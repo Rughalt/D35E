@@ -1,5 +1,5 @@
 /**
- * The DnD 35Est edition game system for Foundry Virtual Tabletop
+ * The Pathfinder 1st edition game system for Foundry Virtual Tabletop
  * Author: Furyspark
  * Software License: GNU GPLv3
  */
@@ -42,7 +42,7 @@ if (!String.prototype.format) {
 /* -------------------------------------------- */
 
 Hooks.once("init", async function() {
-  console.log(`D35E | Initializing DnD 35E System`);
+  console.log(`D35E | Initializing Pathfinder 1 System`);
 
   // Create a D35E namespace within the game global
   game.D35E = {

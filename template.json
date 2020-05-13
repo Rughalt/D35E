@@ -332,16 +332,7 @@
           "bonusSkillRankFormula": ""
         },
         "skills": {
-          "acr": {
-            "value": 0,
-            "ability": "dex",
-            "rt": false,
-            "acp": true,
-            "rank": 0,
-            "notes": "",
-            "mod": 0,
-            "background": false
-          },
+
           "apr": {
             "value": 0,
             "ability": "int",
@@ -350,17 +341,17 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
-          "art": {
+          "blc": {
             "value": 0,
-            "ability": "int",
+            "ability": "dex",
             "rt": false,
-            "acp": false,
+            "acp": true,
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "blf": {
             "value": 0,
@@ -382,6 +373,16 @@
             "mod": 0,
             "background": false
           },
+          "coc": {
+            "value": 0,
+            "ability": "con",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
           "crf": {
             "value": 0,
             "ability": "int",
@@ -390,7 +391,17 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
+          },
+          "dsc": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
           },
           "dip": {
             "value": 0,
@@ -432,11 +443,21 @@
             "mod": 0,
             "background": false
           },
-          "fly": {
+          "fog": {
             "value": 0,
-            "ability": "dex",
+            "ability": "int",
             "rt": false,
-            "acp": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "gif": {
+            "value": 0,
+            "ability": "cha",
+            "rt": false,
+            "acp": false,
             "rank": 0,
             "notes": "",
             "mod": 0,
@@ -450,7 +471,7 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "hea": {
             "value": 0,
@@ -467,6 +488,16 @@
             "ability": "cha",
             "rt": false,
             "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "jmp": {
+            "value": 0,
+            "ability": "str",
+            "rt": false,
+            "acp": true,
             "rank": 0,
             "notes": "",
             "mod": 0,
@@ -500,7 +531,7 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "kge": {
             "value": 0,
@@ -510,7 +541,7 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "khi": {
             "value": 0,
@@ -520,7 +551,7 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "klo": {
             "value": 0,
@@ -572,30 +603,30 @@
             "mod": 0,
             "background": false
           },
-          "lin": {
-            "value": 0,
-            "ability": "int",
-            "rt": true,
-            "acp": false,
-            "rank": 0,
-            "notes": "",
-            "mod": 0,
-            "background": true
-          },
-          "lor": {
-            "value": 0,
-            "ability": "int",
-            "rt": true,
-            "acp": false,
-            "rank": 0,
-            "notes": "",
-            "mod": 0,
-            "background": true
-          },
-          "per": {
+          "lis": {
             "value": 0,
             "ability": "wis",
             "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "mos": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "opl": {
+            "value": 0,
+            "ability": "dex",
+            "rt": true,
             "acp": false,
             "rank": 0,
             "notes": "",
@@ -610,7 +641,7 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "pro": {
             "value": 0,
@@ -620,13 +651,23 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "rid": {
             "value": 0,
             "ability": "dex",
             "rt": false,
             "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "src": {
+            "value": 0,
+            "ability": "int",
+            "rt": false,
+            "acp": false,
             "rank": 0,
             "notes": "",
             "mod": 0,
@@ -650,7 +691,7 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": true
+            "background": false
           },
           "spl": {
             "value": 0,
@@ -662,11 +703,11 @@
             "mod": 0,
             "background": false
           },
-          "ste": {
+          "spt": {
             "value": 0,
-            "ability": "dex",
+            "ability": "wis",
             "rt": false,
-            "acp": true,
+            "acp": false,
             "rank": 0,
             "notes": "",
             "mod": 0,
@@ -692,10 +733,30 @@
             "mod": 0,
             "background": false
           },
+          "tmb": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
           "umd": {
             "value": 0,
             "ability": "cha",
             "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "uro": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
             "acp": false,
             "rank": 0,
             "notes": "",

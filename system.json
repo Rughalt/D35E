@@ -1,9 +1,9 @@
 {
   "name": "D35E",
-  "title": "DnD 35E",
-  "description": "A comprehensive game system for running games of DnD 35E in the Foundry VTT environment.",
+  "title": "D&D 3.5e",
+  "description": "A convertion of Furyspark's Pathfinder1 system to make a functional 3.5e system for FoundryVTT",
   "version": 0.51,
-  "author": "Furyspark",
+  "author": "LoopeeDK",
   "templateVersion": 2,
   "scripts": [],
   "esmodules": ["D35E.js"],
@@ -99,6 +99,16 @@
       "lang": "en",
       "name": "English",
       "path": "lang/en.json"
+    },
+    {
+      "lang": "de",
+      "name": "German",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "fr",
+      "name": "French",
+      "path": "lang/fr.json"
     }
   ],
   "socket": true,
@@ -109,8 +119,8 @@
   "secondaryTokenAttribute": null,
   "minimumCoreVersion": "0.5.6",
   "compatibleCoreVersion": "0.5.6",
-
-  "url": "https://github.com/LoopeeDK/D35E",
-  "manifest": "https://raw.githubusercontent.com/LoopeeDK/D35E/master/system.json",
-  "download": "https://github.com/LoopeeDK/D35E/archive/master.zip"
+  
+  "url": "https://github.com/LoopeeDK/d35e",
+  "manifest": "https://raw.githubusercontent.com/LoopeeDK/d35e/master/system.json",
+  "download": "https://github.com/LoopeeDK/d35e/archive/master.zip"
 }
