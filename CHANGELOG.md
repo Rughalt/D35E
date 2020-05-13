@@ -348,7 +348,7 @@
 - Add or update some items to the following compendiums:
   - Magic Items
   - Common Buffs
-- Add macro'able function to show an actor's defenses as a chatlog (game.pf1.rollDefenses()) (see [documentation](https://furyspark.gitlab.io/foundryvtt-pathfinder1-doc/advanced/macros/))
+- Add macro'able function to show an actor's defenses as a chatlog (game.D35E.rollDefenses()) (see [documentation](https://furyspark.gitlab.io/foundryvtt-pathfinder1-doc/advanced/macros/))
 
 ## 0.21
 

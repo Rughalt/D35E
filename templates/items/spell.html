@@ -6,7 +6,7 @@
 
     <div class="header-details flexrow">
       <h1 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
 
       <div class="item-subtitle">
@@ -27,8 +27,8 @@
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
   </nav>
 
   {{!-- Item Sheet Body --}}
@@ -41,12 +41,12 @@
 
     {{!-- Details Tab --}}
     <div class="tab details" data-group="primary" data-tab="details">
-      <h3 class="form-header">{{localize "PF1.SpellDetails"}}</h3>
+      <h3 class="form-header">{{localize "D35E.SpellDetails"}}</h3>
 
       {{!-- Spellbook --}}
       {{#if owner}}
       <div class="form-group">
-        <label>{{localize "PF1.SpellBook"}}</label>
+        <label>{{localize "D35E.SpellBook"}}</label>
         <select name="data.spellbook">
           {{#select data.spellbook}}
           {{#each spellbooks as |spellbook a|}}
@@ -61,7 +61,7 @@
 
       {{!-- Spell Level --}}
       <div class="form-group">
-        <label>{{localize "PF1.SpellLevel"}}</label>
+        <label>{{localize "D35E.SpellLevel"}}</label>
         <select name="data.level" data-dtype="Number">
           {{#select data.level}}
           {{#each config.spellLevels as |name lvl|}}
@@ -72,32 +72,32 @@
       </div>
       
       <div class="form-group stacked">
-        <label>{{localize "PF1.LearnedAt"}}</label>
+        <label>{{localize "D35E.LearnedAt"}}</label>
 
         <div class="data-selector">
-          <a class="entry-selector" for="data.learnedAt.class" data-fields="{{localize "PF1.CasterLevel"}};{{localize "PF1.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
-          <label for="data.learnedAt.class">{{localize "PF1.CasterLevel"}}</label>
+          <a class="entry-selector" for="data.learnedAt.class" data-fields="{{localize "D35E.CasterLevel"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.class">{{localize "D35E.CasterLevel"}}</label>
         </div>
 
         <div class="data-selector">
-          <a class="entry-selector" for="data.learnedAt.domain" data-fields="{{localize "PF1.Domain"}};{{localize "PF1.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
-          <label for="data.learnedAt.domain">{{localize "PF1.Domain"}}</label>
+          <a class="entry-selector" for="data.learnedAt.domain" data-fields="{{localize "D35E.Domain"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.domain">{{localize "D35E.Domain"}}</label>
         </div>
 
         <div class="data-selector">
-          <a class="entry-selector" for="data.learnedAt.subDomain" data-fields="{{localize "PF1.SubDomain"}};{{localize "PF1.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
-          <label for="data.learnedAt.subDomain">{{localize "PF1.SubDomain"}}</label>
+          <a class="entry-selector" for="data.learnedAt.subDomain" data-fields="{{localize "D35E.SubDomain"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.subDomain">{{localize "D35E.SubDomain"}}</label>
         </div>
 
         <div class="data-selector">
-          <a class="entry-selector" for="data.learnedAt.bloodline" data-fields="{{localize "PF1.Bloodline"}};{{localize "PF1.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
-          <label for="data.learnedAt.bloodline">{{localize "PF1.Bloodline"}}</label>
+          <a class="entry-selector" for="data.learnedAt.bloodline" data-fields="{{localize "D35E.Bloodline"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.bloodline">{{localize "D35E.Bloodline"}}</label>
         </div>
       </div>
 
       {{!-- Spell School --}}
       <div class="form-group">
-        <label>{{localize "PF1.SpellSchool"}}</label>
+        <label>{{localize "D35E.SpellSchool"}}</label>
         <select name="data.school">
           {{#select data.school}}
           {{#each config.spellSchools as |name sch|}}
@@ -109,43 +109,43 @@
 
       {{!-- Subschool and type --}}
       <div class="form-group flexrow">
-        <label>{{localize "PF1.SubSchool"}}</label>
-        <input type="text" name="data.subschool" value="{{data.subschool}}" Placeholder="{{localize "PF1.SubSchoolExample"}}"/>
-        <label>{{localize "PF1.TypePlural"}}</label>
-        <input type="text" name="data.types" value="{{data.types}}" Placeholder="{{localize "PF1.SpellTypesExample"}}"/>
+        <label>{{localize "D35E.SubSchool"}}</label>
+        <input type="text" name="data.subschool" value="{{data.subschool}}" Placeholder="{{localize "D35E.SubSchoolExample"}}"/>
+        <label>{{localize "D35E.TypePlural"}}</label>
+        <input type="text" name="data.types" value="{{data.types}}" Placeholder="{{localize "D35E.SpellTypesExample"}}"/>
       </div>
 
       {{!-- Misc --}}
       <div class="spell-misc form-group stacked">
-        <label>{{localize "PF1.Misc"}}</label>
+        <label>{{localize "D35E.Misc"}}</label>
         <label class="checkbox">
-          <input type="checkbox" name="data.sr" {{checked data.sr}}/> {{localize "PF1.SpellResistance"}}
+          <input type="checkbox" name="data.sr" {{checked data.sr}}/> {{localize "D35E.SpellResistance"}}
         </label>
         <label class="checkbox">
-          <input type="checkbox" name="data.atWill" {{checked data.atWill}}/> {{localize "PF1.SpellPrepAtWill"}}
+          <input type="checkbox" name="data.atWill" {{checked data.atWill}}/> {{localize "D35E.SpellPrepAtWill"}}
         </label>
       </div>
 
       {{!-- Spell Components --}}
       <div class="spell-components form-group stacked">
-        <label>{{localize "PF1.SpellComponents"}}</label>
+        <label>{{localize "D35E.SpellComponents"}}</label>
         <label class="checkbox">
-          <input type="checkbox" name="data.components.verbal" {{checked data.components.verbal}}/> {{localize "PF1.SpellComponentVerbal"}}
+          <input type="checkbox" name="data.components.verbal" {{checked data.components.verbal}}/> {{localize "D35E.SpellComponentVerbal"}}
         </label>
         <label class="checkbox">
-          <input type="checkbox" name="data.components.somatic" {{checked data.components.somatic}}/> {{localize "PF1.SpellComponentSomatic"}}
+          <input type="checkbox" name="data.components.somatic" {{checked data.components.somatic}}/> {{localize "D35E.SpellComponentSomatic"}}
         </label>
         <label class="checkbox">
-          <input type="checkbox" name="data.components.material" {{checked data.components.material}}/> {{localize "PF1.SpellComponentMaterial"}}
+          <input type="checkbox" name="data.components.material" {{checked data.components.material}}/> {{localize "D35E.SpellComponentMaterial"}}
         </label>
         <label class="checkbox">
-          <input type="checkbox" name="data.components.focus" {{checked data.components.focus}}/> {{localize "PF1.SpellComponentFocus"}}
+          <input type="checkbox" name="data.components.focus" {{checked data.components.focus}}/> {{localize "D35E.SpellComponentFocus"}}
         </label>
       </div>
 
       {{!-- Divine Focus --}}
       <div class="divine-focus form-group stacked">
-        <label>{{localize "PF1.SpellComponentDivineFocus"}}</label>
+        <label>{{localize "D35E.SpellComponentDivineFocus"}}</label>
         <select name="data.components.divineFocus" data-dtype="Number">
           {{#select data.components.divineFocus}}
           {{#each config.divineFocus as |name value|}}
@@ -157,21 +157,21 @@
 
       {{!-- Misc Components --}}
       <div class="misc-components form-group stacked">
-        <label>{{localize "PF1.SpellComponentsMisc"}}</label>
+        <label>{{localize "D35E.SpellComponentsMisc"}}</label>
         <input type="text" name="data.components.value" value="{{data.components.value}}"/>
       </div>
 
       {{!-- Material Components --}}
       {{#if data.components.material}}
       <div class="form-group stacked">
-        <label>{{localize "PF1.SpellcastingMaterials"}}</label>
+        <label>{{localize "D35E.SpellcastingMaterials"}}</label>
         <input class="materials" type="text" name="data.materials.value" value="{{data.materials.value}}"/>
       </div>
       {{/if}}
 
       {{#if data.components.focus}}
       <div class="form-group stacked">
-        <label>{{localize "PF1.SpellcastingFocus"}}</label>
+        <label>{{localize "D35E.SpellcastingFocus"}}</label>
         <input class="focus" type="text" name="data.materials.focus" value="{{data.materials.focus}}"/>
       </div>
       {{/if}}
@@ -180,13 +180,13 @@
       {{#if isPreparedSpell}}
       <div class="form-group">
         <div class="form-fields">
-          <label>{{localize "PF1.CastsLeft"}}</label>
+          <label>{{localize "D35E.CastsLeft"}}</label>
           <div class="form-fields">
             <input type="text" name="data.preparation.preparedAmount" value="{{data.preparation.preparedAmount}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="form-fields">
-          <label>{{localize "PF1.SpellPrepPrepared"}}</label>
+          <label>{{localize "D35E.SpellPrepPrepared"}}</label>
           <div class="form-fields">
             <input type="text" name="data.preparation.maxAmount" value="{{data.preparation.maxAmount}}" data-dtype="Number"/>
           </div>
@@ -197,7 +197,7 @@
       {{#unless isAtWill}}
       <div class="spell-misc form-group stacked">
         <label class="checkbox">
-          <input type="checkbox" name="data.preparation.autoDeductCharges" {{checked data.preparation.autoDeductCharges}}/> {{localize "PF1.AutoDeductCharges"}}
+          <input type="checkbox" name="data.preparation.autoDeductCharges" {{checked data.preparation.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
         </label>
       </div>
       {{/unless}}
@@ -205,7 +205,7 @@
       {{!-- Caster Level Offset --}}
       <div class="form-group">
         <div class="form-fields">
-          <label>{{localize "PF1.CasterLevelOffset"}}</label>
+          <label>{{localize "D35E.CasterLevelOffset"}}</label>
           <div class="form-fields">
             <input type="text" name="data.clOffset" value="{{data.clOffset}}" data-dtype="Number"/>
           </div>
@@ -215,31 +215,31 @@
       {{!-- Spell Level Offset --}}
       <div class="form-group">
         <div class="form-fields">
-          <label>{{localize "PF1.SpellLevelOffset"}}</label>
+          <label>{{localize "D35E.SpellLevelOffset"}}</label>
           <div class="form-fields">
             <input type="text" name="data.slOffset" value="{{data.slOffset}}" data-dtype="Number"/>
           </div>
         </div>
       </div>
 
-      <h3 class="form-header">{{localize "PF1.SpellCasting"}}</h3>
+      <h3 class="form-header">{{localize "D35E.SpellCasting"}}</h3>
 
       {{!-- Item Activation Template --}}
-      {{> "systems/pf1/templates/items/parts/item-activation.html"}}
+      {{> "systems/D35E/templates/items/parts/item-activation.html"}}
 
-      <h3 class="form-header">{{localize "PF1.SpellEffects"}}</h3>
+      <h3 class="form-header">{{localize "D35E.SpellEffects"}}</h3>
 
       {{!-- Item Action Template --}}
-      {{> "systems/pf1/templates/items/parts/item-action.html"}}
+      {{> "systems/D35E/templates/items/parts/item-action.html"}}
 
-      <h3 class="form-header">{{localize "PF1.MeasureTemplate"}}</h3>
+      <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
 
       {{!-- Item Measure Template --}}
-      {{> "systems/pf1/templates/items/parts/item-template.html"}}
+      {{> "systems/D35E/templates/items/parts/item-template.html"}}
 
       {{!-- Spell Description --}}
 
-      <h3 class="form-header">{{localize "PF1.Description"}}</h3>
+      <h3 class="form-header">{{localize "D35E.Description"}}</h3>
 
       {{editor content=data.shortDescription target="data.shortDescription" button=true owner=owner editable=editable}}
     </div>

@@ -180,9 +180,9 @@ export const CR = {
 };
 
 export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
-  if (typeof targetSize === "string") targetSize = Object.values(CONFIG.PF1.sizeChart).indexOf(targetSize.toUpperCase());
-  else if (typeof targetSize === "number") targetSize = Math.max(0, Math.min(Object.values(CONFIG.PF1.sizeChart).length - 1, Object.values(CONFIG.PF1.sizeChart).indexOf("M") + targetSize));
-  const c = duplicate(CONFIG.PF1.sizeDie);
+  if (typeof targetSize === "string") targetSize = Object.values(CONFIG.D35E.sizeChart).indexOf(targetSize.toUpperCase());
+  else if (typeof targetSize === "number") targetSize = Math.max(0, Math.min(Object.values(CONFIG.D35E.sizeChart).length - 1, Object.values(CONFIG.D35E.sizeChart).indexOf("M") + targetSize));
+  const c = duplicate(CONFIG.D35E.sizeDie);
 
   const mediumDie = `${origCount}d${origSides}`;
 
@@ -253,7 +253,7 @@ export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
     formula = `${count * crit}d${sides}${RegExp.$3}`;
   }
   if (index === -1) {
-    ui.notifications.warn(game.i18n.localize("PF1.WarningNoSizeDie").format(mediumDie, formula));
+    ui.notifications.warn(game.i18n.localize("D35E.WarningNoSizeDie").format(mediumDie, formula));
   }
 
   return formula;

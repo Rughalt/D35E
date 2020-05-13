@@ -1,8 +1,8 @@
 <div class="tab active flexcol" data-group="primary" data-tab="description">
   {{#if showIdentifyDescription}}
   <nav class="sheet-navigation tabs subtabs description" data-group="description">
-    <a class="item active" data-tab="identified">{{localize "PF1.Identified"}}</a>
-    <a class="item" data-tab="unidentified">{{localize "PF1.Unidentified"}}</a>
+    <a class="item active" data-tab="identified">{{localize "D35E.Identified"}}</a>
+    <a class="item" data-tab="unidentified">{{localize "D35E.Unidentified"}}</a>
   </nav>
   {{/if}}
 
@@ -11,36 +11,36 @@
       {{#if isPhysical}}
       {{!-- Quantity --}}
       <div class="form-group">
-        <label>{{localize "PF1.Quantity"}}</label>
+        <label>{{localize "D35E.Quantity"}}</label>
         <input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number"/>
       </div>
 
       {{!-- Weight --}}
       <div class="form-group">
-        <label>{{localize "PF1.Weight"}}</label>
+        <label>{{localize "D35E.Weight"}}</label>
         <input type="text" name="data.weight" value="{{data.weight}}" data-dtype="Number"/>
       </div>
 
       {{!-- Price --}}
       {{#if showIdentifyDescription}}
       <div class="form-group">
-        <label>{{localize "PF1.Price"}}</label>
+        <label>{{localize "D35E.Price"}}</label>
         <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"/>
       </div>
 
       <div class="form-group">
-        <label>{{localize "PF1.UnidentifiedPriceShort"}}</label>
+        <label>{{localize "D35E.UnidentifiedPriceShort"}}</label>
         <input type="text" name="data.unidentified.price" value="{{data.unidentified.price}}" data-dtype="Number"/>
       </div>
       {{else}}
       {{#if showUnidentifiedData}}
       <div class="form-group">
-        <label>{{localize "PF1.Price"}}</label>
+        <label>{{localize "D35E.Price"}}</label>
         <input type="text" name="data.unidentified.price" value="{{data.unidentified.price}}" data-dtype="Number"/>
       </div>
       {{else}}
       <div class="form-group">
-        <label>{{localize "PF1.Price"}}</label>
+        <label>{{localize "D35E.Price"}}</label>
         <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"/>
       </div>
       {{/if}}
@@ -48,7 +48,7 @@
 
       {{!-- Hit Points --}}
       <div class="form-group">
-        <label>{{localize "PF1.HPShort"}}</label>
+        <label>{{localize "D35E.HPShort"}}</label>
         <input type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number" style="flex: 0 0 32px"/>
         <span>/</span>
         <input type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number" style="flex: 0 0 32px"/>
@@ -56,13 +56,13 @@
 
       {{!-- Hardness --}}
       <div class="form-group">
-        <label>{{localize "PF1.Hardness"}}</label>
+        <label>{{localize "D35E.Hardness"}}</label>
         <input type="text" name="data.hardness" value="{{data.hardness}}" data-dtype="Number"/>
       </div>
 
       {{!-- Carried Flag --}}
       <div class="form-group">
-        <label>{{localize "PF1.Carried"}}</label>
+        <label>{{localize "D35E.Carried"}}</label>
         <input type="checkbox" name="data.carried" {{checked data.carried}}/>
       </div>
       {{/if}}

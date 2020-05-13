@@ -1,4 +1,4 @@
-<div class="pf1 chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
   <header class="card-header flexrow">
     <img src="{{item.img}}" title="{{item.name}}" width="36" height="36"/>
     <h3 class="item-name">{{item.name}}</h3>
@@ -12,7 +12,7 @@
     {{#if isSpell}}
     {{#if spellFailure}}
     <div class="spell-failure">
-      <h3>{{localize "PF1.ArcaneSpellFailure"}}</h3>
+      <h3>{{localize "D35E.ArcaneSpellFailure"}}</h3>
       <div class="dice-roll">
         <div class="dice-result">
           <h4 class="dice-total spell-failure {{#unless spellFailureSuccess}}failure{{/unless}}">{{spellFailure}}</h4>
@@ -22,7 +22,7 @@
     {{/if}}
     {{/if}}
     {{#if data.materials.value}}
-    <p><strong>{{ localize "PF1.ChatReqMats" }}.</strong> {{data.materials.value}}</p>
+    <p><strong>{{ localize "D35E.ChatReqMats" }}.</strong> {{data.materials.value}}</p>
     {{/if}}
 
     {{#each data.properties}}

@@ -2,7 +2,7 @@
 
 {{!-- Buff Navigation --}}
 <nav class="sheet-navigation tabs subtabs buffs" data-group="buffs">
-  <a class="item" data-tab="conditions">{{localize "PF1.ConditionPlural"}}</a>
+  <a class="item" data-tab="conditions">{{localize "D35E.ConditionPlural"}}</a>
   {{#each sections as |section sid|}}
   <a class="item" data-tab="{{sid}}">{{section.label}}</a>
   {{/each}}
@@ -27,17 +27,17 @@
         <h3 class="item-name flexrow"></h3>
 
         <div class="item-detail item-level">
-          <span>{{localize "PF1.Level"}}</span>
+          <span>{{localize "D35E.Level"}}</span>
         </div>
 
         <div class="item-detail item-active">
-          <span>{{localize "PF1.Active"}}</span>
+          <span>{{localize "D35E.Active"}}</span>
         </div>
 
         {{#if ../owner}}
         <div class="item-controls">
-          <a class="item-control item-create" title="{{localize "PF1.CreateItem"}}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-            <i class="fas fa-plus"></i> {{localize "PF1.Add"}}
+          <a class="item-control item-create" title="{{localize "D35E.CreateItem"}}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+            <i class="fas fa-plus"></i> {{localize "D35E.Add"}}
           </a>
         </div>
         {{/if}}

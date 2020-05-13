@@ -6,7 +6,7 @@
 
     <div class="header-details flexrow">
       <h1 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
 
       <div class="item-subtitle">
@@ -20,7 +20,7 @@
         </li>
         <li class="tooltip">
           <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
-          <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize "PF1.Level"}}" data-dtype="Number"/>
+          <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize "D35E.Level"}}" data-dtype="Number"/>
         </li>
       </ul>
     </div>
@@ -28,9 +28,9 @@
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
-    <a class="item" data-tab="changes">{{localize "PF1.Changes"}}</a>
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+    <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
   </nav>
 
   {{!-- Item Sheet Body --}}
@@ -46,7 +46,7 @@
 
       {{!-- Class Type --}}
       <div class="form-group">
-        <label>{{localize "PF1.ClassType"}}</label>
+        <label>{{localize "D35E.ClassType"}}</label>
         <select name="data.classType">
           {{#select data.classType}}
           {{#each config.classTypes as |name type|}}
@@ -59,7 +59,7 @@
       {{!-- Racial Type --}}
       {{#if isRacialHD}}
       <div class="form-group">
-        <label>{{localize "PF1.CreatureType"}}</label>
+        <label>{{localize "D35E.CreatureType"}}</label>
         <select name="data.creatureType">
           {{#select data.creatureType}}
           {{#each config.creatureTypes as |name type|}}
@@ -72,24 +72,24 @@
 
       {{!-- HD --}}
       <div class="form-group">
-        <label>{{localize "PF1.HitDie"}}</label>
+        <label>{{localize "D35E.HitDie"}}</label>
         <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number" />
       </div>
 
       {{!-- Hit Points --}}
       {{#unless healthConfig.auto}}
       <div class="form-group">
-        <label>{{localize "PF1.HitPoints"}}</label>
+        <label>{{localize "D35E.HitPoints"}}</label>
         <input type="text" name="data.hp" value="{{data.hp}}" data-dtype="Number" />
       </div>
       {{/unless}}
 
       {{!-- BAB --}}
       <div class="form-group">
-        <label>{{localize "PF1.BABAbbr"}}</label>
+        <label>{{localize "D35E.BABAbbr"}}</label>
         <select name="data.bab">
           {{#select data.bab}}
-          <option value="">{{localize "PF1.None"}}</option>
+          <option value="">{{localize "D35E.None"}}</option>
           {{#each config.classBAB as |name value|}}
           <option value="{{value}}">{{name}}</option>
           {{/each}}
@@ -99,11 +99,11 @@
 
       {{!-- Skills/Level --}}
       <div class="form-group">
-        <label>{{localize "PF1.SkillsPerLevel"}}</label>
+        <label>{{localize "D35E.SkillsPerLevel"}}</label>
         <input type="text" name="data.skillsPerLevel" value="{{data.skillsPerLevel}}" data-dtype="Number" />
       </div>
 
-      <h4 class="form-header">{{localize "PF1.SavingThrowPlural"}}</h4>
+      <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>
 
       {{!-- Saving Throws --}}
       {{#each data.savingThrows as |savingThrow id|}}
@@ -111,7 +111,7 @@
         <label>{{savingThrow.label}}</label>
         <select name="data.savingThrows.{{id}}.value">
           {{#select savingThrow.value}}
-          <option value="">{{localize "PF1.None"}}</option>
+          <option value="">{{localize "D35E.None"}}</option>
           {{#each ../config.classSavingThrows as |name value|}}
           <option value="{{value}}">{{name}}</option>
           {{/each}}
@@ -121,7 +121,7 @@
       {{/each}}
 
       {{#if isBaseClass}}
-      <h4 class="form-header">{{localize "PF1.FavouredClassBonuses"}}</h4>
+      <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
 
       {{!-- Favoured Class Bonuses --}}
       {{#each data.fc as |fc id|}}
@@ -132,7 +132,7 @@
       {{/each}}
       {{/if}}
 
-      <h4 class="form-header">{{localize "PF1.ClassSkills"}}</h4>
+      <h4 class="form-header">{{localize "D35E.ClassSkills"}}</h4>
 
       <div class="form-group">
         <ol class="item-list">
@@ -149,9 +149,9 @@
     </div>
 
     <div class="tab flexcol" data-group="primary" data-tab="changes">
-      {{> "systems/pf1/templates/items/parts/item-changes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
-      {{> "systems/pf1/templates/items/parts/item-notes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
     </div>
   </section>
 </form>

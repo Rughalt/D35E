@@ -1,33 +1,33 @@
 {{!-- Flags --}}
 <div class="form-group">
-  <label class="header">{{localize "PF1.CheckFlags"}}</label>
+  <label class="header">{{localize "D35E.CheckFlags"}}</label>
   <div class="buff-flags">
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.loseDexToAC" {{checked data.changeFlags.loseDexToAC}}/> {{localize "PF1.ChangeFlagLoseDexToAC"}}
+      <input type="checkbox" name="data.changeFlags.loseDexToAC" {{checked data.changeFlags.loseDexToAC}}/> {{localize "D35E.ChangeFlagLoseDexToAC"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.noDex" {{checked data.changeFlags.noDex}}/> {{localize "PF1.ChangeFlagNoDex"}}
+      <input type="checkbox" name="data.changeFlags.noDex" {{checked data.changeFlags.noDex}}/> {{localize "D35E.ChangeFlagNoDex"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.noStr" {{checked data.changeFlags.noStr}}/> {{localize "PF1.ChangeFlagNoStr"}}
+      <input type="checkbox" name="data.changeFlags.noStr" {{checked data.changeFlags.noStr}}/> {{localize "D35E.ChangeFlagNoStr"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.oneInt" {{checked data.changeFlags.oneInt}}/> {{localize "PF1.ChangeFlagOneInt"}}
+      <input type="checkbox" name="data.changeFlags.oneInt" {{checked data.changeFlags.oneInt}}/> {{localize "D35E.ChangeFlagOneInt"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.oneWis" {{checked data.changeFlags.oneWis}}/> {{localize "PF1.ChangeFlagOneWis"}}
+      <input type="checkbox" name="data.changeFlags.oneWis" {{checked data.changeFlags.oneWis}}/> {{localize "D35E.ChangeFlagOneWis"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.oneCha" {{checked data.changeFlags.oneCha}}/> {{localize "PF1.ChangeFlagOneCha"}}
+      <input type="checkbox" name="data.changeFlags.oneCha" {{checked data.changeFlags.oneCha}}/> {{localize "D35E.ChangeFlagOneCha"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.noEncumbrance" {{checked data.changeFlags.noEncumbrance}}/> {{localize "PF1.ChangeFlagDwarflikeEncumbrance"}}
+      <input type="checkbox" name="data.changeFlags.noEncumbrance" {{checked data.changeFlags.noEncumbrance}}/> {{localize "D35E.ChangeFlagDwarflikeEncumbrance"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.mediumArmorFullSpeed" {{checked data.changeFlags.mediumArmorFullSpeed}}/> {{localize "PF1.ChangeFlagMediumArmorFullSpeed"}}
+      <input type="checkbox" name="data.changeFlags.mediumArmorFullSpeed" {{checked data.changeFlags.mediumArmorFullSpeed}}/> {{localize "D35E.ChangeFlagMediumArmorFullSpeed"}}
     </label>
     <label class="checkbox">
-      <input type="checkbox" name="data.changeFlags.heavyArmorFullSpeed" {{checked data.changeFlags.heavyArmorFullSpeed}}/> {{localize "PF1.ChangeFlagHeavyArmorFullSpeed"}}
+      <input type="checkbox" name="data.changeFlags.heavyArmorFullSpeed" {{checked data.changeFlags.heavyArmorFullSpeed}}/> {{localize "D35E.ChangeFlagHeavyArmorFullSpeed"}}
     </label>
   </div>
 </div>
@@ -35,17 +35,17 @@
 <div>
   {{!-- Changes --}}
   <h4 class="change-header">
-    {{localize "PF1.Changes"}}
+    {{localize "D35E.Changes"}}
     <a class="change-control add-change"><i class="fas fa-plus"></i></a>
   </h4>
   <ol class="changes form-group">
     {{#each data.changes as |change a|}}
     <li class="change flexrow" data-change="{{a}}">
       <input type="text" name="data.changes.{{a}}.0" value="{{lookup this "0"}}"
-                                                     placeholder="{{localize "PF1.Formula"}}" />
+                                                     placeholder="{{localize "D35E.Formula"}}" />
       <select name="data.changes.{{a}}.1">
         {{#select (lookup this "1") }}
-        <option value="">{{localize "PF1.None"}}</option>
+        <option value="">{{localize "D35E.None"}}</option>
         {{#each ../changes.targets as |target type|}}
         <option value="{{type}}">{{target}}</option>
         {{/each}}

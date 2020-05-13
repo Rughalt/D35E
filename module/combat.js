@@ -17,7 +17,7 @@ export const _getInitiativeFormula = function(actor) {
 
 Combat.showInitiativeDialog = function(formula=null) {
   return new Promise(resolve => {
-    let template = "systems/pf1/templates/chat/roll-dialog.html";
+    let template = "systems/D35E/templates/chat/roll-dialog.html";
     let rollMode = game.settings.get("core", "rollMode");
     let dialogData = {
       formula: formula ? formula : "",
@@ -38,7 +38,7 @@ Combat.showInitiativeDialog = function(formula=null) {
     // Show dialog
     renderTemplate(template, dialogData).then(dlg => {
       new Dialog({
-        title: game.i18n.localize("PF1.InitiativeBonus"),
+        title: game.i18n.localize("D35E.InitiativeBonus"),
         content: dlg,
         buttons: buttons,
         default: "normal",
@@ -98,7 +98,7 @@ export const _rollInitiative = async function(ids, formula=null, messageOptions=
         token: c.token._id,
         alias: c.token.name
       },
-      flavor: game.i18n.localize("PF1.RollsForInitiative").format(c.token.name)
+      flavor: game.i18n.localize("D35E.RollsForInitiative").format(c.token.name)
     }, messageOptions);
     const chatData = roll.toMessage(messageData, {rollMode, create:false});
     if ( i > 0 ) chatData.sound = null;   // Only play 1 sound for the whole set
@@ -140,25 +140,25 @@ export const addChatMessageContextOptions = function(html, options) {
   let canApplyCritical = li => canvas.tokens.controlledTokens.length && li.find(".crit-damage-roll .dice-total").length;
   options.push(
     {
-      name: game.i18n.localize("PF1.ApplyDamage"),
+      name: game.i18n.localize("D35E.ApplyDamage"),
       icon: '<i class="fas fa-user-minus"></i>',
       condition: canApply,
       callback: li => ActorPF.applyDamage(li, 1)
     },
     {
-      name: game.i18n.localize("PF1.ApplyHealing"),
+      name: game.i18n.localize("D35E.ApplyHealing"),
       icon: '<i class="fas fa-user-plus"></i>',
       condition: canApply,
       callback: li => ActorPF.applyDamage(li, -1)
     },
     {
-      name: game.i18n.localize("PF1.ApplyCriticalDamage"),
+      name: game.i18n.localize("D35E.ApplyCriticalDamage"),
       icon: '<i class="fas fa-user-minus"></i>',
       condition: canApplyCritical,
       callback: li => ActorPF.applyDamage(li, 1, true)
     },
     {
-      name: game.i18n.localize("PF1.ApplyCriticalHealing"),
+      name: game.i18n.localize("D35E.ApplyCriticalHealing"),
       icon: '<i class="fas fa-user-minus"></i>',
       condition: canApplyCritical,
       callback: li => ActorPF.applyDamage(li, -1, true)

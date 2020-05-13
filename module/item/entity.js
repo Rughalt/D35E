@@ -89,7 +89,7 @@ export class ItemPF extends Item {
 
     const itemData = this.data;
     const data = itemData.data;
-    const C = CONFIG.PF1;
+    const C = CONFIG.D35E;
     const labels = {};
 
     // Physical items
@@ -106,18 +106,18 @@ export class ItemPF extends Item {
 
       // Equipped label
       labels.equipped = "";
-      if (itemData.data.equipped === true) labels.equipped = game.i18n.localize("PF1.Yes");
-      else labels.equipped = game.i18n.localize("PF1.No");
+      if (itemData.data.equipped === true) labels.equipped = game.i18n.localize("D35E.Yes");
+      else labels.equipped = game.i18n.localize("D35E.No");
 
       // Carried label
       labels.carried = "";
-      if (itemData.data.carried === true) labels.carried = game.i18n.localize("PF1.Yes");
-      else labels.carried = game.i18n.localize("PF1.No");
+      if (itemData.data.carried === true) labels.carried = game.i18n.localize("D35E.Yes");
+      else labels.carried = game.i18n.localize("D35E.No");
 
       // Identified label
       labels.identified = "";
-      if (itemData.data.identified === true) labels.identified = game.i18n.localize("PF1.YesShort");
-      else labels.identified = game.i18n.localize("PF1.NoShort");
+      if (itemData.data.identified === true) labels.identified = game.i18n.localize("D35E.YesShort");
+      else labels.identified = game.i18n.localize("D35E.NoShort");
 
       // Slot label
       if (itemData.data.slot) {
@@ -125,7 +125,7 @@ export class ItemPF extends Item {
         const equipmentType = getProperty(this.data, "data.equipmentType") || null;
         if (equipmentType != null) {
           const equipmentSlot = getProperty(this.data, "data.slot") || null;
-          labels.slot = equipmentSlot == null ? null : CONFIG.PF1.equipmentSlots[equipmentType][equipmentSlot];
+          labels.slot = equipmentSlot == null ? null : CONFIG.D35E.equipmentSlots[equipmentType][equipmentSlot];
         }
         else labels.slot = null;
       }
@@ -258,7 +258,7 @@ export class ItemPF extends Item {
     if (data["data.weaponType"] != null && data["data.weaponType"] !== getProperty(this.data, "data.weaponType")) {
       const type = data["data.weaponType"];
       const subtype = data["data.weaponSubtype"] || getProperty(this.data, "data.weaponSubtype") || "";
-      const keys = Object.keys(CONFIG.PF1.weaponTypes[type])
+      const keys = Object.keys(CONFIG.D35E.weaponTypes[type])
         .filter(o => !o.startsWith("_"));
       if (!subtype || !keys.includes(subtype)) {
         data["data.weaponSubtype"] = keys[0];
@@ -270,7 +270,7 @@ export class ItemPF extends Item {
       // Set subtype
       const type = data["data.equipmentType"];
       const subtype = data["data.equipmentSubtype"] || getProperty(this.data, "data.equipmentSubtype") || "";
-      let keys = Object.keys(CONFIG.PF1.equipmentTypes[type])
+      let keys = Object.keys(CONFIG.D35E.equipmentTypes[type])
         .filter(o => !o.startsWith("_"));
       if (!subtype || !keys.includes(subtype)) {
         data["data.equipmentSubtype"] = keys[0];
@@ -278,7 +278,7 @@ export class ItemPF extends Item {
 
       // Set slot
       const slot = data["data.slot"] || getProperty(this.data, "data.slot") || "";
-      keys = Object.keys(CONFIG.PF1.equipmentSlots[type]);
+      keys = Object.keys(CONFIG.D35E.equipmentSlots[type]);
       if (!slot || !keys.includes(slot)) {
         data["data.slot"] = keys[0];
       }
@@ -319,7 +319,7 @@ export class ItemPF extends Item {
    */
   async roll(altChatData={}) {
     const actor = this.actor;
-    if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     // Basic template rendering data
     const token = this.actor.token;
@@ -351,7 +351,7 @@ export class ItemPF extends Item {
 
     // Render the chat card template
     const templateType = ["consumable"].includes(this.data.type) ? this.data.type : "item";
-    const template = `systems/pf1/templates/chat/${templateType}-card.html`;
+    const template = `systems/D35E/templates/chat/${templateType}-card.html`;
 
     // Basic chat message data
     const chatData = mergeObject({
@@ -414,7 +414,7 @@ export class ItemPF extends Item {
     const props = [];
     if ( data.hasOwnProperty("equipped") && ["weapon", "equipment"].includes(this.data.type) ) {
       props.push(
-        data.equipped ? game.i18n.localize("PF1.Equipped") : game.i18n.localize("PF1.NotEquipped"),
+        data.equipped ? game.i18n.localize("D35E.Equipped") : game.i18n.localize("D35E.NotEquipped"),
       );
     }
 
@@ -425,19 +425,19 @@ export class ItemPF extends Item {
       dynamicLabels.level = labels.sl || "";
       // Range
       if (data.range != null) {
-        if (data.range.units === "close") dynamicLabels.range = game.i18n.localize("PF1.RangeNote").format(25 + Math.floor(cl / 2) * 5);
-        else if (data.range.units === "medium") dynamicLabels.range = game.i18n.localize("PF1.RangeNote").format(100 + cl * 10);
-        else if (data.range.units === "long") dynamicLabels.range = game.i18n.localize("PF1.RangeNote").format(400 + cl * 40);
+        if (data.range.units === "close") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(25 + Math.floor(cl / 2) * 5);
+        else if (data.range.units === "medium") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(100 + cl * 10);
+        else if (data.range.units === "long") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(400 + cl * 40);
         else if (["ft", "mi", "spec"].includes(data.range.units) && typeof data.range.value === "string") {
           let range = new Roll(data.range.value.length > 0 ? data.range.value : "0", rollData).roll().total;
-          dynamicLabels.range = [range > 0 ? "Range:" : null, range, CONFIG.PF1.distanceUnits[data.range.units]].filterJoin(" ");
+          dynamicLabels.range = [range > 0 ? "Range:" : null, range, CONFIG.D35E.distanceUnits[data.range.units]].filterJoin(" ");
         }
       }
       // Duration
       if (data.duration != null) {
         if (!["inst", "perm"].includes(data.duration.units) && typeof data.duration.value === "string") {
           let duration = new Roll(data.duration.value.length > 0 ? data.duration.value : "0", rollData).roll().total;
-          dynamicLabels.duration = [duration, CONFIG.PF1.timePeriods[data.duration.units]].filterJoin(" ");
+          dynamicLabels.duration = [duration, CONFIG.D35E.timePeriods[data.duration.units]].filterJoin(" ");
         }
       }
 
@@ -472,7 +472,7 @@ export class ItemPF extends Item {
     // Add SR reminder
     if (this.type === "spell") {
       if (data.sr) {
-        props.push(game.i18n.localize("PF1.SpellResistance"));
+        props.push(game.i18n.localize("D35E.SpellResistance"));
       }
     }
 
@@ -489,7 +489,7 @@ export class ItemPF extends Item {
    */
   _equipmentChatData(data, labels, props) {
     props.push(
-      CONFIG.PF1.equipmentTypes[data.equipmentType][data.equipmentSubtype],
+      CONFIG.D35E.equipmentTypes[data.equipmentType][data.equipmentSubtype],
       labels.armor || null,
     );
   }
@@ -502,8 +502,8 @@ export class ItemPF extends Item {
    */
   _weaponChatData(data, labels, props) {
     props.push(
-      CONFIG.PF1.weaponTypes[data.weaponType]._label,
-      CONFIG.PF1.weaponTypes[data.weaponType][data.weaponSubtype],
+      CONFIG.D35E.weaponTypes[data.weaponType]._label,
+      CONFIG.D35E.weaponTypes[data.weaponType][data.weaponSubtype],
     );
   }
 
@@ -515,12 +515,12 @@ export class ItemPF extends Item {
    */
   _consumableChatData(data, labels, props) {
     props.push(
-      CONFIG.PF1.consumableTypes[data.consumableType]
+      CONFIG.D35E.consumableTypes[data.consumableType]
     );
     if (["day", "week", "charges"].includes(data.uses.per)) {
       props.push(data.uses.value + "/" + data.uses.max + " Charges");
     }
-    else props.push(CONFIG.PF1.limitedUsePeriods[data.uses.per]);
+    else props.push(CONFIG.D35E.limitedUsePeriods[data.uses.per]);
     data.hasCharges = data.uses.value >= 0;
   }
 
@@ -532,7 +532,7 @@ export class ItemPF extends Item {
    */
   _lootChatData(data, labels, props) {
     props.push(
-      data.weight ? data.weight + " " + (game.settings.get("pf1", "units") === "metric" ? game.i18n.localize("PF1.Kgs") : game.i18n.localize("PF1.Lbs")) : null
+      data.weight ? data.weight + " " + (game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")) : null
     );
   }
 
@@ -549,7 +549,7 @@ export class ItemPF extends Item {
     // Spell saving throw text
     // const abl = data.ability || ad.attributes.spellcasting || "int";
     // if ( this.hasSave && !data.save.dc ) data.save.dc = 8 + ad.abilities[abl].mod + ad.attributes.prof;
-    // labels.save = `DC ${data.save.dc} ${CONFIG.PF1.abilities[data.save.ability]}`;
+    // labels.save = `DC ${data.save.dc} ${CONFIG.D35E.abilities[data.save.ability]}`;
 
     // Spell properties
     props.push(
@@ -569,11 +569,11 @@ export class ItemPF extends Item {
     // Spell saving throw text
     // const abl = data.ability || ad.attributes.spellcasting || "str";
     // if ( this.hasSave && !data.save.dc ) data.save.dc = 8 + ad.abilities[abl].mod + ad.attributes.prof;
-    // labels.save = `DC ${data.save.dc} ${CONFIG.PF1.abilities[data.save.ability]}`;
+    // labels.save = `DC ${data.save.dc} ${CONFIG.D35E.abilities[data.save.ability]}`;
 
     // Feat properties
     props.push(
-      CONFIG.PF1.featTypes[data.featType]
+      CONFIG.D35E.featTypes[data.featType]
     );
   }
 
@@ -584,18 +584,18 @@ export class ItemPF extends Item {
   async useAttack({ev=null, skipDialog=false}={}) {
     if (ev && ev.originalEvent) ev = ev.originalEvent;
     const actor = this.actor;
-    if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     const isSingleUse = getProperty(this.data, "data.uses.per") === "single";
     const itemQuantity = getProperty(this.data, "data.quantity");
     if (itemQuantity != null && itemQuantity <= 0) {
-      return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoQuantity"));
+      return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoQuantity"));
     }
 
     const isCharged = ["day", "week", "charges"].includes(getProperty(this.data, "data.uses.per"));
     let charges = isCharged ? getProperty(this.data, "data.uses.value") || 0 : 0;
     if (isCharged && charges <= 0) {
-      return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoCharges").format(this.name));
+      return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
     }
 
     const autoDeductCharges = this.type === "spell"
@@ -652,7 +652,7 @@ export class ItemPF extends Item {
       const allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
         cur.push({ bonus: r[0], label: r[1] });
         return cur;
-      }, [{ bonus: "", label: `${game.i18n.localize("PF1.Attack")}` }]) : [{ bonus: "", label: `${game.i18n.localize("PF1.Attack")}` }];
+      }, [{ bonus: "", label: `${game.i18n.localize("D35E.Attack")}` }]) : [{ bonus: "", label: `${game.i18n.localize("D35E.Attack")}` }];
       let attacks = [], attackRolls = [];
       const damageTypes = this.data.data.damage.parts.reduce((cur, o) => {
         if (o[1] !== "" && cur.indexOf(o[1]) === -1) cur.push(o[1]);
@@ -697,7 +697,7 @@ export class ItemPF extends Item {
 
               tooltip = $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML;
               attack.critConfirm = {
-                flavor: game.i18n.localize("PF1.CriticalConfirmation"),
+                flavor: game.i18n.localize("D35E.CriticalConfirmation"),
                 tooltip: tooltip,
                 total: roll.total,
                 isCrit: d20.total === 20,
@@ -721,7 +721,7 @@ export class ItemPF extends Item {
               // Add tooltip
               tooltips += tooltip;
             }
-            flavor = this.isHealing ? game.i18n.localize("PF1.Healing") : game.i18n.localize("PF1.Damage");
+            flavor = this.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
             attack.damage = {
               flavor: damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor,
               tooltip: tooltips,
@@ -744,7 +744,7 @@ export class ItemPF extends Item {
                 // Add tooltip
                 tooltips += tooltip;
               }
-              flavor = this.isHealing ? game.i18n.localize("PF1.Healing") : game.i18n.localize("PF1.Damage");
+              flavor = this.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
               attack.critDamage = {
                 flavor: damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor,
                 tooltip: tooltips,
@@ -776,7 +776,7 @@ export class ItemPF extends Item {
           // Add tooltip
           tooltips += tooltip;
         }
-        let flavor = this.isHealing ? game.i18n.localize("PF1.Healing") : game.i18n.localize("PF1.Damage");
+        let flavor = this.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
         attack.damage = {
           flavor: damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor,
           tooltip: tooltips,
@@ -837,7 +837,7 @@ export class ItemPF extends Item {
         speaker: ChatMessage.getSpeaker({actor: this.actor}),
         rollMode: rollMode,
         sound: CONFIG.sounds.dice,
-        "flags.pf1.noRollRender": true,
+        "flags.D35E.noRollRender": true,
       };
 
       // Post message
@@ -865,14 +865,14 @@ export class ItemPF extends Item {
         }
         if (attackStr.length > 0) {
           const innerHTML = TextEditor.enrichHTML(attackStr, { rollData: rollData });
-          extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("PF1.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
+          extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
         }
         if (this.hasEffect) {
           extraText += this.rollEffect({ primaryAttack: primaryAttack });
         }
 
         const properties = this.getChatData().properties;
-        if (properties.length > 0) props.push({ header: game.i18n.localize("PF1.InfoShort"), value: properties });
+        if (properties.length > 0) props.push({ header: game.i18n.localize("D35E.InfoShort"), value: properties });
         const templateData = mergeObject(chatTemplateData, {
           extraText: extraText,
           hasExtraText: extraText.length > 0,
@@ -882,7 +882,7 @@ export class ItemPF extends Item {
           actor: this.actor.data,
         }, { inplace: false });
         // Create message
-        await createCustomChatMessage("systems/pf1/templates/chat/attack-roll.html", templateData, chatData, {
+        await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {
           rolls: attackRolls,
         });
       }
@@ -892,7 +892,7 @@ export class ItemPF extends Item {
     if (skipDialog || (ev instanceof MouseEvent && (ev.shiftKey || ev.button === 2))) return _roll.call(this, true);
 
     // Render modal dialog
-    let template = "systems/pf1/templates/apps/attack-roll-dialog.html";
+    let template = "systems/D35E/templates/apps/attack-roll-dialog.html";
     let dialogData = {
       data: rollData,
       item: this.data.data,
@@ -962,7 +962,7 @@ export class ItemPF extends Item {
       rollData.cl = cl;
     }
     // Determine size bonus
-    rollData.sizeBonus = CONFIG.PF1.sizeMods[rollData.traits.size];
+    rollData.sizeBonus = CONFIG.D35E.sizeMods[rollData.traits.size];
     // Add misc bonuses/penalties
     rollData.item.proficiencyPenalty = -4;
 
@@ -1084,7 +1084,7 @@ export class ItemPF extends Item {
     if (effectContent.length === 0) return "";
 
     const inner = TextEditor.enrichHTML(effectContent, { rollData: rollData });
-    return `<div class="flexcol property-group"><label>${game.i18n.localize("PF1.EffectNotes")}</label><div class="flexrow">${inner}</div></div>`;
+    return `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.EffectNotes")}</label><div class="flexrow">${inner}</div></div>`;
   }
 
   /**
@@ -1192,13 +1192,13 @@ export class ItemPF extends Item {
   async rollFormula(options={}) {
     const itemData = this.data.data;
     if ( !itemData.formula ) {
-      throw new Error(game.i18n.localize("PF1.ErrorNoFormula").format(this.name));
+      throw new Error(game.i18n.localize("D35E.ErrorNoFormula").format(this.name));
     }
 
     // Define Roll Data
     const rollData = this.actor.getRollData();
     rollData.item = itemData;
-    const title = `${this.name} - ${game.i18n.localize("PF1.OtherFormula")}`;
+    const title = `${this.name} - ${game.i18n.localize("D35E.OtherFormula")}`;
 
     const roll = new Roll(itemData.formula, rollData).roll();
     return roll.toMessage({
@@ -1235,11 +1235,11 @@ export class ItemPF extends Item {
     if (effectStr === "") {
       new Roll(parts.join("+")).toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: game.i18n.localize("PF1.UsesItem").format(this.name)
+        flavor: game.i18n.localize("D35E.UsesItem").format(this.name)
       });
     }
     else {
-      const chatTemplate = "systems/pf1/templates/chat/roll-ext.html";
+      const chatTemplate = "systems/D35E/templates/chat/roll-ext.html";
       const chatTemplateData = { hasExtraText: true, extraText: effectStr };
       // Execute the roll
       let roll = new Roll(parts.join("+"), data).roll();
@@ -1259,7 +1259,7 @@ export class ItemPF extends Item {
         rollMode: game.settings.get("core", "rollMode"),
         sound: CONFIG.sounds.dice,
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: game.i18n.localize("PF1.UsesItem").format(this.name),
+        flavor: game.i18n.localize("D35E.UsesItem").format(this.name),
         rollMode: game.settings.get("core", "rollMode"),
         roll: roll,
         content: await renderTemplate(chatTemplate, rollData),
@@ -1387,10 +1387,10 @@ export class ItemPF extends Item {
    */
 
   async _updateSpellDescription(updateData, srcData) {
-    const reSplit = CONFIG.PF1.re.traitSeparator;
+    const reSplit = CONFIG.D35E.re.traitSeparator;
 
     const label = {
-      school: (CONFIG.PF1.spellSchools[getProperty(srcData, "data.school")] || "").toLowerCase(),
+      school: (CONFIG.D35E.spellSchools[getProperty(srcData, "data.school")] || "").toLowerCase(),
       subschool: (getProperty(srcData, "data.subschool") || ""),
       types: "",
     };
@@ -1428,11 +1428,11 @@ export class ItemPF extends Item {
       const activationType = getProperty(srcData, "data.activation.type");
 
       if (activationType) {
-        if (CONFIG.PF1.abilityActivationTypesPlurals[activationType] != null) {
-          if (activationCost === 1) label.castingTime = `${CONFIG.PF1.abilityActivationTypes[activationType]}`;
-          else label.castingTime = `${CONFIG.PF1.abilityActivationTypesPlurals[activationType]}`;
+        if (CONFIG.D35E.abilityActivationTypesPlurals[activationType] != null) {
+          if (activationCost === 1) label.castingTime = `${CONFIG.D35E.abilityActivationTypes[activationType]}`;
+          else label.castingTime = `${CONFIG.D35E.abilityActivationTypesPlurals[activationType]}`;
         }
-        else label.castingTime = `${CONFIG.PF1.abilityActivationTypes[activationType]}`;
+        else label.castingTime = `${CONFIG.D35E.abilityActivationTypes[activationType]}`;
       }
       if (!Number.isNaN(activationCost) && label.castingTime != null) label.castingTime = `${activationCost} ${label.castingTime}`;
       if (label.castingTime) label.castingTime = label.castingTime.toLowerCase();
@@ -1492,7 +1492,7 @@ export class ItemPF extends Item {
       const rangeValue = getProperty(srcData, "data.range.value");
 
       if (rangeUnit != null && rangeUnit !== "none") {
-        label.range = (CONFIG.PF1.distanceUnits[rangeUnit] || "").toLowerCase();
+        label.range = (CONFIG.D35E.distanceUnits[rangeUnit] || "").toLowerCase();
         if (rangeUnit === "close") label.range = `${label.range} (25 ft. + 5 ft./2 levels)`;
         else if (rangeUnit === "medium") label.range = `${label.range} (100 ft. + 10 ft./level)`;
         else if (rangeUnit === "long") label.range = `${label.range} (400 ft. + 40 ft./level)`;
@@ -1521,7 +1521,7 @@ export class ItemPF extends Item {
       if (getProperty(srcData, "data.range.units") !== "personal") data.useDCandSR = true;
     }
 
-    linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/pf1/templates/internal/spell-description.html", data));
+    linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/D35E/templates/internal/spell-description.html", data));
   }
 
   /* -------------------------------------------- */

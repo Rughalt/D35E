@@ -9,18 +9,18 @@ export class ActorSheetPFNPCLoot extends ActorSheetPFNPC {
    */
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
-      classes: ["pf1", "sheet", "actor", "npc", "loot"],
+      classes: ["D35E", "sheet", "actor", "npc", "loot"],
       width: 560,
       height: 420,
     });
   }
     
   get template() {
-    return "systems/pf1/templates/actors/npc-sheet-loot.html";
+    return "systems/D35E/templates/actors/npc-sheet-loot.html";
   }
 
   static get name() {
-    return game.i18n.localize("PF1.ActorSheetPFNPCLoot");
+    return game.i18n.localize("D35E.ActorSheetPFNPCLoot");
   }
 
   getData() {

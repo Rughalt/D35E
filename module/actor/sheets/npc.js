@@ -14,7 +14,7 @@ export class ActorSheetPFNPC extends ActorSheetPF {
    */
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
-      classes: ["pf1", "sheet", "actor", "npc"],
+      classes: ["D35E", "sheet", "actor", "npc"],
       width: 720,
       height: 800
     });
@@ -29,12 +29,12 @@ export class ActorSheetPFNPC extends ActorSheetPF {
    * @type {String}
    */
   get template() {
-    if ( !game.user.isGM && this.actor.limited ) return "systems/pf1/templates/actors/limited-sheet.html";
-    return "systems/pf1/templates/actors/npc-sheet.html";
+    if ( !game.user.isGM && this.actor.limited ) return "systems/D35E/templates/actors/limited-sheet.html";
+    return "systems/D35E/templates/actors/npc-sheet.html";
   }
 
   static get name() {
-    return game.i18n.localize("PF1.ActorSheetPFNPC");
+    return game.i18n.localize("D35E.ActorSheetPFNPC");
   }
 
   /* -------------------------------------------- */

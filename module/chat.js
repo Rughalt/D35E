@@ -2,7 +2,7 @@
  * Optionally hide the display of chat card action buttons which cannot be performed by the user
  */
 export const displayChatActionButtons = function(message, html, data) {
-  const chatCard = html.find(".pf1.chat-card");
+  const chatCard = html.find(".D35E.chat-card");
   if (chatCard.length > 0) {
 
     // If the user is the message author or the actor owner, proceed

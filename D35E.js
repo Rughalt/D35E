@@ -1,11 +1,11 @@
 /**
- * The Pathfinder 1st edition game system for Foundry Virtual Tabletop
+ * The DnD 35Est edition game system for Foundry Virtual Tabletop
  * Author: Furyspark
  * Software License: GNU GPLv3
  */
 
 // Import Modules
-import { PF1 } from "./module/config.js";
+import { D35E } from "./module/config.js";
 import { registerSystemSettings } from "./module/settings.js";
 import { preloadHandlebarsTemplates } from "./module/templates.js";
 import { measureDistances, measureDistance } from "./module/canvas.js";
@@ -42,10 +42,10 @@ if (!String.prototype.format) {
 /* -------------------------------------------- */
 
 Hooks.once("init", async function() {
-  console.log(`PF1 | Initializing Pathfinder 1 System`);
+  console.log(`D35E | Initializing DnD 35E System`);
 
-  // Create a PF1 namespace within the game global
-  game.pf1 = {
+  // Create a D35E namespace within the game global
+  game.D35E = {
     ActorPF,
     DicePF,
     ItemPF,
@@ -59,7 +59,7 @@ Hooks.once("init", async function() {
   };
 
   // Record Configuration Values
-  CONFIG.PF1 = PF1;
+  CONFIG.D35E = D35E;
   CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
@@ -76,12 +76,12 @@ Hooks.once("init", async function() {
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("PF1", ActorSheetPFCharacter, { types: ["character"], makeDefault: true });
-  Actors.registerSheet("PF1", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
-  Actors.registerSheet("PF1", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("PF1", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true });
+  Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
+  Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("PF1", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack"], makeDefault: true });
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack"], makeDefault: true });
 });
 
 
@@ -112,7 +112,7 @@ Hooks.once("setup", function() {
     }, {});
   };
   for ( let o of toLocalize ) {
-    CONFIG.PF1[o] = doLocalize(CONFIG.PF1[o]);
+    CONFIG.D35E[o] = doLocalize(CONFIG.D35E[o]);
   }
 });
 
@@ -123,7 +123,7 @@ Hooks.once("setup", function() {
  */
 Hooks.once("ready", async function() {
   const NEEDS_MIGRATION_VERSION = 0.43;
-  let needMigration = game.settings.get("pf1", "systemMigrationVersion") < NEEDS_MIGRATION_VERSION;
+  let needMigration = game.settings.get("D35E", "systemMigrationVersion") < NEEDS_MIGRATION_VERSION;
   if (needMigration && game.user.isGM) {
     await migrations.migrateWorld();
   }
@@ -140,7 +140,7 @@ Hooks.once("ready", async function() {
 Hooks.on("canvasInit", function() {
 
   // Extend Diagonal Measurement
-  canvas.grid.diagonalRule = game.settings.get("pf1", "diagonalMovement");
+  canvas.grid.diagonalRule = game.settings.get("D35E", "diagonalMovement");
   if (isMinimumCoreVersion("0.5.6")) SquareGrid.prototype.measureDistances = measureDistances;
   else SquareGrid.prototype.measureDistance = measureDistance;
 });
@@ -161,7 +161,7 @@ Hooks.on("renderChatMessage", (app, html, data) => {
   chat.hideGMSensitiveInfo(app, html, data);
 
   // Optionally collapse the content
-  if (game.settings.get("pf1", "autoCollapseItemCards")) html.find(".card-content").hide();
+  if (game.settings.get("D35E", "autoCollapseItemCards")) html.find(".card-content").hide();
 });
 
 // Hooks.on("getChatLogEntryContext", addChatMessageContextOptions);
@@ -217,7 +217,7 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
  */
 async function createItemMacro(item, slot) {
   const actor = getItemOwner(item);
-  const command = `game.pf1.rollItemMacro("${item.name}", {\n` +
+  const command = `game.D35E.rollItemMacro("${item.name}", {\n` +
   `  itemId: "${item._id}",\n` +
   `  itemType: "${item.type}",\n` +
   (actor != null ? `  actorId: "${actor._id}",\n` : "") +
@@ -229,7 +229,7 @@ async function createItemMacro(item, slot) {
       type: "script",
       img: item.img,
       command: command,
-      flags: {"pf1.itemMacro": true}
+      flags: {"D35E.itemMacro": true}
     }, {displaySheet: false});
   }
   game.user.assignHotbarMacro(macro, slot);
@@ -244,7 +244,7 @@ async function createItemMacro(item, slot) {
  */
 function rollItemMacro(itemName, {itemId=null, itemType=null, actorId=null}={}) {
   let actor = getActorFromId(actorId);
-  if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+  if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
   const item = actor ? actor.items.find(i => {
     if (itemId != null && i._id !== itemId) return false;
     if (itemType != null && i.type !== itemType) return false;

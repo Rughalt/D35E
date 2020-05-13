@@ -64,8 +64,8 @@ export class ActorSheetPF extends ActorSheet {
       cssClass: isOwner ? "editable" : "locked",
       isCharacter: this.entity.data.type === "character",
       hasRace: false,
-      config: CONFIG.PF1,
-      useBGSkills: this.entity.data.type === "character" && game.settings.get("pf1", "allowBackgroundSkills"),
+      config: CONFIG.D35E,
+      useBGSkills: this.entity.data.type === "character" && game.settings.get("D35E", "allowBackgroundSkills"),
       spellFailure: this.entity.spellFailure,
       isGM: game.user.isGM,
     };
@@ -95,27 +95,27 @@ export class ActorSheetPF extends ActorSheet {
 
     // Ability Scores
     for ( let [a, abl] of Object.entries(data.actor.data.abilities)) {
-      abl.label = CONFIG.PF1.abilities[a];
+      abl.label = CONFIG.D35E.abilities[a];
       abl.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.abilities[a].total : [];
     }
 
     // Armor Class
     for (let [a, ac] of Object.entries(data.actor.data.attributes.ac)) {
-      ac.label = CONFIG.PF1.ac[a];
-      ac.valueLabel = CONFIG.PF1.acValueLabels[a];
+      ac.label = CONFIG.D35E.ac[a];
+      ac.valueLabel = CONFIG.D35E.acValueLabels[a];
       ac.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.attributes.ac[a].total : [];
     }
 
     // Saving Throws
     for (let [a, savingThrow] of Object.entries(data.actor.data.attributes.savingThrows)) {
-      savingThrow.label = CONFIG.PF1.savingThrows[a];
+      savingThrow.label = CONFIG.D35E.savingThrows[a];
       savingThrow.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.attributes.savingThrows[a].total : [];
     }
 
     // Update skill labels
     for ( let [s, skl] of Object.entries(data.actor.data.skills)) {
-      skl.label = CONFIG.PF1.skills[s];
-      skl.arbitrary = CONFIG.PF1.arbitrarySkills.includes(s);
+      skl.label = CONFIG.D35E.skills[s];
+      skl.arbitrary = CONFIG.D35E.arbitrarySkills.includes(s);
       skl.sourceDetails = (data.sourceDetails != null && data.sourceDetails.data.skills[s] != null) ? data.sourceDetails.data.skills[s].changeBonus : [];
       if (skl.subSkills != null) {
         for (let [s2, skl2] of Object.entries(skl.subSkills)) {
@@ -202,7 +202,7 @@ export class ActorSheetPF extends ActorSheet {
     data.skillRanks = skillRanks;
 
     // Fetch the game settings relevant to sheet rendering.
-    data.healthConfig =  game.settings.get("pf1", "healthConfig");
+    data.healthConfig =  game.settings.get("D35E", "healthConfig");
 
     // Return data to the sheet
     return data
@@ -212,13 +212,13 @@ export class ActorSheetPF extends ActorSheet {
 
   _prepareTraits(traits) {
     const map = {
-      // "dr": CONFIG.PF1.damageTypes,
-      "di": CONFIG.PF1.damageTypes,
-      "dv": CONFIG.PF1.damageTypes,
-      "ci": CONFIG.PF1.conditionTypes,
-      "languages": CONFIG.PF1.languages,
-      "armorProf": CONFIG.PF1.armorProficiencies,
-      "weaponProf": CONFIG.PF1.weaponProficiencies
+      // "dr": CONFIG.D35E.damageTypes,
+      "di": CONFIG.D35E.damageTypes,
+      "dv": CONFIG.D35E.damageTypes,
+      "ci": CONFIG.D35E.conditionTypes,
+      "languages": CONFIG.D35E.languages,
+      "armorProf": CONFIG.D35E.armorProficiencies,
+      "weaponProf": CONFIG.D35E.weaponProficiencies
     };
     for ( let [t, choices] of Object.entries(map) ) {
       const trait = traits[t];
@@ -234,7 +234,7 @@ export class ActorSheetPF extends ActorSheet {
 
       // Add custom entry
       if ( trait.custom ) {
-        trait.custom.split(CONFIG.PF1.re.traitSeparator).forEach((c, i) => trait.selected[`custom${i+1}`] = c.trim());
+        trait.custom.split(CONFIG.D35E.re.traitSeparator).forEach((c, i) => trait.selected[`custom${i+1}`] = c.trim());
       }
       trait.cssClass = !isObjectEmpty(trait.selected) ? "" : "inactive";
     }
@@ -262,7 +262,7 @@ export class ActorSheetPF extends ActorSheet {
         spontaneous: book.spontaneous,
         canCreate: owner === true,
         canPrepare: (data.actor.type === "character"),
-        label: CONFIG.PF1.spellLevels[a],
+        label: CONFIG.D35E.spellLevels[a],
         spells: [],
         uses: book.spells["spell"+a].value || 0,
         baseSlots: book.spells["spell"+a].base,
@@ -375,7 +375,7 @@ export class ActorSheetPF extends ActorSheet {
       medium: actorData.data.attributes.encumbrance.levels.medium,
       heavy: actorData.data.attributes.encumbrance.levels.heavy
     };
-    const carryLabel = game.settings.get("pf1", "units") === "metric" ? game.i18n.localize("PF1.CarryLabelKg").format(carriedWeight) : game.i18n.localize("PF1.CarryLabel").format(carriedWeight);
+    const carryLabel = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.CarryLabelKg").format(carriedWeight) : game.i18n.localize("D35E.CarryLabel").format(carriedWeight);
     const enc = {
       pct: {
         light: Math.max(0, Math.min(carriedWeight * 100 / load.light, 99.5)),
@@ -662,7 +662,7 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     let props = [];
-    if (notes.length > 0) props.push({ header: game.i18n.localize("PF1.Notes"), value: notes });
+    if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
     let formulaRoll = new Roll(spellbook.concentrationFormula, rollData).roll();
     return DicePF.d20Roll({
       event: event,
@@ -673,10 +673,10 @@ export class ActorSheetPF extends ActorSheet {
         concentrationBonus: spellbook.concentration,
         formulaBonus: formulaRoll.total
       },
-      title: game.i18n.localize("PF1.ConcentrationCheck"),
+      title: game.i18n.localize("D35E.ConcentrationCheck"),
       speaker: ChatMessage.getSpeaker({actor: this}),
       takeTwenty: false,
-      chatTemplate: "systems/pf1/templates/chat/roll-ext.html",
+      chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   }
@@ -702,15 +702,15 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     let props = [];
-    if (notes.length > 0) props.push({ header: game.i18n.localize("PF1.Notes"), value: notes });
+    if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
     return DicePF.d20Roll({
       event: event,
       parts: [`@cl`],
       data: { cl: spellbook.cl.total },
-      title: game.i18n.localize("PF1.CasterLevelCheck"),
+      title: game.i18n.localize("D35E.CasterLevelCheck"),
       speaker: ChatMessage.getSpeaker({actor: this}),
       takeTwenty: false,
-      chatTemplate: "systems/pf1/templates/chat/roll-ext.html",
+      chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   }
@@ -954,9 +954,9 @@ export class ActorSheetPF extends ActorSheet {
     else {
       button.disabled = true;
 
-      const msg = `<p>${game.i18n.localize("PF1.DeleteItemConfirmation")}</p>`;
+      const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
       Dialog.confirm({
-        title: game.i18n.localize("PF1.DeleteItem"),
+        title: game.i18n.localize("D35E.DeleteItem"),
         content: msg,
         yes: () => {
           this.actor.deleteOwnedItem(li.dataset.itemId);
@@ -1018,14 +1018,14 @@ export class ActorSheetPF extends ActorSheet {
 
     // Categorize items as inventory, spellbook, features, and classes
     const inventory = {
-      weapon: { label: game.i18n.localize("PF1.InventoryWeapons"), canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "weapon" } },
-      equipment: { label: game.i18n.localize("PF1.InventoryArmorEquipment"), canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "equipment" }, hasSlots: true },
-      consumable: { label: game.i18n.localize("PF1.InventoryConsumables"), canCreate: true, hasActions: true, items: [], canEquip: false, dataset: { type: "consumable" } },
-      gear: { label: CONFIG.PF1.lootTypes["gear"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
-      ammo: { label: CONFIG.PF1.lootTypes["ammo"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
-      misc: { label: CONFIG.PF1.lootTypes["misc"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
-      tradeGoods: { label: CONFIG.PF1.lootTypes["tradeGoods"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
-      all: { label: game.i18n.localize("PF1.All"), canCreate: false, hasActions: true, items: [], canEquip: true, dataset: {} },
+      weapon: { label: game.i18n.localize("D35E.InventoryWeapons"), canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "weapon" } },
+      equipment: { label: game.i18n.localize("D35E.InventoryArmorEquipment"), canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "equipment" }, hasSlots: true },
+      consumable: { label: game.i18n.localize("D35E.InventoryConsumables"), canCreate: true, hasActions: true, items: [], canEquip: false, dataset: { type: "consumable" } },
+      gear: { label: CONFIG.D35E.lootTypes["gear"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
+      ammo: { label: CONFIG.D35E.lootTypes["ammo"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
+      misc: { label: CONFIG.D35E.lootTypes["misc"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
+      tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
+      all: { label: game.i18n.localize("D35E.All"), canCreate: false, hasActions: true, items: [], canEquip: true, dataset: {} },
     };
 
     // Partition items by category
@@ -1069,7 +1069,7 @@ export class ActorSheetPF extends ActorSheet {
       i.data.quantity = i.data.quantity || 0;
       i.data.weight = i.data.weight || 0;
       i.totalWeight = Math.round(i.data.quantity * i.data.weight * 10) / 10;
-      i.units = game.settings.get("pf1", "units") === "metric" ? game.i18n.localize("PF1.Kgs") : game.i18n.localize("PF1.Lbs")
+      i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
       inventory.all.items.push(i);
@@ -1077,13 +1077,13 @@ export class ActorSheetPF extends ActorSheet {
 
     // Organize Features
     const features = {
-      classes: { label: game.i18n.localize("PF1.ClassPlural"), items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true },
-      feat: { label: game.i18n.localize("PF1.FeatPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" } },
-      classFeat: { label: game.i18n.localize("PF1.ClassFeaturePlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" } },
-      trait: { label: game.i18n.localize("PF1.TraitPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
-      racial: { label: game.i18n.localize("PF1.RacialTraitPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
-      misc: { label: game.i18n.localize("PF1.Misc"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
-      all: { label: game.i18n.localize("PF1.All"), items: [], canCreate: false, hasActions: true, dataset: { type: "feat" } },
+      classes: { label: game.i18n.localize("D35E.ClassPlural"), items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true },
+      feat: { label: game.i18n.localize("D35E.FeatPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" } },
+      classFeat: { label: game.i18n.localize("D35E.ClassFeaturePlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" } },
+      trait: { label: game.i18n.localize("D35E.TraitPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
+      racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
+      all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, hasActions: true, dataset: { type: "feat" } },
     };
 
     for (let f of feats) {
@@ -1098,11 +1098,11 @@ export class ActorSheetPF extends ActorSheet {
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });
     buffs = this._filterItems(buffs, this._filters.buffs);
     const buffSections = {
-      temp: { label: game.i18n.localize("PF1.Temporary"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
-      perm: { label: game.i18n.localize("PF1.Permanent"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
-      item: { label: game.i18n.localize("PF1.Item"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
-      misc: { label: game.i18n.localize("PF1.Misc"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
-      all: { label: game.i18n.localize("PF1.All"), items: [], hasActions: false, dataset: { type: "buff" } },
+      temp: { label: game.i18n.localize("D35E.Temporary"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
+      perm: { label: game.i18n.localize("D35E.Permanent"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
+      item: { label: game.i18n.localize("D35E.Item"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
+      all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
 
     for (let b of buffs) {
@@ -1114,12 +1114,12 @@ export class ActorSheetPF extends ActorSheet {
 
     // Attacks
     const attackSections = {
-      weapon: { label: game.i18n.localize("PF1.AttackTypeWeaponPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "weapon" } },
-      natural: { label: game.i18n.localize("PF1.AttackTypeNaturalPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "natural" } },
-      ability: { label: game.i18n.localize("PF1.AttackTypeAbilityPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "ability" } },
-      racialAbility: { label: game.i18n.localize("PF1.AttackTypeRacialPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "racialAbility" } },
-      misc: { label: game.i18n.localize("PF1.Misc"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "misc" } },
-      all: { label: game.i18n.localize("PF1.All"), items: [], canCreate: false, initial: true, showTypes: true, dataset: { type: "attack" } },
+      weapon: { label: game.i18n.localize("D35E.AttackTypeWeaponPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "weapon" } },
+      natural: { label: game.i18n.localize("D35E.AttackTypeNaturalPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "natural" } },
+      ability: { label: game.i18n.localize("D35E.AttackTypeAbilityPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "ability" } },
+      racialAbility: { label: game.i18n.localize("D35E.AttackTypeRacialPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "racialAbility" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "misc" } },
+      all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, initial: true, showTypes: true, dataset: { type: "attack" } },
     };
 
     for (let a of attacks) {
@@ -1186,7 +1186,7 @@ export class ActorSheetPF extends ActorSheet {
     const options = {
       name: label.getAttribute("for"),
       title: label.innerText,
-      choices: CONFIG.PF1[a.dataset.options]
+      choices: CONFIG.D35E[a.dataset.options]
     };
     new ActorTraitSelector(this.actor, options).render(true)
   }

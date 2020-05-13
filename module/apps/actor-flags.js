@@ -3,8 +3,8 @@ export class ActorSheetFlags extends BaseEntitySheet {
     const options = super.defaultOptions;
     return mergeObject(options, {
       id: "actor-flags",
-      classes: ["pf1"],
-      template: "systems/pf1/templates/apps/actor-flags.html",
+      classes: ["D35E"],
+      template: "systems/D35E/templates/apps/actor-flags.html",
       width: 500,
       closeOnSubmit: true
     });
@@ -17,7 +17,7 @@ export class ActorSheetFlags extends BaseEntitySheet {
    * @type {String}
    */
   get title() {
-    return `${game.i18n.localize('PF1.FlagsTitle')}: ${this.object.name}`;
+    return `${game.i18n.localize('D35E.FlagsTitle')}: ${this.object.name}`;
   }
 
   /* -------------------------------------------- */
@@ -41,13 +41,13 @@ export class ActorSheetFlags extends BaseEntitySheet {
    */
   _getFlags() {
     const flags = {};
-    for ( let [k, v] of Object.entries(CONFIG.PF1.characterFlags) ) {
+    for ( let [k, v] of Object.entries(CONFIG.D35E.characterFlags) ) {
       if ( !flags.hasOwnProperty(v.section) ) flags[v.section] = {};
       let flag = duplicate(v);
       flag.type = v.type.name;
       flag.isCheckbox = v.type === Boolean;
       flag.isSelect = v.hasOwnProperty('choices');
-      flag.value = this.entity.getFlag("PF1", k);
+      flag.value = this.entity.getFlag("D35E", k);
       flags[v.section][k] = flag;
     }
     return flags;
@@ -64,13 +64,13 @@ export class ActorSheetFlags extends BaseEntitySheet {
 
     // Iterate over the flags which may be configured
     const updateData = {};
-    for ( let [k, v] of Object.entries(CONFIG.pf1.characterFlags) ) {
+    for ( let [k, v] of Object.entries(CONFIG.D35E.characterFlags) ) {
       if ( [undefined, null, "", false].includes(formData[k]) ) updateData[`-=${k}`] = null;
       else if ( (v.type === Number) && (formData[k] === 0) ) updateData[`-=${k}`] = null;
       else updateData[k] = formData[k];
     }
 
     // Set the new flags in bulk
-    actor.update({'flags.pf1': updateData});
+    actor.update({'flags.D35E': updateData});
   }
 }

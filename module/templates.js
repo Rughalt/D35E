@@ -9,37 +9,37 @@ export const preloadHandlebarsTemplates = async function() {
   const templatePaths = [
 
     // Actor Sheet Partials
-    "systems/pf1/templates/actors/parts/actor-traits.html",
-    "systems/pf1/templates/actors/parts/actor-inventory.html",
-    "systems/pf1/templates/actors/parts/actor-features.html",
-    "systems/pf1/templates/actors/parts/actor-spellbook-front.html",
-    "systems/pf1/templates/actors/parts/actor-spellbook.html",
-    "systems/pf1/templates/actors/parts/actor-skills-front.html",
-    "systems/pf1/templates/actors/parts/actor-skills.html",
-    "systems/pf1/templates/actors/parts/actor-defenses.html",
-    "systems/pf1/templates/actors/parts/actor-buffs.html",
-    "systems/pf1/templates/actors/parts/actor-attacks.html",
+    "systems/D35E/templates/actors/parts/actor-traits.html",
+    "systems/D35E/templates/actors/parts/actor-inventory.html",
+    "systems/D35E/templates/actors/parts/actor-features.html",
+    "systems/D35E/templates/actors/parts/actor-spellbook-front.html",
+    "systems/D35E/templates/actors/parts/actor-spellbook.html",
+    "systems/D35E/templates/actors/parts/actor-skills-front.html",
+    "systems/D35E/templates/actors/parts/actor-skills.html",
+    "systems/D35E/templates/actors/parts/actor-defenses.html",
+    "systems/D35E/templates/actors/parts/actor-buffs.html",
+    "systems/D35E/templates/actors/parts/actor-attacks.html",
 
     // Item Sheet Partials
-    "systems/pf1/templates/items/parts/item-action.html",
-    "systems/pf1/templates/items/parts/item-activation.html",
-    "systems/pf1/templates/items/parts/item-description.html",
-    "systems/pf1/templates/items/parts/item-changes.html",
-    "systems/pf1/templates/items/parts/item-notes.html",
-    "systems/pf1/templates/items/parts/item-template.html",
+    "systems/D35E/templates/items/parts/item-action.html",
+    "systems/D35E/templates/items/parts/item-activation.html",
+    "systems/D35E/templates/items/parts/item-description.html",
+    "systems/D35E/templates/items/parts/item-changes.html",
+    "systems/D35E/templates/items/parts/item-notes.html",
+    "systems/D35E/templates/items/parts/item-template.html",
 
     // Misc
-    "systems/pf1/templates/misc/token-config.html",
+    "systems/D35E/templates/misc/token-config.html",
 
     // Apps
-    "systems/pf1/templates/apps/attack-roll-dialog.html",
+    "systems/D35E/templates/apps/attack-roll-dialog.html",
 
     // Chat
-    "systems/pf1/templates/chat/roll-ext.html",
-    "systems/pf1/templates/chat/defenses.html",
+    "systems/D35E/templates/chat/roll-ext.html",
+    "systems/D35E/templates/chat/defenses.html",
 
     // Internal Rendering Partials
-    "systems/pf1/templates/internal/spell-description.html",
+    "systems/D35E/templates/internal/spell-description.html",
   ];
 
   // Load the template parts

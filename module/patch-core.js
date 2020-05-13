@@ -5,7 +5,7 @@ const FormApplication_close = FormApplication.prototype.close;
 
 export function PatchCore() {
   // Patch getTemplate to prevent unwanted indentation in things things like <textarea> elements.
-  async function PF1_getTemplate(path) {
+  async function D35E_getTemplate(path) {
     if ( !_templateCache.hasOwnProperty(path) ) {
       await new Promise(resolve => {
         game.socket.emit('template', path, resp => {
@@ -51,7 +51,7 @@ export function PatchCore() {
   // Patch, patch, patch
   Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
   Combat.prototype.rollInitiative = _rollInitiative;
-  window.getTemplate = PF1_getTemplate;
+  window.getTemplate = D35E_getTemplate;
 }
 
 import "./low-light-vision.js";

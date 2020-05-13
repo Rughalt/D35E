@@ -1,15 +1,15 @@
 <form autocomplete="off">
   <nav class="sheet-tabs tabs">
-    <a class="item" data-tab="base"><i class="fas fa-heartbeat"></i> {{localize "SETTINGS.pf1HealthConfigTabBase"}}</a>
-    <a class="item" data-tab="variants"><i class="fas fa-prescription-bottle-alt"></i> {{localize "SETTINGS.pf1HealthConfigTabVariant"}}</a>
+    <a class="item" data-tab="base"><i class="fas fa-heartbeat"></i> {{localize "SETTINGS.D35EHealthConfigTabBase"}}</a>
+    <a class="item" data-tab="variants"><i class="fas fa-prescription-bottle-alt"></i> {{localize "SETTINGS.D35EHealthConfigTabVariant"}}</a>
   </nav>
 
   <div class="tabbed">
   <!-- Base Tab -->
     <section class="tab" data-tab="base">
-      <p class="notes">{{localize 'SETTINGS.pf1HealthConfigInstructions'}}</p>
+      <p class="notes">{{localize 'SETTINGS.D35EHealthConfigInstructions'}}</p>
       <div id="hitdice">
-        <label class="index table-header">{{localize 'PF1.HitDie'}}</label>
+        <label class="index table-header">{{localize 'D35E.HitDie'}}</label>
         {{#each hitdieOptions}}
           <label class="table-header">{{this}}</label>
         {{/each}}
@@ -19,8 +19,8 @@
           <div class="switch">
             <input class="switch-check" type="checkbox" {{#if opt.auto}}checked{{/if}} name="hitdice.{{hd}}.auto" id="hitdice.{{hd}}.auto">
             <label class="switch-label" for="hitdice.{{hd}}.auto">
-              <span class="switch-auto">{{localize 'SETTINGS.pf1HealthComputeAuto'}}</span>
-              <span class="switch-manual">{{localize 'SETTINGS.pf1HealthComputeManual'}}</span>
+              <span class="switch-auto">{{localize 'SETTINGS.D35EHealthComputeAuto'}}</span>
+              <span class="switch-manual">{{localize 'SETTINGS.D35EHealthComputeManual'}}</span>
             </label>
           </div>
           <span><input type="text" data-dtype="Number" name="hitdice.{{hd}}.rate" value="{{opt.rate}}"></span>
@@ -30,7 +30,7 @@
       </div>
 
       <div class="form-group">
-        <label>{{localize 'SETTINGS.pf1HealthRoundingName'}}</label>
+        <label>{{localize 'SETTINGS.D35EHealthRoundingName'}}</label>
         <select name="rounding">
           {{#select rounding}}
             <option value="up">&uarr;</option>
@@ -38,33 +38,33 @@
             <option value="down">&darr;</option>
           {{/select}}
         </select>
-        <p class="notes">{{localize 'SETTINGS.pf1HealthRoundingHint'}}</p>
+        <p class="notes">{{localize 'SETTINGS.D35EHealthRoundingHint'}}</p>
       </div>
 
       <div class="form-group">
-        <label>{{localize 'SETTINGS.pf1HealthContinuityName'}}</label>
+        <label>{{localize 'SETTINGS.D35EHealthContinuityName'}}</label>
         <select name="continuity">
           {{#select continuity}}
-            <option value="continuous">{{localize 'SETTINGS.pf1HealthContinuityContinuous'}}</option>
-            <option value="discrete">{{localize 'SETTINGS.pf1HealthContinuityDiscrete'}}</option>
+            <option value="continuous">{{localize 'SETTINGS.D35EHealthContinuityContinuous'}}</option>
+            <option value="discrete">{{localize 'SETTINGS.D35EHealthContinuityDiscrete'}}</option>
           {{/select}}
         </select>
-        <p class="notes">{{localize 'SETTINGS.pf1HealthContinuityHint'}}</p>
+        <p class="notes">{{localize 'SETTINGS.D35EHealthContinuityHint'}}</p>
       </div>
     </section>
 
     <!-- Variants Tab -->
     <section class="tab" data-tab="variants">
       <div class="form-group">
-        <label>{{localize 'SETTINGS.pf1HealthConfigWoundsAndVigorPCName'}}</label>
+        <label>{{localize 'SETTINGS.D35EHealthConfigWoundsAndVigorPCName'}}</label>
         <input type="checkbox" {{#if variants.pc.useWoundsAndVigor}}checked{{/if}} name="variants.pc.useWoundsAndVigor">
-        <p class="notes">{{localize 'SETTINGS.pf1HealthConfigWoundsAndVigorPCHint'}}</p>
+        <p class="notes">{{localize 'SETTINGS.D35EHealthConfigWoundsAndVigorPCHint'}}</p>
       </div>
 
       <div class="form-group">
-        <label>{{localize 'SETTINGS.pf1HealthConfigWoundsAndVigorNPCName'}}</label>
+        <label>{{localize 'SETTINGS.D35EHealthConfigWoundsAndVigorNPCName'}}</label>
         <input type="checkbox" {{#if variants.npc.useWoundsAndVigor}}checked{{/if}} name="variants.npc.useWoundsAndVigor">
-        <p class="notes">{{localize 'SETTINGS.pf1HealthConfigWoundsAndVigorNPCHint'}}</p>
+        <p class="notes">{{localize 'SETTINGS.D35EHealthConfigWoundsAndVigorNPCHint'}}</p>
       </div>
     </section>
   </div>

@@ -1,6 +1,6 @@
 {{!-- Activation Cost --}}
 <div class="form-group input-select">
-  <label>{{localize "PF1.ActivationCost"}}</label>
+  <label>{{localize "D35E.ActivationCost"}}</label>
   <div class="form-fields">
     <input type="text" name="data.activation.cost" value="{{data.activation.cost}}" data-dtype="Number" placeholder=""/>
     <select name="data.activation.type">
@@ -18,7 +18,7 @@
 
 {{!-- Ability Target --}}
 <div class="form-group input-select-select">
-  <label>{{localize "PF1.Target"}}</label>
+  <label>{{localize "D35E.Target"}}</label>
   <div class="form-fields">
     <input type="text" name="data.target.value" value="{{data.target.value}}"/>
   </div>
@@ -26,9 +26,9 @@
 
 {{!-- Ability Range --}}
 <div class="form-group input-select">
-  <label>{{localize "PF1.Range"}}</label>
+  <label>{{localize "D35E.Range"}}</label>
   <div class="form-fields">
-    {{#if canInputRange}}<input type="text" name="data.range.value" value="{{data.range.value}}" placeholder="{{#unless isSpell}}{{localize "PF1.Formula"}}{{/unless}}"/>{{/if}}
+    {{#if canInputRange}}<input type="text" name="data.range.value" value="{{data.range.value}}" placeholder="{{#unless isSpell}}{{localize "D35E.Formula"}}{{/unless}}"/>{{/if}}
     <select name="data.range.units">
       {{#select data.range.units}}
       <option value=""></option>
@@ -43,7 +43,7 @@
 {{!-- Area --}}
 {{#if isSpell}}
 <div class="form-group input-select-select">
-  <label>{{localize "PF1.Area"}}</label>
+  <label>{{localize "D35E.Area"}}</label>
   <div class="form-fields">
     <input type="text" name="data.spellArea" value="{{data.spellArea}}"/>
   </div>
@@ -52,12 +52,12 @@
 
 {{!-- Effect Duration --}}
 <div class="form-group input-select">
-  <label>{{localize "PF1.Duration"}}</label>
+  <label>{{localize "D35E.Duration"}}</label>
   <div class="form-fields">
     {{#if isSpell}}
-    <input type="text" name="data.spellDuration" value="{{data.spellDuration}}" placeholder="{{localize "PF1.SpellDurationExample"}}"/>
+    <input type="text" name="data.spellDuration" value="{{data.spellDuration}}" placeholder="{{localize "D35E.SpellDurationExample"}}"/>
     {{else}}
-    {{#if canInputDuration}}<input type="text" name="data.duration.value" value="{{data.duration.value}}" placeholder="{{localize "PF1.Formula"}}"/>{{/if}}
+    {{#if canInputDuration}}<input type="text" name="data.duration.value" value="{{data.duration.value}}" placeholder="{{localize "D35E.Formula"}}"/>{{/if}}
     <select name="data.duration.units">
       {{#select data.duration.units}}
       <option value=""></option>
@@ -73,7 +73,7 @@
 {{!-- Limited Uses --}}
 {{#unless isSpell}}
 <div class="form-group uses-per">
-  <label>{{localize "PF1.LimitedUses"}}</label>
+  <label>{{localize "D35E.LimitedUses"}}</label>
   <div class="form-fields">
     {{#if isCharged}}
     <input type="text" name="data.uses.value" value="{{data.uses.value}}" data-dtype="Number"/>
@@ -92,13 +92,13 @@
 </div>
 {{#if isCharged}}
 <div class="form-group uses-per">
-  <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "PF1.MaximumUsesFormula"}}"/>
+  <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
 </div>
 {{/if}}
 
 <div class="form-group stacked">
   <label class="checkbox">
-    <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "PF1.AutoDeductCharges"}}
+    <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
   </label>
 </div>
 {{/unless}}

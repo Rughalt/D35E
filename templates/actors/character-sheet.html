@@ -10,7 +10,7 @@
     <div class="header-details flexcol">
       <div class="flexrow">
         <h1 class="charname">
-          <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize "PF1.CharacterName"}}" title="{{localize "PF1.CharacterName"}}"/>
+          <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize "D35E.CharacterName"}}" title="{{localize "D35E.CharacterName"}}"/>
         </h1>
 
         <div class="charlevel">
@@ -18,7 +18,7 @@
             <span class="tooltipcontent">
               @attributes.hd.total : {{data.attributes.hd.total}}
             </span>
-            {{localize "PF1.Level"}} {{data.details.level.value}}
+            {{localize "D35E.Level"}} {{data.details.level.value}}
           </div>
           {{#unless disableExperience}}
           <div class="experience">
@@ -37,28 +37,28 @@
       <div class="flexcol">
         <ul class="summary">
           <li>
-            <input type="text" name="data.details.gender" value="{{data.details.gender}}" placeholder="{{localize "PF1.Gender"}}" title="{{localize "PF1.Gender"}}"/>
+            <input type="text" name="data.details.gender" value="{{data.details.gender}}" placeholder="{{localize "D35E.Gender"}}" title="{{localize "D35E.Gender"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.alignment" value="{{data.details.alignment}}" placeholder="{{localize "PF1.Alignment"}}" title="{{localize "PF1.Alignment"}}"/>
+            <input type="text" name="data.details.alignment" value="{{data.details.alignment}}" placeholder="{{localize "D35E.Alignment"}}" title="{{localize "D35E.Alignment"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.deity" value="{{data.details.deity}}" placeholder="{{localize "PF1.Deity"}}" title="{{localize "PF1.Deity"}}"/>
+            <input type="text" name="data.details.deity" value="{{data.details.deity}}" placeholder="{{localize "D35E.Deity"}}" title="{{localize "D35E.Deity"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.race" value="{{data.details.race}}" placeholder="{{localize "PF1.Race"}}" title="{{localize "PF1.Race"}}"/>
+            <input type="text" name="data.details.race" value="{{data.details.race}}" placeholder="{{localize "D35E.Race"}}" title="{{localize "D35E.Race"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.raceType" value="{{data.details.raceType}}" placeholder="{{localize "PF1.TypeSubType"}}" title="{{localize "PF1.TypeSubType"}}"/>
+            <input type="text" name="data.details.raceType" value="{{data.details.raceType}}" placeholder="{{localize "D35E.TypeSubType"}}" title="{{localize "D35E.TypeSubType"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.age" value="{{data.details.age}}" placeholder="{{localize "PF1.Age"}}" title="{{localize "PF1.Age"}}"/>
+            <input type="text" name="data.details.age" value="{{data.details.age}}" placeholder="{{localize "D35E.Age"}}" title="{{localize "D35E.Age"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.height" value="{{data.details.height}}" placeholder="{{localize "PF1.Height"}}" title="{{localize "PF1.Height"}}"/>
+            <input type="text" name="data.details.height" value="{{data.details.height}}" placeholder="{{localize "D35E.Height"}}" title="{{localize "D35E.Height"}}"/>
           </li>
           <li>
-            <input type="text" name="data.details.weight" value="{{data.details.weight}}" placeholder="{{localize "PF1.Weight"}}" title="{{localize "PF1.Weight"}}"/>
+            <input type="text" name="data.details.weight" value="{{data.details.weight}}" placeholder="{{localize "D35E.Weight"}}" title="{{localize "D35E.Weight"}}"/>
           </li>
           <select name="data.attributes.creatureType">
             {{#select data.attributes.creatureType}}
@@ -75,7 +75,7 @@
         <li class="attribute health">
           {{#if healthConfig.variants.pc.useWoundsAndVigor}}
             <h4 class="attribute-name box-title tooltip">
-              {{ localize "PF1.Vigor" }}
+              {{ localize "D35E.Vigor" }}
               <div class="tooltipcontent">
                 @attributes.vigor.min : {{data.attributes.vigor.min}}<br/>
                 @attributes.vigor.value : {{data.attributes.vigor.value}}<br/>
@@ -83,7 +83,7 @@
                 @attributes.vigor.temp : {{data.attributes.vigor.temp}}
 
                 {{#if sourceDetails.data.attributes.vigor.max.length}}
-                  <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.vigor.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </div>
@@ -94,18 +94,18 @@
               <div class="attribute">{{data.attributes.vigor.max}}</div>
             </div>
             <footer class="attribute-footer">
-              <input name="data.attributes.vigor.temp" type="text" class="temphp" placeholder="{{localize 'PF1.Temporary'}}" value="{{#if data.attributes.vigor.temp}}{{data.attributes.vigor.temp}}{{/if}}" data-dtype="Number"/>
+              <input name="data.attributes.vigor.temp" type="text" class="temphp" placeholder="{{localize 'D35E.Temporary'}}" value="{{#if data.attributes.vigor.temp}}{{data.attributes.vigor.temp}}{{/if}}" data-dtype="Number"/>
             </footer>
 
             <h4 class="attribute-name box-title tooltip">
-              {{ localize "PF1.Wounds" }}
+              {{ localize "D35E.Wounds" }}
               <div class="tooltipcontent">
                 @attributes.wounds.min : {{data.attributes.wounds.min}}<br/>
                 @attributes.wounds.value : {{data.attributes.wounds.value}}<br/>
                 @attributes.wounds.max : {{data.attributes.wounds.max}}<br/>
 
                 {{#if sourceDetails.data.attributes.wounds.max.length}}
-                  <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.wounds.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </div>
@@ -117,7 +117,7 @@
             </div>
           {{else}}
             <h4 class="attribute-name box-title tooltip">
-              {{ localize "PF1.Health" }}
+              {{ localize "D35E.Health" }}
               <div class="tooltipcontent">
                 @attributes.hp.value : {{data.attributes.hp.value}}<br/>
                 @attributes.hp.max : {{data.attributes.hp.max}}<br/>
@@ -125,7 +125,7 @@
                 @attributes.hp.nonlethal : {{data.attributes.hp.nonlethal}}
 
                 {{#if sourceDetails.data.attributes.hp.max.length}}
-                  <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.hp.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </div>
@@ -136,72 +136,72 @@
               <div class="attribute">{{data.attributes.hp.max}}</div>
             </div>
             <footer class="attribute-footer">
-              <input name="data.attributes.hp.temp" type="text" class="temphp" placeholder="+{{localize 'PF1.TempShort'}}"
-                value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}" data-dtype="Number" title="{{localize "PF1.TempHP"}}"/>
-              <input name="data.attributes.hp.nonlethal" type="text" class="temphp" placeholder="{{localize 'PF1.Nonlethal'}}"
-                value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}" data-dtype="Number" title="{{localize "PF1.Nonlethal"}}"/>
+              <input name="data.attributes.hp.temp" type="text" class="temphp" placeholder="+{{localize 'D35E.TempShort'}}"
+                value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}" data-dtype="Number" title="{{localize "D35E.TempHP"}}"/>
+              <input name="data.attributes.hp.nonlethal" type="text" class="temphp" placeholder="{{localize 'D35E.Nonlethal'}}"
+                value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}" data-dtype="Number" title="{{localize "D35E.Nonlethal"}}"/>
             </footer>
           {{/if}}
         </li>
 
         <li class="attribute speed">
           <div class="attribute-speed">
-            <h4 class="attribute-name box-title">{{ localize "PF1.SpeedLand" }}</h4>
+            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedLand" }}</h4>
             <div class="attribute-value">
               <div class="attribute">{{#if data.attributes.speed.land.total}}{{data.attributes.speed.land.total}}{{/if}}</div>
             </div>
             <footer class="attribute-footer">
               <input name="data.attributes.speed.land.base" type="text"
                                                             value="{{#if data.attributes.speed.land.base}}{{data.attributes.speed.land.base}}{{/if}}"
-                                                            data-dtype="Number" placeholder="{{localize "PF1.Base"}}"/>
+                                                            data-dtype="Number" placeholder="{{localize "D35E.Base"}}"/>
             </footer>
           </div>
           <div class="attribute-speed">
-            <h4 class="attribute-name box-title">{{ localize "PF1.SpeedClimb" }}</h4>
+            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedClimb" }}</h4>
             <div class="attribute-value">
               <div class="attribute">{{#if data.attributes.speed.climb.total}}{{data.attributes.speed.climb.total}}{{/if}}</div>
             </div>
             <footer class="attribute-footer">
               <input name="data.attributes.speed.climb.base" type="text"
                                                              value="{{#if data.attributes.speed.climb.base}}{{data.attributes.speed.climb.base}}{{/if}}"
-                                                             data-dtype="Number" placeholder="{{localize "PF1.Base"}}"/>
+                                                             data-dtype="Number" placeholder="{{localize "D35E.Base"}}"/>
             </footer>
           </div>
           <div class="attribute-speed">
-            <h4 class="attribute-name box-title">{{ localize "PF1.SpeedSwim" }}</h4>
+            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedSwim" }}</h4>
             <div class="attribute-value">
               <div class="attribute">{{#if data.attributes.speed.swim.total}}{{data.attributes.speed.swim.total}}{{/if}}</div>
             </div>
             <footer class="attribute-footer">
               <input name="data.attributes.speed.swim.base" type="text"
                                                             value="{{#if data.attributes.speed.swim.base}}{{data.attributes.speed.swim.base}}{{/if}}"
-                                                            data-dtype="Number" placeholder="{{localize "PF1.Base"}}"/>
+                                                            data-dtype="Number" placeholder="{{localize "D35E.Base"}}"/>
             </footer>
           </div>
           <div class="attribute-speed">
-            <h4 class="attribute-name box-title">{{ localize "PF1.SpeedBurrow" }}</h4>
+            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedBurrow" }}</h4>
             <div class="attribute-value">
               <div class="attribute">{{#if data.attributes.speed.burrow.total}}{{data.attributes.speed.burrow.total}}{{/if}}</div>
             </div>
             <footer class="attribute-footer">
               <input name="data.attributes.speed.burrow.base" type="text"
                                                               value="{{#if data.attributes.speed.burrow.base}}{{data.attributes.speed.burrow.base}}{{/if}}"
-                                                              data-dtype="Number" placeholder="{{localize "PF1.Base"}}"/>
+                                                              data-dtype="Number" placeholder="{{localize "D35E.Base"}}"/>
             </footer>
           </div>
           <div class="attribute-speed">
-            <h4 class="attribute-name box-title">{{ localize "PF1.SpeedFly" }}</h4>
+            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedFly" }}</h4>
             <div class="attribute-value">
               <div class="attribute">{{#if data.attributes.speed.fly.total}}{{data.attributes.speed.fly.total}}{{/if}}</div>
             </div>
             <footer class="attribute-footer">
               <input name="data.attributes.speed.fly.base" type="text"
                                                            value="{{#if data.attributes.speed.fly.base}}{{data.attributes.speed.fly.base}}{{/if}}"
-                                                           data-dtype="Number" placeholder="{{localize "PF1.Base"}}"/>
+                                                           data-dtype="Number" placeholder="{{localize "D35E.Base"}}"/>
             </footer>
           </div>
           <div class="attribute-speed">
-            <h4 class="attribute-name box-title">{{ localize "PF1.FlyManeuverabilityShort" }}</h4>
+            <h4 class="attribute-name box-title">{{ localize "D35E.FlyManeuverabilityShort" }}</h4>
             <select name="data.attributes.speed.fly.maneuverability">
               {{#select data.attributes.speed.fly.maneuverability}}
               {{#each config.flyManeuverabilities as |name type|}}
@@ -217,16 +217,16 @@
 
   {{!-- NPC Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="attributes">{{ localize "PF1.Attributes" }}</a>
-    <a class="item" data-tab="defenses">{{ localize "PF1.Defenses" }}</a>
-    <a class="item" data-tab="attacks">{{ localize "PF1.Attacks" }}</a>
-    <a class="item" data-tab="inventory">{{ localize "PF1.Inventory" }}</a>
-    <a class="item" data-tab="feats">{{ localize "PF1.Features" }}</a>
-    <a class="item" data-tab="skills">{{ localize "PF1.Skills" }}</a>
-    <a class="item" data-tab="buffs">{{ localize "PF1.Buffs" }}</a>
-    <a class="item" data-tab="spellbook">{{ localize "PF1.Spells" }}</a>
-    <a class="item" data-tab="biography">{{ localize "PF1.Biography" }}</a>
-    <a class="item" data-tab="notes">{{ localize "PF1.Notes" }}</a>
+    <a class="item active" data-tab="attributes">{{ localize "D35E.Attributes" }}</a>
+    <a class="item" data-tab="defenses">{{ localize "D35E.Defenses" }}</a>
+    <a class="item" data-tab="attacks">{{ localize "D35E.Attacks" }}</a>
+    <a class="item" data-tab="inventory">{{ localize "D35E.Inventory" }}</a>
+    <a class="item" data-tab="feats">{{ localize "D35E.Features" }}</a>
+    <a class="item" data-tab="skills">{{ localize "D35E.Skills" }}</a>
+    <a class="item" data-tab="buffs">{{ localize "D35E.Buffs" }}</a>
+    <a class="item" data-tab="spellbook">{{ localize "D35E.Spells" }}</a>
+    <a class="item" data-tab="biography">{{ localize "D35E.Biography" }}</a>
+    <a class="item" data-tab="notes">{{ localize "D35E.Notes" }}</a>
   </nav>
 
   {{!-- NPC Sheet Body --}}
@@ -239,12 +239,12 @@
         {{#each data.abilities as |ability id|}}
         <li class="ability" data-ability="{{id}}">
           <div class="ability-header flexrow">
-            <input class="ability-damage" name="data.abilities.{{id}}.damage" type="text" title="{{localize "PF1.Damage"}}"
-            value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number" placeholder="{{localize "PF1.DMG"}}"/>
-            <input class="ability-penalty" name="data.abilities.{{id}}.userPenalty" type="text" title="{{localize "PF1.Penalty"}}"
-            value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number" placeholder="{{localize "PF1.PNL"}}"/>
-            <input class="ability-drain" name="data.abilities.{{id}}.drain" type="text" title="{{localize "PF1.Drain"}}"
-            value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" placeholder="{{localize "PF1.DRN"}}"/>
+            <input class="ability-damage" name="data.abilities.{{id}}.damage" type="text" title="{{localize "D35E.Damage"}}"
+            value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number" placeholder="{{localize "D35E.DMG"}}"/>
+            <input class="ability-penalty" name="data.abilities.{{id}}.userPenalty" type="text" title="{{localize "D35E.Penalty"}}"
+            value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number" placeholder="{{localize "D35E.PNL"}}"/>
+            <input class="ability-drain" name="data.abilities.{{id}}.drain" type="text" title="{{localize "D35E.Drain"}}"
+            value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" placeholder="{{localize "D35E.DRN"}}"/>
           </div>
           <h4 class="ability-name box-title rollable">{{ability.label}}</h4>
           <span class="ability-score tooltip">
@@ -258,7 +258,7 @@
               @abilities.{{id}}.penalty : {{ability.penalty}}
 
               {{#if ability.sourceDetails.length}}
-                <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                 {{#each ability.sourceDetails as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
               {{/if}}
             </span>
@@ -276,13 +276,13 @@
       <div class="flexcol attributes-root">
         <ul class="attributes misc-base flexrow">
           <li class="attribute bab" data-attribute="bab">
-            <h4 class="attribute-name box-title rollable">{{localize "PF1.BABAbbr"}}</h4>
+            <h4 class="attribute-name box-title rollable">{{localize "D35E.BABAbbr"}}</h4>
             <div class="attribute-value tooltip">
               <span>{{numberFormat data.attributes.bab.total decimals=0 sign=false}}</span>
               <span class="tooltipcontent">
                 @attributes.bab.total : {{data.attributes.bab.total}}
                 {{#if sourceDetails.data.attributes.bab.total.length}}
-                  <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
@@ -290,13 +290,13 @@
           </li>
 
           <li class="attribute cmb" data-attribute="cmb">
-            <h4 class="attribute-name box-title rollable">{{localize "PF1.CMBAbbr"}}</h4>
+            <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
             <div class="attribute-value tooltip">
               <span>{{data.attributes.cmb.total}}</span>
               <span class="tooltipcontent">
                 @attributes.cmb.total : {{data.attributes.cmb.total}}
                 {{#if sourceDetails.data.attributes.cmb.total.length}}
-                  <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
@@ -307,13 +307,13 @@
         <ul class="attributes misc-base flexrow">
           <li class="attribute initiative" data-attribute="init">
 
-            <h4 class="attribute-name box-title rollable">{{localize "PF1.Initiative"}}</h4>
+            <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
             <div class="attribute-value tooltip">
               <span>{{data.attributes.init.total}}</span>
               <span class="tooltipcontent">
                 @attributes.init.total : {{data.attributes.init.total}}
                 {{#if sourceDetails.data.attributes.init.total.length}}
-                  <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.init.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
@@ -323,7 +323,7 @@
 
         <ul class="attributes misc-base2 flexrow">
           <li class="attribute acp" data-attribute="acp">
-            <h4 class="attribute-name box-title">{{localize "PF1.ACP"}}</h4>
+            <h4 class="attribute-name box-title">{{localize "D35E.ACP"}}</h4>
             <div class="attribute-value tooltip">
               <span>{{data.attributes.acp.total}}</span>
               <span class="tooltipcontent">@attributes.acp.total : {{data.attributes.acp.total}}</span>
@@ -331,7 +331,7 @@
           </li>
 
           <li class="attribute maxdex" data-attribute="maxdex">
-            <h4 class="attribute-name box-title">{{localize "PF1.MaxDexShort"}}</h4>
+            <h4 class="attribute-name box-title">{{localize "D35E.MaxDexShort"}}</h4>
             <div class="attribute-value tooltip">
               <span>{{data.attribute.maxDexBonus}}</span>
               <span class="tooltipcontent">@attributes.maxDexBonus : {{data.attributes.maxDexBonus}}</span>
@@ -339,48 +339,48 @@
           </li>
         </ul>
 
-        <textarea name="data.attributes.cmbNotes" placeholder="{{localize "PF1.CMBAbbr"}} {{localize "PF1.Notes"}}">{{data.attributes.cmbNotes}}</textarea>
+        <textarea name="data.attributes.cmbNotes" placeholder="{{localize "D35E.CMBAbbr"}} {{localize "D35E.Notes"}}">{{data.attributes.cmbNotes}}</textarea>
       </div>
 
       <section class="center-pane">
         {{!-- Traits --}}
-        {{> "systems/pf1/templates/actors/parts/actor-traits.html"}}
+        {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
       </section>
     </div>
 
     {{!-- Defenses Tab --}}
     <div class="tab defenses flexcol" data-group="primary" data-tab="defenses">
-      {{> "systems/pf1/templates/actors/parts/actor-defenses.html"}}
+      {{> "systems/D35E/templates/actors/parts/actor-defenses.html"}}
     </div>
 
     {{!-- Attacks Tab --}}
     <div class="tab attacks flexcol" data-group="primary" data-tab="attacks">
-      {{> "systems/pf1/templates/actors/parts/actor-attacks.html" sections=attacks}}
+      {{> "systems/D35E/templates/actors/parts/actor-attacks.html" sections=attacks}}
     </div>
 
     {{!-- Inventory Tab --}}
     <div class="tab inventory flexcol" data-group="primary" data-tab="inventory">
-      {{> "systems/pf1/templates/actors/parts/actor-inventory.html" sections=inventory}}
+      {{> "systems/D35E/templates/actors/parts/actor-inventory.html" sections=inventory}}
     </div>
 
     {{!-- Features Tab --}}
     <div class="tab feats flexcol" data-group="primary" data-tab="feats">
-      {{> "systems/pf1/templates/actors/parts/actor-features.html" sections=features}}
+      {{> "systems/D35E/templates/actors/parts/actor-features.html" sections=features}}
     </div>
 
     {{!-- Skills Tab --}}
     <div class="tab skills flexcol" data-group="primary" data-tab="skills">
-      {{> "systems/pf1/templates/actors/parts/actor-skills-front.html"}}
+      {{> "systems/D35E/templates/actors/parts/actor-skills-front.html"}}
     </div>
 
     {{!-- Buffs Tab --}}
     <div class="tab buffs flexcol" data-group="primary" data-tab="buffs">
-      {{> "systems/pf1/templates/actors/parts/actor-buffs.html" sections=buffs}}
+      {{> "systems/D35E/templates/actors/parts/actor-buffs.html" sections=buffs}}
     </div>
 
     {{!-- Spellbook Tab --}}
     <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
-      {{> "systems/pf1/templates/actors/parts/actor-spellbook-front.html"}}
+      {{> "systems/D35E/templates/actors/parts/actor-spellbook-front.html"}}
     </div>
 
     {{!-- Biography Tab --}}

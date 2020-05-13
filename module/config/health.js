@@ -5,7 +5,7 @@ export class HealthConfig extends FormApplication {
 
   /** Collect data for the template. @override */
   async getData() {
-    let settings = await game.settings.get("pf1", "healthConfig")
+    let settings = await game.settings.get("D35E", "healthConfig")
     settings = mergeObject(HealthConfig.defaultSettings, settings)
     return settings
   }
@@ -13,9 +13,9 @@ export class HealthConfig extends FormApplication {
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      title:  game.i18n.localize("SETTINGS.pf1HealthConfigName"),
+      title:  game.i18n.localize("SETTINGS.D35EHealthConfigName"),
       id: 'health-config',
-      template: "systems/pf1/templates/settings/health.html",
+      template: "systems/D35E/templates/settings/health.html",
       width: 480,
       height: "auto",
       tabs: [{
@@ -60,7 +60,7 @@ export class HealthConfig extends FormApplication {
    */
   async _onReset(event) {
     event.preventDefault();
-    await game.settings.set("pf1", "healthConfig", HealthConfig.defaultSettings)
+    await game.settings.set("D35E", "healthConfig", HealthConfig.defaultSettings)
     ui.notifications.info(`Reset Pathfinder health configuration.`)
     return this.render()
   }
@@ -80,7 +80,7 @@ export class HealthConfig extends FormApplication {
       hd.rate = Math.max(0, Math.min(hd.rate, 100))
       hd.maximized = Math.max(0, Math.min(Math.floor(hd.maximized), 100))
     }
-    await game.settings.set("pf1", "healthConfig", settings)
+    await game.settings.set("D35E", "healthConfig", settings)
     ui.notifications.info(`Updated Pathfinder health configuration.`)
   }
 }

@@ -1,9 +1,9 @@
 {{!-- Template Type --}}
 <div class="form-group select">
-  <label>{{localize "PF1.TemplateType"}}</label>
+  <label>{{localize "D35E.TemplateType"}}</label>
   <select name="data.measureTemplate.type">
     {{#select data.measureTemplate.type}}
-    <option value="">{{localize "PF1.None"}}</option>
+    <option value="">{{localize "D35E.None"}}</option>
     {{#each config.measureTemplateTypes as |name type|}}
     <option value="{{type}}">{{name}}</option>
     {{/each}}
@@ -14,7 +14,7 @@
 {{#if data.measureTemplate.type}}
 {{!-- Template Size --}}
 <div class="form-group">
-  <label>{{localize "PF1.Size"}}</label>
+  <label>{{localize "D35E.Size"}}</label>
   <div class="form-fields">
     <input type="text" name="data.measureTemplate.size" value="{{data.measureTemplate.size}}" placeholder="0" data-dtype="Number" />
   </div>
@@ -23,23 +23,23 @@
 {{!-- Override Color --}}
 <div class="form-group stacked">
   <label class="checkbox">
-    <input type="checkbox" name="data.measureTemplate.overrideColor" {{checked data.measureTemplate.overrideColor}}/> {{localize "PF1.OverrideColor"}}
+    <input type="checkbox" name="data.measureTemplate.overrideColor" {{checked data.measureTemplate.overrideColor}}/> {{localize "D35E.OverrideColor"}}
   </label>
   <label class="checkbox">
-    <input type="checkbox" name="data.measureTemplate.overrideTexture" {{checked data.measureTemplate.overrideTexture}}/> {{localize "PF1.OverrideTexture"}}
+    <input type="checkbox" name="data.measureTemplate.overrideTexture" {{checked data.measureTemplate.overrideTexture}}/> {{localize "D35E.OverrideTexture"}}
   </label>
 </div>
 
 {{#if data.measureTemplate.overrideColor}}
 <div class="form-group">
-  <label>{{localize "PF1.CustomColor"}}</label>
+  <label>{{localize "D35E.CustomColor"}}</label>
   <input type="color" name="data.measureTemplate.customColor" value="{{data.measureTemplate.customColor}}" data-dtype="String"/>
 </div>
 {{/if}}
 
 {{#if data.measureTemplate.overrideTexture}}
 <div class="form-group">
-  <label>{{localize "PF1.CustomTexture"}}</label>
+  <label>{{localize "D35E.CustomTexture"}}</label>
   <div class="form-fields">
     {{filePicker target="data.measureTemplate.customTexture" type="image"}}
     <input class="image" type="text" name="data.measureTemplate.customTexture" placeholder="path/image.png" value="{{data.measureTemplate.customTexture}}" data-dtype="String"/>

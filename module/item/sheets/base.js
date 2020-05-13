@@ -27,7 +27,7 @@ export class ItemSheetPF extends ItemSheet {
     return mergeObject(super.defaultOptions, {
       width: 560,
       height: 600,
-      classes: ["pf1", "sheet", "item"],
+      classes: ["D35E", "sheet", "item"],
       resizable: false
     });
   }
@@ -39,7 +39,7 @@ export class ItemSheetPF extends ItemSheet {
    * @return {string}
    */
   get template() {
-    const path = "systems/pf1/templates/items/";
+    const path = "systems/D35E/templates/items/";
     return `${path}/${this.item.data.type}.html`;
   }
 
@@ -63,7 +63,7 @@ export class ItemSheetPF extends ItemSheet {
     }
 
     // Include CONFIG values
-    data.config = CONFIG.PF1;
+    data.config = CONFIG.D35E;
 
     // Item Type, Status, and Details
     data.itemType = data.item.type.titleCase();
@@ -111,12 +111,12 @@ export class ItemSheetPF extends ItemSheet {
 
       // Prepare categories for weapons
       data.weaponCategories = { types: {}, subTypes: {} };
-      for (let [k, v] of Object.entries(CONFIG.PF1.weaponTypes)) {
+      for (let [k, v] of Object.entries(CONFIG.D35E.weaponTypes)) {
         if (typeof v === "object") data.weaponCategories.types[k] = v._label;
       }
       const type = data.item.data.weaponType;
-      if (hasProperty(CONFIG.PF1.weaponTypes, type)) {
-        for (let [k, v] of Object.entries(CONFIG.PF1.weaponTypes[type])) {
+      if (hasProperty(CONFIG.D35E.weaponTypes, type)) {
+        for (let [k, v] of Object.entries(CONFIG.D35E.weaponTypes[type])) {
           // Add static targets
           if (!k.startsWith("_")) data.weaponCategories.subTypes[k] = v;
         }
@@ -127,19 +127,19 @@ export class ItemSheetPF extends ItemSheet {
     if (data.item.type === "equipment") {
       // Prepare categories for equipment
       data.equipmentCategories = { types: {}, subTypes: {} };
-      for (let [k, v] of Object.entries(CONFIG.PF1.equipmentTypes)) {
+      for (let [k, v] of Object.entries(CONFIG.D35E.equipmentTypes)) {
         if (typeof v === "object") data.equipmentCategories.types[k] = v._label;
       }
       const type = data.item.data.equipmentType;
-      if (hasProperty(CONFIG.PF1.equipmentTypes, type)) {
-        for (let [k, v] of Object.entries(CONFIG.PF1.equipmentTypes[type])) {
+      if (hasProperty(CONFIG.D35E.equipmentTypes, type)) {
+        for (let [k, v] of Object.entries(CONFIG.D35E.equipmentTypes[type])) {
           // Add static targets
           if (!k.startsWith("_")) data.equipmentCategories.subTypes[k] = v;
         }
       }
 
       // Prepare slots for equipment
-      data.equipmentSlots = CONFIG.PF1.equipmentSlots[type];
+      data.equipmentSlots = CONFIG.D35E.equipmentSlots[type];
 
       // Whether the equipment should show armor data
       data.showArmorData = ["armor", "shield"].includes(type);
@@ -175,23 +175,23 @@ export class ItemSheetPF extends ItemSheet {
     // Prepare class specific stuff
     if (data.item.type === "class") {
       for (let [a, s] of Object.entries(data.data.savingThrows)) {
-        s.label = CONFIG.PF1.savingThrows[a];
+        s.label = CONFIG.D35E.savingThrows[a];
       }
       for (let [a, s] of Object.entries(data.data.fc)) {
-        s.label = CONFIG.PF1.favouredClassBonuses[a];
+        s.label = CONFIG.D35E.favouredClassBonuses[a];
       }
 
       data.isBaseClass = data.data.classType === "base";
       data.isRacialHD = data.data.classType === "racial";
 
       if (this.actor != null) {
-        let healthConfig  = game.settings.get("pf1", "healthConfig");
+        let healthConfig  = game.settings.get("D35E", "healthConfig");
         data.healthConfig =  data.isRacialHD ? healthConfig.hitdice.Racial : this.actor.data.type === "character" ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
       } else data.healthConfig = {auto: false};
 
       // Add skill list
       if (!this.item.actor) {
-        data.skills = Object.entries(CONFIG.PF1.skills).reduce((cur, o) => {
+        data.skills = Object.entries(CONFIG.D35E.skills).reduce((cur, o) => {
           cur[o[0]] = { name: o[1], classSkill: getProperty(this.item.data, `data.classSkills.${o[0]}`) === true };
           return cur;
         }, {});
@@ -199,7 +199,7 @@ export class ItemSheetPF extends ItemSheet {
       else {
         data.skills = Object.entries(this.item.actor.data.data.skills).reduce((cur, o) => {
           const key = o[0];
-          const name = CONFIG.PF1.skills[key] != null ? CONFIG.PF1.skills[key] : o[1].name;
+          const name = CONFIG.D35E.skills[key] != null ? CONFIG.D35E.skills[key] : o[1].name;
           cur[o[0]] = { name: name, classSkill: getProperty(this.item.data, `data.classSkills.${o[0]}`) === true };
           return cur;
         }, {});
@@ -208,8 +208,8 @@ export class ItemSheetPF extends ItemSheet {
 
     // Prepare stuff for items with changes
     if (data.item.data.changes) {
-      data.changes = { targets: {}, modifiers: CONFIG.PF1.bonusModifiers };
-      for (let [k, v] of Object.entries(CONFIG.PF1.buffTargets)) {
+      data.changes = { targets: {}, modifiers: CONFIG.D35E.bonusModifiers };
+      for (let [k, v] of Object.entries(CONFIG.D35E.buffTargets)) {
         if (typeof v === "object") data.changes.targets[k] = v._label;
       }
       data.item.data.changes.forEach(item => {
@@ -220,18 +220,18 @@ export class ItemSheetPF extends ItemSheet {
           for (let [s, skl] of Object.entries(actorSkills)) {
             if (!skl.subSkills) {
               if (skl.custom) item.subTargets[`skill.${s}`] = skl.name;
-              else item.subTargets[`skill.${s}`] = CONFIG.PF1.skills[s];
+              else item.subTargets[`skill.${s}`] = CONFIG.D35E.skills[s];
             }
             else {
               for (let [s2, skl2] of Object.entries(skl.subSkills)) {
-                item.subTargets[`skill.${s}.subSkills.${s2}`] = `${CONFIG.PF1.skills[s]} (${skl2.name})`;
+                item.subTargets[`skill.${s}.subSkills.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
               }
             }
           }
         }
         // Add static targets
-        else if (item[1] != null && CONFIG.PF1.buffTargets.hasOwnProperty(item[1])) {
-          for (let [k, v] of Object.entries(CONFIG.PF1.buffTargets[item[1]])) {
+        else if (item[1] != null && CONFIG.D35E.buffTargets.hasOwnProperty(item[1])) {
+          for (let [k, v] of Object.entries(CONFIG.D35E.buffTargets[item[1]])) {
             if (!k.startsWith("_")) item.subTargets[k] = v;
           }
         }
@@ -241,7 +241,7 @@ export class ItemSheetPF extends ItemSheet {
     // Prepare stuff for items with context notes
     if (data.item.data.contextNotes) {
       data.contextNotes = { targets: {} };
-      for (let [k, v] of Object.entries(CONFIG.PF1.contextNoteTargets)) {
+      for (let [k, v] of Object.entries(CONFIG.D35E.contextNoteTargets)) {
         if (typeof v === "object") data.contextNotes.targets[k] = v._label;
       }
       data.item.data.contextNotes.forEach(item => {
@@ -252,18 +252,18 @@ export class ItemSheetPF extends ItemSheet {
           for (let [s, skl] of Object.entries(actorSkills)) {
             if (!skl.subSkills) {
               if (skl.custom) item.subNotes[`skill.${s}`] = skl.name;
-              else item.subNotes[`skill.${s}`] = CONFIG.PF1.skills[s];
+              else item.subNotes[`skill.${s}`] = CONFIG.D35E.skills[s];
             }
             else {
               for (let [s2, skl2] of Object.entries(skl.subSkills)) {
-                item.subNotes[`skill.${s2}`] = `${CONFIG.PF1.skills[s]} (${skl2.name})`;
+                item.subNotes[`skill.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
               }
             }
           }
         }
         // Add static targets
-        else if (item[1] != null && CONFIG.PF1.contextNoteTargets.hasOwnProperty(item[1])) {
-          for (let [k, v] of Object.entries(CONFIG.PF1.contextNoteTargets[item[1]])) {
+        else if (item[1] != null && CONFIG.D35E.contextNoteTargets.hasOwnProperty(item[1])) {
+          for (let [k, v] of Object.entries(CONFIG.D35E.contextNoteTargets[item[1]])) {
             if (!k.startsWith("_")) item.subNotes[k] = v;
           }
         }
@@ -283,14 +283,14 @@ export class ItemSheetPF extends ItemSheet {
   _getItemStatus(item) {
     if ( item.type === "spell" ) {
       if (item.data.preparation.mode === "prepared") {
-        return item.data.preparation.preparedAmount > 0 ? game.i18n.localize("PF1.AmountPrepared").format(item.data.preparation.preparedAmount) : game.i18n.localize("PF1.Unprepared");
+        return item.data.preparation.preparedAmount > 0 ? game.i18n.localize("D35E.AmountPrepared").format(item.data.preparation.preparedAmount) : game.i18n.localize("D35E.Unprepared");
       }
       else if (item.data.preparation.mode) {
         return item.data.preparation.mode.titleCase();
       }
       else return "";
     }
-    else if ( ["weapon", "equipment"].includes(item.type) ) return item.data.equipped ? game.i18n.localize("PF1.Equipped") : game.i18n.localize("PF1.NotEquipped");
+    else if ( ["weapon", "equipment"].includes(item.type) ) return item.data.equipped ? game.i18n.localize("D35E.Equipped") : game.i18n.localize("D35E.NotEquipped");
   }
 
   /* -------------------------------------------- */
@@ -307,7 +307,7 @@ export class ItemSheetPF extends ItemSheet {
     if ( item.type === "weapon" ) {
       props.push(...Object.entries(item.data.properties)
         .filter(e => e[1] === true)
-        .map(e => CONFIG.PF1.weaponProperties[e[0]]));
+        .map(e => CONFIG.D35E.weaponProperties[e[0]]));
     }
 
     else if ( item.type === "spell" ) {
@@ -318,7 +318,7 @@ export class ItemSheetPF extends ItemSheet {
     }
 
     else if ( item.type === "equipment" ) {
-      props.push(CONFIG.PF1.equipmentTypes[item.data.armor.type]);
+      props.push(CONFIG.D35E.equipmentTypes[item.data.armor.type]);
       props.push(labels.armor);
     }
 
@@ -328,7 +328,7 @@ export class ItemSheetPF extends ItemSheet {
 
     // Action type
     if ( item.data.actionType ) {
-      props.push(CONFIG.PF1.itemActionTypes[item.data.actionType]);
+      props.push(CONFIG.D35E.itemActionTypes[item.data.actionType]);
     }
 
     // Action usage
@@ -576,7 +576,7 @@ export class ItemSheetPF extends ItemSheet {
   }
 
   async _createAttack(event) {
-    if (this.item.actor == null) throw new Error(game.i18n.localize("PF1.ErrorItemNoOwner"));
+    if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
 
     await this._onSubmit(event);
 

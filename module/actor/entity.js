@@ -493,7 +493,7 @@ export class ActorPF extends Actor {
       return a.sort - b.sort;
     });
 
-    const healthConfig = game.settings.get("pf1", "healthConfig");
+    const healthConfig = game.settings.get("D35E", "healthConfig");
     const cls_options  = this.data.type === "character" ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
     const race_options = healthConfig.hitdice.Racial;
     const round = {up: Math.ceil, nearest: Math.round, down: Math.floor}[healthConfig.rounding];
@@ -590,12 +590,12 @@ export class ActorPF extends Actor {
     // Add fly bonuses or penalties based on maneuverability
     const flyKey = getProperty(data, "data.attributes.speed.fly.maneuverability");
     let flyValue = 0;
-    if (flyKey != null) flyValue = CONFIG.PF1.flyManeuverabilityValues[flyKey];
+    if (flyKey != null) flyValue = CONFIG.D35E.flyManeuverabilityValues[flyKey];
     if (flyValue !== 0) {
       changes.push({
         raw: [flyValue.toString(), "skill", "skill.fly", "untyped", 0],
         source: {
-          name: game.i18n.localize("PF1.FlyManeuverability"),
+          name: game.i18n.localize("D35E.FlyManeuverability"),
         },
       });
     }
@@ -607,7 +607,7 @@ export class ActorPF extends Actor {
         changes.push({
           raw: ["8", "skill", "skill.clm", "racial", 0],
           source: {
-            name: game.i18n.localize("PF1.SpeedClimb"),
+            name: game.i18n.localize("D35E.SpeedClimb"),
           },
         });
       }
@@ -615,7 +615,7 @@ export class ActorPF extends Actor {
         changes.push({
           raw: ["8", "skill", "skill.swm", "racial", 0],
           source: {
-            name: game.i18n.localize("PF1.SpeedSwim"),
+            name: game.i18n.localize("D35E.SpeedSwim"),
           },
         });
       }
@@ -626,35 +626,35 @@ export class ActorPF extends Actor {
     if (sizeKey !== "med") {
       // AC
       changes.push({
-        raw: [CONFIG.PF1.sizeMods[sizeKey].toString(), "ac", "ac", "size", 0],
+        raw: [CONFIG.D35E.sizeMods[sizeKey].toString(), "ac", "ac", "size", 0],
         source: {
           type: "size"
         }
       });
       // Stealth skill
       changes.push({
-        raw: [CONFIG.PF1.sizeStealthMods[sizeKey].toString(), "skill", "skill.ste", "size", 0],
+        raw: [CONFIG.D35E.sizeStealthMods[sizeKey].toString(), "skill", "skill.ste", "size", 0],
         source: {
           type: "size"
         }
       });
       // Fly skill
       changes.push({
-        raw: [CONFIG.PF1.sizeFlyMods[sizeKey].toString(), "skill", "skill.fly", "size", 0],
+        raw: [CONFIG.D35E.sizeFlyMods[sizeKey].toString(), "skill", "skill.fly", "size", 0],
         source: {
           type: "size"
         }
       });
       // CMB
       changes.push({
-        raw: [CONFIG.PF1.sizeSpecialMods[sizeKey].toString(), "misc", "cmb", "size", 0],
+        raw: [CONFIG.D35E.sizeSpecialMods[sizeKey].toString(), "misc", "cmb", "size", 0],
         source: {
           type: "size"
         }
       });
       // CMD
       changes.push({
-        raw: [CONFIG.PF1.sizeSpecialMods[sizeKey].toString(), "misc", "cmd", "size", 0],
+        raw: [CONFIG.D35E.sizeSpecialMods[sizeKey].toString(), "misc", "cmd", "size", 0],
         source: {
           type: "size"
         }
@@ -864,7 +864,7 @@ export class ActorPF extends Actor {
         sources: []
       }
     };
-    for (let [key, buffTarget] of Object.entries(CONFIG.PF1.buffTargets)) {
+    for (let [key, buffTarget] of Object.entries(CONFIG.D35E.buffTargets)) {
       if (typeof buffTarget === "object") {
         // Add specific skills as targets
         if (key === "skill") {
@@ -872,14 +872,14 @@ export class ActorPF extends Actor {
             if (skl == null) continue;
             if (!skl.subSkills) {
               changeData[`skill.${s}`] = {};
-              Object.keys(CONFIG.PF1.bonusModifiers).forEach(b => {
+              Object.keys(CONFIG.D35E.bonusModifiers).forEach(b => {
                 changeData[`skill.${s}`][b] = duplicate(changeDataTemplate);
               });
             }
             else {
               for (let s2 of Object.keys(skl.subSkills)) {
                 changeData[`skill.${s}.subSkills.${s2}`] = {};
-                Object.keys(CONFIG.PF1.bonusModifiers).forEach(b => {
+                Object.keys(CONFIG.D35E.bonusModifiers).forEach(b => {
                   changeData[`skill.${s}.subSkills.${s2}`][b] = duplicate(changeDataTemplate);
                 });
               }
@@ -891,7 +891,7 @@ export class ActorPF extends Actor {
           for (let subKey of Object.keys(buffTarget)) {
             if (subKey.startsWith("_")) continue;
             changeData[subKey] = {};
-            Object.keys(CONFIG.PF1.bonusModifiers).forEach(b => {
+            Object.keys(CONFIG.D35E.bonusModifiers).forEach(b => {
               changeData[subKey][b] = duplicate(changeDataTemplate);
             });
           }
@@ -1032,7 +1032,7 @@ export class ActorPF extends Actor {
         change.raw[4] = roll.roll().total;
       }
       catch (e) {
-        ui.notifications.error(game.i18n.localize("PF1.ErrorItemFormula").format(change.source.item.name, this.name));
+        ui.notifications.error(game.i18n.localize("D35E.ErrorItemFormula").format(change.source.item.name, this.name));
       }
       this._parseChange(change, changeData[changeTarget], flags);
       temp.push(changeData[changeTarget]);
@@ -1187,7 +1187,7 @@ export class ActorPF extends Actor {
 
            // Apply final rounding of health, if required.
           if (["data.attributes.hp.max", "data.attributes.wounds.max", "data.attributes.vigor.max"].includes(target)) {
-            const healthConfig = game.settings.get("pf1", "healthConfig")
+            const healthConfig = game.settings.get("D35E", "healthConfig")
             const continuous = {discrete: false, continuous: true}[healthConfig.continuity]
             if (continuous) {
               const round = {up: Math.ceil, nearest: Math.round, down: Math.floor}[healthConfig.rounding]
@@ -1206,7 +1206,7 @@ export class ActorPF extends Actor {
     const items = data.items;
     const classes = items.filter(obj => { return obj.type === "class"; });
     const racialHD = classes.filter(o => getProperty(o.data, "classType") === "racial");
-    const useFractionalBaseBonuses = game.settings.get("pf1", "useFractionalBaseBonuses") === true;
+    const useFractionalBaseBonuses = game.settings.get("D35E", "useFractionalBaseBonuses") === true;
 
     // Set creature type
     if (racialHD.length === 1) {
@@ -1269,14 +1269,14 @@ export class ActorPF extends Actor {
           const v = updateData[k];
           if (v !== 0) {
             sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
-            sourceInfo[k].positive.push({ name: game.i18n.localize("PF1.Base"), value: updateData[k] });
+            sourceInfo[k].positive.push({ name: game.i18n.localize("D35E.Base"), value: updateData[k] });
           }
         }
         else {
           linkData(data, updateData, k,
             classes.reduce((cur, obj) => {
               const classType = getProperty(obj.data, "classType") || "base";
-              let formula = CONFIG.PF1.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
+              let formula = CONFIG.D35E.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
               if (formula == null) formula = "0";
               const v = Math.floor(new Roll(formula, {level: obj.data.levels}).roll().total);
 
@@ -1331,12 +1331,12 @@ export class ActorPF extends Actor {
         const v = updateData[k];
         if (v !== 0) {
           sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
-          sourceInfo[k].positive.push({ name: game.i18n.localize("PF1.Base"), value: v });
+          sourceInfo[k].positive.push({ name: game.i18n.localize("D35E.Base"), value: v });
         }
       }
       else {
         linkData(data, updateData, k, classes.reduce((cur, obj) => {
-          const formula = CONFIG.PF1.classBABFormulas[obj.data.bab] != null ? CONFIG.PF1.classBABFormulas[obj.data.bab] : "0";
+          const formula = CONFIG.D35E.classBABFormulas[obj.data.bab] != null ? CONFIG.D35E.classBABFormulas[obj.data.bab] : "0";
           const v = new Roll(formula, {level: obj.data.levels}).roll().total;
 
           if (v !== 0) {
@@ -1396,7 +1396,7 @@ export class ActorPF extends Actor {
     }
 
     // Add ability mods to CMB and CMD
-    const cmbMod = Object.keys(CONFIG.PF1.actorSizes).indexOf(getProperty(data, "data.traits.size") || "") <= Object.keys(CONFIG.PF1.actorSizes).indexOf("tiny") ? modDiffs["dex"] : modDiffs["str"];
+    const cmbMod = Object.keys(CONFIG.D35E.actorSizes).indexOf(getProperty(data, "data.traits.size") || "") <= Object.keys(CONFIG.D35E.actorSizes).indexOf("tiny") ? modDiffs["dex"] : modDiffs["str"];
     linkData(data, updateData, "data.attributes.cmb.total", updateData["data.attributes.cmb.total"] + cmbMod);
     linkData(data, updateData, "data.attributes.cmd.total", updateData["data.attributes.cmd.total"] + modDiffs["str"]);
     if (!flags.loseDexToAC || modDiffs["dex"] < 0) {
@@ -1409,7 +1409,7 @@ export class ActorPF extends Actor {
     linkData(data, updateData, "data.attributes.init.total", updateData["data.attributes.init.total"] + modDiffs["dex"]);
 
     // Add ability mods to saving throws
-    for (let [s, a] of Object.entries(CONFIG.PF1.savingThrowMods)) {
+    for (let [s, a] of Object.entries(CONFIG.D35E.savingThrowMods)) {
       linkData(data, updateData, `data.attributes.savingThrows.${s}.total`, updateData[`data.attributes.savingThrows.${s}.total`] + modDiffs[a]);
     }
 
@@ -1461,7 +1461,7 @@ export class ActorPF extends Actor {
     else if ( actorData.type === "npc" ) this._prepareNPCData(data);
 
     // Create arbitrary skill slots
-    for (let skillId of CONFIG.PF1.arbitrarySkills) {
+    for (let skillId of CONFIG.D35E.arbitrarySkills) {
       if (data.skills[skillId] == null) continue;
       let skill = data.skills[skillId];
       skill.subSkills = skill.subSkills || {};
@@ -1489,7 +1489,7 @@ export class ActorPF extends Actor {
       }
       cls.data.tag = tag;
 
-      let healthConfig = game.settings.get("pf1", "healthConfig");
+      let healthConfig = game.settings.get("D35E", "healthConfig");
       healthConfig  = cls.data.classType === "racial" ? healthConfig.hitdice.Racial : this.isPC ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
       const classType = cls.data.classType || "base";
       data.classes[tag] = {
@@ -1511,7 +1511,7 @@ export class ActorPF extends Actor {
       };
 
       for (let k of Object.keys(data.classes[tag].savingThrows)) {
-        let formula = CONFIG.PF1.classSavingThrowFormulas[classType][cls.data.savingThrows[k].value];
+        let formula = CONFIG.D35E.classSavingThrowFormulas[classType][cls.data.savingThrows[k].value];
         if (formula == null) formula =  "0";
         data.classes[tag].savingThrows[k] = new Roll(formula, {level: cls.data.levels}).roll().total;
       }
@@ -1555,7 +1555,7 @@ export class ActorPF extends Actor {
     if (flags == null) flags = {};
     let sourceDetails = {};
     // Get empty source arrays
-    for (let obj of Object.values(CONFIG.PF1.buffTargets)) {
+    for (let obj of Object.values(CONFIG.D35E.buffTargets)) {
       for (let b of Object.keys(obj)) {
         if (!b.startsWith("_")) {
           let buffTargets = this._getChangeFlat(b, null, actorData.data);
@@ -1593,7 +1593,7 @@ export class ActorPF extends Actor {
       sourceDetails["data.attributes.cmd.total"].push({ name: "BAB", value: actorData.data.attributes.bab.total });
       sourceDetails["data.attributes.cmd.flatFootedTotal"].push({ name: "BAB", value: actorData.data.attributes.bab.total });
     }
-    const useDexForCMB = Object.keys(CONFIG.PF1.actorSizes).indexOf(getProperty(actorData, "data.traits.size") || "") <= Object.keys(CONFIG.PF1.actorSizes).indexOf("tiny");
+    const useDexForCMB = Object.keys(CONFIG.D35E.actorSizes).indexOf(getProperty(actorData, "data.traits.size") || "") <= Object.keys(CONFIG.D35E.actorSizes).indexOf("tiny");
     if (actorData.data.abilities.str.mod !== 0) {
       if (!useDexForCMB) sourceDetails["data.attributes.cmb.total"].push({ name: "Strength", value: actorData.data.abilities.str.mod });
       sourceDetails["data.attributes.cmd.total"].push({ name: "Strength", value: actorData.data.abilities.str.mod });
@@ -1612,10 +1612,10 @@ export class ActorPF extends Actor {
     }
 
     // Add ability mods (and energy drain) to saving throws
-    for (let [s, a] of Object.entries(CONFIG.PF1.savingThrowMods)) {
+    for (let [s, a] of Object.entries(CONFIG.D35E.savingThrowMods)) {
       if (actorData.data.abilities[a].mod !== 0) {
         sourceDetails[`data.attributes.savingThrows.${s}.total`].push({
-          name: CONFIG.PF1.abilities[a],
+          name: CONFIG.D35E.abilities[a],
           value: actorData.data.abilities[a].mod
         });
       }
@@ -1711,7 +1711,7 @@ export class ActorPF extends Actor {
    * @returns {Number} The reduced movement speed.
    */
   static getReducedMovementSpeed(value) {
-    const incr = game.settings.get("pf1", "units") === "metric" ? 1.5 : 5
+    const incr = game.settings.get("D35E", "units") === "metric" ? 1.5 : 5
     
     if (value <= 0) return value;
     if (value < 2*incr) return incr;
@@ -1746,8 +1746,8 @@ export class ActorPF extends Actor {
    * @return {Number}       The XP required
    */
   getLevelExp(level) {
-    const expRate = game.settings.get("pf1", "experienceRate");
-    const levels = CONFIG.PF1.CHARACTER_EXP_LEVELS[expRate];
+    const expRate = game.settings.get("D35E", "experienceRate");
+    const levels = CONFIG.D35E.CHARACTER_EXP_LEVELS[expRate];
     return levels[Math.min(level, levels.length - 1)];
   }
 
@@ -1760,7 +1760,7 @@ export class ActorPF extends Actor {
    */
   getCRExp(cr) {
     if (cr < 1.0) return Math.max(400 * cr, 10);
-    return CONFIG.PF1.CR_EXP_LEVELS[cr];
+    return CONFIG.D35E.CR_EXP_LEVELS[cr];
   }
 
   /* -------------------------------------------- */
@@ -1820,7 +1820,7 @@ export class ActorPF extends Actor {
 
     // Apply changes in Actor size to Token width/height
     if ( data["data.traits.size"] && this.data.data.traits.size !== data["data.traits.size"] ) {
-      let size = CONFIG.PF1.tokenSizes[data["data.traits.size"]];
+      let size = CONFIG.D35E.tokenSizes[data["data.traits.size"]];
       let tokens = this.getActiveTokens();
       if (this.isToken) tokens.push(this.token);
       tokens.forEach(o => { o.update({ width: size.w, height: size.h, scale: size.scale }); });
@@ -2039,10 +2039,10 @@ export class ActorPF extends Actor {
    * @param {MouseEvent} ev The click event
    */
   async useSpell(item, ev, {skipDialog=false}={}) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
     if ( item.data.type !== "spell" ) throw new Error("Wrong Item type");
 
-    if (getProperty(item.data, "data.preparation.mode") !== "atwill" && item.getSpellUses() <= 0) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoSpellsLeft"));
+    if (getProperty(item.data, "data.preparation.mode") !== "atwill" && item.getSpellUses() <= 0) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoSpellsLeft"));
 
     // Invoke the Item roll
     if (item.hasAction) return item.useAttack({ev: ev, skipDialog: skipDialog});
@@ -2051,7 +2051,7 @@ export class ActorPF extends Actor {
   }
 
   async createAttackFromWeapon(item) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     if (item.data.type !== "weapon") throw new Error("Wrong Item type");
 
@@ -2078,7 +2078,7 @@ export class ActorPF extends Actor {
     // Add additional attacks
     let extraAttacks = [];
     for (let a = 5; a < this.data.data.attributes.bab.total; a += 5) {
-      extraAttacks = extraAttacks.concat([[`-${a}`, `${game.i18n.localize("PF1.Attack")} ${Math.floor((a+5) / 5)}`]]);
+      extraAttacks = extraAttacks.concat([[`-${a}`, `${game.i18n.localize("D35E.Attack")} ${Math.floor((a+5) / 5)}`]]);
     }
     if (extraAttacks.length > 0) attackData["data.attackParts"] = extraAttacks;
 
@@ -2100,7 +2100,7 @@ export class ActorPF extends Actor {
       if (die.match(/^([0-9]+)d([0-9]+)$/)) {
         dieCount = parseInt(RegExp.$1);
         dieSides = parseInt(RegExp.$2);
-        const weaponSize = Object.keys(CONFIG.PF1.sizeChart).indexOf(item.data.data.weaponData.size) - 4;
+        const weaponSize = Object.keys(CONFIG.D35E.sizeChart).indexOf(item.data.data.weaponData.size) - 4;
         part = `sizeRoll(${dieCount}, ${dieSides}, ${weaponSize}, @critMult)`;
       }
       const bonusFormula = getProperty(item.data, "data.weaponData.damageFormula");
@@ -2123,7 +2123,7 @@ export class ActorPF extends Actor {
     if (hasProperty(attackData, "data.templates")) delete attackData["data.templates"];
     await this.createOwnedItem(expandObject(attackData));
 
-    ui.notifications.info(game.i18n.localize("PF1.NotificationCreatedAttack").format(item.data.name));
+    ui.notifications.info(game.i18n.localize("D35E.NotificationCreatedAttack").format(item.data.name));
   }
 
   /* -------------------------------------------- */
@@ -2135,7 +2135,7 @@ export class ActorPF extends Actor {
    * @param {Object} options      Options which configure how the skill check is rolled
    */
   rollSkill(skillId, options={}) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     let skl, sklName;
     const skillParts = skillId.split("."),
@@ -2143,12 +2143,12 @@ export class ActorPF extends Actor {
     if (isSubSkill) {
       skillId = skillParts[0];
       skl = this.data.data.skills[skillId].subSkills[skillParts[2]];
-      sklName = `${CONFIG.PF1.skills[skillId]} (${skl.name})`;
+      sklName = `${CONFIG.D35E.skills[skillId]} (${skl.name})`;
     }
     else {
       skl = this.data.data.skills[skillId];
       if (skl.name != null) sklName = skl.name;
-      else sklName = CONFIG.PF1.skills[skillId];
+      else sklName = CONFIG.D35E.skills[skillId];
     }
 
     // Add contextual attack string
@@ -2165,7 +2165,7 @@ export class ActorPF extends Actor {
     }
     // Add untrained note
     if (skl.rt && skl.rank === 0) {
-      notes.push(game.i18n.localize("PF1.Untrained"));
+      notes.push(game.i18n.localize("D35E.Untrained"));
     }
 
     let props = [];
@@ -2176,9 +2176,9 @@ export class ActorPF extends Actor {
       staticRoll: options.staticRoll,
       parts: ["@mod"],
       data: {mod: skl.mod},
-      title: game.i18n.localize("PF1.SkillCheck").format(sklName),
+      title: game.i18n.localize("D35E.SkillCheck").format(sklName),
       speaker: ChatMessage.getSpeaker({actor: this}),
-      chatTemplate: "systems/pf1/templates/chat/roll-ext.html",
+      chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   }
@@ -2196,20 +2196,20 @@ export class ActorPF extends Actor {
   }
 
   rollBAB(options={}) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     return DicePF.d20Roll({
       event: options.event,
       parts: ["@mod - @drain"],
       data: {mod: this.data.data.attributes.bab.total, drain: this.data.data.attributes.energyDrain},
-      title: game.i18n.localize("PF1.BAB"),
+      title: game.i18n.localize("D35E.BAB"),
       speaker: ChatMessage.getSpeaker({actor: this}),
       takeTwenty: false
     });
   }
 
   rollCMB(options={}) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     // Add contextual notes
     let notes = [];
@@ -2239,15 +2239,15 @@ export class ActorPF extends Actor {
     }
 
     let props = [];
-    if (notes.length > 0) props.push({ header: game.i18n.localize("PF1.Notes"), value: notes });
+    if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
     return DicePF.d20Roll({
       event: options.event,
       parts: ["@mod - @drain"],
       data: {mod: this.data.data.attributes.cmb.total, drain: this.data.data.attributes.energyDrain},
-      title: game.i18n.localize("PF1.CMB"),
+      title: game.i18n.localize("D35E.CMB"),
       speaker: ChatMessage.getSpeaker({actor: this}),
       takeTwenty: false,
-      chatTemplate: "systems/pf1/templates/chat/roll-ext.html",
+      chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   }
@@ -2256,54 +2256,54 @@ export class ActorPF extends Actor {
     const data = this.data.data;
     const headers = [];
 
-    const reSplit = CONFIG.PF1.re.traitSeparator;
+    const reSplit = CONFIG.D35E.re.traitSeparator;
     let misc = [];
 
     // Damage reduction
     if (data.traits.dr.length) {
-      headers.push({ header: game.i18n.localize("PF1.DamRed"), value: data.traits.dr.split(reSplit) });
+      headers.push({ header: game.i18n.localize("D35E.DamRed"), value: data.traits.dr.split(reSplit) });
     }
     // Energy resistance
     if (data.traits.eres.length) {
-      headers.push({ header: game.i18n.localize("PF1.EnRes"), value: data.traits.eres.split(reSplit) });
+      headers.push({ header: game.i18n.localize("D35E.EnRes"), value: data.traits.eres.split(reSplit) });
     }
     // Damage vulnerabilities
     if (data.traits.dv.value.length || data.traits.dv.custom.length) {
       const value = [].concat(
-        data.traits.dv.value.map(obj => { return CONFIG.PF1.damageTypes[obj]; }),
+        data.traits.dv.value.map(obj => { return CONFIG.D35E.damageTypes[obj]; }),
         data.traits.dv.custom.length > 0 ? data.traits.dv.custom.split(";") : [],
       );
-      headers.push({ header: game.i18n.localize("PF1.DamVuln"), value: value });
+      headers.push({ header: game.i18n.localize("D35E.DamVuln"), value: value });
     }
     // Condition resistance
     if (data.traits.cres.length) {
-      headers.push({ header: game.i18n.localize("PF1.ConRes"), value: data.traits.cres.split(reSplit) });
+      headers.push({ header: game.i18n.localize("D35E.ConRes"), value: data.traits.cres.split(reSplit) });
     }
     // Immunities
     if (data.traits.di.value.length || data.traits.di.custom.length ||
       data.traits.ci.value.length || data.traits.ci.custom.length) {
       const value = [].concat(
-        data.traits.di.value.map(obj => { return CONFIG.PF1.damageTypes[obj]; }),
+        data.traits.di.value.map(obj => { return CONFIG.D35E.damageTypes[obj]; }),
         data.traits.di.custom.length > 0 ? data.traits.di.custom.split(";") : [],
-        data.traits.ci.value.map(obj => { return CONFIG.PF1.conditionTypes[obj]; }),
+        data.traits.ci.value.map(obj => { return CONFIG.D35E.conditionTypes[obj]; }),
         data.traits.ci.custom.length > 0 ? data.traits.ci.custom.split(";") : [],
       );
-      headers.push({ header: game.i18n.localize("PF1.ImmunityPlural"), value: value });
+      headers.push({ header: game.i18n.localize("D35E.ImmunityPlural"), value: value });
     }
     // Spell Resistance
     if (data.attributes.sr.total > 0) {
-      misc.push(game.i18n.localize("PF1.SpellResistanceNote").format(data.attributes.sr.total));
+      misc.push(game.i18n.localize("D35E.SpellResistanceNote").format(data.attributes.sr.total));
     }
 
     if (misc.length > 0) {
-      headers.push({ header: game.i18n.localize("PF1.MiscShort"), value: misc });
+      headers.push({ header: game.i18n.localize("D35E.MiscShort"), value: misc });
     }
 
     return headers;
   }
 
   async rollInitiative() {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     let formula = _getInitiativeFormula(this);
     let overrideRollMode = null,
@@ -2335,13 +2335,13 @@ export class ActorPF extends Actor {
         token: this.token ? this.token._id : null,
         alias: this.token ? this.token.name : null,
       },
-      flavor: game.i18n.localize("PF1.RollsForInitiative").format(this.token ? this.token.name : this.name),
+      flavor: game.i18n.localize("D35E.RollsForInitiative").format(this.token ? this.token.name : this.name),
     };
     roll.toMessage(messageData, {rollMode});
   }
 
   rollSavingThrow(savingThrowId, options={}) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     // Add contextual notes
     let notes = [];
@@ -2368,18 +2368,18 @@ export class ActorPF extends Actor {
 
     // Roll saving throw
     let props = this.getDefenseHeaders();
-    if (notes.length > 0) props.push({ header: game.i18n.localize("PF1.Notes"), value: notes });
-    const label = CONFIG.PF1.savingThrows[savingThrowId];
+    if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
+    const label = CONFIG.D35E.savingThrows[savingThrowId];
     const savingThrow = this.data.data.attributes.savingThrows[savingThrowId];
     return DicePF.d20Roll({
       event: options.event,
       parts: ["@mod - @drain"],
       situational: true,
       data: { mod: savingThrow.total, drain: this.data.data.attributes.energyDrain },
-      title: game.i18n.localize("PF1.SavingThrowRoll").format(label),
+      title: game.i18n.localize("D35E.SavingThrowRoll").format(label),
       speaker: ChatMessage.getSpeaker({actor: this}),
       takeTwenty: false,
-      chatTemplate: "systems/pf1/templates/chat/roll-ext.html",
+      chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   };
@@ -2393,7 +2393,7 @@ export class ActorPF extends Actor {
    * @param {Object} options      Options which configure how ability tests are rolled
    */
   rollAbilityTest(abilityId, options={}) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
     // Add contextual notes
     let notes = [];
@@ -2420,15 +2420,15 @@ export class ActorPF extends Actor {
 
     let props = this.getDefenseHeaders();
     if (notes.length > 0) props.push({ header: "Notes", value: notes });
-    const label = CONFIG.PF1.abilities[abilityId];
+    const label = CONFIG.D35E.abilities[abilityId];
     const abl = this.data.data.abilities[abilityId];
     return DicePF.d20Roll({
       event: options.event,
       parts: ["@mod + @checkMod - @drain"],
       data: {mod: abl.mod, checkMod: abl.checkMod, drain: this.data.data.attributes.energyDrain},
-      title: game.i18n.localize("PF1.AbilityTest").format(label),
+      title: game.i18n.localize("D35E.AbilityTest").format(label),
       speaker: ChatMessage.getSpeaker({actor: this}),
-      chatTemplate: "systems/pf1/templates/chat/roll-ext.html",
+      chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   }
@@ -2437,7 +2437,7 @@ export class ActorPF extends Actor {
    * Show defenses in chat
    */
   rollDefenses() {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
     const rollData = duplicate(this.data.data);
 
     // Add contextual AC notes
@@ -2510,7 +2510,7 @@ export class ActorPF extends Actor {
     }
 
     // Add misc data
-    const reSplit = CONFIG.PF1.re.traitSeparator;
+    const reSplit = CONFIG.D35E.re.traitSeparator;
     // Damage Reduction
     let drNotes = [];
     if (this.data.data.traits.dr.length) {
@@ -2524,18 +2524,18 @@ export class ActorPF extends Actor {
     // Damage Immunity
     if (this.data.data.traits.di.value.length || this.data.data.traits.di.custom.length) {
       const values = [
-        ...this.data.data.traits.di.value.map(obj => { return CONFIG.PF1.damageTypes[obj]; }),
+        ...this.data.data.traits.di.value.map(obj => { return CONFIG.D35E.damageTypes[obj]; }),
         ...this.data.data.traits.di.custom.length > 0 ? this.data.data.traits.di.custom.split(reSplit) : [],
       ];
-      energyResistance.push(...values.map(o => game.i18n.localize("PF1.ImmuneTo").format(o)));
+      energyResistance.push(...values.map(o => game.i18n.localize("D35E.ImmuneTo").format(o)));
     }
     // Damage Vulnerability
     if (this.data.data.traits.dv.value.length || this.data.data.traits.dv.custom.length) {
       const values = [
-        ...this.data.data.traits.dv.value.map(obj => { return CONFIG.PF1.damageTypes[obj]; }),
+        ...this.data.data.traits.dv.value.map(obj => { return CONFIG.D35E.damageTypes[obj]; }),
         ...this.data.data.traits.dv.custom.length > 0 ? this.data.data.traits.dv.custom.split(reSplit) : [],
       ];
-      energyResistance.push(...values.map(o => game.i18n.localize("PF1.VulnerableTo").format(o)));
+      energyResistance.push(...values.map(o => game.i18n.localize("D35E.VulnerableTo").format(o)));
     }
 
     // Create message
@@ -2562,7 +2562,7 @@ export class ActorPF extends Actor {
         energyResistance: energyResistance,
       },
     };
-    createCustomChatMessage("systems/pf1/templates/chat/defenses.html", data, {
+    createCustomChatMessage("systems/D35E/templates/chat/defenses.html", data, {
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
     });
   }
@@ -2577,7 +2577,7 @@ export class ActorPF extends Actor {
    * @return {Promise}
    */
   static async applyDamage(value) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
     const promises = [];
     for (let t of canvas.tokens.controlled) {
       let a = t.actor,
@@ -2751,16 +2751,16 @@ export class ActorPF extends Actor {
     const carryStr = srcData.data.abilities.str.total + srcData.data.abilities.str.carryBonus;
     let carryMultiplier = srcData.data.abilities.str.carryMultiplier;
     const size = srcData.data.traits.size;
-    if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.PF1.encumbranceMultipliers.quadruped[size];
-    else carryMultiplier *= CONFIG.PF1.encumbranceMultipliers.normal[size];
-    const table = CONFIG.PF1.encumbranceLoads;
+    if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
+    else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
+    const table = CONFIG.D35E.encumbranceLoads;
 
     let heavy = Math.floor(table[carryStr] * carryMultiplier);
     if (carryStr >= table.length) {
       heavy = Math.floor(table[table.length-1] * (1 + (0.3 * (carryStr - (table.length-1)))));
     }
     // 1 Kg = 0.5 Kg
-    if(game.settings.get("pf1", "units") === "metric") {
+    if(game.settings.get("D35E", "units") === "metric") {
       heavy = heavy / 2
     }
       
@@ -2816,7 +2816,7 @@ export class ActorPF extends Actor {
   getRollData(data=null) {
     if (data == null) data = this.data.data;
     const result = mergeObject(data, {
-      size: Object.keys(CONFIG.PF1.sizeChart).indexOf(getProperty(data, "traits.size")) - 4,
+      size: Object.keys(CONFIG.D35E.sizeChart).indexOf(getProperty(data, "traits.size")) - 4,
     }, { inplace: false });
 
     return result;

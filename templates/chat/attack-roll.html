@@ -1,4 +1,4 @@
-<div class="pf1 chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
   {{#if name}}<h2>{{name}}</h2>{{/if}}
 
   {{#each attacks as |atk|}}
@@ -51,16 +51,16 @@
     <div class="flexrow card-buttons">
       {{#if atk.damage}}
       {{#if atk.isHealing}}
-      <button data-action="applyDamage" data-value="-{{atk.damage.total}}">{{localize "PF1.ApplyHealing"}}</button>
+      <button data-action="applyDamage" data-value="-{{atk.damage.total}}">{{localize "D35E.ApplyHealing"}}</button>
       {{else}}
-      <button data-action="applyDamage" data-value="{{atk.damage.total}}">{{localize "PF1.ApplyDamage"}}</button>
+      <button data-action="applyDamage" data-value="{{atk.damage.total}}">{{localize "D35E.ApplyDamage"}}</button>
       {{/if}}
       {{/if}}
       {{#if atk.critDamage}}
       {{#if atk.isHealing}}
-      <button data-action="applyDamage" data-value="-{{atk.critDamage.total}}">{{localize "PF1.ApplyCriticalHealing"}}</button>
+      <button data-action="applyDamage" data-value="-{{atk.critDamage.total}}">{{localize "D35E.ApplyCriticalHealing"}}</button>
       {{else}}
-      <button data-action="applyDamage" data-value="{{atk.critDamage.total}}">{{localize "PF1.ApplyCriticalDamage"}}</button>
+      <button data-action="applyDamage" data-value="{{atk.critDamage.total}}">{{localize "D35E.ApplyCriticalDamage"}}</button>
       {{/if}}
       {{/if}}
     </div>

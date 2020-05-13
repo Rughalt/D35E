@@ -3,12 +3,12 @@
   {{!-- Roll Defenses --}}
   <li class="generic-defenses flexrow">
     <div class="rollable image-d20"></div>
-    <label><h3>{{localize "PF1.Defenses"}}</h3></label>
+    <label><h3>{{localize "D35E.Defenses"}}</h3></label>
   </li>
 
   {{!-- Natural Armor --}}
   <li class="natural-armor flexrow">
-    <label><h3>{{localize "PF1.BuffTarACNatural"}}</h3></label>
+    <label><h3>{{localize "D35E.BuffTarACNatural"}}</h3></label>
     <input type="text" name="data.attributes.naturalAC" value="{{data.attributes.naturalAC}}" placeholder="0" data-dtype="Number"/>
   </li>
 </ul>
@@ -21,7 +21,7 @@
       @attributes.ac.{{id}}.total : {{ac.total}}
 
       {{#if ac.sourceDetails.length}}
-      <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
       {{#each ac.sourceDetails as |src|}}
       {{src.name}}: {{src.value}}<br/>
       {{/each}}
@@ -43,7 +43,7 @@
       @attributes.savingThrows.{{id}}.total : {{savingThrow.total}}
 
       {{#if savingThrow.sourceDetails.length}}
-      <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
       {{#each savingThrow.sourceDetails as |src|}}
       {{src.name}}: {{src.value}}<br/>
       {{/each}}
@@ -64,13 +64,13 @@
       @attributes.cmd.total : {{data.attributes.cmd.total}}
 
       {{#if sourceDetails.data.attributes.cmd.total.length}}
-      <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
       {{#each sourceDetails.data.attributes.cmd.total as |src|}}
       {{src.name}}: {{src.value}}<br/>
       {{/each}}
       {{/if}}
     </div>
-    <h4 class="attribute-name box-title">{{localize "PF1.CMDAbbr"}}</h4>
+    <h4 class="attribute-name box-title">{{localize "D35E.CMDAbbr"}}</h4>
     <div class="attribute-value">
       <span>{{data.attributes.cmd.total}}</span>
     </div>
@@ -81,13 +81,13 @@
       @attributes.cmd.flatFootedTotal : {{data.attributes.cmd.flatFootedTotal}}
 
       {{#if sourceDetails.data.attributes.cmd.flatFootedTotal.length}}
-      <br/><br/>{{localize "PF1.FromSources"}}:<br/>
+      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
       {{#each sourceDetails.data.attributes.cmd.flatFootedTotal as |src|}}
       {{src.name}}: {{src.value}}<br/>
       {{/each}}
       {{/if}}
     </div>
-    <h4 class="attribute-name box-title">{{localize "PF1.CMDFFAbbr"}}</h4>
+    <h4 class="attribute-name box-title">{{localize "D35E.CMDFFAbbr"}}</h4>
     <div class="attribute-value">
       <span>{{data.attributes.cmd.flatFootedTotal}}</span>
     </div>
@@ -97,12 +97,12 @@
       <div class="tooltipcontent">
         @attributes.sr.total : {{data.attributes.sr.total}}
       </div>
-      <h4 class="attribute-name box-title">{{localize "PF1.SpellResistance"}}</h4>
+      <h4 class="attribute-name box-title">{{localize "D35E.SpellResistance"}}</h4>
       <div class="attribute-value">
         <span>{{data.attributes.sr.total}}</span>
       </div>
       <footer class="attribute-footer">
-        <input name="data.attributes.sr.formula" type="text" placeholder="{{localize "PF1.Formula"}}"
+        <input name="data.attributes.sr.formula" type="text" placeholder="{{localize "D35E.Formula"}}"
           value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
       </footer>
     </li>
@@ -110,23 +110,23 @@
 
 <div class="attributes defense-notes flexcol">
   <div class="flexrow">
-    <label><h3>{{localize "PF1.SaveNotes"}}</h3></label>
-    <textarea name="data.attributes.saveNotes" placeholder="{{localize "PF1.SaveNotes"}}">{{data.attributes.saveNotes}}</textarea>
+    <label><h3>{{localize "D35E.SaveNotes"}}</h3></label>
+    <textarea name="data.attributes.saveNotes" placeholder="{{localize "D35E.SaveNotes"}}">{{data.attributes.saveNotes}}</textarea>
   </div>
   <hr>
   <div class="flexrow">
-    <label><h3>{{localize "PF1.ACNotes"}}</h3></label>
-    <textarea name="data.attributes.acNotes" placeholder="{{localize "PF1.ACNotes"}}">{{data.attributes.acNotes}}</textarea>
+    <label><h3>{{localize "D35E.ACNotes"}}</h3></label>
+    <textarea name="data.attributes.acNotes" placeholder="{{localize "D35E.ACNotes"}}">{{data.attributes.acNotes}}</textarea>
   </div>
   <hr>
   <div class="flexrow">
-    <label><h3>{{localize "PF1.CMDNotes"}}</h3></label>
-    <textarea name="data.attributes.cmdNotes" placeholder="{{localize "PF1.CMDNotes"}}">{{data.attributes.cmdNotes}}</textarea>
+    <label><h3>{{localize "D35E.CMDNotes"}}</h3></label>
+    <textarea name="data.attributes.cmdNotes" placeholder="{{localize "D35E.CMDNotes"}}">{{data.attributes.cmdNotes}}</textarea>
   </div>
   <hr>
   <div class="flexrow">
-    <label><h3>{{localize "PF1.SpellResistanceNotes"}}</h3></label>
-    <textarea name="data.attributes.srNotes" placeholder="{{localize "PF1.SpellResistanceNotes"}}">{{data.attributes.srNotes}}</textarea>
+    <label><h3>{{localize "D35E.SpellResistanceNotes"}}</h3></label>
+    <textarea name="data.attributes.srNotes" placeholder="{{localize "D35E.SpellResistanceNotes"}}">{{data.attributes.srNotes}}</textarea>
   </div>
   <hr>
 </div>

@@ -1,16 +1,16 @@
 <div>
   {{!-- Notes --}}
   <h4 class="context-notes-header">
-    {{localize "PF1.ContextNotes"}}
+    {{localize "D35E.ContextNotes"}}
     <a class="context-note-control add-note"><i class="fas fa-plus"></i></a>
   </h4>
   <ol class="context-notes form-group">
     {{#each data.contextNotes as |note a|}}
     <li class="context-note flexrow" data-note="{{a}}">
-      <textarea name="data.contextNotes.{{a}}.0" placeholder="{{localize "PF1.Notes"}}">{{lookup this "0"}}</textarea>
+      <textarea name="data.contextNotes.{{a}}.0" placeholder="{{localize "D35E.Notes"}}">{{lookup this "0"}}</textarea>
       <select name="data.contextNotes.{{a}}.1">
         {{#select (lookup this "1") }}
-        <option value="">{{localize "PF1.None"}}</option>
+        <option value="">{{localize "D35E.None"}}</option>
         {{#each ../contextNotes.targets as |target type|}}
         <option value="{{type}}">{{target}}</option>
         {{/each}}

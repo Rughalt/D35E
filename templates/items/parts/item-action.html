@@ -1,6 +1,6 @@
 {{!-- Action Type --}}
 <div class="form-group select">
-  <label>{{localize "PF1.ActionType"}}</label>
+  <label>{{localize "D35E.ActionType"}}</label>
   <select name="data.actionType">
     {{#select data.actionType}}
     <option value=""></option>
@@ -14,9 +14,9 @@
 
 {{#if isSpell}}
 <div class="form-group">
-  <label>{{localize "PF1.SpellEffect"}}</label>
+  <label>{{localize "D35E.SpellEffect"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.spellEffect" value="{{data.spellEffect}}" placeholder="{{localize "PF1.SpellEffectExample"}}"/>
+    <input type="text" name="data.spellEffect" value="{{data.spellEffect}}" placeholder="{{localize "D35E.SpellEffectExample"}}"/>
   </div>
 </div>
 {{/if}}
@@ -24,35 +24,35 @@
 {{!-- Attack Roll Bonus --}}
 {{#if hasAttackRoll }}
 <div class="form-group">
-  <label>{{localize "PF1.AttackRollBonus"}}</label>
+  <label>{{localize "D35E.AttackRollBonus"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.attackBonus" value="{{data.attackBonus}}" placeholder="{{localize "PF1.Formula"}}"/>
+    <input type="text" name="data.attackBonus" value="{{data.attackBonus}}" placeholder="{{localize "D35E.Formula"}}"/>
   </div>
 </div>
 
 <div class="form-group">
-  <label>{{localize "PF1.CriticalThreatRange"}}</label>
+  <label>{{localize "D35E.CriticalThreatRange"}}</label>
   <div class="form-fields">
     <input type="text" name="data.ability.critRange" value="{{data.ability.critRange}}" data-dtype="Number"/>
   </div>
 </div>
 
 <div class="form-group">
-  <label>{{localize "PF1.CriticalMultiplier"}}</label>
+  <label>{{localize "D35E.CriticalMultiplier"}}</label>
   <div class="form-fields">
     <input type="text" name="data.ability.critMult" value="{{data.ability.critMult}}" data-dtype="Number"/>
   </div>
 </div>
 <div class="form-group">
-  <label>{{localize "PF1.CriticalConfirmBonus"}}</label>
+  <label>{{localize "D35E.CriticalConfirmBonus"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.critConfirmBonus" value="{{data.critConfirmBonus}}" placeholder="{{localize "PF1.Formula"}}"/>
+    <input type="text" name="data.critConfirmBonus" value="{{data.critConfirmBonus}}" placeholder="{{localize "D35E.Formula"}}"/>
   </div>
 </div>
 
 {{!-- Attack Ability --}}
 <div class="form-group select">
-  <label>{{localize "PF1.AttackAbility"}}</label>
+  <label>{{localize "D35E.AttackAbility"}}</label>
   <select name="data.ability.attack">
     {{#select data.ability.attack}}
     <option value=""></option>
@@ -64,14 +64,14 @@
 </div>
 
 <h4 class="attack-header">
-  {{localize "PF1.ExtraAttacks"}}
+  {{localize "D35E.ExtraAttacks"}}
   <a class="attack-control add-attack"><i class="fas fa-plus"></i></a>
 </h4>
 <ol class="attack-parts form-group">
   {{#each data.attackParts as |part a|}}
   <li class="attack-part flexrow" data-attack-part="{{a}}">
-    <input type="text" name="data.attackParts.{{a}}.0" placeholder="{{localize "PF1.AttackBonusFormula"}}" value="{{lookup this "0"}}"/>
-    <input type="text" name="data.attackParts.{{a}}.1" placeholder="{{localize "PF1.Name"}}" value="{{lookup this "1"}}"/>
+    <input type="text" name="data.attackParts.{{a}}.0" placeholder="{{localize "D35E.AttackBonusFormula"}}" value="{{lookup this "0"}}"/>
+    <input type="text" name="data.attackParts.{{a}}.1" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "1"}}"/>
     <a class="attack-control delete-attack"><i class="fas fa-minus"></i></a>
   </li>
   {{/each}}
@@ -80,7 +80,7 @@
 
 {{!-- Damage Ability --}}
 <div class="form-group select">
-  <label>{{localize "PF1.DamageAbility"}}</label>
+  <label>{{localize "D35E.DamageAbility"}}</label>
   <select name="data.ability.damage">
     {{#select data.ability.damage}}
     <option value=""></option>
@@ -101,7 +101,7 @@
 
 {{!-- Damage Formula --}}
 <h4 class="damage-header">
-  {{#unless isHealing }}{{localize "PF1.DamageFormula"}}{{ else }}{{localize "PF1.HealingFormula"}}{{/unless}}
+  {{#unless isHealing }}{{localize "D35E.DamageFormula"}}{{ else }}{{localize "D35E.HealingFormula"}}{{/unless}}
   <a class="damage-control add-damage"><i class="fas fa-plus"></i></a>
 </h4>
 <ol class="damage-parts form-group tooltip">
@@ -115,8 +115,8 @@
   </span>
   {{#each data.damage.parts as |part i| }}
   <li class="damage-part flexrow" data-damage-part="{{i}}">
-    <input type="text" name="data.damage.parts.{{i}}.0" placeholder="{{#unless isHealing }}{{localize "PF1.DamageFormula"}}{{ else }}{{localize "PF1.HealingFormula"}}{{/unless}}" value="{{lookup this "0"}}"/>
-    <input type="text" name="data.damage.parts.{{i}}.1" placeholder="{{localize "PF1.DamageTypes"}}" value="{{lookup this "1"}}"/>
+    <input type="text" name="data.damage.parts.{{i}}.0" placeholder="{{#unless isHealing }}{{localize "D35E.DamageFormula"}}{{ else }}{{localize "D35E.HealingFormula"}}{{/unless}}" value="{{lookup this "0"}}"/>
+    <input type="text" name="data.damage.parts.{{i}}.1" placeholder="{{localize "D35E.DamageTypes"}}" value="{{lookup this "1"}}"/>
     <a class="damage-control delete-damage"><i class="fas fa-minus"></i></a>
   </li>
   {{/each}}
@@ -124,24 +124,24 @@
 
 {{!-- Saving Throw --}}
 <div class="form-group input-select">
-  <label>{{#unless isSpell}}{{localize "PF1.DCOffset"}}{{else}}{{localize "PF1.DCOffset"}}{{/unless}}</label>
+  <label>{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}</label>
   <div class="form-fields">
-    <input type="text" name="data.save.dc" value="{{data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "PF1.DCOffset"}}{{else}}{{localize "PF1.DCOffset"}}{{/unless}}"/>
-    <input type="text" name="data.save.description" value="{{data.save.description}}" placeholder="{{localize "PF1.DCDescriptionExample"}}"/>
+    <input type="text" name="data.save.dc" value="{{data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}"/>
+    <input type="text" name="data.save.description" value="{{data.save.description}}" placeholder="{{localize "D35E.DCDescriptionExample"}}"/>
   </div>
 </div>
 
 {{!-- Attack Notes --}}
 {{#if hasAttackRoll }}
 <div class="form-group stacked">
-  <label>{{localize "PF1.AttackNotes"}}</label>
+  <label>{{localize "D35E.AttackNotes"}}</label>
   <textarea type="text" name="data.attackNotes">{{data.attackNotes}}</textarea>
 </div>
 {{/if}}
 
 {{!-- Effect Notes --}}
 <div class="form-group stacked">
-  <label>{{localize "PF1.EffectNotes"}}</label>
+  <label>{{localize "D35E.EffectNotes"}}</label>
   <textarea type="text" name="data.effectNotes" style="white-space: pre">{{data.effectNotes}}</textarea>
 </div>
 {{/if}}

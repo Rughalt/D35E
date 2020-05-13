@@ -7,26 +7,26 @@
     <div class="header-details flexrow">
       {{#if isGM}}
       <h3 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h3>
 
       <h3 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "PF1.UnidentifiedName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
       </h3>
       {{else}}
       {{#if showUnidentifiedData}}
       <h1 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{itemName}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
       {{else}}
       <h1 class="charname">
-        <input name="name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{itemName}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
       {{/if}}
       {{/if}}
 
       <div class="item-subtitle">
-        <h4 class="item-type">{{localize "PF1.Item"}}</h4>
+        <h4 class="item-type">{{localize "D35E.Item"}}</h4>
         <span class="item-status">{{itemStatus}}</span>
       </div>
 
@@ -43,24 +43,24 @@
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
   </nav>
 
   {{!-- Item Sheet Body --}}
   <section class="primary-body">
 
     {{!-- Description Tab --}}
-    {{> "systems/pf1/templates/items/parts/item-description.html"}}
+    {{> "systems/D35E/templates/items/parts/item-description.html"}}
 
     {{!-- Details Tab --}}
     <div class="tab details" data-group="primary" data-tab="details">
-      <h3 class="form-header">{{localize "PF1.Details"}}</h3>
+      <h3 class="form-header">{{localize "D35E.Details"}}</h3>
 
       {{!-- Consumable Type --}}
       {{#unless showUnidentifiedData}}
       <div class="form-group">
-        <label>{{localize "PF1.Type"}}</label>
+        <label>{{localize "D35E.Type"}}</label>
         <select name="data.consumableType">
           {{#select data.consumableType}}
           {{#each config.consumableTypes as |name type|}}
@@ -72,24 +72,24 @@
 
       {{#if isGM}}
       <label class="checkbox">
-        <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "PF1.Identified"}}
+        <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}
       </label>
       {{/if}}
 
-      <h3 class="form-header">{{localize "PF1.ConsumableUsage"}}</h3>
+      <h3 class="form-header">{{localize "D35E.ConsumableUsage"}}</h3>
 
       {{!-- Item Activation Template --}}
-      {{> "systems/pf1/templates/items/parts/item-activation.html"}}
+      {{> "systems/D35E/templates/items/parts/item-activation.html"}}
 
-      <h3 class="form-header">{{localize "PF1.Action"}}</h3>
+      <h3 class="form-header">{{localize "D35E.Action"}}</h3>
 
       {{!-- Item Action Template --}}
-      {{> "systems/pf1/templates/items/parts/item-action.html"}}
+      {{> "systems/D35E/templates/items/parts/item-action.html"}}
 
-      <h3 class="form-header">{{localize "PF1.MeasureTemplate"}}</h3>
+      <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
 
       {{!-- Item Measure Template --}}
-      {{> "systems/pf1/templates/items/parts/item-template.html"}}
+      {{> "systems/D35E/templates/items/parts/item-template.html"}}
       {{/unless}}
     </div>
   </section>

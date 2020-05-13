@@ -3,7 +3,7 @@
  * @return {Promise}      A Promise which resolves once the migration is completed
  */
 export const migrateWorld = async function() {
-  ui.notifications.info(`Applying PF1 System Migration for version ${game.system.data.version}. Please stand by.`);
+  ui.notifications.info(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
 
   // Migrate World Actors
   for ( let a of game.actors.entities ) {
@@ -47,8 +47,8 @@ export const migrateWorld = async function() {
   }
 
   // Set the migration as complete
-  game.settings.set("pf1", "systemMigrationVersion", game.system.data.version);
-  ui.notifications.info(`PF1 System Migration to version ${game.system.data.version} succeeded!`);
+  game.settings.set("D35E", "systemMigrationVersion", game.system.data.version);
+  ui.notifications.info(`D35E System Migration to version ${game.system.data.version} succeeded!`);
 };
 
 /* -------------------------------------------- */
@@ -190,13 +190,13 @@ export const migrateSceneData = async function(scene) {
  */
 const _migrateActorTraits = function(actor, updateData) {
   if ( !actor.data.traits ) return;
-  const dt = invertObject(CONFIG.pf1.damageTypes);
+  const dt = invertObject(CONFIG.D35E.damageTypes);
   const map = {
     "dr": dt,
     "di": dt,
     "dv": dt,
-    "ci": invertObject(CONFIG.pf1.conditionTypes),
-    "languages": invertObject(CONFIG.pf1.languages)
+    "ci": invertObject(CONFIG.D35E.conditionTypes),
+    "languages": invertObject(CONFIG.D35E.languages)
   };
   for ( let [t, choices] of Object.entries(map) ) {
     const trait = actor.data.traits[t];
@@ -506,7 +506,7 @@ const _migrateWeaponSize = function(ent, updateData) {
 const _migrateCastTime = function(item, updateData) {
   const value = getProperty(item.data, "time.value");
   if ( !value ) return;
-  const ATS = invertObject(CONFIG.pf1.abilityActivationTypes);
+  const ATS = invertObject(CONFIG.D35E.abilityActivationTypes);
   let match = value.match(/([\d]+\s)?([\w\s]+)/);
   if ( !match ) return;
   let type = ATS[match[2]] || "none";
@@ -544,7 +544,7 @@ const _migrateDamage = function(item, updateData) {
  * @private
  */
 const _migrateDuration = function(item, updateData) {
-  const TIME = invertObject(CONFIG.pf1.timePeriods);
+  const TIME = invertObject(CONFIG.D35E.timePeriods);
   const dur = item.data.duration;
   if ( dur && dur.value && !dur.units ) {
     let match = dur.value.match(/([\d]+\s)?([\w\s]+)/);
@@ -647,7 +647,7 @@ const _migrateTarget = function(item, updateData) {
 
     // Target Type
     let type = null;
-    for ( let t of Object.keys(CONFIG.pf1.targetTypes) ) {
+    for ( let t of Object.keys(CONFIG.D35E.targetTypes) ) {
       let rgx = new RegExp(t, "i");
       if ( rgx.test(target.value) ) {
         type = t;
@@ -766,7 +766,7 @@ const _migrateWeaponProperties = function(item, updateData) {
   // Map weapon property strings to boolean flags
   const props = item.data.properties;
   if ( props.value ) {
-    const labels = invertObject(CONFIG.pf1.weaponProperties);
+    const labels = invertObject(CONFIG.D35E.weaponProperties);
     for (let k of props.value.split(",").map(p => p.trim())) {
       if (labels[k]) updateData[`data.properties.${labels[k]}`] = true;
     }

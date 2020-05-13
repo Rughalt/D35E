@@ -5,7 +5,7 @@ export const registerSystemSettings = function() {
   /**
    * Track the system version upon which point a migration was last applied
    */
-  game.settings.register("pf1", "systemMigrationVersion", {
+  game.settings.register("D35E", "systemMigrationVersion", {
     name: "System Migration Version",
     scope: "world",
     config: false,
@@ -14,19 +14,19 @@ export const registerSystemSettings = function() {
   });
 
   // Health configuration
-  game.settings.registerMenu(isMinimumCoreVersion("0.5.6") ? "pf1" : "system",
+  game.settings.registerMenu(isMinimumCoreVersion("0.5.6") ? "D35E" : "system",
     "healthConfig", {
-      name: "SETTINGS.pf1HealthConfigName",
-      label: "SETTINGS.pf1HealthConfigLabel",
-      hint: "SETTINGS.pf1HealthConfigHint",
+      name: "SETTINGS.D35EHealthConfigName",
+      label: "SETTINGS.D35EHealthConfigLabel",
+      hint: "SETTINGS.D35EHealthConfigHint",
       icon: "fas fa-heartbeat",
       type: HealthConfig,
       restricted: true
     }
   );
 
-  game.settings.register("pf1", "healthConfig", {
-    name: "SETTINGS.pf1HealthConfigName",
+  game.settings.register("D35E", "healthConfig", {
+    name: "SETTINGS.D35EHealthConfigName",
     scope: "world",
     default: HealthConfig.defaultSettings,
     type: Object,
@@ -40,16 +40,16 @@ export const registerSystemSettings = function() {
   /**
    * Register diagonal movement rule setting
    */
-  game.settings.register("pf1", "diagonalMovement", {
-    name: "SETTINGS.pf1DiagN",
-    hint: "SETTINGS.pf1DiagL",
+  game.settings.register("D35E", "diagonalMovement", {
+    name: "SETTINGS.D35EDiagN",
+    hint: "SETTINGS.D35EDiagL",
     scope: "world",
     config: true,
     default: "5105",
     type: String,
     choices: {
-      "555": "SETTINGS.pf1DiagPHB",
-      "5105": "SETTINGS.pf1DiagDMG"
+      "555": "SETTINGS.D35EDiagPHB",
+      "5105": "SETTINGS.D35EDiagDMG"
     },
     onChange: rule => canvas.grid.diagonalRule = rule
   });
@@ -57,9 +57,9 @@ export const registerSystemSettings = function() {
   /**
    * Experience rate
    */
-  game.settings.register("pf1", "experienceRate", {
-    name: "SETTINGS.pf1ExpRateN",
-    hint: "SETTINGS.pf1ExpRateL",
+  game.settings.register("D35E", "experienceRate", {
+    name: "SETTINGS.D35EExpRateN",
+    hint: "SETTINGS.D35EExpRateL",
     scope: "world",
     config: true,
     default: "medium",
@@ -82,9 +82,9 @@ export const registerSystemSettings = function() {
   /**
    * System of Units
    */
-  game.settings.register("pf1", "units", {
-    name: "SETTINGS.pf1UnitsN",
-    hint: "SETTINGS.pf1UnitsL",
+  game.settings.register("D35E", "units", {
+    name: "SETTINGS.D35EUnitsN",
+    hint: "SETTINGS.D35EUnitsL",
     scope: "world",
     config: true,
     default: "imperial",
@@ -106,9 +106,9 @@ export const registerSystemSettings = function() {
   /**
    * Option to disable XP bar for session-based or story-based advancement.
    */
-  game.settings.register("pf1", "disableExperienceTracking", {
-    name: "SETTINGS.pf1NoExpN",
-    hint: "SETTINGS.pf1NoExpL",
+  game.settings.register("D35E", "disableExperienceTracking", {
+    name: "SETTINGS.D35ENoExpN",
+    hint: "SETTINGS.D35ENoExpL",
     scope: "world",
     config: true,
     default: false,
@@ -118,9 +118,9 @@ export const registerSystemSettings = function() {
   /**
    * Option to allow the background skills optional ruleset.
    */
-  game.settings.register("pf1", "allowBackgroundSkills", {
-    name: "SETTINGS.pf1BackgroundSkillsN",
-    hint: "SETTINGS.pf1BackgroundSkillsH",
+  game.settings.register("D35E", "allowBackgroundSkills", {
+    name: "SETTINGS.D35EBackgroundSkillsN",
+    hint: "SETTINGS.D35EBackgroundSkillsH",
     scope: "world",
     config: true,
     default: false,
@@ -134,9 +134,9 @@ export const registerSystemSettings = function() {
   /**
    * Option to use the Fractional Base Bonuses optional ruleset.
    */
-  game.settings.register("pf1", "useFractionalBaseBonuses", {
-    name: "SETTINGS.pf1FractionalBaseBonusesN",
-    hint: "SETTINGS.pf1FractionalBaseBonusesH",
+  game.settings.register("D35E", "useFractionalBaseBonuses", {
+    name: "SETTINGS.D35EFractionalBaseBonusesN",
+    hint: "SETTINGS.D35EFractionalBaseBonusesH",
     scope: "world",
     config: true,
     default: false,
@@ -150,9 +150,9 @@ export const registerSystemSettings = function() {
   /**
    * Option to automatically collapse Item Card descriptions
    */
-  game.settings.register("pf1", "autoCollapseItemCards", {
-    name: "SETTINGS.pf1AutoCollapseCardN",
-    hint: "SETTINGS.pf1AutoCollapseCardL",
+  game.settings.register("D35E", "autoCollapseItemCards", {
+    name: "SETTINGS.D35EAutoCollapseCardN",
+    hint: "SETTINGS.D35EAutoCollapseCardL",
     scope: "client",
     config: true,
     default: false,
@@ -165,9 +165,9 @@ export const registerSystemSettings = function() {
   /**
    * Option to change measure style
    */
-  game.settings.register("pf1", "measureStyle", {
-    name: "SETTINGS.pf1MeasureStyleN",
-    hint: "SETTINGS.pf1MeasureStyleL",
+  game.settings.register("D35E", "measureStyle", {
+    name: "SETTINGS.D35EMeasureStyleN",
+    hint: "SETTINGS.D35EMeasureStyleL",
     scope: "world",
     config: true,
     default: true,
@@ -177,9 +177,9 @@ export const registerSystemSettings = function() {
   /**
    * Low-light Vision Mode
    */
-  game.settings.register("pf1", "lowLightVisionMode", {
-    name: "SETTINGS.pf1LowLightVisionModeN",
-    hint: "SETTINGS.pf1LowLightVisionModeH",
+  game.settings.register("D35E", "lowLightVisionMode", {
+    name: "SETTINGS.D35ELowLightVisionModeN",
+    hint: "SETTINGS.D35ELowLightVisionModeH",
     scope: "world",
     config: true,
     default: false,

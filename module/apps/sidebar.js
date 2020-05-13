@@ -15,7 +15,7 @@ export class SidebarPF extends Sidebar {
     await super._render(...args);
 
     const parent = this.element.find("#compendium .directory-footer");
-    const child = await renderTemplate("systems/pf1/templates/sidebar/compendiums-footer.html", {});
+    const child = await renderTemplate("systems/D35E/templates/sidebar/compendiums-footer.html", {});
     parent.append(child);
     this.activateExtraListeners(parent);
   }

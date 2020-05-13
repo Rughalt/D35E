@@ -8,9 +8,9 @@ export class EntrySelector extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       id: "entry-selector",
-      classes: ["pf1", "entry"],
+      classes: ["D35E", "entry"],
       title: "Entry Selector",
-      template: "systems/pf1/templates/apps/entry-selector.html",
+      template: "systems/D35E/templates/apps/entry-selector.html",
       width: 320,
       height: "auto",
       closeOnSubmit: false,

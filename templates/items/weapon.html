@@ -7,26 +7,26 @@
     <div class="header-details flexrow">
       {{#if isGM}}
       <h3 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h3>
 
       <h3 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "PF1.UnidentifiedName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
       </h3>
       {{else}}
       {{#if showUnidentifiedData}}
       <h1 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{itemName}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
       {{else}}
       <h1 class="charname">
-        <input name="name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{itemName}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
       {{/if}}
       {{/if}}
 
       <div class="item-subtitle">
-        <h4 class="item-type">{{localize "PF1.Item"}}</h4>
+        <h4 class="item-type">{{localize "D35E.Item"}}</h4>
         <span class="item-status">{{itemStatus}}</span>
       </div>
 
@@ -46,10 +46,10 @@
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
     {{#unless showUnidentifiedData}}
-    <a class="item" data-tab="changes">{{ localize "PF1.Changes" }}</a>
+    <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
     {{/unless}}
   </nav>
 
@@ -57,7 +57,7 @@
   <section class="primary-body">
 
     {{!-- Description Tab --}}
-    {{> "systems/pf1/templates/items/parts/item-description.html"}}
+    {{> "systems/D35E/templates/items/parts/item-description.html"}}
 
     {{!-- Details Tab --}}
     <div class="tab details" data-group="primary" data-tab="details">
@@ -65,7 +65,7 @@
 
       {{!-- Weapon Type --}}
       <div class="form-group">
-        <label>{{localize "PF1.Category"}}</label>
+        <label>{{localize "D35E.Category"}}</label>
         <select name="data.weaponType">
           {{#select data.weaponType}}
           {{#each weaponCategories.types as |name type|}}
@@ -77,7 +77,7 @@
 
       {{!-- Weapon Subtype --}}
       <div class="form-group">
-        <label>{{localize "PF1.Type"}}</label>
+        <label>{{localize "D35E.Type"}}</label>
         <select name="data.weaponSubtype">
           {{#select data.weaponSubtype}}
           {{#each weaponCategories.subTypes as |name type|}}
@@ -89,7 +89,7 @@
 
       {{!-- Weapon Size --}}
       <div class="form-group">
-        <label>{{localize "PF1.WeaponSize"}}</label>
+        <label>{{localize "D35E.WeaponSize"}}</label>
         <select name="data.weaponData.size">
           {{#select data.weaponData.size}}
           {{#each config.actorSizes as |name type|}}
@@ -101,24 +101,24 @@
 
       {{!-- Equipment Status --}}
       <div class="form-group stacked">
-        <label>{{localize "PF1.EquipmentStatus"}}</label>
+        <label>{{localize "D35E.EquipmentStatus"}}</label>
         <label class="checkbox">
-          <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{localize "PF1.Equipped"}}
+          <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{localize "D35E.Equipped"}}
         </label>
         {{#if isGM}}
         <label class="checkbox">
-          <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "PF1.Identified"}}
+          <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}
         </label>
         {{/if}}
         <label class="checkbox">
-          <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "PF1.Masterwork"}}
+          <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "D35E.Masterwork"}}
         </label>
       </div>
 
       {{#unless showUnidentifiedData}}
       {{!-- Weapon Properties --}}
       <div class="form-group stacked weapon-properties">
-        <label>{{localize "PF1.WeaponProperties"}}</label>
+        <label>{{localize "D35E.WeaponProperties"}}</label>
         {{#each config.weaponProperties as |name prop|}}
         <label class="checkbox">
           <input type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.properties prop)}}/> {{ name }}
@@ -128,7 +128,7 @@
 
       {{#if isRanged}}
       <div class="form-group">
-        <label>{{localize "PF1.Range"}}</label>
+        <label>{{localize "D35E.Range"}}</label>
         <div class="form-fields">
           <input type="text" name="data.weaponData.range" value="{{data.weaponData.range}}" data-dtype="Number"/>
         </div>
@@ -136,7 +136,7 @@
       {{/if}}
 
       <div class="form-group">
-        <label>{{localize "PF1.EnhancementBonus"}}</label>
+        <label>{{localize "D35E.EnhancementBonus"}}</label>
         <div class="form-fields">
           <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
         </div>
@@ -144,32 +144,32 @@
 
       {{!-- Weapon Bonus Attack Formula --}}
       <div class="form-group">
-        <label>{{localize "PF1.BonusAttackFormula"}}</label>
+        <label>{{localize "D35E.BonusAttackFormula"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.weaponData.attackFormula" value="{{data.weaponData.attackFormula}}" placeholder="{{localize "PF1.BonusAttackFormula"}}"/>
+          <input type="text" name="data.weaponData.attackFormula" value="{{data.weaponData.attackFormula}}" placeholder="{{localize "D35E.BonusAttackFormula"}}"/>
         </div>
       </div>
 
       {{!-- Weapon Damage --}}
       <div class="form-group">
-        <label>{{localize "PF1.BaseWeaponDamage"}} ({{localize "PF1.ActorSizeMedium"}})</label>
+        <label>{{localize "D35E.BaseWeaponDamage"}} ({{localize "D35E.ActorSizeMedium"}})</label>
         <div class="form-fields">
-          <input type="text" name="data.weaponData.damageRoll" value="{{data.weaponData.damageRoll}}" placeholder="{{localize "PF1.DamageRoll"}}"/>
-          <input type="text" name="data.weaponData.damageType" value="{{data.weaponData.damageType}}" placeholder="{{localize "PF1.DamageType"}}"/>
+          <input type="text" name="data.weaponData.damageRoll" value="{{data.weaponData.damageRoll}}" placeholder="{{localize "D35E.DamageRoll"}}"/>
+          <input type="text" name="data.weaponData.damageType" value="{{data.weaponData.damageType}}" placeholder="{{localize "D35E.DamageType"}}"/>
         </div>
       </div>
 
       {{!-- Weapon Bonus Damage Formula --}}
       <div class="form-group">
-        <label>{{localize "PF1.BonusDamageFormula"}}</label>
+        <label>{{localize "D35E.BonusDamageFormula"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.weaponData.damageFormula" value="{{data.weaponData.damageFormula}}" placeholder="{{localize "PF1.BonusDamageFormula"}}"/>
+          <input type="text" name="data.weaponData.damageFormula" value="{{data.weaponData.damageFormula}}" placeholder="{{localize "D35E.BonusDamageFormula"}}"/>
         </div>
       </div>
 
       {{!-- Weapon Critical Damage --}}
       <div class="form-group">
-        <label>{{localize "PF1.BaseWeaponCritical"}}</label>
+        <label>{{localize "D35E.BaseWeaponCritical"}}</label>
         <div class="form-fields">
           <input type="text" name="data.weaponData.critRange" value="{{data.weaponData.critRange}}" placeholder="20"/>
           <input type="text" name="data.weaponData.critMult" value="{{data.weaponData.critMult}}" placeholder="2"/>
@@ -178,7 +178,7 @@
 
       {{#if owner}}
       <div class="form-group">
-        <button type="button" name="create-attack">{{localize "PF1.CreateAttack"}}</button>
+        <button type="button" name="create-attack">{{localize "D35E.CreateAttack"}}</button>
       </div>
       {{/if}}
       {{/unless}}
@@ -187,9 +187,9 @@
     {{!-- Changes Tab --}}
     {{#unless showUnidentifiedData}}
     <div class="tab flexcol" data-group="primary" data-tab="changes">
-      {{> "systems/pf1/templates/items/parts/item-changes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
-      {{> "systems/pf1/templates/items/parts/item-notes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
     </div>
     {{/unless}}
   </section>

@@ -1,7 +1,7 @@
 // Namespace D&D5e Configuration Values
-export const PF1 = {};
+export const D35E = {};
 
-PF1.re = {
+D35E.re = {
   "traitSeparator": /\s*[,;]\s*/g,
 };
 
@@ -10,68 +10,68 @@ PF1.re = {
  * The set of Ability Scores used within the system
  * @type {Object}
  */
-PF1.abilities = {
-  "str": "PF1.AbilityStr",
-  "dex": "PF1.AbilityDex",
-  "con": "PF1.AbilityCon",
-  "int": "PF1.AbilityInt",
-  "wis": "PF1.AbilityWis",
-  "cha": "PF1.AbilityCha"
+D35E.abilities = {
+  "str": "D35E.AbilityStr",
+  "dex": "D35E.AbilityDex",
+  "con": "D35E.AbilityCon",
+  "int": "D35E.AbilityInt",
+  "wis": "D35E.AbilityWis",
+  "cha": "D35E.AbilityCha"
 };
 
-PF1.abilitiesShort = {
-  "str": "PF1.AbilityShortStr",
-  "dex": "PF1.AbilityShortDex",
-  "con": "PF1.AbilityShortCon",
-  "int": "PF1.AbilityShortInt",
-  "wis": "PF1.AbilityShortWis",
-  "cha": "PF1.AbilityShortCha"
+D35E.abilitiesShort = {
+  "str": "D35E.AbilityShortStr",
+  "dex": "D35E.AbilityShortDex",
+  "con": "D35E.AbilityShortCon",
+  "int": "D35E.AbilityShortInt",
+  "wis": "D35E.AbilityShortWis",
+  "cha": "D35E.AbilityShortCha"
 };
 
 /**
  * The set of Saving Throws
  * @type {Object}
  */
-PF1.savingThrows = {
-  "fort": "PF1.SavingThrowFort",
-  "ref": "PF1.SavingThrowRef",
-  "will": "PF1.SavingThrowWill"
+D35E.savingThrows = {
+  "fort": "D35E.SavingThrowFort",
+  "ref": "D35E.SavingThrowRef",
+  "will": "D35E.SavingThrowWill"
 };
 
 /**
  * The set of modifiers for Saving Throws
  * @type {Object}
  */
-PF1.savingThrowMods = {
+D35E.savingThrowMods = {
   "fort": "con",
   "ref": "dex",
   "will": "wis"
 };
 
-PF1.classTypes = {
-  "base": "PF1.ClassTypeBase",
-  "prestige": "PF1.ClassTypePrestige",
-  "racial": "PF1.ClassTypeRacial",
+D35E.classTypes = {
+  "base": "D35E.ClassTypeBase",
+  "prestige": "D35E.ClassTypePrestige",
+  "racial": "D35E.ClassTypeRacial",
 };
 
-PF1.classBAB = {
-  "low": "PF1.Low",
-  "med": "PF1.Medium",
-  "high": "PF1.High",
+D35E.classBAB = {
+  "low": "D35E.Low",
+  "med": "D35E.Medium",
+  "high": "D35E.High",
 };
 
-PF1.classSavingThrows = {
-  "low": "PF1.Poor",
-  "high": "PF1.Good",
+D35E.classSavingThrows = {
+  "low": "D35E.Poor",
+  "high": "D35E.Good",
 };
 
-PF1.classBABFormulas = {
+D35E.classBABFormulas = {
   "low": "floor(@level * 0.5)",
   "med": "floor(@level * 0.75)",
   "high": "@level",
 };
 
-PF1.classSavingThrowFormulas = {
+D35E.classSavingThrowFormulas = {
   "base": {
     "low": "floor(@level / 3)",
     "high": "2 + floor(@level / 2)",
@@ -86,30 +86,30 @@ PF1.classSavingThrowFormulas = {
   },
 };
 
-PF1.favouredClassBonuses = {
-  "hp": "PF1.FavouredClassHP",
-  "skill": "PF1.FavouredClassSkill",
-  "alt": "PF1.FavouredClassAlt",
+D35E.favouredClassBonuses = {
+  "hp": "D35E.FavouredClassHP",
+  "skill": "D35E.FavouredClassSkill",
+  "alt": "D35E.FavouredClassAlt",
 };
 
 /**
  * The set of Armor Classes
  * @type {Object}
  */
-PF1.ac = {
-  "normal": "PF1.ACNormal",
-  "touch": "PF1.ACTouch",
-  "flatFooted": "PF1.ACFlatFooted"
+D35E.ac = {
+  "normal": "D35E.ACNormal",
+  "touch": "D35E.ACTouch",
+  "flatFooted": "D35E.ACFlatFooted"
 };
 
 /**
  * The set of Armor Class modifier types
  * @type {Object}
  */
-PF1.acValueLabels = {
-  "normal": "PF1.ACTypeNormal",
-  "touch": "PF1.ACTypeTouch",
-  "flatFooted": "PF1.ACTypeFlatFooted"
+D35E.acValueLabels = {
+  "normal": "D35E.ACTypeNormal",
+  "touch": "D35E.ACTypeTouch",
+  "flatFooted": "D35E.ACTypeFlatFooted"
 };
 
 /* -------------------------------------------- */
@@ -118,16 +118,16 @@ PF1.acValueLabels = {
  * Character alignment options
  * @type {Object}
  */
-PF1.alignments = {
-  'lg': "PF1.AlignmentLG",
-  'ng': "PF1.AlignmentNG",
-  'cg': "PF1.AlignmentCG",
-  'ln': "PF1.AlignmentLN",
-  'tn': "PF1.AlignmentTN",
-  'cn': "PF1.AlignmentCN",
-  'le': "PF1.AlignmentLE",
-  'ne': "PF1.AlignmentNE",
-  'ce': "PF1.AlignmentCE"
+D35E.alignments = {
+  'lg': "D35E.AlignmentLG",
+  'ng': "D35E.AlignmentNG",
+  'cg': "D35E.AlignmentCG",
+  'ln': "D35E.AlignmentLN",
+  'tn': "D35E.AlignmentTN",
+  'cn': "D35E.AlignmentCN",
+  'le': "D35E.AlignmentLE",
+  'ne': "D35E.AlignmentNE",
+  'ce': "D35E.AlignmentCE"
 };
 
 /* -------------------------------------------- */
@@ -136,17 +136,17 @@ PF1.alignments = {
  * The set of Armor Proficiencies which a character may have
  * @type {Object}
  */
-PF1.armorProficiencies = {
-  "lgt": "PF1.ArmorProfLight",
-  "med": "PF1.ArmorProfMedium",
-  "hvy": "PF1.ArmorProfHeavy",
-  "shl": "PF1.ArmorProfShield",
-  "twr": "PF1.ArmorProfTowerShield",
+D35E.armorProficiencies = {
+  "lgt": "D35E.ArmorProfLight",
+  "med": "D35E.ArmorProfMedium",
+  "hvy": "D35E.ArmorProfHeavy",
+  "shl": "D35E.ArmorProfShield",
+  "twr": "D35E.ArmorProfTowerShield",
 };
 
-PF1.weaponProficiencies = {
-  "sim": "PF1.WeaponProfSimple",
-  "mar": "PF1.WeaponProfMartial",
+D35E.weaponProficiencies = {
+  "sim": "D35E.WeaponProfSimple",
+  "mar": "D35E.WeaponProfMartial",
 };
 
 /* -------------------------------------------- */
@@ -155,66 +155,66 @@ PF1.weaponProficiencies = {
  * This describes the ways that an ability can be activated
  * @type {Object}
  */
-PF1.abilityActivationTypes = {
-  "passive": "PF1.ActivationTypePassive",
-  "free": "PF1.ActivationTypeFree",
-  "swift": "PF1.ActivationTypeSwift",
-  "immediate": "PF1.ActivationTypeImmediate",
-  "move": "PF1.ActivationTypeMove",
-  "standard": "PF1.ActivationTypeStandard",
-  "full": "PF1.ActivationTypeFullround",
-  "attack": "PF1.ActivationTypeAttack",
-  "round": "PF1.ActivationTypeRound",
-  "minute": "PF1.ActivationTypeMinute",
-  "hour": "PF1.ActivationTypeHour",
-  "special": "PF1.ActivationTypeSpecial",
+D35E.abilityActivationTypes = {
+  "passive": "D35E.ActivationTypePassive",
+  "free": "D35E.ActivationTypeFree",
+  "swift": "D35E.ActivationTypeSwift",
+  "immediate": "D35E.ActivationTypeImmediate",
+  "move": "D35E.ActivationTypeMove",
+  "standard": "D35E.ActivationTypeStandard",
+  "full": "D35E.ActivationTypeFullround",
+  "attack": "D35E.ActivationTypeAttack",
+  "round": "D35E.ActivationTypeRound",
+  "minute": "D35E.ActivationTypeMinute",
+  "hour": "D35E.ActivationTypeHour",
+  "special": "D35E.ActivationTypeSpecial",
 };
 
 /**
  * This describes plurals for activation types.
  */
-PF1.abilityActivationTypesPlurals = {
-  "free": "PF1.ActivationTypeFreePlural",
-  "swift": "PF1.ActivationTypeSwiftPlural",
-  "immediate": "PF1.ActivationTypeImmediatePlural",
-  "move": "PF1.ActivationTypeMovePlural",
-  "standard": "PF1.ActivationTypeStandardPlural",
-  "full": "PF1.ActivationTypeFullroundPlural",
-  "attack": "PF1.ActivationTypeAttackPlural",
-  "round": "PF1.ActivationTypeRoundPlural",
-  "minute": "PF1.ActivationTypeMinutePlural",
-  "hour": "PF1.ActivationTypeHourPlural",
+D35E.abilityActivationTypesPlurals = {
+  "free": "D35E.ActivationTypeFreePlural",
+  "swift": "D35E.ActivationTypeSwiftPlural",
+  "immediate": "D35E.ActivationTypeImmediatePlural",
+  "move": "D35E.ActivationTypeMovePlural",
+  "standard": "D35E.ActivationTypeStandardPlural",
+  "full": "D35E.ActivationTypeFullroundPlural",
+  "attack": "D35E.ActivationTypeAttackPlural",
+  "round": "D35E.ActivationTypeRoundPlural",
+  "minute": "D35E.ActivationTypeMinutePlural",
+  "hour": "D35E.ActivationTypeHourPlural",
 };
 
-PF1.divineFocus = {
+D35E.divineFocus = {
   "0": "",
-  "1": "PF1.SpellComponentDivineFocusAlone",
-  "2": "PF1.SpellComponentDivineFocusMaterial",
-  "3": "PF1.SpellComponentDivineFocusFocus",
+  "1": "D35E.SpellComponentDivineFocusAlone",
+  "2": "D35E.SpellComponentDivineFocusMaterial",
+  "3": "D35E.SpellComponentDivineFocusFocus",
 };
 
-PF1.measureTemplateTypes = {
-  "cone": "PF1.MeasureTemplateCone",
-  "circle": "PF1.MeasureTemplateCircle",
-  "ray": "PF1.MeasureTemplateRay",
+D35E.measureTemplateTypes = {
+  "cone": "D35E.MeasureTemplateCone",
+  "circle": "D35E.MeasureTemplateCircle",
+  "ray": "D35E.MeasureTemplateRay",
 };
 
 /* -------------------------------------------- */
 
 // Creature Sizes
-PF1.actorSizes = {
-  "fine": "PF1.ActorSizeFine",
-  "dim": "PF1.ActorSizeDiminutive",
-  "tiny": "PF1.ActorSizeTiny",
-  "sm": "PF1.ActorSizeSmall",
-  "med": "PF1.ActorSizeMedium",
-  "lg": "PF1.ActorSizeLarge",
-  "huge": "PF1.ActorSizeHuge",
-  "grg": "PF1.ActorSizeGargantuan",
-  "col": "PF1.ActorSizeColossal",
+D35E.actorSizes = {
+  "fine": "D35E.ActorSizeFine",
+  "dim": "D35E.ActorSizeDiminutive",
+  "tiny": "D35E.ActorSizeTiny",
+  "sm": "D35E.ActorSizeSmall",
+  "med": "D35E.ActorSizeMedium",
+  "lg": "D35E.ActorSizeLarge",
+  "huge": "D35E.ActorSizeHuge",
+  "grg": "D35E.ActorSizeGargantuan",
+  "col": "D35E.ActorSizeColossal",
 };
 
-PF1.sizeChart = {
+D35E.sizeChart = {
   "fine": "F",
   "dim":  "D",
   "tiny": "T",
@@ -226,7 +226,7 @@ PF1.sizeChart = {
   "col":  "C",
 };
 
-PF1.tokenSizes = {
+D35E.tokenSizes = {
   "fine": { w: 1, h: 1, scale: 0.2 },
   "dim": { w: 1, h: 1, scale: 0.4 },
   "tiny": { w: 1, h: 1, scale: 0.6 },
@@ -238,7 +238,7 @@ PF1.tokenSizes = {
   "col": { w: 6, h: 6, scale: 1 },
 };
 
-PF1.sizeMods = {
+D35E.sizeMods = {
   "fine": 8,
   "dim": 4,
   "tiny": 2,
@@ -250,7 +250,7 @@ PF1.sizeMods = {
   "col": -8
 };
 
-PF1.sizeSpecialMods = {
+D35E.sizeSpecialMods = {
   "fine": -8,
   "dim": -4,
   "tiny": -2,
@@ -262,7 +262,7 @@ PF1.sizeSpecialMods = {
   "col": 8
 };
 
-PF1.sizeFlyMods = {
+D35E.sizeFlyMods = {
   "fine": 8,
   "dim": 6,
   "tiny": 4,
@@ -274,7 +274,7 @@ PF1.sizeFlyMods = {
   "col": -8
 };
 
-PF1.sizeStealthMods = {
+D35E.sizeStealthMods = {
   "fine": 16,
   "dim": 12,
   "tiny": 8,
@@ -286,15 +286,15 @@ PF1.sizeStealthMods = {
   "col": -16
 };
 
-PF1.flyManeuverabilities = {
-  "clumsy": "PF1.FlyManeuverabilityClumsy",
-  "poor": "PF1.FlyManeuverabilityPoor",
-  "average": "PF1.FlyManeuverabilityAverage",
-  "good": "PF1.FlyManeuverabilityGood",
-  "perfect": "PF1.FlyManeuverabilityPerfect",
+D35E.flyManeuverabilities = {
+  "clumsy": "D35E.FlyManeuverabilityClumsy",
+  "poor": "D35E.FlyManeuverabilityPoor",
+  "average": "D35E.FlyManeuverabilityAverage",
+  "good": "D35E.FlyManeuverabilityGood",
+  "perfect": "D35E.FlyManeuverabilityPerfect",
 };
 
-PF1.flyManeuverabilityValues = {
+D35E.flyManeuverabilityValues = {
   "clumsy": -8,
   "poor": -4,
   "average": 0,
@@ -302,7 +302,7 @@ PF1.flyManeuverabilityValues = {
   "perfect": 8,
 };
 
-PF1.speedReduction = {
+D35E.speedReduction = {
   "5": 5,
   "15": 10,
   "20": 15,
@@ -323,14 +323,14 @@ PF1.speedReduction = {
 
 /* -------------------------------------------- */
 
-PF1.encumbranceLoads = [
+D35E.encumbranceLoads = [
   0,
   10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
   115, 130, 150, 175, 200, 230, 260, 300, 350,
   400, 460, 520, 600, 700, 800, 920, 1040, 1200, 1400, 1600
 ];
 
-PF1.encumbranceMultipliers = {
+D35E.encumbranceMultipliers = {
   normal: {
     fine: 0.125,
     dim: 0.25,
@@ -361,22 +361,22 @@ PF1.encumbranceMultipliers = {
  * Classification types for item action types
  * @type {Object}
  */
-PF1.itemActionTypes = {
-  "mwak": "PF1.ActionMWAK",
-  "rwak": "PF1.ActionRWAK",
-  "msak": "PF1.ActionMSAK",
-  "rsak": "PF1.ActionRSAK",
-  "spellsave": "PF1.ActionSpellSave",
-  "save": "PF1.ActionSave",
-  "heal": "PF1.ActionHeal",
-  "other": "PF1.ActionOther"
+D35E.itemActionTypes = {
+  "mwak": "D35E.ActionMWAK",
+  "rwak": "D35E.ActionRWAK",
+  "msak": "D35E.ActionMSAK",
+  "rsak": "D35E.ActionRSAK",
+  "spellsave": "D35E.ActionSpellSave",
+  "save": "D35E.ActionSave",
+  "heal": "D35E.ActionHeal",
+  "other": "D35E.ActionOther"
 };
 
 /* -------------------------------------------- */
 
-PF1.itemCapacityTypes = {
-  "items": "PF1.ItemContainerCapacityItems",
-  "weight": "PF1.ItemContainerCapacityWeight"
+D35E.itemCapacityTypes = {
+  "items": "D35E.ItemContainerCapacityItems",
+  "weight": "D35E.ItemContainerCapacityWeight"
 };
 
 /* -------------------------------------------- */
@@ -385,69 +385,69 @@ PF1.itemCapacityTypes = {
  * Enumerate the lengths of time over which an item can have limited use ability
  * @type {Object}
  */
-PF1.limitedUsePeriods = {
-  "single": "PF1.LimitedUseSingle",
-  "unlimited": "PF1.Unlimited",
-  "day": "PF1.LimitedUseDay",
-  "week": "PF1.LimitedUseWeek",
-  "charges": "PF1.LimitedUseCharges",
+D35E.limitedUsePeriods = {
+  "single": "D35E.LimitedUseSingle",
+  "unlimited": "D35E.Unlimited",
+  "day": "D35E.LimitedUseDay",
+  "week": "D35E.LimitedUseWeek",
+  "charges": "D35E.LimitedUseCharges",
 };
 
 
 /* -------------------------------------------- */
 
 // Equipment Types
-PF1.equipmentTypes = {
+D35E.equipmentTypes = {
   "armor": {
-    "_label": "PF1.EquipTypeArmor",
-    "lightArmor": "PF1.EquipTypeLight",
-    "mediumArmor": "PF1.EquipTypeMedium",
-    "heavyArmor": "PF1.EquipTypeHeavy",
+    "_label": "D35E.EquipTypeArmor",
+    "lightArmor": "D35E.EquipTypeLight",
+    "mediumArmor": "D35E.EquipTypeMedium",
+    "heavyArmor": "D35E.EquipTypeHeavy",
   },
   "shield": {
-    "_label": "PF1.EquipTypeShield",
-    "lightShield": "PF1.EquipTypeLightShield",
-    "heavyShield": "PF1.EquipTypeHeavyShield",
-    "towerShield": "PF1.EquipTypeTowerShield",
-    "other": "PF1.EquipTypeOtherShield",
+    "_label": "D35E.EquipTypeShield",
+    "lightShield": "D35E.EquipTypeLightShield",
+    "heavyShield": "D35E.EquipTypeHeavyShield",
+    "towerShield": "D35E.EquipTypeTowerShield",
+    "other": "D35E.EquipTypeOtherShield",
   },
   "misc": {
-    "_label": "PF1.Misc",
-    "wondrous": "PF1.EquipTypeWondrousItem",
-    "clothing": "PF1.EquipTypeClothing",
-    "other": "PF1.Other",
+    "_label": "D35E.Misc",
+    "wondrous": "D35E.EquipTypeWondrousItem",
+    "clothing": "D35E.EquipTypeClothing",
+    "other": "D35E.Other",
   },
 };
 
-PF1.equipmentSlots = {
+D35E.equipmentSlots = {
   "armor": {
-    "armor": "PF1.EquipSlotArmor",
+    "armor": "D35E.EquipSlotArmor",
   },
   "shield": {
-    "shield": "PF1.EquipSlotShield",
+    "shield": "D35E.EquipSlotShield",
   },
   "misc": {
-    "slotless": "PF1.EquipSlotSlotless",
-    "head": "PF1.EquipSlotHead",
-    "headband": "PF1.EquipSlotHeadband",
-    "eyes": "PF1.EquipSlotEyes",
-    "shoulders": "PF1.EquipSlotShoulders",
-    "neck": "PF1.EquipSlotNeck",
-    "chest": "PF1.EquipSlotChest",
-    "body": "PF1.EquipSlotBody",
-    "belt": "PF1.EquipSlotBelt",
-    "wrists": "PF1.EquipSlotWrists",
-    "hands": "PF1.EquipSlotHands",
-    "ring": "PF1.EquipSlotRing",
-    "feet": "PF1.EquipSlotFeet",
+    "slotless": "D35E.EquipSlotSlotless",
+    "head": "D35E.EquipSlotHead",
+    "headband": "D35E.EquipSlotHeadband",
+    "eyes": "D35E.EquipSlotEyes",
+    "shoulders": "D35E.EquipSlotShoulders",
+    "neck": "D35E.EquipSlotNeck",
+    "chest": "D35E.EquipSlotChest",
+    "body": "D35E.EquipSlotBody",
+    "belt": "D35E.EquipSlotBelt",
+    "wrists": "D35E.EquipSlotWrists",
+    "hands": "D35E.EquipSlotHands",
+    "ring": "D35E.EquipSlotRing",
+    "feet": "D35E.EquipSlotFeet",
   },
 };
 
-PF1.lootTypes = {
-  "gear": "PF1.LootTypeGear",
-  "ammo": "PF1.LootTypeAmmo",
-  "tradeGoods": "PF1.LootTypeTradeGoods",
-  "misc": "PF1.Misc",
+D35E.lootTypes = {
+  "gear": "D35E.LootTypeGear",
+  "ammo": "D35E.LootTypeAmmo",
+  "tradeGoods": "D35E.LootTypeTradeGoods",
+  "misc": "D35E.Misc",
 };
 
 
@@ -457,29 +457,29 @@ PF1.lootTypes = {
  * Enumerate the valid consumable types which are recognized by the system
  * @type {Object}
  */
-PF1.consumableTypes = {
-  "potion": "PF1.ConsumableTypePotion",
-  "poison": "PF1.ConsumableTypePoison",
-  "drug": "PF1.ConsumableTypeDrug",
-  "scroll": "PF1.ConsumableTypeScroll",
-  "wand": "PF1.ConsumableTypeWand",
-  "misc": "PF1.Misc",
+D35E.consumableTypes = {
+  "potion": "D35E.ConsumableTypePotion",
+  "poison": "D35E.ConsumableTypePoison",
+  "drug": "D35E.ConsumableTypeDrug",
+  "scroll": "D35E.ConsumableTypeScroll",
+  "wand": "D35E.ConsumableTypeWand",
+  "misc": "D35E.Misc",
 };
 
-PF1.attackTypes = {
-  "weapon": "PF1.AttackTypeWeapon",
-  "natural": "PF1.AttackTypeNatural",
-  "ability": "PF1.AttackTypeAbility",
-  "racialAbility": "PF1.AttackTypeRacial",
-  "misc": "PF1.Misc",
+D35E.attackTypes = {
+  "weapon": "D35E.AttackTypeWeapon",
+  "natural": "D35E.AttackTypeNatural",
+  "ability": "D35E.AttackTypeAbility",
+  "racialAbility": "D35E.AttackTypeRacial",
+  "misc": "D35E.Misc",
 };
 
-PF1.featTypes = {
-  "feat": "PF1.FeatTypeFeat",
-  "classFeat": "PF1.FeatTypeClassFeat",
-  "trait": "PF1.FeatTypeTraits",
-  "racial": "PF1.FeatTypeRacial",
-  "misc": "PF1.Misc",
+D35E.featTypes = {
+  "feat": "D35E.FeatTypeFeat",
+  "classFeat": "D35E.FeatTypeClassFeat",
+  "trait": "D35E.FeatTypeTraits",
+  "racial": "D35E.FeatTypeRacial",
+  "misc": "D35E.Misc",
 };
 
 /* -------------------------------------------- */
@@ -488,20 +488,20 @@ PF1.featTypes = {
  * The valid currency denominations supported by the 5e system
  * @type {Object}
  */
-PF1.currencies = {
-  "pp": "PF1.CurrencyPP",
-  "gp": "PF1.CurrencyGP",
-  "sp": "PF1.CurrencySP",
-  "cp": "PF1.CurrencyCP",
+D35E.currencies = {
+  "pp": "D35E.CurrencyPP",
+  "gp": "D35E.CurrencyGP",
+  "sp": "D35E.CurrencySP",
+  "cp": "D35E.CurrencyCP",
 };
 
-PF1.acTypes = {
+D35E.acTypes = {
   "armor": "Armor",
   "shield": "Shield",
   "natural": "Natural Armor",
 };
 
-PF1.bonusModifiers = {
+D35E.bonusModifiers = {
   "untyped": "Untyped",
   "base": "Base",
   "enh": "Enhancement",
@@ -527,7 +527,7 @@ PF1.bonusModifiers = {
 
 
 // Damage Types
-PF1.damageTypes = {
+D35E.damageTypes = {
   "bludgeoning": "Bludgeoning",
   "piercing": "Piercing",
   "slashing": "Slashing",
@@ -543,18 +543,18 @@ PF1.damageTypes = {
 
 /* -------------------------------------------- */
 
-PF1.distanceUnits = {
-  "none": "PF1.None",
-  "personal": "PF1.DistPersonal",
-  "touch": "PF1.DistTouch",
-  "close": "PF1.DistClose",
-  "medium": "PF1.DistMedium",
-  "long": "PF1.DistLong",
-  "ft": "PF1.DistFt",
-  "mi": "PF1.DistMi",
-  "spec": "PF1.Special",
-  "seeText": "PF1.SeeText",
-  "unlimited": "PF1.Unlimited",
+D35E.distanceUnits = {
+  "none": "D35E.None",
+  "personal": "D35E.DistPersonal",
+  "touch": "D35E.DistTouch",
+  "close": "D35E.DistClose",
+  "medium": "D35E.DistMedium",
+  "long": "D35E.DistLong",
+  "ft": "D35E.DistFt",
+  "mi": "D35E.DistMi",
+  "spec": "D35E.Special",
+  "seeText": "D35E.SeeText",
+  "unlimited": "D35E.Unlimited",
 };
 
 /* -------------------------------------------- */
@@ -563,50 +563,50 @@ PF1.distanceUnits = {
  * This Object defines the types of single or area targets which can be applied in D&D5e
  * @type {Object}
  */
-PF1.targetTypes = {
-  "none": "PF1.None",
-  "self": "PF1.TargetSelf",
-  "creature": "PF1.TargetCreature",
-  "ally": "PF1.TargetAlly",
-  "enemy": "PF1.TargetEnemy",
-  "object": "PF1.TargetObject",
-  "space": "PF1.TargetSpace",
-  "radius": "PF1.TargetRadius",
-  "sphere": "PF1.TargetSphere",
-  "cylinder": "PF1.TargetCylinder",
-  "cone": "PF1.TargetCone",
-  "square": "PF1.TargetSquare",
-  "cube": "PF1.TargetCube",
-  "line": "PF1.TargetLine",
-  "wall": "PF1.TargetWall"
+D35E.targetTypes = {
+  "none": "D35E.None",
+  "self": "D35E.TargetSelf",
+  "creature": "D35E.TargetCreature",
+  "ally": "D35E.TargetAlly",
+  "enemy": "D35E.TargetEnemy",
+  "object": "D35E.TargetObject",
+  "space": "D35E.TargetSpace",
+  "radius": "D35E.TargetRadius",
+  "sphere": "D35E.TargetSphere",
+  "cylinder": "D35E.TargetCylinder",
+  "cone": "D35E.TargetCone",
+  "square": "D35E.TargetSquare",
+  "cube": "D35E.TargetCube",
+  "line": "D35E.TargetLine",
+  "wall": "D35E.TargetWall"
 };
 
 /* -------------------------------------------- */
 
 /**
- * This Object defines the various lengths of time which can occur in PF1
+ * This Object defines the various lengths of time which can occur in D35E
  * @type {Object}
  */
-PF1.timePeriods = {
-  "inst": "PF1.TimeInst",
-  "turn": "PF1.TimeTurn",
-  "round": "PF1.TimeRound",
-  "minute": "PF1.TimeMinute",
-  "hour": "PF1.TimeHour",
-  "day": "PF1.TimeDay",
-  "month": "PF1.TimeMonth",
-  "year": "PF1.TimeYear",
-  "perm": "PF1.TimePerm",
-  "seeText": "PF1.SeeText",
-  "spec": "PF1.Special",
+D35E.timePeriods = {
+  "inst": "D35E.TimeInst",
+  "turn": "D35E.TimeTurn",
+  "round": "D35E.TimeRound",
+  "minute": "D35E.TimeMinute",
+  "hour": "D35E.TimeHour",
+  "day": "D35E.TimeDay",
+  "month": "D35E.TimeMonth",
+  "year": "D35E.TimeYear",
+  "perm": "D35E.TimePerm",
+  "seeText": "D35E.SeeText",
+  "spec": "D35E.Special",
 };
 
 /* -------------------------------------------- */
 
 // Healing Types
-PF1.healingTypes = {
-  "healing": "PF1.Healing",
-  "temphp": "PF1.HealingTemp"
+D35E.healingTypes = {
+  "healing": "D35E.Healing",
+  "temphp": "D35E.HealingTemp"
 };
 
 /* -------------------------------------------- */
@@ -615,72 +615,72 @@ PF1.healingTypes = {
  * Character senses options
  * @type {Object}
  */
-PF1.senses = {
-  "bs": "PF1.SenseBS",
-  "dv": "PF1.SenseDV",
-  "ts": "PF1.SenseTS",
-  "tr": "PF1.SenseTR",
-  "ll": "PF1.SenseLL"
+D35E.senses = {
+  "bs": "D35E.SenseBS",
+  "dv": "D35E.SenseDV",
+  "ts": "D35E.SenseTS",
+  "tr": "D35E.SenseTR",
+  "ll": "D35E.SenseLL"
 };
 
 
 /* -------------------------------------------- */
 
 /**
- * The set of skill which can be trained in PF1
+ * The set of skill which can be trained in D35E
  * @type {Object}
  */
-PF1.skills = {
-  "acr": "PF1.SkillAcr",
-  "apr": "PF1.SkillApr",
-  "art": "PF1.SkillArt",
-  "blf": "PF1.SkillBlf",
-  "clm": "PF1.SkillClm",
-  "crf": "PF1.SkillCrf",
-  "dip": "PF1.SkillDip",
-  "dev": "PF1.SkillDev",
-  "dis": "PF1.SkillDis",
-  "esc": "PF1.SkillEsc",
-  "fly": "PF1.SkillFly",
-  "han": "PF1.SkillHan",
-  "hea": "PF1.SkillHea",
-  "int": "PF1.SkillInt",
-  "kar": "PF1.SkillKAr",
-  "kdu": "PF1.SkillKDu",
-  "ken": "PF1.SkillKEn",
-  "kge": "PF1.SkillKGe",
-  "khi": "PF1.SkillKHi",
-  "klo": "PF1.SkillKLo",
-  "kna": "PF1.SkillKNa",
-  "kno": "PF1.SkillKNo",
-  "kpl": "PF1.SkillKPl",
-  "kre": "PF1.SkillKRe",
-  "lin": "PF1.SkillLin",
-  "lor": "PF1.SkillLor",
-  "per": "PF1.SkillPer",
-  "prf": "PF1.SkillPrf",
-  "pro": "PF1.SkillPro",
-  "rid": "PF1.SkillRid",
-  "sen": "PF1.SkillSen",
-  "slt": "PF1.SkillSlt",
-  "spl": "PF1.SkillSpl",
-  "ste": "PF1.SkillSte",
-  "sur": "PF1.SkillSur",
-  "swm": "PF1.SkillSwm",
-  "umd": "PF1.SkillUMD"
+D35E.skills = {
+  "acr": "D35E.SkillAcr",
+  "apr": "D35E.SkillApr",
+  "art": "D35E.SkillArt",
+  "blf": "D35E.SkillBlf",
+  "clm": "D35E.SkillClm",
+  "crf": "D35E.SkillCrf",
+  "dip": "D35E.SkillDip",
+  "dev": "D35E.SkillDev",
+  "dis": "D35E.SkillDis",
+  "esc": "D35E.SkillEsc",
+  "fly": "D35E.SkillFly",
+  "han": "D35E.SkillHan",
+  "hea": "D35E.SkillHea",
+  "int": "D35E.SkillInt",
+  "kar": "D35E.SkillKAr",
+  "kdu": "D35E.SkillKDu",
+  "ken": "D35E.SkillKEn",
+  "kge": "D35E.SkillKGe",
+  "khi": "D35E.SkillKHi",
+  "klo": "D35E.SkillKLo",
+  "kna": "D35E.SkillKNa",
+  "kno": "D35E.SkillKNo",
+  "kpl": "D35E.SkillKPl",
+  "kre": "D35E.SkillKRe",
+  "lin": "D35E.SkillLin",
+  "lor": "D35E.SkillLor",
+  "per": "D35E.SkillPer",
+  "prf": "D35E.SkillPrf",
+  "pro": "D35E.SkillPro",
+  "rid": "D35E.SkillRid",
+  "sen": "D35E.SkillSen",
+  "slt": "D35E.SkillSlt",
+  "spl": "D35E.SkillSpl",
+  "ste": "D35E.SkillSte",
+  "sur": "D35E.SkillSur",
+  "swm": "D35E.SkillSwm",
+  "umd": "D35E.SkillUMD"
 };
 
-PF1.arbitrarySkills = [
+D35E.arbitrarySkills = [
   "art", "crf", "lor", "prf", "pro"
 ];
 
 
 /* -------------------------------------------- */
 
-PF1.spellPreparationModes = {
-  "atwill": "PF1.SpellPrepAtWill",
-  "prepared": "PF1.SpellPrepPrepared",
-  "spontaneous": "PF1.SpellPrepSpontaneous",
+D35E.spellPreparationModes = {
+  "atwill": "D35E.SpellPrepAtWill",
+  "prepared": "D35E.SpellPrepPrepared",
+  "spontaneous": "D35E.SpellPrepSpontaneous",
 };
 
 /* -------------------------------------------- */
@@ -688,32 +688,32 @@ PF1.spellPreparationModes = {
 /* -------------------------------------------- */
 
 // Weapon Types
-PF1.weaponTypes = {
+D35E.weaponTypes = {
   "simple": {
-    "_label": "PF1.WeaponTypeSimple",
-    "light": "PF1.WeaponPropLight",
-    "1h": "PF1.WeaponPropOneHanded",
-    "2h": "PF1.WeaponPropTwoHanded",
-    "ranged": "PF1.WeaponSubtypeRanged",
+    "_label": "D35E.WeaponTypeSimple",
+    "light": "D35E.WeaponPropLight",
+    "1h": "D35E.WeaponPropOneHanded",
+    "2h": "D35E.WeaponPropTwoHanded",
+    "ranged": "D35E.WeaponSubtypeRanged",
   },
   "martial": {
-    "_label": "PF1.WeaponTypeMartial",
-    "light": "PF1.WeaponPropLight",
-    "1h": "PF1.WeaponPropOneHanded",
-    "2h": "PF1.WeaponPropTwoHanded",
-    "ranged": "PF1.WeaponSubtypeRanged",
+    "_label": "D35E.WeaponTypeMartial",
+    "light": "D35E.WeaponPropLight",
+    "1h": "D35E.WeaponPropOneHanded",
+    "2h": "D35E.WeaponPropTwoHanded",
+    "ranged": "D35E.WeaponSubtypeRanged",
   },
   "exotic": {
-    "_label": "PF1.WeaponTypeExotic",
-    "light": "PF1.WeaponPropLight",
-    "1h": "PF1.WeaponPropOneHanded",
-    "2h": "PF1.WeaponPropTwoHanded",
-    "ranged": "PF1.WeaponSubtypeRanged",
+    "_label": "D35E.WeaponTypeExotic",
+    "light": "D35E.WeaponPropLight",
+    "1h": "D35E.WeaponPropOneHanded",
+    "2h": "D35E.WeaponPropTwoHanded",
+    "ranged": "D35E.WeaponSubtypeRanged",
   },
   "misc": {
-    "_label": "PF1.Misc",
-    "splash": "PF1.WeaponTypeSplash",
-    "other": "PF1.Other",
+    "_label": "D35E.Misc",
+    "splash": "D35E.WeaponTypeSplash",
+    "other": "D35E.Other",
   }
 };
 
@@ -724,60 +724,60 @@ PF1.weaponTypes = {
  * Define the set of weapon property flags which can exist on a weapon
  * @type {Object}
  */
-PF1.weaponProperties = {
-  "blc": "PF1.WeaponPropBlocking",
-  "brc": "PF1.WeaponPropBrace",
-  "dbl": "PF1.WeaponPropDouble",
-  "dis": "PF1.WeaponPropDisarm",
-  "fin": "PF1.WeaponPropFinesse",
-  "frg": "PF1.WeaponPropFragile",
-  "grp": "PF1.WeaponPropGrapple",
-  "imp": "PF1.WeaponPropImprovised",
-  "mnk": "PF1.WeaponPropMonk",
-  "nnl": "PF1.WeaponPropNonLethal",
-  "prf": "PF1.WeaponPropPerformance",
-  "rch": "PF1.WeaponPropReach",
-  "snd": "PF1.WeaponPropSunder",
-  "thr": "PF1.WeaponPropThrown",
-  "trp": "PF1.WeaponPropTrip",
+D35E.weaponProperties = {
+  "blc": "D35E.WeaponPropBlocking",
+  "brc": "D35E.WeaponPropBrace",
+  "dbl": "D35E.WeaponPropDouble",
+  "dis": "D35E.WeaponPropDisarm",
+  "fin": "D35E.WeaponPropFinesse",
+  "frg": "D35E.WeaponPropFragile",
+  "grp": "D35E.WeaponPropGrapple",
+  "imp": "D35E.WeaponPropImprovised",
+  "mnk": "D35E.WeaponPropMonk",
+  "nnl": "D35E.WeaponPropNonLethal",
+  "prf": "D35E.WeaponPropPerformance",
+  "rch": "D35E.WeaponPropReach",
+  "snd": "D35E.WeaponPropSunder",
+  "thr": "D35E.WeaponPropThrown",
+  "trp": "D35E.WeaponPropTrip",
 };
 
 
 // Spell Components
-PF1.spellComponents = {
-  "V": "PF1.SpellComponentVerbal",
-  "S": "PF1.SpellComponentSomatic",
-  "M": "PF1.SpellComponentMaterial",
-  "F": "PF1.SpellComponentFocus",
-  "DF": "PF1.SpellComponentDivineFocus",
+D35E.spellComponents = {
+  "V": "D35E.SpellComponentVerbal",
+  "S": "D35E.SpellComponentSomatic",
+  "M": "D35E.SpellComponentMaterial",
+  "F": "D35E.SpellComponentFocus",
+  "DF": "D35E.SpellComponentDivineFocus",
 };
 
 // Spell Schools
-PF1.spellSchools = {
-  "abj": "PF1.SpellSchoolAbjuration",
-  "con": "PF1.SpellSchoolConjuration",
-  "div": "PF1.SpellSchoolDivination",
-  "enc": "PF1.SpellSchoolEnchantment",
-  "evo": "PF1.SpellSchoolEvocation",
-  "ill": "PF1.SpellSchoolIllusion",
-  "nec": "PF1.SpellSchoolNecromancy",
-  "trs": "PF1.SpellSchoolTransmutation",
-  "uni": "PF1.SpellSchoolUniversal",
-  "misc": "PF1.Misc",
+D35E.spellSchools = {
+  "abj": "D35E.SpellSchoolAbjuration",
+  "con": "D35E.SpellSchoolConjuration",
+  "div": "D35E.SpellSchoolDivination",
+  "enc": "D35E.SpellSchoolEnchantment",
+  "evo": "D35E.SpellSchoolEvocation",
+  "ill": "D35E.SpellSchoolIllusion",
+  "nec": "D35E.SpellSchoolNecromancy",
+  "trs": "D35E.SpellSchoolTransmutation",
+  "uni": "D35E.SpellSchoolUniversal",
+  "misc": "D35E.Misc",
 };
 
 // Spell Levels
-PF1.spellLevels = {
-  0: "PF1.SpellLevel0",
-  1: "PF1.SpellLevel1",
-  2: "PF1.SpellLevel2",
-  3: "PF1.SpellLevel3",
-  4: "PF1.SpellLevel4",
-  5: "PF1.SpellLevel5",
-  6: "PF1.SpellLevel6",
-  7: "PF1.SpellLevel7",
-  8: "PF1.SpellLevel8",
-  9: "PF1.SpellLevel9",
+D35E.spellLevels = {
+  0: "D35E.SpellLevel0",
+  1: "D35E.SpellLevel1",
+  2: "D35E.SpellLevel2",
+  3: "D35E.SpellLevel3",
+  4: "D35E.SpellLevel4",
+  5: "D35E.SpellLevel5",
+  6: "D35E.SpellLevel6",
+  7: "D35E.SpellLevel7",
+  8: "D35E.SpellLevel8",
+  9: "D35E.SpellLevel9",
 };
 
 /* -------------------------------------------- */
@@ -787,182 +787,182 @@ PF1.spellLevels = {
  * Each level provides a proficiency multiplier
  * @type {Object}
  */
-PF1.proficiencyLevels = {
+D35E.proficiencyLevels = {
   "-4": "Not Proficient",
   0: "Proficient"
 };
 
 /* -------------------------------------------- */
 
-PF1.conditionTypes = {
-  "bleed": "PF1.CondTypeBleed",
-  "blind": "PF1.CondTypeBlind",
-  "confuse": "PF1.CondTypeConfuse",
-  "daze": "PF1.CondTypeDaze",
-  "dazzle": "PF1.CondTypeDazzle",
-  "deaf": "PF1.CondTypeDeaf",
-  "disease": "PF1.CondTypeDisease",
-  "energyDrain": "PF1.CondTypeEnergyDrain",
-  "fatigue": "PF1.CondTypeFatigue",
-  "fear": "PF1.CondTypeFear",
-  "mindAffecting": "PF1.CondTypeMindAffecting",
-  "poison": "PF1.CondTypePoison",
-  "sicken": "PF1.CondTypeSicken",
-  "paralyze": "PF1.CondTypeParalyze",
-  "petrify": "PF1.CondTypePetrify",
-  "stun": "PF1.CondTypeStun",
-  "sleep": "PF1.CondTypeSleep",
+D35E.conditionTypes = {
+  "bleed": "D35E.CondTypeBleed",
+  "blind": "D35E.CondTypeBlind",
+  "confuse": "D35E.CondTypeConfuse",
+  "daze": "D35E.CondTypeDaze",
+  "dazzle": "D35E.CondTypeDazzle",
+  "deaf": "D35E.CondTypeDeaf",
+  "disease": "D35E.CondTypeDisease",
+  "energyDrain": "D35E.CondTypeEnergyDrain",
+  "fatigue": "D35E.CondTypeFatigue",
+  "fear": "D35E.CondTypeFear",
+  "mindAffecting": "D35E.CondTypeMindAffecting",
+  "poison": "D35E.CondTypePoison",
+  "sicken": "D35E.CondTypeSicken",
+  "paralyze": "D35E.CondTypeParalyze",
+  "petrify": "D35E.CondTypePetrify",
+  "stun": "D35E.CondTypeStun",
+  "sleep": "D35E.CondTypeSleep",
 };
 
-PF1.conditions = {
-  "blind": "PF1.CondBlind",
-  "dazzled": "PF1.CondDazzled",
-  "deaf": "PF1.CondDeaf",
-  "entangled": "PF1.CondEntangled",
-  "fatigued": "PF1.CondFatigued",
-  "exhausted": "PF1.CondExhausted",
-  "grappled": "PF1.CondGrappled",
-  "helpless": "PF1.CondHelpless",
-  "paralyzed": "PF1.CondParalyzed",
-  "pinned": "PF1.CondPinned",
-  "fear": "PF1.CondFear",
-  "sickened": "PF1.CondSickened",
-  "stunned": "PF1.CondStunned",
+D35E.conditions = {
+  "blind": "D35E.CondBlind",
+  "dazzled": "D35E.CondDazzled",
+  "deaf": "D35E.CondDeaf",
+  "entangled": "D35E.CondEntangled",
+  "fatigued": "D35E.CondFatigued",
+  "exhausted": "D35E.CondExhausted",
+  "grappled": "D35E.CondGrappled",
+  "helpless": "D35E.CondHelpless",
+  "paralyzed": "D35E.CondParalyzed",
+  "pinned": "D35E.CondPinned",
+  "fear": "D35E.CondFear",
+  "sickened": "D35E.CondSickened",
+  "stunned": "D35E.CondStunned",
 };
 
-PF1.buffTypes = {
-  "temp": "PF1.Temporary",
-  "perm": "PF1.Permanent",
-  "item": "PF1.Item",
-  "misc": "PF1.Misc",
+D35E.buffTypes = {
+  "temp": "D35E.Temporary",
+  "perm": "D35E.Permanent",
+  "item": "D35E.Item",
+  "misc": "D35E.Misc",
 };
 
-PF1.buffTargets = {
+D35E.buffTargets = {
   "ac": {
-    "_label": "PF1.BuffTarAC",
-    "ac": "PF1.BuffTarACGeneric",
-    "aac": "PF1.BuffTarACArmor",
-    "sac": "PF1.BuffTarACShield",
-    "nac": "PF1.BuffTarACNatural",
+    "_label": "D35E.BuffTarAC",
+    "ac": "D35E.BuffTarACGeneric",
+    "aac": "D35E.BuffTarACArmor",
+    "sac": "D35E.BuffTarACShield",
+    "nac": "D35E.BuffTarACNatural",
   },
   "attack": {
-    "_label": "PF1.AttackRollPlural",
-    "attack": "PF1.All",
-    "mattack": "PF1.Melee",
-    "rattack": "PF1.Ranged",
+    "_label": "D35E.AttackRollPlural",
+    "attack": "D35E.All",
+    "mattack": "D35E.Melee",
+    "rattack": "D35E.Ranged",
   },
   "damage": {
-    "_label": "PF1.Damage",
-    "damage": "PF1.All",
-    "wdamage": "PF1.WeaponDamage",
-    "sdamage": "PF1.SpellDamage",
+    "_label": "D35E.Damage",
+    "damage": "D35E.All",
+    "wdamage": "D35E.WeaponDamage",
+    "sdamage": "D35E.SpellDamage",
   },
   "ability": {
-    "_label": "PF1.AbilityScore",
-    "str": "PF1.AbilityStr",
-    "dex": "PF1.AbilityDex",
-    "con": "PF1.AbilityCon",
-    "int": "PF1.AbilityInt",
-    "wis": "PF1.AbilityWis",
-    "cha": "PF1.AbilityCha",
+    "_label": "D35E.AbilityScore",
+    "str": "D35E.AbilityStr",
+    "dex": "D35E.AbilityDex",
+    "con": "D35E.AbilityCon",
+    "int": "D35E.AbilityInt",
+    "wis": "D35E.AbilityWis",
+    "cha": "D35E.AbilityCha",
   },
   "savingThrows": {
-    "_label": "PF1.SavingThrowPlural",
-    "allSavingThrows": "PF1.All",
-    "fort": "PF1.SavingThrowFort",
-    "ref": "PF1.SavingThrowRef",
-    "will": "PF1.SavingThrowWill",
+    "_label": "D35E.SavingThrowPlural",
+    "allSavingThrows": "D35E.All",
+    "fort": "D35E.SavingThrowFort",
+    "ref": "D35E.SavingThrowRef",
+    "will": "D35E.SavingThrowWill",
   },
   "skills": {
-    "_label": "PF1.Skills",
-    "skills": "PF1.All",
-    "strSkills": "PF1.BuffTarStrSkills",
-    "dexSkills": "PF1.BuffTarDexSkills",
-    "conSkills": "PF1.BuffTarConSkills",
-    "intSkills": "PF1.BuffTarIntSkills",
-    "wisSkills": "PF1.BuffTarWisSkills",
-    "chaSkills": "PF1.BuffTarChaSkills",
+    "_label": "D35E.Skills",
+    "skills": "D35E.All",
+    "strSkills": "D35E.BuffTarStrSkills",
+    "dexSkills": "D35E.BuffTarDexSkills",
+    "conSkills": "D35E.BuffTarConSkills",
+    "intSkills": "D35E.BuffTarIntSkills",
+    "wisSkills": "D35E.BuffTarWisSkills",
+    "chaSkills": "D35E.BuffTarChaSkills",
   },
   "skill": {
-    "_label": "PF1.BuffTarSpecificSkill",
+    "_label": "D35E.BuffTarSpecificSkill",
   },
   "abilityChecks": {
-    "_label": "PF1.BuffTarAbilityChecks",
-    "allChecks": "PF1.All",
-    "strChecks": "PF1.BuffTarStrChecks",
-    "dexChecks": "PF1.BuffTarDexChecks",
-    "conChecks": "PF1.BuffTarConChecks",
-    "intChecks": "PF1.BuffTarIntChecks",
-    "wisChecks": "PF1.BuffTarWisChecks",
-    "chaChecks": "PF1.BuffTarChaChecks",
+    "_label": "D35E.BuffTarAbilityChecks",
+    "allChecks": "D35E.All",
+    "strChecks": "D35E.BuffTarStrChecks",
+    "dexChecks": "D35E.BuffTarDexChecks",
+    "conChecks": "D35E.BuffTarConChecks",
+    "intChecks": "D35E.BuffTarIntChecks",
+    "wisChecks": "D35E.BuffTarWisChecks",
+    "chaChecks": "D35E.BuffTarChaChecks",
   },
   "speed": {
-    "_label": "PF1.Speed",
-    "allSpeeds": "PF1.All",
-    "landSpeed": "PF1.SpeedLand",
-    "climbSpeed": "PF1.SpeedClimb",
-    "swimSpeed": "PF1.SpeedSwim",
-    "burrowSpeed": "PF1.SpeedBurrow",
-    "flySpeed": "PF1.SpeedFly",
+    "_label": "D35E.Speed",
+    "allSpeeds": "D35E.All",
+    "landSpeed": "D35E.SpeedLand",
+    "climbSpeed": "D35E.SpeedClimb",
+    "swimSpeed": "D35E.SpeedSwim",
+    "burrowSpeed": "D35E.SpeedBurrow",
+    "flySpeed": "D35E.SpeedFly",
   },
   "misc": {
-    "_label": "PF1.MiscShort",
+    "_label": "D35E.MiscShort",
     "cmb": "CMB",
     "cmd": "CMD",
-    "init": "PF1.Initiative",
+    "init": "D35E.Initiative",
     "mhp": "Hit Points",
-    "wounds": "PF1.Wounds",
-    "vigor": "PF1.Vigor",
+    "wounds": "D35E.Wounds",
+    "vigor": "D35E.Vigor",
   },
 };
 
-PF1.contextNoteTargets = {
+D35E.contextNoteTargets = {
   "attacks": {
-    "_label": "PF1.Attacks",
-    "attack": "PF1.AttackRollPlural",
-    "effect": "PF1.DamageRollPlural",
+    "_label": "D35E.Attacks",
+    "attack": "D35E.AttackRollPlural",
+    "effect": "D35E.DamageRollPlural",
   },
   "savingThrows": {
-    "_label": "PF1.SavingThrowPlural",
-    "allSavingThrows": "PF1.All",
-    "fort": "PF1.SavingThrowFort",
-    "ref": "PF1.SavingThrowRef",
-    "will": "PF1.SavingThrowWill",
+    "_label": "D35E.SavingThrowPlural",
+    "allSavingThrows": "D35E.All",
+    "fort": "D35E.SavingThrowFort",
+    "ref": "D35E.SavingThrowRef",
+    "will": "D35E.SavingThrowWill",
   },
   "skills": {
-    "_label": "PF1.Skills",
-    "skills": "PF1.All",
-    "strSkills": "PF1.BuffTarStrSkills",
-    "dexSkills": "PF1.BuffTarDexSkills",
-    "conSkills": "PF1.BuffTarConSkills",
-    "intSkills": "PF1.BuffTarIntSkills",
-    "wisSkills": "PF1.BuffTarWisSkills",
-    "chaSkills": "PF1.BuffTarChaSkills",
+    "_label": "D35E.Skills",
+    "skills": "D35E.All",
+    "strSkills": "D35E.BuffTarStrSkills",
+    "dexSkills": "D35E.BuffTarDexSkills",
+    "conSkills": "D35E.BuffTarConSkills",
+    "intSkills": "D35E.BuffTarIntSkills",
+    "wisSkills": "D35E.BuffTarWisSkills",
+    "chaSkills": "D35E.BuffTarChaSkills",
   },
   "skill": {
-    "_label": "PF1.BuffTarSpecificSkill",
+    "_label": "D35E.BuffTarSpecificSkill",
   },
   "abilityChecks": {
-    "_label": "PF1.BuffTarAbilityChecks",
-    "allChecks": "PF1.All",
-    "strChecks": "PF1.BuffTarStrChecks",
-    "dexChecks": "PF1.BuffTarDexChecks",
-    "conChecks": "PF1.BuffTarConChecks",
-    "intChecks": "PF1.BuffTarIntChecks",
-    "wisChecks": "PF1.BuffTarWisChecks",
-    "chaChecks": "PF1.BuffTarChaChecks",
+    "_label": "D35E.BuffTarAbilityChecks",
+    "allChecks": "D35E.All",
+    "strChecks": "D35E.BuffTarStrChecks",
+    "dexChecks": "D35E.BuffTarDexChecks",
+    "conChecks": "D35E.BuffTarConChecks",
+    "intChecks": "D35E.BuffTarIntChecks",
+    "wisChecks": "D35E.BuffTarWisChecks",
+    "chaChecks": "D35E.BuffTarChaChecks",
   },
   "misc": {
-    "_label": "PF1.MiscShort",
-    "ac": "PF1.ACNormal",
+    "_label": "D35E.MiscShort",
+    "ac": "D35E.ACNormal",
     "cmb": "CMB",
     "cmd": "CMD",
-    "sr": "PF1.SpellResistance",
+    "sr": "D35E.SpellResistance",
   },
 };
 
 // Languages
-PF1.languages = {
+D35E.languages = {
   "common": "Common",
   "aboleth": "Aboleth",
   "abyssal": "Abyssal",
@@ -1000,23 +1000,23 @@ PF1.languages = {
   "vegepygmy": "Vegepygmy"
 };
 
-PF1.creatureTypes = {
-  "aberration": "PF1.CreatureTypeAberration",
-  "animal": "PF1.CreatureTypeAnimal",
-  "construct": "PF1.CreatureTypeConstruct",
-  "dragon": "PF1.CreatureTypeDragon",
-  "fey": "PF1.CreatureTypeFey",
-  "humanoid": "PF1.CreatureTypeHumanoid",
-  "magicalBeast": "PF1.CreatureTypeMagicalBeast",
-  "monstrousHumanoid": "PF1.CreatureTypeMonstrousHumanoid",
-  "ooze": "PF1.CreatureTypeOoze",
-  "outsider": "PF1.CreatureTypeOutsider",
-  "plant": "PF1.CreatureTypePlant",
-  "undead": "PF1.CreatureTypeUndead",
-  "vermin": "PF1.CreatureTypeVermin",
+D35E.creatureTypes = {
+  "aberration": "D35E.CreatureTypeAberration",
+  "animal": "D35E.CreatureTypeAnimal",
+  "construct": "D35E.CreatureTypeConstruct",
+  "dragon": "D35E.CreatureTypeDragon",
+  "fey": "D35E.CreatureTypeFey",
+  "humanoid": "D35E.CreatureTypeHumanoid",
+  "magicalBeast": "D35E.CreatureTypeMagicalBeast",
+  "monstrousHumanoid": "D35E.CreatureTypeMonstrousHumanoid",
+  "ooze": "D35E.CreatureTypeOoze",
+  "outsider": "D35E.CreatureTypeOutsider",
+  "plant": "D35E.CreatureTypePlant",
+  "undead": "D35E.CreatureTypeUndead",
+  "vermin": "D35E.CreatureTypeVermin",
 };
 
-PF1.sizeDie = [
+D35E.sizeDie = [
   "1",
   "1d2",
   "1d3",
@@ -1041,7 +1041,7 @@ PF1.sizeDie = [
 ];
 
 // Character Level XP Requirements
-PF1.CHARACTER_EXP_LEVELS =  {
+D35E.CHARACTER_EXP_LEVELS =  {
   slow: [
     0, 3000, 7500, 14000, 23000, 35000, 53000, 77000, 115000, 160000, 235000, 330000,
     475000, 665000, 955000, 1350000, 1900000, 2700000, 3850000, 5350000
@@ -1057,7 +1057,7 @@ PF1.CHARACTER_EXP_LEVELS =  {
 };
 
 // Challenge Rating XP Levels
-PF1.CR_EXP_LEVELS = [
+D35E.CR_EXP_LEVELS = [
   200, 400, 600, 800, 1200, 1600, 2400, 3200, 4800, 6400, 9600, 12800, 19200, 25600,
   38400, 51200, 76800, 102400, 153600, 204800, 307200, 409600, 614400, 819200, 1228800, 1638400, 2457600,
   3276800, 4915200, 6553600, 9830400

@@ -81,7 +81,7 @@ export class DicePF {
             sound: a === 0 ? CONFIG.sounds.dice : null,
             speaker: speaker,
             content: await renderTemplate(chatTemplate, rollData),
-            "flags.pf1.noRollRender": true,
+            "flags.D35E.noRollRender": true,
           };
           // Handle different roll modes
           switch (rollMode) {
@@ -126,7 +126,7 @@ export class DicePF {
     else parts = parts.concat(["@bonus"]);
 
     // Render modal dialog
-    template = template || "systems/pf1/templates/chat/roll-dialog.html";
+    template = template || "systems/D35E/templates/chat/roll-dialog.html";
     let dialogData = {
       formula: parts.join(" + "),
       data: data,
@@ -272,7 +272,7 @@ export class DicePF {
     else parts = parts.concat(["@bonus"]);
 
     // Construct dialog data
-    template = template || "systems/pf1/templates/chat/roll-dialog.html";
+    template = template || "systems/D35E/templates/chat/roll-dialog.html";
     let dialogData = {
       formula: parts.join(" + "),
       data: data,
@@ -322,7 +322,7 @@ export const _preProcessDiceFormula = function(formula, data={}) {
 
   // Replace parentheses with semicolons to use for splitting
   let toSplit = formula.replace(/([A-z]+)?\(/g, (match, prefix) => {
-    return (prefix in game.pf1.rollPreProcess || prefix in Math) ? `;${prefix};(;` : ";(;";
+    return (prefix in game.D35E.rollPreProcess || prefix in Math) ? `;${prefix};(;` : ";(;";
   }).replace(/\)/g, ";);");
   let terms = toSplit.split(";");
 
@@ -332,7 +332,7 @@ export const _preProcessDiceFormula = function(formula, data={}) {
   terms = terms.reduce((arr, t) => {
 
     // Handle cases where the prior term is a math function
-    const beginPreProcessFn = (t[0] === "(") && (arr[arr.length-1] in game.pf1.rollPreProcess);
+    const beginPreProcessFn = (t[0] === "(") && (arr[arr.length-1] in game.D35E.rollPreProcess);
     if (beginPreProcessFn) nOpenPreProcess.push([arr.length-1, nOpen]);
     const beginMathFn = (t[0] === "(") && (arr[arr.length-1] in Math);
     if (beginMathFn && nOpenPreProcess.length > 0) nOpenPreProcess.push([arr.length-1, nOpen]);
@@ -361,7 +361,7 @@ export const _preProcessDiceFormula = function(formula, data={}) {
             arr.push(Math[fn](...fnParams).toString());
           }
           else {
-            arr.push(game.pf1.rollPreProcess[fn](...fnParams).toString());
+            arr.push(game.D35E.rollPreProcess[fn](...fnParams).toString());
           }
 
           nOpenPreProcess.splice(a, 1);

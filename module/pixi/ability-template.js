@@ -5,7 +5,7 @@
 export class AbilityTemplate extends MeasuredTemplate {
 
   get pfStyle() {
-    return game.settings.get("pf1", "measureStyle") === true;
+    return game.settings.get("D35E", "measureStyle") === true;
   }
 
   _createMouseInteractionManager() {
@@ -56,7 +56,7 @@ export class AbilityTemplate extends MeasuredTemplate {
     // Additional type-specific data
     switch (type) {
       case "cone":
-        if (game.settings.get("pf1", "measureStyle") === true) templateData.angle = 90;
+        if (game.settings.get("D35E", "measureStyle") === true) templateData.angle = 90;
         else templateData.angle = 53.13;
         break;
       case "rect":

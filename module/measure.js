@@ -1,9 +1,9 @@
 import { degtorad } from "./lib.js";
 
-// Use 90 degrees cone in PF1 style
+// Use 90 degrees cone in D35E style
 const TemplateLayer__onDragStart = TemplateLayer.prototype._onDragStart;
 TemplateLayer.prototype._onDragStart = function(event) {
-  if (!game.settings.get("pf1", "measureStyle")) return TemplateLayer__onDragStart.call(this, event);
+  if (!game.settings.get("D35E", "measureStyle")) return TemplateLayer__onDragStart.call(this, event);
 
   PlaceablesLayer.prototype._onDragStart.call(this, event);
 
@@ -44,7 +44,7 @@ TemplateLayer.prototype._onDragStart = function(event) {
 
 const TemplateLayer__onMouseMove = TemplateLayer.prototype._onMouseMove;
 TemplateLayer.prototype._onMouseMove = function(event) {
-  if (!game.settings.get("pf1", "measureStyle")) return TemplateLayer__onMouseMove.call(this, event);
+  if (!game.settings.get("D35E", "measureStyle")) return TemplateLayer__onMouseMove.call(this, event);
 
   PlaceablesLayer.prototype._onMouseMove.call(this, event);
   if (event.data.createState >= 1) {
@@ -78,10 +78,10 @@ TemplateLayer.prototype._onMouseMove = function(event) {
 };
 
 
-// Highlight grid in PF1 style
+// Highlight grid in D35E style
 const MeasuredTemplate_highlightGrid = MeasuredTemplate.prototype.highlightGrid;
 MeasuredTemplate.prototype.highlightGrid = function() {
-  if (!game.settings.get("pf1", "measureStyle") || !(["circle", "cone"].includes(this.data.t))) return MeasuredTemplate__highlightGrid.call(this);
+  if (!game.settings.get("D35E", "measureStyle") || !(["circle", "cone"].includes(this.data.t))) return MeasuredTemplate__highlightGrid.call(this);
 
   const grid = canvas.grid,
         d = canvas.dimensions,

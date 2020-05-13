@@ -2,33 +2,33 @@
   <div class="flexrow spellcasting-misc">
     <div class="spellcasting-concentration flexrow">
       <div class="rollable image-d20"></div>
-      <label><h3>{{localize "PF1.Concentration"}}</h3></label>
+      <label><h3>{{localize "D35E.Concentration"}}</h3></label>
       <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.concentrationFormula"
-      value="{{spellbook.orig.concentrationFormula}}" placeholder="{{localize "PF1.ConcentrationBonusFormula"}}" />
+      value="{{spellbook.orig.concentrationFormula}}" placeholder="{{localize "D35E.ConcentrationBonusFormula"}}" />
     </div>
     
     <div class="spellcasting-cl flexrow">
       <div class="rollable image-d20"></div>
-      <label><h3>{{localize "PF1.CasterLevel"}}</h3></label>
+      <label><h3>{{localize "D35E.CasterLevel"}}</h3></label>
       <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.cl.formula"
-      value="{{spellbook.orig.cl.formula}}" placeholder="{{localize "PF1.CasterLevelBonusFormula"}}" />
+      value="{{spellbook.orig.cl.formula}}" placeholder="{{localize "D35E.CasterLevelBonusFormula"}}" />
     </div>
   </div>
   
   <div class="flexrow spellcasting-notes">
-    <textarea name="data.attributes.spells.spellbooks.{{spellbookIndex}}.concentrationNotes" placeholder="{{localize "PF1.ConcentrationNotes"}}">{{spellbook.orig.concentrationNotes}}</textarea>
-    <textarea name="data.attributes.spells.spellbooks.{{spellbookIndex}}.clNotes" placeholder="{{localize "PF1.CasterLevelNotes"}}">{{spellbook.orig.clNotes}}</textarea>
+    <textarea name="data.attributes.spells.spellbooks.{{spellbookIndex}}.concentrationNotes" placeholder="{{localize "D35E.ConcentrationNotes"}}">{{spellbook.orig.concentrationNotes}}</textarea>
+    <textarea name="data.attributes.spells.spellbooks.{{spellbookIndex}}.clNotes" placeholder="{{localize "D35E.CasterLevelNotes"}}">{{spellbook.orig.clNotes}}</textarea>
   </div>
   
   <div class="flexrow">
     <div class="flexcol">
       <div class="form-group spellcasting-class tooltip">
         <span class="tooltipcontent">@cl : {{spellbook.orig.cl.total}}</span>
-        <label><h3>{{localize "PF1.SpellcastingClass"}}</h3></label>
+        <label><h3>{{localize "D35E.SpellcastingClass"}}</h3></label>
         <select name="data.attributes.spells.spellbooks.{{spellbookIndex}}.class" data-dtype="String">
           {{#select spellbook.orig.class}}
-          <option value="">{{localize "PF1.None"}}</option>
-          <option value="_hd">{{localize "PF1.HitDie"}}</option>
+          <option value="">{{localize "D35E.None"}}</option>
+          <option value="_hd">{{localize "D35E.HitDie"}}</option>
           {{#each data.classes as |cls a|}}
           <option value="{{a}}">{{cls.name}}</option>
           {{/each}}
@@ -37,10 +37,10 @@
       </div>
       
       <div class="form-group spellcasting-ability">
-        <label><h3>{{localize "PF1.SpellcastingAbility"}}</h3></label>
+        <label><h3>{{localize "D35E.SpellcastingAbility"}}</h3></label>
         <select name="data.attributes.spells.spellbooks.{{spellbookIndex}}.ability" data-dtype="String">
           {{#select spellbook.orig.ability}}
-          <option value="">{{localize "PF1.None"}}</option>
+          <option value="">{{localize "D35E.None"}}</option>
           {{#each data.abilities as |abl a|}}
           <option value="{{a}}">{{abl.label}}</option>
           {{/each}}
@@ -49,39 +49,39 @@
       </div>
       
       <div class="flexrow spell-failure">
-        <label><h3>{{localize "PF1.ArcaneSpellFailure"}}</h3></label>
+        <label><h3>{{localize "D35E.ArcaneSpellFailure"}}</h3></label>
         <input type="text" disabled value="{{spellFailure}}%"/>
       </div>
 
       <div class="flexrow formulas">
-        <label><h3>{{localize "PF1.BaseDCFormula"}}</h3></label>
+        <label><h3>{{localize "D35E.BaseDCFormula"}}</h3></label>
         <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.baseDCFormula"
-        value="{{spellbook.orig.baseDCFormula}}" placeholder="{{localize "PF1.BaseDCFormula"}}" />
+        value="{{spellbook.orig.baseDCFormula}}" placeholder="{{localize "D35E.BaseDCFormula"}}" />
       </div>
     </div>
     
     <div class="flexcol">
       <label class="checkbox">
         <input type="checkbox" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.autoSpellLevels"
-        {{checked spellbook.orig.autoSpellLevels}}/> {{localize "PF1.AutomaticSpellSlots"}}
+        {{checked spellbook.orig.autoSpellLevels}}/> {{localize "D35E.AutomaticSpellSlots"}}
       </label>
       <label class="checkbox">
         <input type="checkbox" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.spontaneous"
-        {{checked spellbook.orig.spontaneous}}/> {{localize "PF1.SpellPrepSpontaneous"}}
+        {{checked spellbook.orig.spontaneous}}/> {{localize "D35E.SpellPrepSpontaneous"}}
       </label>
       <label class="checkbox">
         <input type="checkbox" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.arcaneSpellFailure"
-        {{checked spellbook.orig.arcaneSpellFailure}}/> {{localize "PF1.ArcaneSpellFailure"}}
+        {{checked spellbook.orig.arcaneSpellFailure}}/> {{localize "D35E.ArcaneSpellFailure"}}
       </label>
     </div>
   </div>
   
   <div class="flexrow spell-range">
-    <label><h3>{{localize "PF1.DistClose"}}</h3></label>
+    <label><h3>{{localize "D35E.DistClose"}}</h3></label>
     <input type="text" value="{{spellbook.orig.range.close}}" disabled />
-    <label><h3>{{localize "PF1.DistMedium"}}</h3></label>
+    <label><h3>{{localize "D35E.DistMedium"}}</h3></label>
     <input type="text" value="{{spellbook.orig.range.medium}}" disabled />
-    <label><h3>{{localize "PF1.DistLong"}}</h3></label>
+    <label><h3>{{localize "D35E.DistLong"}}</h3></label>
     <input type="text" value="{{spellbook.orig.range.long}}" disabled />
   </div>
 </div>
@@ -103,7 +103,7 @@
           <h3></h3>
         </div>
         
-        <div class="item-detail item-actions"><span>{{localize "PF1.ActionPlural"}}</span></div>
+        <div class="item-detail item-actions"><span>{{localize "D35E.ActionPlural"}}</span></div>
         
         <div class="spell-uses">
           {{#if section.usesSlots}}
@@ -119,12 +119,12 @@
           {{/if}}
         </div>
         
-        <div class="spell-school">{{localize "PF1.SpellSchool"}}</div>
+        <div class="spell-school">{{localize "D35E.SpellSchool"}}</div>
         
         <div class="item-controls">
           {{#if section.canCreate}}
           <a class="item-control item-create" title="Create Spell" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-            <i class="fas fa-plus"></i> {{localize "PF1.Add"}}
+            <i class="fas fa-plus"></i> {{localize "D35E.Add"}}
           </a>
           {{/if}}
         </div>
@@ -140,13 +140,13 @@
           
           <div class="item-detail item-actions">
             <div class="item-attack">
-              <a class="item-control item-attack"><img class="icon" src="systems/pf1/icons/actions/gladius.svg"></a>
+              <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
             </div>
           </div>
           
           <div class="spell-uses flexrow">
             {{#unless ../../spellbook.orig.spontaneous}}
-            <span>{{localize "PF1.Uses"}}</span>
+            <span>{{localize "D35E.Uses"}}</span>
             <input type="text" value="{{item.data.preparation.preparedAmount}}" data-type="amount" data-dtype="Number"/>
             <span class="sep"> / </span>
             <input type="text" value="{{item.data.preparation.maxAmount}}" data-type="max" data-dtype="Number"/>

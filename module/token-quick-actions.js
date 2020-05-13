@@ -18,9 +18,9 @@ export class TokenQuickActions {
     });
     items.forEach(function(item) {
       if (item.type === "attack") {
-        // const icon = "/systems/pf1/icons/actions/" + ( item.data.actionType === "mwak" ? "melee" : "ranged" ) + "-attack.svg"
+        // const icon = "/systems/D35E/icons/actions/" + ( item.data.actionType === "mwak" ? "melee" : "ranged" ) + "-attack.svg"
         const icon = item.img;
-        const title = game.i18n.localize("PF1.AttackWith").format(item.name)
+        const title = game.i18n.localize("D35E.AttackWith").format(item.name)
         quickActions += '<div id="attack-' + item._id + '" class="control-icon token-quick-action"><img src="' + icon + '" width="36" height="36" title="' + title + '"></div>';
       }
     });
@@ -30,7 +30,7 @@ export class TokenQuickActions {
     items.forEach(function(item) {
       if (item.type === "attack") {
         html.find('#attack-' + item._id).click( function(event) {
-          game.pf1.rollItemMacro(item.name, {
+          game.D35E.rollItemMacro(item.name, {
             itemId: item._id,
             itemType: "attack",
             actorId: actorId

@@ -3,8 +3,8 @@ export class ActorRestDialog extends BaseEntitySheet {
     const options = super.defaultOptions;
     return mergeObject(options, {
       id: "actor-flags",
-      classes: ["pf1", "actor-rest"],
-      template: "systems/pf1/templates/apps/actor-rest.html",
+      classes: ["D35E", "actor-rest"],
+      template: "systems/D35E/templates/apps/actor-rest.html",
       width: 500,
       closeOnSubmit: true
     });
@@ -17,7 +17,7 @@ export class ActorRestDialog extends BaseEntitySheet {
    * @type {String}
    */
   get title() {
-    return `${game.i18n.localize('PF1.Rest')}: ${this.object.name}`;
+    return `${game.i18n.localize('D35E.Rest')}: ${this.object.name}`;
   }
 
   /* -------------------------------------------- */
@@ -80,7 +80,7 @@ export class ActorRestDialog extends BaseEntitySheet {
       // Restore spontaneous spellbooks
       for (let [key, spellbook] of Object.entries(actorData.attributes.spells.spellbooks)) {
         if (spellbook.spontaneous) {
-          for (let sl of Object.keys(CONFIG.PF1.spellLevels)) {
+          for (let sl of Object.keys(CONFIG.D35E.spellLevels)) {
             updateData[`data.attributes.spells.spellbooks.${key}.spells.spell${sl}.value`] = getProperty(actorData, `attributes.spells.spellbooks.${key}.spells.spell${sl}.max`);
           }
         }

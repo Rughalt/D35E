@@ -13,20 +13,20 @@
         <h3 class="item-name flexrow"></h3>
 
         {{#if section.hasActions}}
-        <div class="item-detail item-actions"><span>{{localize "PF1.ActionPlural"}}</span></div>
-        <div class="item-detail item-uses"><span>{{localize "PF1.ChargePlural"}}</span></div>
-        <div class="item-detail item-usage"><span>{{localize "PF1.Usage"}}</span></div>
+        <div class="item-detail item-actions"><span>{{localize "D35E.ActionPlural"}}</span></div>
+        <div class="item-detail item-uses"><span>{{localize "D35E.ChargePlural"}}</span></div>
+        <div class="item-detail item-usage"><span>{{localize "D35E.Usage"}}</span></div>
         {{/if}}
 
         {{#if section.isClass}}
-        <div class="item-detail item-feat-level"><span>{{localize "PF1.Level"}}</span></div>
+        <div class="item-detail item-feat-level"><span>{{localize "D35E.Level"}}</span></div>
         {{/if}}
 
         {{#if ../owner}}
         <div class="item-controls">
           {{#if section.canCreate}}
           <a class="item-control item-create" title="Create Item" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-            <i class="fas fa-plus"></i> {{localize "PF1.Add"}}
+            <i class="fas fa-plus"></i> {{localize "D35E.Add"}}
           </a>
           {{/if}}
         </div>
@@ -45,7 +45,7 @@
           <div class="item-detail item-actions">
             <div class="item-attack">
               {{#if item.hasAction}}
-              <a class="item-control item-attack"><img class="icon" src="systems/pf1/icons/actions/gladius.svg"></a>
+              <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
               {{/if}}
             </div>
           </div>

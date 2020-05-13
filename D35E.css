@@ -66,145 +66,145 @@
 /* ----------------------------------------- */
 /*  All D&D5e Apps                           */
 /* ----------------------------------------- */
-.pf1 {
+.D35E {
   /* ----------------------------------------- */
   /*  Element Styles                           */
   /* ----------------------------------------- */
   /* Form Groups */
   /* Tags */
 }
-.pf1 li {
+.D35E li {
   align-items: center;
 }
-.pf1 .window-content {
+.D35E .window-content {
   background: url("ui/parchment.jpg") repeat;
   font-size: 13px;
   color: #191813;
 }
-.pf1 input[type="text"],
-.pf1 select {
+.D35E input[type="text"],
+.D35E select {
   border: 1px solid #7a7971;
   background: rgba(0, 0, 0, 0.05);
   color: #191813;
 }
-.pf1 input[type="text"]:hover,
-.pf1 input[type="text"]:focus {
+.D35E input[type="text"]:hover,
+.D35E input[type="text"]:focus {
   border: 1px solid #111;
   box-shadow: 0 0 8px red;
 }
-.pf1 input:disabled,
-.pf1 select:disabled,
-.pf1 textarea:disabled {
+.D35E input:disabled,
+.D35E select:disabled,
+.D35E textarea:disabled {
   color: #4b4a44;
 }
-.pf1 input:disabled:hover,
-.pf1 select:disabled:hover,
-.pf1 textarea:disabled:hover,
-.pf1 input:disabled:focus,
-.pf1 select:disabled:focus,
-.pf1 textarea:disabled:focus {
+.D35E input:disabled:hover,
+.D35E select:disabled:hover,
+.D35E textarea:disabled:hover,
+.D35E input:disabled:focus,
+.D35E select:disabled:focus,
+.D35E textarea:disabled:focus {
   box-shadow: none !important;
 }
-.pf1 button {
+.D35E button {
   background: rgba(0, 0, 0, 0.1);
   border: 2px groove #eeede0;
 }
-.pf1 button:active {
+.D35E button:active {
   background: rgba(0, 0, 0, 0.3);
 }
-.pf1 label.checkbox {
+.D35E label.checkbox {
   flex: auto;
   margin: 0;
   line-height: 20px;
   font-size: 11px;
 }
-.pf1 label.checkbox input[type="checkbox"] {
+.D35E label.checkbox input[type="checkbox"] {
   height: auto;
   margin: 0 5px 0;
   position: relative;
   top: 3px;
 }
-.pf1 .form-group {
+.D35E .form-group {
   flex: 0 0 24px;
 }
-.pf1 .form-group label.header {
+.D35E .form-group label.header {
   flex: 0 0 100%;
 }
-.pf1 .form-group .buff-flags {
+.D35E .form-group .buff-flags {
   display: flex;
   flex-wrap: wrap;
   min-width: 100%;
   max-height: 96px;
   overflow-y: auto;
 }
-.pf1 .form-group .buff-flags label.checkbox {
+.D35E .form-group .buff-flags label.checkbox {
   flex: 0 0 50%;
   text-align: left;
 }
-.pf1 .form-group label {
+.D35E .form-group label {
   flex: 2;
   color: #4b4a44;
   font-weight: bold;
   white-space: nowrap;
 }
-.pf1 .form-group span {
+.D35E .form-group span {
   flex: 0 0 1px;
 }
-.pf1 .form-group .form-fields {
+.D35E .form-group .form-fields {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
-.pf1 .form-group .form-fields > * {
+.D35E .form-group .form-fields > * {
   flex: 1;
 }
-.pf1 .form-group .form-fields .flex1 {
+.D35E .form-group .form-fields .flex1 {
   flex: 1;
 }
-.pf1 .form-group .form-fields .flex2 {
+.D35E .form-group .form-fields .flex2 {
   flex: 2;
 }
-.pf1 .form-group .form-fields .flex3 {
+.D35E .form-group .form-fields .flex3 {
   flex: 3;
 }
-.pf1 .form-group .form-fields .flex4 {
+.D35E .form-group .form-fields .flex4 {
   flex: 4;
 }
-.pf1 .form-group .form-fields > * {
+.D35E .form-group .form-fields > * {
   margin: 0 3px 0 0;
 }
-.pf1 .form-group .form-fields > *:last-child {
+.D35E .form-group .form-fields > *:last-child {
   margin-right: 0;
 }
-.pf1 .form-group .group {
+.D35E .form-group .group {
   flex: 1 1 96px;
 }
-.pf1 .form-group .group label {
+.D35E .form-group .group label {
   flex: 1;
   font-weight: normal;
 }
-.pf1 .form-group .group a {
+.D35E .form-group .group a {
   flex: 0 0 16px;
 }
-.pf1 .form-group.stacked label {
+.D35E .form-group.stacked label {
   flex: 0 0 100%;
 }
-.pf1 .form-group.stacked label.checkbox {
+.D35E .form-group.stacked label.checkbox {
   flex: auto;
   text-align: left;
 }
-.pf1 .form-group.stacked .data-selector {
+.D35E .form-group.stacked .data-selector {
   flex: 1;
 }
-.pf1 .form-group.stacked .data-selector label {
+.D35E .form-group.stacked .data-selector label {
   font-weight: normal;
   flex: 1;
 }
-.pf1 .form-group.stacked .data-selector .entry-selector {
+.D35E .form-group.stacked .data-selector .entry-selector {
   flex: 0 0 16px;
 }
-.pf1 .form-header {
+.D35E .form-header {
   margin: 0 0 0.25em 0;
   padding: 0 2px;
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
@@ -213,7 +213,7 @@
   border-top: 2px groove #eeede0;
   border-bottom: 2px groove #eeede0;
 }
-.pf1 .tag {
+.D35E .tag {
   display: inline-block;
   margin: 0 2px 0 0;
   padding: 0 3px;
@@ -226,7 +226,7 @@
 /* ----------------------------------------- */
 /*  Entity Sheets Specifically               */
 /* ----------------------------------------- */
-.pf1.sheet {
+.D35E.sheet {
   /* ----------------------------------------- */
   /*  Element Styles                           */
   /* ----------------------------------------- */
@@ -246,57 +246,57 @@
   /*  List Filters                             */
   /* ----------------------------------------- */
 }
-.pf1.sheet .window-content {
+.D35E.sheet .window-content {
   overflow-y: hidden;
   padding: 5px;
   background: url("ui/parchment.jpg") repeat;
   font-size: 13px;
   color: #191813;
 }
-.pf1.sheet .window-content form {
+.D35E.sheet .window-content form {
   height: 100%;
   overflow: hidden;
 }
-.pf1.sheet .window-content .tab {
+.D35E.sheet .window-content .tab {
   height: 100%;
   overflow-y: auto;
   align-content: flex-start;
 }
-.pf1.sheet input[type="text"],
-.pf1.sheet textarea {
+.D35E.sheet input[type="text"],
+.D35E.sheet textarea {
   background: none;
   border: 1px solid transparent;
 }
-.pf1.sheet input[type="text"]:hover,
-.pf1.sheet textarea:hover,
-.pf1.sheet input[type="text"]:focus,
-.pf1.sheet textarea:focus {
+.D35E.sheet input[type="text"]:hover,
+.D35E.sheet textarea:hover,
+.D35E.sheet input[type="text"]:focus,
+.D35E.sheet textarea:focus {
   border: 1px solid #111;
 }
-.pf1.sheet textarea {
+.D35E.sheet textarea {
   font-family: sans-serif;
   min-height: 16px;
   padding: 1px 5px;
 }
-.pf1.sheet select {
+.D35E.sheet select {
   flex: 1;
   font-size: 12px;
   height: 22px;
   background: transparent;
 }
-.pf1.sheet .editable .rollable:hover {
+.D35E.sheet .editable .rollable:hover {
   color: #000;
   text-shadow: 0 0 10px red;
   cursor: pointer;
 }
-.pf1.sheet .editor {
+.D35E.sheet .editor {
   height: 100%;
 }
-.pf1.sheet .editor .tox-toolbar-overlord,
-.pf1.sheet .editor .tox-toolbar__primary {
+.D35E.sheet .editor .tox-toolbar-overlord,
+.D35E.sheet .editor .tox-toolbar__primary {
   background: none;
 }
-.pf1.sheet .sheet-header {
+.D35E.sheet .sheet-header {
   flex: 0 0 100px;
   border-bottom: 2px groove #eeede0;
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
@@ -306,18 +306,18 @@
   /* Profile Image */
   /* Header Summary Details */
 }
-.pf1.sheet .sheet-header h1 {
+.D35E.sheet .sheet-header h1 {
   flex: 1;
   border-bottom: none;
   height: 60px;
   margin: 0;
   padding: 5px;
 }
-.pf1.sheet .sheet-header h1 input {
+.D35E.sheet .sheet-header h1 input {
   height: 50px;
   font-size: 36px;
 }
-.pf1.sheet .sheet-header img.profile {
+.D35E.sheet .sheet-header img.profile {
   flex: 0 0 100px;
   width: 100px;
   height: 100px;
@@ -325,7 +325,7 @@
   border: none;
   border-right: 2px groove #eeede0;
 }
-.pf1.sheet .sheet-header .summary {
+.D35E.sheet .sheet-header .summary {
   flex: 0 0 100%;
   height: 60px;
   margin: 0;
@@ -334,7 +334,7 @@
   border-top: 2px groove #eeede0;
   border-bottom: none;
 }
-.pf1.sheet .sheet-header .summary li {
+.D35E.sheet .sheet-header .summary li {
   width: 33.33%;
   float: left;
   height: 24px;
@@ -344,64 +344,64 @@
   line-height: 24px;
   color: #4b4a44;
 }
-.pf1.sheet .sheet-header .summary li input {
+.D35E.sheet .sheet-header .summary li input {
   vertical-align: top;
 }
-.pf1.sheet .sheet-navigation {
+.D35E.sheet .sheet-navigation {
   flex: 0 0 30px;
   margin-bottom: 5px;
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
 }
-.pf1.sheet .sheet-navigation .item {
+.D35E.sheet .sheet-navigation .item {
   height: 30px;
   line-height: 32px;
   margin: 0 8px;
   white-space: nowrap;
   border-bottom: 3px solid #b5b3a4;
 }
-.pf1.sheet .sheet-navigation .item.active {
+.D35E.sheet .sheet-navigation .item.active {
   border-bottom: 3px solid #44191A;
 }
-.pf1.sheet .sheet-navigation.tabs {
+.D35E.sheet .sheet-navigation.tabs {
   border-bottom: 2px groove #eeede0;
 }
-.pf1.sheet .sheet-navigation.subtabs {
+.D35E.sheet .sheet-navigation.subtabs {
   font-size: 16px;
 }
-.pf1.sheet .primary-body {
+.D35E.sheet .primary-body {
   flex: 1;
   overflow: hidden;
 }
-.pf1.sheet .filter-list {
+.D35E.sheet .filter-list {
   list-style: none;
   margin: 0;
   padding: 0;
   line-height: 16px;
 }
-.pf1.sheet .filter-list .filter-title {
+.D35E.sheet .filter-list .filter-title {
   flex: 3;
 }
-.pf1.sheet .filter-list .filter-item {
+.D35E.sheet .filter-list .filter-item {
   text-align: center;
   font-size: 12px;
   margin: 0 6px;
   border-bottom: 3px solid #b5b3a4;
   white-space: nowrap;
 }
-.pf1.sheet .filter-list .filter-item:hover {
+.D35E.sheet .filter-list .filter-item:hover {
   text-shadow: 0 0 4px red;
   border-bottom: 3px solid #7a7971;
 }
-.pf1.sheet .filter-list .filter-item.active {
+.D35E.sheet .filter-list .filter-item.active {
   border-bottom: 3px solid #44191A;
 }
-.pf1.sheet a > .icon {
+.D35E.sheet a > .icon {
   display: inline-block;
   width: 16px;
   height: 16px;
 }
-.pf1.sheet a > .icon:hover {
+.D35E.sheet a > .icon:hover {
   opacity: 0.5;
 }
 /* ----------------------------------------- */
@@ -416,24 +416,24 @@
   height: 24px;
   margin: 2px;
 }
-.pf1.entry table {
+.D35E.entry table {
   border: 1px solid #888888;
   font-weight: normal;
   table-layout: fixed;
 }
-.pf1.entry table th.entry-control {
+.D35E.entry table th.entry-control {
   width: 16px;
 }
-.pf1.entry table tr {
+.D35E.entry table tr {
   height: 16px;
 }
-.pf1.entry table thead {
+.D35E.entry table thead {
   background-color: #cfe2f3;
 }
-.pf1.entry table tbody tr {
+.D35E.entry table tbody tr {
   background-color: white;
 }
-.pf1.entry table tbody tr:nth-child(even) {
+.D35E.entry table tbody tr:nth-child(even) {
   background-color: #f3f3f3;
 }
 .compendium-browser {
@@ -501,7 +501,7 @@
 .compendium-browser .directory-container .directory-list .directory-item h4 {
   margin-left: 4px;
 }
-.pf1.sheet.actor {
+.D35E.sheet.actor {
   /* ----------------------------------------- */
   /*  Sheet Header                             */
   /* ----------------------------------------- */
@@ -544,17 +544,17 @@
   /*  Misc                                     */
   /* ----------------------------------------- */
 }
-.pf1.sheet.actor .warning {
+.D35E.sheet.actor .warning {
   flex: 0;
   background-color: #CECE00;
   border: 1px solid #909000;
   border-radius: 2px;
 }
-.pf1.sheet.actor .sheet-header .header-details {
+.D35E.sheet.actor .sheet-header .header-details {
   height: 100%;
   border-left: 2px groove #eeede0;
 }
-.pf1.sheet.actor .sheet-header .header-details .attributes > .attribute {
+.D35E.sheet.actor .sheet-header .header-details .attributes > .attribute {
   margin: 0;
   border-left: none;
   border-bottom: none;
@@ -563,29 +563,29 @@
   border-radius: 0;
   height: auto;
 }
-.pf1.sheet.actor .sheet-header .header-details .attribute.speed {
+.D35E.sheet.actor .sheet-header .header-details .attribute.speed {
   flex: 1.5;
   display: flex;
   flex-wrap: wrap;
   align-items: start;
 }
-.pf1.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed {
+.D35E.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed {
   flex: 0 0 33%;
   max-width: 33%;
 }
-.pf1.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed select {
+.D35E.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed select {
   width: 100%;
 }
-.pf1.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed h4 {
+.D35E.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed h4 {
   white-space: nowrap;
   overflow: hidden;
 }
-.pf1.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed input[type="text"] {
+.D35E.sheet.actor .sheet-header .header-details .attribute.speed .attribute-speed input[type="text"] {
   height: 16px;
   margin: 0;
   padding: 0;
 }
-.pf1.sheet.actor .sheet-header img.profile {
+.D35E.sheet.actor .sheet-header img.profile {
   flex: 0 0 200px;
   max-width: 200px;
   min-height: 120px;
@@ -594,7 +594,7 @@
   object-fit: contain;
   border: none;
 }
-.pf1.sheet.actor .sheet-header .hd {
+.D35E.sheet.actor .sheet-header .hd {
   flex: 0 0 88px;
   height: 60px;
   margin: 0;
@@ -604,12 +604,12 @@
   font-size: 20px;
   line-height: 20px;
 }
-.pf1.sheet.actor .sheet-header .hd label {
+.D35E.sheet.actor .sheet-header .hd label {
   display: inline;
   font-size: 32px;
   text-align: right;
 }
-.pf1.sheet.actor .sheet-header .hd input {
+.D35E.sheet.actor .sheet-header .hd input {
   display: inline;
   width: 36px;
   font-size: 32px;
@@ -617,80 +617,80 @@
   flex: 0 0 40px;
   height: 44px;
 }
-.pf1.sheet.actor .sheet-header .charlevel {
+.D35E.sheet.actor .sheet-header .charlevel {
   flex: 0 0 120px;
   height: 60px;
   margin: 0;
   padding: 2px;
   text-align: right;
 }
-.pf1.sheet.actor .sheet-header .charlevel .level {
+.D35E.sheet.actor .sheet-header .charlevel .level {
   width: 100%;
   height: 20px;
   font-size: 16px;
   line-height: 20px;
 }
-.pf1.sheet.actor .sheet-header .charlevel .level label {
+.D35E.sheet.actor .sheet-header .charlevel .level label {
   display: inline;
   font-size: 24px;
   text-align: right;
 }
-.pf1.sheet.actor .sheet-header .charlevel .level input {
+.D35E.sheet.actor .sheet-header .charlevel .level input {
   display: inline;
   width: 36px;
   font-size: 24px;
   text-align: center;
 }
-.pf1.sheet.actor .sheet-header .charlevel .level.noxp {
+.D35E.sheet.actor .sheet-header .charlevel .level.noxp {
   margin-top: 10px;
 }
-.pf1.sheet.actor .sheet-header .charlevel .level.noxp > label {
+.D35E.sheet.actor .sheet-header .charlevel .level.noxp > label {
   font-size: 32px;
 }
-.pf1.sheet.actor .sheet-header .charlevel .level.noxp > input {
+.D35E.sheet.actor .sheet-header .charlevel .level.noxp > input {
   font-size: 32px;
   flex: 0 0 40px;
   height: 44px;
 }
-.pf1.sheet.actor .sheet-header .charlevel .experience {
+.D35E.sheet.actor .sheet-header .charlevel .experience {
   width: 100%;
   height: 20px;
   padding-right: 5px;
   font-size: 16px;
   color: #4b4a44;
 }
-.pf1.sheet.actor .attributes input[type="text"] {
+.D35E.sheet.actor .attributes input[type="text"] {
   height: 24px;
 }
-.pf1.sheet.actor .attributes input.temphp {
+.D35E.sheet.actor .attributes input.temphp {
   width: 48%;
 }
-.pf1.sheet.actor h4.box-title {
+.D35E.sheet.actor h4.box-title {
   line-height: 16px;
   margin: 4px 8px 2px;
   font-size: 18px;
   border-bottom: 1px solid #b5b3a4;
 }
-.pf1.sheet.actor section {
+.D35E.sheet.actor section {
   overflow-y: auto;
 }
-.pf1.sheet.actor ul.attributes.misc-base .attribute-footer input,
-.pf1.sheet.actor ul.attributes.misc-defenses .attribute-footer input {
+.D35E.sheet.actor ul.attributes.misc-base .attribute-footer input,
+.D35E.sheet.actor ul.attributes.misc-defenses .attribute-footer input {
   width: 100%;
 }
-.pf1.sheet.actor .attributes-root {
+.D35E.sheet.actor .attributes-root {
   flex: 0 0 30%;
 }
-.pf1.sheet.actor ul.attributes {
+.D35E.sheet.actor ul.attributes {
   list-style: none;
   margin: 8px 0 0;
   padding: 0;
 }
-.pf1.sheet.actor ul.attributes li.attribute.health {
+.D35E.sheet.actor ul.attributes li.attribute.health {
   height: 100%;
   border-bottom: none;
 }
-.pf1.sheet.actor ul.attributes li.attribute {
+.D35E.sheet.actor ul.attributes li.attribute {
   height: 70px;
   margin: 0 5px;
   border: 2px groove #eeede0;
@@ -699,70 +699,70 @@
   font-size: 20px;
   text-align: center;
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-name {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-name {
   flex: 0 0 18px;
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-value {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value {
   height: 28px;
   line-height: 20px;
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-value input {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value input {
   display: inline;
   max-width: 80%;
   margin: 0;
   font-size: 24px;
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-value div.attribute {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value div.attribute {
   display: inline-block;
   min-width: 24px;
   max-width: 33%;
   font-size: 24px;
   width: calc(100% - 2px);
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-value span.sep {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value span.sep {
   display: inline;
   position: relative;
   top: 2px;
   font-size: 28px;
   color: #7a7971;
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-value.multiple input {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value.multiple input {
   max-width: 33%;
 }
-.pf1.sheet.actor ul.attributes li.attribute .attribute-footer {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-footer {
   flex: 0 0 18px;
   margin-top: -1px;
   line-height: 18px;
   font-family: "Signika", "Palatino Linotype", serif;
   font-size: 12px;
 }
-.pf1.sheet.actor .defenses .attributes {
+.D35E.sheet.actor .defenses .attributes {
   flex: 0;
 }
-.pf1.sheet.actor .defenses .attribute .attribute-footer input {
+.D35E.sheet.actor .defenses .attribute .attribute-footer input {
   width: 32px;
 }
-.pf1.sheet.actor .defenses .defense-rolls label,
-.pf1.sheet.actor .defenses .defense-notes label {
+.D35E.sheet.actor .defenses .defense-rolls label,
+.D35E.sheet.actor .defenses .defense-notes label {
   line-height: 20px;
   white-space: nowrap;
 }
-.pf1.sheet.actor .defenses .defense-rolls label h3,
-.pf1.sheet.actor .defenses .defense-notes label h3 {
+.D35E.sheet.actor .defenses .defense-rolls label h3,
+.D35E.sheet.actor .defenses .defense-notes label h3 {
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
   font-size: 18px;
 }
-.pf1.sheet.actor .defenses .defense-notes {
+.D35E.sheet.actor .defenses .defense-notes {
   margin-top: 5px;
 }
-.pf1.sheet.actor .defenses .defense-notes label {
+.D35E.sheet.actor .defenses .defense-notes label {
   flex: 1;
 }
-.pf1.sheet.actor .defenses .defense-notes textarea {
+.D35E.sheet.actor .defenses .defense-notes textarea {
   flex: 3;
 }
-.pf1.sheet.actor .ability-scores {
+.D35E.sheet.actor .ability-scores {
   flex: 0 0 100%;
   list-style: none;
   margin: 0;
@@ -770,7 +770,7 @@
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
 }
-.pf1.sheet.actor .ability-scores .ability {
+.D35E.sheet.actor .ability-scores .ability {
   height: 94px;
   margin: 0 2px;
   text-align: center;
@@ -778,30 +778,30 @@
   border-radius: 3px;
   /* Hide modifier box on hover */
 }
-.pf1.sheet.actor .ability-scores .ability input.ability-total {
+.D35E.sheet.actor .ability-scores .ability input.ability-total {
   height: 30px;
   width: 50px;
   margin: 0 auto;
   line-height: 32px;
   font-size: 24px;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-modifiers {
+.D35E.sheet.actor .ability-scores .ability .ability-modifiers {
   height: 24px;
   margin: -12px 0 0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-modifiers span.ability-mod,
-.pf1.sheet.actor .ability-scores .ability .ability-modifiers input[type="text"].ability-base {
+.D35E.sheet.actor .ability-scores .ability .ability-modifiers span.ability-mod,
+.D35E.sheet.actor .ability-scores .ability .ability-modifiers input[type="text"].ability-base {
   flex: 0 0 32px;
   height: 32px;
   border-top: 2px groove #eeede0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-modifiers span.ability-mod {
+.D35E.sheet.actor .ability-scores .ability .ability-modifiers span.ability-mod {
   border-right: 2px groove #eeede0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-modifiers div.ability-center {
+.D35E.sheet.actor .ability-scores .ability .ability-modifiers div.ability-center {
   height: 0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-modifiers input[type="text"].ability-base {
+.D35E.sheet.actor .ability-scores .ability .ability-modifiers input[type="text"].ability-base {
   border-left: 2px groove #eeede0;
   border-bottom: 0;
   border-right: 0;
@@ -810,34 +810,34 @@
   margin-bottom: 0;
   padding: 0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-header {
+.D35E.sheet.actor .ability-scores .ability .ability-header {
   height: 24px;
   margin: 0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-header input[type="text"].ability-damage {
+.D35E.sheet.actor .ability-scores .ability .ability-header input[type="text"].ability-damage {
   flex: 1;
   height: 24px;
   border-bottom: 2px groove #eeede0;
   border-right: 2px groove #eeede0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-header input[type="text"].ability-penalty {
+.D35E.sheet.actor .ability-scores .ability .ability-header input[type="text"].ability-penalty {
   flex: 1;
   height: 24px;
   border-bottom: 2px groove #eeede0;
 }
-.pf1.sheet.actor .ability-scores .ability .ability-header input[type="text"].ability-drain {
+.D35E.sheet.actor .ability-scores .ability .ability-header input[type="text"].ability-drain {
   flex: 1;
   height: 24px;
   border-bottom: 2px groove #eeede0;
   border-left: 2px groove #eeede0;
 }
-.pf1.sheet.actor .ability-scores .ability input.ability-total:hover + .ability-modifiers {
+.D35E.sheet.actor .ability-scores .ability input.ability-total:hover + .ability-modifiers {
   visibility: hidden;
 }
-.pf1.sheet.actor div.skill-rank {
+.D35E.sheet.actor div.skill-rank {
   flex: 0;
 }
-.pf1.sheet.actor ul.skills-list {
+.D35E.sheet.actor ul.skills-list {
   flex: 1;
   overflow-y: auto;
   list-style: none;
@@ -846,130 +846,130 @@
   border: 2px groove #eeede0;
   border-radius: 3px;
 }
-.pf1.sheet.actor ul.skills-list li.skill,
-.pf1.sheet.actor ul.skills-list li.sub-skill {
+.D35E.sheet.actor ul.skills-list li.skill,
+.D35E.sheet.actor ul.skills-list li.sub-skill {
   height: 28px;
   padding: 3px 0;
   background-color: rgba(155, 155, 155, 0.3);
 }
-.pf1.sheet.actor ul.skills-list li.skill:nth-child(2n+1),
-.pf1.sheet.actor ul.skills-list li.sub-skill:nth-child(2n+1) {
+.D35E.sheet.actor ul.skills-list li.skill:nth-child(2n+1),
+.D35E.sheet.actor ul.skills-list li.sub-skill:nth-child(2n+1) {
   background-color: rgba(210, 210, 210, 0.3);
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-name,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name {
+.D35E.sheet.actor ul.skills-list li.skill .skill-name,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name {
   display: flex;
   flex: 180px;
   margin: 0;
   font-size: 11px;
   align-items: center;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-name .image-d20,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name .image-d20 {
+.D35E.sheet.actor ul.skills-list li.skill .skill-name .image-d20,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .image-d20 {
   display: inline-block;
   background-image: url(../../icons/dice/d20black.svg);
   background-size: 100%;
   width: 24px;
   height: 24px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-name h4,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name h4,
-.pf1.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
+.D35E.sheet.actor ul.skills-list li.skill .skill-name h4,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name h4,
+.D35E.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
   display: inline-block;
   margin: 0;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
+.D35E.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
   height: 24px;
   width: initial;
   padding: 0;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-name .skill-control,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control {
+.D35E.sheet.actor ul.skills-list li.skill .skill-name .skill-control,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control {
   display: flex;
   align-items: center;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-name .skill-control .fas,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control .fas {
+.D35E.sheet.actor ul.skills-list li.skill .skill-name .skill-control .fas,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control .fas {
   display: inline-block;
   text-align: center;
   width: 24px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .checkbox,
-.pf1.sheet.actor ul.skills-list li.sub-skill .checkbox {
+.D35E.sheet.actor ul.skills-list li.skill .checkbox,
+.D35E.sheet.actor ul.skills-list li.sub-skill .checkbox {
   flex: 0 0 48px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-ability,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-ability {
+.D35E.sheet.actor ul.skills-list li.skill .skill-ability,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-ability {
   flex: 0 0 48px;
   margin: 0 2px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-mod,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-mod {
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod {
   flex: 0 0 20px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-notes,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-notes {
+.D35E.sheet.actor ul.skills-list li.skill .skill-notes,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-notes {
   flex: 0 0 160px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-rank,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-rank {
+.D35E.sheet.actor ul.skills-list li.skill .skill-rank,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-rank {
   flex: 0 0 48px;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-passive,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-passive {
+.D35E.sheet.actor ul.skills-list li.skill .skill-passive,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-passive {
   flex: 0 0 26px;
   text-align: center;
   color: #7a7971;
 }
-.pf1.sheet.actor ul.skills-list li.skill .skill-controls,
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-controls {
+.D35E.sheet.actor ul.skills-list li.skill .skill-controls,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-controls {
   flex: 0 0 24px;
 }
-.pf1.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
   padding-left: 8px;
 }
-.pf1.sheet.actor .counters {
+.D35E.sheet.actor .counters {
   flex: 0 0 100%;
   border-bottom: 2px groove #eeede0;
   margin-bottom: 5px;
 }
-.pf1.sheet.actor .counters .counter {
+.D35E.sheet.actor .counters .counter {
   padding: 0 3px;
   line-height: 32px;
 }
-.pf1.sheet.actor .counters .counter h4 {
+.D35E.sheet.actor .counters .counter h4 {
   flex: auto;
   margin: 0;
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
   font-size: 14px;
 }
-.pf1.sheet.actor .counters .counter .counter-value {
+.D35E.sheet.actor .counters .counter .counter-value {
   flex: 0 0 50px;
   text-align: right;
 }
-.pf1.sheet.actor .counters .counter .counter-value > * {
+.D35E.sheet.actor .counters .counter .counter-value > * {
   display: inline;
 }
-.pf1.sheet.actor .counters .counter input[type="text"] {
+.D35E.sheet.actor .counters .counter input[type="text"] {
   height: 20px;
   max-width: 20px;
   margin: 0;
   padding: 0;
   text-align: center;
 }
-.pf1.sheet.actor .counters .counter input[type="checkbox"] {
+.D35E.sheet.actor .counters .counter input[type="checkbox"] {
   position: relative;
   margin: 0;
   top: 6px;
 }
-.pf1.sheet.actor .counters .counter span.sep {
+.D35E.sheet.actor .counters .counter span.sep {
   margin: 0 -2px;
   font-size: 12px;
 }
-.pf1.sheet.actor .condition {
+.D35E.sheet.actor .condition {
   flex: 0;
   display: flex;
   flex-direction: row;
@@ -978,64 +978,64 @@
   margin: 2px;
   flex-basis: calc(20% - 4px);
 }
-.pf1.sheet.actor .condition label {
+.D35E.sheet.actor .condition label {
   line-height: 20px;
   flex: 0;
   white-space: nowrap;
 }
-.pf1.sheet.actor .condition label span {
+.D35E.sheet.actor .condition label span {
   font-size: 12px;
 }
-.pf1.sheet.actor .traits {
+.D35E.sheet.actor .traits {
   margin: 0 5px;
 }
-.pf1.sheet.actor .traits .form-group,
-.pf1.sheet.actor .traits .form-group-stacked {
+.D35E.sheet.actor .traits .form-group,
+.D35E.sheet.actor .traits .form-group-stacked {
   margin: 0 0 4px 0;
   justify-content: space-between;
 }
-.pf1.sheet.actor .traits .trait-selector {
+.D35E.sheet.actor .traits .trait-selector {
   flex: 0 0 16px;
   padding: 2px 0;
   color: #999;
   font-size: 10px;
 }
-.pf1.sheet.actor .traits .configure-flags {
+.D35E.sheet.actor .traits .configure-flags {
   flex: 1;
 }
-.pf1.sheet.actor .traits .traits-list {
+.D35E.sheet.actor .traits .traits-list {
   list-style: none;
   margin: 0;
   padding: 0;
   text-align: right;
 }
-.pf1.sheet.actor .traits .actor-size {
+.D35E.sheet.actor .traits .actor-size {
   flex: 0 0 150px;
 }
-.pf1.sheet.actor .traits label {
+.D35E.sheet.actor .traits label {
   flex: 0 0 150px;
   line-height: 20px;
   font-weight: bold;
   margin: 0;
   text-align: right;
 }
-.pf1.sheet.actor .traits input {
+.D35E.sheet.actor .traits input {
   text-align: right;
 }
-.pf1.sheet.actor .traits i.fas {
+.D35E.sheet.actor .traits i.fas {
   float: right;
   margin-right: 3px;
   text-align: right;
   color: #999;
 }
-.pf1.sheet.actor .traits i.fas:hover {
+.D35E.sheet.actor .traits i.fas:hover {
   color: #111;
   text-shadow: 0 0 10px red;
 }
-.pf1.sheet.actor .traits .inactive {
+.D35E.sheet.actor .traits .inactive {
   color: #7a7971;
 }
-.pf1.sheet.actor .encumbrance {
+.D35E.sheet.actor .encumbrance {
   flex: 0 0 12px;
   background: #7a7971;
   margin: 1px 15px 0 1px;
@@ -1043,7 +1043,7 @@
   border-radius: 3px;
   position: relative;
 }
-.pf1.sheet.actor .encumbrance .encumbrance-bar {
+.D35E.sheet.actor .encumbrance .encumbrance-bar {
   position: absolute;
   top: 1px;
   left: 1px;
@@ -1052,7 +1052,7 @@
   border: 1px solid #cde4ff;
   border-radius: 2px;
 }
-.pf1.sheet.actor .encumbrance .encumbrance-label {
+.D35E.sheet.actor .encumbrance .encumbrance-label {
   height: 10px;
   padding: 0 5px;
   position: absolute;
@@ -1064,11 +1064,11 @@
   color: #EEE;
   text-shadow: 0 0 5px #000;
 }
-.pf1.sheet.actor .encumbrance .encumbrance-breakpoint {
+.D35E.sheet.actor .encumbrance .encumbrance-breakpoint {
   position: absolute;
   left: 66%;
 }
-.pf1.sheet.actor .encumbrance .arrow-up {
+.D35E.sheet.actor .encumbrance .arrow-up {
   bottom: 0;
   width: 0;
   height: 0;
@@ -1076,7 +1076,7 @@
   border-right: 4px solid transparent;
   border-bottom: 4px solid #666;
 }
-.pf1.sheet.actor .encumbrance .arrow-down {
+.D35E.sheet.actor .encumbrance .arrow-down {
   top: 0;
   width: 0;
   height: 0;
@@ -1084,68 +1084,68 @@
   border-right: 4px solid transparent;
   border-top: 4px solid #666;
 }
-.pf1.sheet.actor .encumbrance.encumbered .arrow-up {
+.D35E.sheet.actor .encumbrance.encumbered .arrow-up {
   border-bottom: 4px solid #000;
 }
-.pf1.sheet.actor .encumbrance.encumbered .arrow-down {
+.D35E.sheet.actor .encumbrance.encumbered .arrow-down {
   border-top: 4px solid #000;
 }
-.pf1.sheet.actor .carry-label,
-.pf1.sheet.actor .inventory-total-value {
+.D35E.sheet.actor .carry-label,
+.D35E.sheet.actor .inventory-total-value {
   flex: 0;
 }
-.pf1.sheet.actor .tab.features,
-.pf1.sheet.actor .tab.inventory,
-.pf1.sheet.actor .tab.spellbook {
+.D35E.sheet.actor .tab.features,
+.D35E.sheet.actor .tab.inventory,
+.D35E.sheet.actor .tab.spellbook {
   overflow-y: hidden;
 }
-.pf1.sheet.actor .tab.features label.checkbox,
-.pf1.sheet.actor .tab.inventory label.checkbox,
-.pf1.sheet.actor .tab.spellbook label.checkbox {
+.D35E.sheet.actor .tab.features label.checkbox,
+.D35E.sheet.actor .tab.inventory label.checkbox,
+.D35E.sheet.actor .tab.spellbook label.checkbox {
   text-align: left;
   flex: 0;
   margin: 0 0 0 4px;
 }
-.pf1.sheet.actor .tab.features label.checkbox:first-child,
-.pf1.sheet.actor .tab.inventory label.checkbox:first-child,
-.pf1.sheet.actor .tab.spellbook label.checkbox:first-child {
+.D35E.sheet.actor .tab.features label.checkbox:first-child,
+.D35E.sheet.actor .tab.inventory label.checkbox:first-child,
+.D35E.sheet.actor .tab.spellbook label.checkbox:first-child {
   margin-top: 4px;
 }
-.pf1.sheet.actor .inventory-filters {
+.D35E.sheet.actor .inventory-filters {
   margin: 0 8px;
   flex: 0 0 20px;
 }
-.pf1.sheet.actor .inventory-filters h3,
-.pf1.sheet.actor .inventory-filters .filter-title {
+.D35E.sheet.actor .inventory-filters h3,
+.D35E.sheet.actor .inventory-filters .filter-title {
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
   color: #4b4a44;
   font-size: 18px;
   margin: 0;
 }
-.pf1.sheet.actor .inventory-filters.spellbook-filters {
+.D35E.sheet.actor .inventory-filters.spellbook-filters {
   flex: 0 0 40px;
 }
-.pf1.sheet.actor .inventory-filters .currency {
+.D35E.sheet.actor .inventory-filters .currency {
   list-style: none;
   margin: 4px 0 8px;
   padding: 0;
   font-size: 12px;
 }
-.pf1.sheet.actor .inventory-filters .currency label {
+.D35E.sheet.actor .inventory-filters .currency label {
   flex: 0;
   margin-left: 8px;
   text-align: right;
   line-height: 20px;
   color: #7a7971;
 }
-.pf1.sheet.actor .inventory-filters .currency input[type="text"] {
+.D35E.sheet.actor .inventory-filters .currency input[type="text"] {
   flex: 0 0 64px;
   text-align: center;
   margin-left: 8px;
   border-bottom: 2px groove #eeede0;
 }
-.pf1.sheet.actor .carry-bonus label {
+.D35E.sheet.actor .carry-bonus label {
   flex: 0;
   margin-left: 8px;
   text-align: right;
@@ -1153,71 +1153,71 @@
   color: #7a7971;
   white-space: nowrap;
 }
-.pf1.sheet.actor .carry-bonus input[type="text"] {
+.D35E.sheet.actor .carry-bonus input[type="text"] {
   flex: 0 0 48px;
   text-align: center;
   margin-left: 8px;
   border-bottom: 2px groove #eeede0;
 }
-.pf1.sheet.actor .inventory-list {
+.D35E.sheet.actor .inventory-list {
   list-style: none;
   margin: 0;
   padding: 0 5px;
   overflow-y: auto;
 }
-.pf1.sheet.actor .inventory-list .item {
+.D35E.sheet.actor .inventory-list .item {
   line-height: 24px;
   padding: 0 2px;
   border-bottom: 1px solid #c9c7b8;
   background-color: rgba(155, 155, 155, 0.3);
 }
-.pf1.sheet.actor .inventory-list .item:last-child {
+.D35E.sheet.actor .inventory-list .item:last-child {
   border-bottom: none;
 }
-.pf1.sheet.actor .inventory-list .item:nth-child(2n+1) {
+.D35E.sheet.actor .inventory-list .item:nth-child(2n+1) {
   background-color: rgba(210, 210, 210, 0.3);
 }
-.pf1.sheet.actor .inventory-list .item .item-name {
+.D35E.sheet.actor .inventory-list .item .item-name {
   cursor: pointer;
   white-space: nowrap;
 }
-.pf1.sheet.actor .inventory-list .item .item-name .item-image {
+.D35E.sheet.actor .inventory-list .item .item-name .item-image {
   flex: 0 0 24px;
   background-size: 24px;
   margin-right: 5px;
 }
-.pf1.sheet.actor .inventory-list .item .item-name h4 {
+.D35E.sheet.actor .inventory-list .item .item-name h4 {
   margin: 0;
 }
-.pf1.sheet.actor .inventory-list .item .item-name:hover .item-image {
+.D35E.sheet.actor .inventory-list .item .item-name:hover .item-image {
   background-image: url("/icons/svg/d20-grey.svg") !important;
 }
-.pf1.sheet.actor .inventory-list .item .item-name .item-image:hover {
+.D35E.sheet.actor .inventory-list .item .item-name .item-image:hover {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
-.pf1.sheet.actor .inventory-list .item input[type="checkbox"] {
+.D35E.sheet.actor .inventory-list .item input[type="checkbox"] {
   height: 12px;
 }
-.pf1.sheet.actor .inventory-list .item .item-properties {
+.D35E.sheet.actor .inventory-list .item .item-properties {
   margin-top: 3px;
 }
-.pf1.sheet.actor .inventory-list .item .item-recharge {
+.D35E.sheet.actor .inventory-list .item .item-recharge {
   flex: 0 0 80px;
   text-align: right;
   font-size: 11px;
   color: #7a7971;
 }
-.pf1.sheet.actor .inventory-list .item .item-actions > div a {
+.D35E.sheet.actor .inventory-list .item .item-actions > div a {
   display: flex;
   flex: 0 0 16px;
   padding: 0;
   margin-right: 1px;
   height: 16px;
 }
-.pf1.sheet.actor .inventory-list .item .item-actions > div a:last-child {
+.D35E.sheet.actor .inventory-list .item .item-actions > div a:last-child {
   margin-right: 0;
 }
-.pf1.sheet.actor .inventory-list .inventory-header {
+.D35E.sheet.actor .inventory-list .inventory-header {
   margin: 2px 0;
   padding: 0;
   background: rgba(0, 0, 0, 0.05);
@@ -1225,19 +1225,19 @@
   font-weight: bold;
   line-height: 24px;
 }
-.pf1.sheet.actor .inventory-list .inventory-header h3 {
+.D35E.sheet.actor .inventory-list .inventory-header h3 {
   margin: 0;
   padding-left: 5px;
   font-size: 13px;
   font-weight: bold;
 }
-.pf1.sheet.actor .inventory-list .inventory-header .item-controls {
+.D35E.sheet.actor .inventory-list .inventory-header .item-controls {
   justify-content: flex-start;
 }
-.pf1.sheet.actor .inventory-list .inventory-header .item-controls a.item-create {
+.D35E.sheet.actor .inventory-list .inventory-header .item-controls a.item-create {
   flex: 0 0 100%;
 }
-.pf1.sheet.actor .inventory-list .item-detail {
+.D35E.sheet.actor .inventory-list .item-detail {
   height: 24px;
   flex: 0 0 80px;
   font-size: 11px;
@@ -1253,84 +1253,84 @@
   justify-content: flex-end;
   align-items: center;
 }
-.pf1.sheet.actor .inventory-list .item-detail > * {
+.D35E.sheet.actor .inventory-list .item-detail > * {
   flex: 1;
 }
-.pf1.sheet.actor .inventory-list .item-detail .flex1 {
+.D35E.sheet.actor .inventory-list .item-detail .flex1 {
   flex: 1;
 }
-.pf1.sheet.actor .inventory-list .item-detail .flex2 {
+.D35E.sheet.actor .inventory-list .item-detail .flex2 {
   flex: 2;
 }
-.pf1.sheet.actor .inventory-list .item-detail .flex3 {
+.D35E.sheet.actor .inventory-list .item-detail .flex3 {
   flex: 3;
 }
-.pf1.sheet.actor .inventory-list .item-detail .flex4 {
+.D35E.sheet.actor .inventory-list .item-detail .flex4 {
   flex: 4;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-actions {
+.D35E.sheet.actor .inventory-list .item-detail.item-actions {
   flex: 0 0 54px;
   padding: 0 1px 0 1px;
   justify-content: center;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-actions > div {
+.D35E.sheet.actor .inventory-list .item-detail.item-actions > div {
   flex: 0 0 16px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-usage {
+.D35E.sheet.actor .inventory-list .item-detail.item-usage {
   flex: 0 0 96px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-type {
+.D35E.sheet.actor .inventory-list .item-detail.item-type {
   flex: 0 0 96px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-weight {
+.D35E.sheet.actor .inventory-list .item-detail.item-weight {
   flex: 0 0 54px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-identified {
+.D35E.sheet.actor .inventory-list .item-detail.item-identified {
   flex: 0 0 32px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-carried {
+.D35E.sheet.actor .inventory-list .item-detail.item-carried {
   flex: 0 0 48px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-equipped {
+.D35E.sheet.actor .inventory-list .item-detail.item-equipped {
   flex: 0 0 54px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail.item-uses {
+.D35E.sheet.actor .inventory-list .item-detail.item-uses {
   flex: 0 0 64px;
   padding: 0 1px 0 1px;
 }
-.pf1.sheet.actor .inventory-list .item-detail:nth-child(2) {
+.D35E.sheet.actor .inventory-list .item-detail:nth-child(2) {
   border-left: 1px solid #c9c7b8;
 }
-.pf1.sheet.actor .inventory-list .item-detail:last-child {
+.D35E.sheet.actor .inventory-list .item-detail:last-child {
   border-right: none;
 }
-.pf1.sheet.actor .inventory-list a.item-control {
+.D35E.sheet.actor .inventory-list a.item-control {
   height: 100%;
 }
-.pf1.sheet.actor .inventory-list .item-level {
+.D35E.sheet.actor .inventory-list .item-level {
   flex: 0 0 40px;
   border-right: 1px solid #c9c7b8;
 }
-.pf1.sheet.actor .inventory-list .item-feat-level {
+.D35E.sheet.actor .inventory-list .item-feat-level {
   flex: 0 0 60px;
   border-right: 1px solid #c9c7b8;
 }
-.pf1.sheet.actor .inventory-list .item-active {
+.D35E.sheet.actor .inventory-list .item-active {
   flex: 0 0 60px;
   border-right: 1px solid #c9c7b8;
 }
-.pf1.sheet.actor .inventory-list .item-list {
+.D35E.sheet.actor .inventory-list .item-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.pf1.sheet.actor .inventory-list .item-controls {
+.D35E.sheet.actor .inventory-list .item-controls {
   flex: 0 0 64px;
   display: flex;
   flex-direction: row;
@@ -1340,37 +1340,37 @@
   white-space: nowrap;
   justify-content: center;
 }
-.pf1.sheet.actor .inventory-list .item-controls > * {
+.D35E.sheet.actor .inventory-list .item-controls > * {
   flex: 1;
 }
-.pf1.sheet.actor .inventory-list .item-controls .flex1 {
+.D35E.sheet.actor .inventory-list .item-controls .flex1 {
   flex: 1;
 }
-.pf1.sheet.actor .inventory-list .item-controls .flex2 {
+.D35E.sheet.actor .inventory-list .item-controls .flex2 {
   flex: 2;
 }
-.pf1.sheet.actor .inventory-list .item-controls .flex3 {
+.D35E.sheet.actor .inventory-list .item-controls .flex3 {
   flex: 3;
 }
-.pf1.sheet.actor .inventory-list .item-controls .flex4 {
+.D35E.sheet.actor .inventory-list .item-controls .flex4 {
   flex: 4;
 }
-.pf1.sheet.actor .inventory-list .item-controls a {
+.D35E.sheet.actor .inventory-list .item-controls a {
   flex: 0 0 16px;
   font-size: 10px;
   text-align: center;
   color: #666;
 }
-.pf1.sheet.actor .inventory-list .item-summary {
+.D35E.sheet.actor .inventory-list .item-summary {
   flex: 0 0 100%;
   font-size: 12px;
   line-height: 16px;
   padding: 0.25em 0.5em;
   border-top: 1px solid #c9c7b8;
 }
-.pf1.sheet.actor .spell-slots,
-.pf1.sheet.actor .spell-comps,
-.pf1.sheet.actor .spell-uses {
+.D35E.sheet.actor .spell-slots,
+.D35E.sheet.actor .spell-comps,
+.D35E.sheet.actor .spell-uses {
   flex: 0 0 128px;
   font-size: 12px;
   text-align: center;
@@ -1380,61 +1380,61 @@
   align-items: center;
   justify-content: center;
 }
-.pf1.sheet.actor .spell-slots input[type="text"].base,
-.pf1.sheet.actor .spell-comps input[type="text"].base,
-.pf1.sheet.actor .spell-uses input[type="text"].base {
+.D35E.sheet.actor .spell-slots input[type="text"].base,
+.D35E.sheet.actor .spell-comps input[type="text"].base,
+.D35E.sheet.actor .spell-uses input[type="text"].base {
   flex: 1;
 }
-.pf1.sheet.actor .spell-slots input,
-.pf1.sheet.actor .spell-comps input,
-.pf1.sheet.actor .spell-uses input,
-.pf1.sheet.actor .spell-slots span.sep,
-.pf1.sheet.actor .spell-comps span.sep,
-.pf1.sheet.actor .spell-uses span.sep {
+.D35E.sheet.actor .spell-slots input,
+.D35E.sheet.actor .spell-comps input,
+.D35E.sheet.actor .spell-uses input,
+.D35E.sheet.actor .spell-slots span.sep,
+.D35E.sheet.actor .spell-comps span.sep,
+.D35E.sheet.actor .spell-uses span.sep {
   text-align: center;
 }
-.pf1.sheet.actor .spell-slots span.sep,
-.pf1.sheet.actor .spell-comps span.sep,
-.pf1.sheet.actor .spell-uses span.sep {
+.D35E.sheet.actor .spell-slots span.sep,
+.D35E.sheet.actor .spell-comps span.sep,
+.D35E.sheet.actor .spell-uses span.sep {
   flex: 0 0 8px;
 }
-.pf1.sheet.actor .spell-uses input {
+.D35E.sheet.actor .spell-uses input {
   flex: 0 0 24px;
 }
-.pf1.sheet.actor .spell-school,
-.pf1.sheet.actor .spell-action {
+.D35E.sheet.actor .spell-school,
+.D35E.sheet.actor .spell-action {
   flex: 0 0 120px;
   font-size: 12px;
   color: #7a7971;
   text-align: center;
   border-right: 1px solid #c9c7b8;
 }
-.pf1.sheet.actor .spellbook-empty .item-controls {
+.D35E.sheet.actor .spellbook-empty .item-controls {
   flex: 1;
 }
-.pf1.sheet.actor .spell-failure input[type="text"] {
+.D35E.sheet.actor .spell-failure input[type="text"] {
   flex: 1;
 }
-.pf1.sheet.actor .spell-range label {
+.D35E.sheet.actor .spell-range label {
   flex: 1 1 48px;
   text-align: right;
   margin-right: 8px;
   white-space: nowrap;
 }
-.pf1.sheet.actor .spell-range input[type="text"] {
+.D35E.sheet.actor .spell-range input[type="text"] {
   flex: 1 1 48px;
 }
-.pf1.sheet.actor .rollable.image-d20 {
+.D35E.sheet.actor .rollable.image-d20 {
   flex: 0 0 24px;
   display: inline-block;
   background-image: url(../../icons/dice/d20black.svg);
   background-size: 100%;
   height: 24px;
 }
-.pf1.sheet.actor .editor {
+.D35E.sheet.actor .editor {
   padding: 0 8px;
 }
-.pf1.sheet.actor hr {
+.D35E.sheet.actor hr {
   margin: 4px 0 4px 0;
 }
 .locked img.sheet-profile {
@@ -1442,7 +1442,7 @@
   max-width: 240px;
   float: left;
 }
-.pf1.sheet.item {
+.D35E.sheet.item {
   min-height: 420px;
   /* ----------------------------------------- */
   /*  Sheet Header                             */
@@ -1460,10 +1460,10 @@
   /*  Loot Sheet (No Tabs)                     */
   /* ----------------------------------------- */
 }
-.pf1.sheet.item .sheet-header img.profile {
+.D35E.sheet.item .sheet-header img.profile {
   border: 2px solid #000;
 }
-.pf1.sheet.item .sheet-header .item-subtitle {
+.D35E.sheet.item .sheet-header .item-subtitle {
   flex: 0 0 80px;
   height: 60px;
   margin: 0;
@@ -1471,48 +1471,48 @@
   text-align: right;
   color: #7a7971;
 }
-.pf1.sheet.item .sheet-header .item-subtitle .item-type {
+.D35E.sheet.item .sheet-header .item-subtitle .item-type {
   font-size: 24px;
   line-height: 26px;
   margin: 0;
 }
-.pf1.sheet.item .sheet-header .item-subtitle .item-status {
+.D35E.sheet.item .sheet-header .item-subtitle .item-status {
   font-size: 16px;
   line-height: 24px;
 }
-.pf1.sheet.item .sheet-navigation {
+.D35E.sheet.item .sheet-navigation {
   margin-bottom: 5px;
 }
-.pf1.sheet.item .sheet-navigation .item {
+.D35E.sheet.item .sheet-navigation .item {
   font-size: 18px;
 }
-.pf1.sheet.item .primary-body {
+.D35E.sheet.item .primary-body {
   overflow: hidden scroll;
 }
-.pf1.sheet.item .primary-body .tab {
+.D35E.sheet.item .primary-body .tab {
   padding: 0 5px;
 }
-.pf1.sheet.item .primary-body .item-properties {
+.D35E.sheet.item .primary-body .item-properties {
   flex: 0 0 120px;
   margin: 5px 5px 5px 0;
   padding-right: 5px;
   border-right: 2px groove #eeede0;
 }
-.pf1.sheet.item .primary-body .item-properties .form-group {
+.D35E.sheet.item .primary-body .item-properties .form-group {
   margin: 0;
 }
-.pf1.sheet.item .primary-body .item-properties .form-group label {
+.D35E.sheet.item .primary-body .item-properties .form-group label {
   line-height: 20px;
 }
-.pf1.sheet.item .primary-body .item-properties .form-group input {
+.D35E.sheet.item .primary-body .item-properties .form-group input {
   text-align: right;
 }
-.pf1.sheet.item .primary-body .item-properties .properties-list {
+.D35E.sheet.item .primary-body .item-properties .properties-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.pf1.sheet.item .primary-body .item-properties .properties-list li {
+.D35E.sheet.item .primary-body .item-properties .properties-list li {
   margin: 3px 0;
   padding: 0 2px;
   background: rgba(0, 0, 0, 0.05);
@@ -1521,74 +1521,74 @@
   font-size: 12px;
   line-height: 18px;
 }
-.pf1.sheet.item .details input[type="text"],
-.pf1.sheet.item .details select {
+.D35E.sheet.item .details input[type="text"],
+.D35E.sheet.item .details select {
   border: 1px solid #7a7971;
   background: rgba(0, 0, 0, 0.05);
 }
-.pf1.sheet.item .details .form-group .entry-selector {
+.D35E.sheet.item .details .form-group .entry-selector {
   flex: 1;
   height: 28px;
   overflow: hidden;
 }
-.pf1.sheet.item .details .form-group.input-select select {
+.D35E.sheet.item .details .form-group.input-select select {
   flex: 1.8;
 }
-.pf1.sheet.item .details .form-group.input-select-select select {
+.D35E.sheet.item .details .form-group.input-select-select select {
   flex: 1.5;
 }
-.pf1.sheet.item .details .form-group.uses-per input {
+.D35E.sheet.item .details .form-group.uses-per input {
   flex: 1;
 }
-.pf1.sheet.item .details .form-group.uses-per span {
+.D35E.sheet.item .details .form-group.uses-per span {
   text-align: center;
   flex: 0 0 16px;
   line-height: 24px;
 }
-.pf1.sheet.item .details .form-group.uses-per select {
+.D35E.sheet.item .details .form-group.uses-per select {
   flex: 3;
 }
-.pf1.sheet.item .details span.sep {
+.D35E.sheet.item .details span.sep {
   flex: 0 0 8px;
   line-height: 24px;
   text-align: center;
 }
-.pf1.sheet.item .details .prepared {
+.D35E.sheet.item .details .prepared {
   flex: 1.3 !important;
   text-align: right;
   padding-right: 10px;
 }
-.pf1.sheet.item .details .spell-materials {
+.D35E.sheet.item .details .spell-materials {
   flex: 0 0 100%;
   margin: 0.25em 0;
   justify-content: flex-end;
 }
-.pf1.sheet.item .details .spell-materials label {
+.D35E.sheet.item .details .spell-materials label {
   flex: 0 0 64px;
   text-align: right;
   margin-right: 5px;
   font-size: 12px;
   line-height: 24px;
 }
-.pf1.sheet.item .details .spell-materials input[type="text"] {
+.D35E.sheet.item .details .spell-materials input[type="text"] {
   flex: 0 0 48px;
   margin-right: 10px;
 }
-.pf1.sheet.item .details .item-list .item {
+.D35E.sheet.item .details .item-list .item {
   line-height: 24px;
   border-bottom: 1px solid #c9c7b8;
   background-color: rgba(155, 155, 155, 0.3);
 }
-.pf1.sheet.item .details .item-list .item:last-child {
+.D35E.sheet.item .details .item-list .item:last-child {
   border-bottom: none;
 }
-.pf1.sheet.item .details .item-list .item:nth-child(2n+1) {
+.D35E.sheet.item .details .item-list .item:nth-child(2n+1) {
   background-color: rgba(210, 210, 210, 0.3);
 }
-.pf1.sheet.item .details .item-list .item .checkbox {
+.D35E.sheet.item .details .item-list .item .checkbox {
   flex: 0;
 }
-.pf1.sheet.item .tab .inventory-header {
+.D35E.sheet.item .tab .inventory-header {
   margin: 2px 0;
   padding: 0;
   background: rgba(0, 0, 0, 0.05);
@@ -1596,36 +1596,36 @@
   font-weight: bold;
   line-height: 24px;
 }
-.pf1.sheet.item .tab .inventory-header h3 {
+.D35E.sheet.item .tab .inventory-header h3 {
   margin: 0 -5px 0 0;
   padding-left: 5px;
   font-size: 13px;
   font-weight: bold;
 }
-.pf1.sheet.item .tab .inventory-header .item-controls a.item-create {
+.D35E.sheet.item .tab .inventory-header .item-controls a.item-create {
   flex: 0 0 100%;
 }
-.pf1.sheet.item .tab .item-detail {
+.D35E.sheet.item .tab .item-detail {
   flex: 0 0 80px;
   font-size: 12px;
   color: #7a7971;
   text-align: center;
   border-right: 1px solid #c9c7b8;
 }
-.pf1.sheet.item .tab .item-detail:last-child {
+.D35E.sheet.item .tab .item-detail:last-child {
   border-right: none;
 }
-.pf1.sheet.item .tab .item-weight {
+.D35E.sheet.item .tab .item-weight {
   flex: 0 0 60px;
   border-left: 1px solid #c9c7b8;
   border-right: 1px solid #c9c7b8;
 }
-.pf1.sheet.item .tab .item-list {
+.D35E.sheet.item .tab .item-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.pf1.sheet.item .tab .item-controls {
+.D35E.sheet.item .tab .item-controls {
   flex: 0 0 44px;
   display: flex;
   flex-direction: row;
@@ -1633,101 +1633,101 @@
   justify-content: flex-start;
   justify-content: flex-end;
 }
-.pf1.sheet.item .tab .item-controls > * {
+.D35E.sheet.item .tab .item-controls > * {
   flex: 1;
 }
-.pf1.sheet.item .tab .item-controls .flex1 {
+.D35E.sheet.item .tab .item-controls .flex1 {
   flex: 1;
 }
-.pf1.sheet.item .tab .item-controls .flex2 {
+.D35E.sheet.item .tab .item-controls .flex2 {
   flex: 2;
 }
-.pf1.sheet.item .tab .item-controls .flex3 {
+.D35E.sheet.item .tab .item-controls .flex3 {
   flex: 3;
 }
-.pf1.sheet.item .tab .item-controls .flex4 {
+.D35E.sheet.item .tab .item-controls .flex4 {
   flex: 4;
 }
-.pf1.sheet.item .tab .item-controls a {
+.D35E.sheet.item .tab .item-controls a {
   flex: 0 0 22px;
   font-size: 10px;
   text-align: center;
   color: #666;
 }
-.pf1.sheet.item .tab .item-summary {
+.D35E.sheet.item .tab .item-summary {
   flex: 0 0 100%;
   font-size: 12px;
   line-height: 16px;
   padding: 0.25em 0.5em;
   border-top: 1px solid #c9c7b8;
 }
-.pf1.sheet.item h4.damage-header,
-.pf1.sheet.item h4.change-header,
-.pf1.sheet.item h4.context-notes-header,
-.pf1.sheet.item h4.attack-header {
+.D35E.sheet.item h4.damage-header,
+.D35E.sheet.item h4.change-header,
+.D35E.sheet.item h4.context-notes-header,
+.D35E.sheet.item h4.attack-header {
   margin: 0;
   padding: 0;
   font-weight: bold;
   line-height: 24px;
   color: #4b4a44;
 }
-.pf1.sheet.item .damage-parts,
-.pf1.sheet.item .attack-parts {
+.D35E.sheet.item .damage-parts,
+.D35E.sheet.item .attack-parts {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.pf1.sheet.item .damage-parts .damage-part,
-.pf1.sheet.item .attack-parts .damage-part,
-.pf1.sheet.item .damage-parts .attack-part,
-.pf1.sheet.item .attack-parts .attack-part {
+.D35E.sheet.item .damage-parts .damage-part,
+.D35E.sheet.item .attack-parts .damage-part,
+.D35E.sheet.item .damage-parts .attack-part,
+.D35E.sheet.item .attack-parts .attack-part {
   flex: 0 0 100%;
   padding: 0;
 }
-.pf1.sheet.item .damage-parts .damage-part input,
-.pf1.sheet.item .attack-parts .damage-part input,
-.pf1.sheet.item .damage-parts .attack-part input,
-.pf1.sheet.item .attack-parts .attack-part input {
+.D35E.sheet.item .damage-parts .damage-part input,
+.D35E.sheet.item .attack-parts .damage-part input,
+.D35E.sheet.item .damage-parts .attack-part input,
+.D35E.sheet.item .attack-parts .attack-part input {
   flex: 3;
 }
-.pf1.sheet.item .damage-parts .damage-part select,
-.pf1.sheet.item .attack-parts .damage-part select,
-.pf1.sheet.item .damage-parts .attack-part select,
-.pf1.sheet.item .attack-parts .attack-part select {
+.D35E.sheet.item .damage-parts .damage-part select,
+.D35E.sheet.item .attack-parts .damage-part select,
+.D35E.sheet.item .damage-parts .attack-part select,
+.D35E.sheet.item .attack-parts .attack-part select {
   margin-left: 5px;
   flex: 1;
 }
-.pf1.sheet.item .changes,
-.pf1.sheet.item .context-notes {
+.D35E.sheet.item .changes,
+.D35E.sheet.item .context-notes {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.pf1.sheet.item .changes .change,
-.pf1.sheet.item .context-notes .change,
-.pf1.sheet.item .changes .context-note,
-.pf1.sheet.item .context-notes .context-note {
+.D35E.sheet.item .changes .change,
+.D35E.sheet.item .context-notes .change,
+.D35E.sheet.item .changes .context-note,
+.D35E.sheet.item .context-notes .context-note {
   flex: 0 0 100%;
   padding: 0;
 }
-.pf1.sheet.item .changes .change input,
-.pf1.sheet.item .context-notes .change input,
-.pf1.sheet.item .changes .context-note input,
-.pf1.sheet.item .context-notes .context-note input {
+.D35E.sheet.item .changes .change input,
+.D35E.sheet.item .context-notes .change input,
+.D35E.sheet.item .changes .context-note input,
+.D35E.sheet.item .context-notes .context-note input {
   flex: 3;
 }
-.pf1.sheet.item .changes .change select,
-.pf1.sheet.item .context-notes .change select,
-.pf1.sheet.item .changes .context-note select,
-.pf1.sheet.item .context-notes .context-note select {
+.D35E.sheet.item .changes .change select,
+.D35E.sheet.item .context-notes .change select,
+.D35E.sheet.item .changes .context-note select,
+.D35E.sheet.item .context-notes .context-note select {
   flex: 0 0 96px;
   width: 96px;
   margin-left: 5px;
 }
-.pf1.sheet.item .damage-control,
-.pf1.sheet.item .attack-control,
-.pf1.sheet.item .change-control,
-.pf1.sheet.item .context-note-control {
+.D35E.sheet.item .damage-control,
+.D35E.sheet.item .attack-control,
+.D35E.sheet.item .change-control,
+.D35E.sheet.item .context-note-control {
   width: 18px;
   flex: 0 0 18px;
   line-height: 24px;
@@ -1735,43 +1735,43 @@
   text-align: right;
   color: #7a7971;
 }
-.pf1.sheet.item .recharge span {
+.D35E.sheet.item .recharge span {
   line-height: 24px;
   flex: 0 0 80px;
 }
-.pf1.sheet.item .recharge label.checkbox {
+.D35E.sheet.item .recharge label.checkbox {
   flex: 0 0 80px;
   text-align: right;
 }
-.pf1.sheet.item .weapon-properties label.checkbox {
+.D35E.sheet.item .weapon-properties label.checkbox {
   flex: 0 0 98px;
 }
-.pf1.sheet.item .loot-header {
+.D35E.sheet.item .loot-header {
   margin-bottom: 10px;
 }
-.pf1.sheet.item div[data-tab="description"][data-group="primary"] nav {
+.D35E.sheet.item div[data-tab="description"][data-group="primary"] nav {
   flex: 0;
 }
-.pf1.sheet.item div[data-tab="description"][data-group="primary"] .description-container {
+.D35E.sheet.item div[data-tab="description"][data-group="primary"] .description-container {
   flex: 1;
 }
 /* ----------------------------------------- */
 /*  Chat Cards
 /* ----------------------------------------- */
-.pf1.chat-card {
+.D35E.chat-card {
   font-style: normal;
   font-size: 12px;
 }
-.pf1.chat-card .card-header {
+.D35E.chat-card .card-header {
   padding: 3px 0;
   border-top: 2px groove #FFF;
   border-bottom: 2px groove #FFF;
 }
-.pf1.chat-card .card-header img {
+.D35E.chat-card .card-header img {
   flex: 0 0 36px;
   margin-right: 5px;
 }
-.pf1.chat-card .card-header h3 {
+.D35E.chat-card .card-header h3 {
   flex: 1;
   margin: 0;
   line-height: 36px;
@@ -1779,60 +1779,60 @@
   font-size: 20px;
   color: #4b4a44;
 }
-.pf1.chat-card .card-content {
+.D35E.chat-card .card-content {
   margin: 5px 0;
 }
-.pf1.chat-card .card-content h3 {
+.D35E.chat-card .card-content h3 {
   font-size: 12px;
   margin: 0;
   font-weight: bold;
 }
-.pf1.chat-card .card-content > * {
+.D35E.chat-card .card-content > * {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
 }
-.pf1.chat-card .card-buttons {
+.D35E.chat-card .card-buttons {
   margin: 5px 0;
 }
-.pf1.chat-card .card-buttons span {
+.D35E.chat-card .card-buttons span {
   display: block;
   line-height: 28px;
   text-align: center;
   border: 1px solid #CCC;
 }
-.pf1.chat-card .card-buttons button {
+.D35E.chat-card .card-buttons button {
   font-size: 12px;
   height: 24px;
   line-height: 20px;
   margin: 2px 0;
 }
-.pf1.chat-card .card-footer {
+.D35E.chat-card .card-footer {
   padding: 3px 0 0;
   border-top: 2px groove #FFF;
 }
-.pf1.chat-card .card-footer .spell-failure {
+.D35E.chat-card .card-footer .spell-failure {
   padding: 4px;
   margin-bottom: 4px;
   border: 1px solid #999;
   border-radius: 3px;
 }
-.pf1.chat-card .card-footer .spell-failure h3 {
+.D35E.chat-card .card-footer .spell-failure h3 {
   color: #4C6D9F;
   font-size: 16px;
   text-align: center;
 }
-.pf1.chat-card .card-footer .spell-failure .dice-roll,
-.pf1.chat-card .card-footer .spell-failure .dice-total {
+.D35E.chat-card .card-footer .spell-failure .dice-roll,
+.D35E.chat-card .card-footer .spell-failure .dice-total {
   padding: 0;
 }
-.pf1.chat-card .card-footer span {
+.D35E.chat-card .card-footer span {
   border-right: 2px groove #FFF;
   padding: 0 5px 0 0;
   font-size: 10px;
 }
-.pf1.chat-card .card-footer span:last-child {
+.D35E.chat-card .card-footer span:last-child {
   border-right: none;
   padding-right: 0;
 }
@@ -1927,7 +1927,7 @@
 /* ----------------------------------------- */
 /*  Basic Structure                          */
 /* ----------------------------------------- */
-.pf1.sheet.actor.character {
+.D35E.sheet.actor.character {
   min-width: 672px;
   min-height: 736px;
   /* ----------------------------------------- */
@@ -1940,24 +1940,24 @@
   /*  Spellbook                                */
   /* ----------------------------------------- */
 }
-.pf1.sheet.actor.character .sheet-header .charlevel {
+.D35E.sheet.actor.character .sheet-header .charlevel {
   flex: 0 0 180px;
   padding: 0 5px 2px;
 }
-.pf1.sheet.actor.character .sheet-header .charlevel .level {
+.D35E.sheet.actor.character .sheet-header .charlevel .level {
   height: 28px;
 }
-.pf1.sheet.actor.character .sheet-header .charlevel .experience input[type="text"] {
+.D35E.sheet.actor.character .sheet-header .charlevel .experience input[type="text"] {
   width: 100px;
 }
-.pf1.sheet.actor.character .sheet-header .charlevel .xpbar {
+.D35E.sheet.actor.character .sheet-header .charlevel .xpbar {
   width: 100%;
   flex: 0 0 8px;
   background: #666;
   border: 1px solid #000;
   border-radius: 3px;
 }
-.pf1.sheet.actor.character .sheet-header .charlevel .xpbar .bar {
+.D35E.sheet.actor.character .sheet-header .charlevel .xpbar .bar {
   height: 4px;
   margin: 1px;
   display: block;
@@ -1965,90 +1965,90 @@
   border: 1px solid #000;
   border-radius: 2px;
 }
-.pf1.sheet.actor.character .sheet-header .summary {
+.D35E.sheet.actor.character .sheet-header .summary {
   border-bottom: 2px groove #eeede0;
 }
-.pf1.sheet.actor.character .sheet-header .summary li:nth-last-child(1),
-.pf1.sheet.actor.character .sheet-header .summary li:nth-last-child(2),
-.pf1.sheet.actor.character .sheet-header .summary li:nth-last-child(3) {
+.D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(1),
+.D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(2),
+.D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(3) {
   border-bottom: none;
 }
-.pf1.sheet.actor.character .attributes .resource .attribute-name {
+.D35E.sheet.actor.character .attributes .resource .attribute-name {
   margin: 0 8px;
 }
-.pf1.sheet.actor.character .attributes .resource .attribute-name input[type="text"] {
+.D35E.sheet.actor.character .attributes .resource .attribute-name input[type="text"] {
   height: 20px;
   margin: 2px 0 -2px;
   line-height: 24px;
 }
-.pf1.sheet.actor.character .attributes .resource label.checkbox {
+.D35E.sheet.actor.character .attributes .resource label.checkbox {
   margin: 0 3px;
 }
-.pf1.sheet.actor.character .attributes .resource label.checkbox input[type="checkbox"] {
+.D35E.sheet.actor.character .attributes .resource label.checkbox input[type="checkbox"] {
   transform: scale(1.2);
 }
-.pf1.sheet.actor.character div.skill-rank label {
+.D35E.sheet.actor.character div.skill-rank label {
   flex: 0;
   white-space: nowrap;
   margin-right: 10px;
 }
-.pf1.sheet.actor.character div.skill-rank li.skill-rank-formula input[type="text"] {
+.D35E.sheet.actor.character div.skill-rank li.skill-rank-formula input[type="text"] {
   flex: 3 1 0;
 }
-.pf1.sheet.actor.character .counters .death-saves {
+.D35E.sheet.actor.character .counters .death-saves {
   flex: 2;
 }
-.pf1.sheet.actor.character .counters .death-saves .counter-value {
+.D35E.sheet.actor.character .counters .death-saves .counter-value {
   flex: 0 0 90px;
 }
-.pf1.sheet.actor.character .item-detail.player-class {
+.D35E.sheet.actor.character .item-detail.player-class {
   flex: 0 0 180px;
   text-align: right;
   padding-right: 10px;
 }
-.pf1.sheet.actor.character .spellbook .item-controls {
+.D35E.sheet.actor.character .spellbook .item-controls {
   flex: 0 0 68px;
 }
-.pf1.sheet.actor.character .spellbook .item-controls .toggle-prepared {
+.D35E.sheet.actor.character .spellbook .item-controls .toggle-prepared {
   color: #b5b3a4;
 }
-.pf1.sheet.actor.character .spellbook .item-controls .toggle-prepared.prepared {
+.D35E.sheet.actor.character .spellbook .item-controls .toggle-prepared.prepared {
   color: #4b4a44;
 }
 /* ----------------------------------------- */
 /*  Basic Structure                          */
 /* ----------------------------------------- */
-.pf1.sheet.actor.npc {
+.D35E.sheet.actor.npc {
   min-width: 600px;
   min-height: 658px;
 }
-.pf1.sheet.actor.npc.lite {
+.D35E.sheet.actor.npc.lite {
   min-width: 440px;
   min-height: 200px;
 }
-.pf1.sheet.actor.npc.lite .sheet-header img.profile {
+.D35E.sheet.actor.npc.lite .sheet-header img.profile {
   flex: 0 0 140px;
   max-width: 140px;
   min-height: 100px;
   max-height: 140px;
 }
-.pf1.sheet.actor.npc.lite .sheet-header .header-top {
+.D35E.sheet.actor.npc.lite .sheet-header .header-top {
   max-height: 40px;
 }
-.pf1.sheet.actor.npc.lite .sheet-header .header-top .charname {
+.D35E.sheet.actor.npc.lite .sheet-header .header-top .charname {
   padding: 0;
   margin: 0;
 }
-.pf1.sheet.actor.npc.lite .sheet-header .header-top .charname input[type="text"] {
+.D35E.sheet.actor.npc.lite .sheet-header .header-top .charname input[type="text"] {
   padding: 0;
   margin: 0;
   font-size: 24px;
   height: 24px;
 }
-.pf1.sheet.actor.npc.lite .sheet-header .header-top .charlevel {
+.D35E.sheet.actor.npc.lite .sheet-header .header-top .charlevel {
   flex: 0 0 128px;
 }
-.pf1.sheet.actor.npc.lite .sheet-header .attribute.health {
+.D35E.sheet.actor.npc.lite .sheet-header .attribute.health {
   border-right: 0;
 }
 .icon.gladius {

@@ -6,7 +6,7 @@
 
     <div class="header-details flexrow">
       <h1 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.BuffName"}}"/>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.BuffName"}}"/>
       </h1>
 
       <div class="item-subtitle">
@@ -20,7 +20,7 @@
         </li>
         <li class="tooltip">
           <span class="tooltipcontent">@item.level : {{data.level}}</span>
-          <input type="text" name="data.level" value="{{#if data.level}}{{data.level}}{{/if}}" placeholder="{{localize "PF1.Level"}}"/>
+          <input type="text" name="data.level" value="{{#if data.level}}{{data.level}}{{/if}}" placeholder="{{localize "D35E.Level"}}"/>
         </li>
       </ul>
     </div>
@@ -28,8 +28,8 @@
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
-    <a class="item" data-tab="changes">{{ localize "PF1.Changes" }}</a>
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
   </nav>
 
   {{!-- Item Sheet Body --}}
@@ -43,7 +43,7 @@
     {{!-- Changes Tab --}}
     <div class="tab flexcol" data-group="primary" data-tab="changes">
       <div class="form-group select">
-        <label>{{localize "PF1.Type"}}</label>
+        <label>{{localize "D35E.Type"}}</label>
         <select name="data.buffType" value="{{data.buffType}}">
           {{#select data.buffType}}
           {{#each config.buffTypes as |type a|}}
@@ -53,9 +53,9 @@
         </select>
       </div>
 
-      {{> "systems/pf1/templates/items/parts/item-changes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
-      {{> "systems/pf1/templates/items/parts/item-notes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
     </div>
   </section>
 </form>

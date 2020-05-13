@@ -6,7 +6,7 @@
 
     <div class="header-details flexrow">
       <h1 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
       </h1>
 
       <div class="item-subtitle">
@@ -18,25 +18,25 @@
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
-    <a class="item" data-tab="changes">{{ localize "PF1.Changes" }}</a>
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+    <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
   </nav>
 
   {{!-- Item Sheet Body --}}
   <section class="primary-body">
 
     {{!-- Description Tab --}}
-    {{> "systems/pf1/templates/items/parts/item-description.html"}}
+    {{> "systems/D35E/templates/items/parts/item-description.html"}}
 
     {{!-- Details Tab --}}
     <div class="tab details" data-group="primary" data-tab="details">
 
-      <h3 class="form-header">{{localize "PF1.Details"}}</h3>
+      <h3 class="form-header">{{localize "D35E.Details"}}</h3>
 
       {{!-- Feat Type --}}
       <div class="form-group select">
-        <label>{{localize "PF1.Type"}}</label>
+        <label>{{localize "D35E.Type"}}</label>
         <select name="data.featType" value="{{data.featType}}">
           {{#select data.featType}}
           {{#each config.featTypes as |type a|}}
@@ -49,42 +49,42 @@
       {{!-- Feat Tags --}}
       <div class="form-group stacked">
         <div class="data-selector">
-          <a class="entry-selector" for="data.tags" data-fields="{{localize "PF1.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
-          <label for="data.tags">{{localize "PF1.Tags"}}</label>
+          <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
+          <label for="data.tags">{{localize "D35E.Tags"}}</label>
         </div>
 
         {{#if isClassFeature}}
         <div class="data-selector">
-          <a class="entry-selector" for="data.associations.classes" data-fields="{{localize "PF1.ClassPlural"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
-          <label for="data.associations.classes">{{localize "PF1.ClassPlural"}}</label>
+          <a class="entry-selector" for="data.associations.classes" data-fields="{{localize "D35E.ClassPlural"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
+          <label for="data.associations.classes">{{localize "D35E.ClassPlural"}}</label>
         </div>
         {{/if}}
       </div>
 
       {{!-- Activation --}}
-      <h3 class="form-header">{{localize "PF1.FeatureUsage"}}</h3>
+      <h3 class="form-header">{{localize "D35E.FeatureUsage"}}</h3>
 
       {{!-- Item Activation Template --}}
-      {{> "systems/pf1/templates/items/parts/item-activation.html"}}
+      {{> "systems/D35E/templates/items/parts/item-activation.html"}}
 
       {{!-- Action --}}
-      <h3 class="form-header">{{localize "PF1.Attack"}}</h3>
+      <h3 class="form-header">{{localize "D35E.Attack"}}</h3>
 
       {{!-- Item Action Template --}}
-      {{> "systems/pf1/templates/items/parts/item-action.html"}}
+      {{> "systems/D35E/templates/items/parts/item-action.html"}}
 
       {{!-- Measure Template --}}
-      <h3 class="form-header">{{localize "PF1.MeasureTemplate"}}</h3>
+      <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
 
       {{!-- Item Measure Template --}}
-      {{> "systems/pf1/templates/items/parts/item-template.html"}}
+      {{> "systems/D35E/templates/items/parts/item-template.html"}}
     </div>
 
     {{!-- Changes Tab --}}
     <div class="tab flexcol" data-group="primary" data-tab="changes">
-      {{> "systems/pf1/templates/items/parts/item-changes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
-      {{> "systems/pf1/templates/items/parts/item-notes.html"}}
+      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
     </div>
   </section>
 </form>
