@@ -1,0 +1,1066 @@
+@import "./variables.less";
+.pf1.sheet.actor {
+
+  /* ----------------------------------------- */
+  /*  Sheet Header                             */
+  /* ----------------------------------------- */
+
+  .warning {
+    flex: 0;
+    background-color: #CECE00;
+    border: 1px solid #909000;
+    border-radius: 2px;
+  }
+
+  .sheet-header {
+    .header-details {
+      height: 100%;
+      border-left: @borderGroove;
+
+      .attributes > .attribute {
+        margin: 0;
+        border-left: none;
+        border-bottom: none;
+        border-top: @borderGroove;
+        border-right: @borderGroove;
+        border-radius: 0;
+        height: auto;
+      }
+
+      .attribute.speed {
+        flex: 1.5;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: start;
+
+        .attribute-speed {
+          flex: 0 0 33%;
+          max-width: 33%;
+
+          select {
+            width: 100%;
+          }
+
+          h4 {
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
+          input[type="text"] {
+            height: 16px;
+            margin: 0;
+            padding: 0;
+          }
+        }
+      }
+    }
+
+    img.profile {
+      flex: 0 0 200px;
+      max-width: 200px;
+      min-height: 120px;
+      max-height: 260px;
+      height: auto;
+      object-fit: contain;
+      border: none;
+    }
+
+    .hd {
+      flex: 0 0 88px;
+      height: 60px;
+      margin: 0;
+      padding: 2px;
+      text-align: right;
+      width: 100%;
+      font-size: 20px;
+      line-height: 20px;
+
+      label {
+        display: inline;
+        font-size: 32px;
+        text-align: right;
+      }
+
+      input {
+        display: inline;
+        width: 36px;
+        font-size: 32px;
+        text-align: center;
+        flex: 0 0 40px;
+        height: 44px;
+      }
+
+    }
+
+    .charlevel {
+      flex: 0 0 120px;
+      height: 60px;
+      margin: 0;
+      padding: 2px;
+      text-align: right;
+
+      .level {
+        width: 100%;
+        height: 20px;
+        font-size: 16px;
+        line-height: 20px;
+
+        label {
+          display: inline;
+          font-size: 24px;
+          text-align: right;
+        }
+
+        input {
+          display: inline;
+          width: 36px;
+          font-size: 24px;
+          text-align: center;
+        }
+
+        // If the Experience Bar is disabled
+        &.noxp {
+          margin-top: 10px;
+          > label {
+            font-size: 32px;
+          }
+          > input {
+            font-size: 32px;
+            flex: 0 0 40px;
+            height: 44px;
+          }
+        }
+
+      }
+
+      .experience {
+        width: 100%;
+        height: 20px;
+        padding-right: 5px;
+        font-size: 16px;
+        color: @colorOlive;
+      }
+    }
+  }
+
+  .attributes {
+    input[type="text"] {
+      height: 24px;
+    }
+    input.temphp {
+      width: 48%;
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  General Styles                           */
+  /* ----------------------------------------- */
+
+  // Box Headers
+  h4.box-title {
+    line-height: 16px;
+    margin: 4px 8px 2px;
+    font-size: 18px;
+    border-bottom: 1px solid @colorBeige;
+  }
+
+  // Sections
+  section {
+    overflow-y: auto;
+  }
+
+  /* ----------------------------------------- */
+  /*  Attributes                               */
+  /* ----------------------------------------- */
+
+  ul.attributes.misc-base, ul.attributes.misc-defenses {
+    .attribute-footer input {
+      width: 100%;
+    }
+  }
+
+  .attributes-root {
+    flex: 0 0 30%;
+  }
+
+  ul.attributes {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+
+    li.attribute.health {
+      height: 100%;
+      border-bottom: none;
+    }
+
+    li.attribute {
+      height: 70px;
+      margin: 0 5px;
+      border: @borderGroove;
+      border-radius: 4px;
+      .nodesto();
+      text-align: center;
+
+      .attribute-name {
+        flex: 0 0 18px;
+      }
+
+      .attribute-value {
+        height: 28px;
+        line-height: 20px;
+
+        input {
+          display: inline;
+          max-width: 80%;
+          margin: 0;
+          font-size: 24px;
+        }
+
+        div.attribute {
+          display: inline-block;
+          min-width: 24px;
+          max-width: 33%;
+          font-size: 24px;
+          width: calc(100% - 2px);
+        }
+
+        span.sep {
+          display: inline;
+          position: relative;
+          top: 2px;
+          font-size: 28px;
+          color: @colorTan;
+        }
+
+        &.multiple {
+          input { max-width: 33%; }
+        }
+      }
+
+      .attribute-footer {
+        flex: 0 0 18px;
+        margin-top: -1px;
+        line-height: 18px;
+        font-family: "Signika", "Palatino Linotype", serif;
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Defenses                                 */
+  /* ----------------------------------------- */
+  
+  .defenses {
+    .attributes {
+      flex: 0;
+    }
+
+    .attribute .attribute-footer input {
+      width: 32px;
+    }
+
+    .defense-rolls, .defense-notes {
+      label {
+        line-height: 20px;
+        white-space: nowrap;
+
+        h3 {
+          .nodesto();
+          font-size: 18px;
+        }
+      }
+    }
+
+    .defense-notes {
+      margin-top: 5px;
+
+      label {
+        flex: 1;
+      }
+
+      textarea {
+        flex: 3;
+      }
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Ability Scores                           */
+  /* ----------------------------------------- */
+
+  .ability-scores {
+    flex: 0 0 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    .nodesto();
+
+    .ability {
+      height: 94px;
+      margin: 0 2px;
+      text-align: center;
+      border: @borderGroove;
+      border-radius: 3px;
+
+      input.ability-total {
+        height: 30px;
+        width: 50px;
+        margin: 0 auto;
+        line-height: 32px;
+        font-size: 24px;
+      }
+
+      .ability-modifiers {
+        height: 24px;
+        margin: -12px 0 0;
+
+        span.ability-mod,
+        input[type="text"].ability-base {
+          flex: 0 0 32px;
+          height: 32px;
+          border-top: @borderGroove;
+        }
+
+        span.ability-mod {
+          border-right: @borderGroove;
+        }
+
+        div.ability-center {
+          height: 0;
+        }
+
+        input[type="text"].ability-base {
+          border-left: @borderGroove;
+          border-bottom: 0;
+          border-right: 0;
+          border-radius: 0;
+          margin-right: 0;
+          margin-bottom: 0;
+          padding: 0;
+        }
+      }
+
+      .ability-header {
+        height: 24px;
+        margin: 0;
+
+        input[type="text"].ability-damage {
+          flex: 1;
+          height: 24px;
+          border-bottom: @borderGroove;
+          border-right: @borderGroove;
+        }
+
+        input[type="text"].ability-penalty {
+          flex: 1;
+          height: 24px;
+          border-bottom: @borderGroove;
+        }
+
+        input[type="text"].ability-drain {
+          flex: 1;
+          height: 24px;
+          border-bottom: @borderGroove;
+          border-left: @borderGroove;
+        }
+      }
+
+      /* Hide modifier box on hover */
+
+      input.ability-total:hover + .ability-modifiers {
+        visibility: hidden;
+      }
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Skills                                   */
+  /* ----------------------------------------- */
+
+  div.skill-rank {
+    flex: 0;
+  }
+
+  ul.skills-list {
+    flex: 1;
+    overflow-y: auto;
+    list-style: none;
+    margin: 5px 5px 0;
+    padding: 2px 2px 0;
+    border: @borderGroove;
+    border-radius: 3px;
+
+    li.skill, li.sub-skill {
+      height: 28px;
+      padding: 3px 0;
+
+      background-color: rgba(155, 155, 155, 0.3);
+      &:nth-child(2n+1) {
+        background-color: rgba(210, 210, 210, 0.3);
+      }
+
+      .skill-name {
+        display: flex;
+        flex: 180px;
+        margin: 0;
+        font-size: 11px;
+        align-items: center;
+
+        .image-d20 {
+          display: inline-block;
+          background-image: url(../../icons/dice/d20black.svg);
+          background-size: 100%;
+          width: 24px;
+          height: 24px;
+        }
+
+        h4, input[type="text"] {
+          display: inline-block;
+          margin: 0;
+        }
+
+        input[type="text"] {
+          height: 24px;
+          width: initial;
+          padding: 0;
+        }
+
+        .skill-control {
+          display: flex;
+          align-items: center;
+
+          .fas {
+            display: inline-block;
+            text-align: center;
+            width: 24px;
+          }
+        }
+      }
+
+      .checkbox {
+        flex: 0 0 48px;
+      }
+
+      .skill-ability {
+        flex: 0 0 48px;
+        margin: 0 2px;
+      }
+
+      .skill-mod {
+        flex: 0 0 20px;
+      }
+
+      .skill-notes {
+        flex: 0 0 160px;
+      }
+
+      .skill-rank {
+        flex: 0 0 48px;
+      }
+
+      .skill-passive {
+        flex: 0 0 26px;
+        text-align: center;
+        color: @colorTan;
+      }
+
+      .skill-controls {
+        flex: 0 0 24px;
+      }
+    }
+
+    li.sub-skill .skill-name input[type="text"] {
+      padding-left: 8px;
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Statuses                                 */
+  /* ----------------------------------------- */
+
+  .counters {
+    flex: 0 0 100%;
+    border-bottom: @borderGroove;
+    margin-bottom: 5px;
+
+    .counter {
+      padding: 0 3px;
+      line-height: 32px;
+
+      h4 {
+        flex: auto;
+        margin: 0;
+        .nodesto();
+        font-size: 14px;
+      }
+
+      .counter-value {
+        flex: 0 0 50px;
+        text-align: right;
+        > * {
+          display: inline;
+        }
+      }
+
+      input[type="text"] {
+        height: 20px;
+        max-width: 20px;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+      }
+
+      input[type="checkbox"] {
+        position: relative;
+        margin: 0;
+        top: 6px;
+      }
+
+      span.sep {
+        margin: 0 -2px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Buffs & Conditions                       */
+  /* ----------------------------------------- */
+
+  .condition {
+    flex: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    margin: 2px;
+    flex-basis: calc(20% - 4px);
+
+    label {
+      line-height: 20px;
+      flex: 0;
+      white-space: nowrap;
+
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Traits                                   */
+  /* ----------------------------------------- */
+
+  .traits {
+    margin: 0 5px;
+
+    .form-group, .form-group-stacked {
+      margin: 0 0 4px 0;
+      justify-content: space-between;
+    }
+
+    .trait-selector {
+      flex: 0 0 16px;
+      padding: 2px 0;
+      color: #999;
+      font-size: 10px;
+    }
+
+    .configure-flags {
+      flex: 1;
+    }
+
+    .traits-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      text-align: right;
+    }
+
+    .actor-size {
+      flex: 0 0 150px;
+    }
+
+    label {
+      flex: 0 0 150px;
+      line-height: 20px;
+      font-weight: bold;
+      margin: 0;
+      text-align: right;
+    }
+
+    input {
+      text-align: right;
+    }
+
+    i.fas {
+      float: right;
+      margin-right: 3px;
+      text-align: right;
+      color: #999;
+
+      &:hover {
+        color: #111;
+        text-shadow: 0 0 10px red;
+      }
+    }
+
+    .inactive {
+      color: @colorTan;
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Inventory Lists                          */
+  /* ----------------------------------------- */
+
+  /* Encumbrance Bar */
+  .encumbrance {
+    flex: 0 0 12px;
+    background: @colorTan;
+    margin: 1px 15px 0 1px;
+    border: 1px solid @colorDark;
+    border-radius: 3px;
+    position: relative;
+
+    .encumbrance-bar {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      background: #6c8aa5;
+      height: 8px;
+      border: 1px solid #cde4ff;
+      border-radius: 2px;
+    }
+
+    .encumbrance-label {
+      height: 10px;
+      padding: 0 5px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 13px;
+      line-height: 12px;
+      text-align: right;
+      color: #EEE;
+      text-shadow: 0 0 5px #000;
+    }
+
+    .encumbrance-breakpoint {
+      position: absolute;
+      left: 66%;
+    }
+
+    .arrow-up {
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid #666;
+    }
+
+    .arrow-down {
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #666;
+    }
+
+    &.encumbered {
+      .arrow-up { border-bottom: 4px solid #000; }
+      .arrow-down { border-top: 4px solid #000; }
+    }
+  }
+
+  .carry-label, .inventory-total-value {
+    flex: 0;
+  }
+
+  .tab.features,
+  .tab.inventory,
+  .tab.spellbook {
+    overflow-y: hidden;
+
+    label.checkbox {
+      text-align: left;
+      flex: 0;
+      margin: 0 0 0 4px;
+
+      &:first-child {
+        margin-top: 4px;
+      }
+    }
+  }
+
+  /* Inventory List Filters */
+  .inventory-filters {
+    margin: 0 8px;
+    flex: 0 0 20px;
+    h3, .filter-title {
+      .nodesto();
+      color: @colorOlive;
+      font-size: 18px;
+      margin: 0;
+    }
+
+    &.spellbook-filters {
+      flex: 0 0 40px;
+    }
+
+    .currency {
+      list-style: none;
+      margin: 4px 0 8px;
+      padding: 0;
+      font-size: 12px;
+
+      label {
+        flex: 0;
+        margin-left: 8px;
+        text-align: right;
+        line-height: 20px;
+        color: @colorTan;
+      }
+      input[type="text"] {
+        flex: 0 0 64px;
+        text-align: center;
+        margin-left: 8px;
+        border-bottom: @borderGroove;
+      }
+    }
+  }
+
+  .carry-bonus {
+    label {
+      flex: 0;
+      margin-left: 8px;
+      text-align: right;
+      line-height: 20px;
+      color: @colorTan;
+      white-space: nowrap;
+    }
+    input[type="text"] {
+      flex: 0 0 48px;
+      text-align: center;
+      margin-left: 8px;
+      border-bottom: @borderGroove;
+    }
+  }
+
+  .inventory-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 5px;
+    overflow-y: auto;
+
+    // Inventory Item
+    .item {
+      line-height: 24px;
+      padding: 0 2px; // to align with the header border
+      border-bottom: 1px solid @colorFaint;
+      &:last-child { border-bottom: none; }
+
+      background-color: rgba(155, 155, 155, 0.3);
+      &:nth-child(2n+1) {
+        background-color: rgba(210, 210, 210, 0.3);
+      }
+
+      // Item Header Name
+      .item-name {
+        cursor: pointer;
+        white-space: nowrap;
+
+        .item-image {
+          flex: 0 0 24px;
+          background-size: 24px;
+          margin-right: 5px;
+        }
+
+        h4 {
+          margin: 0;
+        }
+
+        &:hover .item-image {
+          background-image: url("/icons/svg/d20-grey.svg") !important;
+        }
+
+        .item-image:hover {
+          background-image: url("/icons/svg/d20-black.svg") !important;
+        }
+      }
+
+      input[type="checkbox"] {
+        height: 12px;
+      }
+
+      // Item Dropdown Properties
+      .item-properties {
+        margin-top: 3px;
+      }
+
+      // Charged
+      .item-recharge {
+        flex: 0 0 80px;
+        text-align: right;
+        font-size: 11px;
+        color: @colorTan;
+      }
+
+      .item-actions {
+        > div {
+
+          a {
+            display: flex;
+            flex: 0 0 16px;
+            padding: 0;
+            margin-right: 1px;
+            height: 16px;
+            &:last-child { margin-right: 0; }
+          }
+        }
+      }
+    }
+
+    // Inventory Header
+    .inventory-header {
+      margin: 2px 0;
+      padding: 0;
+      background: rgba(0, 0, 0, 0.05);
+      border: @borderGroove;
+      font-weight: bold;
+      line-height: 24px;
+
+      h3 {
+        margin: 0;
+        padding-left: 5px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      .item-controls {
+        justify-content: flex-start;
+
+        a.item-create {
+          flex: 0 0 100%;
+        }
+      }
+    }
+
+    // Item Detail Sections
+    .item-detail {
+      height: 24px;
+      flex: 0 0 80px;
+      font-size: 11px;
+      color: @colorTan;
+      text-align: center;
+      border-right: 1px solid @colorFaint;
+      overflow: hidden;
+      white-space: nowrap;
+      .flexrow();
+      justify-content: flex-end;
+      align-items: center;
+
+      &.item-actions {
+        flex: 0 0 54px;
+        padding: 0 1px 0 1px;
+        justify-content: center;
+
+        & > div {
+          flex: 0 0 16px;
+        }
+      }
+
+      &.item-usage {
+        flex: 0 0 96px;
+        padding: 0 1px 0 1px;
+      }
+
+      &.item-type {
+        flex: 0 0 96px;
+        padding: 0 1px 0 1px;
+      }
+
+      &.item-weight {
+        flex: 0 0 54px;
+        padding: 0 1px 0 1px;
+      }
+
+      &.item-identified {
+        flex: 0 0 32px;
+        padding: 0 1px 0 1px;
+      }
+
+      &.item-carried {
+        flex: 0 0 48px;
+        padding: 0 1px 0 1px;
+      }
+
+      &.item-equipped {
+        flex: 0 0 54px;
+        padding: 0 1px 0 1px;
+      }
+
+      &.item-uses {
+        flex: 0 0 64px;
+        padding: 0 1px 0 1px;
+      }
+
+      &:nth-child(2) { border-left: 1px solid @colorFaint; }
+      &:last-child { border-right: none; }
+    }
+
+    a.item-control {
+      height: 100%;
+    }
+
+    .item-level {
+      flex: 0 0 40px;
+      border-right: 1px solid @colorFaint;
+    }
+
+    .item-feat-level {
+      flex: 0 0 60px;
+      border-right: 1px solid @colorFaint;
+    }
+
+    .item-active {
+      flex: 0 0 60px;
+      border-right: 1px solid @colorFaint;
+    }
+
+    .item-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    // Item Control Buttons
+    .item-controls {
+      flex: 0 0 64px;
+      .flexrow();
+      overflow-x: hidden;
+      white-space: nowrap;
+      justify-content: center;
+
+      a {
+        flex: 0 0 16px;
+        font-size: 10px;
+        text-align: center;
+        color: #666;
+      }
+    }
+
+    // Item Dropdown Summary
+    .item-summary {
+      flex: 0 0 100%;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 0.25em 0.5em;
+      border-top: 1px solid @colorFaint;
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Spellbook                                */
+  /* ----------------------------------------- */
+
+  .spell-slots,
+  .spell-comps,
+  .spell-uses {
+    flex: 0 0 128px;
+    font-size: 12px;
+    text-align: center;
+    color: @colorTan;
+    border-right: 1px solid @colorFaint;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input[type="text"].base {
+      flex: 1;
+    }
+
+    input, span.sep {
+      text-align: center;
+    }
+    span.sep {
+      flex: 0 0 8px;
+    }
+  }
+
+  .spell-uses {
+    input {
+      flex: 0 0 24px;
+    }
+  }
+
+  // .spell-uses {
+  //   padding-right: 8px;
+  //   text-align: right !important;
+  // }
+
+  .spell-school, .spell-action {
+    flex: 0 0 120px;
+    font-size: 12px;
+    color: @colorTan;
+    text-align: center;
+    border-right: 1px solid @colorFaint;
+  }
+
+  // Empty spellbook controls
+  .spellbook-empty .item-controls { flex: 1; }
+
+  .spell-failure {
+    input[type="text"] {
+      flex: 1;
+    }
+  }
+
+  .spell-range {
+    label {
+      flex: 1 1 48px;
+      text-align: right;
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+
+    input[type="text"] {
+      flex: 1 1 48px;
+    }
+  }
+
+  .rollable.image-d20 {
+    flex: 0 0 24px;
+    display: inline-block;
+    background-image: url(../../icons/dice/d20black.svg);
+    background-size: 100%;
+    height: 24px;
+  }
+
+  /* ----------------------------------------- */
+  /*  TinyMCE                                  */
+  /* ----------------------------------------- */
+
+  .editor {
+    padding: 0 8px;
+  }
+
+  /* ----------------------------------------- */
+  /*  Misc                                     */
+  /* ----------------------------------------- */
+
+  hr {
+    margin: 4px 0 4px 0;
+  }
+}
+
+.locked {
+  img.sheet-profile {
+    max-height: 360px;
+    max-width: 240px;
+    float: left;
+  }
+}

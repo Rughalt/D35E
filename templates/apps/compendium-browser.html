@@ -1,0 +1,35 @@
+<div class="compendium-browser flexrow" data-type="{{type}}">
+  <header class="header">
+    <div class="search">
+      <i class="fas fa-search"></i>
+      <input type="text" name="search" value="{{searchString}}" placeholder="Search" autocomplete="off" />
+    </div>
+
+    <div class="filter-container">
+      {{#each filters as |filter|}}
+      <div class="filter" data-path="{{filter.path}}">
+        <h3 class="rollable">{{filter.label}}</h3>
+        <div class="filter-content">
+          {{#each filter.items as |i|}}
+          <div class="checkbox">
+            <input type="checkbox" name="{{i.key}}" />
+            <span>{{i.name}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </header>
+
+  <div class="directory-container">
+    <ol class="directory-list">
+      {{#each collection as |c|}}
+      <li class="directory-item flexrow" data-collection="{{c.collection}}" data-entry-id="{{c.item._id}}">
+        <img class="profile" src="{{c.item.img}}" title="{{c.item.name}}"/>
+        <h4 class="entry-name"><a>{{c.item.name}}</a></h4>
+      </li>
+      {{/each}}
+    </ol>
+  </div>
+</div>

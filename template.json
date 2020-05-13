@@ -1,0 +1,1103 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "templates": {
+      "common": {
+        "abilities": {
+          "str": {
+            "total": 10,
+            "mod": 0,
+            "value": 10,
+            "carryBonus": 0,
+            "carryMultiplier": 1,
+            "checkMod": 0,
+            "damage": 0,
+            "drain": 0,
+            "penalty": 0,
+            "userPenalty": 0
+          },
+          "dex": {
+            "total": 10,
+            "mod": 0,
+            "value": 10,
+            "checkMod": 0,
+            "damage": 0,
+            "drain": 0,
+            "penalty": 0,
+            "userPenalty": 0
+          },
+          "con": {
+            "total": 10,
+            "mod": 0,
+            "value": 10,
+            "checkMod": 0,
+            "damage": 0,
+            "drain": 0,
+            "penalty": 0,
+            "userPenalty": 0
+          },
+          "int": {
+            "total": 10,
+            "mod": 0,
+            "value": 10,
+            "checkMod": 0,
+            "damage": 0,
+            "drain": 0,
+            "penalty": 0,
+            "userPenalty": 0
+          },
+          "wis": {
+            "total": 10,
+            "mod": 0,
+            "value": 10,
+            "checkMod": 0,
+            "damage": 0,
+            "drain": 0,
+            "penalty": 0,
+            "userPenalty": 0
+          },
+          "cha": {
+            "total": 10,
+            "mod": 0,
+            "value": 10,
+            "checkMod": 0,
+            "damage": 0,
+            "drain": 0,
+            "penalty": 0,
+            "userPenalty": 0
+          }
+        },
+        "resources": {},
+        "attributes": {
+          "creatureType": "humanoid",
+          "encumbrance": {
+            "level": 0,
+            "levels": {
+              "light": 33,
+              "medium": 66,
+              "heavy": 100,
+              "carry": 200,
+              "drag": 500
+            },
+            "carriedWeight": 0
+          },
+          "vision": {
+            "lowLight": false,
+            "darkvision": 0
+          },
+          "hd": {
+            "base": {
+              "_deprecated": true,
+              "value": 0
+            },
+            "total": 1,
+            "max": {
+              "_deprecated": true,
+              "value": 0
+            }
+          },
+          "naturalAC": 0,
+          "ac": {
+            "normal": {
+              "value": 0,
+              "total": 10
+            },
+            "touch": {
+              "value": 0,
+              "total": 10
+            },
+            "flatFooted": {
+              "value": 0,
+              "total": 10
+            }
+          },
+          "bab": {
+            "value": 0,
+            "total": 0
+          },
+          "cmd": {
+            "value": 0,
+            "total": 10,
+            "flatFootedTotal": 10
+          },
+          "cmb": {
+            "value": 0,
+            "total": 0
+          },
+          "sr": {
+            "formula": "",
+            "total": 0
+          },
+          "cmbNotes": "",
+          "saveNotes": "",
+          "acNotes": "",
+          "cmdNotes": "",
+          "srNotes": "",
+          "attack": {
+            "general": 0,
+            "melee": 0,
+            "ranged": 0
+          },
+          "damage": {
+            "general": 0,
+            "weapon": 0,
+            "spell": 0
+          },
+          "maxDexBonus": null,
+          "acp": {
+            "gear": 0,
+            "encumbrance": 0,
+            "total": 0
+          },
+          "energyDrain": 0,
+          "quadruped": false,
+          "savingThrows": {
+            "fort": {
+              "total": 0
+            },
+            "ref": {
+              "total": 0
+            },
+            "will": {
+              "total": 0
+            }
+          },
+          "hp": {
+            "value": 0,
+            "min": -100,
+            "base": 0,
+            "max": 0,
+            "temp": null,
+            "nonlethal": null
+          },
+          "wounds": {
+            "min": 0,
+            "value": 0
+          },
+          "vigor": {
+            "min": 0,
+            "value": 0,
+            "temp": 0
+          },
+          "init": {
+            "value": 0,
+            "bonus": 0,
+            "total": 0
+          },
+          "prof": 2,
+          "speed": {
+            "land": {
+              "base": 30,
+              "total": 30
+            },
+            "climb": {
+              "base": 0,
+              "total": null
+            },
+            "swim": {
+              "base": 0,
+              "total": null
+            },
+            "burrow": {
+              "base": 0,
+              "total": null
+            },
+            "fly": {
+              "base": 0,
+              "total": null,
+              "maneuverability": "average"
+            }
+          },
+          "conditions": {
+            "blind": false,
+            "dazzled": false,
+            "deaf": false,
+            "entangled": false,
+            "fatigued": false,
+            "exhausted": false,
+            "grappled": false,
+            "helpless": false,
+            "paralyzed": false,
+            "pinned": false,
+            "fear": false,
+            "sickened": false,
+            "stunned": false
+          },
+          "spells": {
+            "concentration": {
+              "bonus": 0,
+              "context": ""
+            },
+            "spellbooks": {
+              "primary": {
+                "name": "Primary",
+                "class": "",
+                "cl": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "concentration": 0,
+                "concentrationFormula": "",
+                "concentrationNotes": "",
+                "clNotes": "",
+                "ability": "int",
+                "autoSpellLevels": true,
+                "arcaneSpellFailure": true,
+                "baseDCFormula": "10 + @sl + @ablMod",
+                "spontaneous": false
+              },
+              "secondary": {
+                "name": "Secondary",
+                "class": "",
+                "cl": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "concentration": 0,
+                "concentrationFormula": "",
+                "concentrationNotes": "",
+                "clNotes": "",
+                "ability": "int",
+                "autoSpellLevels": true,
+                "arcaneSpellFailure": true,
+                "baseDCFormula": "10 + @sl + @ablMod",
+                "spontaneous": false
+              },
+              "tertiary": {
+                "name": "Tertiary",
+                "class": "",
+                "cl": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "concentration": 0,
+                "concentrationFormula": "",
+                "concentrationNotes": "",
+                "clNotes": "",
+                "ability": "int",
+                "autoSpellLevels": true,
+                "arcaneSpellFailure": true,
+                "baseDCFormula": "10 + @sl + @ablMod",
+                "spontaneous": false
+              },
+              "spelllike": {
+                "name": "Spell-likes",
+                "class": "_hd",
+                "cl": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "concentration": 0,
+                "concentrationFormula": "",
+                "concentrationNotes": "",
+                "clNotes": "",
+                "ability": "cha",
+                "autoSpellLevels": true,
+                "arcaneSpellFailure": true,
+                "baseDCFormula": "10 + @sl + @ablMod",
+                "spontaneous": false
+              }
+            }
+          },
+          "spellcasting": {
+            "_deprecated": true
+          },
+          "spelldc": {
+            "_deprecated": true
+          }
+        },
+        "details": {
+          "level": {
+            "value": 0,
+            "min": 0,
+            "max": 40
+          },
+          "alignment": "",
+          "biography": {
+            "value": "",
+            "public": ""
+          },
+          "notes": {
+            "value": "",
+            "public": ""
+          },
+          "bonusSkillRankFormula": ""
+        },
+        "skills": {
+          "acr": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "apr": {
+            "value": 0,
+            "ability": "int",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "art": {
+            "value": 0,
+            "ability": "int",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "blf": {
+            "value": 0,
+            "ability": "cha",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "clm": {
+            "value": 0,
+            "ability": "str",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "crf": {
+            "value": 0,
+            "ability": "int",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "dip": {
+            "value": 0,
+            "ability": "cha",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "dev": {
+            "value": 0,
+            "ability": "dex",
+            "rt": true,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "dis": {
+            "value": 0,
+            "ability": "cha",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "esc": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "fly": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "han": {
+            "value": 0,
+            "ability": "cha",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "hea": {
+            "value": 0,
+            "ability": "wis",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "int": {
+            "value": 0,
+            "ability": "cha",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "kar": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "kdu": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "ken": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "kge": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "khi": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "klo": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "kna": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "kno": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "kpl": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "kre": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "lin": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "lor": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "per": {
+            "value": 0,
+            "ability": "wis",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "prf": {
+            "value": 0,
+            "ability": "cha",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "pro": {
+            "value": 0,
+            "ability": "wis",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "rid": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "sen": {
+            "value": 0,
+            "ability": "wis",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "slt": {
+            "value": 0,
+            "ability": "dex",
+            "rt": true,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": true
+          },
+          "spl": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "ste": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "sur": {
+            "value": 0,
+            "ability": "wis",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "swm": {
+            "value": 0,
+            "ability": "str",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "umd": {
+            "value": 0,
+            "ability": "cha",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          }
+        },
+        "customSkills": {},
+        "traits": {
+          "size": "med",
+          "senses": "",
+          "dr": "",
+          "eres": "",
+          "cres": "",
+          "languages": {
+            "value": [],
+            "custom": ""
+          },
+          "di": {
+            "value": [],
+            "custom": ""
+          },
+          "dv": {
+            "value": [],
+            "custom": ""
+          },
+          "ci": {
+            "value": [],
+            "custom": ""
+          },
+          "perception": {
+            "_deprecated": true
+          }
+        },
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "altCurrency": {
+          "pp": 0,
+          "gp": 0,
+          "sp": 0,
+          "cp": 0
+        }
+      }
+    },
+    "character": {
+      "templates": ["common"],
+      "details": {
+        "xp": {
+          "value": 0,
+          "min": 0,
+          "max": 300
+        },
+        "race": "",
+        "raceType": "",
+        "height": "",
+        "weight": "",
+        "gender": "",
+        "deity": "",
+        "age": ""
+      },
+      "traits": {
+        "weaponProf": {
+          "value": [],
+          "custom": ""
+        },
+        "armorProf": {
+          "value": [],
+          "custom": ""
+        }
+      }
+    },
+    "npc": {
+      "templates": ["common"],
+      "attributes": {
+        "spellLevel": 0,
+        "hp": {
+          "value": 0,
+          "max": 0
+        }
+      },
+      "details": {
+        "type": "",
+        "environment": "",
+        "cr": 1,
+        "xp": {
+          "value": 10
+        }
+      }
+    }
+  },
+  "Item": {
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack"],
+    "templates": {
+      "changes": {
+        "changes": [],
+        "changeFlags": {
+          "loseDexToAC": false,
+          "noStr": false,
+          "noDex": false,
+          "oneInt": false,
+          "oneWis": false,
+          "oneCha": false,
+          "noEncumbrance": false,
+          "mediumArmorFullSpeed": false,
+          "heavyArmorFullSpeed": false
+        }
+      },
+      "contextNotes": {
+        "contextNotes": []
+      },
+      "itemDescription": {
+        "description": {
+          "value": "",
+          "chat": "",
+          "unidentified": ""
+        },
+        "tags": []
+      },
+      "physicalItem": {
+        "quantity": 1,
+        "weight": 0,
+        "price": 0,
+        "identified": true,
+        "hp": {
+          "max": 10,
+          "value": 10
+        },
+        "hardness": 0,
+        "carried": true,
+        "unidentified": {
+          "price": 0,
+          "name": ""
+        },
+        "identifiedName": ""
+      },
+      "activatedEffect": {
+        "activation": {
+          "cost": 1,
+          "type": ""
+        },
+        "duration": {
+          "value": null,
+          "units": ""
+        },
+        "target": {
+          "value": ""
+        },
+        "range": {
+          "value": null,
+          "units": ""
+        },
+        "uses": {
+          "value": 0,
+          "max": 0,
+          "per": null,
+          "autoDeductCharges": true
+        }
+      },
+      "action": {
+        "measureTemplate": {
+          "type": "",
+          "size": 0,
+          "overrideColor": false,
+          "customColor": "",
+          "overrideTexture": false,
+          "customTexture": ""
+        },
+        "actionType": null,
+        "attackBonus": "",
+        "critConfirmBonus": "",
+        "damage": {
+          "parts": []
+        },
+        "attackParts": [],
+        "formula": "",
+        "ability": {
+          "attack": null,
+          "damage": null,
+          "damageMult": 1,
+          "critRange": 20,
+          "critMult": 2
+        },
+        "save": {
+          "dc": 0,
+          "description": ""
+        },
+        "effectNotes": "",
+        "attackNotes": ""
+      }
+    },
+    "class": {
+      "templates": ["itemDescription", "changes"],
+      "classType": "base",
+      "levels": 1,
+      "hd": 8,
+      "hp": 8,
+      "bab": "low",
+      "skillsPerLevel": 0,
+      "creatureType": "humanoid",
+      "savingThrows": {
+        "fort": { "value": "low" },
+        "ref": { "value": "low" },
+        "will": { "value": "low" }
+      },
+      "fc": {
+        "hp": { "value": 0 },
+        "skill": { "value": 0 },
+        "alt": { "value": 0 }
+      },
+      "classSkills": {}
+    },
+    "buff": {
+      "templates": ["itemDescription", "changes", "contextNotes"],
+      "buffType": "temp",
+      "active": false,
+      "level": 0
+    },
+    "consumable": {
+      "templates": ["itemDescription", "physicalItem", "activatedEffect", "action"],
+      "consumableType": "potion",
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "maxFormula": "",
+        "per": null
+      },
+      "charges": {
+        "value": 1,
+        "max": 1,
+        "_deprecated": true
+      },
+      "consume": {
+        "value": "",
+        "_deprecated": true
+      },
+      "autoUse": {
+        "value": true,
+        "_deprecated": true
+      },
+      "autoDestroy": {
+        "value": true,
+        "_deprecated": true
+      }
+    },
+    "equipment": {
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes"],
+      "equipped": true,
+      "equipmentType": "armor",
+      "equipmentSubtype": "lightArmor",
+      "armor": {
+        "value": 0,
+        "dex": null,
+        "acp": 0,
+        "enh": 0
+      },
+      "armorType": {
+        "value": "",
+        "_deprecated": true
+      },
+      "spellFailure": 0,
+      "slot": "slotless"
+    },
+    "feat": {
+      "templates": ["itemDescription", "activatedEffect", "action", "changes", "contextNotes"],
+      "featType": "feat",
+      "associations": {
+        "classes": []
+      },
+      "recharge": {
+        "value": null,
+        "charged": false,
+        "_deprecated": true
+      },
+      "time": {
+        "value": "",
+        "_deprecated": true
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": true
+      }
+    },
+    "loot": {
+      "templates": ["itemDescription", "physicalItem"],
+      "subType": "misc"
+    },
+    "spell": {
+      "templates": ["itemDescription", "activatedEffect", "action"],
+      "learnedAt": {
+        "class": [],
+        "domain": [],
+        "subDomain": [],
+        "elementalSchool": [],
+        "bloodline": []
+      },
+      "level": 1,
+      "clOffset": 0,
+      "slOffset": 0,
+      "school": "",
+      "subschool": "",
+      "types": "",
+      "components": {
+        "value": "",
+        "verbal": false,
+        "somatic": false,
+        "material": false,
+        "focus": false,
+        "divineFocus": 0
+      },
+      "castTime": "",
+      "materials": {
+        "value": "",
+        "consumed": {
+          "value": false,
+          "_deprecated": true
+        },
+        "focus": ""
+      },
+      "spellbook": "primary",
+      "preparation": {
+        "preparedAmount": 0,
+        "maxAmount": 0,
+        "autoDeductCharges": true
+      },
+      "atWill": false,
+      "sr": true,
+      "shortDescription": "",
+      "spellDuration": "",
+      "spellEffect": "",
+      "spellArea": "",
+      "spellType": {
+        "value": "",
+        "_deprecated": true
+      },
+      "time": {
+        "value": "",
+        "_deprecated": true
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": true
+      },
+      "concentration": {
+        "value": null,
+        "_deprecated": true
+      },
+      "ritual": {
+        "value": null,
+        "_deprecated": true
+      },
+      "prepared": {
+        "value": null,
+        "_deprecated": true
+      }
+    },
+    "weapon": {
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes"],
+      "equipped": true,
+      "masterwork": false,
+      "weaponType": "simple",
+      "weaponSubtype": "light",
+      "properties": {},
+      "enh": null,
+      "weaponData": {
+        "damageRoll": "",
+        "damageType": "",
+        "critRange": 20,
+        "critMult": 2,
+        "range": null,
+        "attackFormula": "",
+        "damageFormula": "",
+        "size": "med"
+      },
+      "bonus": {
+        "value": 0,
+        "_deprecated": true
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": true
+      },
+      "damage2": {
+        "value": "",
+        "_deprecated": true
+      },
+      "damage2Type": {
+        "value": "",
+        "_deprecated": true
+      }
+    },
+    "attack": {
+      "templates": ["itemDescription", "activatedEffect", "action"],
+      "attackType": "weapon",
+      "masterwork": false,
+      "enh": null,
+      "proficient": true,
+      "primaryAttack": true,
+      "showInQuickbar": true
+    }
+  }
+}

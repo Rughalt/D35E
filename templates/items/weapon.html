@@ -1,0 +1,196 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+  {{!-- Item Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+
+    <div class="header-details flexrow">
+      {{#if isGM}}
+      <h3 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+      </h3>
+
+      <h3 class="charname">
+        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "PF1.UnidentifiedName"}}"/>
+      </h3>
+      {{else}}
+      {{#if showUnidentifiedData}}
+      <h1 class="charname">
+        <input name="data.unidentified.name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+      </h1>
+      {{else}}
+      <h1 class="charname">
+        <input name="name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+      </h1>
+      {{/if}}
+      {{/if}}
+
+      <div class="item-subtitle">
+        <h4 class="item-type">{{localize "PF1.Item"}}</h4>
+        <span class="item-status">{{itemStatus}}</span>
+      </div>
+
+      <ul class="summary">
+        <li>
+          {{itemType}}
+        </li>
+        <li>
+          {{labels.weaponType}}
+        </li>
+        <li>
+          {{labels.weaponSubtype}}
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  {{!-- Item Sheet Navigation --}}
+  <nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
+    {{#unless showUnidentifiedData}}
+    <a class="item" data-tab="changes">{{ localize "PF1.Changes" }}</a>
+    {{/unless}}
+  </nav>
+
+  {{!-- Item Sheet Body --}}
+  <section class="primary-body">
+
+    {{!-- Description Tab --}}
+    {{> "systems/pf1/templates/items/parts/item-description.html"}}
+
+    {{!-- Details Tab --}}
+    <div class="tab details" data-group="primary" data-tab="details">
+      <h3 class="form-header">Weapon Details</h3>
+
+      {{!-- Weapon Type --}}
+      <div class="form-group">
+        <label>{{localize "PF1.Category"}}</label>
+        <select name="data.weaponType">
+          {{#select data.weaponType}}
+          {{#each weaponCategories.types as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- Weapon Subtype --}}
+      <div class="form-group">
+        <label>{{localize "PF1.Type"}}</label>
+        <select name="data.weaponSubtype">
+          {{#select data.weaponSubtype}}
+          {{#each weaponCategories.subTypes as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- Weapon Size --}}
+      <div class="form-group">
+        <label>{{localize "PF1.WeaponSize"}}</label>
+        <select name="data.weaponData.size">
+          {{#select data.weaponData.size}}
+          {{#each config.actorSizes as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- Equipment Status --}}
+      <div class="form-group stacked">
+        <label>{{localize "PF1.EquipmentStatus"}}</label>
+        <label class="checkbox">
+          <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{localize "PF1.Equipped"}}
+        </label>
+        {{#if isGM}}
+        <label class="checkbox">
+          <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "PF1.Identified"}}
+        </label>
+        {{/if}}
+        <label class="checkbox">
+          <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "PF1.Masterwork"}}
+        </label>
+      </div>
+
+      {{#unless showUnidentifiedData}}
+      {{!-- Weapon Properties --}}
+      <div class="form-group stacked weapon-properties">
+        <label>{{localize "PF1.WeaponProperties"}}</label>
+        {{#each config.weaponProperties as |name prop|}}
+        <label class="checkbox">
+          <input type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.properties prop)}}/> {{ name }}
+        </label>
+        {{/each}}
+      </div>
+
+      {{#if isRanged}}
+      <div class="form-group">
+        <label>{{localize "PF1.Range"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.range" value="{{data.weaponData.range}}" data-dtype="Number"/>
+        </div>
+      </div>
+      {{/if}}
+
+      <div class="form-group">
+        <label>{{localize "PF1.EnhancementBonus"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
+
+      {{!-- Weapon Bonus Attack Formula --}}
+      <div class="form-group">
+        <label>{{localize "PF1.BonusAttackFormula"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.attackFormula" value="{{data.weaponData.attackFormula}}" placeholder="{{localize "PF1.BonusAttackFormula"}}"/>
+        </div>
+      </div>
+
+      {{!-- Weapon Damage --}}
+      <div class="form-group">
+        <label>{{localize "PF1.BaseWeaponDamage"}} ({{localize "PF1.ActorSizeMedium"}})</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.damageRoll" value="{{data.weaponData.damageRoll}}" placeholder="{{localize "PF1.DamageRoll"}}"/>
+          <input type="text" name="data.weaponData.damageType" value="{{data.weaponData.damageType}}" placeholder="{{localize "PF1.DamageType"}}"/>
+        </div>
+      </div>
+
+      {{!-- Weapon Bonus Damage Formula --}}
+      <div class="form-group">
+        <label>{{localize "PF1.BonusDamageFormula"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.damageFormula" value="{{data.weaponData.damageFormula}}" placeholder="{{localize "PF1.BonusDamageFormula"}}"/>
+        </div>
+      </div>
+
+      {{!-- Weapon Critical Damage --}}
+      <div class="form-group">
+        <label>{{localize "PF1.BaseWeaponCritical"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.critRange" value="{{data.weaponData.critRange}}" placeholder="20"/>
+          <input type="text" name="data.weaponData.critMult" value="{{data.weaponData.critMult}}" placeholder="2"/>
+        </div>
+      </div>
+
+      {{#if owner}}
+      <div class="form-group">
+        <button type="button" name="create-attack">{{localize "PF1.CreateAttack"}}</button>
+      </div>
+      {{/if}}
+      {{/unless}}
+    </div>
+
+    {{!-- Changes Tab --}}
+    {{#unless showUnidentifiedData}}
+    <div class="tab flexcol" data-group="primary" data-tab="changes">
+      {{> "systems/pf1/templates/items/parts/item-changes.html"}}
+
+      {{> "systems/pf1/templates/items/parts/item-notes.html"}}
+    </div>
+    {{/unless}}
+  </section>
+</form>

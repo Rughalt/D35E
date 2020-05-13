@@ -1,0 +1,125 @@
+{
+  "name": "pf1",
+  "title": "Pathfinder 1",
+  "description": "A comprehensive game system for running games of Pathfinder 1 in the Foundry VTT environment.",
+  "version": 0.51,
+  "author": "Furyspark",
+  "templateVersion": 2,
+  "scripts": [],
+  "esmodules": ["pf1.js"],
+  "styles": ["pf1.css"],
+  "packs": [
+    {
+      "name": "classes",
+      "label": "Classes",
+      "system": "pf1",
+      "path": "./packs/classes.db",
+      "entity": "Item"
+    },
+    {
+      "name": "commonbuffs",
+      "label": "Common Buffs",
+      "system": "pf1",
+      "path": "./packs/commonbuffs.db",
+      "entity": "Item"
+    },
+    {
+      "name": "spells",
+      "label": "Spells",
+      "system": "pf1",
+      "path": "./packs/spells.db",
+      "entity": "Item"
+    },
+    {
+      "name": "feats",
+      "label": "Feats",
+      "system": "pf1",
+      "path": "./packs/feats.db",
+      "entity": "Item"
+    },
+    {
+      "name": "items",
+      "label": "Items",
+      "system": "pf1",
+      "path": "./packs/items.db",
+      "entity": "Item"
+    },
+    {
+      "name": "armors-and-shields",
+      "label": "Armor and Shields",
+      "system": "pf1",
+      "path": "./packs/armors-and-shields.db",
+      "entity": "Item"
+    },
+    {
+      "name": "weapons-and-ammo",
+      "label": "Weapons and Ammo",
+      "system": "pf1",
+      "path": "./packs/weapons-and-ammo.db",
+      "entity": "Item"
+    },
+    {
+      "name": "racialhd",
+      "label": "Racial HD",
+      "system": "pf1",
+      "path": "./packs/racial-hd.db",
+      "entity": "Item"
+    },
+    {
+      "name": "sample-macros",
+      "label": "Sample Macros",
+      "system": "pf1",
+      "path": "./packs/sample-macros.db",
+      "entity": "Macro"
+    },
+    {
+      "name": "roll-tables",
+      "label": "Roll Tables",
+      "system": "pf1",
+      "path": "./packs/roll-tables.db",
+      "entity": "RollTable"
+    },
+    {
+      "name": "bestiary",
+      "label": "Bestiary",
+      "system": "pf1",
+      "path": "./packs/bestiary.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "conditions",
+      "label": "Conditions",
+      "system": "pf1",
+      "path": "./packs/conditions.db",
+      "entity": "JournalEntry"
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "de",
+      "name": "German",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "fr",
+      "name": "French",
+      "path": "lang/fr.json"
+    }
+  ],
+  "socket": true,
+  "initiative": "1d20 + @attributes.init.total + (@attributes.init.total / 100)",
+  "gridDistance": 5,
+  "gridUnits": "ft",
+  "primaryTokenAttribute": "attributes.hp",
+  "secondaryTokenAttribute": null,
+  "minimumCoreVersion": "0.5.6",
+  "compatibleCoreVersion": "0.5.6",
+  "url": "https://gitlab.com/Furyspark/foundryvtt-pathfinder1",
+  "manifest": "https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/raw/master/system.json",
+  "download": "https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/archive/v0.51/foundryvtt-pathfinder1-v0.51.zip"
+}

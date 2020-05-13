@@ -1,0 +1,147 @@
+{{!-- Action Type --}}
+<div class="form-group select">
+  <label>{{localize "PF1.ActionType"}}</label>
+  <select name="data.actionType">
+    {{#select data.actionType}}
+    <option value=""></option>
+    {{#each config.itemActionTypes as |name type|}}
+    <option value="{{type}}">{{name}}</option>
+    {{/each}}
+    {{/select}}
+  </select>
+</div>
+{{#if data.actionType}}
+
+{{#if isSpell}}
+<div class="form-group">
+  <label>{{localize "PF1.SpellEffect"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.spellEffect" value="{{data.spellEffect}}" placeholder="{{localize "PF1.SpellEffectExample"}}"/>
+  </div>
+</div>
+{{/if}}
+
+{{!-- Attack Roll Bonus --}}
+{{#if hasAttackRoll }}
+<div class="form-group">
+  <label>{{localize "PF1.AttackRollBonus"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.attackBonus" value="{{data.attackBonus}}" placeholder="{{localize "PF1.Formula"}}"/>
+  </div>
+</div>
+
+<div class="form-group">
+  <label>{{localize "PF1.CriticalThreatRange"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.ability.critRange" value="{{data.ability.critRange}}" data-dtype="Number"/>
+  </div>
+</div>
+
+<div class="form-group">
+  <label>{{localize "PF1.CriticalMultiplier"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.ability.critMult" value="{{data.ability.critMult}}" data-dtype="Number"/>
+  </div>
+</div>
+<div class="form-group">
+  <label>{{localize "PF1.CriticalConfirmBonus"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.critConfirmBonus" value="{{data.critConfirmBonus}}" placeholder="{{localize "PF1.Formula"}}"/>
+  </div>
+</div>
+
+{{!-- Attack Ability --}}
+<div class="form-group select">
+  <label>{{localize "PF1.AttackAbility"}}</label>
+  <select name="data.ability.attack">
+    {{#select data.ability.attack}}
+    <option value=""></option>
+    {{#each config.abilities as |ability a|}}
+    <option value="{{a}}">{{ability}}</option>
+    {{/each}}
+    {{/select}}
+  </select>
+</div>
+
+<h4 class="attack-header">
+  {{localize "PF1.ExtraAttacks"}}
+  <a class="attack-control add-attack"><i class="fas fa-plus"></i></a>
+</h4>
+<ol class="attack-parts form-group">
+  {{#each data.attackParts as |part a|}}
+  <li class="attack-part flexrow" data-attack-part="{{a}}">
+    <input type="text" name="data.attackParts.{{a}}.0" placeholder="{{localize "PF1.AttackBonusFormula"}}" value="{{lookup this "0"}}"/>
+    <input type="text" name="data.attackParts.{{a}}.1" placeholder="{{localize "PF1.Name"}}" value="{{lookup this "1"}}"/>
+    <a class="attack-control delete-attack"><i class="fas fa-minus"></i></a>
+  </li>
+  {{/each}}
+</ol>
+{{/if}}
+
+{{!-- Damage Ability --}}
+<div class="form-group select">
+  <label>{{localize "PF1.DamageAbility"}}</label>
+  <select name="data.ability.damage">
+    {{#select data.ability.damage}}
+    <option value=""></option>
+    {{#each config.abilities as |ability a|}}
+    <option value="{{a}}">{{ability}}</option>
+    {{/each}}
+    {{/select}}
+  </select>
+  <select name="data.ability.damageMult" data-dtype="Number">
+    {{#select data.ability.damageMult}}
+    <option value="0.5">x0.5</option>
+    <option value="1" {{#unless data.ability.damageMult}}selected="selected"{{/unless}}>x1</option>
+    <option value="1.5">x1.5</option>
+    <option value="2">x2</option>
+    {{/select}}
+  </select>
+</div>
+
+{{!-- Damage Formula --}}
+<h4 class="damage-header">
+  {{#unless isHealing }}{{localize "PF1.DamageFormula"}}{{ else }}{{localize "PF1.HealingFormula"}}{{/unless}}
+  <a class="damage-control add-damage"><i class="fas fa-plus"></i></a>
+</h4>
+<ol class="damage-parts form-group tooltip">
+  <span class="tooltipcontent">
+    NOTE: Normally, every variable entered in these fields are not multiplied on a critical hit,
+    EXCEPT the first damage die in the first field. If you want to have something multiplied on
+    a critical hit, multiply it by the variable @critMult.<br>
+    Examples:<br>
+    1d8 + 2 * @critMult<br>
+    2d6 + (@critMult)d6
+  </span>
+  {{#each data.damage.parts as |part i| }}
+  <li class="damage-part flexrow" data-damage-part="{{i}}">
+    <input type="text" name="data.damage.parts.{{i}}.0" placeholder="{{#unless isHealing }}{{localize "PF1.DamageFormula"}}{{ else }}{{localize "PF1.HealingFormula"}}{{/unless}}" value="{{lookup this "0"}}"/>
+    <input type="text" name="data.damage.parts.{{i}}.1" placeholder="{{localize "PF1.DamageTypes"}}" value="{{lookup this "1"}}"/>
+    <a class="damage-control delete-damage"><i class="fas fa-minus"></i></a>
+  </li>
+  {{/each}}
+</ol>
+
+{{!-- Saving Throw --}}
+<div class="form-group input-select">
+  <label>{{#unless isSpell}}{{localize "PF1.DCOffset"}}{{else}}{{localize "PF1.DCOffset"}}{{/unless}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.save.dc" value="{{data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "PF1.DCOffset"}}{{else}}{{localize "PF1.DCOffset"}}{{/unless}}"/>
+    <input type="text" name="data.save.description" value="{{data.save.description}}" placeholder="{{localize "PF1.DCDescriptionExample"}}"/>
+  </div>
+</div>
+
+{{!-- Attack Notes --}}
+{{#if hasAttackRoll }}
+<div class="form-group stacked">
+  <label>{{localize "PF1.AttackNotes"}}</label>
+  <textarea type="text" name="data.attackNotes">{{data.attackNotes}}</textarea>
+</div>
+{{/if}}
+
+{{!-- Effect Notes --}}
+<div class="form-group stacked">
+  <label>{{localize "PF1.EffectNotes"}}</label>
+  <textarea type="text" name="data.effectNotes" style="white-space: pre">{{data.effectNotes}}</textarea>
+</div>
+{{/if}}

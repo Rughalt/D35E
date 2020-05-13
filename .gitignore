@@ -1,0 +1,9 @@
+# IDE
+.idea/
+.vs/
+.vscode/
+*.code-workspace
+
+# Node Modules
+node_modules/
+/test-scripts

@@ -1,0 +1,26 @@
+<div class="spell-description">
+  <p>
+    <strong>School</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
+    {{#if learnedAt.class}}<strong>{{localize "PF1.Level"}}</strong>&nbsp;{{learnedAt.class}};{{/if}}
+    {{#if learnedAt.domain}}<strong>{{localize "PF1.Domain"}}</strong>&nbsp;{{learnedAt.domain}};{{/if}}
+    {{#if learnedAt.subDomain}}<strong>{{localize "PF1.SubDomain"}}</strong>&nbsp;{{learnedAt.subDomain}};{{/if}}
+    {{#if learnedAt.elementalSchool}}<strong>{{localize "PF1.ElementalSchool"}}</strong>&nbsp;{{learnedAt.elementalSchool}};{{/if}}
+    {{#if learnedAt.bloodline}}<strong>{{localize "PF1.Bloodline"}}</strong>&nbsp;{{learnedAt.bloodline}};{{/if}}
+  </p>
+  <p>
+    {{#if label.castingTime}}<strong>Casting Time</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
+    {{#if label.components}}<strong>Components</strong>&nbsp;{{label.components}}<br>{{/if}}
+  </p>
+  <p>
+    {{#if label.range}}<strong>Range</strong>&nbsp;{{label.range}}<br>{{/if}}
+    {{#if label.area}}<strong>Area</strong>&nbsp;{{label.area}}<br>{{/if}}
+    {{#if label.targets}}<strong>Targets</strong>&nbsp;{{label.targets}}<br>{{/if}}
+    {{#if label.effect}}<strong>Effect</strong>&nbsp;{{label.effect}}<br>{{/if}}
+    {{#if label.duration}}<strong>Duration</strong>&nbsp;{{label.duration}}<br>{{/if}}
+    {{#if useDCandSR}}<strong>Saving Throw</strong>&nbsp;{{label.savingThrow}};&nbsp;<strong>Spell Resistance</strong>&nbsp;{{label.sr}}<br>{{/if}}
+  </p>
+  {{#if data.shortDescription}}
+  <h2>Description</h2>
+  {{{data.shortDescription}}}
+  {{/if}}
+</div>

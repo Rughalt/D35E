@@ -1,0 +1,128 @@
+@import "./variables.less";
+
+/* ----------------------------------------- */
+/*  Basic Structure                          */
+/* ----------------------------------------- */
+.pf1.sheet.actor.character {
+  min-width: 672px;
+  min-height: 736px;
+
+  /* ----------------------------------------- */
+  /*  Sheet Header                             */
+  /* ----------------------------------------- */
+
+  .sheet-header {
+
+    // Character level and experience bar
+    .charlevel {
+      flex: 0 0 180px;
+      padding: 0 5px 2px;
+
+      .level {
+        height: 28px;
+      }
+
+      .experience {
+        input[type="text"] {
+          width: 100px;
+        }
+      }
+
+      .xpbar {
+        width: 100%;
+        flex: 0 0 8px;
+        background: #666;
+        border: 1px solid #000;
+        border-radius: 3px;
+
+        .bar {
+          height: 4px;
+          margin: 1px;
+          display: block;
+          background: #afebff;
+          border: 1px solid #000;
+          border-radius: 2px;
+        }
+      }
+    }
+
+    // Character Summary
+    .summary {
+      border-bottom: @borderGroove;
+
+      li:nth-last-child(1), li:nth-last-child(2), li:nth-last-child(3) {
+        border-bottom: none;
+      }
+    }
+  }
+
+  /* ----------------------------------------- */
+  /*  Sheet Body                               */
+  /* ----------------------------------------- */
+
+  .attributes {
+    .resource {
+      .attribute-name {
+        margin: 0 8px;
+        input[type="text"] {
+          height: 20px;
+          margin: 2px 0 -2px;
+          line-height: 24px;
+        }
+      }
+      label.checkbox {
+        margin: 0 3px;
+        input[type="checkbox"] {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+  div.skill-rank {
+    label {
+      flex: 0;
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+
+    li.skill-rank-formula {
+      input[type="text"] {
+        flex: 3 1 0;
+      }
+    }
+  }
+
+  .counters {
+    .death-saves {
+      flex: 2;
+      .counter-value {
+        flex: 0 0 90px;
+      }
+    }
+  }
+
+  .item-detail.player-class {
+    flex: 0 0 180px;
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  /* ----------------------------------------- */
+  /*  Spellbook                                */
+  /* ----------------------------------------- */
+
+  .spellbook {
+    .item-controls {
+      flex: 0 0 68px;
+
+      .toggle-prepared {
+        color: @colorBeige;
+        &.prepared {
+          color: @colorOlive;
+        }
+      }
+    }
+  }
+
+}

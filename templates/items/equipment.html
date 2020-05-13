@@ -1,0 +1,188 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+  {{!-- Item Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+
+    <div class="header-details flexrow">
+      {{#if isGM}}
+      <h3 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "PF1.ItemName"}}"/>
+      </h3>
+
+      <h3 class="charname">
+        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "PF1.UnidentifiedName"}}"/>
+      </h3>
+      {{else}}
+      {{#if showUnidentifiedData}}
+      <h1 class="charname">
+        <input name="data.unidentified.name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+      </h1>
+      {{else}}
+      <h1 class="charname">
+        <input name="name" type="text" value="{{itemName}}" placeholder="{{localize "PF1.ItemName"}}"/>
+      </h1>
+      {{/if}}
+      {{/if}}
+
+      <div class="item-subtitle">
+        <h4 class="item-type">{{localize "PF1.Item"}}</h4>
+        <span class="item-status">{{itemStatus}}</span>
+      </div>
+
+      <ul class="summary">
+        <li>
+          {{itemType}}
+        </li>
+        <li>
+          {{#unless showUnidentifiedData}}{{labels.equipmentSubtype}}{{/unless}}
+        </li>
+        <li>
+          {{#if hasMultipleSlots}}{{#unless showUnidentifiedData}}{{labels.slot}}{{/unless}}{{/if}}
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  {{!-- Item Sheet Navigation --}}
+  <nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="description">{{ localize "PF1.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "PF1.Details" }}</a>
+    {{#unless showUnidentifiedData}}
+    <a class="item" data-tab="changes">{{ localize "PF1.Changes" }}</a>
+    {{/unless}}
+  </nav>
+
+  {{!-- Item Sheet Body --}}
+  <section class="primary-body">
+
+    {{!-- Description Tab --}}
+    {{> "systems/pf1/templates/items/parts/item-description.html"}}
+
+    {{!-- Details Tab --}}
+    <div class="tab details" data-group="primary" data-tab="details">
+      <h3 class="form-header">{{localize "PF1.Details"}}</h3>
+
+      {{!-- Equipment Type --}}
+      <div class="form-group">
+        <label>{{localize "PF1.Category"}}</label>
+        <select name="data.equipmentType">
+          {{#select data.equipmentType}}
+          {{#each equipmentCategories.types as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- Equipment Subtype --}}
+      <div class="form-group">
+        <label>{{localize "PF1.Type"}}</label>
+        <select name="data.equipmentSubtype">
+          {{#select data.equipmentSubtype}}
+          {{#each equipmentCategories.subTypes as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+
+      {{!-- Equipment Slot --}}
+      {{#if hasMultipleSlots}}
+      <div class="form-group">
+        <label>{{localize "PF1.Slot"}}</label>
+        <select name="data.slot">
+          {{#select data.slot}}
+          {{#each equipmentSlots as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+      {{else}}
+      <input type="hidden" name="data.slot" value="{{data.slot}}" />
+      {{/if}}
+
+      {{!-- Equipment Status --}}
+      <div class="form-group stacked">
+        <label>{{localize "PF1.EquipmentStatus"}}</label>
+        <label class="checkbox">
+          <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{localize "PF1.Equipped"}}
+        </label>
+        {{#if isGM}}
+        <label class="checkbox">
+          <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "PF1.Identified"}}
+        </label>
+        {{/if}}
+      </div>
+
+      {{#if showArmorData}}
+      {{!-- Armor Class --}}
+      <div class="form-group">
+        <label>{{localize "PF1.ArmorClass"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.armor.value" value="{{data.armor.value}}" data-dtype="Number"/>
+        </div>
+      </div>
+
+      {{!-- Enhancement Bonus --}}
+      <div class="form-group">
+        <label>{{localize "PF1.EnhancementBonus"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.armor.enh" value="{{data.armor.enh}}" data-dtype="Number"/>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#unless showUnidentifiedData}}
+      {{!-- Dexterity Modifier --}}
+      <div class="form-group">
+        <label>{{localize "PF1.MaxDexterityModifier"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.armor.dex" value="{{data.armor.dex}}" placeholder="{{localize "PF1.Unlimited"}}"/>
+        </div>
+      </div>
+
+      {{!-- Armor Check Penalty --}}
+      <div class="form-group">
+        <label>{{localize "PF1.ArmorCheckPenalty"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.armor.acp" value="{{data.armor.acp}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
+
+      {{!-- Spell Failure --}}
+      <div class="form-group">
+        <label>{{localize "PF1.ArcaneSpellFailure"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.spellFailure" value="{{data.spellFailure}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
+
+      <h3 class="form-header">{{localize "PF1.EquipmentUsage"}}</h3>
+
+      {{!-- Item Activation Template --}}
+      {{> "systems/pf1/templates/items/parts/item-activation.html"}}
+
+      <h3 class="form-header">{{localize "PF1.Action"}}</h3>
+
+      {{!-- Item Action Template --}}
+      {{> "systems/pf1/templates/items/parts/item-action.html"}}
+
+      <h3 class="form-header">{{localize "PF1.MeasureTemplate"}}</h3>
+
+      {{!-- Item Measure Template --}}
+      {{> "systems/pf1/templates/items/parts/item-template.html"}}
+      {{/unless}}
+    </div>
+
+    {{!-- Changes Tab --}}
+    {{#unless showUnidentifiedData}}
+    <div class="tab flexcol" data-group="primary" data-tab="changes">
+      {{> "systems/pf1/templates/items/parts/item-changes.html"}}
+
+      {{> "systems/pf1/templates/items/parts/item-notes.html"}}
+    </div>
+    {{/unless}}
+  </section>
+</form>

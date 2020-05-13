@@ -1,0 +1,17 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+  <!-- HEADER -->
+  <header class="sheet-header">
+    <h1 class="charname">
+      <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize "PF1.CharacterName"}}"/>
+    </h1>
+  </header>
+
+  <!-- BODY -->
+  <section class="sheet-body">
+    <img class="sheet-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+    <div class="tab biography">
+      {{editor content=data.details.biography.value target="data.details.biography.value" button=true owner=owner editable=editable}}
+    </div>
+  </section>
+</form>

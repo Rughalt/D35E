@@ -1,0 +1,55 @@
+@dark-color : #191813;
+@light-color: #f0f0f0;
+
+#health-config nav.tabs {
+  font-size: 16px;
+  line-height: 32px;
+  border-bottom: 1px solid black;
+}
+
+#hitdice {
+  display: grid;
+  grid-template: 32px 1fr 1fr 1fr e('/') 1fr 1fr 1fr 1fr;
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px 0;
+}
+
+#hitdice > * {
+  padding: 5px;
+  border-bottom: 1px solid @dark-color;
+}
+
+#hitdice .table-header {
+  color: @light-color;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid @dark-color;
+  font-weight: bold;
+  text-shadow: 1px 1px black;
+}
+
+#hitdice .index {
+  text-align: left;
+}
+
+#hitdice .switch-check {
+  display: none;
+}
+
+#hitdice .switch-label > span {
+  display: block;
+  border: 1px solid @dark-color;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: auto;
+  padding: 2px;
+  width: calc(100% - 2px);
+}
+
+#hitdice .switch-label > span.switch-auto {
+  background-color: fade(@dark-color, 25%);
+  color: @light-color;
+}
+
+#hitdice .switch-check:not(:checked) + .switch-label .switch-auto   { display: none; }
+#hitdice .switch-check:checked       + .switch-label .switch-manual { display: none; }

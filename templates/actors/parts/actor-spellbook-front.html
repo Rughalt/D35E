@@ -1,0 +1,16 @@
+{{!-- Spellbook Navigation --}}
+<nav class="sheet-navigation tabs subtabs spellbooks" data-group="spellbooks">
+  {{#each data.attributes.spells.spellbooks as |spellbook a|}}
+  <a class="item" data-tab="{{a}}">{{spellbook.name}}</a>
+  {{/each}}
+</nav>
+
+<section class="spellbooks-body">
+  {{#each spellbookData as |spellbook a|}}
+  <div class="tab spellbook-group flexcol" data-group="spellbooks" data-tab="{{a}}">
+  {{> "systems/pf1/templates/actors/parts/actor-spellbook.html" spellbook=spellbook spellbookIndex=a
+    data=../data owner=../owner filters=../filters.spellbook isCharacter=../isCharacter
+    spellFailure=../spellFailure}}
+  </div>
+  {{/each}}
+</section>

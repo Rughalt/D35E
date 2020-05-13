@@ -1,0 +1,49 @@
+form {
+  
+  .form-group.stacked {
+    label {
+      flex: 0 0 100%;
+    }
+    label.checkbox {
+      flex: auto;
+      text-align: left;
+      line-height: 20px;
+      font-size: 11px;
+
+      input[type="checkbox"] {
+        height: unset;
+        margin: unset;
+      }
+    }
+  }
+}
+
+/* Tooltip text */
+.tooltip .tooltipcontent {
+  font-family: sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  line-height: 13px;
+  min-width: 128px;
+  width: 240px;
+
+  /* Position the tooltip text */
+  position: fixed;
+  z-index: 1;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltipcontent {
+  visibility: visible;
+  pointer-events: none;
+  opacity: 1;
+}

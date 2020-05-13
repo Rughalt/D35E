@@ -1,0 +1,113 @@
+<div class="pf1 chat-card defense-card" data-actor-id="{{actor._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+  <header class="card-header flexrow">
+    <h3 class="actor-name">{{name}} - Defenses</h3>
+  </header>
+
+  <div>
+    {{#if ac}}
+    <div class="defense ac">
+      <table>
+        <tr>
+          <th>{{localize "PF1.ACNormal"}}</th>
+          <th>{{localize "PF1.ACTouch"}}</th>
+          <th>{{localize "PF1.ACFlatFooted"}}</th>
+        </tr>
+        <tr>
+          <td>{{ac.normal}}</td>
+          <td>{{ac.touch}}</td>
+          <td>{{ac.flatFooted}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{#if ac.notes}}
+    <div class="flexcol property-group">
+      <label>{{localize "PF1.ACNotes"}}</label>
+      <div class="flexrow">
+        {{#each ac.notes as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+    {{/if}}
+
+    {{#if cmd}}
+    <div class="defense cmd">
+      <table>
+        <tr>
+          <th>{{localize "PF1.CMDAbbr"}}</th>
+          <th>{{localize "PF1.CMDFlatFooted"}}</th>
+        </tr>
+        <tr>
+          <td>{{cmd.normal}}</td>
+          <td>{{cmd.flatFooted}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{#if cmd.notes}}
+    <div class="flexcol property-group">
+      <label>{{localize "PF1.CMDNotes"}}</label>
+      <div class="flexrow">
+        {{#each cmd.notes as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+    {{/if}}
+
+    {{#if misc}}
+    <div class="defense misc">
+      <table>
+        <tr>
+          <th>{{localize "PF1.SpellResistance"}}</th>
+        </tr>
+        <tr>
+          <td>{{#if misc.sr}}{{misc.sr}}{{else}}{{localize "PF1.NonApplicable"}}{{/if}}</td>
+        </tr>
+      </table>
+    </div>
+
+    {{#if misc.srNotes}}
+    <div class="flexcol property-group">
+      <label>{{localize "PF1.SpellResistanceNotes"}}</label>
+      <div class="flexrow">
+        {{#each misc.srNotes as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+    {{/if}}
+
+    {{#if misc.drNotes}}
+    <div class="flexcol property-group">
+      <label>{{localize "PF1.DamRed"}}</label>
+      <div class="flexrow">
+        {{#each misc.drNotes as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if misc.energyResistance}}
+    <div class="flexcol property-group">
+      <label>{{localize "PF1.EnRes"}}</label>
+      <div class="flexrow">
+        {{#each misc.energyResistance as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="saving-throws flexrow">
+      <button data-action="save" data-save="fort">{{localize "PF1.SavingThrowFort"}}</button>
+      <button data-action="save" data-save="ref">{{localize "PF1.SavingThrowRef"}}</button>
+      <button data-action="save" data-save="will">{{localize "PF1.SavingThrowWill"}}</button>
+    </div>
+  </div>
+</div>

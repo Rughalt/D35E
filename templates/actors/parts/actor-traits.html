@@ -1,0 +1,114 @@
+<div class="traits">
+  <div class="form-group">
+    <label>{{localize "PF1.Size"}}</label>
+    <select class="actor-size" name="data.traits.size">
+      {{#select data.traits.size}}
+      {{#each config.actorSizes as |label size|}}
+      <option value="{{size}}">{{label}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+
+  <div class="form-group {{#unless data.traits.senses}}inactive{{/unless}}">
+    <label>{{localize "PF1.Senses"}}</label>
+    <input type="text" name="data.traits.senses" value="{{data.traits.senses}}" placeholder="{{localize "PF1.None"}}"/>
+  </div>
+
+  <div class="form-group {{#unless data.traits.dr}}inactive{{/unless}}">
+    <label>{{localize "PF1.DamRed"}}</label>
+    <input type="text" name="data.traits.dr" value="{{data.traits.dr}}" placeholder="{{localize "PF1.None"}}"/>
+  </div>
+
+  <div class="form-group {{#unless data.traits.eres}}inactive{{/unless}}">
+    <label>{{localize "PF1.EnRes"}}</label>
+    <input type="text" name="data.traits.eres" value="{{data.traits.eres}}" placeholder="{{localize "PF1.None"}}"/>
+  </div>
+
+  <div class="form-group {{#unless data.traits.cres}}inactive{{/unless}}">
+    <label>{{localize "PF1.ConRes"}}</label>
+    <input type="text" name="data.traits.cres" value="{{data.traits.cres}}" placeholder="{{localize "PF1.None"}}"/>
+  </div>
+
+  <div class="form-group {{data.traits.di.cssClass}}">
+    <label for="data.traits.di">{{localize "PF1.DamImm"}}</label>
+    <ul class="traits-list">
+      {{#each data.traits.di.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
+  </div>
+
+  <div class="form-group {{data.traits.dv.cssClass}}">
+    <label for="data.traits.dv">{{localize "PF1.DamVuln"}}</label>
+    <ul class="traits-list">
+      {{#each data.traits.dv.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
+  </div>
+
+  <div class="form-group {{data.traits.ci.cssClass}}">
+    <label for="data.traits.ci">{{localize "PF1.ConImm"}}</label>
+    <ul class="traits-list">
+      {{#each data.traits.ci.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="conditionTypes"><i class="fas fa-edit"></i></a>
+  </div>
+
+  <div class="form-group {{data.traits.languages.cssClass}}">
+    <label for="data.traits.languages">{{localize "PF1.Languages"}}</label>
+    <ul class="traits-list">
+      {{#each data.traits.languages.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="languages"><i class="fas fa-edit"></i></a>
+  </div>
+
+  {{#if isCharacter}}
+  <div class="form-group {{data.traits.weaponProf.cssClass}}">
+    <label for="data.traits.weaponProf">{{localize "PF1.TraitWeaponProf"}}</label>
+    <ul class="traits-list">
+      {{#each data.traits.weaponProf.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="weaponProficiencies"><i class="fas fa-edit"></i></a>
+  </div>
+
+  <div class="form-group {{data.traits.armorProf.cssClass}}">
+    <label for="data.traits.armorProf">{{localize "PF1.TraitArmorProf"}}</label>
+    <ul class="traits-list">
+      {{#each data.traits.armorProf.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="armorProficiencies"><i class="fas fa-edit"></i></a>
+  </div>
+  {{/if}}
+
+  <div class="form-group">
+    <label>{{localize "PF1.Quadruped"}}</label>
+    <label class="checkbox">
+      <input type="checkbox" name="data.attributes.quadruped" {{checked data.attributes.quadruped}}/>
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "PF1.LevelDrain"}}</label>
+    <label class="checkbox">
+      <input type="text" name="data.attributes.energyDrain" value="{{#if data.attributes.energyDrain}}{{data.attributes.energyDrain}}{{/if}}"
+                                                            placeholder="0" data-dtype="Number" />
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "PF1.Rest"}}</label>
+    <a class="rest"><i class="fas fa-edit"></i></a>
+  </div>
+</div>

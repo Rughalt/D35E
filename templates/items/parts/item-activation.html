@@ -1,0 +1,105 @@
+{{!-- Activation Cost --}}
+<div class="form-group input-select">
+  <label>{{localize "PF1.ActivationCost"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.activation.cost" value="{{data.activation.cost}}" data-dtype="Number" placeholder=""/>
+    <select name="data.activation.type">
+      {{#select data.activation.type}}
+      <option value=""></option>
+      {{#each config.abilityActivationTypes as |name key|}}
+      <option value="{{key}}">{{name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+</div>
+{{#if data.activation.type}}
+
+
+{{!-- Ability Target --}}
+<div class="form-group input-select-select">
+  <label>{{localize "PF1.Target"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.target.value" value="{{data.target.value}}"/>
+  </div>
+</div>
+
+{{!-- Ability Range --}}
+<div class="form-group input-select">
+  <label>{{localize "PF1.Range"}}</label>
+  <div class="form-fields">
+    {{#if canInputRange}}<input type="text" name="data.range.value" value="{{data.range.value}}" placeholder="{{#unless isSpell}}{{localize "PF1.Formula"}}{{/unless}}"/>{{/if}}
+    <select name="data.range.units">
+      {{#select data.range.units}}
+      <option value=""></option>
+      {{#each config.distanceUnits as |name key|}}
+      <option value="{{key}}">{{name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+</div>
+
+{{!-- Area --}}
+{{#if isSpell}}
+<div class="form-group input-select-select">
+  <label>{{localize "PF1.Area"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.spellArea" value="{{data.spellArea}}"/>
+  </div>
+</div>
+{{/if}}
+
+{{!-- Effect Duration --}}
+<div class="form-group input-select">
+  <label>{{localize "PF1.Duration"}}</label>
+  <div class="form-fields">
+    {{#if isSpell}}
+    <input type="text" name="data.spellDuration" value="{{data.spellDuration}}" placeholder="{{localize "PF1.SpellDurationExample"}}"/>
+    {{else}}
+    {{#if canInputDuration}}<input type="text" name="data.duration.value" value="{{data.duration.value}}" placeholder="{{localize "PF1.Formula"}}"/>{{/if}}
+    <select name="data.duration.units">
+      {{#select data.duration.units}}
+      <option value=""></option>
+      {{#each config.timePeriods as |name key|}}
+      <option value="{{key}}">{{name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{/if}}
+  </div>
+</div>
+
+{{!-- Limited Uses --}}
+{{#unless isSpell}}
+<div class="form-group uses-per">
+  <label>{{localize "PF1.LimitedUses"}}</label>
+  <div class="form-fields">
+    {{#if isCharged}}
+    <input type="text" name="data.uses.value" value="{{data.uses.value}}" data-dtype="Number"/>
+    <span class="sep"> / </span>
+    <input type="text" value="{{data.uses.max}}" disabled data-dtype="Number"/>
+    {{/if}}
+    <select name="data.uses.per">
+      {{#select data.uses.per}}
+      <option value=""></option>
+      {{#each config.limitedUsePeriods as |name key|}}
+      <option value="{{key}}">{{name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+</div>
+{{#if isCharged}}
+<div class="form-group uses-per">
+  <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "PF1.MaximumUsesFormula"}}"/>
+</div>
+{{/if}}
+
+<div class="form-group stacked">
+  <label class="checkbox">
+    <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "PF1.AutoDeductCharges"}}
+  </label>
+</div>
+{{/unless}}
+{{/if}}
