@@ -1431,19 +1431,19 @@ export class ActorPF extends Actor {
       let specificSkillBonus = skl.changeBonus || 0;
 
       // Parse main skills
-      let sklValue = skl.rank + (skl.cs && skl.rank > 0 ? 3 : 0) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
+      let sklValue = (Math.floor((skl.cs && skl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty));
       linkData(data, updateData, `data.skills.${sklKey}.mod`, sklValue);
-      // Parse sub-skills
-      for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
-        if (subSkl == null) continue;
-        if (updateData[`data.skills.${sklKey}.subSkills.${subSklKey}`] === null) continue;
-
-        acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
-        ablMod = data1.abilities[subSkl.ability].mod;
-        specificSkillBonus = subSkl.changeBonus || 0;
-        sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? 3 : 0) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
-        linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
-      }
+//      // Parse sub-skills
+//      for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
+//        if (subSkl == null) continue;
+//        if (updateData[`data.skills.${sklKey}.subSkills.${subSklKey}`] === null) continue;
+//
+//        acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
+//        ablMod = data1.abilities[subSkl.ability].mod;
+//        specificSkillBonus = subSkl.changeBonus || 0;
+//        sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? 3 : 0) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
+//        linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
+//      }
     }
   }
 
