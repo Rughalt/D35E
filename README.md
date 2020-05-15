@@ -1,6 +1,6 @@
 # Foundry VTT 5th Edition
 
-An implementation of the first edition of Pathfinder for Foundry Virtual
+An implementation of the 3.5e Dungeons and Dragons system for Foundry Virtual
 Tabletop (http://foundryvtt.com).
 
 The software component of this system is distributed under the GNUv3 license
@@ -16,7 +16,7 @@ downloading a zip archive from the [Releases Page](https://github.com/LoopeeDK/D
 
 ## Information
 
-You can view information on 3.5e [here](https://dndtools.net/).
+You always more than welcome to contact me via discord LoopeeDK#9498 or here
 
 ## Credits
 
