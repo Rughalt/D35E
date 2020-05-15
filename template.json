@@ -483,6 +483,16 @@
             "mod": 0,
             "background": false
           },
+          "hid": {
+            "value": 0,
+            "ability": "dex",
+            "rt": false,
+            "acp": true,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
           "int": {
             "value": 0,
             "ability": "cha",

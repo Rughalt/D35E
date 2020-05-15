@@ -646,6 +646,7 @@ D35E.skills = {
   "gif": "D35E.SkillGif",
   "han": "D35E.SkillHan",
   "hea": "D35E.SkillHea",
+  "hid": "D35E.SkillHid",
   "int": "D35E.SkillInt",
   "jmp": "D35E.SkillJmp",
   "kar": "D35E.SkillKAr",

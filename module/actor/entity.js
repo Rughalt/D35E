@@ -633,7 +633,7 @@ export class ActorPF extends Actor {
       });
       // Stealth skill
       changes.push({
-        raw: [CONFIG.D35E.sizeStealthMods[sizeKey].toString(), "skill", "skill.ste", "size", 0],
+        raw: [CONFIG.D35E.sizeStealthMods[sizeKey].toString(), "skill", "skill.hid", "size", 0],
         source: {
           type: "size"
         }
