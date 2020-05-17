@@ -971,40 +971,26 @@ D35E.contextNoteTargets = {
 // Languages
 D35E.languages = {
   "common": "Common",
-  "aboleth": "Aboleth",
   "abyssal": "Abyssal",
-  "aklo": "Aklo",
   "aquan": "Aquan",
   "auran": "Auran",
-  "boggard": "Boggard",
   "celestial": "Celestial",
-  "common": "Common",
-  "cyclops": "Cyclops",
-  "dark": "Dark Folk",
   "draconic": "Draconic",
-  "drowsign": "Drow Sign Language",
   "druidic": "Druidic",
   "dwarven": "Dwarven",
-  "dziriak": "D'ziriak",
   "elven": "Elven",
   "giant": "Giant",
   "gnome": "Gnome",
   "goblin": "Goblin",
   "gnoll": "Gnoll",
-  "grippli": "Grippli",
   "halfling": "Halfling",
   "ignan": "Ignan",
   "infernal": "Infernal",
-  "nercil": "Necril",
   "orc": "Orc",
-  "protean": "Protean",
-  "sphinx": "Sphinx",
   "sylvan": "Sylvan",
-  "tengu": "Tengu",
   "terran": "Terran",
   "treant": "Treant",
   "undercommon": "Undercommon",
-  "vegepygmy": "Vegepygmy"
 };
 
 D35E.creatureTypes = {
@@ -1048,18 +1034,20 @@ D35E.sizeDie = [
 ];
 
 // Character Level XP Requirements
+// Slow is medium x2
+// Fast is medium *0.75
 D35E.CHARACTER_EXP_LEVELS =  {
   slow: [
-    0, 3000, 7500, 14000, 23000, 35000, 53000, 77000, 115000, 160000, 235000, 330000,
-    475000, 665000, 955000, 1350000, 1900000, 2700000, 3850000, 5350000
+    0, 2000, 6000, 12000, 20000, 30000, 42000, 56000, 72000, 90000, 110000, 132000,
+    156000, 182000, 210000, 140000, 272000, 306000, 342000, 384000
   ],
   medium: [
-    0, 2000, 5000, 9000, 15000, 23000, 35000, 51000, 75000, 105000, 155000, 220000,
-    315000, 445000, 635000, 890000, 1300000, 1800000, 2550000, 3600000
+    0, 1000, 3000, 6000, 10000, 15000, 21000, 28000, 36000, 45000, 55000, 66000,
+    78000, 91000, 105000, 120000, 136000, 153000, 171000, 190000
   ],
   fast: [
-    0, 1300, 3300, 6000, 10000, 15000, 23000, 34000, 50000, 71000, 105000, 145000,
-    210000, 295000, 425000, 600000, 850000, 1200000, 1700000, 2400000
+    0, 750, 2250, 4500, 7500, 11250, 15750, 21000, 27000, 33750, 41250, 49500,
+    58500, 68250, 78750, 90000, 102000, 114750, 128250, 142500
   ]
 };
 
