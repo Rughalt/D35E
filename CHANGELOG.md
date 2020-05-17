@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.52
+
+### Bug Fixes
+
+
+### Changelog
+- Retrofited the entire system to run as a 3.5e system
+changing skills, skill rank calculation and skills pr level
+also started adding compendium items for ease of use,
+so far armor, weapons, items and classes from the playershandbook
+have been added.
+
+
 ## 0.51
 
 ### Bug Fixes
