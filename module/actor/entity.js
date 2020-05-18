@@ -1401,7 +1401,7 @@ export class ActorPF extends Actor {
     linkData(data, updateData, "data.attributes.cmd.total", updateData["data.attributes.cmd.total"] + modDiffs["str"]);
     if (!flags.loseDexToAC || modDiffs["dex"] < 0) {
       linkData(data, updateData, "data.attributes.cmd.total", updateData["data.attributes.cmd.total"] + modDiffs["dex"]);
-      linkData(data, updateData, "data.attributes.cmd.flatFootedTotal", updateData["data.attributes.cmd.flatFootedTotal"] + modDiffs["dex"]);
+      linkData(data, updateData, "data.attributes.cmd.flatFootedTotal", updateData["data.attributes.cmd.flatFootedTotal"] + Math.min(0, modDiffs["dex"]));
     }
     linkData(data, updateData, "data.attributes.cmd.flatFootedTotal", updateData["data.attributes.cmd.flatFootedTotal"] + modDiffs["str"]);
 
@@ -1602,7 +1602,9 @@ export class ActorPF extends Actor {
     if (actorData.data.abilities.dex.mod !== 0) {
       if (useDexForCMB) sourceDetails["data.attributes.cmb.total"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
       sourceDetails["data.attributes.cmd.total"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
-      sourceDetails["data.attributes.cmd.flatFootedTotal"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
+      if (actorData.data.abilities.dex.mod < 0) {
+        sourceDetails["data.attributes.cmd.flatFootedTotal"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
+      }  
       sourceDetails["data.attributes.init.total"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
     }
     if (actorData.data.attributes.energyDrain != null && actorData.data.attributes.energyDrain !== 0) {
@@ -2577,13 +2579,17 @@ export class ActorPF extends Actor {
    * @return {Promise}
    */
   static async applyDamage(value) {
-    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+    
     const promises = [];
     for (let t of canvas.tokens.controlled) {
       let a = t.actor,
           hp = a.data.data.attributes.hp,
           tmp = parseInt(hp.temp) || 0,
           dt = value > 0 ? Math.min(tmp, value) : 0;
+          if (!a.hasPerm(game.user, "OWNER")) {
+            ui.notifications.warn(game.i18n.localize("PF1.ErrorNoActorPermission"));
+            continue;
+          }    
       promises.push(t.actor.update({
         "data.attributes.hp.temp": tmp - dt,
         "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)

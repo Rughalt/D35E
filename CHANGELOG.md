@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.53
+
+### Bug Fixes
+
+
+### Changelog
+- Applied the latest fixes that fury made :)
+- added some skill math changes. 
+
 ## 0.52
 
 ### Bug Fixes

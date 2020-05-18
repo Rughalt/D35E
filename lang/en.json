@@ -494,6 +494,7 @@
   "D35E.ErrorNoCharges": "There's no charges left in {0}",
   "D35E.ErrorNoQuantity": "You don't have any more of that item",
   "D35E.ErrorNoSpellsLeft": "You don't have spells left of that type",
+  "D35E.ErrorUnauthorizedAction": "You are not authorized to perform that action",
   "D35E.WarningNoSizeDie": "Could not determine size-appropriate die for {0}, defaulting to rolling {1}",
   "D35E.NotificationCreatedAttack": "Created attack for {0}",
 
@@ -836,6 +837,7 @@
   "D35E.Kgs": "kg",
   "D35E.Category": "Category",
   "D35E.AttackWith": "Attack with: {0}",
+  "D35E.AttackWithSpell": "Cast spell: {0}",
   "D35E.ShowInQuickbar": "Show in Quickbar",
   "D35E.Tags": "Tags"
 }

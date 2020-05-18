@@ -1,8 +1,9 @@
 import { DicePF } from "../dice.js";
 import { createCustomChatMessage } from "../chat.js";
-import { createTag, alterRoll, linkData } from "../lib.js";
-import { AbilityTemplate } from "../pixi/ability-template.js";
+import { createTag, alterRoll, linkData, isMinimumCoreVersion } from "../lib.js";
 import { ActorPF } from "../actor/entity.js";
+import { AbilityTemplate } from "../pixi/ability-template.js";
+import { AbilityTemplateLegacy } from "../pixi/ability-template_legacy.js";
 
 /**
  * Override and extend the basic :class:`Item` implementation
@@ -754,6 +755,11 @@ export class ItemPF extends Item {
               };
             }
           }
+          // Roll effects
+          if (this.hasEffect) {
+            attack.effectNotes = this.rollEffect({ primaryAttack: primaryAttack });
+          }
+          // Set attack flags          
           attack.isHealing = this.isHealing;
           // Add to list
           attacks.push(attack);
@@ -804,7 +810,7 @@ export class ItemPF extends Item {
         }
 
         // Create template
-        const template = AbilityTemplate.fromData(templateOptions);
+        const template = isMinimumCoreVersion("0.5.6") ? AbilityTemplate.fromData(templateOptions) : AbilityTemplateLegacy.fromData(templateOptions);
         if (template) {
           if (getProperty(this, "actor.sheet.rendered")) this.actor.sheet.minimize();
           const success = await template.drawPreview(ev);
@@ -863,12 +869,10 @@ export class ItemPF extends Item {
         for (let an of attackNotes) {
           attackStr += `<span class="tag">${an}</span>`;
         }
+        
         if (attackStr.length > 0) {
           const innerHTML = TextEditor.enrichHTML(attackStr, { rollData: rollData });
           extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
-        }
-        if (this.hasEffect) {
-          extraText += this.rollEffect({ primaryAttack: primaryAttack });
         }
 
         const properties = this.getChatData().properties;

@@ -3,6 +3,7 @@
  * @return {Promise}      A Promise which resolves once the migration is completed
  */
 export const migrateWorld = async function() {
+  if (!game.user.isGM) return ui.notifications.error(game.i18n.localize("D35E.ErrorUnauthorizedAction"));
   ui.notifications.info(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
 
   // Migrate World Actors
@@ -111,8 +112,9 @@ export const migrateActorData = async function(actor) {
 
   // Migrate Owned Items
   let items = [];
-  for (let a = 0; a < actor.items.length; a++) {
-    let i = actor.items[a];
+  const actorItems = Array.from(actor.items);
+  for (let a = 0; a < actorItems.length; a++) {
+    let i = actorItems[a];
     items[a] = i;
     let itemUpdate = migrateItemData(i);
 
