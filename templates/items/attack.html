@@ -56,17 +56,17 @@
       </div>
 
       <div class="form-group">
-        <label>Enhancement Bonus</label>
+        <label>{{localize "D35E.EnhancementBonus"}}</label>
         <div class="form-fields">
           <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
 
-      <h3 class="form-header">Attack Details</h3>
+      <h3 class="form-header">{{localize "D35E.AttackDetails"}}</h3>
 
       {{!-- Attack Type --}}
       <div class="form-group">
-        <label>Attack Type</label>
+        <label>{{localize "D35E.AttackType"}}</label>
         <select name="data.attackType">
           {{#select data.attackType}}
           {{#each config.attackTypes as |name type|}}
@@ -76,12 +76,12 @@
         </select>
       </div>
 
-      <h3 class="form-header">Attack Usage</h3>
+      <h3 class="form-header">{{localize "D35E.AttackUsage"}}</h3>
 
       {{!-- Item Activation Template --}}
       {{> "systems/D35E/templates/items/parts/item-activation.html"}}
 
-      <h3 class="form-header">Attack Action</h3>
+      <h3 class="form-header">{{localize "D35E.AttackAction"}}</h3>
 
       {{!-- Item Action Template --}}
       {{> "systems/D35E/templates/items/parts/item-action.html"}}

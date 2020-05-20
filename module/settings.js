@@ -185,4 +185,17 @@ export const registerSystemSettings = function() {
     default: false,
     type: Boolean,
   });
+
+  /**
+   * Preload Compendiums
+   */
+  // game.settings.register("D35E", "preloadCompendiums", {
+    // name: "SETTINGS.D35EPreloadCompendiumsN",
+    // hint: "SETTINGS.D35EPreloadCompendiumsH",
+    // scope: "client",
+    // config: true,
+    // default: false,
+    // type: Boolean,
+  // });
+
 };

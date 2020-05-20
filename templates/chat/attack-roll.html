@@ -3,7 +3,7 @@
 
   {{#each attacks as |atk|}}
   <div class="chat-attack">
-    {{#if atk.attack}}
+    {{#if atk.hasAttack}}
     <div class="dice-roll attack-roll">
       {{#if atk.attack.flavor}}
       <div class="dice-flavor">{{atk.attack.flavor}}</div>
@@ -13,8 +13,7 @@
         {{{atk.attack.tooltip}}}
       </div>
     </div>
-    {{/if}}
-    {{#if atk.critConfirm}}
+    {{#if atk.hasCritConfirm}}
     <div class="dice-roll crit-confirm-roll">
       {{#if atk.critConfirm.flavor}}
       <div class="dice-flavor">{{atk.critConfirm.flavor}}</div>
@@ -24,8 +23,9 @@
         {{{atk.critConfirm.tooltip}}}
       </div>
     </div>
-    {{/if}}
-    {{#if atk.damage}}
+    {{/if}}{{/if}}
+
+    {{#if atk.hasDamage}}
     <div class="dice-roll damage-roll">
       {{#if atk.damage.flavor}}
       <div class="dice-flavor">{{atk.damage.flavor}}</div>
@@ -35,8 +35,7 @@
         {{{atk.damage.tooltip}}}
       </div>
     </div>
-    {{/if}}
-    {{#if atk.critDamage}}
+    {{#if atk.hasCritConfirm}}
     <div class="dice-roll crit-damage-roll">
       {{#if atk.critDamage.flavor}}
       <div class="dice-flavor">{{atk.critDamage.flavor}}</div>
@@ -46,24 +45,15 @@
         {{{atk.critDamage.tooltip}}}
       </div>
     </div>
-    {{/if}}
+    {{/if}}{{/if}}
 
+    {{#if atk.cards.length}}
     <div class="flexrow card-buttons">
-      {{#if atk.damage}}
-      {{#if atk.isHealing}}
-      <button data-action="applyDamage" data-value="-{{atk.damage.total}}">{{localize "D35E.ApplyHealing"}}</button>
-      {{else}}
-      <button data-action="applyDamage" data-value="{{atk.damage.total}}">{{localize "D35E.ApplyDamage"}}</button>
-      {{/if}}
-      {{/if}}
-      {{#if atk.critDamage}}
-      {{#if atk.isHealing}}
-      <button data-action="applyDamage" data-value="-{{atk.critDamage.total}}">{{localize "D35E.ApplyCriticalHealing"}}</button>
-      {{else}}
-      <button data-action="applyDamage" data-value="{{atk.critDamage.total}}">{{localize "D35E.ApplyCriticalDamage"}}</button>
-      {{/if}}
-      {{/if}}
+      {{#each atk.cards as |card|}}
+      <button data-action="{{card.action}}" data-value="{{card.value}}">{{card.label}}</button>
+      {{/each}}
     </div>
+    {{/if}}
     <div class="flexcol property-group gm-sensitive">
       {{{atk.effectNotes}}}
       </div>

@@ -19,6 +19,16 @@
     <label>{{localize "D35E.DamRed"}}</label>
     <input type="text" name="data.traits.dr" value="{{data.traits.dr}}" placeholder="{{localize "D35E.None"}}"/>
   </div>
+  <div class="form-group {{#unless data.traits.regen}}inactive{{/unless}}">
+    <label>{{localize "D35E.Regeneration"}}</label>
+    <input type="text" name="data.traits.regen" value="{{data.traits.regen}}" placeholder="{{localize "D35E.None"}}"/>
+  </div>
+
+  <div class="form-group {{#unless data.traits.fastHealing}}inactive{{/unless}}">
+    <label>{{localize "D35E.FastHealing"}}</label>
+    <input type="text" name="data.traits.fastHealing" value="{{data.traits.fastHealing}}" placeholder="{{localize "D35E.None"}}"/>
+  </div>
+
 
   <div class="form-group {{#unless data.traits.eres}}inactive{{/unless}}">
     <label>{{localize "D35E.EnRes"}}</label>

@@ -1,22 +1,18 @@
 import { degtorad } from "./lib.js";
 
 // Use 90 degrees cone in D35E style
-const TemplateLayer__onDragStart = TemplateLayer.prototype._onDragStart;
-TemplateLayer.prototype._onDragStart = function(event) {
-  if (!game.settings.get("D35E", "measureStyle")) return TemplateLayer__onDragStart.call(this, event);
+const TemplateLayer__onDragLeftStart = TemplateLayer.prototype._onDragLeftStart;
+TemplateLayer.prototype._onDragLeftStart = function(event) {
+  if (!game.settings.get("D35E", "measureStyle")) return TemplateLayer__onDragLeftStart.call(this, event);
 
-  PlaceablesLayer.prototype._onDragStart.call(this, event);
+  PlaceablesLayer.prototype._onDragLeftStart.call(this, event);
 
   // Create the new preview template
   const tool = game.activeTool;
   const origin = event.data.origin;
   let pos;
   if (["cone", "circle"].includes(tool)) {
-    pos = canvas.grid.getSnappedPosition(origin.x, origin.y, 1);
-    if (tool === "cone") {
-      pos.x -= canvas.dimensions.size * 0.5;
-      pos.y -= canvas.dimensions.size * 0.5;
-    }
+    pos = canvas.grid.getSnappedPosition(origin.x, origin.y, 2);
   }
   else pos = canvas.grid.getSnappedPosition(origin.x, origin.y, 2);
   origin.x = pos.x;
@@ -37,16 +33,16 @@ TemplateLayer.prototype._onDragStart = function(event) {
 
   // Assign the template
   let template = new MeasuredTemplate(data);
-  event.data.object = this.preview.addChild(template);
+  event.data.preview = this.preview.addChild(template);
   template.draw();
 };
 
 
-const TemplateLayer__onMouseMove = TemplateLayer.prototype._onMouseMove;
-TemplateLayer.prototype._onMouseMove = function(event) {
-  if (!game.settings.get("D35E", "measureStyle")) return TemplateLayer__onMouseMove.call(this, event);
+const TemplateLayer__onDragLeftMove = TemplateLayer.prototype._onDragLeftMove;
+TemplateLayer.prototype._onDragLeftMove = function(event) {
+  if (!game.settings.get("D35E", "measureStyle")) return TemplateLayer__onDragLeftMove.call(this, event);
 
-  PlaceablesLayer.prototype._onMouseMove.call(this, event);
+  PlaceablesLayer.prototype._onDragLeftMove.call(this, event);
   if (event.data.createState >= 1) {
     // Snap the destination to the grid
     let dest = event.data.destination;
@@ -55,7 +51,7 @@ TemplateLayer.prototype._onMouseMove = function(event) {
     dest.y = y;
 
     // Compute the ray
-    let template = event.data.object,
+    let template = event.data.preview,
         ray = new Ray(event.data.origin, event.data.destination),
         ratio = (canvas.dimensions.size / canvas.dimensions.distance);
 
@@ -81,7 +77,7 @@ TemplateLayer.prototype._onMouseMove = function(event) {
 // Highlight grid in D35E style
 const MeasuredTemplate_highlightGrid = MeasuredTemplate.prototype.highlightGrid;
 MeasuredTemplate.prototype.highlightGrid = function() {
-  if (!game.settings.get("D35E", "measureStyle") || !(["circle", "cone"].includes(this.data.t))) return MeasuredTemplate__highlightGrid.call(this);
+  if (!game.settings.get("D35E", "measureStyle") || !(["circle", "cone"].includes(this.data.t))) return MeasuredTemplate_highlightGrid.call(this);
 
   const grid = canvas.grid,
         d = canvas.dimensions,
@@ -120,61 +116,68 @@ MeasuredTemplate.prototype.highlightGrid = function() {
   const measureDistance = function(p0, p1) {
     let gs = canvas.dimensions.size,
     ray = new Ray(p0, p1),
-    nx = Math.abs(Math.ceil(ray.dx / gs)),
-    ny = Math.abs(Math.ceil(ray.dy / gs));
+    // How many squares do we travel across to get there? If 2.3, we should count that as 3 instead of 2; hence, Math.ceil
+    nx = Math.ceil(Math.abs(ray.dx / gs)),
+    ny = Math.ceil(Math.abs(ray.dy / gs));
 
     // Get the number of straight and diagonal moves
     let nDiagonal = Math.min(nx, ny),
         nStraight = Math.abs(ny - nx);
         
-    let nd10 = Math.floor(nDiagonal / 2);
-    let spaces = (nd10 * 2) + (nDiagonal - nd10) + nStraight;
-    return spaces * canvas.dimensions.distance;
+    // Diagonals in PF pretty much count as 1.5 times a straight
+    let distance = Math.floor(nDiagonal * 1.5 + nStraight);
+    let distanceOnGrid = distance * canvas.dimensions.distance;
+    return distanceOnGrid;
   };
+
+  let originOffset = {x: 0, y: 0};
+  // Offset measurement for cones
+  // Offset is to ensure that cones only start measuring from cell borders, as in https://www.d20pfsrd.com/magic/#Aiming_a_Spell
+  if (this.data.t === "cone") {
+    // Degrees anticlockwise from pointing right. In 45-degree increments from 0 to 360
+    const dir = (this.data.direction >= 0 ? 360 - this.data.direction : -this.data.direction) % 360;
+    // If we're not on a border for X, offset by 0.5 or -0.5 to the border of the cell in the direction we're looking on X axis
+    let xOffset = this.data.x % d.size != 0 ?
+      Math.sign(1 * (Math.round(Math.cos(degtorad(dir)) * 100)) / 100) /2 // /2 turns from 1/0/-1 to 0.5/0/-0.5
+      : 0;
+    // Same for Y, but cos Y goes down on screens, we invert
+    let yOffset = this.data.y % d.size != 0 ?
+      -Math.sign(1 * (Math.round(Math.sin(degtorad(dir)) * 100)) / 100) /2
+      : 0;
+    originOffset.x = xOffset;
+    originOffset.y = yOffset;
+  }
+
+  // Point we are measuring distances from
+  let origin = {
+    x: this.data.x + (originOffset.x * d.size),
+    y: this.data.y + (originOffset.y * d.size)
+  }
 
   for (let a = -nc; a < nc; a++) {
     for (let b = -nr; b < nr; b++) {
+       // Position of cell's top-left corner, in pixels
       let [gx, gy] = canvas.grid.grid.getPixelsFromGridPosition(col0 + a, row0 + b);
-      let [gx2, gy2] = [gx + d.size * 0.5, gy + d.size * 0.5];
+      // Position of cell's center, in pixels
+      let [cellCenterX, cellCenterY] = [gx + d.size * 0.5, gy + d.size * 0.5];
 
       // Determine point of origin
-      let p1 = {x: this.data.x, y: this.data.y};
-      let originOffset = {x: 0, y: 0};
-      // Offset measurement for cones
-      if (this.data.t === "cone") {
-        const dir = (this.data.direction >= 0 ? 360 - this.data.direction : -this.data.direction) % 360;
-        originOffset = {
-          x: Math.sign(1 * (Math.round(Math.cos(degtorad(dir)) * 100)) / 100),
-          y: -Math.sign(1 * (Math.round(Math.sin(degtorad(dir)) * 100)) / 100),
-        };
-      }
-      p1.x += (originOffset.x * d.size);
-      p1.y += (originOffset.y * d.size);
+      let origin = {x: this.data.x, y: this.data.y};
+      origin.x += (originOffset.x * d.size);
+      origin.y += (originOffset.y * d.size);
 
-      let ray = new Ray(p1, {x: gx2, y: gy2});
+      let ray = new Ray(origin, {x: cellCenterX, y: cellCenterY});
 
       let rayAngle = (360 + (ray.angle / (Math.PI / 180)) % 360) % 360;
-      // if (this.data.t === "cone" && ray.distance === 0) continue;
       if (this.data.t === "cone" && ray.distance > 0 && !within_angle(minAngle, maxAngle, rayAngle)) {
         continue;
       }
 
-      // Determine point of measurement
-      let p0 = {x: gx, y: gy};
-      if (this.data.x / d.size !== Math.floor(this.data.x / d.size)) p0.x = gx2;
-      if (this.data.y / d.size !== Math.floor(this.data.y / d.size)) p0.y = gy2;
-      // Offset measurement for non-cones
-      if (this.data.t !== "cone") {
-        if (p0.x > this.data.x) p0.x += d.size;
-        if (p0.y > this.data.y) p0.y += d.size;
-      }
-      // Reset point of origin for cones
-      if (this.data.t === "cone") {
-        p1.x -= (originOffset.x * d.size);
-        p1.y -= (originOffset.y * d.size);
-      }
+       // Determine point we're measuring the distance to - always in the center of a grid square
+      let destination = {x: cellCenterX, y: cellCenterY};
 
-      if (measureDistance(p0, p1) <= this.data.distance) {
+      let distance = measureDistance(destination, origin);
+      if (distance <= this.data.distance) {
         grid.grid.highlightGridPosition(hl, { x: gx, y: gy, color: fc, border: bc });
       }
     }

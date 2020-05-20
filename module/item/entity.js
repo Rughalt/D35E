@@ -3,7 +3,7 @@ import { createCustomChatMessage } from "../chat.js";
 import { createTag, alterRoll, linkData, isMinimumCoreVersion } from "../lib.js";
 import { ActorPF } from "../actor/entity.js";
 import { AbilityTemplate } from "../pixi/ability-template.js";
-import { AbilityTemplateLegacy } from "../pixi/ability-template_legacy.js";
+import { ChatAttack } from "../misc/chat-attack.js";
 
 /**
  * Override and extend the basic :class:`Item` implementation
@@ -614,6 +614,7 @@ export class ItemPF extends Item {
         primaryAttack = true,
         useMeasureTemplate = false,
         rollMode = null;
+      // Get form data
       if (form) {
         rollData.attackBonus = form.find('[name="attack-bonus"]').val();
         if (rollData.attackBonus) attackExtraParts.push("@attackBonus");
@@ -638,10 +639,12 @@ export class ItemPF extends Item {
         if (typeof html.prop("checked") === "boolean") {
           useMeasureTemplate = html.prop("checked");
         }
+        // Damage ability multiplier
+        html = form.find('[name="damage-ability-multiplier"]');
+        if (html.length > 0) {
+          rollData.item.ability.damageMult = parseFloat(html.val());
+        }
       }
-
-      // Define Critical threshold
-      let crit = itemData.ability.critRange || 20;
 
       // Prepare the chat message data
       let chatTemplateData = {
@@ -649,148 +652,43 @@ export class ItemPF extends Item {
         type: CONST.CHAT_MESSAGE_TYPES.OTHER,
         rollMode: rollMode,
       };
+
       // Create attacks
       const allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
         cur.push({ bonus: r[0], label: r[1] });
         return cur;
       }, [{ bonus: "", label: `${game.i18n.localize("D35E.Attack")}` }]) : [{ bonus: "", label: `${game.i18n.localize("D35E.Attack")}` }];
-      let attacks = [], attackRolls = [];
-      const damageTypes = this.data.data.damage.parts.reduce((cur, o) => {
-        if (o[1] !== "" && cur.indexOf(o[1]) === -1) cur.push(o[1]);
-        return cur;
-      }, []);
+      let attacks = [];
       if (this.hasAttack) {
         for (let atk of allAttacks) {
-          const attack = {};
-          let tooltip, roll, d20, flavor, critType = 0;
-          // Attack roll
-          if (this.hasAttack) {
-            roll = this.rollAttack({
-              data: rollData,
-              bonus: atk.bonus !== "" ? atk.bonus : null,
-              extraParts: attackExtraParts,
-              primaryAttack: primaryAttack,
-            });
-            attackRolls.push(roll);
-            d20 = roll.parts[0];
-            if (d20.total >= crit) critType = 1;
-            else if (d20.total <= 1) critType = 2;
-
-            tooltip = $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML;
-            attack.attack = {
-              flavor: atk.label,
-              tooltip: tooltip,
-              total: roll.total,
-              isCrit: critType === 1,
-              isFumble: critType === 2,
-            };
-
-            // Critical hit confirmation
-            if (critType === 1) {
-              if (this.data.data.critConfirmBonus != null && this.data.data.critConfirmBonus !== "") attackExtraParts.push(this.data.data.critConfirmBonus);
-              roll = this.rollAttack({
-                data: rollData,
-                bonus: atk.bonus !== "" ? atk.bonus : null,
-                extraParts: attackExtraParts,
-                primaryAttack: primaryAttack,
-              });
-              d20 = roll.parts[0];
-
-              tooltip = $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML;
-              attack.critConfirm = {
-                flavor: game.i18n.localize("D35E.CriticalConfirmation"),
-                tooltip: tooltip,
-                total: roll.total,
-                isCrit: d20.total === 20,
-                isFumble: d20.total === 1,
-              };
-            }
-          }
-          // Add damage
+      // Create attack object
+      let attack = new ChatAttack(this, atk.label);
+      await attack.addAttack({bonus: atk.bonus, extraParts: attackExtraParts, primaryAttack: primaryAttack});
           if (this.hasDamage) {
-            let rolls = [];
-            rolls = this.rollDamage({ data: rollData, extraParts: damageExtraParts, primaryAttack: primaryAttack });
-            let tooltips = "";
-            for (let roll of rolls) {
-              let tooltip = $(await roll.roll.getTooltip()).prepend(`<div class="dice-formula">${roll.roll.formula}</div>`)[0].outerHTML;
-              // Alter tooltip
-              let tooltipHtml = $(tooltip);
-              let totalText = roll.roll.total.toString();
-              if (roll.damageType.length) totalText += ` (${roll.damageType})`;
-              tooltipHtml.find(".part-total").text(totalText);
-              tooltip = tooltipHtml[0].outerHTML;
-              // Add tooltip
-              tooltips += tooltip;
+            await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
+            if (attack.hasCritConfirm) {
+              await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: true});
             }
-            flavor = this.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
-            attack.damage = {
-              flavor: damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor,
-              tooltip: tooltips,
-              total: rolls.reduce((cur, roll) => {
-                return cur + roll.roll.total
-              }, 0),
-            };
+          }
+          await attack.addEffect({primaryAttack: primaryAttack});
 
-            if (critType === 1) {
-              rolls = this.rollDamage({ data: rollData, extraParts: damageExtraParts, critical: true, primaryAttack: primaryAttack });
-              let tooltips = "";
-              for (let roll of rolls) {
-                let tooltip = $(await roll.roll.getTooltip()).prepend(`<div class="dice-formula">${roll.roll.formula}</div>`)[0].outerHTML;
-                // Alter tooltip
-                let tooltipHtml = $(tooltip);
-                let totalText = roll.roll.total.toString();
-                if (roll.damageType.length) totalText += ` (${roll.damageType})`;
-                tooltipHtml.find(".part-total").text(totalText);
-                tooltip = tooltipHtml[0].outerHTML;
-                // Add tooltip
-                tooltips += tooltip;
-              }
-              flavor = this.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
-              attack.critDamage = {
-                flavor: damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor,
-                tooltip: tooltips,
-                total: rolls.reduce((cur, roll) => {
-                  return cur + roll.roll.total
-                }, 0),
-              };
-            }
-          }
-          // Roll effects
-          if (this.hasEffect) {
-            attack.effectNotes = this.rollEffect({ primaryAttack: primaryAttack });
-          }
-          // Set attack flags          
-          attack.isHealing = this.isHealing;
           // Add to list
           attacks.push(attack);
         }
       }
       // Add damage only
       else if (this.hasDamage) {
-        let rolls = [];
-        rolls = this.rollDamage({ data: rollData, extraParts: damageExtraParts, primaryAttack: primaryAttack });
-        let tooltips = "";
-        let attack = {};
-        for (let roll of rolls) {
-          let tooltip = $(await roll.roll.getTooltip()).prepend(`<div class="dice-formula">${roll.roll.formula}</div>`)[0].outerHTML;
-          // Alter tooltip
-          let tooltipHtml = $(tooltip);
-          let totalText = roll.roll.total.toString();
-          if (roll.damageType.length) totalText += ` (${roll.damageType})`;
-          tooltipHtml.find(".part-total").text(totalText);
-          tooltip = tooltipHtml[0].outerHTML;
-          // Add tooltip
-          tooltips += tooltip;
-        }
-        let flavor = this.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
-        attack.damage = {
-          flavor: damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor,
-          tooltip: tooltips,
-          total: rolls.reduce((cur, roll) => {
-            return cur + roll.roll.total
-          }, 0),
-        };
-        attack.isHealing = this.isHealing;
+        let attack = new ChatAttack(this);
+        await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
+        await attack.addEffect({primaryAttack: primaryAttack});
+        // Add to list
+        attacks.push(attack);
+      }
+      // Add effect notes only
+      else if (this.hasEffect) {
+        let attack = new ChatAttack(this);
+        await attack.addEffect({primaryAttack: primaryAttack});
+        // Add to list
         attacks.push(attack);
       }
       chatTemplateData.attacks = attacks;
@@ -810,7 +708,7 @@ export class ItemPF extends Item {
         }
 
         // Create template
-        const template = isMinimumCoreVersion("0.5.6") ? AbilityTemplate.fromData(templateOptions) : AbilityTemplateLegacy.fromData(templateOptions);
+        const template = AbilityTemplate.fromData(templateOptions);
         if (template) {
           if (getProperty(this, "actor.sheet.rendered")) this.actor.sheet.minimize();
           const success = await template.drawPreview(ev);
@@ -874,7 +772,6 @@ export class ItemPF extends Item {
           const innerHTML = TextEditor.enrichHTML(attackStr, { rollData: rollData });
           extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
         }
-
         const properties = this.getChatData().properties;
         if (properties.length > 0) props.push({ header: game.i18n.localize("D35E.InfoShort"), value: properties });
         const templateData = mergeObject(chatTemplateData, {
@@ -886,9 +783,7 @@ export class ItemPF extends Item {
           actor: this.actor.data,
         }, { inplace: false });
         // Create message
-        await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {
-          rolls: attackRolls,
-        });
+        await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData);
       }
     };
 
@@ -904,6 +799,7 @@ export class ItemPF extends Item {
       rollModes: CONFIG.rollModes,
       hasAttack: this.hasAttack,
       hasDamage: this.hasDamage,
+      hasDamageAbility: getProperty(this.data, "data.ability.damage") !== "",
       isNaturalAttack: getProperty(this.data, "data.attackType") === "natural",
       isWeaponAttack: getProperty(this.data, "data.attackType") === "weapon",
       hasTemplate: this.hasTemplate,
@@ -915,26 +811,26 @@ export class ItemPF extends Item {
     if (this.hasAttack) {
       if (this.type !== "spell") {
         buttons.normal = {
-          label: "Single Attack",
+          label: game.i18n.localize("D35E.SingleAttack"),
           callback: html => roll = _roll.call(this, false, html)
         };
       }
       if ((getProperty(this.data, "data.attackParts") || []).length || this.type === "spell") {
         buttons.multi = {
-          label: this.type === "spell" ? "Cast" : "Full Attack",
-          callback: html => roll = _roll.call(this, true, html)
+          label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : game.i18n.localize("D35E.FullAttack"),
+                    callback: html => roll = _roll.call(this, true, html)
         };
       }
     }
     else {
       buttons.normal = {
-        label: this.type === "spell" ? "Cast" : "Use",
+        label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : game.i18n.localize("D35E.Use"),
         callback: html => roll = _roll.call(this, false, html)
       };
     }
     return new Promise(resolve => {
       new Dialog({
-        title: `Use: ${this.name}`,
+        title: `${game.i18n.localize("D35E.Use")}: ${this.name}`,
         content: html,
         buttons: buttons,
         default: buttons.multi != null ? "multi" : "normal",
@@ -1062,9 +958,9 @@ export class ItemPF extends Item {
 
     // Determine critical multiplier
     rollData.critMult = 1;
-    if (critical) rollData.critMult = this.data.data.ability.critMult;
+    if (critical) rollData.critMult = rollData.item.ability.critMult;
     // Determine ability multiplier
-    if (this.data.data.ability.damageMult != null) rollData.ablMult = this.data.data.ability.damageMult;
+    if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
     if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
 
     // Create effect string
@@ -1162,7 +1058,7 @@ export class ItemPF extends Item {
     for (let a = 0; a < parts.length; a++) {
       const part = parts[a];
       const roll = {
-        roll: new Roll([part.base, ...part.extra].join("+"), rollData).roll(),
+        roll: new Roll([part.base, ...part.extra, ...extraParts].join("+"), rollData).roll(),
         damageType: part.damageType,
       };
       rolls.push(roll);

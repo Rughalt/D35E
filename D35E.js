@@ -1,6 +1,6 @@
 /**
- * The Pathfinder 1st edition game system for Foundry Virtual Tabletop
- * Author: Furyspark
+ * The D35E edition game system for Foundry Virtual Tabletop
+ * Author: LoopeeDK
  * Software License: GNU GPLv3
  */
 
@@ -42,7 +42,7 @@ if (!String.prototype.format) {
 /* -------------------------------------------- */
 
 Hooks.once("init", async function() {
-  console.log(`D35E | Initializing Pathfinder 1 System`);
+  console.log(`D35E | Initializing D35E 1 System`);
 
   // Create a D35E namespace within the game global
   game.D35E = {
@@ -254,8 +254,10 @@ function rollItemMacro(itemName, {itemId=null, itemType=null, actorId=null}={}) 
   if (!item) return ui.notifications.warn(`Your controlled Actor does not have an item named ${itemName}`);
 
    // Trigger the item roll
-   if (item.data.type === "spell") return actor.useSpell(item, null, {skipDialog: keyboard.isDown("Shift")});
-   if (item.hasAction) return item.useAttack({skipDialog: keyboard.isDown("Shift")});
+   if (!game.keyboard.isDown("Shift")) {
+    if (item.data.type === "spell") return actor.useSpell(item, null, {skipDialog: keyboard.isDown("Shift")});
+    if (item.hasAction) return item.useAttack({skipDialog: keyboard.isDown("Shift")});
+   }
    return item.roll();
  }
  

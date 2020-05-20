@@ -1,6 +1,7 @@
 # Changelog
 
-## 0.53
+## 0.54
+Implemented latest fixes of template messurement
 
 ### Bug Fixes
 

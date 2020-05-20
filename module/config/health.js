@@ -61,7 +61,7 @@ export class HealthConfig extends FormApplication {
   async _onReset(event) {
     event.preventDefault();
     await game.settings.set("D35E", "healthConfig", HealthConfig.defaultSettings)
-    ui.notifications.info(`Reset Pathfinder health configuration.`)
+    ui.notifications.info(`Reset D35E health configuration.`)
     return this.render()
   }
 
@@ -81,6 +81,6 @@ export class HealthConfig extends FormApplication {
       hd.maximized = Math.max(0, Math.min(Math.floor(hd.maximized), 100))
     }
     await game.settings.set("D35E", "healthConfig", settings)
-    ui.notifications.info(`Updated Pathfinder health configuration.`)
+    ui.notifications.info(`Updated D35E health configuration.`)
   }
 }

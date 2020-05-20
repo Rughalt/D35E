@@ -58,14 +58,14 @@
     {{/if}}
     {{/if}}
 
-    {{#if misc}}
+    {{#if misc.sr}}
     <div class="defense misc">
       <table>
         <tr>
           <th>{{localize "D35E.SpellResistance"}}</th>
         </tr>
         <tr>
-          <td>{{#if misc.sr}}{{misc.sr}}{{else}}{{localize "D35E.NonApplicable"}}{{/if}}</td>
+          <td>{{#if misc.sr}}</td>
         </tr>
       </table>
     </div>
@@ -104,6 +104,21 @@
     </div>
     {{/if}}
 
+    {{#if regen}}
+    <div class="defense regen">
+      <table>
+        <tr>
+          <th>{{localize "D35E.Regeneration"}}</th>
+          <th>{{localize "D35E.FastHealing"}}</th>
+        </tr>
+        <tr>
+          <td>{{#if regen.regen}}{{regen.regen}}{{else}}{{localize "D35E.NonApplicable"}}{{/if}}</td>
+          <td>{{#if regen.fastHealing}}{{regen.fastHealing}}{{else}}{{localize "D35E.NonApplicable"}}{{/if}}</td>
+        </tr>
+      </table>
+    </div>
+    {{/if}}
+    
     <div class="saving-throws flexrow">
       <button data-action="save" data-save="fort">{{localize "D35E.SavingThrowFort"}}</button>
       <button data-action="save" data-save="ref">{{localize "D35E.SavingThrowRef"}}</button>

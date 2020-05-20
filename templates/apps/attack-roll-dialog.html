@@ -26,6 +26,20 @@
     {{/if}}
     {{/if}}{{/if}}
   </div>
+  {{#if hasDamage}}{{#if hasDamageAbility}}
+  <div class="form-group select">
+    <label>{{localize "D35E.DamageAbility"}}</label>
+    <select name="damage-ability-multiplier">
+      {{#select data.item.ability.damageMult}}
+      <option value="0.5">x0.5</option>
+      <option value="1">x1</option>
+      <option value="1.5">x1.5</option>
+      <option value="2">x2</option>
+      {{/select}}
+    </select>
+  </div>
+  {{/if}}{{/if}}
+
 
   <div class="form-group stacked">
     {{#if hasTemplate}}

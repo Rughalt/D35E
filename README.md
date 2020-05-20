@@ -21,7 +21,7 @@ You always more than welcome to contact me via discord LoopeeDK#9498 or here
 ## Credits
 
 The entire base work of this system is based on Furyspark's work
-on the PF1 system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)
+on the D35E system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)
 Im super greatful for being allowed to use this as it saved me
 HOURS of work to get this off the ground.
 

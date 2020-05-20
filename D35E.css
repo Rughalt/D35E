@@ -1035,6 +1035,9 @@
 .D35E.sheet.actor .traits .inactive {
   color: #7a7971;
 }
+.D35E.sheet.actor .traits .inactive input[type="text"]::placeholder {
+  color: #7a7971;
+}
 .D35E.sheet.actor .encumbrance {
   flex: 0 0 12px;
   background: #7a7971;

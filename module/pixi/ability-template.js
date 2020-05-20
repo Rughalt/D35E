@@ -4,29 +4,6 @@
  */
 export class AbilityTemplate extends MeasuredTemplate {
 
-  get pfStyle() {
-    return game.settings.get("D35E", "measureStyle") === true;
-  }
-
-  _createMouseInteractionManager() {
-
-    // Handle permissions to perform various actions
-    const permissions = {
-      clickLeft: true,
-      clickRight: true,
-    };
-
-    // Define callback functions for each workflow step
-    const callbacks = {
-      clickLeft: this._onClickLeft.bind(this),
-      clickRight: this._onClickRight.bind(this),
-    };
-
-    if (this.controlIcon) this.controlIcon.removeAllListeners();
-
-    return new MouseInteractionManager(this.layer, this.layer, permissions, callbacks);
-  }
-
   /**
    * A factory method to create an AbilityTemplate instance using provided data
    * @param {string} type -             The type of template ("cone", "circle", "rect" or "ray")
@@ -82,12 +59,12 @@ export class AbilityTemplate extends MeasuredTemplate {
    * @param {Event} event   The initiating click event
    */
   async drawPreview(event) {
-    this.initialLayer = canvas.activeLayer;
+    const initialLayer = canvas.activeLayer;
     this.draw();
+    this.active = true;
     this.layer.activate();
     this.layer.preview.addChild(this);
-    this.active = true;
-    return this.activatePreviewListeners();
+    return this.activatePreviewListeners(initialLayer);
   }
 
   /* -------------------------------------------- */
@@ -97,87 +74,81 @@ export class AbilityTemplate extends MeasuredTemplate {
    * @param {CanvasLayer} initialLayer  The initially active CanvasLayer to re-activate after the workflow is complete
    * @returns {Promise<boolean>} Returns true if placed, or false if cancelled
    */
-  activatePreviewListeners() {
+  activatePreviewListeners(initialLayer) {
     return new Promise(resolve => {
-      this.moveTime = 0;
+      const handlers = {};
+      let moveTime = 0;
+
+      const pfStyle = game.settings.get("D35E", "measureStyle") === true;
+
+      // Update placement (mouse-move)
+      handlers.mm = event => {
+        event.stopPropagation();
+        let now = Date.now(); // Apply a 20ms throttle
+        if ( now - moveTime <= 20 ) return;
+        const center = event.data.getLocalPosition(this.layer);
+        let pos = canvas.grid.getSnappedPosition(center.x, center.y, 2);
+        this.data.x = pos.x;
+        this.data.y = pos.y;
+        this.refresh();
+        canvas.app.render();
+        moveTime = now;
+      };
+
+      // Cancel the workflow (right-click)
+      handlers.rc = (event, canResolve=true) => {
+        this.layer.preview.removeChildren();
+        canvas.stage.off("mousemove", handlers.mm);
+        canvas.stage.off("mousedown", handlers.lc);
+        canvas.app.view.oncontextmenu = null;
+        canvas.app.view.onwheel = null;
+        // Clear highlight
+        this.active = false;
+        const hl = canvas.grid.getHighlightLayer(`Template.${this.id}`);
+        hl.clear();
+
+        initialLayer.activate();
+        if (canResolve) resolve(false);
+      };
+
+      // Confirm the workflow (left-click)
+      handlers.lc = event => {
+        handlers.rc(event, false);
+
+        // Confirm final snapped position
+        const destination = canvas.grid.getSnappedPosition(this.x, this.y, 2);
+        this.data.x = destination.x;
+        this.data.y = destination.y;
+
+        // Create the template
+        canvas.scene.createEmbeddedEntity("MeasuredTemplate", this.data);
+        resolve(true);
+      };
+
+      // Rotate the template by 3 degree increments (mouse-wheel)
+      handlers.mw = event => {
+        if (event.ctrlKey) event.preventDefault(); // Avoid zooming the browser window
+        event.stopPropagation();
+        let delta, snap;
+        if (pfStyle && this.data.t === "cone") {
+          delta = 90;
+          snap = event.shiftKey ? delta : 45;
+        }
+        else {
+          delta = canvas.grid.type > CONST.GRID_TYPES.SQUARE ? 30 : 15;
+          snap = event.shiftKey ? delta : 5;
+        }
+        this.data.direction += (snap * Math.sign(event.deltaY));
+        this.refresh();
+      };
 
       // Activate listeners
-      this.mouseInteractionManager = this._createMouseInteractionManager().activate();
-      canvas.stage.on("mousemove", this._onMouseMove.bind(this));
-      // canvas.stage.on("mousedown", handlers.lc);
-      // canvas.app.view.oncontextmenu = handlers.rc;
-      canvas.app.view.onwheel = this._onMouseWheel.bind(this);
-
-      this.__cb = (result) => {
-        resolve(result);
-      };
+      if (this.controlIcon) this.controlIcon.removeAllListeners();
+      canvas.stage.on("mousemove", handlers.mm);
+      canvas.stage.on("mousedown", handlers.lc);
+      canvas.app.view.oncontextmenu = handlers.rc;
+      canvas.app.view.onwheel = handlers.mw;
     });
-  }
-
-  _onMouseWheel(event) {
-    if (event.ctrlKey) event.preventDefault(); // Avoid zooming the browser window
-    event.stopPropagation();
-    let delta, snap;
-    if (this.pfStyle && this.data.t === "cone") {
-      delta = 90;
-      snap = event.shiftKey ? delta : 45;
-    }
-    else {
-      delta = canvas.grid.type > CONST.GRID_TYPES.SQUARE ? 30 : 15;
-      snap = event.shiftKey ? delta : 5;
-    }
-    this.data.direction += (snap * Math.sign(event.deltaY));
-    this.refresh();
-  }
-
-  _onMouseMove(event) {
-    event.stopPropagation();
-    let now = Date.now(); // Apply a 20ms throttle
-    if (now - this.moveTime <= 20) return;
-    const center = event.data.getLocalPosition(this.layer);
-    let pos;
-    if (this.pfStyle && this.data.t === "cone") {
-      const cs = canvas.dimensions.size * 0.5;
-      pos = canvas.grid.getSnappedPosition(center.x - cs, center.y - cs, 1);
-      pos.x += cs;
-      pos.y += cs;
-    }
-    else if (this.pfStyle && this.data.t === "circle") {
-      pos = canvas.grid.getSnappedPosition(center.x, center.y, 1);
-    }
-    else pos = canvas.grid.getSnappedPosition(center.x, center.y, 2);
-    this.data.x = pos.x;
-    this.data.y = pos.y;
-    this.refresh();
-    this.moveTime = now;
-  }
-
-  _onClickRight(event) {
-    this.layer.preview.removeChildren();
-    this.active = false;
-    // Deactivate events
-    canvas.stage.off("mousemove", this._onMouseMove);
-    canvas.app.view.onwheel = null;
-    this.mouseInteractionManager._deactivateClickEvents();
-    // Clear highlight
-    const hl = canvas.grid.getHighlightLayer(`Template.${this.id}`);
-    hl.clear();
-
-    this.initialLayer.activate();
-    if (this.__cb) this.__cb(false);
-  }
-
-  _onClickLeft(event) {
-    // Confirm final snapped position
-    const destination = canvas.grid.getSnappedPosition(this.x, this.y, 2);
-    this.data.x = destination.x;
-    this.data.y = destination.y;
-
-    // Create the template
-    canvas.scene.createEmbeddedEntity("MeasuredTemplate", this.data);
-
-    if (this.__cb) this.__cb(true);
-    this._onClickRight(event);
   }
 
   refresh() {
@@ -186,5 +157,7 @@ export class AbilityTemplate extends MeasuredTemplate {
     if (this.active) {
       this.highlightGrid();
     }
+
+    return this;
   }
 }

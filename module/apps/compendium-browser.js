@@ -8,8 +8,43 @@ export class CompendiumBrowser extends Application {
 
     this.filters = [];
 
-    this.filterQuery = /.*/i;
     this.activeFilters = {};
+
+    this._data = {
+      loaded: false,
+      data: {},
+      promise: null,
+    };
+
+    // Preload compendiums
+    // if (game.settings.get("D35E", "preloadCompendiums") === true) {
+      // this.loadData();
+    // }
+  }
+
+  loadData() {
+    return new Promise(resolve => {
+      let promise = this._data.promise;
+      if (promise == null) {
+        promise = this._gatherData();
+        this._data.promise = promise;
+      }
+
+      promise.then(() => {
+        this._data.loaded = true;
+        this._data.promise = null;
+        resolve(this._data.data);
+      });
+    });
+  }
+
+  async _gatherData() {
+    await this._fetchMetadata();
+
+    this._data.data = {
+      filters: this.filters,
+      collection: this.items,
+    };
   }
 
   static get defaultOptions() {
@@ -241,12 +276,14 @@ export class CompendiumBrowser extends Application {
   }
 
   async getData() {
-    await this._fetchMetadata();
+    if (!this._data.loaded) await this.loadData();
 
-    return {
-      filters: this.filters,
-      collection: this.items,
-    };
+    return this._data.data;
+  }
+
+  async refresh() {
+    await this.loadData();
+    this.render(false);
   }
 
   _fetchSpellFilters() {
@@ -509,6 +546,7 @@ export class CompendiumBrowser extends Application {
   async _render(...args) {
     await super._render(...args);
 
+    this.filterQuery = /.*/;
     this.element.find(".filter-content").css("display", "none");
   }
 
@@ -532,6 +570,8 @@ export class CompendiumBrowser extends Application {
     html.find('.filter input[type="checkbox"]').change(this._onActivateBooleanFilter.bind(this));
 
     html.find('.filter h3').click(this._toggleFilterVisibility.bind(this));
+
+    html.find("button.refresh").click(this.refresh.bind(this));
   }
 
   /**
