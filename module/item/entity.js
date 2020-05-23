@@ -33,7 +33,58 @@ export class ItemPF extends Item {
   }
 
   get hasAction() {
-    return this.hasAttack || this.hasDamage || this.hasEffect || this.hasTemplate;
+    return this.hasAttack
+    || this.hasDamage
+    || this.hasEffect
+    || this.hasTemplate;
+  }
+
+  get isSingleUse() {
+    return getProperty(this.data, "data.uses.per") === "single";
+  }
+
+  get isCharged() {
+    if (this.type === "consumable" && getProperty(this.data, "data.uses.per") === "single") return true;
+    return ["day", "week", "charges"].includes(getProperty(this.data, "data.uses.per"));
+  }
+
+  get autoDeductCharges() {
+    return this.type === "spell"
+      ? getProperty(this.data, "data.preparation.autoDeductCharges") === true
+      : (this.isCharged && getProperty(this.data, "data.uses.autoDeductCharges") === true);
+  }
+
+  get charges() {
+    if (getProperty(this.data, "data.uses.per") === "single") return getProperty(this.data, "data.quantity");
+    if (this.type === "spell") return this.getSpellUses();
+    return getProperty(this.data, "data.uses.value") || 0;
+  }
+
+  /**
+   * Generic charge addition (or subtraction) function that either adds charges
+   * or quantity, based on item data.
+   * @param {number} value       - The amount of charges to add.
+   * @param {Object} [data=null] - An object in the style of that of an update call to alter, rather than applying the change immediately.
+   * @returns {Promise}
+   */
+  async addCharges(value, data=null) {
+    if ( getProperty(this.data, "data.uses.per") === "single"
+      && getProperty(this.data, "data.quantity") == null) return;
+
+    if (this.type === "spell") return this.addSpellUses(value, data);
+
+    let prevValue = this.isSingleUse ? getProperty(this.data, "data.quantity") : getProperty(this.data, "data.uses.value");
+    if      (data != null && this.isSingleUse  && data["data.quantity"]  != null)  prevValue = data["data.quantity"];
+    else if (data != null && !this.isSingleUse && data["data.uses.value"] != null) prevValue = data["data.uses.value"];
+
+    if (data != null) {
+      if (this.isSingleUse) data["data.quantity"]   = prevValue + value;
+      else                  data["data.uses.value"] = prevValue + value;
+    }
+    else {
+      if (this.isSingleUse) await this.update({ "data.quantity"  : prevValue + value });
+      else                  await this.update({ "data.uses.value": prevValue + value });
+    }
   }
 
   /* -------------------------------------------- */
@@ -332,7 +383,7 @@ export class ItemPF extends Item {
       labels: this.labels,
       hasAttack: this.hasAttack,
       hasMultiAttack: this.hasMultiAttack,
-      hasAction: this.hasAction,
+      hasAction: this.hasAction || this.isCharged,
       isHealing: this.isHealing,
       hasDamage: this.hasDamage,
       hasEffect: this.hasEffect,
@@ -363,7 +414,7 @@ export class ItemPF extends Item {
 
     // Toggle default roll mode
     let rollMode = chatData.rollMode || game.settings.get("core", "rollMode");
-    if ( ["gmroll", "blindroll"].includes(rollMode) ) chatData["whisper"] = ChatMessage.getWhisperIDs("GM");
+    if ( ["gmroll", "blindroll"].includes(rollMode) ) chatData["whisper"] = ChatMessage.getWhisperRecipients("GM");
     if ( rollMode === "blindroll" ) chatData["blind"] = true;
 
     // Create the chat message
@@ -582,26 +633,38 @@ export class ItemPF extends Item {
   /*  Item Rolls - Attack, Damage, Saves, Checks  */
   /* -------------------------------------------- */
 
+  async use({ev=null, skipDialog=false}) {
+    if (this.type === "spell") {
+      return this.actor.useSpell(this, ev, {skipDialog: skipDialog});
+    }
+    else if (this.hasAction) {
+      return this.useAttack({ev: ev, skipDialog: skipDialog});
+    }
+
+    if (this.isCharged) {
+      if (this.charges <= 0) {
+        if (this.isSingleUse) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoQuantity"));
+        return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
+      }
+      this.addCharges(-1);
+    }
+    this.roll();
+  }
+
   async useAttack({ev=null, skipDialog=false}={}) {
     if (ev && ev.originalEvent) ev = ev.originalEvent;
     const actor = this.actor;
     if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
-    const isSingleUse = getProperty(this.data, "data.uses.per") === "single";
     const itemQuantity = getProperty(this.data, "data.quantity");
     if (itemQuantity != null && itemQuantity <= 0) {
       return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoQuantity"));
     }
 
-    const isCharged = ["day", "week", "charges"].includes(getProperty(this.data, "data.uses.per"));
-    let charges = isCharged ? getProperty(this.data, "data.uses.value") || 0 : 0;
-    if (isCharged && charges <= 0) {
+    if (this.isCharged && this.charges <= 0) {
       return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
     }
 
-    const autoDeductCharges = this.type === "spell"
-      ? getProperty(this.data, "data.preparation.autoDeductCharges") === true
-      : ((isCharged || isSingleUse) && getProperty(this.data, "data.uses.autoDeductCharges") === true);
     const itemData = this.data.data;
     const rollData = this.actor.getRollData();
     rollData.item = duplicate(itemData);
@@ -720,18 +783,8 @@ export class ItemPF extends Item {
       }
 
       // Deduct charge
-      if (autoDeductCharges) {
-        if (this.type === "spell") {
-          this.addSpellUses(-1, itemUpdateData);
-        }
-        else {
-          const newCharges = Math.max(0, charges - 1);
-          itemUpdateData["data.uses.value"] = newCharges;
-          if (isSingleUse) {
-            const newQuantity = newCharges > 0 ? itemQuantity : itemQuantity - 1;
-            itemUpdateData["data.quantity"] = newQuantity;
-          }
-        }
+      if (this.autoDeductCharges) {
+        this.addCharges(-1, itemUpdateData);
       }
       // Update item
       this.update(itemUpdateData);
@@ -796,7 +849,7 @@ export class ItemPF extends Item {
       data: rollData,
       item: this.data.data,
       rollMode: game.settings.get("core", "rollMode"),
-      rollModes: CONFIG.rollModes,
+      rollModes: CONFIG.Dice.rollModes,
       hasAttack: this.hasAttack,
       hasDamage: this.hasDamage,
       hasDamageAbility: getProperty(this.data, "data.ability.damage") !== "",

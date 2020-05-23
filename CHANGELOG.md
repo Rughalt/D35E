@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.55
+Updated to 0.6.0 std's
+
+### Bug Fixes
+
+
+### Changelog
+- Applied the latest fixes
+
 ## 0.54
 Implemented latest fixes of template messurement
 

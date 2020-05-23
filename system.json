@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "D&D 3.5e",
   "description": "A convertion of Furyspark's Pathfinder1 system to make a functional 3.5e system for FoundryVTT",
-  "version": 0.54,
+  "version": 0.55,
   "author": "LoopeeDK",
   "templateVersion": 2,
   "scripts": [],
@@ -118,7 +118,7 @@
   "primaryTokenAttribute": "attributes.hp",
   "secondaryTokenAttribute": null,
   "minimumCoreVersion": "0.5.6",
-  "compatibleCoreVersion": "0.5.7",
+  "compatibleCoreVersion": "0.6.0",
   
   "url": "https://github.com/LoopeeDK/d35e",
   "manifest": "https://raw.githubusercontent.com/LoopeeDK/d35e/master/system.json",

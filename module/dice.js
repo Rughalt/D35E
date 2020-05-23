@@ -131,7 +131,7 @@ export class DicePF {
       formula: parts.join(" + "),
       data: data,
       rollMode: rollMode,
-      rollModes: CONFIG.rollModes
+      rollModes: CONFIG.Dice.rollModes
     };
     const html = await renderTemplate(template, dialogData);
 
@@ -277,7 +277,7 @@ export class DicePF {
       formula: parts.join(" + "),
       data: data,
       rollMode: rollMode,
-      rollModes: CONFIG.rollModes
+      rollModes: CONFIG.Dice.rollModes
     };
     const html = await renderTemplate(template, dialogData);
 

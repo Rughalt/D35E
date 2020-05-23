@@ -254,9 +254,8 @@ function rollItemMacro(itemName, {itemId=null, itemType=null, actorId=null}={}) 
   if (!item) return ui.notifications.warn(`Your controlled Actor does not have an item named ${itemName}`);
 
    // Trigger the item roll
-   if (!game.keyboard.isDown("Shift")) {
-    if (item.data.type === "spell") return actor.useSpell(item, null, {skipDialog: keyboard.isDown("Shift")});
-    if (item.hasAction) return item.useAttack({skipDialog: keyboard.isDown("Shift")});
+   if (!game.keyboard.isDown("Control")) {
+    return item.use({skipDialog: keyboard.isDown("Shift")});
    }
    return item.roll();
  }

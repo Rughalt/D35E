@@ -1044,14 +1044,7 @@
         "charged": false,
         "_deprecated": true
       },
-      "time": {
-        "value": "",
-        "_deprecated": true
-      },
-      "damageType": {
-        "value": "",
-        "_deprecated": true
-      }
+      "showInQuickbar": false
     },
     "loot": {
       "templates": ["itemDescription", "physicalItem"],

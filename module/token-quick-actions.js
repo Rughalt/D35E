@@ -13,14 +13,14 @@ export class TokenQuickActions {
         return;
     
     let quickActions = '<div class="col actions"><div class="below">'
-    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell") && getProperty(o, "data.showInQuickbar") === true).sort((a, b) => {
-      return a.data.sort - b.data.sort;
+    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "feat") && getProperty(o, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
     });
     items.forEach(function(item) {
       const icon = item.img;
       let title = "";
       if      (item.type === "attack") title = game.i18n.localize("D35E.AttackWith").format(item.name);
       else if (item.type === "spell")  title = game.i18n.localize("D35E.AttackWithSpell").format(item.name);
+      else if (item.type === "feat")   title = game.i18n.localize("D35E.AttackWithFeat").format(item.name);
       const type = item.type;
       quickActions += `<div id="${type}-${item._id}" class="control-icon token-quick-action"><img src="${icon}" width="36" height="36" title="${title}"></div>`;
     });

@@ -22,7 +22,7 @@ Combat.showInitiativeDialog = function(formula=null) {
     let dialogData = {
       formula: formula ? formula : "",
       rollMode: rollMode,
-      rollModes: CONFIG.rollModes
+      rollModes: CONFIG.Dice.rollModes
     };
     // Create buttons object
     let buttons = {
@@ -110,15 +110,13 @@ export const _rollInitiative = async function(ids, formula=null, messageOptions=
   if ( !updates.length ) return this;
 
   // Update multiple combatants
-  if (isMinimumCoreVersion("0.5.4")) await this.updateEmbeddedEntity("Combatant", updates);
-  else await this.updateManyEmbeddedEntities("Combatant", updates);
+  await this.updateEmbeddedEntity("Combatant", updates);
 
   // Ensure the turn order remains with the same combatant
   await this.update({turn: this.turns.findIndex(t => t._id === currentId)});
 
   // Create multiple chat messages
-  if (isMinimumCoreVersion("0.5.4")) await ChatMessage.create(messages);
-  else await ChatMessage.createMany(messages);
+  await ChatMessage.create(messages);
 
   // Return the updated Combat
   return this;
@@ -136,8 +134,8 @@ export const _rollInitiative = async function(ids, formula=null, messageOptions=
  * @return {Array}              The extended options Array including new context choices
  */
 export const addChatMessageContextOptions = function(html, options) {
-  let canApply = li => canvas.tokens.controlledTokens.length && li.find(".damage-roll .dice-total").length;
-  let canApplyCritical = li => canvas.tokens.controlledTokens.length && li.find(".crit-damage-roll .dice-total").length;
+  let canApply = li => canvas.tokens.controlled.length && li.find(".damage-roll .dice-total").length;
+  let canApplyCritical = li => canvas.tokens.controlled.length && li.find(".crit-damage-roll .dice-total").length;
   options.push(
     {
       name: game.i18n.localize("D35E.ApplyDamage"),
