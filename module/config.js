@@ -1058,4 +1058,4 @@ D35E.CR_EXP_LEVELS = [
   3276800, 4915200, 6553600, 9830400
 ];
 
-CONFIG.initiative.decimals = 2;
+CONFIG.Combat.initiative.decimals = 2;
