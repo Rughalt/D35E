@@ -17,6 +17,7 @@ downloading a zip archive from the [Releases Page](https://github.com/LoopeeDK/D
 ## Information
 
 You always more than welcome to contact me via discord LoopeeDK#9498 or here
+And please we need people who can code on this I dont have the time to maintain it :(
 
 ## Credits
 
