@@ -24,4 +24,7 @@ And please we need people who can code on this I dont have the time to maintain 
 The entire base work of this system is based on Furyspark's 
 on the PF1 system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)  and LoopeeDK#9498 work 
 
-Icons by J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0
+Icons by 
+- J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0
+- Various authors at [game-icons.net](https://game-icons.net/)
+
