@@ -22,7 +22,7 @@
       "system": "D35E",
       "path": "./packs/commonbuffs.db",
       "entity": "Item"
-    },,
+    },
     {
       "name": "racialfeatures",
       "label": "Racial Features",
