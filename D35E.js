@@ -1,6 +1,6 @@
 /**
  * The D35E edition game system for Foundry Virtual Tabletop
- * Author: LoopeeDK
+ * Author: LoopeeDK, Rughalt
  * Software License: GNU GPLv3
  */
 
