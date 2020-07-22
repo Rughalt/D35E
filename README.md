@@ -1,4 +1,4 @@
-# Foundry VTT 5th Edition
+# Foundry VTT 3.5 Edition
 
 An implementation of the 3.5e Dungeons and Dragons system for Foundry Virtual
 Tabletop (http://foundryvtt.com).
@@ -21,8 +21,6 @@ And please we need people who can code on this I dont have the time to maintain 
 
 ## Credits
 
-The entire base work of this system is based on Furyspark's work
-on the D35E system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)
-Im super greatful for being allowed to use this as it saved me
-HOURS of work to get this off the ground.
+The entire base work of this system is based on Furyspark's
+on the PF1 system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)  and LoopeeDK#9498 work 
 

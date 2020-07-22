@@ -177,11 +177,19 @@ export class ActorSheetPF extends ActorSheet {
       }
     }
     // Count allowed skill ranks
+    let firstOnList = true;
     this.actor.data.items.filter(obj => { return obj.type === "class"; }).forEach(cls => {
       const clsLevel = cls.data.levels;
       const clsSkillsPerLevel = cls.data.skillsPerLevel;
       const fcSkills = cls.data.fc.skill.value;
-      skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * 3) + ((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel)) + fcSkills));
+      if (clsLevel > 0) {
+        if (firstOnList) {
+          skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * 3) + ((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel)) + fcSkills));
+          firstOnList = false;
+        } else {
+          skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel)) + fcSkills));
+        }
+      }
       if (data.useBGSkills) skillRanks.bgAllowed = this.actor.data.data.details.level.value * 2;
     });
     if (this.actor.data.data.details.bonusSkillRankFormula !== "") {
@@ -264,9 +272,9 @@ export class ActorSheetPF extends ActorSheet {
         canPrepare: (data.actor.type === "character"),
         label: CONFIG.D35E.spellLevels[a],
         spells: [],
-        uses: book.spells["spell"+a].value || 0,
-        baseSlots: book.spells["spell"+a].base,
-        slots: book.spells["spell"+a].max || 0,
+        uses: book.spells === undefined ? 0 : book.spells["spell"+a].value || 0,
+        baseSlots: book.spells === undefined ? 0 : book.spells["spell"+a].base,
+        slots: book.spells === undefined ? 0 : book.spells["spell"+a].max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
       };
     }
@@ -1049,6 +1057,7 @@ export class ActorSheetPF extends ActorSheet {
     // Organize Spellbook
     let spellbookData = {};
     const spellbooks = data.actor.data.attributes.spells.spellbooks;
+    
     for (let [a, spellbook] of Object.entries(spellbooks)) {
       const spellbookSpells = spells.filter(obj => { return obj.data.spellbook === a; });
       spellbookData[a] = {

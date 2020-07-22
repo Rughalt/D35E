@@ -1433,17 +1433,17 @@ export class ActorPF extends Actor {
       // Parse main skills
       let sklValue = (Math.floor((skl.cs && skl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty));
       linkData(data, updateData, `data.skills.${sklKey}.mod`, sklValue);
-//      // Parse sub-skills
-//      for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
-//        if (subSkl == null) continue;
-//        if (getProperty(data1, `skills.${sklKey}.subSkills.${subSklKey}`) == null) continue;
-//
-//        acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
-//        ablMod = data1.abilities[subSkl.ability].mod;
-//        specificSkillBonus = subSkl.changeBonus || 0;
-//        sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? 3 : 0) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
-//        linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
-//      }
+     // Parse sub-skills
+     for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
+       if (subSkl == null) continue;
+       if (getProperty(data1, `skills.${sklKey}.subSkills.${subSklKey}`) == null) continue;
+
+       acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
+       ablMod = data1.abilities[subSkl.ability].mod;
+       specificSkillBonus = subSkl.changeBonus || 0;
+       sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? 3 : 0) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
+       linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
+     }
     }
   }
 
@@ -1531,24 +1531,24 @@ export class ActorPF extends Actor {
       data.attributes.sr.total = 0;
     }
 
-    // Set spellbook info
-    for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
-      // Set CL
-      let roll = new Roll(spellbook.cl.formula, data).roll();
-      spellbook.cl.total = roll.total || 0;
-      if (actorData.type === "npc") spellbook.cl.total += spellbook.cl.base;
-      if (spellbook.class === "_hd") {
-        spellbook.cl.total += data.attributes.hd.total;
-      }
-      else if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
-        spellbook.cl.total += data.classes[spellbook.class].level;
-      }
-      // Add spell slots
-      spellbook.spells = spellbook.spells || {};
-      for (let a = 0; a < 10; a++) {
-        spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null };
-      }
-    }
+    // // Set spellbook info
+    // for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
+    //   // Set CL
+    //   let roll = new Roll(spellbook.cl.formula, data).roll();
+    //   spellbook.cl.total = roll.total || 0;
+    //   if (actorData.type === "npc") spellbook.cl.total += spellbook.cl.base;
+    //   if (spellbook.class === "_hd") {
+    //     spellbook.cl.total += data.attributes.hd.total;
+    //   }
+    //   else if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
+    //     spellbook.cl.total += data.classes[spellbook.class].level;
+    //   }
+    //   // Add spell slots
+    //   spellbook.spells = spellbook.spells || {};
+    //   for (let a = 0; a < 10; a++) {
+    //     spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null };
+    //   }
+    // }
   }
 
   _setSourceDetails(actorData, extraData, flags) {

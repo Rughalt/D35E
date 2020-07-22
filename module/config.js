@@ -77,8 +77,8 @@ D35E.classSavingThrowFormulas = {
     "high": "2 + floor(@level / 2)",
   },
   "prestige": {
-    "low": "floor((1 + @level) / 3)",
-    "high": "floor((1 + @level) / 2)",
+    "low": "floor(@level / 3)",
+    "high": "2 + floor(@level / 2)",
   },
   "racial": {
     "low": "floor(@level / 3)",
