@@ -14,10 +14,19 @@ If you wish to manually install the system, you must clone or extract it into
 the Data/systems/D35E folder. You may do this by cloning the repository or
 downloading a zip archive from the [Releases Page](https://github.com/Rughalt/D35E/archive/master.zip).
 
-## Information
+## Progress
+### Compendium
+- Base classes - Done
+- Base NPC classes - Done
+- Feats - In Compendium, not implemented
+- Racial Traits - Partially done
+- Racial HD - Partially done
 
-You always more than welcome to contact me via discord LoopeeDK#9498 or here
-And please we need people who can code on this I dont have the time to maintain it :(
+### Systems
+Most of the stuff that is the same as in PF1 works. For things that are different:
+
+- Skills - Done, except for related skill bonuses
+- Power points - Done, simple system
 
 ## Credits
 

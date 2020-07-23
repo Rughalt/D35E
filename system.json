@@ -1,8 +1,8 @@
 {
   "name": "D35E",
   "title": "D&D 3.5e",
-  "description": "A convertion of Furyspark's Pathfinder1 system to make a functional 3.5e system for FoundryVTT",
-  "version": 0.61,
+  "description": "A conversion of Furyspark's Pathfinder1 system to make a functional 3.5e system for FoundryVTT",
+  "version": 0.62,
   "author": "LoopeeDK, Rughalt",
   "templateVersion": 2,
   "scripts": [],
