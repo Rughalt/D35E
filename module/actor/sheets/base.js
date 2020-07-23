@@ -269,6 +269,7 @@ export class ActorSheetPF extends ActorSheet {
         usesSlots: true,
         spontaneous: book.spontaneous,
         usePowerPoints: book.usePowerPoints,
+        powerPoints: book.powerPoints,
         canCreate: owner === true,
         canPrepare: (data.actor.type === "character"),
         label: CONFIG.D35E.spellLevels[a],

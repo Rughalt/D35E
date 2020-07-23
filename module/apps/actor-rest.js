@@ -66,8 +66,9 @@ export class ActorRestDialog extends BaseEntitySheet {
         }
         else if (item.type === "spell") {
           const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
-            isSpontaneous = spellbook.spontaneous;
-          if (!isSpontaneous && itemData.preparation.preparedAmount < itemData.preparation.maxAmount) {
+            isSpontaneous = spellbook.spontaneous, 
+            usePowerPoints = spellbook.usePowerPoints;
+          if (!isSpontaneous && !usePowerPoints && itemData.preparation.preparedAmount < itemData.preparation.maxAmount) {
             hasItemUpdates = true;
             itemUpdate["data.preparation.preparedAmount"] = itemData.preparation.maxAmount;
           }
@@ -83,6 +84,12 @@ export class ActorRestDialog extends BaseEntitySheet {
           for (let sl of Object.keys(CONFIG.D35E.spellLevels)) {
             updateData[`data.attributes.spells.spellbooks.${key}.spells.spell${sl}.value`] = getProperty(actorData, `attributes.spells.spellbooks.${key}.spells.spell${sl}.max`);
           }
+        }
+        if (spellbook.usePowerPoints) {
+          let rollData = {};
+          if (actorData == null && this.actor != null) rollData = this.actor.getRollData();
+            updateData[`data.attributes.spells.spellbooks.${key}.powerPoints`] = new Roll(getProperty(actorData, `attributes.spells.spellbooks.${key}.dailyPowerPointsFormula`), rollData).roll()._total;
+          
         }
       }
     }

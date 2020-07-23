@@ -1505,8 +1505,8 @@ export class ItemPF extends Item {
     const newCharges = usePowerPoints ? Math.max(0, (getProperty(spellbook, `powerPoints`) || 0) + value*getProperty(this.data, "data.powerPointsCost")) : isSpontaneous
       ? Math.max(0, (getProperty(spellbook, `spells.spell${spellLevel}.value`) || 0) + value)
       : Math.max(0, (getProperty(this.data, "data.preparation.preparedAmount") || 0) + value);
-
-    if (!isSpontaneous) {
+    
+    if (!isSpontaneous && !usePowerPoints) {
       const key = "data.preparation.preparedAmount";
       if (data == null) {
         data = {};

@@ -65,6 +65,12 @@
         <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.powerPoints"
                value="{{spellbook.orig.powerPoints}}" placeholder="{{localize "D35E.PowerPoints"}}" />
       </div>
+
+      <div class="flexrow powerpoints">
+        <label><h3>{{localize "D35E.DailyPowerPointsFormula"}}</h3></label>
+        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.dailyPowerPointsFormula"
+               value="{{spellbook.orig.dailyPowerPointsFormula}}" placeholder="{{localize "D35E.DailyPowerPointsFormula"}}" />
+      </div>
     </div>
     
     <div class="flexcol">
@@ -118,8 +124,8 @@
         <div class="item-detail item-actions"><span>{{localize "D35E.ActionPlural"}}</span></div>
         
         <div class="spell-uses">
-          {{#if section.userPowerPoints}}
-            <input type="text" disabled value="{{section.powerPointsCost}}" placeholder="0" data-dtype="Number" />
+          {{#if section.usePowerPoints}}
+            <input type="text" disabled value="{{section.powerPoints}}" placeholder="0" data-dtype="Number" />
           {{ else }}
           {{#if section.usesSlots}}
           <input class="base" type="text" name="data.attributes.spells.spellbooks.{{../spellbookIndex}}.spells.spell{{section.level}}.base"
@@ -161,12 +167,18 @@
           </div>
           
           <div class="spell-uses flexrow">
+
+          {{#if section.usePowerPoints}}
+          <input type="text" value="{{item.data.powerPointsCost}}" disabled data-type="max" data-dtype="Number"/>
+           {{ else }}
             {{#unless ../../spellbook.orig.spontaneous}}
             <span>{{localize "D35E.Uses"}}</span>
             <input type="text" value="{{item.data.preparation.preparedAmount}}" data-type="amount" data-dtype="Number"/>
             <span class="sep"> / </span>
             <input type="text" value="{{item.data.preparation.maxAmount}}" data-type="max" data-dtype="Number"/>
             {{/unless}}
+
+          {{/if}}
           </div>
           
           <div class="spell-school">{{labels.school}}</div>
