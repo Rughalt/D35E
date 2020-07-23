@@ -58,6 +58,13 @@
         <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.baseDCFormula"
         value="{{spellbook.orig.baseDCFormula}}" placeholder="{{localize "D35E.BaseDCFormula"}}" />
       </div>
+
+
+      <div class="flexrow powerpoints">
+        <label><h3>{{localize "D35E.PowerPoints"}}</h3></label>
+        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.powerPoints"
+               value="{{spellbook.orig.powerPoints}}" placeholder="{{localize "D35E.PowerPoints"}}" />
+      </div>
     </div>
     
     <div class="flexcol">
@@ -72,6 +79,11 @@
       <label class="checkbox">
         <input type="checkbox" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.arcaneSpellFailure"
         {{checked spellbook.orig.arcaneSpellFailure}}/> {{localize "D35E.ArcaneSpellFailure"}}
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.usePowerPoints"
+               {{checked spellbook.orig.usePowerPoints}}/> {{localize "D35E.UsePowerPoints"}}
       </label>
     </div>
   </div>
@@ -106,6 +118,9 @@
         <div class="item-detail item-actions"><span>{{localize "D35E.ActionPlural"}}</span></div>
         
         <div class="spell-uses">
+          {{#if section.userPowerPoints}}
+            <input type="text" disabled value="{{section.powerPointsCost}}" placeholder="0" data-dtype="Number" />
+          {{ else }}
           {{#if section.usesSlots}}
           <input class="base" type="text" name="data.attributes.spells.spellbooks.{{../spellbookIndex}}.spells.spell{{section.level}}.base"
           value="{{section.baseSlots}}" placeholder="Base" />
@@ -116,6 +131,7 @@
           <span class="spell-slots">{{{section.uses}}}</span>
           <span class="sep"> / </span>
           <span class="spell-max">{{{section.slots}}}</span>
+          {{/if}}
           {{/if}}
         </div>
         

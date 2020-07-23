@@ -1209,7 +1209,6 @@ export class ItemPF extends Item {
       let chatData = {
         user: game.user._id,
         type: CONST.CHAT_MESSAGE_TYPES.CHAT,
-        rollMode: game.settings.get("core", "rollMode"),
         sound: CONFIG.sounds.dice,
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: game.i18n.localize("D35E.UsesItem").format(this.name),
@@ -1500,10 +1499,10 @@ export class ItemPF extends Item {
     if (this.data.data.level === 0) return;
 
     const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
-      isSpontaneous = spellbook.spontaneous,
+      isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
       spellbookKey = getProperty(this.data, "data.spellbook") || "primary",
       spellLevel = getProperty(this.data, "data.level");
-    const newCharges = isSpontaneous
+    const newCharges = usePowerPoints ? Math.max(0, (getProperty(spellbook, `powerPoints`) || 0) + value*getProperty(this.data, "data.powerPointsCost")) : isSpontaneous
       ? Math.max(0, (getProperty(spellbook, `spells.spell${spellLevel}.value`) || 0) + value)
       : Math.max(0, (getProperty(this.data, "data.preparation.preparedAmount") || 0) + value);
 
@@ -1517,6 +1516,12 @@ export class ItemPF extends Item {
       else {
         data[key] = newCharges;
       }
+    }
+    else if (usePowerPoints) {
+      const key = `data.attributes.spells.spellbooks.${spellbookKey}.powerPoints`;
+      const actorUpdateData = {};
+      actorUpdateData[key] = newCharges;
+      return this.actor.update(actorUpdateData);
     }
     else {
       const key = `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${spellLevel}.value`;
@@ -1533,9 +1538,9 @@ export class ItemPF extends Item {
     if (this.data.data.atWill) return Number.POSITIVE_INFINITY;
 
     const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
-      isSpontaneous = spellbook.spontaneous,
+      isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
       spellLevel = getProperty(this.data, "data.level");
-    return isSpontaneous
+    return usePowerPoints ? (getProperty(spellbook, `powerPoints`) - getProperty(this.data, "data.powerPointsCost")  > 0 || 0) : isSpontaneous
       ? (getProperty(spellbook, `spells.spell${spellLevel}.value`) || 0)
       : (getProperty(this.data, "data.preparation.preparedAmount") || 0);
   }

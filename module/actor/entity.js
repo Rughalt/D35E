@@ -2048,6 +2048,7 @@ export class ActorPF extends Actor {
 
     // Invoke the Item roll
     if (item.hasAction) return item.useAttack({ev: ev, skipDialog: skipDialog});
+
     item.addSpellUses(-1);
     return item.roll();
   }

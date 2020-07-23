@@ -741,6 +741,8 @@
   "D35E.MaxDexterityModifier": "Max. Dexterity Modifier",
   "D35E.ArmorCheckPenalty": "Armor Check Penalty",
   "D35E.ArcaneSpellFailure": "Arcane Spell Failure",
+  "D35E.UsePowerPoints": "Use Power Points/Spell Points",
+  "D35E.UsePowerPoints": "Power Points/Spell Points",
   "D35E.SkillsPerLevel": "Skills/Level",
   "D35E.Source": "Source",
   "D35E.Unlimited": "Unlimited",
