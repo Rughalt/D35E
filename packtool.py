@@ -1,5 +1,7 @@
 import json
 import argparse
+import string
+import random
 
 parser = argparse.ArgumentParser(description='nedb pack/unpack tool')
 parser.add_argument('action', help='action')
