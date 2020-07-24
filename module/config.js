@@ -921,6 +921,7 @@ D35E.buffTargets = {
     "mhp": "Hit Points",
     "wounds": "D35E.Wounds",
     "vigor": "D35E.Vigor",
+    "sneakAttack": "D35E.SneakAttackBonusDice",
   },
 };
 

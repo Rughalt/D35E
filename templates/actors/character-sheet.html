@@ -303,14 +303,14 @@
           </li>
 
           <li class="attribute cmb" data-attribute="cmb">
-            <h4 class="attribute-name box-title rollable">{{localize "D35E.TurnUndead"}}</h4>
+            <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
             <div class="attribute-value tooltip">
-              <span>{{data.attributes.turnUndeadHdTotal}}</span>
+              <span>{{data.attributes.cmb.total}}</span>
               <span class="tooltipcontent">
-                @attributes.turnUndeadHdTotal: {{data.attributes.turnUndeadHdTotal}}
-                {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
+                @attributes.cmb.total : {{data.attributes.cmb.total}}
+                {{#if sourceDetails.data.attributes.cmb.total.length}}
                   <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                  {{#each sourceDetails.data.attributes.turnUndeadHdTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                  {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
             </div>
@@ -332,6 +332,36 @@
               </span>
             </div>
           </li>
+          {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
+          <li class="attribute turnUndeadHdTotal" data-attribute="turnUndeadHdTotal">
+            <h4 class="attribute-name box-title">{{localize "D35E.TurnUndead"}}</h4>
+            <div class="attribute-value tooltip">
+              <span>{{data.attributes.turnUndeadHdTotal}}</span>
+              <span class="tooltipcontent">
+                @attributes.turnUndeadHdTotal: {{data.attributes.turnUndeadHdTotal}}
+                {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each sourceDetails.data.attributes.turnUndeadHdTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
+            </div>
+          </li>
+          {{/if}}
+          {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}
+          <li class="attribute sneakAttackDiceTotal" data-attribute="sneakAttackDiceTotal">
+            <h4 class="attribute-name box-title">{{localize "D35E.SneakAttackDiceTotal"}}</h4>
+            <div class="attribute-value tooltip">
+              <span>{{data.attributes.sneakAttackDiceTotal}}d6</span>
+              <span class="tooltipcontent">
+                @attributes.sneakAttackDiceTotal: {{data.attributes.sneakAttackDiceTotal}}d6
+                {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each sourceDetails.data.attributes.sneakAttackDiceTotal as |src|}}{{src.name}}: {{src.value}}d6<br/>{{/each}}
+                {{/if}}
+              </span>
+            </div>
+          </li>
+          {{/if}}
         </ul>
 
         <ul class="attributes misc-base2 flexrow">

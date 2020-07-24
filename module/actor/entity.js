@@ -459,6 +459,8 @@ export class ActorPF extends Actor {
         return "data.attributes.speed.fly.total";
       case "cmb":
         return "data.attributes.cmb.total";
+      case "sneakAttack":
+        return "data.attributes.sneakAttackDiceTotal";
       case "cmd":
         return ["data.attributes.cmd.total", "data.attributes.cmd.flatFootedTotal"];
       case "init":
@@ -1361,6 +1363,7 @@ export class ActorPF extends Actor {
       }
     }
 
+    // Turn undead total level
     {
       const k = "data.attributes.turnUndeadHdTotal";
       linkData(data, updateData, k, classes.reduce((cur, obj) => {
@@ -1378,6 +1381,41 @@ export class ActorPF extends Actor {
         }
       }, 0));
     }
+
+    // Total sneak attak dice
+    {
+      const k = "data.attributes.sneakAttackDiceTotal";
+      let totalSneakAttakDice = 0
+      let groupLevels = new Map()
+      let groupFormulas = new Map()
+      classes.forEach(obj => {
+        try {
+          if (obj.data.sneakAttackGroup == null || obj.data.sneakAttackGroup == "")
+            return;
+          if (!groupLevels.has(obj.data.sneakAttackGroup)) {
+            groupLevels.set(obj.data.sneakAttackGroup,0)
+          }
+          if (!groupFormulas.has(obj.data.sneakAttackGroup)) {
+            groupFormulas.set(obj.data.sneakAttackGroup,obj.data.sneakAttackFormula)
+          }
+          groupLevels.set(obj.data.sneakAttackGroup, groupLevels.get(obj.data.sneakAttackGroup) + obj.data.levels)
+        } catch (e) {
+          console.log(e)
+        }
+      })
+      for (var key of groupLevels.keys()) {
+        const v = new Roll(groupFormulas.get(key), {level: groupLevels.get(key)}).roll().total;
+
+        if (v !== 0) {
+          sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+          sourceInfo[k].positive.push({name:key, value: v});
+        }
+        totalSneakAttakDice = totalSneakAttakDice + v
+      }
+      linkData(data, updateData, k, totalSneakAttakDice);
+
+    }
+
     linkData(data, updateData, "data.attributes.cmb.total", updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
     linkData(data, updateData, "data.attributes.cmd.total", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
     linkData(data, updateData, "data.attributes.cmd.flatFootedTotal", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);

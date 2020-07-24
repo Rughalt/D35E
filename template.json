@@ -170,6 +170,7 @@
             "nonlethal": null
           },
           "turnUndeadHdTotal": 0,
+          "sneakAttackDiceTotal": 0,
           "wounds": {
             "min": 0,
             "value": 0
@@ -982,6 +983,8 @@
       "classType": "base",
       "levels": 1,
       "turnUndeadLevelFormula": "0",
+      "sneakAttackGroup": "rogue",
+      "sneakAttackFormula": "0",
       "hd": 8,
       "hp": 8,
       "bab": "low",
