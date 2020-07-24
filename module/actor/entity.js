@@ -1360,6 +1360,24 @@ export class ActorPF extends Actor {
         }, 0));
       }
     }
+
+    {
+      const k = "data.attributes.turnUndeadHdTotal";
+      linkData(data, updateData, k, classes.reduce((cur, obj) => {
+        try {
+          const v = new Roll(obj.data.turnUndeadLevelFormula, {level: obj.data.levels}).roll().total;
+
+          if (v !== 0) {
+            sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+            sourceInfo[k].positive.push({name: getProperty(obj, "name"), value: v});
+          }
+
+          return cur + v;
+        } catch (e) {
+          return cur;
+        }
+      }, 0));
+    }
     linkData(data, updateData, "data.attributes.cmb.total", updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
     linkData(data, updateData, "data.attributes.cmd.total", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
     linkData(data, updateData, "data.attributes.cmd.flatFootedTotal", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);

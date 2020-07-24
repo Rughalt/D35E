@@ -860,5 +860,7 @@
   "D35E.PowerPoints": "Power Points/Spell Points",
   "D35E.PowerPointsCost": "Power Points/Spell Points Cost",
   "D35E.UncannyDodge": "Uncanny Dodge",
-  "D35E.Links": "Links"
+  "D35E.Links": "Links",
+  "D35E.TurnUndeadFormula": "Turn/Rebuke Undead Formula",
+  "D35E.TurnUndead": "Turn/Rebuke Undead Level"
 }

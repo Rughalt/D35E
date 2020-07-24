@@ -303,14 +303,14 @@
           </li>
 
           <li class="attribute cmb" data-attribute="cmb">
-            <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
+            <h4 class="attribute-name box-title rollable">{{localize "D35E.TurnUndead"}}</h4>
             <div class="attribute-value tooltip">
-              <span>{{data.attributes.cmb.total}}</span>
+              <span>{{data.attributes.turnUndeadHdTotal}}</span>
               <span class="tooltipcontent">
-                @attributes.cmb.total : {{data.attributes.cmb.total}}
-                {{#if sourceDetails.data.attributes.cmb.total.length}}
+                @attributes.turnUndeadHdTotal: {{data.attributes.turnUndeadHdTotal}}
+                {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
                   <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                  {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                  {{#each sourceDetails.data.attributes.turnUndeadHdTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
             </div>
