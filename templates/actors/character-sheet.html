@@ -353,10 +353,10 @@
             <div class="attribute-value tooltip">
               <span>{{data.attributes.sneakAttackDiceTotal}}d6</span>
               <span class="tooltipcontent">
-                @attributes.sneakAttackDiceTotal: {{data.attributes.sneakAttackDiceTotal}}d6
+                @attributes.sneakAttackDiceTotal: {{data.attributes.sneakAttackDiceTotal}}
                 {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}
                   <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                  {{#each sourceDetails.data.attributes.sneakAttackDiceTotal as |src|}}{{src.name}}: {{src.value}}d6<br/>{{/each}}
+                  {{#each sourceDetails.data.attributes.sneakAttackDiceTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
             </div>
