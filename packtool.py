@@ -21,9 +21,10 @@ if args.action == 'pack':
         data = json.load(read_file)
     with open('packs/'+args.file+'.db', 'w') as outfile:
         for item in data:
-            item['_id'] = generate_random_id()
-            outfile.write(json.dumps(item))
-            outfile.write('\n')
+            if '_skip_' not in item['name']:
+                item['_id'] = generate_random_id()
+                outfile.write(json.dumps(item))
+                outfile.write('\n')
 
 if args.action == 'unpack':
     data = []
