@@ -61,6 +61,69 @@ export class ItemPF extends Item {
   }
 
   /**
+   * @param {String} type - The item type (such as "attack" or "equipment")
+   * @param {Number} colorType - 0 for the primary color, 1 for the secondary color
+   * @returns {String} A color hex, in the format "#RRGGBB"
+   */
+  static getTypeColor(type, colorType) {
+    switch (colorType) {
+      case 0:
+        switch (type) {
+          case "feat":
+            return "#8900EA";
+          case "spell":
+            return "#5C37FF";
+          case "class":
+            return "#85B1D2";
+          case "race":
+            return "#00BD29";
+          case "attack":
+            return "#F21B1B";
+          case "weapon":
+          case "equipment":
+          case "consumable":
+          case "loot":
+            return "#E5E5E5";
+          case "buff":
+            return "#FDF767";
+          default: return "#FFFFFF";
+        }
+      case 1:
+        switch (type) {
+          case "feat":
+            return "#5F00A3";
+          case "spell":
+            return "#4026B2";
+          case "class":
+            return "#6A8DA8";
+          case "race":
+            return "#00841C";
+          case "attack":
+            return "#A91212";
+          case "weapon":
+          case "equipment":
+          case "consumable":
+          case "loot":
+            return "#B7B7B7";
+          case "buff":
+            return "#FDF203";
+          default:
+            return "#C1C1C1";
+        }
+    }
+
+    return "#FFFFFF";
+  }
+
+  get typeColor() {
+    return this.constructor.getTypeColor(this.type, 0);
+  }
+
+  get typeColor2() {
+    return this.constructor.getTypeColor(this.type, 1);
+  }
+
+  /**
    * Generic charge addition (or subtraction) function that either adds charges
    * or quantity, based on item data.
    * @param {number} value       - The amount of charges to add.

@@ -1,0 +1,58 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Item Sheet Header --}}
+    <header class="sheet-header flexrow">
+        <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+
+        <div class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
+            </h1>
+        </div>
+    </header>
+
+    {{!-- Item Sheet Navigation --}}
+    <nav class="sheet-navigation tabs" data-group="primary">
+        <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+        <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+        <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
+        <a class="item" data-tab="links">{{localize "D35E.Links"}}</a>
+    </nav>
+
+    {{!-- Item Sheet Body --}}
+    <section class="primary-body">
+
+        {{!-- Description Tab --}}
+        {{> "systems/D35E/templates/items/parts/item-description.html"}}
+
+        {{!-- Details Tab --}}
+        <div class="tab details" data-group="primary" data-tab="details">
+
+            {{!-- Racial Type --}}
+            <div class="form-group">
+                <label>{{localize "D35E.CreatureType"}}</label>
+                <select name="data.creatureType">
+                    {{#select data.creatureType}}
+                    {{#each config.creatureTypes as |name type|}}
+                    <option value="{{type}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+
+            <div class="form-group stacked">
+                <div class="data-selector">
+                    <a class="entry-selector" for="data.subTypes" data-fields="{{localize "D35E.RaceSubtypePlural"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
+                    <label for="data.subTypes">{{localize "D35E.RaceSubtypePlural"}}</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tab flexcol" data-group="primary" data-tab="changes">
+            {{> "systems/D35E/templates/items/parts/item-changes.html"}}
+
+            {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+        </div>
+    </section>
+</form>

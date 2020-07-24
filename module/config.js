@@ -478,6 +478,7 @@ D35E.featTypes = {
   "feat": "D35E.FeatTypeFeat",
   "classFeat": "D35E.FeatTypeClassFeat",
   "trait": "D35E.FeatTypeTraits",
+  "template": "D35E.FeatTypeTemplate",
   "racial": "D35E.FeatTypeRacial",
   "misc": "D35E.Misc",
 };

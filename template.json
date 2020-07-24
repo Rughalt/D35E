@@ -69,7 +69,6 @@
         },
         "resources": {},
         "attributes": {
-          "creatureType": "humanoid",
           "encumbrance": {
             "level": 0,
             "levels": {
@@ -836,8 +835,6 @@
           "min": 0,
           "max": 300
         },
-        "race": "",
-        "raceType": "",
         "height": "",
         "weight": "",
         "gender": "",
@@ -875,7 +872,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack"],
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race"],
     "templates": {
       "changes": {
         "changes": [],
@@ -972,6 +969,11 @@
         },
         "effectNotes": "",
         "attackNotes": ""
+      },
+      "links": {
+        "links": {
+          "children": []
+        }
       }
     },
     "class": {
@@ -1052,12 +1054,16 @@
       "associations": {
         "classes": []
       },
+      "crOffset": "",
       "recharge": {
         "value": null,
         "charged": false,
         "_deprecated": true
       },
-      "showInQuickbar": false
+      "showInQuickbar": false,
+      "links": {
+        "charges": []
+      }
     },
     "loot": {
       "templates": ["itemDescription", "physicalItem"],
@@ -1158,6 +1164,11 @@
       "proficient": true,
       "primaryAttack": true,
       "showInQuickbar": true
+    },
+    "race": {
+      "templates": ["itemDescription", "changes", "contextNotes", "links"],
+      "creatureType": "humanoid",
+      "subTypes": []
     }
   }
 }

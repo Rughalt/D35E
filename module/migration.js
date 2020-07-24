@@ -89,6 +89,7 @@ export const migrateCompendium = async function(pack) {
 /*  Entity Type Migration Helpers               */
 /* -------------------------------------------- */
 
+
 /**
  * Migrate a single Actor entity to incorporate latest data model changes
  * Return an Object of updateData to be applied
@@ -107,6 +108,7 @@ export const migrateActorData = async function(actor) {
   _migrateActorBaseStats(actor, updateData);
   _migrateActorCreatureType(actor, updateData);
   _migrateActorSpellbookDCFormula(actor, updateData);
+  _migrateActorRace(actor, updateData)
 
   if ( !actor.items ) return updateData;
 
@@ -257,6 +259,17 @@ const _migrateActorEncumbrance = function(ent, updateData) {
     }
   }
 };
+
+const _migrateActorRace = function(actor, updateData) {
+  // if (!(actor instanceof Actor)) return;
+  // if (actor.race == null) return;
+  //
+  // if (item.type === "race") {
+  //   actor.race.update(item);
+  //   return false;
+  // }
+}
+
 
 const _migrateActorDefenseNotes = function(ent, updateData) {
   const arr = ["attributes.acNotes", "attributes.cmdNotes", "attributes.srNotes"];

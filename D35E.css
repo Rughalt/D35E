@@ -204,6 +204,39 @@
 .D35E .form-group.stacked .data-selector .entry-selector {
   flex: 0 0 16px;
 }
+
+.D35E.sheet.actor .sheet-header .race-container {
+  border-top: 2px groove #eeede0;
+  flex: 1;
+  margin: 3px 0;
+  padding: 0 0 0 16px;
+}
+.D35E.sheet.actor .sheet-header .race-container .item-controls {
+  align-items: flex-start;
+}
+.D35E.sheet.actor .sheet-header .race-container .item-controls a {
+  flex: 0 0 16px;
+  font-size: 10px;
+  text-align: center;
+  color: #666;
+}
+.D35E.sheet.actor .sheet-header .race-container .race {
+  flex: 0 0 24px;
+  background-size: contain;
+  line-height: 24px;
+  text-align: center;
+  vertical-align: baseline;
+  margin-right: 4px;
+  height: 24px;
+}
+.D35E.sheet.actor .sheet-header .race-container .race.rollable:hover {
+  background-image: url("/icons/svg/d20-black.svg") !important;
+}
+
+
+
+
+
 .D35E .form-header {
   margin: 0 0 0.25em 0;
   padding: 0 2px;

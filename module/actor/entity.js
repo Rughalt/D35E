@@ -36,10 +36,16 @@ export class ActorPF extends Actor {
   /* -------------------------------------------- */
 
   get spellFailure() {
+    if (this.items == null) return 0;
     return this.items.filter(o => { return o.type === "equipment" && o.data.data.equipped === true; }).reduce((cur, o) => {
       if (typeof o.data.data.spellFailure === "number") return cur + o.data.data.spellFailure;
       return cur;
     }, 0);
+  }
+
+  get race() {
+    if (this.items == null) return null;
+    return this.items.filter(o => o.type === "race")[0];
   }
 
   static _translateSourceInfo(type, subtype, name) {
@@ -51,6 +57,9 @@ export class ActorPF extends Actor {
       if (subtype === "perm") result = "Permanent Buffs";
       if (subtype === "item") result = "Item Buffs";
       if (subtype === "misc") result = "Misc Buffs";
+    }
+    if (type === "race") {
+      result = "Race";
     }
     if (type === "equipment") result = "Equipment";
     if (type === "weapon") result = "Weapons";
@@ -1101,6 +1110,9 @@ export class ActorPF extends Actor {
       if (updateData["data.abilities.dex.mod"] < 0) {
         linkData(srcData1, updateData, "data.attributes.ac.flatFooted.total", updateData["data.attributes.ac.flatFooted.total"] + dexBonus);
       }
+      if (flags.uncannyDodge && !flags.loseDexToAC) {
+        linkData(srcData1, updateData, "data.attributes.ac.flatFooted.total", updateData["data.attributes.ac.flatFooted.total"] + dexBonus);
+      }
     }
     // Add current hit points
     if (updateData["data.attributes.hp.max"]) {
@@ -1531,24 +1543,28 @@ export class ActorPF extends Actor {
       data.attributes.sr.total = 0;
     }
 
-    // // Set spellbook info
-    // for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
-    //   // Set CL
-    //   let roll = new Roll(spellbook.cl.formula, data).roll();
-    //   spellbook.cl.total = roll.total || 0;
-    //   if (actorData.type === "npc") spellbook.cl.total += spellbook.cl.base;
-    //   if (spellbook.class === "_hd") {
-    //     spellbook.cl.total += data.attributes.hd.total;
-    //   }
-    //   else if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
-    //     spellbook.cl.total += data.classes[spellbook.class].level;
-    //   }
-    //   // Add spell slots
-    //   spellbook.spells = spellbook.spells || {};
-    //   for (let a = 0; a < 10; a++) {
-    //     spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null };
-    //   }
-    // }
+    // Set spellbook info
+    for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
+      // Set CL
+      try {
+        let roll = new Roll(spellbook.cl.formula, data).roll();
+        spellbook.cl.total = roll.total || 0;
+      } catch (e) {
+        spellbook.cl.total = 0;
+      }
+      if (actorData.type === "npc") spellbook.cl.total += spellbook.cl.base;
+      if (spellbook.class === "_hd") {
+        spellbook.cl.total += data.attributes.hd.total;
+      }
+      else if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
+        spellbook.cl.total += data.classes[spellbook.class].level;
+      }
+      // Add spell slots
+      spellbook.spells = spellbook.spells || {};
+      for (let a = 0; a < 10; a++) {
+        spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null };
+      }
+    }
   }
 
   _setSourceDetails(actorData, extraData, flags) {
@@ -1606,6 +1622,9 @@ export class ActorPF extends Actor {
         sourceDetails["data.attributes.cmd.flatFootedTotal"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
       }  
       sourceDetails["data.attributes.init.total"].push({ name: "Dexterity", value: actorData.data.abilities.dex.mod });
+    }
+    if (flags.uncannyDodge && !flags.loseDexToAC) {
+      sourceDetails["data.attributes.ac.flatFooted.total"].push({ name: "Dexterity (Uncanny Dodge)", value: actorData.data.abilities.dex.mod });
     }
     if (actorData.data.attributes.energyDrain != null && actorData.data.attributes.energyDrain !== 0) {
       sourceDetails["data.attributes.cmb.total"].push({ name: "Negative Levels", value: -actorData.data.attributes.energyDrain });

@@ -37,13 +37,24 @@
             <li>
               <input type="text" name="data.details.alignment" value="{{data.details.alignment}}" placeholder="{{localize "D35E.Alignment"}}" title="{{localize "D35E.Alignment"}}"/>
             </li>
-            <select name="data.attributes.creatureType">
-              {{#select data.attributes.creatureType}}
-              {{#each config.creatureTypes as |name type|}}
-              <option value="{{type}}">{{name}}</option>
-              {{/each}}
-              {{/select}}
-            </select>
+            <li>
+              <div class="race-container item flexrow" {{#if race}}data-item-id="{{race._id}}"{{/if}} title="{{localize "D35E.Race"}}">
+              <div class="race item-image rollable" style="background-image: url({{race.img}})" title="{{labels.race}}">
+                {{#unless race}}{{localize "D35E.Race"}}{{/unless}}
+              </div>
+
+              <div class="item-controls flexcol">
+                {{#if owner}}
+                {{#unless race}}
+                <a class="item-control add" title="{{localize "D35E.CreateItem"}}"><i class="fas fa-plus"></i></a>
+                {{/unless}}
+                {{#if race}}
+                <a class="item-control edit" title="{{localize "D35E.EditItem"}}"><i class="fas fa-edit"></i></a>
+                <a class="item-control delete" title="{{localize "D35E.DeleteItem"}}"><i class="fas fa-trash"></i></a>
+                {{/if}}
+                {{/if}}
+              </div>
+            </li>
           </ul>
         </div>
 

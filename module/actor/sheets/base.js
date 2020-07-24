@@ -68,6 +68,8 @@ export class ActorSheetPF extends ActorSheet {
       useBGSkills: this.entity.data.type === "character" && game.settings.get("D35E", "allowBackgroundSkills"),
       spellFailure: this.entity.spellFailure,
       isGM: game.user.isGM,
+      race: this.entity.race != null ? duplicate(this.entity.race.data) : null,
+
     };
 
     // The Actor and its Items
@@ -545,6 +547,15 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".item-detail.item-active input[type='checkbox']").off("change").change(this._setItemActive.bind(this));
 
     html.find(".item-detail.item-level input[type='text']").off("change").change(this._setBuffLevel.bind(this));
+
+    /*
+        Race
+     */
+
+    // Race controls
+    html.find(".race-container .item-control").click(this._onRaceControl.bind(this));
+
+
   }
 
   createTabs(html) {
@@ -1003,6 +1014,29 @@ export class ActorSheetPF extends ActorSheet {
     let savingThrow = event.currentTarget.parentElement.dataset.savingthrow;
     this.actor.rollSavingThrow(savingThrow, {event: event});
   }
+
+  async _onRaceControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+
+    // Add race
+    if (a.classList.contains("add")) {
+      const itemData = {
+        name: "New Race",
+        type: "race",
+      };
+      this.actor.createOwnedItem(itemData);
+    }
+    // Edit race
+    else if (a.classList.contains("edit")) {
+      this._onItemEdit(event);
+    }
+    // Delete race
+    else if (a.classList.contains("delete")) {
+      this._onItemDelete(event);
+    }
+  }
+
 
   /* -------------------------------------------- */
 

@@ -60,37 +60,11 @@
 {{!-- Misc --}}
 <ul class="attributes misc-defenses flexrow">
   <li class="attribute cmd tooltip" data-attribute="cmd">
-    <div class="tooltipcontent">
-      @attributes.cmd.total : {{data.attributes.cmd.total}}
 
-      {{#if sourceDetails.data.attributes.cmd.total.length}}
-      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-      {{#each sourceDetails.data.attributes.cmd.total as |src|}}
-      {{src.name}}: {{src.value}}<br/>
-      {{/each}}
-      {{/if}}
-    </div>
-    <h4 class="attribute-name box-title">{{localize "D35E.CMDAbbr"}}</h4>
-    <div class="attribute-value">
-      <span>{{data.attributes.cmd.total}}</span>
-    </div>
   </li>
 
   <li class="attribute cmd-flat-footed tooltip" data-attribute="cmd-flat-footed">
-    <div class="tooltipcontent">
-      @attributes.cmd.flatFootedTotal : {{data.attributes.cmd.flatFootedTotal}}
 
-      {{#if sourceDetails.data.attributes.cmd.flatFootedTotal.length}}
-      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-      {{#each sourceDetails.data.attributes.cmd.flatFootedTotal as |src|}}
-      {{src.name}}: {{src.value}}<br/>
-      {{/each}}
-      {{/if}}
-    </div>
-    <h4 class="attribute-name box-title">{{localize "D35E.CMDFFAbbr"}}</h4>
-    <div class="attribute-value">
-      <span>{{data.attributes.cmd.flatFootedTotal}}</span>
-    </div>
   </li>
 
   <li class="attribute sr tooltip" data-attribute="sr">
