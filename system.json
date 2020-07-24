@@ -31,6 +31,13 @@
       "entity": "Item"
     },
     {
+      "name": "spelllike",
+      "label": "Spell-Like Abilities",
+      "system": "D35E",
+      "path": "./packs/spell-like-abilities.db",
+      "entity": "Item"
+    },
+    {
       "name": "spells",
       "label": "Spells",
       "system": "D35E",
