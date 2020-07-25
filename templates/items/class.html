@@ -76,21 +76,7 @@
         <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number" />
       </div>
 
-      {{!-- HD --}}
-      <div class="form-group">
-        <label>{{localize "D35E.TurnUndeadFormula"}}</label>
-        <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}" data-dtype="String" />
-      </div>
 
-      <div class="form-group">
-        <label>{{localize "D35E.SneakAttackGroup"}}</label>
-        <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String" />
-      </div>
-
-      <div class="form-group">
-        <label>{{localize "D35E.sneakAttackFormula"}}</label>
-        <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}" data-dtype="String" />
-      </div>
 
       {{!-- Hit Points --}}
       {{#unless healthConfig.auto}}
@@ -135,6 +121,23 @@
         </select>
       </div>
       {{/each}}
+
+
+      <h4 class="form-header">{{localize "D35E.AdditionalClassFeatures"}}</h4>
+      <div class="form-group">
+        <label>{{localize "D35E.TurnUndeadFormula"}}</label>
+        <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}" data-dtype="String" />
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "D35E.SneakAttackGroup"}}</label>
+        <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String" />
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "D35E.SneakAttackFormula"}}</label>
+        <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}" data-dtype="String" />
+      </div>
 
       {{#if isBaseClass}}
       <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
