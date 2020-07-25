@@ -1624,7 +1624,7 @@ export class ItemPF extends Item {
     const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
       isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
       spellLevel = getProperty(this.data, "data.level");
-    return usePowerPoints ? (getProperty(spellbook, `powerPoints`) - getProperty(this.data, "data.powerPointsCost")  > 0 || 0) : isSpontaneous
+    return usePowerPoints ? (getProperty(spellbook, `powerPoints`) - getProperty(this.data, "data.powerPointsCost")  >= 0 || 0) : isSpontaneous
       ? (getProperty(spellbook, `spells.spell${spellLevel}.value`) || 0)
       : (getProperty(this.data, "data.preparation.preparedAmount") || 0);
   }
