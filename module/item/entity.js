@@ -570,12 +570,21 @@ export class ItemPF extends Item {
         );
       }
 
+
+      rollData.powerAbl = 0;
+      if (data.school == "bol") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.str.mod`)
+      if (data.school == "kin") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.con.mod`)
+      if (data.school == "por") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.dex.mod`)
+      if (data.school == "met") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.int.mod`)
+      if (data.school == "cla") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.wis.mod`)
+      if (data.school == "tel") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.cha.mod`)
+
       // Add save DC
       if (data.hasOwnProperty("actionType") && getProperty(data, "save.description")) {
         let saveDC = new Roll(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
         let saveType = data.save.description;
         if (this.type === "spell") {
-          saveDC += new Roll(spellbook.baseDCFormula || "", rollData).roll().total;
+            saveDC += new Roll(spellbook.baseDCFormula || "", rollData).roll().total;
         }
         if (saveDC > 0 && saveType) {
           props.push(`DC ${saveDC}`);
