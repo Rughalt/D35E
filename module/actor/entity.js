@@ -1382,6 +1382,30 @@ export class ActorPF extends Actor {
       }, 0));
     }
 
+    {
+      const k = "data.attributes.powerPointsTotal";
+      linkData(data, updateData, k, classes.reduce((cur, obj) => {
+        try {
+          if (obj.data.powerPointTable[obj.data.levels] === undefined)
+            return cur
+          let ablMod = 0;
+          if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
+            ablMod = getProperty(data, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`);
+          const v = new Roll("ceil(0.5*@level*@ablMod)", {level: obj.data.levels, ablMod: ablMod}).roll().total + obj.data.powerPointTable[obj.data.levels];
+
+          if (v !== 0) {
+            sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+            sourceInfo[k].positive.push({name: getProperty(obj, "name"), value: v});
+          }
+
+          return cur + v;
+        } catch (e) {
+          console.log(obj,e)
+          return cur;
+        }
+      }, 0));
+    }
+
     // Total sneak attak dice
     {
       const k = "data.attributes.sneakAttackDiceTotal";

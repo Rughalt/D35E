@@ -380,6 +380,8 @@ export class ItemPF extends Item {
       }
     }
 
+
+
     // Set equipment subtype and slot
     if (data["data.equipmentType"] != null && data["data.equipmentType"] !== getProperty(this.data, "data.equipmentType")) {
       // Set subtype

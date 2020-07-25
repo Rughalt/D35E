@@ -877,5 +877,7 @@
   "D35E.PowerResistance": "Power Resistance",
   "D35E.PowerDisplay": "Power Display",
   "D35E.PowerDisplayExample": "Auditory",
-  "D35E.IsPower": "Psionic Power"
+  "D35E.IsPower": "Psionic Power",
+  "D35E.PowerPointsBaseAbility": "Power Points Bonus Ability",
+  "D35E.PowerPointsTable": "Power Points Table"
 }

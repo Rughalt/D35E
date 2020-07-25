@@ -180,7 +180,25 @@ export class ItemSheetPF extends ItemSheet {
       for (let [a, s] of Object.entries(data.data.fc)) {
         s.label = CONFIG.D35E.favouredClassBonuses[a];
       }
+      data.powerPointLevels = {}
+      if (data.data.powerPointTable !== undefined && data.data.powerPointTable !== null) {
+        Object.keys(data.data.powerPointTable).forEach(key => {
+          data.powerPointLevels[key] = {value: data.data.powerPointTable[key]}
+        })
+      } else {
+        data.data.powerPointTable = {}
+        for (let i = 1; i <= 20; i++) {
+          data.data.powerPointTable[i] = 0;
+          data.powerPointLevels[i] = {value: 0}
+        }
+      }
 
+      data.powerPointBonusBaseAbility = data.data.powerPointBonusBaseAbility
+      data.abilities = {}
+      for (let [a, s] of Object.entries(CONFIG.D35E.abilities)) {
+        data.abilities[a] = {}
+        data.abilities[a].label = s;
+      }
       data.isBaseClass = data.data.classType === "base";
       data.isRacialHD = data.data.classType === "racial";
 
@@ -196,6 +214,9 @@ export class ItemSheetPF extends ItemSheet {
           return cur;
         }, {});
       }
+
+
+
       else {
         data.skills = Object.entries(this.item.actor.data.data.skills).reduce((cur, o) => {
           const key = o[0];
