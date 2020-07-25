@@ -2,7 +2,7 @@
   <p>
     {{#if psionicPower}}
     <strong>Discipline</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
-    {{#else}}
+    {{else}}
     <strong>School</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
     {{/if}}
     {{#if learnedAt.class}}<strong>{{localize "D35E.Level"}}</strong>&nbsp;{{learnedAt.class}};{{/if}}
@@ -14,7 +14,7 @@
   <p>
     {{#if psionicPower}}
     {{#if label.castingTime}}<strong>Manifesting Time</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
-    {{#else}}
+    {{else}}
     {{#if label.castingTime}}<strong>Casting Time</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
     {{/if}}
     {{#if label.components}}<strong>Components</strong>&nbsp;{{label.components}}<br>{{/if}}
@@ -29,7 +29,7 @@
     {{#if label.powerPointsCost}}<strong>{{localize "D35E.PowerPointsCost"}}</strong>&nbsp;{{label.powerPointsCost}}<br>{{/if}}
     {{#if psionicPower}}
     {{#if useDCandSR}}<strong>Saving Throw</strong>&nbsp;{{label.savingThrow}};&nbsp;<strong>Power Resistance</strong>&nbsp;{{label.pr}}<br>{{/if}}
-    {{#else}}
+    {{else}}
     {{#if useDCandSR}}<strong>Saving Throw</strong>&nbsp;{{label.savingThrow}};&nbsp;<strong>Spell Resistance</strong>&nbsp;{{label.sr}}<br>{{/if}}
     {{/if}}
   </p>
