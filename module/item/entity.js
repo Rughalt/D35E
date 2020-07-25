@@ -589,6 +589,9 @@ export class ItemPF extends Item {
       if (data.sr) {
         props.push(game.i18n.localize("D35E.SpellResistance"));
       }
+      if (data.pr) {
+        props.push(game.i18n.localize("D35E.PowerResistance"));
+      }
     }
 
     // Filter properties and return
@@ -1453,6 +1456,9 @@ export class ItemPF extends Item {
       if (label.castingTime) label.castingTime = label.castingTime.toLowerCase();
     }
 
+
+    data.psionicPower = getProperty(srcData, "data.isPower");
+
     // Set components label
     let components = [];
     for (let [key, value] of Object.entries(getProperty(srcData, "data.components"))) {
@@ -1532,9 +1538,15 @@ export class ItemPF extends Item {
 
       const sr = getProperty(srcData, "data.sr");
       label.sr = (sr === true ? "yes" : "no");
+      const pr = getProperty(srcData, "data.pr");
+      label.pr = (sr === true ? "yes" : "no");
 
       if (getProperty(srcData, "data.range.units") !== "personal") data.useDCandSR = true;
     }
+
+    if (getProperty(srcData, "data.powerPointsCost") > 0)
+      label.powerPointsCost = getProperty(srcData, "data.powerPointsCost");
+    label.display = getProperty(srcData, "data.display");
 
     linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/D35E/templates/internal/spell-description.html", data));
   }

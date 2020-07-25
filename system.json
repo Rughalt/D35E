@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "D&D 3.5e",
   "description": "A conversion of Furyspark's Pathfinder1 system to make a functional 3.5e system for FoundryVTT",
-  "version": 0.68,
+  "version": 0.69,
   "author": "LoopeeDK, Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -42,6 +42,13 @@
       "label": "Spells",
       "system": "D35E",
       "path": "./packs/spells.db",
+      "entity": "Item"
+    },
+    {
+      "name": "powers",
+      "label": "Powers",
+      "system": "D35E",
+      "path": "./packs/powers.db",
       "entity": "Item"
     },
     {

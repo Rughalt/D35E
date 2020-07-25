@@ -771,6 +771,13 @@ D35E.spellSchools = {
   "nec": "D35E.SpellSchoolNecromancy",
   "trs": "D35E.SpellSchoolTransmutation",
   "uni": "D35E.SpellSchoolUniversal",
+
+  "cla": "D35E.PowerSchoolClairsentience",
+  "met": "D35E.PowerSchoolMetacreativity",
+  "kin": "D35E.PowerSchoolPsychokinesis",
+  "bol": "D35E.PowerSchoolPsychometabolism",
+  "por": "D35E.PowerSchoolPsychoportation",
+  "tel": "D35E.PowerSchoolTelepathy",
   "misc": "D35E.Misc",
 };
 

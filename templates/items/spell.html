@@ -115,11 +115,20 @@
         <input type="text" name="data.types" value="{{data.types}}" Placeholder="{{localize "D35E.SpellTypesExample"}}"/>
       </div>
 
+
+      <div class="form-group flexrow">
+        <label>{{localize "D35E.PowerDisplay"}}</label>
+        <input type="text" name="data.display" value="{{data.display}}" Placeholder="{{localize "D35E.PowerDisplayExample"}}"/>
+      </div>
+
       {{!-- Misc --}}
       <div class="spell-misc form-group stacked">
         <label>{{localize "D35E.Misc"}}</label>
         <label class="checkbox">
           <input type="checkbox" name="data.sr" {{checked data.sr}}/> {{localize "D35E.SpellResistance"}}
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" name="data.pr" {{checked data.pr}}/> {{localize "D35E.PowerResistance"}}
         </label>
 
         <label class="checkbox">
@@ -128,6 +137,10 @@
 
         <label class="checkbox">
           <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" name="data.isPower" {{checked data.isPower}}/> {{localize "D35E.IsPower"}}
         </label>
       </div>
 
