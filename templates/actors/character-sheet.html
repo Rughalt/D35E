@@ -335,6 +335,22 @@
               </span>
             </div>
           </li>
+
+          {{#if sourceDetails.data.attributes.powerPointsTotal}}
+          <li class="attribute sneakAttackDiceTotal" data-attribute="sneakAttackDiceTotal">
+            <h4 class="attribute-name box-title">{{localize "D35E.PsionicPowerPoints"}}</h4>
+            <div class="attribute-value tooltip">
+              <span>{{data.attributes.powerPointsTotal}}</span>
+              <span class="tooltipcontent">
+                @attributes.powerPointsTotal: {{data.attributes.powerPointsTotal}}
+                {{#if sourceDetails.data.attributes.powerPointsTotal.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each sourceDetails.data.attributes.powerPointsTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
+            </div>
+          </li>
+          {{/if}}
         </ul>
 
         <ul class="attributes misc-base2 flexrow">

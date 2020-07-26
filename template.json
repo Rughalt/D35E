@@ -1027,10 +1027,11 @@
       "templates": ["itemDescription", "changes"],
       "classType": "base",
       "levels": 1,
+      "prestigeLevels": 0,
       "turnUndeadLevelFormula": "0",
-      "sneakAttackGroup": "rogue",
+      "sneakAttackGroup": "none",
       "sneakAttackFormula": "0",
-      "spellPointGroup": "rogue",
+      "spellPointGroup": "wizard",
       "spellPointBonusFormula": "0",
       "spellPointTable": {
         "1":0,
