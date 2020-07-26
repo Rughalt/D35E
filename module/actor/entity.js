@@ -463,6 +463,8 @@ export class ActorPF extends Actor {
         return "data.attributes.sneakAttackDiceTotal";
       case "powerPoints":
         return "data.attributes.powerPointsTotal";
+      case "turnUndead":
+        return "data.attributes.turnUndeadUsesTotal";
       case "cmd":
         return ["data.attributes.cmd.total", "data.attributes.cmd.flatFootedTotal"];
       case "init":
@@ -1385,10 +1387,24 @@ export class ActorPF extends Actor {
     }
 
     {
+      const k = "data.attributes.turnUndeadUsesTotal";
+      let chaMod = getProperty(data, `data.abilities.cha.mod`)
+      if (getProperty(data, `data.attributes.turnUndeadHdTotal`) > 0) {
+        linkData(data, updateData, k, new Roll("3+@chaMod", {chaMod: chaMod}).roll().total);
+
+        sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+        sourceInfo[k].positive.push({name: "Base", value: 3});
+        sourceInfo[k].positive.push({name: "Charisma", value: chaMod});
+      }
+      else
+        linkData(data, updateData, k, 0);
+    }
+
+    {
       const k = "data.attributes.powerPointsTotal";
       linkData(data, updateData, k, classes.reduce((cur, obj) => {
         try {
-          if (obj.data.powerPointTable[obj.data.levels] === undefined)
+          if (obj.data.powerPointTable === undefined || obj.data.powerPointTable[obj.data.levels] === undefined)
             return cur
           let ablMod = 0;
           if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
@@ -2109,6 +2125,8 @@ export class ActorPF extends Actor {
     }
   }
 
+
+
   /* -------------------------------------------- */
 
   /**
@@ -2543,6 +2561,14 @@ export class ActorPF extends Actor {
     if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
     const rollData = duplicate(this.data.data);
     let turnUndeadHdTotal = this.data.data.attributes.turnUndeadHdTotal
+    let turnUndeadUses = this.data.data.attributes.turnUndeadUses
+    if (turnUndeadHdTotal < 1) {
+      return ui.notifications.warn(game.i18n.localize("D35E.CannotTurnUndead").format(this.name));
+    }
+    if (turnUndeadUses < 1) {
+      return ui.notifications.warn(game.i18n.localize("D35E.CannotTurnUndead").format(this.name));
+    }
+
     let knowledgeMod = this.data.data.skills.kre.rank > 5 ? 2 : 0
     let chaMod = this.data.data.abilities.cha.mod
     let maxHdResult = new Roll("1d20 + @chaMod + @kMod", {kMod: knowledgeMod, chaMod: chaMod}).roll()
@@ -2555,31 +2581,31 @@ export class ActorPF extends Actor {
     data.maxHDResult = maxHdResult
     if (maxHdResult.total > 21) {
       data.maxHD = turnUndeadHdTotal + 4
-      data.diffHd = "+ 4"
+      data.diffHD = "+ 4"
     } else if (maxHdResult.total > 18) {
       data.maxHD = turnUndeadHdTotal + 3
-      data.diffHd = "+ 3"
+      data.diffHD = "+ 3"
     } else if (maxHdResult.total > 15) {
       data.maxHD = turnUndeadHdTotal + 2
-      data.diffHd = "+ 2"
+      data.diffHD = "+ 2"
     } else if (maxHdResult.total > 12) {
       data.maxHD = turnUndeadHdTotal + 1
-      data.diffHd = "+ 1"
+      data.diffHD = "+ 1"
     } else if (maxHdResult.total > 9) {
       data.maxHD = turnUndeadHdTotal
     } else if (maxHdResult.total > 6) {
       data.maxHD = turnUndeadHdTotal - 1
-      data.diffHd = "- 1"
+      data.diffHD = "- 1"
     } else if (maxHdResult.total > 3) {
       data.maxHD = turnUndeadHdTotal - 2
-      data.diffHd = "- 2"
+      data.diffHD = "- 2"
     } else if (maxHdResult.total > 0) {
       data.maxHD = turnUndeadHdTotal - 3
-      data.diffHd = "- 3"
+      data.diffHD = "- 3"
     } else
     {
       data.maxHD = turnUndeadHdTotal - 4
-      data.diffHd = "- 4"
+      data.diffHD = "- 4"
     }
 
 
@@ -2613,8 +2639,12 @@ export class ActorPF extends Actor {
 
     data.level = turnUndeadHdTotal
 
+    ;
 
     createCustomChatMessage("systems/D35E/templates/chat/turn-undead.html", data, chatData);
+    let updateData = {}
+    updateData[`data.attributes.turnUndeadUses`] = this.data.data.attributes.turnUndeadUses-1;
+    this.update(updateData)
   }
 
 

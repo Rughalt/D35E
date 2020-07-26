@@ -170,6 +170,9 @@
             "nonlethal": null
           },
           "turnUndeadHdTotal": 0,
+          "turnUndeadUsesBonusFormula": "",
+          "turnUndeadUses": 0,
+          "turnUndeadUsesTotal": 0,
           "sneakAttackDiceTotal": 0,
           "spellPointsTotal": [],
           "powerPointsTotal": 0,
@@ -783,6 +786,46 @@
             "value": 0,
             "ability": "dex",
             "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "kps": {
+            "value": 0,
+            "ability": "int",
+            "rt": false,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "aut": {
+            "value": 0,
+            "ability": "wis",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "psi": {
+            "value": 0,
+            "ability": "int",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false
+          },
+          "upd": {
+            "value": 0,
+            "ability": "cha",
+            "rt": true,
             "acp": false,
             "rank": 0,
             "notes": "",

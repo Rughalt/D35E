@@ -91,7 +91,7 @@ export class ItemSheetPF extends ItemSheet {
 
     data.isCharged = false;
     if (data.item.data.uses != null) {
-      data.isCharged = ["day", "week", "charges"].includes(data.item.data.uses.per);
+      data.isCharged = ["day", "week", "charges", "encounter"].includes(data.item.data.uses.per);
     }
     if (data.item.data.range != null) {
       data.canInputRange = ["ft", "mi", "spec"].includes(data.item.data.range.units);

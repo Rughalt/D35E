@@ -92,6 +92,8 @@ export class ActorRestDialog extends BaseEntitySheet {
           
         }
       }
+
+      updateData[`data.attributes.turnUndeadUses`] = getProperty(actorData, `attributes.turnUndeadUsesTotal`)
     }
 
     actor.update(updateData);

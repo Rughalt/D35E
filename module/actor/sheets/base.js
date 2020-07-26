@@ -1075,7 +1075,7 @@ export class ActorSheetPF extends ActorSheet {
       item.img = item.img || DEFAULT_TOKEN;
       item.isStack = item.data.quantity ? item.data.quantity > 1 : false;
       item.hasUses = item.data.uses && (item.data.uses.max > 0);
-      item.isCharged = ["day", "week", "charges"].includes(getProperty(item, "data.uses.per"));
+      item.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(item, "data.uses.per"));
 
       const itemQuantity = getProperty(item, "data.quantity") != null ? getProperty(item, "data.quantity") : 1;
       const itemCharges = getProperty(item, "data.uses.value") != null ? getProperty(item, "data.uses.value") : 1;

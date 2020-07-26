@@ -1411,10 +1411,21 @@ export class ItemPF extends Item {
     return game.actors.get(actorId) || null;
   }
 
+
+  resetPerEncounterUses() {
+    if (this.data.data.uses != null && this.data.data.activation != null && this.data.data.activation.type !== "") {
+      let itemData = this.data.data
+      let updateData = {}
+      if (itemData.uses && itemData.uses.per === "encounter" && itemData.uses.value !== itemData.uses.max) {
+        updateData["data.uses.value"] = itemData.uses.max;
+        this.update(updateData);
+      }
+    }
+  }
+
   /**
    * Updates the spell's description.
    */
-
   async _updateSpellDescription(updateData, srcData) {
     const reSplit = CONFIG.D35E.re.traitSeparator;
 

@@ -886,5 +886,8 @@
   "D35E.SkillUPD": "Use Psionic Device",
   "D35E.SkillAut": "Autohypnosis",
   "D35E.SkillPsi": "Psicraft",
-  "D35E.CasterLevelTotal": "Total Caster Level"
+  "D35E.CasterLevelTotal": "Total Caster Level",
+  "D35E.CannotTurnUndead":  "No ability to turn undead",
+  "D35E.TurnUndeadUses": "Turn Undead Uses",
+  "D35E.LimitedUseEncounter": "Per Encounter"
 }
