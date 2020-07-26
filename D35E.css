@@ -112,6 +112,15 @@
 .D35E button:active {
   background: rgba(0, 0, 0, 0.3);
 }
+
+.D35E a.btn {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px groove #eeede0;
+}
+.D35E a.btn:active {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 .D35E label.checkbox {
   flex: auto;
   margin: 0;

@@ -687,14 +687,17 @@ export class ActorSheetPF extends ActorSheet {
 
     let props = [];
     if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
-    let formulaRoll = new Roll(spellbook.concentrationFormula, rollData).roll();
+    let formulaRoll = {}
+    try {
+      formulaRoll = new Roll(spellbook.concentrationFormula, rollData).roll();
+    } catch (e) {
+      formulaRoll = {total: 0}
+    }
     return DicePF.d20Roll({
       event: event,
-      parts: ["@cl + @mod + @concentrationBonus + @formulaBonus"],
+      parts: ["@concentrationBonus + @formulaBonus"],
       data: {
-        cl: spellbook.cl.total,
-        mod: this.actor.data.data.abilities[spellbook.ability].mod,
-        concentrationBonus: spellbook.concentration,
+        concentrationBonus: this.actor.data.data.skills["coc"].mod, // This is standard concentration skill
         formulaBonus: formulaRoll.total
       },
       title: game.i18n.localize("D35E.ConcentrationCheck"),
@@ -1102,7 +1105,8 @@ export class ActorSheetPF extends ActorSheet {
       spellbookData[a] = {
         data: this._prepareSpellbook(data, spellbookSpells, a),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
-        orig: spellbook
+        orig: spellbook,
+        concentration: this.actor.data.data.skills["coc"].mod
       };
     }
 
