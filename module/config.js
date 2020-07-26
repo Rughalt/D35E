@@ -660,6 +660,7 @@ D35E.skills = {
   "kno": "D35E.SkillKNo",
   "kpl": "D35E.SkillKPl",
   "kre": "D35E.SkillKRe",
+  "kps": "D35E.SkillKPs",
   "lis": "D35E.SkillLis",
   "mos": "D35E.SkillMos",
   "opl": "D35E.SkillOpl",
@@ -675,7 +676,10 @@ D35E.skills = {
   "swm": "D35E.SkillSwm",
   "tmb": "D35E.SkillTmb",
   "umd": "D35E.SkillUMD",
-  "uro": "D35E.SkillUro"
+  "uro": "D35E.SkillUro",
+  "aut": "D35E.SkillAut",
+  "psi": "D35E.SkillPsi",
+  "upd": "D35E.SkillUPD"
 };
 
 D35E.arbitrarySkills = [
@@ -919,6 +923,10 @@ D35E.buffTargets = {
     "swimSpeed": "D35E.SpeedSwim",
     "burrowSpeed": "D35E.SpeedBurrow",
     "flySpeed": "D35E.SpeedFly",
+  },
+  "psionic": {
+    "_label": "D35E.Psionics",
+    "powerPoints": "D35E.PowerPointsBonus",
   },
   "misc": {
     "_label": "D35E.MiscShort",

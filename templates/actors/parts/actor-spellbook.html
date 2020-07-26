@@ -1,19 +1,41 @@
 <div class="inventory-filters spellbook-filters">
-  <div class="flexrow spellcasting-misc">
-    <div class="spellcasting-concentration flexrow">
-      <div class="rollable image-d20"></div>
-      <label><h3>{{localize "D35E.Concentration"}}</h3></label>
-      <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.concentrationFormula"
-      value="{{spellbook.orig.concentrationFormula}}" placeholder="{{localize "D35E.ConcentrationBonusFormula"}}" />
-    </div>
-    
-    <div class="spellcasting-cl flexrow">
-      <div class="rollable image-d20"></div>
-      <label><h3>{{localize "D35E.CasterLevel"}}</h3></label>
-      <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.cl.formula"
-      value="{{spellbook.orig.cl.formula}}" placeholder="{{localize "D35E.CasterLevelBonusFormula"}}" />
-    </div>
-  </div>
+
+  <ul class="attributes misc-defenses flexrow">
+    <li class="attribute high cl tooltip" data-attribute="cl">
+      <h4 class="attribute-name box-title">{{localize "D35E.CasterLevelTotal"}}</h4>
+      <div class="attribute-value">
+        <span>{{spellbook.orig.cl.total}}</span>
+      </div>
+      <footer class="attribute-footer">
+        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.cl.formula"
+               value="{{spellbook.orig.cl.formula}}" placeholder="{{localize "D35E.CasterLevelBonusFormula"}}" />
+      </footer>
+    </li>
+
+    <li class="attribute high concentration tooltip spellcasting-concentration" data-attribute="concentration">
+      <h4 class="attribute-name box-title rollable">{{localize "D35E.Concentration"}}</h4>
+      <div class="attribute-value">
+        <span>{{concentration}}</span>
+      </div>
+      <footer class="attribute-footer">
+        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.concentrationFormula"
+               value="{{spellbook.orig.concentrationFormula}}" placeholder="{{localize "D35E.ConcentrationBonusFormula"}}" />
+      </footer>
+    </li>
+
+    <li class="attribute high powerPoints tooltip" data-attribute="powerPoints">
+      <h4 class="attribute-name box-title">{{localize "D35E.PowerPoints"}}</h4>
+      <div class="attribute-value">
+
+        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.powerPoints"
+               value="{{spellbook.orig.powerPoints}}" placeholder="{{localize "D35E.PowerPoints"}}" data-dtype="Number" />
+      </div>
+      <footer class="attribute-footer">
+        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.dailyPowerPointsFormula"
+               value="{{spellbook.orig.dailyPowerPointsFormula}}" placeholder="{{localize "D35E.DailyPowerPointsFormula"}}" />
+      </footer>
+    </li>
+  </ul>
   
   <div class="flexrow spellcasting-notes">
     <textarea name="data.attributes.spells.spellbooks.{{spellbookIndex}}.concentrationNotes" placeholder="{{localize "D35E.ConcentrationNotes"}}">{{spellbook.orig.concentrationNotes}}</textarea>
@@ -60,17 +82,6 @@
       </div>
 
 
-      <div class="flexrow powerpoints">
-        <label><h3>{{localize "D35E.PowerPoints"}}</h3></label>
-        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.powerPoints"
-               value="{{spellbook.orig.powerPoints}}" placeholder="{{localize "D35E.PowerPoints"}}" data-dtype="Number" />
-      </div>
-
-      <div class="flexrow powerpoints">
-        <label><h3>{{localize "D35E.DailyPowerPointsFormula"}}</h3></label>
-        <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.dailyPowerPointsFormula"
-               value="{{spellbook.orig.dailyPowerPointsFormula}}" placeholder="{{localize "D35E.DailyPowerPointsFormula"}}" />
-      </div>
     </div>
     
     <div class="flexcol">

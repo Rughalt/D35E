@@ -461,6 +461,8 @@ export class ActorPF extends Actor {
         return "data.attributes.cmb.total";
       case "sneakAttack":
         return "data.attributes.sneakAttackDiceTotal";
+      case "powerPoints":
+        return "data.attributes.powerPointsTotal";
       case "cmd":
         return ["data.attributes.cmd.total", "data.attributes.cmd.flatFootedTotal"];
       case "init":
@@ -2534,6 +2536,87 @@ export class ActorPF extends Actor {
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
   }
+
+
+
+  async rollTurnUndead() {
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+    const rollData = duplicate(this.data.data);
+    let turnUndeadHdTotal = this.data.data.attributes.turnUndeadHdTotal
+    let knowledgeMod = this.data.data.skills.kre.rank > 5 ? 2 : 0
+    let chaMod = this.data.data.abilities.cha.mod
+    let maxHdResult = new Roll("1d20 + @chaMod + @kMod", {kMod: knowledgeMod, chaMod: chaMod}).roll()
+
+    let data = {}
+    data.actor = this
+    data.name = this.name
+    data.kMod = knowledgeMod
+    data.chaMod = chaMod
+    data.maxHDResult = maxHdResult
+    if (maxHdResult.total > 21) {
+      data.maxHD = turnUndeadHdTotal + 4
+      data.diffHd = "+ 4"
+    } else if (maxHdResult.total > 18) {
+      data.maxHD = turnUndeadHdTotal + 3
+      data.diffHd = "+ 3"
+    } else if (maxHdResult.total > 15) {
+      data.maxHD = turnUndeadHdTotal + 2
+      data.diffHd = "+ 2"
+    } else if (maxHdResult.total > 12) {
+      data.maxHD = turnUndeadHdTotal + 1
+      data.diffHd = "+ 1"
+    } else if (maxHdResult.total > 9) {
+      data.maxHD = turnUndeadHdTotal
+    } else if (maxHdResult.total > 6) {
+      data.maxHD = turnUndeadHdTotal - 1
+      data.diffHd = "- 1"
+    } else if (maxHdResult.total > 3) {
+      data.maxHD = turnUndeadHdTotal - 2
+      data.diffHd = "- 2"
+    } else if (maxHdResult.total > 0) {
+      data.maxHD = turnUndeadHdTotal - 3
+      data.diffHd = "- 3"
+    } else
+    {
+      data.maxHD = turnUndeadHdTotal - 4
+      data.diffHd = "- 4"
+    }
+
+
+    {
+      let tooltip = $(await maxHdResult.getTooltip()).prepend(`<div class="dice-formula">${maxHdResult.formula}</div>`)[0].outerHTML;
+      // Alter tooltip
+      let tooltipHtml = $(tooltip);
+      let totalText = maxHdResult.total.toString();
+      tooltipHtml.find(".part-total").text(totalText);
+      data.maxHDResult.tooltip = tooltipHtml[0].outerHTML;
+
+    }
+
+    let damageHD = new Roll("2d6 + @chaMod + @level", {level: turnUndeadHdTotal, chaMod: chaMod}).roll()
+    data.damageHD = damageHD
+    {
+      let tooltip = $(await damageHD.getTooltip()).prepend(`<div class="dice-formula">${damageHD.formula}</div>`)[0].outerHTML;
+      // Alter tooltip
+      let tooltipHtml = $(tooltip);
+      let totalText = damageHD.total.toString();
+      tooltipHtml.find(".part-total").text(totalText);
+      data.damageHD.tooltip = tooltipHtml[0].outerHTML;
+    }
+
+    let chatData = {
+      speaker: ChatMessage.getSpeaker({actor: this.actor}),
+      sound: CONFIG.sounds.dice,
+      "flags.D35E.noRollRender": true,
+    };
+
+
+    data.level = turnUndeadHdTotal
+
+
+    createCustomChatMessage("systems/D35E/templates/chat/turn-undead.html", data, chatData);
+  }
+
 
   /**
    * Show defenses in chat

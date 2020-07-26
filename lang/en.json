@@ -878,6 +878,13 @@
   "D35E.PowerDisplay": "Power Display",
   "D35E.PowerDisplayExample": "Auditory",
   "D35E.IsPower": "Psionic Power",
+  "D35E.Psionics": "Psionics",
   "D35E.PowerPointsBaseAbility": "Power Points Bonus Ability",
-  "D35E.PowerPointsTable": "Power Points Table"
+  "D35E.PowerPointsBonus": "Bonus Power Points",
+  "D35E.PowerPointsTable": "Power Points Table",
+  "D35E.SkillKPs": "Knowledge (psionics)",
+  "D35E.SkillUPD": "Use Psionic Device",
+  "D35E.SkillAut": "Autohypnosis",
+  "D35E.SkillPsi": "Psicraft",
+  "D35E.CasterLevelTotal": "Total Caster Level"
 }

@@ -732,6 +732,9 @@
   font-size: 20px;
   text-align: center;
 }
+.D35E.sheet.actor ul.attributes li.attribute.high {
+  height: 80px;
+}
 .D35E.sheet.actor ul.attributes li.attribute .attribute-name {
   flex: 0 0 18px;
 }

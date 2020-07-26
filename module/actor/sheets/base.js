@@ -494,6 +494,9 @@ export class ActorSheetPF extends ActorSheet {
     // Roll defenses
     html.find(".defense-rolls .generic-defenses .rollable").click(ev => { this.actor.rollDefenses(); });
 
+
+    html.find(".turnUndeadHdTotal .rollable").click(ev => { this.actor.rollTurnUndead(); });
+
     // Rest
     html.find(".rest").click(this._onRest.bind(this));
 

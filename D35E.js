@@ -52,6 +52,7 @@ Hooks.once("init", async function() {
     migrations,
     rollItemMacro,
     rollDefenses,
+    rollTurnUndead,
     CompendiumDirectoryPF,
     rollPreProcess: {
       sizeRoll: sizeDie
@@ -288,4 +289,19 @@ function rollDefenses({actorName=null, actorId=null}={}) {
   if (!actor) return ui.notifications.warn("No applicable actor found");
 
   return actor.rollDefenses();
+};
+
+function rollTurnUndead({actorName=null, actorId=null}={}) {
+  const speaker = ChatMessage.getSpeaker();
+  let actor = game.actors.entities.filter(o => {
+    if (!actorName && !actorId) return false;
+    if (actorName && o.name !== actorName) return false;
+    if (actorId && o._id !== actorId) return false;
+    return true;
+  })[0];
+  if (speaker.token && !actor) actor = game.actors.tokens[speaker.token];
+  if (!actor) actor = game.actors.get(speaker.actor);
+  if (!actor) return ui.notifications.warn("No applicable actor found");
+
+  return actor.rollTurnUndead();
 };

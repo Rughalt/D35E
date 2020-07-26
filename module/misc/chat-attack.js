@@ -99,7 +99,7 @@ export class ChatAttack {
     for (let roll of rolls) {
       let tooltip = $(await roll.roll.getTooltip()).prepend(`<div class="dice-formula">${roll.roll.formula}</div>`)[0].outerHTML;
       // Alter tooltip
-      let tooltipHtml = $(tooltip);4
+      let tooltipHtml = $(tooltip);
       totalDamage += roll.roll.total;
       let totalText = roll.roll.total.toString();
       if (roll.damageType.length) totalText += ` (${roll.damageType})`;

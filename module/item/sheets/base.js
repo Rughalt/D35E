@@ -202,6 +202,12 @@ export class ItemSheetPF extends ItemSheet {
       data.isBaseClass = data.data.classType === "base";
       data.isRacialHD = data.data.classType === "racial";
 
+      data.children = []
+      {
+        let spellLikes = game.packs.get("D35E.spelllike");
+        spellLikes.getIndex().then(index => index.forEach(entry => {spellLikes.getEntity(entry._id).then(spell => data.children.push(spell))}));
+      }
+
       if (this.actor != null) {
         let healthConfig  = game.settings.get("D35E", "healthConfig");
         data.healthConfig =  data.isRacialHD ? healthConfig.hitdice.Racial : this.actor.data.type === "character" ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;

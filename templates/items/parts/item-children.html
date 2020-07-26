@@ -1,0 +1,28 @@
+<div class="links-body">
+    {{!-- Children Tab --}}
+    <div class="tab flexcol" data-group="children">
+        <table>
+            <tr>
+                <th>{{localize "D35E.ClassFeaturePlural"}}</th>
+                <th class="links-controls"></th>
+            </tr>
+            {{#each data.children as |item|}}
+            <tr class="links-item" data-link={{item.id}}>
+                {{!-- Link name and image --}}
+                <td class="links-item-name">
+                    <div>
+                        <img src="{{item.img}}" width="24" height="24">
+                        <span>{{item.name}}</span>
+                    </div>
+                </td>
+
+                {{!-- Link Controls --}}
+                <td class="links-controls">
+                    <div>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>

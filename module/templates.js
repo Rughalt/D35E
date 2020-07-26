@@ -27,6 +27,7 @@ export const preloadHandlebarsTemplates = async function() {
     "systems/D35E/templates/items/parts/item-changes.html",
     "systems/D35E/templates/items/parts/item-notes.html",
     "systems/D35E/templates/items/parts/item-template.html",
+    "systems/D35E/templates/items/parts/item-children.html",
 
     // Misc
     "systems/D35E/templates/misc/token-config.html",
@@ -37,6 +38,7 @@ export const preloadHandlebarsTemplates = async function() {
     // Chat
     "systems/D35E/templates/chat/roll-ext.html",
     "systems/D35E/templates/chat/defenses.html",
+    "systems/D35E/templates/chat/turn-undead.html",
 
     // Internal Rendering Partials
     "systems/D35E/templates/internal/spell-description.html",
