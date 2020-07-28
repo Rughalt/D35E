@@ -893,5 +893,6 @@
   "D35E.LimitedUseEncounter": "Per Encounter",
   "D35E.Abilities": "Abilities",
   "D35E.Total": "Total",
-  "D35E.Summary": "Summary"
+  "D35E.Summary": "Summary",
+  "D35E.ECL": "ECL"
 }

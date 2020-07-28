@@ -15,9 +15,9 @@
           <h4 class="ability-name rollable">{{ability.label}}</h4>
           <input class="ability-base-simple" name="data.abilities.{{id}}.tempvalue" type="text" value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
           <div class="flexrow">
-          <span class="ability-score tooltip">
-            <h4 class="ability-value-text">{{numberFormat ability.total decimals=0 sign=false}}</h4>
-            <span class="tooltipcontent">
+            <span class="ability-score tooltip">
+              <h4 class="ability-value-text">{{numberFormat ability.total decimals=0 sign=false}}</h4>
+              <span class="tooltipcontent">
               @abilities.{{id}}.total : {{ability.total}}<br/>
               @abilities.{{id}}.value : {{ability.value}}<br/>
               @abilities.{{id}}.mod : {{ability.mod}}<br/>
@@ -25,68 +25,92 @@
               @abilities.{{id}}.drain : {{ability.drain}}<br/>
               @abilities.{{id}}.penalty : {{ability.penalty}}
 
-              {{#if ability.sourceDetails.length}}
-                <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                {{#each ability.sourceDetails as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-              {{/if}}
+                {{#if ability.sourceDetails.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each ability.sourceDetails as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
             </span>
-          </span>
             <h4 class="ability-mod-text">{{numberFormat ability.mod decimals=0 sign=true}}</h4>
-            </div>
+          </div>
 
         </div>
       {{/each}}
     </div>
-    <div class="details-attack-simple  inventory-group flexcol" data-group="attacks" data-tab="all">
+
+    <div class="flexcol details-skills-list" data-group="skillsets" data-tab="known">
 
       <h4 class="box-name">
-        {{ localize "D35E.Attacks" }}
+        {{ localize "D35E.Skills" }}
       </h4>
-      <ol class="inventory-list sub-scroll scroll-attacks">
-        <li class="inventory-header flexrow">
-          <h3 class="item-name flexrow"></h3>
-          <div class="item-detail item-actions">
-            <span>{{localize "D35E.ActionPlural"}}</span></div>
 
-          <div class="item-detail item-uses">
-            <span>{{localize "D35E.ChargePlural"}}</span></div>
-        </li>
+      <div class="skill-header flexrow">
+        <h3 class="skill-name flexrow" ></h3>
+        <div class="item-detail item-type">
+          <span>{{localize "D35E.Rank"}}</span></div>
 
-        <ol class="item-list">
-          {{#each attacks.all.items as |item iid|}}
-            <li class="item flexrow" data-item-id="{{item._id}}">
-              <div class="item-name flexrow rollable">
-                <div class="item-image" style="background-image: url({{item.img}})"></div>
-                <h4>
-                  {{item.name~}}
-                </h4>
-              </div>
-
-              <div class="item-detail item-actions">
-                <div class="item-attack">
-                  {{#if item.hasAction}}
-                    <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
-                  {{/if}}
-                </div>
-              </div>
-
-              <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
-                {{#if item.isCharged}}
-                  <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
-                  <span class="sep"> of </span>
-                  <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
+        <div class="item-detail item-actions">
+          <span>{{localize "D35E.Total"}}</span></div>
+      </div>
+      <ul class="noborder skills-list sub-scroll scroll-skillset" data-background="{{isBackgroundSkills}}">
+        {{#each skillsets.known.skills as |skill s|}}
+          {{#if skill.arbitrary}}
+            {{#each skill.subSkills as |subSkill b|}}
+              <li class="sub-skill flexrow" data-skill="{{b}}" data-main-skill="{{s}}">
+                <div class="skill-name tooltip">
                   <span class="tooltipcontent">
-              @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
-              @resources.{{item.tag}}.max : {{item.data.uses.max}}
+        @skills.{{s}}.subSkills.{{b}}.mod : {{subSkill.mod}}<br>
+        @skills.{{s}}.subSkills.{{b}}.rank : {{subSkill.rank}}<br>
+
+                    {{#if subSkill.sourceDetails.length}}
+                      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                      {{#each subSkill.sourceDetails as |src|}}
+                        {{src.name}}: {{src.value}}<br/>
+                      {{/each}}
+                    {{/if}}
                   </span>
+                  <div class="rollable image-d20"></div>
+                  <h4 style>{{subSkill.name}}
+                    {{#if skill.rt}}■{{/if}}
+                  </h4>
+                </div>
+                <h4>{{skill.rank}}</h4>
+                <h4>{{numberFormat skill.mod decimals=0}}</h4>
+              </li>
+            {{/each}}
+          {{else}}
+            <li class="skill flexrow" data-skill="{{s}}">
+              <div class="skill-name tooltip">
+                <span class="tooltipcontent">
+        @skills.{{s}}.mod : {{skill.mod}}<br>
+        @skills.{{s}}.rank : {{skill.rank}}<br>
+
+                  {{#if skill.sourceDetails.length}}
+                    <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                    {{#each skill.sourceDetails as |src|}}
+                      {{src.name}}: {{src.value}}<br/>
+                    {{/each}}
+                  {{/if}}
+                </span>
+                <div class="rollable image-d20"></div>
+                {{#if skill.custom}}
+                  <h4>{{skill.name}}
+                    {{#if skill.rt}}■{{/if}}
+                  </h4>
+                {{else}}
+                  <h4>{{skill.label}}
+                    {{#if skill.rt}}■{{/if}}
+                  </h4>
                 {{/if}}
               </div>
-            </li>
-          {{/each}}
-        </ol>
-    </ol>
-  </div>
 
+              <h4>{{skill.rank}}</h4>
+              <h4>{{numberFormat skill.mod decimals=0}}</h4>
+            </li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
 </div>
 <ul class="attributes nomargin">
   <li>
@@ -211,73 +235,56 @@
   </li>
   <li>
 
-    <div class="flexcol details-skills-list" data-group="skillsets" data-tab="known">
+
+    <div class="details-attack-simple  inventory-group flexcol" data-group="attacks" data-tab="all">
 
       <h4 class="box-name">
-        {{ localize "D35E.Skills" }}
+        {{ localize "D35E.Attacks" }}
       </h4>
+      <ol class="inventory-list sub-scroll scroll-attacks">
+        <li class="inventory-header flexrow">
+          <h3 class="item-name flexrow"></h3>
+          <div class="item-detail item-actions">
+            <span>{{localize "D35E.ActionPlural"}}</span></div>
 
-              <div class="skill-header flexrow">
-                <h3 class="skill-name flexrow" ></h3>
-                <div class="item-detail item-type">
-                  <span>{{localize "D35E.Rank"}}</span></div>
+          <div class="item-detail item-uses">
+            <span>{{localize "D35E.ChargePlural"}}</span></div>
+        </li>
 
-                <div class="item-detail item-actions">
-                  <span>{{localize "D35E.Total"}}</span></div>
+        <ol class="item-list">
+          {{#each attacks.all.items as |item iid|}}
+            <li class="item flexrow" data-item-id="{{item._id}}">
+              <div class="item-name flexrow rollable">
+                <div class="item-image" style="background-image: url({{item.img}})"></div>
+                <h4>
+                  {{item.name~}}
+                </h4>
               </div>
-      <ul class="noborder skills-list sub-scroll scroll-skillset" data-background="{{isBackgroundSkills}}">
-        {{#each skillsets.known.skills as |skill s|}}
-          {{#if skill.arbitrary}}
-            {{#each skill.subSkills as |subSkill b|}}
-              <li class="sub-skill flexrow" data-skill="{{b}}" data-main-skill="{{s}}">
-                <div class="skill-name tooltip">
-                  <span class="tooltipcontent">
-        @skills.{{s}}.subSkills.{{b}}.mod : {{subSkill.mod}}<br>
-        @skills.{{s}}.subSkills.{{b}}.rank : {{subSkill.rank}}<br>
 
-                    {{#if subSkill.sourceDetails.length}}
-                      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                      {{#each subSkill.sourceDetails as |src|}}
-                        {{src.name}}: {{src.value}}<br/>
-                      {{/each}}
-                    {{/if}}
-                  </span>
-                  <div class="rollable image-d20"></div>
-                  <h4 style>{{subSkill.name}} {{#if skill.rt}}■{{/if}}</h4>
-                </div>
-                  <h4>{{skill.rank}}</h4>
-              <h4>{{numberFormat skill.mod decimals=0}}</h4>
-              </li>
-            {{/each}}
-          {{else}}
-            <li class="skill flexrow" data-skill="{{s}}">
-              <div class="skill-name tooltip">
-                <span class="tooltipcontent">
-        @skills.{{s}}.mod : {{skill.mod}}<br>
-        @skills.{{s}}.rank : {{skill.rank}}<br>
-
-                  {{#if skill.sourceDetails.length}}
-                    <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                    {{#each skill.sourceDetails as |src|}}
-                      {{src.name}}: {{src.value}}<br/>
-                    {{/each}}
+              <div class="item-detail item-actions">
+                <div class="item-attack">
+                  {{#if item.hasAction}}
+                    <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
                   {{/if}}
-                </span>
-                <div class="rollable image-d20"></div>
-                {{#if skill.custom}}
-                  <h4>{{skill.name}} {{#if skill.rt}}■{{/if}}</h4>
-                {{else}}
-                  <h4>{{skill.label}} {{#if skill.rt}}■{{/if}}</h4>
+                </div>
+              </div>
+
+              <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                {{#if item.isCharged}}
+                  <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
+                  <span class="sep"> of </span>
+                  <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
+                  <span class="tooltipcontent">
+              @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
+              @resources.{{item.tag}}.max : {{item.data.uses.max}}
+                  </span>
                 {{/if}}
               </div>
-
-                  <h4>{{skill.rank}}</h4>
-              <h4>{{numberFormat skill.mod decimals=0}}</h4>
             </li>
-          {{/if}}
-        {{/each}}
-      </ul>
-    </div>
+          {{/each}}
+        </ol>
+    </ol>
+  </div>
   </li>
 
 </ul>

@@ -325,13 +325,19 @@
 
     border: 2px groove #eeede0;
     border-radius: 4px;
-    margin: 0 5px;
+    margin-top: 5px;
 
+    .skills-list {
+      margin: 0;
+      padding: 0;
+    }
     .skill-header {
       margin: 2px 0;
       padding: 0;
       background: rgba(0, 0, 0, 0.05);
       border: 2px groove #eeede0;
+      border-right: none;
+      border-left: none;
       font-weight: bold;
       line-height: 24px;
       flex: none;
@@ -344,7 +350,6 @@
     .box-name {
       text-align: center;
       flex: none;
-      border-bottom: 1px solid #b5b3a4;
       height: 24px;
       line-height: 24px;
       font-size: 18px;
@@ -356,12 +361,20 @@
   .details-attack-simple {
     border: 2px groove #eeede0;
     border-radius: 4px;
+    margin: 0 5px;
+    margin-top: 5px;
+    .inventory-list {
+      margin: 0;
+      padding: 0;
+      .inventory-header {
 
-
+        border-right: none;
+        border-left: none;
+      }
+    }
     .box-name {
       text-align: center;
       flex: none;
-      border-bottom: 1px solid #b5b3a4;
       height: 24px;
       line-height: 24px;
       font-size: 18px;

@@ -151,6 +151,14 @@ export class ActorSheetPF extends ActorSheet {
     // Prepare owned items
     this._prepareItems(data);
 
+    let classNamesAndLevels = []
+
+    console.log(data)
+
+    data.items.filter(i => i.type == "class").forEach(c => classNamesAndLevels.push(c.name + " " + c.data.levels))
+
+    data.classList = classNamesAndLevels.join(", ")
+
     // Compute encumbrance
     data.encumbrance = this._computeEncumbrance(data);
 
