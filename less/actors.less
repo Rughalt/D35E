@@ -56,11 +56,11 @@
     }
 
     img.profile {
-      flex: 0 0 200px;
-      max-width: 200px;
+      flex: 0 0 120px;
+      max-width: 120px;
       min-height: 120px;
-      max-height: 260px;
-      height: auto;
+      max-height: 120px;
+      height: 120px;
       object-fit: contain;
       border: none;
     }
@@ -188,11 +188,35 @@
     margin: 8px 0 0;
     padding: 0;
 
-    li.attribute.health {
-      height: 100%;
-      border-bottom: none;
+    &.nomargin {
+      margin: 0;
     }
 
+    a.rest {
+      border-radius: 4px;
+      height: 40px;
+      display: block;
+      margin: 0 5px 4px;
+      line-height: 40px;
+      text-align: center;
+      font-size: 18px;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+    }
+
+    li.attribute.health {
+      height: 80px;
+    }
+
+    li.attribute.ac-details {
+      height: 50px;
+    }
+    li.attribute.st-details {
+      height: 50px;
+    }
+
+    li.attribute.speed {
+      height: 80px;
+    }
 
 
     li.attribute {
@@ -207,7 +231,7 @@
         flex: 0 0 18px;
       }
 
-      .high {
+      &.high {
         height: 80px;
       }
 
@@ -291,12 +315,131 @@
     }
   }
 
+  
+
   /* ----------------------------------------- */
   /*  Ability Scores                           */
   /* ----------------------------------------- */
 
+  .details-skills-list {
+
+    border: 2px groove #eeede0;
+    border-radius: 4px;
+    margin: 0 5px;
+
+    .skill-header {
+      margin: 2px 0;
+      padding: 0;
+      background: rgba(0, 0, 0, 0.05);
+      border: 2px groove #eeede0;
+      font-weight: bold;
+      line-height: 24px;
+      flex: none;
+
+      .skill-name {
+        flex: 180px;
+      }
+    }
+
+    .box-name {
+      text-align: center;
+      flex: none;
+      border-bottom: 1px solid #b5b3a4;
+      height: 24px;
+      line-height: 24px;
+      font-size: 18px;
+      margin: 4px 8px 2px;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+    }
+  }
+
+  .details-attack-simple {
+    border: 2px groove #eeede0;
+    border-radius: 4px;
+
+
+    .box-name {
+      text-align: center;
+      flex: none;
+      border-bottom: 1px solid #b5b3a4;
+      height: 24px;
+      line-height: 24px;
+      font-size: 18px;
+      margin: 4px 8px 2px;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+    }
+  }
+
+  .ability-scores-simple {
+    border: 2px groove #eeede0;
+    border-radius: 4px;
+    flex: none;
+    .ability-simple-header {
+      flex: none;
+
+      span {
+        flex: 1;
+        font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      }
+    }
+
+    .ability-box-name {
+      text-align: center;
+      flex: none;
+      border-bottom: 1px solid #b5b3a4;
+      height: 24px;
+      line-height: 24px;
+      font-size: 18px;
+      margin: 4px 8px 2px;
+    }
+
+    .ability-simple {
+      height: 40px;
+      flex: none;
+    }
+    h4 {
+      line-height: 40px;
+      font-size: 22px;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+        &.box-title {
+          border-bottom: none;
+        }
+        &.box-ability {      
+          text-align: center;    
+          border: 2px groove #eeede0;
+          border-radius: 4px;
+          height: 34px;
+        }
+        &.ability-value-text {      
+          text-align: center;    
+          height: 34px;
+          font-size: 22px;
+          line-height: 40px;
+        }
+        &.ability-mod-text {      
+          text-align: center;    
+          height: 34px;
+          line-height: 40px;
+          font-size: 18px;
+          color: #7a7971;
+        }
+    }
+    .ability-base-simple {
+      text-align: center;
+      line-height: 30px;
+      font-size: 22px;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      border: 2px groove #eeede0;
+      border-radius: 4px;
+      height: 34px;
+      margin: 4px 0;
+
+    }
+
+  }
+  
   .ability-scores {
-    flex: 0 0 100%;
+    flex: none;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -397,6 +540,11 @@
     border: @borderGroove;
     border-radius: 3px;
 
+    &.noborder {
+
+      border: none
+    }
+
     li.skill, li.sub-skill {
       height: 28px;
       padding: 3px 0;
@@ -421,7 +569,12 @@
           height: 24px;
         }
 
-        h4, input[type="text"] {
+        h4 {
+          display: inline-block;
+          margin: 0 0 0.25rem;
+      
+        }
+        input[type="text"] {
           display: inline-block;
           margin: 0;
         }

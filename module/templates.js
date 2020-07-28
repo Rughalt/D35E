@@ -19,6 +19,8 @@ export const preloadHandlebarsTemplates = async function() {
     "systems/D35E/templates/actors/parts/actor-defenses.html",
     "systems/D35E/templates/actors/parts/actor-buffs.html",
     "systems/D35E/templates/actors/parts/actor-attacks.html",
+    "systems/D35E/templates/actors/parts/actor-details.html",
+    "systems/D35E/templates/actors/parts/actor-attributes.html",
 
     // Item Sheet Partials
     "systems/D35E/templates/items/parts/item-action.html",

@@ -1,0 +1,21 @@
+{
+  "name": "foundryvtt-dnd35",
+  "private": true,
+  "author": {
+    "name": "Antoni Sobkowicz"
+  },
+  "scripts": {
+    "build:release": "webpack"
+  },
+  "devDependencies": {
+    "color": "^3.1.2",
+    "fs-extra": "^9.0.0",
+    "gulp": "^4.0.2",
+    "gulp-less": "^4.0.1",
+    "gulp-stream": "0.0.2",
+    "terser-webpack-plugin": "^3.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
+

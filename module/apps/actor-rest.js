@@ -89,7 +89,11 @@ export class ActorRestDialog extends BaseEntitySheet {
           let rollData = {};
           if (actorData == null && this.actor != null) rollData = this.actor.getRollData();
           else rollData = actorData
+          try {
           updateData[`data.attributes.spells.spellbooks.${key}.powerPoints`] = new Roll(getProperty(actorData, `attributes.spells.spellbooks.${key}.dailyPowerPointsFormula`), rollData).roll().total;
+          } catch {
+            updateData[`data.attributes.spells.spellbooks.${key}.powerPoints`] = 0;
+          }
         }
       }
 

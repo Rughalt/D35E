@@ -112,15 +112,13 @@
 .D35E button:active {
   background: rgba(0, 0, 0, 0.3);
 }
-
 .D35E a.btn {
   background: rgba(0, 0, 0, 0.1);
   border: 2px groove #eeede0;
 }
-.D35E a.btn:active {
+.D35E a.button:active {
   background: rgba(0, 0, 0, 0.3);
 }
-
 .D35E label.checkbox {
   flex: auto;
   margin: 0;
@@ -213,39 +211,6 @@
 .D35E .form-group.stacked .data-selector .entry-selector {
   flex: 0 0 16px;
 }
-
-.D35E.sheet.actor .sheet-header .race-container {
-  border-top: 2px groove #eeede0;
-  flex: 1;
-  margin: 3px 0;
-  padding: 0 0 0 16px;
-}
-.D35E.sheet.actor .sheet-header .race-container .item-controls {
-  align-items: flex-start;
-}
-.D35E.sheet.actor .sheet-header .race-container .item-controls a {
-  flex: 0 0 16px;
-  font-size: 10px;
-  text-align: center;
-  color: #666;
-}
-.D35E.sheet.actor .sheet-header .race-container .race {
-  flex: 0 0 24px;
-  background-size: contain;
-  line-height: 24px;
-  text-align: center;
-  vertical-align: baseline;
-  margin-right: 4px;
-  height: 24px;
-}
-.D35E.sheet.actor .sheet-header .race-container .race.rollable:hover {
-  background-image: url("/icons/svg/d20-black.svg") !important;
-}
-
-
-
-
-
 .D35E .form-header {
   margin: 0 0 0.25em 0;
   padding: 0 2px;
@@ -504,6 +469,7 @@
   overflow-x: hidden;
   overflow-y: scroll;
   max-height: calc(100% - 48px);
+  margin-bottom: 8px;
 }
 .compendium-browser .header .filter-container .filter {
   margin-top: 8px;
@@ -628,11 +594,11 @@
   padding: 0;
 }
 .D35E.sheet.actor .sheet-header img.profile {
-  flex: 0 0 200px;
-  max-width: 200px;
+  flex: 0 0 120px;
+  max-width: 120px;
   min-height: 120px;
-  max-height: 260px;
-  height: auto;
+  max-height: 120px;
+  height: 120px;
   object-fit: contain;
   border: none;
 }
@@ -728,9 +694,30 @@
   margin: 8px 0 0;
   padding: 0;
 }
+.D35E.sheet.actor ul.attributes.nomargin {
+  margin: 0;
+}
+.D35E.sheet.actor ul.attributes a.rest {
+  border-radius: 4px;
+  height: 40px;
+  display: block;
+  margin: 0 5px 4px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
 .D35E.sheet.actor ul.attributes li.attribute.health {
-  height: 100%;
-  border-bottom: none;
+  height: 80px;
+}
+.D35E.sheet.actor ul.attributes li.attribute.ac-details {
+  height: 50px;
+}
+.D35E.sheet.actor ul.attributes li.attribute.st-details {
+  height: 50px;
+}
+.D35E.sheet.actor ul.attributes li.attribute.speed {
+  height: 80px;
 }
 .D35E.sheet.actor ul.attributes li.attribute {
   height: 70px;
@@ -741,11 +728,11 @@
   font-size: 20px;
   text-align: center;
 }
-.D35E.sheet.actor ul.attributes li.attribute.high {
-  height: 80px;
-}
 .D35E.sheet.actor ul.attributes li.attribute .attribute-name {
   flex: 0 0 18px;
+}
+.D35E.sheet.actor ul.attributes li.attribute.high {
+  height: 80px;
 }
 .D35E.sheet.actor ul.attributes li.attribute .attribute-value {
   height: 28px;
@@ -807,8 +794,111 @@
 .D35E.sheet.actor .defenses .defense-notes textarea {
   flex: 3;
 }
+.D35E.sheet.actor .details-skills-list {
+  border: 2px groove #eeede0;
+  border-radius: 4px;
+  margin: 0 5px;
+}
+.D35E.sheet.actor .details-skills-list .skill-header {
+  margin: 2px 0;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove #eeede0;
+  font-weight: bold;
+  line-height: 24px;
+  flex: none;
+}
+.D35E.sheet.actor .details-skills-list .skill-header .skill-name {
+  flex: 180px;
+}
+.D35E.sheet.actor .details-skills-list .box-name {
+  text-align: center;
+  flex: none;
+  border-bottom: 1px solid #b5b3a4;
+  height: 24px;
+  line-height: 24px;
+  font-size: 18px;
+  margin: 4px 8px 2px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
+.D35E.sheet.actor .details-attack-simple {
+  border: 2px groove #eeede0;
+  border-radius: 4px;
+}
+.D35E.sheet.actor .details-attack-simple .box-name {
+  text-align: center;
+  flex: none;
+  border-bottom: 1px solid #b5b3a4;
+  height: 24px;
+  line-height: 24px;
+  font-size: 18px;
+  margin: 4px 8px 2px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
+.D35E.sheet.actor .ability-scores-simple {
+  border: 2px groove #eeede0;
+  border-radius: 4px;
+  flex: none;
+}
+.D35E.sheet.actor .ability-scores-simple .ability-simple-header {
+  flex: none;
+}
+.D35E.sheet.actor .ability-scores-simple .ability-simple-header span {
+  flex: 1;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
+.D35E.sheet.actor .ability-scores-simple .ability-box-name {
+  text-align: center;
+  flex: none;
+  border-bottom: 1px solid #b5b3a4;
+  height: 24px;
+  line-height: 24px;
+  font-size: 18px;
+  margin: 4px 8px 2px;
+}
+.D35E.sheet.actor .ability-scores-simple .ability-simple {
+  height: 40px;
+  flex: none;
+}
+.D35E.sheet.actor .ability-scores-simple h4 {
+  line-height: 40px;
+  font-size: 22px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
+.D35E.sheet.actor .ability-scores-simple h4.box-title {
+  border-bottom: none;
+}
+.D35E.sheet.actor .ability-scores-simple h4.box-ability {
+  text-align: center;
+  border: 2px groove #eeede0;
+  border-radius: 4px;
+  height: 34px;
+}
+.D35E.sheet.actor .ability-scores-simple h4.ability-value-text {
+  text-align: center;
+  height: 34px;
+  font-size: 22px;
+  line-height: 40px;
+}
+.D35E.sheet.actor .ability-scores-simple h4.ability-mod-text {
+  text-align: center;
+  height: 34px;
+  line-height: 40px;
+  font-size: 18px;
+  color: #7a7971;
+}
+.D35E.sheet.actor .ability-scores-simple .ability-base-simple {
+  text-align: center;
+  line-height: 30px;
+  font-size: 22px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  border: 2px groove #eeede0;
+  border-radius: 4px;
+  height: 34px;
+  margin: 4px 0;
+}
 .D35E.sheet.actor .ability-scores {
-  flex: 0 0 100%;
+  flex: none;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -891,6 +981,9 @@
   border: 2px groove #eeede0;
   border-radius: 3px;
 }
+.D35E.sheet.actor ul.skills-list.noborder {
+  border: none;
+}
 .D35E.sheet.actor ul.skills-list li.skill,
 .D35E.sheet.actor ul.skills-list li.sub-skill {
   height: 28px;
@@ -918,7 +1011,10 @@
   height: 24px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name h4,
-.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name h4,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-name h4 {
+  display: inline-block;
+  margin: 0 0 0.25rem;
+}
 .D35E.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
   display: inline-block;
@@ -2012,6 +2108,34 @@
   background: #afebff;
   border: 1px solid #000;
   border-radius: 2px;
+}
+.D35E.sheet.actor.character .sheet-header .race-container {
+  flex: 1;
+  padding: 0 0 0 4px;
+}
+.D35E.sheet.actor.character .sheet-header .race-container .item-controls {
+  align-items: flex-start;
+}
+.D35E.sheet.actor.character .sheet-header .race-container .item-controls a {
+  flex: 0 0 16px;
+  font-size: 10px;
+  text-align: center;
+  color: #666;
+}
+.D35E.sheet.actor.character .sheet-header .race-container.norace {
+  padding: 0 0 0 6px;
+}
+.D35E.sheet.actor.character .sheet-header .race-container .race {
+  flex: 0 0 24px;
+  background-size: contain;
+  line-height: 24px;
+  text-align: center;
+  vertical-align: baseline;
+  margin-right: 4px;
+  height: 24px;
+}
+.D35E.sheet.actor.character .sheet-header .race-container .race .rollable:hover {
+  background-image: url("/icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor.character .sheet-header .summary {
   border-bottom: 2px groove #eeede0;

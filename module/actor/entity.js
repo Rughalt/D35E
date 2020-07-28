@@ -1927,6 +1927,17 @@ export class ActorPF extends Actor {
       }
       data = flattenObject(expandedData);
     }
+    console.log(data)
+    for (let abl of Object.keys(this.data.data.abilities)) {
+      if (data[`data.abilities.${abl}.tempvalue`] === undefined || data[`data.abilities.${abl}.tempvalue`] === null)
+        continue
+      for (let val of data[`data.abilities.${abl}.tempvalue`]) {
+          if (parseInt(val) != data[`data.abilities.${abl}.value`]) {
+            data[`data.abilities.${abl}.value`] = parseInt(val);
+            break;
+          }
+        }
+    }
 
     // Make certain variables absolute
     const _absoluteKeys = Object.keys(this.data.data.abilities).reduce((arr, abl) => {

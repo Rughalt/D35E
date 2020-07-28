@@ -97,7 +97,7 @@ export class ActorSheetPF extends ActorSheet {
 
     // Ability Scores
     for ( let [a, abl] of Object.entries(data.actor.data.abilities)) {
-      abl.label = CONFIG.D35E.abilities[a];
+      abl.label = CONFIG.D35E.abilitiesShort[a];
       abl.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.abilities[a].total : [];
     }
 
@@ -297,7 +297,8 @@ export class ActorSheetPF extends ActorSheet {
     let result = {
       all: { skills: {} },
       adventure: { skills: {} },
-      background: { skills: {} }
+      background: { skills: {} },
+      known: { skills: {} }
     };
 
     // sort skills by label
@@ -310,6 +311,7 @@ export class ActorSheetPF extends ActorSheet {
     keys.forEach( a => {
       let skl = skillset[a]
       result.all.skills[a] = skl;
+      if (skl.rank > 0) result.known.skills[a] = skl;
       if (skl.background) result.background.skills[a] = skl;
       else result.adventure.skills[a] = skl;
     })
@@ -465,6 +467,8 @@ export class ActorSheetPF extends ActorSheet {
 
     // Saving Throw
     html.find(".defenses .saving-throw .attribute-name").click(this._onRollSavingThrow.bind(this));
+
+    html.find(".attributes .saving-throw .attribute-name").click(this._onRollSavingThrow.bind(this));
 
     // Add arbitrary skill
     html.find(".skill.arbitrary .skill-create").click(ev => this._onArbitrarySkillCreate(ev));

@@ -890,5 +890,8 @@
   "D35E.CasterLevelTotal": "Total Caster Level",
   "D35E.CannotTurnUndead":  "No ability to turn undead",
   "D35E.TurnUndeadUses": "Turn Undead Uses",
-  "D35E.LimitedUseEncounter": "Per Encounter"
+  "D35E.LimitedUseEncounter": "Per Encounter",
+  "D35E.Abilities": "Abilities",
+  "D35E.Total": "Total",
+  "D35E.Summary": "Summary"
 }
