@@ -1551,7 +1551,7 @@ export class ActorPF extends Actor {
        acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
        ablMod = data1.abilities[subSkl.ability].mod;
        specificSkillBonus = subSkl.changeBonus || 0;
-       sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? 3 : 0) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
+       sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
        linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
      }
     }
@@ -1927,7 +1927,6 @@ export class ActorPF extends Actor {
       }
       data = flattenObject(expandedData);
     }
-    console.log(data)
     for (let abl of Object.keys(this.data.data.abilities)) {
       if (data[`data.abilities.${abl}.tempvalue`] === undefined || data[`data.abilities.${abl}.tempvalue`] === null)
         continue
