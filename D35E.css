@@ -797,13 +797,18 @@
 .D35E.sheet.actor .details-skills-list {
   border: 2px groove #eeede0;
   border-radius: 4px;
-  margin: 0 5px;
+}
+.D35E.sheet.actor .details-skills-list .skills-list {
+  margin: 0;
+  padding: 0;
 }
 .D35E.sheet.actor .details-skills-list .skill-header {
   margin: 2px 0;
   padding: 0;
   background: rgba(0, 0, 0, 0.05);
   border: 2px groove #eeede0;
+  border-right: none;
+  border-left: none;
   font-weight: bold;
   line-height: 24px;
   flex: none;
@@ -814,7 +819,6 @@
 .D35E.sheet.actor .details-skills-list .box-name {
   text-align: center;
   flex: none;
-  border-bottom: 1px solid #b5b3a4;
   height: 24px;
   line-height: 24px;
   font-size: 18px;
@@ -824,11 +828,19 @@
 .D35E.sheet.actor .details-attack-simple {
   border: 2px groove #eeede0;
   border-radius: 4px;
+  margin-top: 5px;
+}
+.D35E.sheet.actor .details-attack-simple .inventory-list {
+  margin: 0;
+  padding: 0;
+}
+.D35E.sheet.actor .details-attack-simple .inventory-list .inventory-header {
+  border-right: none;
+  border-left: none;
 }
 .D35E.sheet.actor .details-attack-simple .box-name {
   text-align: center;
   flex: none;
-  border-bottom: 1px solid #b5b3a4;
   height: 24px;
   line-height: 24px;
   font-size: 18px;
@@ -838,7 +850,6 @@
 .D35E.sheet.actor .ability-scores-simple {
   border: 2px groove #eeede0;
   border-radius: 4px;
-  flex: none;
 }
 .D35E.sheet.actor .ability-scores-simple .ability-simple-header {
   flex: none;
@@ -1899,6 +1910,215 @@
 .D35E.sheet.item div[data-tab="description"][data-group="primary"] .description-container {
   flex: 1;
 }
+.D35E.sheet.item .inventory-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 5px;
+  overflow-y: auto;
+}
+.D35E.sheet.item .inventory-list .item {
+  line-height: 24px;
+  padding: 0 2px;
+  border-bottom: 1px solid #c9c7b8;
+  background-color: rgba(155, 155, 155, 0.3);
+}
+.D35E.sheet.item .inventory-list .item:last-child {
+  border-bottom: none;
+}
+.D35E.sheet.item .inventory-list .item:nth-child(2n+1) {
+  background-color: rgba(210, 210, 210, 0.3);
+}
+.D35E.sheet.item .inventory-list .item .item-name {
+  cursor: pointer;
+  white-space: nowrap;
+}
+.D35E.sheet.item .inventory-list .item .item-name .item-image {
+  flex: 0 0 24px;
+  background-size: 24px;
+  margin-right: 5px;
+}
+.D35E.sheet.item .inventory-list .item .item-name h4 {
+  margin: 0;
+}
+.D35E.sheet.item .inventory-list .item .item-name:hover .item-image {
+  background-image: url("/icons/svg/d20-grey.svg") !important;
+}
+.D35E.sheet.item .inventory-list .item .item-name .item-image:hover {
+  background-image: url("/icons/svg/d20-black.svg") !important;
+}
+.D35E.sheet.item .inventory-list .item input[type="checkbox"] {
+  height: 12px;
+}
+.D35E.sheet.item .inventory-list .item .item-properties {
+  margin-top: 3px;
+}
+.D35E.sheet.item .inventory-list .item .item-recharge {
+  flex: 0 0 80px;
+  text-align: right;
+  font-size: 11px;
+  color: #7a7971;
+}
+.D35E.sheet.item .inventory-list .item .item-actions > div a {
+  display: flex;
+  flex: 0 0 16px;
+  padding: 0;
+  margin-right: 1px;
+  height: 16px;
+}
+.D35E.sheet.item .inventory-list .item .item-actions > div a:last-child {
+  margin-right: 0;
+}
+.D35E.sheet.item .inventory-list .inventory-header {
+  margin: 2px 0;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove #eeede0;
+  font-weight: bold;
+  line-height: 24px;
+}
+.D35E.sheet.item .inventory-list .inventory-header h3 {
+  margin: 0;
+  padding-left: 5px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.D35E.sheet.item .inventory-list .inventory-header .item-controls {
+  justify-content: flex-start;
+}
+.D35E.sheet.item .inventory-list .inventory-header .item-controls a.item-create {
+  flex: 0 0 100%;
+}
+.D35E.sheet.item .inventory-list .item-detail {
+  height: 24px;
+  flex: 0 0 80px;
+  font-size: 11px;
+  color: #7a7971;
+  text-align: center;
+  border-right: 1px solid #c9c7b8;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  justify-content: flex-end;
+  align-items: center;
+}
+.D35E.sheet.item .inventory-list .item-detail > * {
+  flex: 1;
+}
+.D35E.sheet.item .inventory-list .item-detail .flex1 {
+  flex: 1;
+}
+.D35E.sheet.item .inventory-list .item-detail .flex2 {
+  flex: 2;
+}
+.D35E.sheet.item .inventory-list .item-detail .flex3 {
+  flex: 3;
+}
+.D35E.sheet.item .inventory-list .item-detail .flex4 {
+  flex: 4;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-actions {
+  flex: 0 0 54px;
+  padding: 0 1px 0 1px;
+  justify-content: center;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-actions > div {
+  flex: 0 0 16px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-usage {
+  flex: 0 0 96px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-type {
+  flex: 0 0 96px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-weight {
+  flex: 0 0 54px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-identified {
+  flex: 0 0 32px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-carried {
+  flex: 0 0 48px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-equipped {
+  flex: 0 0 54px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail.item-uses {
+  flex: 0 0 64px;
+  padding: 0 1px 0 1px;
+}
+.D35E.sheet.item .inventory-list .item-detail:nth-child(2) {
+  border-left: 1px solid #c9c7b8;
+}
+.D35E.sheet.item .inventory-list .item-detail:last-child {
+  border-right: none;
+}
+.D35E.sheet.item .inventory-list a.item-control {
+  height: 100%;
+}
+.D35E.sheet.item .inventory-list .item-level {
+  flex: 0 0 40px;
+  border-right: 1px solid #c9c7b8;
+}
+.D35E.sheet.item .inventory-list .item-feat-level {
+  flex: 0 0 60px;
+  border-right: 1px solid #c9c7b8;
+}
+.D35E.sheet.item .inventory-list .item-active {
+  flex: 0 0 60px;
+  border-right: 1px solid #c9c7b8;
+}
+.D35E.sheet.item .inventory-list .item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.D35E.sheet.item .inventory-list .item-controls {
+  flex: 0 0 64px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  white-space: nowrap;
+  justify-content: center;
+}
+.D35E.sheet.item .inventory-list .item-controls > * {
+  flex: 1;
+}
+.D35E.sheet.item .inventory-list .item-controls .flex1 {
+  flex: 1;
+}
+.D35E.sheet.item .inventory-list .item-controls .flex2 {
+  flex: 2;
+}
+.D35E.sheet.item .inventory-list .item-controls .flex3 {
+  flex: 3;
+}
+.D35E.sheet.item .inventory-list .item-controls .flex4 {
+  flex: 4;
+}
+.D35E.sheet.item .inventory-list .item-controls a {
+  flex: 0 0 16px;
+  font-size: 10px;
+  text-align: center;
+  color: #666;
+}
+.D35E.sheet.item .inventory-list .item-summary {
+  flex: 0 0 100%;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 0.25em 0.5em;
+  border-top: 1px solid #c9c7b8;
+}
 /* ----------------------------------------- */
 /*  Chat Cards
 /* ----------------------------------------- */
@@ -2085,7 +2305,7 @@
   /* ----------------------------------------- */
 }
 .D35E.sheet.actor.character .sheet-header .charlevel {
-  flex: 0 0 180px;
+  flex: 0 0 220px;
   padding: 0 5px 2px;
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .level {

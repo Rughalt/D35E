@@ -1,28 +1,114 @@
 <div class="links-body">
     {{!-- Children Tab --}}
     <div class="tab flexcol" data-group="children">
-        <table>
-            <tr>
-                <th>{{localize "D35E.ClassFeaturePlural"}}</th>
-                <th class="links-controls"></th>
-            </tr>
-            {{#each data.children as |item|}}
-            <tr class="links-item" data-link={{item.id}}>
-                {{!-- Link name and image --}}
-                <td class="links-item-name">
-                    <div>
-                        <img src="{{item.img}}" width="24" height="24">
-                        <span>{{item.name}}</span>
-                    </div>
-                </td>
 
-                {{!-- Link Controls --}}
-                <td class="links-controls">
-                    <div>
+        <ol class="inventory-list sub-scroll scroll-inventory" >
+
+            <li class="inventory-header flexrow">
+                <h3 class="item-name flexrow"></h3>
+                <div class="item-detail item-type">
+                    <span>Type</span></div>
+            </li>
+            <ol class="item-list" data-pack="D35E.spelllike">
+                {{#each children.spelllikes as |item iid|}}
+                    <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                        <div class="item-name flexrow">
+                            <div class="item-image" style="background-image: url({{item.img}})"></div>
+                            <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                                {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                            {{item.name~}}
+                        </h4>
                     </div>
-                </td>
-            </tr>
+
+                    <div class="item-detail item-type flexrow">
+                        <span>Spell-like</span>
+                    </div>
+
+                    </li>
+                {{/each}}
+        </ol>
+        {{#if isRace}}
+        <ol class="item-list" data-pack="D35E.racial-abilities">
+            {{#each children.abilities as |item iid|}}
+                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                    <div class="item-name flexrow">
+                        <div class="item-image" style="background-image: url({{item.img}})"></div>
+                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                        {{item.name~}}
+                    </h4>
+                </div>
+
+                <div class="item-detail item-type flexrow">
+                    <span>Special Ability</span>
+                </div>
+
+                </li>
             {{/each}}
-        </table>
-    </div>
+
+        </ol>
+
+        <ol class="item-list" data-pack="D35E.racial-abilities">
+            {{#each children.traits as |item iid|}}
+                <li class="item item-box  flexrow" data-item-id="{{item._id}}">
+                    <div class="item-name flexrow">
+                        <div class="item-image" style="background-image: url({{item.img}})"></div>
+                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                        {{item.name~}}
+                    </h4>
+                    </div>
+
+                    <div class="item-detail item-type flexrow">
+                        <span>Trait</span>
+                    </div>
+
+                </li>
+            {{/each}}
+        </ol>
+    </ol>
+    {{/if}}
+    {{#if isClass}}
+        <ol class="item-list" data-pack="D35E.class-abilities">
+            {{#each children.abilities as |item iid|}}
+                <li class="item item-box  flexrow" data-item-id="{{item._id}}">
+                    <div class="item-name flexrow">
+                        <div class="item-image" style="background-image: url({{item.img}})"></div>
+                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                        {{item.name~}}
+                    </h4>
+                </div>
+
+                <div class="item-detail item-type flexrow">
+                    <span>Special Ability</span>
+                </div>
+
+                </li>
+            {{/each}}
+
+        </ol>
+
+        <ol class="item-list" data-pack="D35E.class-abilities">
+            {{#each children.traits as |item iid|}}
+                <li class="item item-box  flexrow" data-item-id="{{item._id}}">
+                    <div class="item-name flexrow">
+                        <div class="item-image" style="background-image: url({{item.img}})"></div>
+                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                        {{item.name~}}
+                    </h4>
+                    </div>
+
+                    <div class="item-detail item-type flexrow">
+                        <span>Trait</span>
+                    </div>
+
+                </li>
+            {{/each}}
+        </ol>
+    </ol>
+    {{/if}}
+
+</div>
 </div>

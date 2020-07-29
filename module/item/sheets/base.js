@@ -19,6 +19,7 @@ export class ItemSheetPF extends ItemSheet {
     };
 
     this.items = [];
+    this.childItemMap = new Map()
   }
 
   /* -------------------------------------------- */
@@ -45,14 +46,16 @@ export class ItemSheetPF extends ItemSheet {
 
   /* -------------------------------------------- */
 
+  
+
   /**
    * Prepare item sheet data
    * Start with the base item data and extending with additional properties for rendering.
    */
-  getData() {
-    const data = super.getData();
+  async getData() {
+    const data = await super.getData();
     data.labels = this.item.labels;
-
+    console.log("Reloading", data)
     // Include sub-items
     data.items = [];
     if (this.item.items != null) {
@@ -72,10 +75,13 @@ export class ItemSheetPF extends ItemSheet {
     data.itemName = data.item.name;
     data.isPhysical = data.item.data.hasOwnProperty("quantity");
     data.isSpell = this.item.type === "spell";
+    data.isClass = this.item.type === "class";
+    data.isRace = this.item.type === "race";
     data.owner = this.item.actor != null;
     data.isGM = game.user.isGM;
     data.showIdentifyDescription = data.isGM && data.isPhysical;
     data.showUnidentifiedData = this.item.showUnidentifiedData;
+    
 
     // Unidentified data
     if (this.item.showUnidentifiedData) {
@@ -171,6 +177,54 @@ export class ItemSheetPF extends ItemSheet {
       // Enrich description
       data.description = TextEditor.enrichHTML(data.data.description.value);
     }
+    if (data.item.type === "race") {
+      data.children = {
+        spelllikes: [],
+        abilities: [],
+        traits: [],
+      }
+
+      {
+        let spellLikes = game.packs.get("D35E.spelllike");
+        let spellikeItems = []
+        await spellLikes.getIndex().then(index => spellikeItems = index);
+        for (let entry of spellikeItems) {
+          await spellLikes.getEntity(entry._id).then(e => 
+          {
+            
+            if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
+              data.children.spelllikes.push(e);
+              this.childItemMap.set(entry._id,e);
+            }
+          }
+          )
+        }
+      
+      }
+
+      {
+        let itemPack = game.packs.get("D35E.racial-abilities");
+        let items = []
+        await itemPack.getIndex().then(index => items = index);
+        for (let entry of items) {
+          await itemPack.getEntity(entry._id).then(e => 
+          {
+            console.log(e)
+            if (e.data.data.tags.some(el => el[0] === this.item.data.name))
+            {
+              if (e.data.type === "feat")
+                data.children.traits.push(e);
+              else
+                data.children.abilities.push(e);
+              this.childItemMap.set(entry._id,e);
+            }
+          }
+          )
+        }
+      
+      }
+    }
+
 
     // Prepare class specific stuff
     if (data.item.type === "class") {
@@ -202,10 +256,50 @@ export class ItemSheetPF extends ItemSheet {
       data.isBaseClass = data.data.classType === "base";
       data.isRacialHD = data.data.classType === "racial";
 
-      data.children = []
+      data.children = {
+        spelllikes: [],
+        abilities: [],
+        traits: [],
+      }
+
       {
         let spellLikes = game.packs.get("D35E.spelllike");
-        spellLikes.getIndex().then(index => index.forEach(entry => {spellLikes.getEntity(entry._id).then(spell => data.children.push(spell))}));
+        let spellikeItems = []
+        await spellLikes.getIndex().then(index => spellikeItems = index);
+        for (let entry of spellikeItems) {
+          await spellLikes.getEntity(entry._id).then(e => 
+          {
+            
+            if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
+              data.children.spelllikes.push(e);
+              this.childItemMap.set(entry._id,e);
+            }
+          }
+          )
+        }
+      
+      }
+
+      {
+        let itemPack = game.packs.get("D35E.class-abilities");
+        let items = []
+        await itemPack.getIndex().then(index => items = index);
+        for (let entry of items) {
+          await itemPack.getEntity(entry._id).then(e => 
+          {
+            if (e.data.data.tags.some(el => el[0] === this.item.data.name))
+            {
+              if (e.data.type === "feat")
+                data.children.traits.push(e);
+              else
+                data.children.abilities.push(e);
+              
+              this.childItemMap.set(entry._id,e);
+            }
+          }
+          )
+        }
+      
       }
 
       if (this.actor != null) {
@@ -499,6 +593,19 @@ export class ItemSheetPF extends ItemSheet {
 
     // Listen to field entries
     html.find(".entry-selector").click(this._onEntrySelector.bind(this));
+
+
+    // Item summaries
+    html.find('.item .item-name h4').click(event => this._onItemSummary(event));
+    
+    let handler = ev => this._onDragStart(ev);
+    html.find('li.item').each((i, li) => {
+      if ( li.classList.contains("inventory-header") ) return;
+      li.setAttribute("draggable", true);
+      li.addEventListener("dragstart", handler, false);
+    });
+
+
   }
 
   /* -------------------------------------------- */
@@ -566,14 +673,14 @@ export class ItemSheetPF extends ItemSheet {
 
     // Add new change
     if (a.classList.contains("add-change")) {
-      await this._onSubmit(event);  // Submit any unsaved changes
+      //await this._onSubmit(event);  // Submit any unsaved changes
       const changes = this.item.data.data.changes || [];
       return this.item.update({"data.changes": changes.concat([["", "", "", "", 0]])});
     }
 
     // Remove a change
     if (a.classList.contains("delete-change")) {
-      await this._onSubmit(event);  // Submit any unsaved changes
+      //await this._onSubmit(event);  // Submit any unsaved changes
       const li = a.closest(".change");
       const changes = duplicate(this.item.data.data.changes);
       changes.splice(Number(li.dataset.change), 1);
@@ -636,5 +743,43 @@ export class ItemSheetPF extends ItemSheet {
     }
 
     if (manualUpdate && Object.keys(updateData).length > 0) await this.item.update(updateData);
+  }
+
+  _onItemSummary(event) {
+    event.preventDefault();
+    let li = $(event.currentTarget).parents(".item-box"),
+        item = this.childItemMap.get(li.attr("data-item-id"));
+
+
+    item.sheet.render(true);
+
+    // // Toggle summary
+    // if ( li.hasClass("expanded") ) {
+    //   let summary = li.children(".item-summary");
+    //   summary.slideUp(200, () => summary.remove());
+    // } else {
+    //   let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
+    //   let props = $(`<div class="item-properties"></div>`);
+    //   chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
+    //   div.append(props);
+    //   li.append(div.hide());
+    //   div.slideDown(200);
+    // }
+    // li.toggleClass("expanded");
+  }
+
+  _onDragStart(event) {
+    // Get the Compendium pack
+    const li = event.currentTarget;
+    const packName = li.parentElement.getAttribute("data-pack");
+    const pack = game.packs.get(packName);
+    console.log(event)
+    if ( !pack ) return;
+    // Set the transfer data
+    event.dataTransfer.setData("text/plain", JSON.stringify({
+      type: pack.entity,
+      pack: pack.collection,
+      id: li.getAttribute('data-item-id')
+    }));
   }
 }

@@ -361,7 +361,7 @@ export class ItemPF extends Item {
 
   async update(data, options={}) {
     const srcData = mergeObject(this.data, expandObject(data), { inplace: false });
-
+    console.log("Updating", data)
     // Update name
     if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
     else if (data["name"]) data["data.identifiedName"] = data["name"];
@@ -405,8 +405,10 @@ export class ItemPF extends Item {
 
     const diff = diffObject(flattenObject(this.data), data);
     if (Object.keys(diff).length) {
+      console.log("Finished updating", data)
       return super.update(diff, options);
     }
+
     return false;
   }
 
@@ -693,7 +695,7 @@ export class ItemPF extends Item {
    * Prepare chat card data for items of the "Feat" type
    */
   _featChatData(data, labels, props) {
-    const ad = this.actor.data.data;
+    //const ad = this.actor.data.data;
 
     // Spell saving throw text
     // const abl = data.ability || ad.attributes.spellcasting || "str";

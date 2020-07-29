@@ -14,9 +14,9 @@
     {{!-- Item Sheet Navigation --}}
     <nav class="sheet-navigation tabs" data-group="primary">
         <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+        <a class="item" data-tab="children">{{ localize "D35E.Children" }}</a>
         <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
         <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
-        <a class="item" data-tab="links">{{localize "D35E.Links"}}</a>
     </nav>
 
     {{!-- Item Sheet Body --}}
@@ -48,6 +48,11 @@
             </div>
 
         </div>
+
+
+    <div class="tab flexcol" data-group="primary" data-tab="children">
+      {{> "systems/D35E/templates/items/parts/item-children.html"}}
+    </div> 
 
         <div class="tab flexcol" data-group="primary" data-tab="changes">
             {{> "systems/D35E/templates/items/parts/item-changes.html"}}

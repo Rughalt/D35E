@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "D&D 3.5e",
   "description": "A conversion of Furyspark's Pathfinder1 system to make a functional 3.5e system for FoundryVTT",
-  "version": 0.75,
+  "version": 0.76,
   "author": "LoopeeDK, Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -35,6 +35,13 @@
       "label": "Racial Abilities",
       "system": "D35E",
       "path": "./packs/racial-abilities.db",
+      "entity": "Item"
+    },
+    {
+      "name": "class-abilities",
+      "label": "Class Abilities",
+      "system": "D35E",
+      "path": "./packs/class-abilities.db",
       "entity": "Item"
     },
     {
