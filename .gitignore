@@ -9,3 +9,4 @@ node_modules/
 /test-scripts
 /tokens
 source/*.json
+icons/
