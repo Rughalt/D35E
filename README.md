@@ -37,7 +37,9 @@ Use `packtool unpack <compendium file>` to unpack to json and `packtool pack <co
 The entire base work of this system is based on Furyspark's 
 on the PF1 system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)  and LoopeeDK#9498 work 
 
-Icons by 
+Icons provided in source distribution (on this github repository) by 
 - J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0
 - Various authors at [game-icons.net](https://game-icons.net/)
+
+Icons provided in binary distribution are used with persmission of the autor and licensed to use only in this application. Any other use is prohibited.
 

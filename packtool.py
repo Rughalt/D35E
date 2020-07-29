@@ -41,10 +41,10 @@ if args.action == 'pack' or args.action == 'repack':
             if '_skip_' not in item['name']:
                 if item['_id'] == 'generate':
                     item['_id'] = generate_random_id()
-                try:
-                    item['img'] = 'data:image/png;base64, ' + img_to_base_64(item['img'])
-                except:
-                    pass
+#                 try:
+#                     item['img'] = 'data:image/png;base64, ' + img_to_base_64(item['img'])
+#                 except:
+#                     pass
                 outfile.write(json.dumps(item))
                 outfile.write('\n')
 
