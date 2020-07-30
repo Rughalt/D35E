@@ -104,6 +104,7 @@ export class ActorSheetPF extends ActorSheet {
     // Armor Class
     for (let [a, ac] of Object.entries(data.actor.data.attributes.ac)) {
       ac.label = CONFIG.D35E.ac[a];
+      ac.labelShort = CONFIG.D35E.acShort[a];
       ac.valueLabel = CONFIG.D35E.acValueLabels[a];
       ac.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.attributes.ac[a].total : [];
     }
@@ -197,7 +198,7 @@ export class ActorSheetPF extends ActorSheet {
           skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * 3) + ((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel)) + fcSkills));
           firstOnList = false;
         } else {
-          skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel)) + fcSkills));
+          skillRanks.allowed += (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel));
         }
       }
       if (data.useBGSkills) skillRanks.bgAllowed = this.actor.data.data.details.level.value * 2;

@@ -13,6 +13,21 @@
               </span>
     </div>
   </li>
+
+  <li class="attribute bab  high" data-attribute="bab">
+
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.BAB"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.bab.total}}</span>
+      <span class="tooltipcontent">
+                @attributes.init.total : {{data.attributes.bab.total}}
+                {{#if sourceDetails.data.attributes.bab.total.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
+    </div>
+  </li>
   {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
   <li class="attribute turnUndeadHdTotal high" data-attribute="turnUndeadHdTotal">
     <h4 class="attribute-name box-title rollable">{{localize "D35E.TurnUndead"}}</h4>

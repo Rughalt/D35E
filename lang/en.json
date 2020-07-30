@@ -895,5 +895,7 @@
   "D35E.Total": "Total",
   "D35E.Summary": "Summary",
   "D35E.ECL": "ECL",
-  "D35E.Children": "Special features"
+  "D35E.Children": "Special features",
+  "D35E.ACFlatFootedShort": "FF",
+  "D35E.LA": "Level Adjustment"
 }

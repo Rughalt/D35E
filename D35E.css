@@ -2361,8 +2361,7 @@
   border-bottom: 2px groove #eeede0;
 }
 .D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(1),
-.D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(2),
-.D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(3) {
+.D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(2) {
   border-bottom: none;
 }
 .D35E.sheet.actor.character .attributes .resource .attribute-name {

@@ -1231,8 +1231,18 @@ export class ActorPF extends Actor {
       linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data, "creatureType") || "humanoid");
     }
 
-    // Reset HD
-    linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value);
+    // Reset HD, taking into account race LA
+    let raceLA = 0;
+    if (this.items != null) {
+      try {
+        let raceObject = this.items.filter(o => o.type === "race")[0];
+        if (raceObject != null) {
+          raceLA = raceObject.data.data.la
+        }
+      } catch (e) {
+      }
+    }
+    linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
 
     // Reset abilities
     for (let [a, abl] of Object.entries(data1.abilities)) {
@@ -1537,7 +1547,9 @@ export class ActorPF extends Actor {
       if (skl == null) continue;
 
       let acpPenalty = (skl.acp ? data1.attributes.acp.total : 0);
-      let ablMod = data1.abilities[skl.ability].mod;
+      let ablMod = 0;
+      if (skl.ability !== "")
+        ablMod = data1.abilities[skl.ability].mod;
       let specificSkillBonus = skl.changeBonus || 0;
 
       // Parse main skills
@@ -1549,7 +1561,9 @@ export class ActorPF extends Actor {
        if (getProperty(data1, `skills.${sklKey}.subSkills.${subSklKey}`) == null) continue;
 
        acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
-       ablMod = data1.abilities[subSkl.ability].mod;
+       ablMod = 0
+       if (subSkl.ability !== "")
+        ablMod = data1.abilities[subSkl.ability].mod;
        specificSkillBonus = subSkl.changeBonus || 0;
        sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
        linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
@@ -2061,9 +2075,24 @@ export class ActorPF extends Actor {
    */
   _updateExp(data) {
     const classes = this.items.filter(o => o.type === "class");
-    const level = classes.reduce((cur, o) => {
+
+    let raceLA = 0;
+    if (this.items != null) {
+      try {
+        let raceObject = this.items.filter(o => o.type === "race")[0];
+        if (raceObject != null) {
+          raceLA = raceObject.data.data.la
+        }
+      } catch (e) {
+      }
+    }
+
+    let level = classes.reduce((cur, o) => {
       return cur + o.data.data.levels;
     }, 0);
+    console.log(raceLA)
+    level += raceLA;
+
     if (getProperty(this.data, "data.details.level.value") !== level) {
       data["data.details.level.value"] = level;
     }
@@ -2462,7 +2491,7 @@ export class ActorPF extends Actor {
     // Construct chat message data
     let messageData = {
       speaker: {
-        scene: canvas.scene._id,
+        scene: canvas.scene === null ? null : canvas.scene._id,
         actor: this._id,
         token: this.token ? this.token._id : null,
         alias: this.token ? this.token.name : null,

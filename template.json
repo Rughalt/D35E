@@ -273,7 +273,7 @@
                 "clNotes": "",
                 "ability": "int",
                 "autoSpellLevels": true,
-                "usePowerPoints": true,
+                "usePowerPoints": false,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
@@ -295,7 +295,7 @@
                 "clNotes": "",
                 "ability": "int",
                 "autoSpellLevels": true,
-                "usePowerPoints": true,
+                "usePowerPoints": false,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
@@ -317,7 +317,7 @@
                 "clNotes": "",
                 "ability": "cha",
                 "autoSpellLevels": true,
-                "usePowerPoints": true,
+                "usePowerPoints": false,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
@@ -1269,6 +1269,7 @@
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],
       "creatureType": "humanoid",
+      "la": 0,
       "subTypes": []
     }
   }

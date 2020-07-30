@@ -1,4 +1,12 @@
 # Changelog
+## 0.81
+
+### Features
+- Level adjustment for races
+
+### Bug Fixes
+- Fixed skill calculation for multiclass characters
+- Fixed character sheet text length
 
 ## 0.55
 Updated to 0.6.0 std's

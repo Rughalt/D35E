@@ -17,7 +17,8 @@
         <div class="charlevel">
           <div class="level {{#if disableExperience}}noxp{{/if}} tooltip">
             <span class="tooltipcontent">
-              @attributes.hd.total : {{data.attributes.hd.total}}
+              @attributes.hd.total : {{data.attributes.hd.total}}<br>
+              @details.level.value : {{data.details.level.value}}
             </span>
             {{localize "D35E.ECL"}}
             {{data.details.level.value}}
@@ -57,7 +58,7 @@
           <li>
             <input type="text" name="data.details.weight" value="{{data.details.weight}}" placeholder="{{localize "D35E.Weight"}}" title="{{localize "D35E.Weight"}}"/>
           </li>
-          <li class="flexrow race-container item  {{#unless race}}norace{{/unless}}"  {{#if race}}data-item-id="{{race._id}}"{{/if}}>
+          <li class="flexrow race-container item  {{#unless race}}norace{{/unless}}"  {{#if race}}data-item-id="{{race._id}}"{{/if}} style="width: 66.66%">
             <div class="race item-image rollable" style="background-image: url({{race.img}})" title="{{labels.race}}">
               {{#unless race}}{{localize "D35E.Race"}}
               {{/unless}}
@@ -65,7 +66,7 @@
             {{#if race}}
               <span>{{race.name}}</span>
             {{/if}}
-            <div class="item-controls flexrow">
+            <div class="item-controls flexrow" style="flex: 0 40px;">
               {{#if owner}}
                 {{#unless race}}
                   <a class="item-control add" title="{{localize "D35E.CreateItem"}}">

@@ -102,6 +102,12 @@ D35E.ac = {
   "flatFooted": "D35E.ACFlatFooted"
 };
 
+D35E.acShort = {
+  "normal": "D35E.ACNormal",
+  "touch": "D35E.ACTouch",
+  "flatFooted": "D35E.ACFlatFootedShort"
+};
+
 /**
  * The set of Armor Class modifier types
  * @type {Object}

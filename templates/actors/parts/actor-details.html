@@ -116,6 +116,41 @@
 
         <li>
           <ul class="attributes armor-class  flexrow">
+  <li class="attribute initiative high" data-attribute="init">
+
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.init.total}}</span>
+      <span class="tooltipcontent">
+                @attributes.init.total : {{data.attributes.init.total}}
+                {{#if sourceDetails.data.attributes.init.total.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each sourceDetails.data.attributes.init.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
+    </div>
+  </li>
+
+
+  <li class="attribute bab  high" data-attribute="bab">
+
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.BAB"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.bab.total}}</span>
+      <span class="tooltipcontent">
+                @attributes.init.total : {{data.attributes.bab.total}}
+                {{#if sourceDetails.data.attributes.bab.total.length}}
+                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
+    </div>
+  </li>
+          </ul>
+        </li>
+
+        <li>
+          <ul class="attributes armor-class  flexrow">
             {{#each data.attributes.ac as |ac id|}}
               <li class="attribute armor-class ac-details tooltip" data-armorclass="{{id}}">
                 <div class="tooltipcontent">
@@ -128,7 +163,7 @@
                     {{/each}}
                   {{/if}}
                 </div>
-                <h4 class="attribute-name box-title">{{ac.label}}</h4>
+                <h4 class="attribute-name box-title">{{localize ac.labelShort}}</h4>
                 <div class="attribute-value">
                   <span>{{numberFormat ac.total decimals=0 sign=false}}</span>
                 </div>
@@ -160,6 +195,7 @@
           </ul>
         </li>
         <li></li>
+        
 
       </ul>
     </div>

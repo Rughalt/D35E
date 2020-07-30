@@ -805,6 +805,7 @@ export class ItemPF extends Item {
         for (let atk of allAttacks) {
       // Create attack object
       let attack = new ChatAttack(this, atk.label);
+      attack.rollData = rollData;
       await attack.addAttack({bonus: atk.bonus, extraParts: attackExtraParts, primaryAttack: primaryAttack});
           if (this.hasDamage) {
             await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
@@ -821,6 +822,7 @@ export class ItemPF extends Item {
       // Add damage only
       else if (this.hasDamage) {
         let attack = new ChatAttack(this);
+        attack.rollData = rollData;
         await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
         await attack.addEffect({primaryAttack: primaryAttack});
         // Add to list
@@ -829,6 +831,7 @@ export class ItemPF extends Item {
       // Add effect notes only
       else if (this.hasEffect) {
         let attack = new ChatAttack(this);
+        attack.rollData = rollData;
         await attack.addEffect({primaryAttack: primaryAttack});
         // Add to list
         attacks.push(attack);
@@ -1048,6 +1051,8 @@ export class ItemPF extends Item {
     // Add secondary natural attack penalty
     if (options.primaryAttack === false) parts.push("-5");
     // Add bonus
+
+    console.log(options)
     if (options.bonus != null) {
       rollData.bonus = options.bonus;
       parts.push("@bonus");

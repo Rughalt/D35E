@@ -42,6 +42,7 @@
     <div class="form-group skill-ability">
       <select class="skill-ability" name="data.skills.{{s}}.subSkills.{{b}}.ability" data-dtype="String">
         {{#select subSkill.ability}}
+        <option value="">None</option>
         {{#each ../../config.abilitiesShort as |ability a|}}
         <option value="{{a}}">{{ability}}</option>
         {{/each}}
@@ -90,6 +91,7 @@
     <div class="form-group skill-ability">
       <select class="skill-ability" name="data.skills.{{s}}.ability" data-dtype="String">
         {{#select skill.ability}}
+        <option value="">None</option>
         {{#each ../config.abilitiesShort as |ability a|}}
         <option value="{{a}}">{{ability}}</option>
         {{/each}}
