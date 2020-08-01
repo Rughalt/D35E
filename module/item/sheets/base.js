@@ -91,6 +91,7 @@ export class ItemSheetPF extends ItemSheet {
       data.itemName = getProperty(this.item.data, "data.identifiedName") || this.item.name;
     }
 
+
     // Action Details
     data.hasAttackRoll = this.item.hasAttack;
     data.isHealing = data.item.data.actionType === "heal";
@@ -577,6 +578,10 @@ export class ItemSheetPF extends ItemSheet {
     // Modify attack formula
     html.find(".attack-control").click(this._onAttackControl.bind(this));
 
+
+    // Modify special formula
+    html.find(".special-control").click(this._onSpecialControl.bind(this));
+
     // Modify damage formula
     html.find(".damage-control").click(this._onDamageControl.bind(this));
 
@@ -664,6 +669,29 @@ export class ItemSheetPF extends ItemSheet {
       const attackParts = duplicate(this.item.data.data.attackParts);
       attackParts.splice(Number(li.dataset.attackPart), 1);
       return this.item.update({"data.attackParts": attackParts});
+    }
+  }
+
+  async _onSpecialControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    console.log(this.item.data.data.specialActions)
+    // Add new attack component
+    if ( a.classList.contains("add-special") ) {
+      await this._onSubmit(event);  // Submit any unsaved changes
+      let specialActions = this.item.data.data.specialActions;
+      if (specialActions === undefined)
+        specialActions = []
+      return this.item.update({"data.specialActions": specialActions.concat([[{name:"",action:"",range:""}]])});
+    }
+
+    // Remove an attack component
+    if ( a.classList.contains("delete-special") ) {
+      await this._onSubmit(event);  // Submit any unsaved changes
+      const li = a.closest(".special-part");
+      const specialActions = duplicate(this.item.data.data.specialActions);
+      specialActions.splice(Number(li.dataset.specialActions), 1);
+      return this.item.update({"data.specialActions": specialActions});
     }
   }
 

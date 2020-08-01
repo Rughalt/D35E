@@ -92,6 +92,30 @@
   border: 1px solid #111;
   box-shadow: 0 0 8px red;
 }
+.D35E input[type="number"] {
+  width: calc(100% - 2px);
+  min-width: 20px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1px 3px;
+  margin: 0;
+  color: #191813;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: inherit;
+  line-height: inherit;
+  border: 1px solid #7a7971;
+  border-radius: 3px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+.D35E input[type="number"]:hover,
+.D35E input[type="number"]:focus {
+  border: 1px solid #111;
+  box-shadow: 0 0 8px red;
+}
 .D35E input:disabled,
 .D35E select:disabled,
 .D35E textarea:disabled {
@@ -1827,28 +1851,44 @@
   color: #4b4a44;
 }
 .D35E.sheet.item .damage-parts,
-.D35E.sheet.item .attack-parts {
+.D35E.sheet.item .attack-parts,
+.D35E.sheet.item .special-parts {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 .D35E.sheet.item .damage-parts .damage-part,
 .D35E.sheet.item .attack-parts .damage-part,
+.D35E.sheet.item .special-parts .damage-part,
 .D35E.sheet.item .damage-parts .attack-part,
-.D35E.sheet.item .attack-parts .attack-part {
+.D35E.sheet.item .attack-parts .attack-part,
+.D35E.sheet.item .special-parts .attack-part,
+.D35E.sheet.item .damage-parts .special-part,
+.D35E.sheet.item .attack-parts .special-part,
+.D35E.sheet.item .special-parts .special-part {
   flex: 0 0 100%;
   padding: 0;
 }
 .D35E.sheet.item .damage-parts .damage-part input,
 .D35E.sheet.item .attack-parts .damage-part input,
+.D35E.sheet.item .special-parts .damage-part input,
 .D35E.sheet.item .damage-parts .attack-part input,
-.D35E.sheet.item .attack-parts .attack-part input {
+.D35E.sheet.item .attack-parts .attack-part input,
+.D35E.sheet.item .special-parts .attack-part input,
+.D35E.sheet.item .damage-parts .special-part input,
+.D35E.sheet.item .attack-parts .special-part input,
+.D35E.sheet.item .special-parts .special-part input {
   flex: 3;
 }
 .D35E.sheet.item .damage-parts .damage-part select,
 .D35E.sheet.item .attack-parts .damage-part select,
+.D35E.sheet.item .special-parts .damage-part select,
 .D35E.sheet.item .damage-parts .attack-part select,
-.D35E.sheet.item .attack-parts .attack-part select {
+.D35E.sheet.item .attack-parts .attack-part select,
+.D35E.sheet.item .special-parts .attack-part select,
+.D35E.sheet.item .damage-parts .special-part select,
+.D35E.sheet.item .attack-parts .special-part select,
+.D35E.sheet.item .special-parts .special-part select {
   margin-left: 5px;
   flex: 1;
 }
@@ -1882,7 +1922,8 @@
 .D35E.sheet.item .damage-control,
 .D35E.sheet.item .attack-control,
 .D35E.sheet.item .change-control,
-.D35E.sheet.item .context-note-control {
+.D35E.sheet.item .context-note-control,
+.D35E.sheet.item .special-control {
   width: 18px;
   flex: 0 0 18px;
   line-height: 24px;
@@ -2066,6 +2107,10 @@
 }
 .D35E.sheet.item .inventory-list .item-level {
   flex: 0 0 40px;
+  border-right: 1px solid #c9c7b8;
+}
+.D35E.sheet.item .inventory-list .item-timeline {
+  flex: 0 0 80px;
   border-right: 1px solid #c9c7b8;
 }
 .D35E.sheet.item .inventory-list .item-feat-level {

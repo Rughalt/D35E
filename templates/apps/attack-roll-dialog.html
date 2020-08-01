@@ -50,6 +50,15 @@
   </div>
 
   <div class="form-group">
+    {{#if allowMultipleUses}}
+    <label class="slider">Multiple Uses
+    </label>
+    <input type="range" name="use" min="1" max="{{data.item.uses.value}}" value="1" class="slider" style="flex: 1" onchange="this.nextElementSibling.value=this.value">
+    <input type="text" name="useAmount" value="1" disabled style="flex: 0 30; margin-left: 8px"/>
+    {{/if}}
+  </div>
+
+  <div class="form-group">
     <label>{{localize "D35E.RollMode"}}</label>
     <select name="rollMode">
       {{#select rollMode}}

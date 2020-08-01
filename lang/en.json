@@ -897,5 +897,12 @@
   "D35E.ECL": "ECL",
   "D35E.Children": "Special features",
   "D35E.ACFlatFootedShort": "FF",
-  "D35E.LA": "Level Adjustment"
+  "D35E.LA": "Level Adjustment",
+  "D35E.Timeline": "Timeline",
+  "D35E.TimelineElapsed": "Elapsed time",
+  "D35E.TimelineFormula": "Total time formula",
+  "D35E.TimelineTotal": "Total time",
+  "D35E.TimelineInfo": "",
+  "D35E.TimelineDeleteOnExpiry": "Delete on expiry",
+  "D35E.TimelineTimed": "Time left"
 }

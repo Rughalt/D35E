@@ -381,6 +381,19 @@ export class ItemPF extends Item {
     }
 
 
+    if (data["data.active"] && data["data.active"] !== this.data.data.active) {
+      //Buff or item was activated
+      data["data.timeline.elapsed"] = 0
+    }
+    {
+      let rollData = {};
+      if (this.actor != null) rollData = this.actor.getRollData();
+      let rollFormula = getProperty(this.data, "data.timeline.formula");
+      if (data["data.timeline.formula"] != null && data["data.timeline.formula"] !== getProperty(this.data, "data.timeline.formula"))
+        rollFormula = data["data.timeline.formula"]
+      if (rollFormula !== undefined)
+        data["data.timeline.total"] = new Roll(rollFormula, rollData).roll().total;
+    }
 
     // Set equipment subtype and slot
     if (data["data.equipmentType"] != null && data["data.equipmentType"] !== getProperty(this.data, "data.equipmentType")) {
@@ -764,6 +777,12 @@ export class ItemPF extends Item {
         if (rollData.damageBonus) damageExtraParts.push("@damageBonus");
         rollMode = form.find('[name="rollMode"]').val();
 
+        rollData.useAmount = form.find('[name="use"]').val();
+        if (rollData.useAmount === undefined) {
+          rollData.useAmount = 1
+        } else {
+          rollData.useAmount = parseFloat(form.find('[name="use"]').val())
+        }
         // Power Attack
         if (form.find('[name="power-attack"]').prop("checked")) {
           rollData.powerAttackBonus = (1 + Math.floor(getProperty(rollData, "attributes.bab.total") / 4)) * 2;
@@ -866,7 +885,10 @@ export class ItemPF extends Item {
 
       // Deduct charge
       if (this.autoDeductCharges) {
-        this.addCharges(-1, itemUpdateData);
+        if (rollData.useAmount === undefined)
+          this.addCharges(-1, itemUpdateData);
+        else
+          this.addCharges(-1*parseFloat(rollData.useAmount), itemUpdateData);
       }
       // Update item
       this.update(itemUpdateData);
@@ -934,6 +956,7 @@ export class ItemPF extends Item {
       rollModes: CONFIG.Dice.rollModes,
       hasAttack: this.hasAttack,
       hasDamage: this.hasDamage,
+      allowMultipleUses: this.data.data.uses.allowMultipleUses,
       hasDamageAbility: getProperty(this.data, "data.ability.damage") !== "",
       isNaturalAttack: getProperty(this.data, "data.attackType") === "natural",
       isWeaponAttack: getProperty(this.data, "data.attackType") === "weapon",
@@ -1372,6 +1395,25 @@ export class ItemPF extends Item {
     else if (action === "applyDamage") {
       const value = button.dataset.value;
       if (!isNaN(parseInt(value))) ActorPF.applyDamage(parseInt(value));
+    } else if (action === "customAction") {
+      const value = button.dataset.value;
+      const range = value.range;
+      const actionValue = value.action;
+      /*
+       * Action Value syntax
+       * <action> <object> on <target>, for example:
+       * - Add <item name> from <compendium> on self
+       * - Remove <quantity> <item name> <?type> on self
+       * - Clear <buff> <temporary> on target
+       * - Damage <roll> on self
+       * -
+       */
+      const target = "self";
+      if (target === "self") {
+        actor.applyActionOnSelf(actionValue)
+      } else {
+        ActorPF.applyAction(actionValue);
+      }
     }
 
     // Re-enable the button
@@ -1428,6 +1470,59 @@ export class ItemPF extends Item {
         this.update(updateData);
       }
     }
+  }
+
+  addElapsedTime(time) {
+    if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
+      if (!this.data.data.timeline.enabled)
+        return
+      if (!this.data.data.active)
+        return
+      if (this.data.data.timeline.elapsed + time > this.data.data.timeline.total) {
+        if (!this.data.data.timeline.deleteOnExpiry) {
+          let updateData = {}
+          updateData["data.active"] = false;
+          this.update(updateData);
+        } else {
+          if (!this.actor) return;
+          this.actor.deleteOwnedItem(this.id)
+        }
+      } else {
+        let updateData = {}
+        updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
+        this.update(updateData);
+      }
+    }
+  }
+
+  getTimelineTimeLeft() {
+    if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
+      if (!this.data.data.timeline.enabled)
+        return -1;
+      if (!this.data.data.active)
+        return -1;
+      return this.data.data.timeline.total - this.data.data.timeline.elapsed
+    }
+    return 0
+  }
+
+  getTimelineTimeLeftDescriptive() {
+    if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
+      if (!this.data.data.timeline.enabled)
+        return "Indefinite";
+      if (!this.data.data.active)
+        return "Not active";
+      if (this.data.data.timeline.total - this.data.data.timeline.elapsed >= 600)
+      {
+        return Math.floor((this.data.data.timeline.total - this.data.data.timeline.elapsed)/600)+"h"
+      }
+      else if (this.data.data.timeline.total - this.data.data.timeline.elapsed >= 10)
+      {
+        return Math.floor((this.data.data.timeline.total - this.data.data.timeline.elapsed)/10)+"min"
+      }
+      return (this.data.data.timeline.total - this.data.data.timeline.elapsed + 1) + " rounds"
+    }
+    return "Indefinite"
   }
 
   /**

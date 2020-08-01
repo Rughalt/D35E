@@ -29,6 +29,7 @@
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
     <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="timeline">{{ localize "D35E.Timeline" }}</a>
     <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
   </nav>
 
@@ -40,7 +41,35 @@
       {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
     </div>
 
-    {{!-- Changes Tab --}}
+    {{!-- Timeline Tab --}}
+    <div class="tab flexcol" data-group="primary" data-tab="timeline">
+        <span style="flex: none">{{localize "D35E.TimelineInfo"}}</span>
+        <div class="form-group">
+          <label>{{localize "D35E.TimelineEnabled"}}</label>
+          <input type="checkbox" name="data.timeline.enabled" {{checked data.timeline.enabled}}/>
+        </div>
+        {{!-- Total time --}}
+        <div class="form-group">
+          <label>{{localize "D35E.TimelineFormula"}}</label>
+          <input type="text" name="data.timeline.formula" value="{{data.timeline.formula}}" data-dtype="String" />
+        </div>
+        {{!-- Total time --}}
+        <div class="form-group">
+          <label>{{localize "D35E.TimelineTotal"}}</label>
+          <input type="text" name="data.timeline.total" value="{{data.timeline.total}}" data-dtype="Number" disabled />
+        </div>
+
+        {{!-- Elapsed time --}}
+        <div class="form-group">
+          <label>{{localize "D35E.TimelineElapsed"}}</label>
+          <input type="text" name="data.timeline.elapsed" value="{{data.timeline.elapsed}}" data-dtype="Number"/>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "D35E.TimelineDeleteOnExpiry"}}</label>
+          <input type="checkbox" name="data.timeline.deleteOnExpiry" {{checked data.timeline.deleteOnExpiry}}/>
+        </div>
+    </div>
     <div class="tab flexcol" data-group="primary" data-tab="changes">
       <div class="form-group select">
         <label>{{localize "D35E.Type"}}</label>

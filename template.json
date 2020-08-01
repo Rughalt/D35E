@@ -983,7 +983,8 @@
           "value": 0,
           "max": 0,
           "per": null,
-          "autoDeductCharges": true
+          "autoDeductCharges": true,
+          "allowMultipleUses": false
         }
       },
       "action": {
@@ -1015,7 +1016,8 @@
           "description": ""
         },
         "effectNotes": "",
-        "attackNotes": ""
+        "attackNotes": "",
+        "specialActions": []
       },
       "links": {
         "links": {
@@ -1096,10 +1098,17 @@
       "classSkills": {}
     },
     "buff": {
-      "templates": ["itemDescription", "changes", "contextNotes"],
+      "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect"],
       "buffType": "temp",
       "active": false,
-      "level": 0
+      "level": 0,
+      "timeline": {
+        "elapsed": 0,
+        "total": 0,
+        "formula": "",
+        "enabled": false,
+        "deleteOnExpiry": false
+      }
     },
     "consumable": {
       "templates": ["itemDescription", "physicalItem", "activatedEffect", "action"],

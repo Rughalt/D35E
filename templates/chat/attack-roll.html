@@ -48,7 +48,7 @@
     {{/if}}{{/if}}
 
     {{#if atk.cards.length}}
-    <div class="flexrow card-buttons">
+    <div class="flexcol card-buttons">
       {{#each atk.cards as |card|}}
       <button data-action="{{card.action}}" data-value="{{card.value}}">{{card.label}}</button>
       {{/each}}

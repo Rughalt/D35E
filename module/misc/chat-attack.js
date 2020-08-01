@@ -33,6 +33,7 @@ export class ChatAttack {
     this.hasDamage = false;
 
     this.cards = [];
+    this.special = [];
     this.effectNotes = "";
   }
 
@@ -78,6 +79,7 @@ export class ChatAttack {
     data.isCrit   = critType === 1;
     data.isFumble = critType === 2;
 
+
     // Add crit confirm
     if (!critical && d20.total >= this.critRange) {
       this.hasCritConfirm = true;
@@ -87,6 +89,7 @@ export class ChatAttack {
 
   async addDamage({extraParts=[], primaryAttack=true, critical=false}={}) {
     if (!this.item) return;
+
 
     this.hasDamage = true;
     let data = this.damage;
@@ -136,7 +139,11 @@ export class ChatAttack {
 
   async addEffect({primaryAttack=true}={}) {
     if (!this.item) return;
-
     this.effectNotes = this.item.rollEffect({ primaryAttack: primaryAttack });
+    if (this.item.data.data.specialActions === undefined || this.item.data.data.specialActions === null)
+      return;
+    for (let action of this.item.data.data.specialActions) {
+      this.cards.push({label: action.name, value: {range: action.range, action: action.action}, action: "customAction",});
+    }
   }
 }

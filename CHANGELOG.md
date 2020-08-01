@@ -3,6 +3,8 @@
 
 ### Features
 - Level adjustment for races
+- Buff time tracking
+- Multiple-use items
 
 ### Bug Fixes
 - Fixed skill calculation for multiclass characters

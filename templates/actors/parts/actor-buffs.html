@@ -26,6 +26,11 @@
       <li class="inventory-header flexrow">
         <h3 class="item-name flexrow"></h3>
 
+
+        <div class="item-detail item-timeline">
+          <span>{{localize "D35E.TimelineTimed"}}</span>
+        </div>
+
         <div class="item-detail item-level">
           <span>{{localize "D35E.Level"}}</span>
         </div>
@@ -50,7 +55,11 @@
               <div class="item-image" style="background-image: url('{{item.img}}')"></div>
               <h4>{{item.name}}</h4>
           </div>
-
+          <div class="item-detail item-timeline">
+          {{#if item.data.timeline.enabled }}
+            <span>{{item.timelineLeftText}}</span>
+          {{/if}}
+          </div>
           <div class="item-detail item-level">
             <input type="text" value="{{#if item.data.level}}{{item.data.level}}{{/if}}" data-dtype="Number"/>
           </div>

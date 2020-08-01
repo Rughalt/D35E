@@ -2090,7 +2090,6 @@ export class ActorPF extends Actor {
     let level = classes.reduce((cur, o) => {
       return cur + o.data.data.levels;
     }, 0);
-    console.log(raceLA)
     level += raceLA;
 
     if (getProperty(this.data, "data.details.level.value") !== level) {
@@ -3085,6 +3084,14 @@ export class ActorPF extends Actor {
     }, { inplace: false });
 
     return result;
+  }
+
+  static applyAction(actionValue) {
+
+  }
+
+  applyActionOnSelf(actionValue) {
+
   }
 }
 

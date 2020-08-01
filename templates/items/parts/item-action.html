@@ -142,4 +142,19 @@
   <label>{{localize "D35E.EffectNotes"}}</label>
   <textarea type="text" name="data.effectNotes" style="white-space: pre">{{data.effectNotes}}</textarea>
 </div>
+
+
+<h4 class="attack-header">
+  {{localize "D35E.SpecialActions"}}
+  <a class="special-control add-special"><i class="fas fa-plus"></i></a>
+</h4>
+<ol class="special-parts form-group">
+  {{#each data.specialActions as |part a|}}
+  <li class="special-part flexrow" data-attack-part="{{a}}">
+    <input type="text" name="data.specialActions.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "name"}}"/>
+    <input type="text" name="data.specialActions.{{a}}.action" placeholder="{{localize "D35E.Action"}}" value="{{lookup this "action"}}"/>
+    <a class="special-control delete-special"><i class="fas fa-minus"></i></a>
+  </li>
+  {{/each}}
+</ol>
 {{/if}}

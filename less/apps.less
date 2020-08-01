@@ -40,6 +40,31 @@
     }
   }
 
+  input[type="number"] {
+    width: calc(100% - 2px);
+    min-width: 20px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 1px 3px;
+    margin: 0;
+    color: #191813;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: inherit;
+    line-height: inherit;
+    border: 1px solid #7a7971;
+    border-radius: 3px;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    &:hover,
+    &:focus {
+      border: 1px solid #111;
+      box-shadow: 0 0 8px red;
+    }
+  }
+
   // Disabled Fields
   input:disabled,
   select:disabled,

@@ -375,7 +375,8 @@ D35E.itemActionTypes = {
   "spellsave": "D35E.ActionSpellSave",
   "save": "D35E.ActionSave",
   "heal": "D35E.ActionHeal",
-  "other": "D35E.ActionOther"
+  "other": "D35E.ActionOther",
+  "special": "D35E.ActionSpecial"
 };
 
 /* -------------------------------------------- */

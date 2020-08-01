@@ -255,12 +255,12 @@
     color: @colorOlive;
   }
 
-  .damage-parts, .attack-parts {
+  .damage-parts, .attack-parts, .special-parts {
     list-style: none;
     margin: 0;
     padding: 0;
 
-    .damage-part, .attack-part {
+    .damage-part, .attack-part, .special-part {
       flex: 0 0 100%;
       padding: 0;
       input {
@@ -294,7 +294,7 @@
     }
   }
 
-  .damage-control, .attack-control, .change-control, .context-note-control {
+  .damage-control, .attack-control, .change-control, .context-note-control, .special-control {
     width: 18px;
     flex: 0 0 18px;
     line-height: 24px;
@@ -510,6 +510,10 @@
       flex: 0 0 40px;
       border-right: 1px solid @colorFaint;
     }
+    .item-timeline {
+       flex: 0 0 80px;
+       border-right: 1px solid @colorFaint;
+     }
 
     .item-feat-level {
       flex: 0 0 60px;

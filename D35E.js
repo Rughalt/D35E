@@ -204,6 +204,20 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
   }
 });
 
+Hooks.on("preUpdateCombat", (combat, combatant, info, data) => {
+  const actor = game.actors.tokens[combat.current.tokenId];
+  if (actor != null) {
+    actor.refresh();
+    if (actor.items !== undefined && actor.items.size > 0) {
+      // Update items
+      for (let i of actor.items) {
+        actor.updateItemResources(i);
+        i.addElapsedTime(1);
+      }
+    }
+  }
+});
+
 // Create race on actor
 Hooks.on("preCreateOwnedItem", (actor, item) => {
   if (!(actor instanceof Actor)) return;
