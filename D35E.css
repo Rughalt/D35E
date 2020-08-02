@@ -617,14 +617,35 @@
   margin: 0;
   padding: 0;
 }
-.D35E.sheet.actor .sheet-header img.profile {
+.D35E.sheet.actor .sheet-header div.profile {
   flex: 0 0 120px;
   max-width: 120px;
   min-height: 120px;
-  max-height: 120px;
-  height: 120px;
+  max-height: 136px;
+  overflow: hidden;
   object-fit: contain;
   border: none;
+  background-size: cover;
+  background-position: center;
+}
+.D35E.sheet.actor .sheet-header div.profile img {
+  width: 120px;
+  min-height: 120px;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+}
+.D35E.sheet.actor .sheet-header div.profile .buffbox {
+  position: absolute;
+  width: 120px;
+}
+.D35E.sheet.actor .sheet-header div.profile .buffbox div {
+  height: 16px;
+  width: 16px;
+  flex: 0 16px;
+  background-size: 16px;
+  margin: 2px;
+  border: white 0.5px solid;
 }
 .D35E.sheet.actor .sheet-header .hd {
   flex: 0 0 88px;
@@ -2205,6 +2226,12 @@
 .D35E.chat-card .card-buttons {
   margin: 5px 0;
 }
+.D35E.chat-card .card-buttons img {
+  height: 24px;
+  float: left;
+  vertical-align: middle;
+  margin-right: -24px;
+}
 .D35E.chat-card .card-buttons span {
   display: block;
   line-height: 28px;
@@ -2214,7 +2241,7 @@
 .D35E.chat-card .card-buttons button {
   font-size: 12px;
   height: 24px;
-  line-height: 20px;
+  line-height: 24px;
   margin: 2px 0;
 }
 .D35E.chat-card .card-footer {

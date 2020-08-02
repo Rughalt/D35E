@@ -5,9 +5,20 @@
 
   {{!-- Sheet Header --}}
   <header class="sheet-header flexrow">
-
-    <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
-
+    <div class="profile"  >
+      <div class="buffbox flexrow">
+        {{#each buffs.all.items as |buff bif|}}
+          {{#if buff.data.active}}
+            <div class="item-image tooltip" style="background-image: url('{{buff.img}}')">
+             <span class="tooltipcontent">
+                  {{buff.name}}
+                </span>
+            </div>
+          {{/if}}
+        {{/each}}
+      </div>
+      <img src="{{actor.img}}"  data-edit="img">
+    </div>
     <div class="header-details flexcol">
       <div class="flexrow">
         <h1 class="charname">

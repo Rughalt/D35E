@@ -36,7 +36,7 @@ export class ItemPF extends Item {
     return this.hasAttack
     || this.hasDamage
     || this.hasEffect
-    || this.hasTemplate;
+    || this.hasTemplate || getProperty(this.data, "data.actionType") === "special";
   }
 
   get isSingleUse() {
@@ -391,7 +391,7 @@ export class ItemPF extends Item {
       let rollFormula = getProperty(this.data, "data.timeline.formula");
       if (data["data.timeline.formula"] != null && data["data.timeline.formula"] !== getProperty(this.data, "data.timeline.formula"))
         rollFormula = data["data.timeline.formula"]
-      if (rollFormula !== undefined)
+      if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "")
         data["data.timeline.total"] = new Roll(rollFormula, rollData).roll().total;
     }
 
@@ -768,6 +768,7 @@ export class ItemPF extends Item {
         damageExtraParts = [],
         primaryAttack = true,
         useMeasureTemplate = false,
+          useAmmoId = "none",
         rollMode = null;
       // Get form data
       if (form) {
@@ -783,6 +784,14 @@ export class ItemPF extends Item {
         } else {
           rollData.useAmount = parseFloat(form.find('[name="use"]').val())
         }
+
+
+        if (form.find('[name="ammunition-id"]').val() !== undefined) {
+          useAmmoId = form.find('[name="ammunition-id"]').val()
+
+        }
+
+
         // Power Attack
         if (form.find('[name="power-attack"]').prop("checked")) {
           rollData.powerAttackBonus = (1 + Math.floor(getProperty(rollData, "attributes.bab.total") / 4)) * 2;
@@ -854,7 +863,14 @@ export class ItemPF extends Item {
         await attack.addEffect({primaryAttack: primaryAttack});
         // Add to list
         attacks.push(attack);
+      } else if (getProperty(this.data, "data.actionType") === "special") {
+        let attack = new ChatAttack(this);
+        attack.rollData = rollData;
+        await attack.addSpecial();
+        // Add to list
+        attacks.push(attack);
       }
+
       chatTemplateData.attacks = attacks;
 
       // Prompt measure template
@@ -890,6 +906,9 @@ export class ItemPF extends Item {
         else
           this.addCharges(-1*parseFloat(rollData.useAmount), itemUpdateData);
       }
+      if (useAmmoId !== "none" && this.actor !== null) {
+        this.actor.quickChangeItemQuantity(useAmmoId, -1*attacks.length)
+      }
       // Update item
       this.update(itemUpdateData);
       
@@ -903,8 +922,7 @@ export class ItemPF extends Item {
 
       // Post message
       if (this.data.type === "spell") await this.roll({ rollMode: rollMode });
-      
-      if (this.hasAttack || this.hasDamage || this.hasEffect) {
+      if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
         // Get extra text and properties
         let props = [],
           extraText = "";
@@ -945,7 +963,7 @@ export class ItemPF extends Item {
     };
 
     // Handle fast-forwarding
-    if (skipDialog || (ev instanceof MouseEvent && (ev.shiftKey || ev.button === 2))) return _roll.call(this, true);
+    if (skipDialog || (ev instanceof MouseEvent && (ev.shiftKey || ev.button === 2)) || getProperty(this.data, "data.actionType") === "special") return _roll.call(this, true);
 
     // Render modal dialog
     let template = "systems/D35E/templates/apps/attack-roll-dialog.html";
@@ -960,6 +978,9 @@ export class ItemPF extends Item {
       hasDamageAbility: getProperty(this.data, "data.ability.damage") !== "",
       isNaturalAttack: getProperty(this.data, "data.attackType") === "natural",
       isWeaponAttack: getProperty(this.data, "data.attackType") === "weapon",
+      isRangedWeapon: getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.actionType") === "rwak",
+      ammunition: this.actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
+      extraAttacksCount: (getProperty(this.data, "data.attackParts") || []).length + 1,
       hasTemplate: this.hasTemplate,
     };
     const html = await renderTemplate(template, dialogData);
@@ -975,7 +996,7 @@ export class ItemPF extends Item {
       }
       if ((getProperty(this.data, "data.attackParts") || []).length || this.type === "spell") {
         buttons.multi = {
-          label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : game.i18n.localize("D35E.FullAttack"),
+          label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : (game.i18n.localize("D35E.FullAttack") + " ("+((getProperty(this.data, "data.attackParts") || []).length + 1)+" attacks)"),
                     callback: html => roll = _roll.call(this, true, html)
         };
       }
@@ -1397,8 +1418,7 @@ export class ItemPF extends Item {
       if (!isNaN(parseInt(value))) ActorPF.applyDamage(parseInt(value));
     } else if (action === "customAction") {
       const value = button.dataset.value;
-      const range = value.range;
-      const actionValue = value.action;
+      const actionValue = value;
       /*
        * Action Value syntax
        * <action> <object> on <target>, for example:
@@ -1408,16 +1428,33 @@ export class ItemPF extends Item {
        * - Damage <roll> on self
        * -
        */
-      const target = "self";
-      if (target === "self") {
-        actor.applyActionOnSelf(actionValue)
-      } else {
-        ActorPF.applyAction(actionValue);
+      let actions = ItemPF.parseAction(actionValue)
+      console.log(actions)
+      for (let actionData of actions) {
+        if (actionData.target === "self") {
+          await actor.applyActionOnSelf(actionData)
+        } else {
+          await ActorPF.applyAction(actionData);
+        }
       }
     }
 
     // Re-enable the button
     button.disabled = false;
+  }
+
+  static parseAction(action) {
+    let actions = []
+    for (let group of action.split(";")) {
+      let actionParts = group.match('([A-Za-z]+) (.*?) on (target|self)')
+      if (actionParts !== null)
+        actions.push({
+          action: actionParts[1],
+          parameters: actionParts[2].match(/(?:[^\s"]+|"[^"]*")+/g),
+          target: actionParts[3]
+        })
+    }
+    return actions
   }
 
   /* -------------------------------------------- */
@@ -1478,7 +1515,7 @@ export class ItemPF extends Item {
         return
       if (!this.data.data.active)
         return
-      if (this.data.data.timeline.elapsed + time > this.data.data.timeline.total) {
+      if (this.data.data.timeline.elapsed + time >= this.data.data.timeline.total) {
         if (!this.data.data.timeline.deleteOnExpiry) {
           let updateData = {}
           updateData["data.active"] = false;
@@ -1520,7 +1557,9 @@ export class ItemPF extends Item {
       {
         return Math.floor((this.data.data.timeline.total - this.data.data.timeline.elapsed)/10)+"min"
       }
-      return (this.data.data.timeline.total - this.data.data.timeline.elapsed + 1) + " rounds"
+      else if (this.data.data.timeline.total - this.data.data.timeline.elapsed > 1)
+        return (this.data.data.timeline.total - this.data.data.timeline.elapsed) + " rounds"
+      return "Last round";
     }
     return "Indefinite"
   }

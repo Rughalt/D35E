@@ -4,7 +4,8 @@
 ### Features
 - Level adjustment for races
 - Buff time tracking
-- Multiple-use items
+- Use multiple items/features/classes charges at once
+- Ability to use ammunition with ranged weapon attacks
 
 ### Bug Fixes
 - Fixed skill calculation for multiclass characters

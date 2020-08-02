@@ -54,10 +54,19 @@
       {{/each}}
     </div>
     {{/if}}
+
+    {{#if atk.special.length}}
+    <div class="flexcol card-buttons">
+      {{#each atk.special as |card|}}
+      <button data-action="{{card.action}}" data-value="{{card.value}}">{{#if card.hasImg}}<img src="{{card.img}}">{{/if}}{{card.label}}</button>
+      {{/each}}
+    </div>
+    {{/if}}
     <div class="flexcol property-group gm-sensitive">
       {{{atk.effectNotes}}}
       </div>
     </div>
+
   {{/each}}
 
   {{#if hasExtraText}}
@@ -76,4 +85,6 @@
   </div>
   {{/each}}
   {{/if}}
+
+
 </div>

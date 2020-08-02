@@ -1174,7 +1174,8 @@
     },
     "loot": {
       "templates": ["itemDescription", "physicalItem"],
-      "subType": "misc"
+      "subType": "misc",
+      "bonusAmmoDamage": ""
     },
     "spell": {
       "templates": ["itemDescription", "activatedEffect", "action"],

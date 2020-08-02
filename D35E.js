@@ -204,8 +204,8 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
   }
 });
 
-Hooks.on("preUpdateCombat", (combat, combatant, info, data) => {
-  const actor = game.actors.tokens[combat.current.tokenId];
+Hooks.on("updateCombat", (combat, combatant, info, data) => {
+  const actor = combat.combatant.actor;
   if (actor != null) {
     actor.refresh();
     if (actor.items !== undefined && actor.items.size > 0) {

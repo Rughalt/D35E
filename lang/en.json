@@ -900,9 +900,12 @@
   "D35E.LA": "Level Adjustment",
   "D35E.Timeline": "Timeline",
   "D35E.TimelineElapsed": "Elapsed time",
+  "D35E.TimelineEnabled": "Timeline Enabled",
   "D35E.TimelineFormula": "Total time formula",
   "D35E.TimelineTotal": "Total time",
   "D35E.TimelineInfo": "",
   "D35E.TimelineDeleteOnExpiry": "Delete on expiry",
-  "D35E.TimelineTimed": "Time left"
+  "D35E.TimelineTimed": "Time left",
+  "D35E.ActionSpecial": "Special",
+  "D35E.SpecialActions": "Special actions (advanced)"
 }

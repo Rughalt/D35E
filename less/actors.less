@@ -55,14 +55,39 @@
       }
     }
 
-    img.profile {
+
+    div.profile {
       flex: 0 0 120px;
       max-width: 120px;
       min-height: 120px;
-      max-height: 120px;
-      height: 120px;
+      max-height: 136px;
+      overflow:hidden;
       object-fit: contain;
       border: none;
+      background-size: cover;
+      background-position: center;
+
+      img {
+
+        width: 120px;
+        min-height: 120px;
+        height: 100%;
+        object-fit: contain;
+        border: none;
+      }
+
+      .buffbox {
+        position: absolute;
+        width: 120px;
+        div {
+          height: 16px;
+          width: 16px;
+          flex: 0 16px;
+          background-size: 16px;
+          margin: 2px;
+          border: white 0.5px solid;
+        }
+      }
     }
 
     .hd {

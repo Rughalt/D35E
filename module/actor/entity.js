@@ -3077,6 +3077,35 @@ export class ActorPF extends Actor {
     });
   }
 
+  /**
+   * Import a new owned Item from a compendium collection
+   * The imported Item is then added to the Actor as an owned item.
+   *
+   * @param collection {String}     The name of the pack from which to import
+   * @param name {String}        The name of the compendium entry to import
+   */
+  async importItemFromCollectionByName(collection, name, unique = false) {
+
+    const pack = game.packs.find(p => p.collection === collection);
+    if (pack.metadata.entity !== "Item") return;
+    await pack.getIndex();
+    const entry = pack.index.find(e => e.name === name)
+    return pack.getEntity(entry._id).then(ent => {
+      if (unique) {
+        if (this.items.filter(o => o.name === name && o.type === ent.type).length > 0)
+          return;
+      }
+      console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
+
+      let data = duplicate(ent.data);
+      if (this.sheet != null && this.sheet.rendered) {
+        data = mergeObject(data, this.sheet.getDropData(data));
+      }
+      delete data._id;
+      return this.createOwnedItem(data);
+    });
+  }
+
   getRollData(data=null) {
     if (data == null) data = this.data.data;
     const result = mergeObject(data, {
@@ -3086,12 +3115,102 @@ export class ActorPF extends Actor {
     return result;
   }
 
-  static applyAction(actionValue) {
-
+  static applyAction(action) {
+    const promises = [];
+    for (let t of canvas.tokens.controlled) {
+      promises.push(t.actor.applyActionOnSelf(action));
+    }
+    return Promise.all(promises);
   }
 
-  applyActionOnSelf(actionValue) {
+  async applyActionOnSelf(action) {
+    console.log('Action', action)
 
+    function cleanParam(parameter) {
+      return parameter.replace("\"","");
+    }
+
+    switch (action.action) {
+      case "Create":
+      case "Give":
+        if (action.parameters.length === 1) {
+          // Create from default compendiums
+        } else if (action.parameters.length === 3) {
+          if (action.parameters[1] === "from") {
+            await this.importItemFromCollectionByName(cleanParam(action.parameters[2]), cleanParam(action.parameters[0]))
+          } else {
+            ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+          }
+        } else if (action.parameters.length === 4) {
+          if (action.parameters[2] === "from" && (action.parameters[0] === "unique" || action.parameters[0] === "u")) {
+            await this.importItemFromCollectionByName(cleanParam(action.parameters[3]), cleanParam(action.parameters[1]), true)
+          } else {
+            ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+          }
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
+      case "Activate":
+        if (action.parameters.length === 1) {
+          let name = action.parameters[0]
+          let items = this.items.filter(o => o.name === name)
+          if (items.length > 0) {
+            const item = items[0]
+            if (item.type === "buff") {
+              await item.update({'data.active': true})
+            } else {
+              await item.use({skipDialog: true})
+            }
+          }
+        } else if (action.parameters.length === 2) {
+
+          let name = action.parameters[1]
+          let type = action.parameters[0]
+          let items = this.items.filter(o => o.name === name && o.type === type)
+          if (items.length > 0) {
+            const item = items[0]
+            if (item.type === "buff") {
+              await item.update({'data.active': true})
+            } else {
+              await item.use({skipDialog: true})
+            }
+          }
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+          break;
+      case "Clear":
+        if (action.parameters.length === 1) {
+          // Clear all items of type
+        } if (action.parameters.length === 2) {
+          // Clear all items of type and subtype
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
+      case "Use":
+        if (action.parameters.length === 1) {
+          // Use an action or item
+        } if (action.parameters.length === 2) {
+          // Use n items/action
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
+      case "Roll":
+        if (action.parameters.length === 1) {
+          // Do a roll
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
+      default:
+        break;
+    }
+  }
+
+  quickChangeItemQuantity(itemId, add=1) {
+    const item = this.getOwnedItem(itemId);
+
+    const curQuantity = getProperty(item.data, "data.quantity") || 0;
+    const newQuantity = Math.max(0, curQuantity + add);
+    item.update({ "data.quantity": newQuantity });
   }
 }
 

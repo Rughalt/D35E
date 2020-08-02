@@ -140,10 +140,15 @@ export class ChatAttack {
   async addEffect({primaryAttack=true}={}) {
     if (!this.item) return;
     this.effectNotes = this.item.rollEffect({ primaryAttack: primaryAttack });
+    this.addSpecial();
+  }
+
+  async addSpecial() {
+    if (!this.item) return;
     if (this.item.data.data.specialActions === undefined || this.item.data.data.specialActions === null)
       return;
     for (let action of this.item.data.data.specialActions) {
-      this.cards.push({label: action.name, value: {range: action.range, action: action.action}, action: "customAction",});
+      this.special.push({label: action.name, value: action.action, action: "customAction",img:action.img,hasImg:action.img!==undefined&&action.img!==null&&action.img!==""});
     }
   }
 }

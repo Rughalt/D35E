@@ -337,16 +337,28 @@ export class ItemSheetPF extends ItemSheet {
       data.item.data.changes.forEach(item => {
         item.subTargets = {};
         // Add specific skills
-        if (item[1] === "skill" && this.item.actor != null) {
-          const actorSkills = this.item.actor.data.data.skills;
-          for (let [s, skl] of Object.entries(actorSkills)) {
-            if (!skl.subSkills) {
-              if (skl.custom) item.subTargets[`skill.${s}`] = skl.name;
-              else item.subTargets[`skill.${s}`] = CONFIG.D35E.skills[s];
+        if (item[1] === "skill") {
+          if (this.item.actor != null) {
+            const actorSkills = this.item.actor.data.data.skills;
+            for (let [s, skl] of Object.entries(actorSkills)) {
+              if (!skl.subSkills) {
+                if (skl.custom) item.subTargets[`skill.${s}`] = skl.name;
+                else item.subTargets[`skill.${s}`] = CONFIG.D35E.skills[s];
+              } else {
+                for (let [s2, skl2] of Object.entries(skl.subSkills)) {
+                  item.subTargets[`skill.${s}.subSkills.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+                }
+              }
             }
-            else {
-              for (let [s2, skl2] of Object.entries(skl.subSkills)) {
-                item.subTargets[`skill.${s}.subSkills.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+          } else {
+            for (let [s, skl] of Object.entries(CONFIG.D35E.skills)) {
+              if (!skl.subSkills) {
+                if (skl.custom) item.subTargets[`skill.${s}`] = skl.name;
+                else item.subTargets[`skill.${s}`] = CONFIG.D35E.skills[s];
+              } else {
+                for (let [s2, skl2] of Object.entries(skl.subSkills)) {
+                  item.subTargets[`skill.${s}.subSkills.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+                }
               }
             }
           }
@@ -525,6 +537,15 @@ export class ItemSheetPF extends ItemSheet {
       return arr;
     }, []);
 
+    let actions = Object.entries(formData).filter(e => e[0].startsWith("data.specialActions"));
+    formData["data.specialActions"] = actions.reduce((arr, entry) => {
+      let [i, j] = entry[0].split(".").slice(2);
+      if ( !arr[i] ) arr[i] = {name: "", action: ""};
+      console.log(i,j)
+      arr[i][j] = entry[1];
+      return arr;
+    }, []);
+
     // Update the Item
     super._updateObject(event, formData);
   }
@@ -682,7 +703,7 @@ export class ItemSheetPF extends ItemSheet {
       let specialActions = this.item.data.data.specialActions;
       if (specialActions === undefined)
         specialActions = []
-      return this.item.update({"data.specialActions": specialActions.concat([[{name:"",action:"",range:""}]])});
+      return this.item.update({"data.specialActions": specialActions.concat([[{name:"",action:"",range:"",img:""}]])});
     }
 
     // Remove an attack component
