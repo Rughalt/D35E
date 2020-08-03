@@ -13,6 +13,7 @@
 - Fixed skill calculation for multiclass characters
 - Fixed character sheet text length
 - Fixes permission when GM rolls effect for player
+- [#2](https://github.com/Rughalt/D35E/issues/2) - Limited character sheet scrollbar
 
 ## 0.56 - 0.80
 A lot of things were fixed.
