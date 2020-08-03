@@ -3089,6 +3089,7 @@ export class ActorPF extends Actor {
     const pack = game.packs.find(p => p.collection === collection);
     if (pack.metadata.entity !== "Item") return;
     await pack.getIndex();
+    console.log('Finding item',name)
     const entry = pack.index.find(e => e.name === name)
     return pack.getEntity(entry._id).then(ent => {
       if (unique) {
@@ -3115,21 +3116,21 @@ export class ActorPF extends Actor {
     return result;
   }
 
-  static applyAction(action) {
+  static applyAction(action, actor) {
     const promises = [];
     for (let t of canvas.tokens.controlled) {
-      promises.push(t.actor.applyActionOnSelf(action));
+      promises.push(t.actor.applyActionOnSelf(action, actor));
     }
     return Promise.all(promises);
   }
 
-  async applyActionOnSelf(action) {
-    console.log('Action', action)
-
+  async applyActionOnSelf(action, actor) {
+    if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
     function cleanParam(parameter) {
-      return parameter.replace("\"","");
+      return parameter.replace(/"/gi,"");
     }
-
+    if (action.condition !== null && action.condition !== "" && !(new Roll(action.condition, this.getRollData()).roll().result))
+      return;
     switch (action.action) {
       case "Create":
       case "Give":
@@ -3152,7 +3153,7 @@ export class ActorPF extends Actor {
         break;
       case "Activate":
         if (action.parameters.length === 1) {
-          let name = action.parameters[0]
+          let name = cleanParam(action.parameters[0])
           let items = this.items.filter(o => o.name === name)
           if (items.length > 0) {
             const item = items[0]
@@ -3164,8 +3165,8 @@ export class ActorPF extends Actor {
           }
         } else if (action.parameters.length === 2) {
 
-          let name = action.parameters[1]
-          let type = action.parameters[0]
+          let name = cleanParam(action.parameters[1])
+          let type = cleanParam(action.parameters[0])
           let items = this.items.filter(o => o.name === name && o.type === type)
           if (items.length > 0) {
             const item = items[0]
@@ -3178,6 +3179,32 @@ export class ActorPF extends Actor {
         } else
           ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
           break;
+      case "Set":
+        if (action.parameters.length === 5 && action.parameters[1] === "field" && action.parameters[3] === "to") {
+          let name = cleanParam(action.parameters[0])
+
+          let items = this.items.filter(o => o.name === name)
+          if (items.length > 0) {
+            const item = items[0]
+            let updateObject = {}
+            updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+            await item.update(updateObject)
+          }
+        } else if (action.parameters.length === 6 && action.parameters[2] === "field" && action.parameters[4] === "to") {
+          let type = cleanParam(action.parameters[0])
+          let name = cleanParam(action.parameters[1])
+
+          let items = this.items.filter(o => o.name === name && o.type === type)
+          if (items.length > 0) {
+            const item = items[0]
+            let updateObject = {}
+            updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+            console.log(updateObject)
+            await item.update(updateObject)
+          }
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
       case "Clear":
         if (action.parameters.length === 1) {
           // Clear all items of type

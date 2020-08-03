@@ -391,8 +391,15 @@ export class ItemPF extends Item {
       let rollFormula = getProperty(this.data, "data.timeline.formula");
       if (data["data.timeline.formula"] != null && data["data.timeline.formula"] !== getProperty(this.data, "data.timeline.formula"))
         rollFormula = data["data.timeline.formula"]
-      if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "")
+      if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "") {
+
+        rollData.item = {};
+        rollData.item.level = getProperty(this.data, "data.level");
+        if (data["data.level"] != null && data["data.level"] !== getProperty(this.data, "data.level"))
+          rollData.item.level = data["data.level"]
+        console.log('RollData', rollData)
         data["data.timeline.total"] = new Roll(rollFormula, rollData).roll().total;
+      }
     }
 
     // Set equipment subtype and slot
@@ -926,6 +933,7 @@ export class ItemPF extends Item {
         // Get extra text and properties
         let props = [],
           extraText = "";
+        let hasBoxInfo =  this.hasAttack || this.hasDamage || this.hasEffect;
         let attackNotes = this.actor.getContextNotes("attacks.attack").reduce((cur, o) => {
           o.notes.reduce((cur2, n) => {
             cur2.push(...n.split(/[\n\r]+/));
@@ -956,6 +964,7 @@ export class ItemPF extends Item {
           hasProperties: props.length > 0,
           item: this.data,
           actor: this.actor.data,
+          hasBoxInfo: hasBoxInfo
         }, { inplace: false });
         // Create message
         await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData);
@@ -1398,11 +1407,19 @@ export class ItemPF extends Item {
     // Validate permission to proceed with the roll
     // const isTargetted = action === "save";
     const isTargetted = false;
-    if ( !( isTargetted || game.user.isGM || message.isAuthor ) ) return;
+    let isOwnerOfToken = game.actors.get(message.data.speaker.actor).hasPerm(game.user, "OWNER");
+    if ( !( isTargetted || game.user.isGM || message.isAuthor || isOwnerOfToken ) ){
+      console.log('No permission', isTargetted, game.user.isGM, isOwnerOfToken)
+      button.disabled = false;
+      return;
+    }
 
     // Get the Actor from a synthetic Token
     const actor = this._getChatCardActor(card);
-    if ( !actor ) return;
+    if ( !actor ){
+      button.disabled = false;
+      return;
+    }
 
     // Get the Item
     const item = actor.getOwnedItem(card.dataset.itemId);
@@ -1432,9 +1449,9 @@ export class ItemPF extends Item {
       console.log(actions)
       for (let actionData of actions) {
         if (actionData.target === "self") {
-          await actor.applyActionOnSelf(actionData)
+          await actor.applyActionOnSelf(actionData, actor)
         } else {
-          await ActorPF.applyAction(actionData);
+          await ActorPF.applyAction(actionData, actor);
         }
       }
     }
@@ -1446,10 +1463,18 @@ export class ItemPF extends Item {
   static parseAction(action) {
     let actions = []
     for (let group of action.split(";")) {
-      let actionParts = group.match('([A-Za-z]+) (.*?) on (target|self)')
+      let condition = "";
+      let groupAction = group;
+      if (group.indexOf(" if ") !== -1)
+      {
+        condition = group.split(" if ")[1]
+        groupAction = group.split(" if ")[0]
+      }
+      let actionParts = groupAction.match('([A-Za-z]+) (.*?) on (target|self)')
       if (actionParts !== null)
         actions.push({
           action: actionParts[1],
+          condition: condition,
           parameters: actionParts[2].match(/(?:[^\s"]+|"[^"]*")+/g),
           target: actionParts[3]
         })

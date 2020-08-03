@@ -6,10 +6,16 @@
 - Buff time tracking
 - Use multiple items/features/classes charges at once
 - Ability to use ammunition with ranged weapon attacks
+- Ability to assign bonus damage to ammunition
+- Added party HUD
 
 ### Bug Fixes
 - Fixed skill calculation for multiclass characters
 - Fixed character sheet text length
+- Fixes permission when GM rolls effect for player
+
+## 0.56 - 0.80
+A lot of things were fixed.
 
 ## 0.55
 Updated to 0.6.0 std's

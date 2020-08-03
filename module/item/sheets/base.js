@@ -703,7 +703,7 @@ export class ItemSheetPF extends ItemSheet {
       let specialActions = this.item.data.data.specialActions;
       if (specialActions === undefined)
         specialActions = []
-      return this.item.update({"data.specialActions": specialActions.concat([[{name:"",action:"",range:"",img:""}]])});
+      return this.item.update({"data.specialActions": specialActions.concat([[{name:"",action:"",range:"",img:"",condition:""}]])});
     }
 
     // Remove an attack component

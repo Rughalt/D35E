@@ -22,6 +22,7 @@ import { DicePF } from "./module/dice.js";
 import { getItemOwner, sizeDie, getActorFromId, isMinimumCoreVersion } from "./module/lib.js";
 import { ChatMessagePF } from "./module/sidebar/chat-message.js";
 import { TokenQuickActions } from "./module/token-quick-actions.js";
+import { TopPortraitBar } from "./module/top-portrait-bar.js";
 import * as chat from "./module/chat.js";
 import * as migrations from "./module/migration.js";
 
@@ -133,6 +134,35 @@ Hooks.once("ready", async function() {
   game.actors.entities.forEach(obj => { obj._updateChanges({ sourceOnly: true }); });
   
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Attacks(app, html, data) });
+  Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Buffs(app, html, data) });
+
+  for (let key of game.actors.keys()) {
+    TopPortraitBar.render(game.actors.get(key))
+  }
+
+  if (!game.user.isGM)
+    return;
+  // Edit next line to match module.
+  const system = game.system;
+  const title = system.data.title;
+  const moduleVersion = system.data.version;
+  game.settings.register(title, 'version', {
+    name: `${title} Version`,
+    default: "0.0.0",
+    type: String,
+    scope: 'world',
+  });
+  const oldVersion = game.settings.get(title, "version");
+
+  if (!isNewerVersion(moduleVersion, oldVersion))
+    return;
+
+  (await import(
+          /* webpackChunkName: "welcome-screen" */
+          './module/welcome-screen.js'
+          )
+  ).default();
+
 });
 
 /* -------------------------------------------- */
@@ -205,6 +235,8 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
 });
 
 Hooks.on("updateCombat", (combat, combatant, info, data) => {
+  if (!game.user.isGM)
+    return;
   const actor = combat.combatant.actor;
   if (actor != null) {
     actor.refresh();
@@ -236,6 +268,11 @@ Hooks.on("createOwnedItem", (actor) => {
 Hooks.on("deleteOwnedItem", (actor) => {
   if (!(actor instanceof Actor)) return;
   actor.refresh();
+});
+
+Hooks.on("updateActor",  (actor) => {
+  if (!(actor instanceof Actor)) return;
+  TopPortraitBar.render(actor)
 });
 
 

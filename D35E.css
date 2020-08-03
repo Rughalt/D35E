@@ -1913,6 +1913,22 @@
   margin-left: 5px;
   flex: 1;
 }
+.D35E.sheet.item .damage-parts .special-part div.flexrow,
+.D35E.sheet.item .attack-parts .special-part div.flexrow,
+.D35E.sheet.item .special-parts .special-part div.flexrow {
+  width: 100%;
+  line-height: 24px;
+}
+.D35E.sheet.item .damage-parts .special-part div.flexrow span,
+.D35E.sheet.item .attack-parts .special-part div.flexrow span,
+.D35E.sheet.item .special-parts .special-part div.flexrow span {
+  flex: 0 0 100px;
+}
+.D35E.sheet.item .damage-parts .special-part a,
+.D35E.sheet.item .attack-parts .special-part a,
+.D35E.sheet.item .special-parts .special-part a {
+  width: 100%;
+}
 .D35E.sheet.item .changes,
 .D35E.sheet.item .context-notes {
   list-style: none;
@@ -2573,8 +2589,65 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   bottom: 0;
   display: flex;
 }
+.col.actions .above {
+  position: absolute;
+  top: -50px;
+  display: flex;
+}
 .below .control-icon.token-quick-action {
   margin: 0 5px;
+}
+.above .control-icon.token-quick-action {
+  margin: 0 5px;
+}
+.portrait-bar {
+  height: 100px;
+  position: fixed;
+  top: 60px;
+  overflow: hidden;
+  left: 120px;
+  z-index: 30;
+}
+.portrait-bar .portrait {
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #000;
+  border-radius: 2px;
+  margin: 0 5px;
+  position: relative;
+}
+.portrait-bar .portrait img {
+  border: none;
+}
+.portrait-bar .portrait .buffbox {
+  position: absolute;
+  width: 120px;
+}
+.portrait-bar .portrait .buffbox div {
+  height: 16px;
+  width: 16px;
+  flex: 0 16px;
+  background-size: 16px;
+  margin: 2px;
+  border: white 0.5px solid;
+}
+.portrait-bar .portrait.dead {
+  filter: grayscale(1);
+}
+.portrait-bar .portrait .damage {
+  background: rgba(255, 0, 0, 0.4);
+  position: absolute;
+  width: 98px;
+}
+.portrait-bar .portrait .life {
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  color: black;
+  font-weight: 600;
+  -webkit-text-stroke: 1px white;
+  text-stroke: 1px white;
 }
 #health-config nav.tabs {
   font-size: 16px;

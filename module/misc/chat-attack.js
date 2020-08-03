@@ -148,6 +148,12 @@ export class ChatAttack {
     if (this.item.data.data.specialActions === undefined || this.item.data.data.specialActions === null)
       return;
     for (let action of this.item.data.data.specialActions) {
+      if (action.condition !== undefined && action.condition !== null && action.condition !== "") {
+        console.log('Condition', action.condition, this.rollData)
+        if (!(new Roll(action.condition, this.rollData).roll().total)){
+          continue;
+        }
+      }
       this.special.push({label: action.name, value: action.action, action: "customAction",img:action.img,hasImg:action.img!==undefined&&action.img!==null&&action.img!==""});
     }
   }

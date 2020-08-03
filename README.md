@@ -28,6 +28,9 @@ Most of the stuff that is the same as in PF1 works. For things that are differen
 - Skills - Done, except for related skill bonuses
 - Power points - Done, simple system
 
+## Support
+This project is done in my free time and for free. If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
+
 ## Packtool
 As changing compendiums is not very fun in foundry and nedb is not a proper json, packtool.py can be used to pack and unpack data to sources directory.
 Use `packtool unpack <compendium file>` to unpack to json and `packtool pack <compendium file>` to pack to db (generating proper random nedb ids).
