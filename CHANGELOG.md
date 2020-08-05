@@ -2,7 +2,7 @@
 ## 0.81
 
 ### SRD
-- Finished Base Classes
+- Finished Base Classes (without Wilder and Soulknife special abilities)
 - Finished Races (without new icons tough)
 - Finished Racial HD
 
