@@ -10,10 +10,10 @@ export const displayChatActionButtons = function(message, html, data) {
     if (actor && actor.owner) return;
     else if (game.user.isGM || (data.author.id === game.user.id)) return;
 
-    // Otherwise conceal action buttons
+    // Otherwise make buttons disabled, but show the actions action buttons
     const buttons = chatCard.find("button[data-action]");
     buttons.each((a, btn) => {
-      btn.style.display = "none"
+      btn.disabled = true
     });
   }
 };
@@ -27,6 +27,7 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
     user: game.user._id,
     type: CONST.CHAT_MESSAGE_TYPES.CHAT,
   }, chatData);
+  console.log('ChataData', chatData)
   chatData.content = await renderTemplate(chatTemplate, chatTemplateData);
   // Handle different roll modes
   switch (chatData.rollMode) {

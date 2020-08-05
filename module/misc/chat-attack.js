@@ -154,7 +154,7 @@ export class ChatAttack {
           continue;
         }
       }
-      this.special.push({label: action.name, value: action.action, action: "customAction",img:action.img,hasImg:action.img!==undefined&&action.img!==null&&action.img!==""});
+      this.special.push({label: action.name, value: action.action, isTargeted: action.action.endsWith("target") || action.action.endsWith("target;"), action: "customAction",img:action.img,hasImg:action.img!==undefined&&action.img!==null&&action.img!==""});
     }
   }
 }

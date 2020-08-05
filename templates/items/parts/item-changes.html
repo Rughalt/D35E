@@ -34,7 +34,15 @@
     </label>
   </div>
 </div>
-
+{{!-- Conditions --}}
+<div class="form-group">
+  <label class="header">{{localize "D35E.ConditionPlural"}}</label>
+  <div class="buff-flags">
+    <label class="checkbox">
+      <input type="checkbox" name="data.conditionFlags.dazzled" {{checked data.conditionFlags.dazzled}}/> {{localize "D35E.CondDazzled"}}
+    </label>
+  </div>
+</div>
 <div>
   {{!-- Changes --}}
   <h4 class="change-header">

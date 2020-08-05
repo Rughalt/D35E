@@ -469,6 +469,8 @@ export class ActorPF extends Actor {
         return ["data.attributes.cmd.total", "data.attributes.cmd.flatFootedTotal"];
       case "init":
         return "data.attributes.init.total";
+      case "spellResistance":
+        return "data.attributes.sr.total";
     }
 
     if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -499,7 +501,7 @@ export class ActorPF extends Actor {
     return this.isPC;
   }
 
-  _addDefaultChanges(data, changes, flags, sourceInfo) {
+  _addDefaultChanges(data, changes, flags, sourceInfo, conditionFlags) {
     // Class hit points
     const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
       return a.sort - b.sort;
@@ -602,6 +604,8 @@ export class ActorPF extends Actor {
       }
     });
 
+
+
     // Add fly bonuses or penalties based on maneuverability
     const flyKey = getProperty(data, "data.attributes.speed.fly.maneuverability");
     let flyValue = 0;
@@ -676,8 +680,13 @@ export class ActorPF extends Actor {
       });
     }
 
+
     // Add conditions
-    for (let [con, v] of Object.entries(data.data.attributes.conditions || {})) {
+    let fullConditions = data.data.attributes.conditions || {}
+    {
+      fullConditions.dazzled = conditionFlags.dazzled || fullConditions.dazzled;
+    }
+    for (let [con, v] of Object.entries(fullConditions)) {
       if (!v) continue;
 
       switch (con) {
@@ -933,6 +942,7 @@ export class ActorPF extends Actor {
 
     // Add more changes
     let flags = {},
+        conditionFlags = {},
       sourceInfo = {};
 
     // Check flags
@@ -1016,10 +1026,19 @@ export class ActorPF extends Actor {
           break;
       }
     }
+    // Condition flags
+    for (let obj of changeObjects) {
+      if (!obj.data.conditionFlags) continue;
+      for (let [flagKey, flagValue] of Object.entries(obj.data.conditionFlags)) {
+        if (flagValue === true) {
+          conditionFlags[flagKey] = true;
+        }
+      }
+    }
 
     // Initialize data
     this._resetData(updateData, srcData1, flags, sourceInfo);
-    this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo);
+    this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, conditionFlags);
 
     // Sort changes
     allChanges.sort(this._sortChanges.bind(this));
@@ -1396,6 +1415,7 @@ export class ActorPF extends Actor {
       }, 0));
     }
 
+
     {
       const k = "data.attributes.turnUndeadUsesTotal";
       let chaMod = getProperty(data, `data.abilities.cha.mod`)
@@ -1408,6 +1428,19 @@ export class ActorPF extends Actor {
       }
       else
         linkData(data, updateData, k, 0);
+    }
+
+    {
+      const k = "data.attributes.sr.total";
+      // Set spell resistance
+      if (getProperty(data, `data.attributes.sr.formula`).length > 0) {
+        let roll = new Roll(getProperty(data, `data.attributes.sr.formula`), data).roll();
+        linkData(data, updateData, k, roll.total);
+      }
+      else {
+
+        linkData(data, updateData, k, 0);
+      }
     }
 
     {
@@ -1452,7 +1485,6 @@ export class ActorPF extends Actor {
           }
           groupLevels.set(obj.data.sneakAttackGroup, groupLevels.get(obj.data.sneakAttackGroup) + obj.data.levels)
         } catch (e) {
-          console.log(e)
         }
       })
       for (var key of groupLevels.keys()) {
@@ -1534,6 +1566,7 @@ export class ActorPF extends Actor {
     }
 
     // Apply changes
+    console.log(changes)
     for (let [changeTarget, value] of Object.entries(changes)) {
       linkData(data, updateData, changeTarget, (updateData[changeTarget] || 0) + value);
     }
@@ -1646,14 +1679,7 @@ export class ActorPF extends Actor {
     data.attributes.mods = data.attributes.mods || {};
     data.attributes.mods.skills = data.attributes.mods.skills || {};
 
-    // Set spell resistance
-    if (typeof data.attributes.sr.formula === "string" && data.attributes.sr.formula.length) {
-      let roll = new Roll(data.attributes.sr.formula, data).roll();
-      data.attributes.sr.total = roll.total;
-    }
-    else {
-      data.attributes.sr.total = 0;
-    }
+
 
     // Set spellbook info
     for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {

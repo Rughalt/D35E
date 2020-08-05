@@ -1,6 +1,11 @@
 # Changelog
 ## 0.81
 
+### SRD
+- Finished Base Classes
+- Finished Races (without new icons tough)
+- Finished Racial HD
+
 ### Features
 - Level adjustment for races
 - Buff time tracking
@@ -8,12 +13,14 @@
 - Ability to use ammunition with ranged weapon attacks
 - Ability to assign bonus damage to ammunition
 - Added party HUD
+- Added welcome screen
 
 ### Bug Fixes
 - Fixed skill calculation for multiclass characters
 - Fixed character sheet text length
 - Fixes permission when GM rolls effect for player
 - [#2](https://github.com/Rughalt/D35E/issues/2) - Limited character sheet scrollbar
+- [#3](https://github.com/Rughalt/D35E/issues/3) - Saving throws rolled multiple times
 
 ## 0.56 - 0.80
 A lot of things were fixed.

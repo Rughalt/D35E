@@ -64,7 +64,23 @@
       height: 24px;
       line-height: 24px;
       margin: 2px 0;
+
+      &[disabled] {
+        img {
+          filter: grayscale(1);
+        }
+      }
+      img.target {
+        display: none;
+      }
+      &:hover {
+        img.target {
+          display: block;
+        }
+      }
     }
+
+
   }
 
   .card-footer {

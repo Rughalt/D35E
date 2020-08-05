@@ -101,5 +101,11 @@ export class ActorRestDialog extends BaseEntitySheet {
     }
 
     actor.update(updateData);
+    if (actor.items !== undefined && actor.items.size > 0) {
+      // Update items
+      for (let i of actor.items) {
+        i.addElapsedTime(8*60*10);
+      }
+    }
   }
 }

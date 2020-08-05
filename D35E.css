@@ -2260,6 +2260,15 @@
   line-height: 24px;
   margin: 2px 0;
 }
+.D35E.chat-card .card-buttons button[disabled] img {
+  filter: grayscale(1);
+}
+.D35E.chat-card .card-buttons button img.target {
+  display: none;
+}
+.D35E.chat-card .card-buttons button:hover img.target {
+  display: block;
+}
 .D35E.chat-card .card-footer {
   padding: 3px 0 0;
   border-top: 2px groove #FFF;
@@ -2393,7 +2402,7 @@
   /* ----------------------------------------- */
 }
 .D35E.sheet.actor.character .sheet-header .charlevel {
-  flex: 0 0 220px;
+  flex: 0 0 240px;
   padding: 0 5px 2px;
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .level {

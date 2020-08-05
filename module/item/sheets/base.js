@@ -109,7 +109,7 @@ export class ItemSheetPF extends ItemSheet {
 
     // Prepare feat specific stuff
     if (data.item.type === "feat") {
-      data.isClassFeature = getProperty(this.item.data, "data.featType") === "classFeat";
+      data.isClassFeature = true; //Any feat can be a class feature
     }
 
     // Prepare weapon specific stuff
@@ -192,7 +192,6 @@ export class ItemSheetPF extends ItemSheet {
         for (let entry of spellikeItems) {
           await spellLikes.getEntity(entry._id).then(e => 
           {
-            
             if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
               data.children.spelllikes.push(e);
               this.childItemMap.set(entry._id,e);
@@ -210,7 +209,6 @@ export class ItemSheetPF extends ItemSheet {
         for (let entry of items) {
           await itemPack.getEntity(entry._id).then(e => 
           {
-            console.log(e)
             if (e.data.data.tags.some(el => el[0] === this.item.data.name))
             {
               if (e.data.type === "feat")
@@ -271,7 +269,7 @@ export class ItemSheetPF extends ItemSheet {
           await spellLikes.getEntity(entry._id).then(e => 
           {
             
-            if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
+            if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined && e.data.data.associations.classes.some(el => el[0] === this.item.data.name)) {
               data.children.spelllikes.push(e);
               this.childItemMap.set(entry._id,e);
             }
@@ -288,7 +286,7 @@ export class ItemSheetPF extends ItemSheet {
         for (let entry of items) {
           await itemPack.getEntity(entry._id).then(e => 
           {
-            if (e.data.data.tags.some(el => el[0] === this.item.data.name))
+            if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined && e.data.data.associations.classes.some(el => el[0] === this.item.data.name))
             {
               if (e.data.type === "feat")
                 data.children.traits.push(e);
@@ -743,14 +741,14 @@ export class ItemSheetPF extends ItemSheet {
 
     // Add new note
     if (a.classList.contains("add-note")) {
-      await this._onSubmit(event);  // Submit any unsaved changes
+      //await this._onSubmit(event);  // Submit any unsaved changes
       const contextNotes = this.item.data.data.contextNotes || [];
       return this.item.update({"data.contextNotes": contextNotes.concat([["", "", "", 0]])});
     }
 
     // Remove a note
     if (a.classList.contains("delete-note")) {
-      await this._onSubmit(event);  // Submit any unsaved changes
+      //await this._onSubmit(event);  // Submit any unsaved changes
       const li = a.closest(".context-note");
       const contextNotes = duplicate(this.item.data.data.contextNotes);
       contextNotes.splice(Number(li.dataset.note), 1);

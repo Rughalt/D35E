@@ -933,6 +933,9 @@
           "noEncumbrance": false,
           "mediumArmorFullSpeed": false,
           "heavyArmorFullSpeed": false
+        },
+        "conditionFlags": {
+          "dazzled": false
         }
       },
       "contextNotes": {
@@ -1269,6 +1272,9 @@
     },
     "attack": {
       "templates": ["itemDescription", "activatedEffect", "action"],
+      "associations": {
+        "classes": []
+      },
       "attackType": "weapon",
       "masterwork": false,
       "enh": null,
