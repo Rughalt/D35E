@@ -2407,6 +2407,7 @@
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .level {
   height: 28px;
+  line-height: 16px;
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .experience input[type="text"] {
   width: 100px;
@@ -2618,13 +2619,16 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   z-index: 30;
 }
 .portrait-bar .portrait {
+  pointer-events: initial;
   overflow: hidden;
   width: 100px;
   height: 100px;
   border: 1px solid #000;
   border-radius: 2px;
-  margin: 0 5px;
+  margin-right: 10px;
   position: relative;
+  background: #595959;
+  background: radial-gradient(circle, #595959 0%, #000000 100%);
 }
 .portrait-bar .portrait img {
   border: none;
