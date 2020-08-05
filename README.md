@@ -28,8 +28,6 @@ Most of the stuff that is the same as in PF1 works. For things that are differen
 You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
 
 ## Support
-If you want to talk about this implementation, you can find our Discord community [here](https://discord.gg/wDyUaZH)
-
 This project is done in my free time and for free. If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
 
 ## Packtool
