@@ -63,7 +63,7 @@ Hooks.once("init", async function() {
 
   // Record Configuration Values
   CONFIG.D35E = D35E;
-  CONFIG.debug.hooks = true
+  CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.entityClass = ChatMessagePF;
@@ -176,13 +176,6 @@ Hooks.on("canvasInit", function() {
   if (isMinimumCoreVersion("0.5.6")) SquareGrid.prototype.measureDistances = measureDistances;
   else SquareGrid.prototype.measureDistance = measureDistance;
 });
-
-Hooks.on("renderSceneNavigation", function() {
-  for (let key of game.actors.keys()) {
-    TopPortraitBar.render(game.actors.get(key))
-  }
-});
-
 
 
 /* -------------------------------------------- */

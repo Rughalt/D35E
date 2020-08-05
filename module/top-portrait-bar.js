@@ -7,14 +7,11 @@ export class TopPortraitBar {
       var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexrow'></div>" )
       $('#navigation').append($portraitBarDiv)
     }
-    let height = $('#scene-list').height()
     portraitBar = $('#portrait-bar')
     console.log('Bar', portraitBar, actor)
     if (actor == null)
       return;
     if (actor.data.type !== "character")
-      return;
-    if (!actor.data.data.isPartyMember)
       return;
     if (!actor.hasPerm(game.user, "OBSERVER")) // Player cannot see
       return;
@@ -23,7 +20,7 @@ export class TopPortraitBar {
       var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait'><div class='buffbox flexrow'></div><img src='"+actor.img+"'><div class='damage'></div><span class='life'>10/10</span></div>" )
       portraitBar.append($portraitDiv)
     }
-    portraitBar.css('top',height+18)
+
     let portraitDiv = portraitBar.find('#actor-portrait-'+actor.id);
     let buffBar = portraitDiv.find('.buffbox');
     buffBar.empty()
