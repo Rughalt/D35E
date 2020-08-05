@@ -150,12 +150,13 @@
 </h4>
 <ol class="special-parts form-group">
   {{#each data.specialActions as |part a|}}
-  <li class="special-part flexcol" data-attack-part="{{a}}">
+  <li class="special-part flexcol" data-special-actions="{{a}}">
     <div class="flexrow"><span>Name:</span><input type="text" name="data.specialActions.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "name"}}"/></div>
     <div class="flexrow"><span>Action:</span><input type="text" name="data.specialActions.{{a}}.action" placeholder="{{localize "D35E.Action"}}" value="{{lookup this "action"}}"/></div>
     <div class="flexrow"><span>Condition:</span><input type="text" name="data.specialActions.{{a}}.condition" placeholder="{{localize "D35E.Condition"}}" value="{{lookup this "condition"}}"/></div>
     <div class="flexrow"><span>Icon path:</span><input type="text" name="data.specialActions.{{a}}.img" placeholder="{{localize "D35E.Image"}}" value="{{lookup this "img"}}"/></div>
     <a class="special-control delete-special"><i class="fas fa-minus"></i>Remove</a>
+
   </li>
   {{/each}}
 </ol>
