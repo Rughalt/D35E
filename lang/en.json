@@ -908,5 +908,6 @@
   "D35E.TimelineTimed": "Time left",
   "D35E.ActionSpecial": "Special",
   "D35E.SpecialActions": "Special actions (advanced)",
-  "D35E.AllowMultipleUses": "Use multiple charges at once"
+  "D35E.AllowMultipleUses": "Use multiple charges at once",
+  "D35E.PartyMember": "Party Member"
 }

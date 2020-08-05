@@ -876,6 +876,7 @@
     },
     "character": {
       "templates": ["common"],
+      "isPartyMember": false,
       "details": {
         "xp": {
           "value": 0,

@@ -33,13 +33,16 @@
   z-index: 30;
 
   .portrait {
+    pointer-events: initial;
     overflow: hidden;
     width: 100px;
     height: 100px;
     border: 1px solid #000;
     border-radius: 2px;
-    margin: 0 5px;
+    margin-right: 10px;
     position: relative;
+    background: rgb(89,89,89);
+    background: radial-gradient(circle, rgba(89,89,89,1) 0%, rgba(0,0,0,1) 100%);
 
     img {
       border: none;
