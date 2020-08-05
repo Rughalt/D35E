@@ -11,3 +11,5 @@ node_modules/
 source/*.json
 icons/
 dnd35e.zip
+
+*.zip
