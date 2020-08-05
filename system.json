@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "D&D 3.5e",
   "description": "Dungeons and Dragons 3.5E implementation for Foundry VTT. Aiming to provide 100% SRD coverage.<br><br>Originaly based LoopeeDK conversion of Furyspark's Pathfinder1 system.",
-  "version": 0.81,
+  "version": 0.80,
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -157,5 +157,5 @@
   
   "url": "https://github.com/Rughalt/d35e",
   "manifest": "https://raw.githubusercontent.com/Rughalt/d35e/master/system.json",
-  "download": "http://dragonshorn.info/download/dnd35e.0.81.zip"
+  "download": "http://dragonshorn.info/download/dnd35e.0.80.zip"
 }
