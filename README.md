@@ -25,10 +25,11 @@ downloading a zip archive from the [Releases Page](https://github.com/Rughalt/D3
 ### Systems
 Most of the stuff that is the same as in PF1 works. For things that are different:
 
-- Skills - Done, except for related skill bonuses
-- Power points - Done, simple system
+You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
 
 ## Support
+If you want to talk about this implementation, you can find our Discord community [here[(https://discord.gg/wDyUaZH)
+
 This project is done in my free time and for free. If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
 
 ## Packtool
@@ -44,5 +45,5 @@ Icons provided in source distribution (on this github repository) by
 - J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0
 - Various authors at [game-icons.net](https://game-icons.net/)
 
-Icons provided in binary distribution are used with persmission of the autor and licensed to use only in this application. Any other use is prohibited.
+Icons provided in binary distribution are used with persmission of the authors and licensed to use only in this application. Any other use is prohibited.
 
