@@ -1,4 +1,9 @@
 # Changelog
+## 0.82
+### SRD
+- Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
+- Added Soulknife special abilities
+
 ## 0.81
 
 ### SRD
