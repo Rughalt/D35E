@@ -2863,9 +2863,13 @@ export class ActorPF extends Actor {
    * @return {Promise}
    */
   static async applyDamage(value) {
-    
+    let tokensList;
+    if (game.user.targets.size > 0)
+      tokensList = game.user.targets;
+    else
+      tokensList = canvas.tokens.controlled;
     const promises = [];
-    for (let t of canvas.tokens.controlled) {
+    for (let t of tokensList) {
       let a = t.actor,
           hp = a.data.data.attributes.hp,
           tmp = parseInt(hp.temp) || 0,
@@ -3144,7 +3148,13 @@ export class ActorPF extends Actor {
 
   static applyAction(action, actor) {
     const promises = [];
-    for (let t of canvas.tokens.controlled) {
+    let tokensList;
+    if (game.user.targets.size > 0)
+      tokensList = game.user.targets;
+    else
+      tokensList = canvas.tokens.controlled;
+    console.log('Tokens',tokensList)
+    for (let t of tokensList) {
       promises.push(t.actor.applyActionOnSelf(action, actor));
     }
     return Promise.all(promises);
