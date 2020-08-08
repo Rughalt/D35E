@@ -4,7 +4,7 @@ export class TopPortraitBar {
   static async render(actor) {
     let portraitBar = $('#portrait-bar')
     if (portraitBar.length === 0) {
-      var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexrow'></div>" )
+      var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexcol'></div>" )
       $('#navigation').append($portraitBarDiv)
     }
     let height = $('#scene-list').height()
@@ -20,7 +20,7 @@ export class TopPortraitBar {
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
-      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait'><div class='buffbox flexrow'></div><img src='"+actor.img+"'><div class='damage'></div><span class='life'>10/10</span></div>" )
+      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait'><div class='barbox'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow'></div><img src='"+actor.img+"'><div class='overlay'></div></div>" )
       portraitBar.append($portraitDiv)
     }
     portraitBar.css('top',height+18)
@@ -32,7 +32,7 @@ export class TopPortraitBar {
     });
     let damage = portraitDiv.find('.damage');
     let life = portraitDiv.find('.life');
-    let pixelDamage = 100 - (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 100
+    let pixelDamage = (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 200
     if (actor.data.data.attributes.hp.value === 0) {
       pixelDamage = 0;
       portraitDiv.addClass('dead');
@@ -41,8 +41,8 @@ export class TopPortraitBar {
       portraitDiv.removeClass('dead');
       life.text(`${actor.data.data.attributes.hp.value} / ${actor.data.data.attributes.hp.max}`)
     }
-    damage.css("height",`${pixelDamage}px`)
-    damage.css("top",`calc(100px - ${pixelDamage}px)`)
+    damage.css("width",`${pixelDamage}px`)
+    //damage.css("top",`calc(100px - ${pixelDamage}px)`)
     //<div class="item-image tooltip" style="background-image: url('systems/D35E/icons/buffs/bark-skin.png')">
     //              <span class="tooltipcontent">
     //                   Barkskin

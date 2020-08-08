@@ -237,11 +237,11 @@ export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
     formula = c[index];
   }
 
-  // if (crit !== 1 && formula.match(/^([0-9]+)d([0-9]+)(.*)/)) {
-  // const count = parseInt(RegExp.$1);
-  // const sides = parseInt(RegExp.$2);
-  // formula = `${count * crit}d${sides}${RegExp.$3}`;
-  // }
+  if (crit !== 1 && formula.match(/^([0-9]+)d([0-9]+)(.*)/)) {
+  const count = parseInt(RegExp.$1);
+  const sides = parseInt(RegExp.$2);
+  formula = `${count * crit}d${sides}${RegExp.$3}`;
+  }
   if (index === -1) {
     ui.notifications.warn(game.i18n.localize("D35E.WarningNoSizeDie").format(mediumDie, formula));
   }
