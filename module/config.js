@@ -257,15 +257,15 @@ D35E.sizeMods = {
 };
 
 D35E.sizeSpecialMods = {
-  "fine": -8,
-  "dim": -4,
-  "tiny": -2,
-  "sm": -1,
+  "fine": -16,
+  "dim": -12,
+  "tiny": -8,
+  "sm": -4,
   "med": 0,
-  "lg": 1,
-  "huge": 2,
-  "grg": 4,
-  "col": 8
+  "lg": 4,
+  "huge": 8,
+  "grg": 12,
+  "col": 16
 };
 
 D35E.sizeFlyMods = {
