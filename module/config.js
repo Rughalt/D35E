@@ -938,8 +938,8 @@ D35E.buffTargets = {
   },
   "misc": {
     "_label": "D35E.MiscShort",
-    "cmb": "CMB",
-    "cmd": "CMD",
+    "cmb": "Grapple",
+    "cmd": "CMD (Unused)",
     "init": "D35E.Initiative",
     "mhp": "Hit Points",
     "wounds": "D35E.Wounds",
