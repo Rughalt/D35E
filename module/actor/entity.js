@@ -2256,7 +2256,7 @@ export class ActorPF extends Actor {
     attackData["data.enh"] = item.data.data.enh;
     attackData["data.ability.critRange"] = item.data.data.weaponData.critRange || 20;
     attackData["data.ability.critMult"] = item.data.data.weaponData.critMult || 2;
-    attackData["data.actionType"] = (item.data.data.weaponData.isMelee ? "mwak" : "rwak");
+    attackData["data.actionType"] = (item.data.data.weaponSubtype === "ranged" ? "rwak" : "mwak");
     attackData["data.activation.type"] = "attack";
     attackData["data.duration.units"] = "inst";
     attackData["img"] = item.data.img;
