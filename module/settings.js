@@ -42,7 +42,7 @@ export const registerSystemSettings = function() {
   game.settings.register("D35E", "autosizeWeapons", {
     name: "SETTINGS.D35EAutosizeWeaponsN",
     hint: "SETTINGS.D35EAutosizeWeaponsL",
-    scope: "client",
+    scope: "world",
     config: true,
     default: true,
     type: Boolean,
