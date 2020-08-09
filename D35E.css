@@ -2841,11 +2841,11 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
 #hitdice .switch-check:checked + .switch-label .switch-manual {
   display: none;
 }
-#hotbar #macro-list {
+.d35ecustom #hotbar #macro-list {
   border: none;
   flex: 0 0 522px;
 }
-#hotbar .macro {
+.d35ecustom #hotbar .macro {
   background: url(/systems/D35E/icons/ui/skill-frame.png);
   background-size: cover;
   padding: 2px;
@@ -2854,10 +2854,10 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   width: 52px;
   flex: 0 0 52px;
 }
-#hotbar .macro.inactive {
+.d35ecustom #hotbar .macro.inactive {
   background-color: #191818;
 }
-#hotbar .macro .macro-icon {
+.d35ecustom #hotbar .macro .macro-icon {
   background: #595959;
   background: radial-gradient(circle, #595959 0%, #000000 100%);
   height: 48px;
@@ -2865,42 +2865,42 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   z-index: -3;
   position: absolute;
 }
-#hotbar #hotbar-page-controls {
+.d35ecustom #hotbar #hotbar-page-controls {
   background: url(/systems/D35E/icons/ui/vert-button.png);
   background-size: contain;
   border: none;
   flex: 0 0 26px;
   padding-top: 1px;
 }
-#hotbar #hotbar-directory-controls {
+.d35ecustom #hotbar #hotbar-directory-controls {
   background: url(/systems/D35E/icons/ui/vert-button.png);
   background-size: contain;
   border: none;
   flex: 0 0 26px;
   padding-top: 1px;
 }
-button {
+.d35ecustom button {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
   border: none;
   color: white;
 }
-.D35E button {
+.d35ecustom .D35E button {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
   border: none;
   color: white;
 }
-.dialog .dialog-buttons button {
+.d35ecustom .dialog .dialog-buttons button {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
   border: none;
   color: white;
 }
-.dialog .dialog-buttons button:disabled {
+.d35ecustom .dialog .dialog-buttons button:disabled {
   filter: grayscale(1);
 }
-.D35E.chat-card .card-buttons button {
+.d35ecustom .D35E.chat-card .card-buttons button {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
   border: none;
@@ -2909,63 +2909,63 @@ button {
   padding: 0;
   border-radius: 0;
 }
-#navigation #nav-toggle {
+.d35ecustom #navigation #nav-toggle {
   border-radius: 0;
   background: url(/systems/D35E/icons/ui/mini-button.png);
   background-size: 100% 100%;
 }
-#navigation #scene-list .scene.gm {
+.d35ecustom #navigation #scene-list .scene.gm {
   border-radius: 0;
   background: url(/systems/D35E/icons/ui/name-frame.png);
   background-size: 100% 100%;
   border: 1px solid rgba(0, 0, 0, 0);
 }
-#navigation #scene-list .scene.gm.view {
+.d35ecustom #navigation #scene-list .scene.gm.view {
   border: 1px solid red;
   border-bottom: 1px solid #ff6400;
   box-shadow: 0 0 10px #ff6400;
 }
-#players {
+.d35ecustom #players {
   border-radius: 0;
   border: none;
   line-height: 27px;
   background: url(/systems/D35E/icons/ui/sidebar-bg.png);
   background-size: 100% 100%;
 }
-#sidebar {
+.d35ecustom #sidebar {
   border-radius: 0;
   border: none;
   line-height: 27px;
   background: url(/systems/D35E/icons/ui/sidebar-bg.png);
   background-size: 100% 100%;
 }
-#sidebar #scenes .scene h3 {
+.d35ecustom #sidebar #scenes .scene h3 {
   background: url(/systems/D35E/icons/ui/frame-2-1-3.png);
   background-size: 100% 100%;
 }
-#sidebar #compendium li.compendium-pack {
+.d35ecustom #sidebar #compendium li.compendium-pack {
   background: url(/systems/D35E/icons/ui/frame-2-1-3.png);
   background-size: 100% 100%;
   margin: 0px;
   padding: 5px 15px;
   border-bottom: none;
 }
-#sidebar #compendium li.compendium-pack .status-icons {
+.d35ecustom #sidebar #compendium li.compendium-pack .status-icons {
   right: 10px;
 }
-#sidebar header:not(.message-header) {
+.d35ecustom #sidebar header:not(.message-header) {
   background: url(/systems/D35E/icons/ui/sidebar-top.png);
   background-position: bottom;
   background-size: cover;
   border-bottom: none !important;
   flex: 0 0 36px;
 }
-#sidebar #sidebar-tabs {
+.d35ecustom #sidebar #sidebar-tabs {
   flex: 0 0 27px;
   border-bottom: 1px solid #967671;
   box-shadow: 0 0 10px #825a5a;
 }
-#sidebar #sidebar-tabs .item {
+.d35ecustom #sidebar #sidebar-tabs .item {
   border-radius: 0;
   background: url(/systems/D35E/icons/ui/mini-button-border.png);
   background-size: 100% 100%;
@@ -2973,11 +2973,11 @@ button {
   border: none;
   opacity: 0.8;
 }
-#sidebar #sidebar-tabs .item.active {
+.d35ecustom #sidebar #sidebar-tabs .item.active {
   box-shadow: 0 0 6px inset #a78169;
   opacity: 1;
 }
-#sidebar #sidebar-tabs .collapse {
+.d35ecustom #sidebar #sidebar-tabs .collapse {
   border-radius: 0;
   background: url(/systems/D35E/icons/ui/mini-button-border.png);
   background-size: 100% 100%;
@@ -2985,32 +2985,32 @@ button {
   border: none;
   flex: 0 0 30px;
 }
-#sidebar.collapsed #sidebar-tabs .item {
+.d35ecustom #sidebar.collapsed #sidebar-tabs .item {
   flex: 0 0 30px;
 }
-#controls .scene-control {
+.d35ecustom #controls .scene-control {
   border-radius: 0;
   background: url(/systems/D35E/icons/ui/mini-button.png);
   background-size: cover;
   font-size: 20px;
 }
-#controls .scene-control .control-tool {
+.d35ecustom #controls .scene-control .control-tool {
   background: url(/systems/D35E/icons/ui/mini-button.png);
   background-size: cover;
   border-radius: 0;
   font-size: 20px;
 }
-#controls .scene-control .active {
+.d35ecustom #controls .scene-control .active {
   background: url(/systems/D35E/icons/ui/mini-button.png);
   background-size: cover;
 }
-::-webkit-scrollbar-thumb {
+.d35ecustom ::-webkit-scrollbar-thumb {
   outline: none;
   border-radius: 3px;
   background: #452722;
   border: 1px solid #896f5f;
 }
-.placeable-hud .control-icon {
+.d35ecustom .placeable-hud .control-icon {
   background: url(/systems/D35E/icons/ui/skill-frame-bg.png);
   background-size: cover;
   border-radius: 0;

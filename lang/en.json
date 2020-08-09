@@ -913,5 +913,9 @@
   "D35E.Container": "Container",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
-  "SETTINGS.D35EShowPartyHudL": "How to display party HUD"
+  "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
+  "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
+  "SETTINGS.D35ECustomSkinL": "Use custom Foundry VTT skin designed for this system",
+  "SETTINGS.D35EAutosizeWeaponsN": "Autosize weapons",
+  "SETTINGS.D35EAutosizeWeaponsL": "Attack created from weapon will use @size instead of weapon size"
 }

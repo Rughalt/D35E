@@ -86,6 +86,9 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack", "race"], makeDefault: true });
+
+  // Enable skin
+  $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
 });
 
 
