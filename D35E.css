@@ -2674,6 +2674,7 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
 }
 .portrait-bar .portrait .barbox .name {
   color: #c9c7b8;
+  padding-left: 20px;
 }
 .portrait-bar .portrait .barbox .damagebar {
   background-image: url(/systems/D35E/icons/ui/hp-frame.png);
@@ -2914,7 +2915,20 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   background: url(/systems/D35E/icons/ui/mini-button.png);
   background-size: 100% 100%;
 }
+.d35ecustom #navigation #scene-list .scene {
+  border-radius: 0;
+  background: url(/systems/D35E/icons/ui/name-frame.png);
+  filter: grayscale(0.4);
+  background-size: 100% 100%;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+.d35ecustom #navigation #scene-list .scene.view {
+  border: 1px solid red;
+  border-bottom: 1px solid #ff6400;
+  box-shadow: 0 0 10px #ff6400;
+}
 .d35ecustom #navigation #scene-list .scene.gm {
+  filter: none;
   border-radius: 0;
   background: url(/systems/D35E/icons/ui/name-frame.png);
   background-size: 100% 100%;

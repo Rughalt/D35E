@@ -123,7 +123,19 @@
 
     #scene-list {
       .scene {
+        border-radius: 0;
+        background: url(/systems/D35E/icons/ui/name-frame.png);
+        filter: grayscale(0.4);
+        background-size: 100% 100%;
+        border: 1px solid rgba(0, 0, 0, 0);
+        &.view {
+          border: 1px solid red;
+          border-bottom: 1px solid #ff6400;
+          box-shadow: 0 0 10px #ff6400;
+        }
+
         &.gm {
+          filter: none;
           border-radius: 0;
           background: url(/systems/D35E/icons/ui/name-frame.png);
           background-size: 100% 100%;
