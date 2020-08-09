@@ -3344,8 +3344,8 @@ export class ActorPF extends Actor {
         },
         scroll: {
           icon: '<i class="fas fa-scroll"></i>',
-          label: "Crystal",
-          callback: () => this.createConsumableSpell(itemData, "crystal"),
+          label: "Power Stone",
+          callback: () => this.createConsumableSpell(itemData, "powerstone"),
         },
         wand: {
           icon: '<i class="fas fa-magic"></i>',

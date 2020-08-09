@@ -1898,8 +1898,8 @@ export class ItemPF extends Item {
       data.data.hp.max = 1;
       data.data.hp.value = 1;
     }
-    else if (type === "crystal") {
-      data.name = `Crystal of ${origData.name}`;
+    else if (type === "powerstone") {
+      data.name = `Power Stone of ${origData.name}`;
       data.img = "systems/D35E/icons/items/magic/generated/crystal.png";
       data.data.price = Math.max(0.5, slcl[0]) * slcl[1] * 25;
       data.data.hardness = 0;
@@ -1992,7 +1992,7 @@ export class ItemPF extends Item {
       data: data,
       isWand: type === "wand" || type === "dorje",
       isPotion: type === "potion" || type === "tattoo",
-      isScroll: type === "scroll" || type === "crystal",
+      isScroll: type === "scroll" || type === "powerstone",
       auraPower: auraPower,
       aura: (CONFIG.D35E.spellSchools[origData.data.school] || "").toLowerCase(),
       sl: slcl[0],

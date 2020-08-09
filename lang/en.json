@@ -917,6 +917,7 @@
   "D35E.CreateItemForSpellD": "You can create item for spell. It will be created with default charges, and using lowest possible manifester caster",
   "D35E.ConsumableTypeDorje": "Dorje",
   "D35E.ConsumableTypeCrystal": "Crysal",
+  "D35E.ConsumableTypePowerStone": "Power Stone",
   "D35E.ConsumableTypeTattoo": "Tatoo",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

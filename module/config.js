@@ -488,6 +488,7 @@ D35E.consumableTypes = {
   "scroll": "D35E.ConsumableTypeScroll",
   "wand": "D35E.ConsumableTypeWand",
   "dorje": "D35E.ConsumableTypeDorje",
+  "powerstone": "D35E.ConsumableTypePowerStone",
   "tattoo": "D35E.ConsumableTypeTattoo",
   "crystal": "D35E.ConsumableTypeCrystal",
   "misc": "D35E.Misc",
