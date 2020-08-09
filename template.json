@@ -967,6 +967,7 @@
         },
         "identifiedName": "",
         "container": "",
+        "containerId": "",
         "containerWeightless": false
       },
       "activatedEffect": {
@@ -1182,7 +1183,7 @@
       "templates": ["itemDescription", "physicalItem"],
       "subType": "misc",
       "bonusAmmoDamage": "",
-      "bagOfHoldingLike": ""
+      "bagOfHoldingLike": false
     },
     "spell": {
       "templates": ["itemDescription", "activatedEffect", "action"],

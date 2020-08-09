@@ -361,7 +361,7 @@ export class ItemPF extends Item {
 
   async update(data, options={}) {
     const srcData = mergeObject(this.data, expandObject(data), { inplace: false });
-    console.log("Updating", data)
+
     // Update name
     if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
     else if (data["name"]) data["data.identifiedName"] = data["name"];
@@ -397,7 +397,7 @@ export class ItemPF extends Item {
         rollData.item.level = getProperty(this.data, "data.level");
         if (data["data.level"] != null && data["data.level"] !== getProperty(this.data, "data.level"))
           rollData.item.level = data["data.level"]
-        console.log('RollData', rollData)
+
         data["data.timeline.total"] = new Roll(rollFormula, rollData).roll().total;
       }
     }
@@ -425,7 +425,6 @@ export class ItemPF extends Item {
 
     const diff = diffObject(flattenObject(this.data), data);
     if (Object.keys(diff).length) {
-      console.log("Finished updating", data)
       return super.update(diff, options);
     }
 
@@ -776,6 +775,7 @@ export class ItemPF extends Item {
         primaryAttack = true,
         useMeasureTemplate = false,
           useAmmoId = "none",
+          useAmmoDamage = "",
         rollMode = null;
       // Get form data
       if (form) {
@@ -795,7 +795,10 @@ export class ItemPF extends Item {
 
         if (form.find('[name="ammunition-id"]').val() !== undefined) {
           useAmmoId = form.find('[name="ammunition-id"]').val()
-
+          useAmmoDamage = form.find('[name="ammo-dmg-formula"]').val()
+          if (useAmmoDamage !== '') {
+            damageExtraParts.push(useAmmoDamage);
+          }
         }
 
 
@@ -1105,7 +1108,6 @@ export class ItemPF extends Item {
     if (options.primaryAttack === false) parts.push("-5");
     // Add bonus
 
-    console.log(options)
     if (options.bonus != null) {
       rollData.bonus = options.bonus;
       parts.push("@bonus");
@@ -1446,7 +1448,7 @@ export class ItemPF extends Item {
        * -
        */
       let actions = ItemPF.parseAction(actionValue)
-      console.log(actions)
+
       for (let actionData of actions) {
         if (actionData.target === "self") {
           await actor.applyActionOnSelf(actionData, actor)

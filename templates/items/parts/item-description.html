@@ -68,10 +68,10 @@
       <div class="form-group">
         <label>{{localize "D35E.Container"}}</label>
 
-        <select name="data.container">
-          {{#select data.container}}
-          {{#each availableContainers as |name|}}
-          <option value="{{name}}">{{name}}</option>
+        <select name="data.containerId">
+          {{#select data.containerId}}
+          {{#each availableContainers as |name id|}}
+          <option value="{{id}}">{{name}}</option>
           {{/each}}
           {{/select}}
         </select>

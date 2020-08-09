@@ -156,8 +156,6 @@ export class ActorSheetPF extends ActorSheet {
 
     let classNamesAndLevels = []
 
-    console.log(data)
-
     data.items.filter(i => i.type == "class").forEach(c => classNamesAndLevels.push(c.name + " " + c.data.levels))
 
     data.classList = classNamesAndLevels.join(", ")
@@ -1130,8 +1128,9 @@ export class ActorSheetPF extends ActorSheet {
     for ( let i of items ) {
       const subType = i.type === "loot" ? i.data.subType || "gear" : i.data.subType;
       i.data.quantity = i.data.quantity || 0;
-      i.data.weight = i.data.weight || 0;
-      i.totalWeight = Math.round(i.data.quantity * i.data.weight * 10) / 10;
+      i.data.weight =  i.data.weight || 0;
+      let weightMult = i.data.containerWeightless ? 0 : 1
+      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);

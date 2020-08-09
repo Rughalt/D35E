@@ -51,6 +51,26 @@ button {
   background-size: 100% 100%;
   border: none;
   color: white;
+
+}
+
+.D35E button {
+
+  background: url(/systems/D35E/icons/ui/long-button.png);
+  background-size: 100% 100%;
+  border: none;
+  color: white;
+
+}
+
+.dialog .dialog-buttons button {
+  background: url(/systems/D35E/icons/ui/long-button.png);
+  background-size: 100% 100%;
+  border: none;
+  color: white;
+  &:disabled {
+    filter: grayscale(1);
+  }
 }
 
 .D35E.chat-card .card-buttons button {
@@ -124,7 +144,7 @@ button {
       }
   }
 
-  header {
+  header:not(.message-header) {
     background: url(/systems/D35E/icons/ui/sidebar-top.png);
     background-position: bottom;
     background-size: cover;

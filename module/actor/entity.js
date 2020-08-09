@@ -1461,7 +1461,7 @@ export class ActorPF extends Actor {
 
           return cur + v;
         } catch (e) {
-          console.log(obj,e)
+
           return cur;
         }
       }, 0));
@@ -1566,7 +1566,7 @@ export class ActorPF extends Actor {
     }
 
     // Apply changes
-    console.log(changes)
+
     for (let [changeTarget, value] of Object.entries(changes)) {
       linkData(data, updateData, changeTarget, (updateData[changeTarget] || 0) + value);
     }
@@ -2000,6 +2000,30 @@ export class ActorPF extends Actor {
       }
     }
 
+    // Update item containers data
+
+    for (let i of this.items.values()) {
+      if (!i.data.data.hasOwnProperty("quantity")) continue;
+      let itemUpdateData = {}
+
+      if (i.data.data.containerId !== undefined && i.data.data.containerId !== "none") {
+        const container = this.getOwnedItem(i.data.data.containerId);
+        if (container === undefined || container === null) {
+          itemUpdateData["data.containerId"] = "none";
+          itemUpdateData["data.container"] = "None";
+          itemUpdateData["data.containerWeightless"] = false;
+        } else {
+          itemUpdateData["data.container"] = container.name;
+          itemUpdateData["data.containerWeightless"] = container.data.data.containerWeightless;
+        }
+      } else {
+        itemUpdateData["data.containerId"] = "none";
+        itemUpdateData["data.container"] = "None";
+        itemUpdateData["data.containerWeightless"] = false;
+      }
+      await i.update(itemUpdateData)
+    }
+
     // Send resource updates to item
     let updatedResources = [];
     for (let key of Object.keys(data)) {
@@ -2027,6 +2051,7 @@ export class ActorPF extends Actor {
         }
       }
     }
+
 
     // Clean up old item resources
     for (let [tag, res] of Object.entries(getProperty(this.data, "data.resources") || {})) {
@@ -3069,8 +3094,10 @@ export class ActorPF extends Actor {
     // Determine carried weight
     const physicalItems = srcData.items.filter(o => { return o.data.weight != null; });
     return physicalItems.reduce((cur, o) => {
+
+      let weightMult = o.data.containerWeightless ? 0 : 1
       if (!o.data.carried) return cur;
-      return cur + (o.data.weight * o.data.quantity);
+      return cur + (o.data.weight * o.data.quantity * weightMult);
     }, this._calculateCoinWeight(srcData));
   }
 
@@ -3119,7 +3146,6 @@ export class ActorPF extends Actor {
     const pack = game.packs.find(p => p.collection === collection);
     if (pack.metadata.entity !== "Item") return;
     await pack.getIndex();
-    console.log('Finding item',name)
     const entry = pack.index.find(e => e.name === name)
     return pack.getEntity(entry._id).then(ent => {
       if (unique) {
@@ -3153,7 +3179,6 @@ export class ActorPF extends Actor {
       tokensList = game.user.targets;
     else
       tokensList = canvas.tokens.controlled;
-    console.log('Tokens',tokensList)
     for (let t of tokensList) {
       promises.push(t.actor.applyActionOnSelf(action, actor));
     }
@@ -3235,7 +3260,7 @@ export class ActorPF extends Actor {
             const item = items[0]
             let updateObject = {}
             updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
-            console.log(updateObject)
+
             await item.update(updateObject)
           }
         } else

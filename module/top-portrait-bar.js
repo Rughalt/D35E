@@ -13,7 +13,7 @@ export class TopPortraitBar {
     }
     let height = $('#scene-list').height()
     portraitBar = $('#portrait-bar')
-    console.log('Bar', portraitBar, actor)
+    // console.log('Bar', portraitBar, actor)
     if (actor == null)
       return;
     if (actor.data.type !== "character")
@@ -24,7 +24,7 @@ export class TopPortraitBar {
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
-      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait "+partyHudType+"''><div class='barbox "+partyHudType+"'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow "+partyHudType+"'></div><img src='"+actor.img+"'><div class='overlay'></div></div>" )
+      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait "+partyHudType+"''><div class='barbox "+partyHudType+"'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='background'></div> <div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow "+partyHudType+"'></div><img src='"+actor.img+"'><div class='overlay'></div></div>" )
       portraitBar.append($portraitDiv)
     }
     portraitBar.css('top','460px')
@@ -38,7 +38,7 @@ export class TopPortraitBar {
     let damage = portraitDiv.find('.damage');
     let life = portraitDiv.find('.life');
     let pixelDamage = (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 100
-    if (actor.data.data.attributes.hp.value === 0) {
+    if (actor.data.data.attributes.hp.value <= 0) {
       pixelDamage = 0;
       portraitDiv.addClass('dead');
       life.text(`Dead`)

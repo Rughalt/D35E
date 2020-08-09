@@ -149,7 +149,7 @@ export class ChatAttack {
       return;
     for (let action of this.item.data.data.specialActions) {
       if (action.condition !== undefined && action.condition !== null && action.condition !== "") {
-        console.log('Condition', action.condition, this.rollData)
+        // console.log('Condition', action.condition, this.rollData)
         if (!(new Roll(action.condition, this.rollData).roll().total)){
           continue;
         }

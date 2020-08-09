@@ -45,16 +45,19 @@
     <label>{{localize "D35E.LootTypeAmmo"}}</label>
     <select name="ammunition-id" onchange="enableDisableFullAttack(this)">
       {{#select ammo}}
-      <option value="none"data-ammo-count="9999">None</option>
+      <option value="none"data-ammo-count="9999" data-dmg-formula="">None</option>
       {{#each ammunition as |item iid|}}
-      <option value="{{item._id}}" data-ammo-count="{{item.data.data.quantity}}">{{item.name}} ({{item.data.data.quantity}})</option>
+      <option value="{{item._id}}" data-ammo-count="{{item.data.data.quantity}}" data-dmg-formula="{{item.data.data.bonusAmmoDamage}}">{{item.name}} ({{item.data.data.quantity}})</option>
       {{/each}}
       {{/select}}
     </select>
+
+    <input type="hidden" name="ammo-dmg-formula"/>
     <script>
       function enableDisableFullAttack(select) {
         var option = $('option:selected', select).attr('data-ammo-count');
-        console.log(({{extraAttacksCount}} > parseInt(option)), {{extraAttacksCount}}, option, parseInt(option))
+        var damage = $('option:selected', select).attr('data-dmg-formula');
+        $('option:selected', select).closest("section").find("input[name='ammo-dmg-formula']").val(damage)
         $('option:selected', select).closest("section").find("button[data-button='multi']").prop( "disabled", {{extraAttacksCount}} > parseInt(option));
       }
     </script>

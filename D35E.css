@@ -1247,9 +1247,9 @@
   position: absolute;
   top: 1px;
   left: 1px;
-  background: #6c8aa5;
+  background: #77504a;
   height: 8px;
-  border: 1px solid #cde4ff;
+  border: 1px solid #2f2220;
   border-radius: 2px;
 }
 .D35E.sheet.actor .encumbrance .encumbrance-label {
@@ -2700,6 +2700,13 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   top: 24px;
   overflow: hidden;
 }
+.portrait-bar .portrait .barbox .damagebar .background {
+  width: calc(100% - 4px);
+  height: 100%;
+  background-color: #211817;
+  position: absolute;
+  z-index: -3;
+}
 .portrait-bar .portrait .barbox .damage {
   background-image: url(/systems/D35E/icons/ui/hp-bar.png);
   background-size: cover;
@@ -2729,6 +2736,13 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
 .portrait-bar .portrait .barbox.narrow .damagebar {
   position: absolute;
   width: 100px;
+}
+.portrait-bar .portrait .barbox.narrow .damagebar .background {
+  width: calc(100% - 4px);
+  height: 100%;
+  background-color: #211817;
+  position: absolute;
+  z-index: -3;
 }
 .portrait-bar .portrait img {
   border: none;
@@ -2871,6 +2885,21 @@ button {
   border: none;
   color: white;
 }
+.D35E button {
+  background: url(/systems/D35E/icons/ui/long-button.png);
+  background-size: 100% 100%;
+  border: none;
+  color: white;
+}
+.dialog .dialog-buttons button {
+  background: url(/systems/D35E/icons/ui/long-button.png);
+  background-size: 100% 100%;
+  border: none;
+  color: white;
+}
+.dialog .dialog-buttons button:disabled {
+  filter: grayscale(1);
+}
 .D35E.chat-card .card-buttons button {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
@@ -2924,7 +2953,7 @@ button {
 #sidebar #compendium li.compendium-pack .status-icons {
   right: 10px;
 }
-#sidebar header {
+#sidebar header:not(.message-header) {
   background: url(/systems/D35E/icons/ui/sidebar-top.png);
   background-position: bottom;
   background-size: cover;

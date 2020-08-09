@@ -4,6 +4,10 @@
 - Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
 - Added Soulknife special abilities
 
+### Features
+- Container item type and ability to assign items to containers (with support for Bags of Holding)
+- Toggleable custom skin for Foundry VTT
+
 ## 0.81
 
 ### SRD
