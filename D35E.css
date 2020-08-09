@@ -2953,6 +2953,9 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   background: url(/systems/D35E/icons/ui/sidebar-bg.png);
   background-size: 100% 100%;
 }
+.d35ecustom #sidebar .message p {
+  line-height: initial;
+}
 .d35ecustom #sidebar #scenes .scene h3 {
   background: url(/systems/D35E/icons/ui/frame-2-1-3.png);
   background-size: 100% 100%;
@@ -2967,7 +2970,7 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
 .d35ecustom #sidebar #compendium li.compendium-pack .status-icons {
   right: 10px;
 }
-.d35ecustom #sidebar header:not(.message-header):not(.folder-header) {
+.d35ecustom #sidebar header:not(.message-header):not(.folder-header):not(.card-header) {
   background: url(/systems/D35E/icons/ui/sidebar-top.png);
   background-position: bottom;
   background-size: cover;

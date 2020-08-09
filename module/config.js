@@ -459,6 +459,21 @@ D35E.lootTypes = {
   "container": "D35E.Container",
 };
 
+D35E.magicAuraByLevel = {
+  "spell": [
+    { power: "faint", level: 1 },
+    { power: "moderate", level: 4 },
+    { power: "strong", level: 7 },
+    { power: "overwhelming", level: 10 },
+  ],
+  "item": [
+    { power: "faint", level: 1 },
+    { power: "moderate", level: 6 },
+    { power: "strong", level: 12 },
+    { power: "overwhelming", level: 21 },
+  ],
+};
+
 
 /* -------------------------------------------- */
 
@@ -472,6 +487,9 @@ D35E.consumableTypes = {
   "drug": "D35E.ConsumableTypeDrug",
   "scroll": "D35E.ConsumableTypeScroll",
   "wand": "D35E.ConsumableTypeWand",
+  "dorje": "D35E.ConsumableTypeDorje",
+  "tattoo": "D35E.ConsumableTypeTattoo",
+  "crystal": "D35E.ConsumableTypeCrystal",
   "misc": "D35E.Misc",
 };
 

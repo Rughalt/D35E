@@ -911,6 +911,13 @@
   "D35E.AllowMultipleUses": "Use multiple charges at once",
   "D35E.PartyMember": "Party Member",
   "D35E.Container": "Container",
+  "D35E.CreateItemForPower": "Create Item for Power",
+  "D35E.CreateItemForPowerD": "You can create item for power. It will be created with default charges, and using lowest possible manifester level",
+  "D35E.CreateItemForSpell": "Create Item for Spell",
+  "D35E.CreateItemForSpellD": "You can create item for spell. It will be created with default charges, and using lowest possible manifester caster",
+  "D35E.ConsumableTypeDorje": "Dorje",
+  "D35E.ConsumableTypeCrystal": "Crysal",
+  "D35E.ConsumableTypeTattoo": "Tatoo",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

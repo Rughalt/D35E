@@ -2227,6 +2227,7 @@ export class ActorPF extends Actor {
   async createOwnedItem(itemData, options) {
     let t = itemData.type;
     let initial = {};
+
     // Assume NPCs are always proficient with weapons and always have spells prepared
     if ( !this.isPC ) {
       if ( t === "weapon" ) initial["data.proficient"] = true;
@@ -3304,5 +3305,64 @@ export class ActorPF extends Actor {
     const newQuantity = Math.max(0, curQuantity + add);
     item.update({ "data.quantity": newQuantity });
   }
+
+  //
+  _createConsumableSpellDialog(itemData) {
+    new Dialog({
+      title: game.i18n.localize("D35E.CreateItemForSpell").format(itemData.name),
+      content: game.i18n.localize("D35E.CreateItemForSpellD").format(itemData.name),
+      buttons: {
+        potion: {
+          icon: '<i class="fas fa-prescription-bottle"></i>',
+          label: "Potion",
+          callback: () => this.createConsumableSpell(itemData, "potion"),
+        },
+        scroll: {
+          icon: '<i class="fas fa-scroll"></i>',
+          label: "Scroll",
+          callback: () => this.createConsumableSpell(itemData, "scroll"),
+        },
+        wand: {
+          icon: '<i class="fas fa-magic"></i>',
+          label: "Wand",
+          callback: () => this.createConsumableSpell(itemData, "wand"),
+        },
+      },
+      default: "potion",
+    }).render(true);
+  }
+
+  _createConsumablePowerDialog(itemData) {
+    new Dialog({
+      title: game.i18n.localize("D35E.CreateItemForPower").format(itemData.name),
+      content: game.i18n.localize("D35E.CreateItemForPowerD").format(itemData.name),
+      buttons: {
+        potion: {
+          icon: '<i class="fas fa-prescription-bottle"></i>',
+          label: "Tattoo",
+          callback: () => this.createConsumableSpell(itemData, "tattoo"),
+        },
+        scroll: {
+          icon: '<i class="fas fa-scroll"></i>',
+          label: "Crystal",
+          callback: () => this.createConsumableSpell(itemData, "crystal"),
+        },
+        wand: {
+          icon: '<i class="fas fa-magic"></i>',
+          label: "Dorje",
+          callback: () => this.createConsumableSpell(itemData, "dorje"),
+        },
+      },
+      default: "tattoo",
+    }).render(true);
+  }
+
+  async createConsumableSpell(itemData, type) {
+    let data = await ItemPF.toConsumable(itemData, type);
+
+    if (data._id) delete data._id;
+    await this.createEmbeddedEntity("OwnedItem", data);
+  }
+
 }
 
