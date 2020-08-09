@@ -1155,6 +1155,7 @@
         "acp": 0,
         "enh": 0
       },
+      "masterwork": false,
       "armorType": {
         "value": "",
         "_deprecated": true

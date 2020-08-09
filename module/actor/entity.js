@@ -1343,7 +1343,10 @@ export class ActorPF extends Actor {
     linkData(data, updateData, "data.attributes.acp.gear", 0);
     linkData(data, updateData, "data.attributes.maxDexBonus", null);
     items.filter(obj => { return obj.type === "equipment" && obj.data.equipped; }).forEach(obj => {
-      linkData(data, updateData, "data.attributes.acp.gear", updateData["data.attributes.acp.gear"] + Math.abs(obj.data.armor.acp));
+      let itemAcp = Math.abs(obj.data.armor.acp);
+      if (obj.data.masterwork)
+        itemAcp = Math.max(0,itemAcp-1)
+      linkData(data, updateData, "data.attributes.acp.gear", updateData["data.attributes.acp.gear"] + itemAcp);
       if(obj.data.armor.dex != null) {
         if (updateData["data.attributes.maxDexBonus"] == null) linkData(data, updateData, "data.attributes.maxDexBonus", Math.abs(obj.data.armor.dex));
         else {
