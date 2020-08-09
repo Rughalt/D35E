@@ -456,6 +456,7 @@ D35E.lootTypes = {
   "ammo": "D35E.LootTypeAmmo",
   "tradeGoods": "D35E.LootTypeTradeGoods",
   "misc": "D35E.Misc",
+  "container": "D35E.Container",
 };
 
 

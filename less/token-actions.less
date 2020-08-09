@@ -31,6 +31,8 @@
   //overflow: hidden;
   left: 120px;
   z-index: 30;
+  transform-origin: top left;
+  transform: scale(0.9);
 
   .portrait {
     pointer-events: initial;
@@ -42,12 +44,14 @@
     margin-right: 10px;
     position: relative;
 
+
+
     .barbox {
 
       background-image: url(/systems/D35E/icons/ui/portrait-bar.png);
       background-size: cover;
       width: 240px;
-      height: 60px;
+      height: 26px;
       top: 40px;
       left: 50px;
       position: absolute;
@@ -55,8 +59,57 @@
       text-align: center;
       padding: 4px;
 
+
       .name {
         color: #c9c7b8;
+      }
+
+      .damagebar {
+
+        background-image: url(/systems/D35E/icons/ui/hp-frame.png);
+        background-size: cover;
+        background-position: right;
+        position: absolute;
+        width: 225px;
+        height: 24px;
+        left: 20px;
+        top: 24px;
+        overflow: hidden;
+      }
+
+      .damage {
+        background-image: url(/systems/D35E/icons/ui/hp-bar.png);
+        background-size: cover;
+        background-position: right;
+        position: absolute;
+        height: 24px;
+        z-index: -1;
+      }
+
+      .life {
+        color: black;
+        font-weight: 600;
+        -webkit-text-stroke: 1px white;
+        line-height: 24px;
+      }
+
+
+      &.narrow {
+        background-image: none;
+        background-size: cover;
+        background-position: right;
+        width: 140px;
+        height: 60px;
+        left: 16px;
+        top: 0px;
+        .name {
+          display: none;
+        }
+
+        .damagebar {
+          position: absolute;
+          width: 100px;
+        }
       }
     }
 
@@ -86,7 +139,26 @@
         flex: 0 16px;
         background-size: 16px;
         margin: 2px;
-        border: white 0.5px solid;
+        .pretty-border {
+          height: 16px;
+          width: 16px;
+          margin: 0;
+          background-image: url(/systems/D35E/icons/ui/frame-sq-small.png);
+          background-size: cover;
+        }
+      }
+
+      &.narrow {
+        top: 2px;
+        left: 50px;
+      }
+    }
+    &.narrow {
+      width: 50px;
+      height: 50px;
+      .overlay {
+        width: 50px;
+        height: 50px;
       }
     }
 
@@ -94,32 +166,6 @@
       filter: grayscale(1);
     }
 
-    .damagebar {
 
-      background-image: url(/systems/D35E/icons/ui/hp-frame.png);
-      background-size: cover;
-      background-position: right;
-      position: absolute;
-      width: 200px;
-      height: 24px;
-      left: 20px;
-      top: 24px;
-    }
-
-    .damage {
-      background-image: url(/systems/D35E/icons/ui/hp-bar.png);
-      background-size: cover;
-      background-position: right;
-      position: absolute;
-      height: 24px;
-      z-index: -1;
-    }
-
-    .life {
-      color: black;
-      font-weight: 600;
-      -webkit-text-stroke: 1px white;
-      line-height: 24px;
-    }
   }
 }

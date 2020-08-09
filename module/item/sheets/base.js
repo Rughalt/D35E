@@ -112,6 +112,21 @@ export class ItemSheetPF extends ItemSheet {
       data.isClassFeature = true; //Any feat can be a class feature
     }
 
+    data.availableContainers = []
+    data.availableContainers.push("None")
+
+
+    if (this.actor != null) {
+      console.log('Actor', this.actor)
+      this.actor.items.forEach(i => {
+        if (i.data.type === "loot" && i.data.data.subType === "container") {
+          data.availableContainers.push(i.name)
+        }
+      })
+    }
+
+    console.log('Containers', data.availableContainers)
+
     // Prepare weapon specific stuff
     if (data.item.type === "weapon") {
       data.isRanged = (data.item.data.weaponSubtype === "ranged" || data.item.data.properties["thr"] === true);

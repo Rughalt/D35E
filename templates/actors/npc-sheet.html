@@ -42,8 +42,11 @@
               <div class="race item-image rollable" style="background-image: url({{race.img}})" title="{{labels.race}}">
                 {{#unless race}}{{localize "D35E.Race"}}{{/unless}}
               </div>
+              {{#if race}}
+              <span>{{race.name}}</span>
+              {{/if}}
 
-              <div class="item-controls flexcol">
+              <div class="item-controls flexrow">
                 {{#if owner}}
                 {{#unless race}}
                 <a class="item-control add" title="{{localize "D35E.CreateItem"}}"><i class="fas fa-plus"></i></a>

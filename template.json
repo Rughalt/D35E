@@ -965,7 +965,9 @@
           "price": 0,
           "name": ""
         },
-        "identifiedName": ""
+        "identifiedName": "",
+        "container": "",
+        "containerWeightless": false
       },
       "activatedEffect": {
         "activation": {
@@ -1179,7 +1181,8 @@
     "loot": {
       "templates": ["itemDescription", "physicalItem"],
       "subType": "misc",
-      "bonusAmmoDamage": ""
+      "bonusAmmoDamage": "",
+      "bagOfHoldingLike": ""
     },
     "spell": {
       "templates": ["itemDescription", "activatedEffect", "action"],

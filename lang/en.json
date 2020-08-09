@@ -909,5 +909,9 @@
   "D35E.ActionSpecial": "Special",
   "D35E.SpecialActions": "Special actions (advanced)",
   "D35E.AllowMultipleUses": "Use multiple charges at once",
-  "D35E.PartyMember": "Party Member"
+  "D35E.PartyMember": "Party Member",
+  "D35E.Container": "Container",
+
+  "SETTINGS.D35EShowPartyHudN": "Party HUD type",
+  "SETTINGS.D35EShowPartyHudL": "How to display party HUD"
 }

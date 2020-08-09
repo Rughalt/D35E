@@ -162,6 +162,23 @@ export const registerSystemSettings = function() {
     }
   });
 
+  game.settings.register("D35E", "showPartyHud", {
+    name: "SETTINGS.D35EShowPartyHudN",
+    hint: "SETTINGS.D35EShowPartyHudL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: String,
+    choices: {
+      "full": "Full Party HUD",
+      "narrow": "Narrow Party HUD",
+      "none": "No party HUD"
+    },
+    onChange: () => {
+      ui.nav.render()
+    }
+  });
+
   /**
    * Option to change measure style
    */
