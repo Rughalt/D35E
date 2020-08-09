@@ -9,6 +9,7 @@
 - Container item type and ability to assign items to containers (with support for Bags of Holding)
 - Toggleable custom skin for Foundry VTT
 - Application of Attack damage/Special buffs for targeted tokens
+- Ported spell- and power-based consumable creation from PF1
 
 ### Bug Fixes
 - [#19](https://github.com/Rughalt/D35E/issues/19) - Armor doesn't have option for Masterwork bug
