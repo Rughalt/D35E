@@ -321,6 +321,9 @@ export class ActorSheetPF extends ActorSheet {
       let skl = skillset[a]
       result.all.skills[a] = skl;
       if (skl.rank > 0) result.known.skills[a] = skl;
+      else if (skl.subSkills !== undefined) {
+        result.known.skills[a] = skl;
+      }
       if (skl.background) result.background.skills[a] = skl;
       else result.adventure.skills[a] = skl;
     })
