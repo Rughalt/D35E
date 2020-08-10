@@ -841,10 +841,10 @@ export class ItemPF extends Item {
       let attacks = [];
       if (this.hasAttack) {
         for (let atk of allAttacks) {
-      // Create attack object
-      let attack = new ChatAttack(this, atk.label);
-      attack.rollData = rollData;
-      await attack.addAttack({bonus: atk.bonus, extraParts: attackExtraParts, primaryAttack: primaryAttack});
+          // Create attack object
+          let attack = new ChatAttack(this, atk.label);
+          attack.rollData = rollData;
+          await attack.addAttack({bonus: atk.bonus, extraParts: attackExtraParts, primaryAttack: primaryAttack});
           if (this.hasDamage) {
             await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
             if (attack.hasCritConfirm) {
@@ -1249,10 +1249,18 @@ export class ItemPF extends Item {
     let rolls = [];
     for (let a = 0; a < parts.length; a++) {
       const part = parts[a];
-      const roll = {
-        roll: new Roll([part.base, ...part.extra, ...extraParts].join("+"), rollData).roll(),
-        damageType: part.damageType,
-      };
+      let roll = {}
+      if (a === 0) {
+         roll = {
+          roll: new Roll([part.base, ...part.extra, ...extraParts].join("+"), rollData).roll(),
+          damageType: part.damageType,
+        };
+      } else {
+         roll = {
+          roll: new Roll([part.base, ...part.extra].join("+"), rollData).roll(),
+          damageType: part.damageType,
+        };
+      }
       rolls.push(roll);
     }
 
