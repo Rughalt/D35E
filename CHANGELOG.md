@@ -22,6 +22,8 @@
 - [#17](https://github.com/Rughalt/D35E/issues/17) - Changes tab still references CMB/CMD no way to add to Grapple
 - [#14](https://github.com/Rughalt/D35E/issues/14) - Grapple size modifier uses PF vales not 3.5
 - [#8](https://github.com/Rughalt/D35E/issues/8) - Class Compendium bugs
+- [#25](https://github.com/Rughalt/D35E/issues/25) - Damage bonus applied twice if more than one type of damage is present
+- [#24](https://github.com/Rughalt/D35E/issues/24) - Skill roll-up on character sheet doesn't show specialized skills
 
 ## 0.81
 
