@@ -1,5 +1,5 @@
 <ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
-  <li class="attribute initiative  high" data-attribute="init">
+  <li class="attribute initiative" data-attribute="init">
 
     <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
     <div class="attribute-value tooltip">
@@ -14,7 +14,7 @@
     </div>
   </li>
 
-  <li class="attribute bab  high" data-attribute="bab">
+  <li class="attribute bab" data-attribute="bab">
 
     <h4 class="attribute-name box-title rollable">{{localize "D35E.BAB"}}</h4>
     <div class="attribute-value tooltip">
@@ -28,6 +28,22 @@
               </span>
     </div>
   </li>
+  <li class="attribute cmb" data-attribute="cmb">
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.cmb.total}}</span>
+      <span class="tooltipcontent">
+                  @attributes.cmb.total : {{data.attributes.cmb.total}}
+                  {{#if sourceDetails.data.attributes.cmb.total.length}}
+                    <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                    {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                  {{/if}}
+                </span>
+    </div>
+  </li>
+</ul>
+<ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
+
   {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
   <li class="attribute turnUndeadHdTotal high" data-attribute="turnUndeadHdTotal">
     <h4 class="attribute-name box-title rollable">{{localize "D35E.TurnUndead"}}</h4>
@@ -48,8 +64,8 @@
              value="{{data.attributes.turnUndeadUses}}" placeholder="0" />
       <span>/</span>
       <div class="tooltip">
-      <input type="text" name="data.attributes.turnUndeadUsesTotal"
-             value="{{data.attributes.turnUndeadUsesTotal}}" placeholder="0" disabled/>
+        <input type="text" name="data.attributes.turnUndeadUsesTotal"
+               value="{{data.attributes.turnUndeadUsesTotal}}" placeholder="0" disabled/>
         <span class="tooltipcontent">
                 @attributes.turnUndeadUsesTotal: {{data.attributes.turnUndeadUsesTotal}}
                 {{#if sourceDetails.data.attributes.turnUndeadUsesTotal.length}}

@@ -257,15 +257,15 @@ D35E.sizeMods = {
 };
 
 D35E.sizeSpecialMods = {
-  "fine": -8,
-  "dim": -4,
-  "tiny": -2,
-  "sm": -1,
+  "fine": -16,
+  "dim": -12,
+  "tiny": -8,
+  "sm": -4,
   "med": 0,
-  "lg": 1,
-  "huge": 2,
-  "grg": 4,
-  "col": 8
+  "lg": 4,
+  "huge": 8,
+  "grg": 12,
+  "col": 16
 };
 
 D35E.sizeFlyMods = {
@@ -456,6 +456,22 @@ D35E.lootTypes = {
   "ammo": "D35E.LootTypeAmmo",
   "tradeGoods": "D35E.LootTypeTradeGoods",
   "misc": "D35E.Misc",
+  "container": "D35E.Container",
+};
+
+D35E.magicAuraByLevel = {
+  "spell": [
+    { power: "faint", level: 1 },
+    { power: "moderate", level: 4 },
+    { power: "strong", level: 7 },
+    { power: "overwhelming", level: 10 },
+  ],
+  "item": [
+    { power: "faint", level: 1 },
+    { power: "moderate", level: 6 },
+    { power: "strong", level: 12 },
+    { power: "overwhelming", level: 21 },
+  ],
 };
 
 
@@ -471,6 +487,10 @@ D35E.consumableTypes = {
   "drug": "D35E.ConsumableTypeDrug",
   "scroll": "D35E.ConsumableTypeScroll",
   "wand": "D35E.ConsumableTypeWand",
+  "dorje": "D35E.ConsumableTypeDorje",
+  "powerstone": "D35E.ConsumableTypePowerStone",
+  "tattoo": "D35E.ConsumableTypeTattoo",
+  "crystal": "D35E.ConsumableTypeCrystal",
   "misc": "D35E.Misc",
 };
 
@@ -938,8 +958,8 @@ D35E.buffTargets = {
   },
   "misc": {
     "_label": "D35E.MiscShort",
-    "cmb": "CMB",
-    "cmd": "CMD",
+    "cmb": "Grapple",
+    "cmd": "CMD (Unused)",
     "init": "D35E.Initiative",
     "mhp": "Hit Points",
     "wounds": "D35E.Wounds",

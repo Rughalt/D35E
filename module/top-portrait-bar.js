@@ -2,25 +2,33 @@ export class TopPortraitBar {
 
 
   static async render(actor) {
+    let partyHudType = game.settings.get("D35E", "showPartyHud")
     let portraitBar = $('#portrait-bar')
+    if (partyHudType === "none") {
+      portraitBar.hide()
+    }
     if (portraitBar.length === 0) {
-      var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexrow'></div>" )
+      var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexcol'></div>" )
       $('#navigation').append($portraitBarDiv)
     }
+    let height = $('#scene-list').height()
     portraitBar = $('#portrait-bar')
-    console.log('Bar', portraitBar, actor)
+    // console.log('Bar', portraitBar, actor)
     if (actor == null)
       return;
     if (actor.data.type !== "character")
+      return;
+    if (!actor.data.data.isPartyMember)
       return;
     if (!actor.hasPerm(game.user, "OBSERVER")) // Player cannot see
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
-      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait'><div class='buffbox flexrow'></div><img src='"+actor.img+"'><div class='damage'></div><span class='life'>10/10</span></div>" )
+      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait "+partyHudType+"''><div class='barbox "+partyHudType+"'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='background'></div> <div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow "+partyHudType+"'></div><img src='"+actor.img+"'><div class='overlay'></div></div>" )
       portraitBar.append($portraitDiv)
     }
-
+    portraitBar.css('top','460px')
+    portraitBar.css('left','20px')
     let portraitDiv = portraitBar.find('#actor-portrait-'+actor.id);
     let buffBar = portraitDiv.find('.buffbox');
     buffBar.empty()
@@ -29,8 +37,8 @@ export class TopPortraitBar {
     });
     let damage = portraitDiv.find('.damage');
     let life = portraitDiv.find('.life');
-    let pixelDamage = 100 - (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 100
-    if (actor.data.data.attributes.hp.value === 0) {
+    let pixelDamage = (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 100
+    if (actor.data.data.attributes.hp.value <= 0) {
       pixelDamage = 0;
       portraitDiv.addClass('dead');
       life.text(`Dead`)
@@ -38,8 +46,8 @@ export class TopPortraitBar {
       portraitDiv.removeClass('dead');
       life.text(`${actor.data.data.attributes.hp.value} / ${actor.data.data.attributes.hp.max}`)
     }
-    damage.css("height",`${pixelDamage}px`)
-    damage.css("top",`calc(100px - ${pixelDamage}px)`)
+    damage.css("width",`${pixelDamage}%`)
+    //damage.css("top",`calc(100px - ${pixelDamage}px)`)
     //<div class="item-image tooltip" style="background-image: url('systems/D35E/icons/buffs/bark-skin.png')">
     //              <span class="tooltipcontent">
     //                   Barkskin
@@ -50,7 +58,7 @@ export class TopPortraitBar {
       const icon = item.img;
       let title = item.name;
       const type = item.type;
-      buffBarItems += `<div class="item-image tooltip" style="background-image: url('${item.img}')"></div>`;
+      buffBarItems += `<div class="item-image tooltip" style="background-image: url('${item.img}')"><div class="pretty-border"></div></div>`;
     });
 
     buffBar.append(buffBarItems);

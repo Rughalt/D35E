@@ -46,6 +46,7 @@
         <div class="item-detail item-identified"><span>{{localize "D35E.IdentifiedShort"}}</span></div>
         {{/if}}
         <div class="item-detail item-carried"><span>{{localize "D35E.Carried"}}</span></div>
+        <div class="item-detail item-container"><span>{{localize "D35E.Container"}}</span></div>
         {{#if section.canEquip}}
         <div class="item-detail item-equipped"><span>{{localize "D35E.Equipped"}}</span></div>
         {{/if}}
@@ -109,6 +110,10 @@
 
           <div class="item-detail item-carried">
             <a class="item-control item-carry"><span>{{item.labels.carried}}</span></a>
+          </div>
+
+          <div class="item-detail item-container">
+            <span>{{item.container}}</span>
           </div>
 
           {{#if section.canEquip}}

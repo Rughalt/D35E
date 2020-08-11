@@ -66,6 +66,22 @@
         </select>
       </div>
 
+      {{#if isContainer}}
+      <div class="form-group">
+        <label>{{localize "D35E.BagOfHoldingLike"}}</label>
+        <label class="checkbox">
+          <input type="checkbox" name="data.bagOfHoldingLike" {{checked data.bagOfHoldingLike}}/>
+        </label>
+      </div>
+      {{/if}}
+
+      {{#if isAmmo}}
+      <div class="form-group ammo-formula">
+        <label>{{localize "D35E.BonusAmmoDamage"}}</label>
+        <input type="text" name="data.bonusAmmoDamage" value="{{data.bonusAmmoDamage}}" placeholder="{{localize "D35E.BonusAmmoDamageFormula"}}"/>
+      </div>
+      {{/if}}
+
       {{#if isGM}}
       <label class="checkbox">
         <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}

@@ -37,6 +37,17 @@ export const registerSystemSettings = function() {
     }
   });
 
+
+
+  game.settings.register("D35E", "autosizeWeapons", {
+    name: "SETTINGS.D35EAutosizeWeaponsN",
+    hint: "SETTINGS.D35EAutosizeWeaponsL",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
   /**
    * Register diagonal movement rule setting
    */
@@ -115,6 +126,7 @@ export const registerSystemSettings = function() {
     type: Boolean,
   });
 
+
   /**
    * Option to allow the background skills optional ruleset.
    */
@@ -160,6 +172,36 @@ export const registerSystemSettings = function() {
     onChange: () => {
       ui.chat.render();
     }
+  });
+
+  game.settings.register("D35E", "showPartyHud", {
+    name: "SETTINGS.D35EShowPartyHudN",
+    hint: "SETTINGS.D35EShowPartyHudL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: String,
+    choices: {
+      "full": "Full Party HUD",
+      "narrow": "Narrow Party HUD",
+      "none": "No party HUD"
+    },
+    onChange: () => {
+      ui.nav.render()
+    }
+  });
+
+
+  game.settings.register("D35E", "customSkin", {
+    name: "SETTINGS.D35ECustomSkinN",
+    hint: "SETTINGS.D35ECustomSkinL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
+    },
   });
 
   /**

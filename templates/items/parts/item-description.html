@@ -65,6 +65,17 @@
         <label>{{localize "D35E.Carried"}}</label>
         <input type="checkbox" name="data.carried" {{checked data.carried}}/>
       </div>
+      <div class="form-group">
+        <label>{{localize "D35E.Container"}}</label>
+
+        <select name="data.containerId">
+          {{#select data.containerId}}
+          {{#each availableContainers as |name id|}}
+          <option value="{{id}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
       {{/if}}
 
       {{!-- Properties --}}

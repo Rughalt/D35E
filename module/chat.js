@@ -27,7 +27,6 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
     user: game.user._id,
     type: CONST.CHAT_MESSAGE_TYPES.CHAT,
   }, chatData);
-  console.log('ChataData', chatData)
   chatData.content = await renderTemplate(chatTemplate, chatTemplateData);
   // Handle different roll modes
   switch (chatData.rollMode) {

@@ -908,5 +908,22 @@
   "D35E.TimelineTimed": "Time left",
   "D35E.ActionSpecial": "Special",
   "D35E.SpecialActions": "Special actions (advanced)",
-  "D35E.AllowMultipleUses": "Use multiple charges at once"
+  "D35E.AllowMultipleUses": "Use multiple charges at once",
+  "D35E.PartyMember": "Party Member",
+  "D35E.Container": "Container",
+  "D35E.CreateItemForPower": "Create Item for Power",
+  "D35E.CreateItemForPowerD": "You can create item for power. It will be created with default charges, and using lowest possible manifester level",
+  "D35E.CreateItemForSpell": "Create Item for Spell",
+  "D35E.CreateItemForSpellD": "You can create item for spell. It will be created with default charges, and using lowest possible manifester caster",
+  "D35E.ConsumableTypeDorje": "Dorje",
+  "D35E.ConsumableTypeCrystal": "Crysal",
+  "D35E.ConsumableTypePowerStone": "Power Stone",
+  "D35E.ConsumableTypeTattoo": "Tatoo",
+
+  "SETTINGS.D35EShowPartyHudN": "Party HUD type",
+  "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
+  "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
+  "SETTINGS.D35ECustomSkinL": "Use custom Foundry VTT skin designed for this system",
+  "SETTINGS.D35EAutosizeWeaponsN": "Autosize weapons",
+  "SETTINGS.D35EAutosizeWeaponsL": "Attack created from weapon will use @size instead of weapon size"
 }

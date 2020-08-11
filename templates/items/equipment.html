@@ -109,6 +109,9 @@
         <label class="checkbox">
           <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{localize "D35E.Equipped"}}
         </label>
+        <label class="checkbox">
+          <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "D35E.Masterwork"}}
+        </label>
         {{#if isGM}}
         <label class="checkbox">
           <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}
@@ -132,6 +135,8 @@
           <input type="text" name="data.armor.enh" value="{{data.armor.enh}}" data-dtype="Number"/>
         </div>
       </div>
+
+
       {{/if}}
 
       {{#unless showUnidentifiedData}}

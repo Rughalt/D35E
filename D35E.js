@@ -63,6 +63,7 @@ Hooks.once("init", async function() {
 
   // Record Configuration Values
   CONFIG.D35E = D35E;
+  CONFIG.debug.hooks = true;
   CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
@@ -85,6 +86,9 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack", "race"], makeDefault: true });
+
+  // Enable skin
+  $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
 });
 
 
@@ -176,6 +180,13 @@ Hooks.on("canvasInit", function() {
   if (isMinimumCoreVersion("0.5.6")) SquareGrid.prototype.measureDistances = measureDistances;
   else SquareGrid.prototype.measureDistance = measureDistance;
 });
+
+Hooks.on("renderSceneNavigation", function() {
+  for (let key of game.actors.keys()) {
+    TopPortraitBar.render(game.actors.get(key))
+  }
+});
+
 
 
 /* -------------------------------------------- */

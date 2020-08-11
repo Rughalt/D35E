@@ -80,6 +80,7 @@ export class ActorSheetPF extends ActorSheet {
       i.data.hasMultiAttack = i.hasMultiAttack;
       i.data.hasDamage = i.hasDamage;
       i.data.hasEffect = i.hasEffect;
+      i.data.container = getProperty(i.data, "data.container");
       i.data.hasAction = i.hasAction || i.isCharged;
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
       i.data.showUnidentifiedData = i.showUnidentifiedData;
@@ -154,8 +155,6 @@ export class ActorSheetPF extends ActorSheet {
     this._prepareItems(data);
 
     let classNamesAndLevels = []
-
-    console.log(data)
 
     data.items.filter(i => i.type == "class").forEach(c => classNamesAndLevels.push(c.name + " " + c.data.levels))
 
@@ -322,6 +321,9 @@ export class ActorSheetPF extends ActorSheet {
       let skl = skillset[a]
       result.all.skills[a] = skl;
       if (skl.rank > 0) result.known.skills[a] = skl;
+      else if (skl.subSkills !== undefined) {
+        result.known.skills[a] = skl;
+      }
       if (skl.background) result.background.skills[a] = skl;
       else result.adventure.skills[a] = skl;
     })
@@ -1083,6 +1085,7 @@ export class ActorSheetPF extends ActorSheet {
       gear: { label: CONFIG.D35E.lootTypes["gear"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
       ammo: { label: CONFIG.D35E.lootTypes["ammo"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
       misc: { label: CONFIG.D35E.lootTypes["misc"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
+      container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" } },
       tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
       all: { label: game.i18n.localize("D35E.All"), canCreate: false, hasActions: true, items: [], canEquip: true, dataset: {} },
     };
@@ -1128,8 +1131,9 @@ export class ActorSheetPF extends ActorSheet {
     for ( let i of items ) {
       const subType = i.type === "loot" ? i.data.subType || "gear" : i.data.subType;
       i.data.quantity = i.data.quantity || 0;
-      i.data.weight = i.data.weight || 0;
-      i.totalWeight = Math.round(i.data.quantity * i.data.weight * 10) / 10;
+      i.data.weight =  i.data.weight || 0;
+      let weightMult = i.data.containerWeightless ? 0 : 1
+      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
@@ -1326,12 +1330,14 @@ export class ActorSheetPF extends ActorSheet {
     await Promise.all(promises);
   }
 
+  /**
+   * @override
+   */
   async _onDrop(event) {
     event.preventDefault();
 
     // Try to extract the data
     let data;
-    let extraData = {};
     try {
       data = JSON.parse(event.dataTransfer.getData('text/plain'));
       if (data.type !== "Item") return;
@@ -1339,10 +1345,16 @@ export class ActorSheetPF extends ActorSheet {
       return false;
     }
 
+    let itemData = {};
+    let dataType = "";
+
     // Case 1 - Import from a Compendium pack
     const actor = this.actor;
     if (data.pack) {
-      return actor.importItemFromCollection(data.pack, data.id);
+      dataType = "compendium";
+      const pack = game.packs.find(p => p.collection === data.pack);
+      const packItem = await pack.getEntity(data.id);
+      if (packItem != null) itemData = packItem.data;
     }
 
     // Case 2 - Data explicitly provided
@@ -1350,18 +1362,39 @@ export class ActorSheetPF extends ActorSheet {
       let sameActor = data.actorId === actor._id;
       if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
       if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
-      else {
-        return actor.createEmbeddedEntity("OwnedItem", mergeObject(data.data, this.getDropData(data.data), { inplace: false }));  // Create a new Item
-      }
+
+      dataType = "data";
+      itemData = data.data;
     }
 
     // Case 3 - Import from World entity
     else {
-      let item = game.items.get(data.id);
-      if (!item) return;
-      return actor.createEmbeddedEntity("OwnedItem", mergeObject(item.data, this.getDropData(item.data), { inplace: false }));
+      dataType = "world";
+      itemData = game.items.get(data.id).data;
     }
+
+    return this.importItem(mergeObject(itemData, this.getDropData(itemData), { inplace: false }), dataType);
   }
+
+  get currentPrimaryTab() {
+    const primaryElem = this.element.find('nav[data-group="primary"] .item.active');
+    if (primaryElem.length !== 1 || primaryElem.attr("data-tab") !== "inventory") return null;
+    return primaryElem.attr("data-tab");
+  }
+
+  async importItem(itemData, dataType) {
+    if (itemData.type === "spell" && !itemData.data.isPower && this.currentPrimaryTab === "inventory") {
+      return this.actor._createConsumableSpellDialog(itemData);
+    }
+    if (itemData.type === "spell" && itemData.data.isPower && this.currentPrimaryTab === "inventory") {
+      return this.actor._createConsumablePowerDialog(itemData);
+    }
+
+    if (itemData._id) delete itemData._id;
+    return this.actor.createEmbeddedEntity("OwnedItem", itemData);
+  }
+
+
 
   getDropData(origData) {
     let result = {};

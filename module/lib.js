@@ -182,63 +182,53 @@ export const CR = {
 export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
   if (typeof targetSize === "string") targetSize = Object.values(CONFIG.D35E.sizeChart).indexOf(targetSize.toUpperCase());
   else if (typeof targetSize === "number") targetSize = Math.max(0, Math.min(Object.values(CONFIG.D35E.sizeChart).length - 1, Object.values(CONFIG.D35E.sizeChart).indexOf("M") + targetSize));
-  const c = duplicate(CONFIG.D35E.sizeDie);
+  let c = duplicate(CONFIG.D35E.sizeDie);
 
   const mediumDie = `${origCount}d${origSides}`;
+  const mediumDieMax = origCount * origSides;
+  if (c.indexOf(mediumDie) === -1) {
+    c = c.map(d => {
+      if (d.match(/^([0-9]+)d([0-9]+)$/)) {
+        const dieCount = parseInt(RegExp.$1),
+            dieSides = parseInt(RegExp.$2),
+            dieMaxValue = dieCount * dieSides;
 
-  // Alter chart based on original die
-  for (let a = 0; a < c.length; a++) {
-    const d = c[a];
-    if (d.match(/^([0-9]+)d([0-9]+)$/)) {
-      const dieCount = parseInt(RegExp.$1),
-        dieSides = parseInt(RegExp.$2),
-        dieMaxValue = dieCount * dieSides;
+        if (dieMaxValue === mediumDieMax) return mediumDie;
+      }
 
-      if (origSides === 4 && origCount >= 2) {
-        if (dieSides === 8) {
-          c[a] = `${dieCount*2}d4`;
-        }
-        else if (dieSides === 6 && Math.floor(dieMaxValue / origSides) === dieMaxValue / origSides) {
-          c[a] = `${Math.floor(dieMaxValue / origSides)}d4`;
-        }
-      }
-      else if (origSides === 12) {
-        if (dieSides === 6 && Math.floor(dieMaxValue / origSides) === dieMaxValue / origSides) {
-          c[a] = `${Math.floor(dieMaxValue / origSides)}d12`;
-        }
-      }
-    }
+      return d;
+    });
   }
 
   // Pick an index from the chart
   let index = c.indexOf(mediumDie),
-    formula = mediumDie;
+      formula = mediumDie;
   if (index >= 0) {
     const d6Index = c.indexOf("1d6");
     let d8Index = c.indexOf("1d8");
     if (d8Index === -1) d8Index = c.indexOf("2d4");
-    let indexOffset = (targetSize - 4);
-    while (indexOffset !== 0) {
-      if ((index <= d8Index && indexOffset < 1) ||
-      (index <= d6Index && indexOffset < 0)) {
-        if (indexOffset < 0) {
-          index--;
-          indexOffset++;
-        }
-        else {
-          index++;
-          indexOffset--;
-        }
+    let curSize = 4;
+
+    // When decreasing in size (e.g. from medium to small)
+    while (curSize > targetSize) {
+      if (curSize <= 4 || index <= d8Index) {
+        index--;
+        curSize--;
       }
       else {
-        if (indexOffset < 0) {
-          index -= 2;
-          indexOffset++;
-        }
-        else {
-          index += 2;
-          indexOffset--;
-        }
+        index -= 2;
+        curSize--;
+      }
+    }
+    // When increasing in size (e.g. from medium to large)
+    while (curSize < targetSize) {
+      if (curSize <= 3 || index <= d6Index) {
+        index++;
+        curSize++;
+      }
+      else {
+        index += 2;
+        curSize++;
       }
     }
 
@@ -248,12 +238,24 @@ export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
   }
 
   if (crit !== 1 && formula.match(/^([0-9]+)d([0-9]+)(.*)/)) {
-    const count = parseInt(RegExp.$1);
-    const sides = parseInt(RegExp.$2);
-    formula = `${count * crit}d${sides}${RegExp.$3}`;
+  const count = parseInt(RegExp.$1);
+  const sides = parseInt(RegExp.$2);
+  formula = `${count * crit}d${sides}${RegExp.$3}`;
   }
   if (index === -1) {
     ui.notifications.warn(game.i18n.localize("D35E.WarningNoSizeDie").format(mediumDie, formula));
+  }
+
+  return formula;
+};
+
+export const normalDie = function(origCount, origSides, crit=1) {
+  let formula = `${origCount}d${origSides}`;
+
+  if (crit !== 1 && formula.match(/^([0-9]+)d([0-9]+)(.*)/)) {
+    const count = parseInt(RegExp.$1);
+    const sides = parseInt(RegExp.$2);
+    formula = `${count * crit}d${sides}${RegExp.$3}`;
   }
 
   return formula;

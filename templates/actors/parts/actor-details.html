@@ -134,7 +134,7 @@
 
   <li class="attribute bab  high" data-attribute="bab">
 
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.BAB"}}</h4>
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.BABAbbr"}}</h4>
     <div class="attribute-value tooltip">
       <span>{{data.attributes.bab.total}}</span>
       <span class="tooltipcontent">
@@ -287,8 +287,8 @@
                 {{#if skill.rt}}■{{/if}}
               </h4>
             </div>
-            <h4>{{skill.rank}}</h4>
-            <h4>{{numberFormat skill.mod decimals=0}}</h4>
+            <h4>{{subSkill.rank}}</h4>
+            <h4>{{numberFormat subSkill.mod decimals=0}}</h4>
           </li>
         {{/each}}
       {{else}}

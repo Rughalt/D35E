@@ -1,4 +1,31 @@
 # Changelog
+## 0.82
+### SRD
+- Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
+- Added Soulknife special abilities
+- Converted Backpacks etc. to Containers
+- Added Magic Items from SRD - currently description and typing, no special properties
+
+### Features
+- Container item type and ability to assign items to containers (with support for Bags of Holding)
+- Toggleable custom skin for Foundry VTT
+- Application of Attack damage/Special buffs for targeted tokens
+- Ported spell- and power-based consumable creation from PF1
+
+### Bug Fixes
+- [#19](https://github.com/Rughalt/D35E/issues/19) - Armor doesn't have option for Masterwork bug
+- [#21](https://github.com/Rughalt/D35E/issues/21) - sizeRoll() given static value instead variable when creating an attack
+- [#13](https://github.com/Rughalt/D35E/issues/13) - Missing input for Ammo Bonus Damage formula
+- [#23](https://github.com/Rughalt/D35E/issues/23) - Applying a race from the compendium places a large color box on the NPC sheet in place of name or avatar
+- [#20](https://github.com/Rughalt/D35E/issues/20) - Attacks created from weapons are created as Ranged Weapon Attacks.
+- [#22](https://github.com/Rughalt/D35E/issues/22) - sizeRoll() increases the d4 and d6 by 2 steps instead of 1
+- [#16](https://github.com/Rughalt/D35E/issues/16) - Missing Grapple box on Player character sheet 
+- [#17](https://github.com/Rughalt/D35E/issues/17) - Changes tab still references CMB/CMD no way to add to Grapple
+- [#14](https://github.com/Rughalt/D35E/issues/14) - Grapple size modifier uses PF vales not 3.5
+- [#8](https://github.com/Rughalt/D35E/issues/8) - Class Compendium bugs
+- [#25](https://github.com/Rughalt/D35E/issues/25) - Damage bonus applied twice if more than one type of damage is present
+- [#24](https://github.com/Rughalt/D35E/issues/24) - Skill roll-up on character sheet doesn't show specialized skills
+
 ## 0.81
 
 ### SRD

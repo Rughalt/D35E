@@ -1343,7 +1343,10 @@ export class ActorPF extends Actor {
     linkData(data, updateData, "data.attributes.acp.gear", 0);
     linkData(data, updateData, "data.attributes.maxDexBonus", null);
     items.filter(obj => { return obj.type === "equipment" && obj.data.equipped; }).forEach(obj => {
-      linkData(data, updateData, "data.attributes.acp.gear", updateData["data.attributes.acp.gear"] + Math.abs(obj.data.armor.acp));
+      let itemAcp = Math.abs(obj.data.armor.acp);
+      if (obj.data.masterwork)
+        itemAcp = Math.max(0,itemAcp-1)
+      linkData(data, updateData, "data.attributes.acp.gear", updateData["data.attributes.acp.gear"] + itemAcp);
       if(obj.data.armor.dex != null) {
         if (updateData["data.attributes.maxDexBonus"] == null) linkData(data, updateData, "data.attributes.maxDexBonus", Math.abs(obj.data.armor.dex));
         else {
@@ -1461,7 +1464,7 @@ export class ActorPF extends Actor {
 
           return cur + v;
         } catch (e) {
-          console.log(obj,e)
+
           return cur;
         }
       }, 0));
@@ -1566,7 +1569,7 @@ export class ActorPF extends Actor {
     }
 
     // Apply changes
-    console.log(changes)
+
     for (let [changeTarget, value] of Object.entries(changes)) {
       linkData(data, updateData, changeTarget, (updateData[changeTarget] || 0) + value);
     }
@@ -2000,6 +2003,30 @@ export class ActorPF extends Actor {
       }
     }
 
+    // Update item containers data
+
+    for (let i of this.items.values()) {
+      if (!i.data.data.hasOwnProperty("quantity")) continue;
+      let itemUpdateData = {}
+
+      if (i.data.data.containerId !== undefined && i.data.data.containerId !== "none") {
+        const container = this.getOwnedItem(i.data.data.containerId);
+        if (container === undefined || container === null) {
+          itemUpdateData["data.containerId"] = "none";
+          itemUpdateData["data.container"] = "None";
+          itemUpdateData["data.containerWeightless"] = false;
+        } else {
+          itemUpdateData["data.container"] = container.name;
+          itemUpdateData["data.containerWeightless"] = container.data.data.containerWeightless;
+        }
+      } else {
+        itemUpdateData["data.containerId"] = "none";
+        itemUpdateData["data.container"] = "None";
+        itemUpdateData["data.containerWeightless"] = false;
+      }
+      await i.update(itemUpdateData)
+    }
+
     // Send resource updates to item
     let updatedResources = [];
     for (let key of Object.keys(data)) {
@@ -2027,6 +2054,7 @@ export class ActorPF extends Actor {
         }
       }
     }
+
 
     // Clean up old item resources
     for (let [tag, res] of Object.entries(getProperty(this.data, "data.resources") || {})) {
@@ -2199,6 +2227,7 @@ export class ActorPF extends Actor {
   async createOwnedItem(itemData, options) {
     let t = itemData.type;
     let initial = {};
+
     // Assume NPCs are always proficient with weapons and always have spells prepared
     if ( !this.isPC ) {
       if ( t === "weapon" ) initial["data.proficient"] = true;
@@ -2256,7 +2285,7 @@ export class ActorPF extends Actor {
     attackData["data.enh"] = item.data.data.enh;
     attackData["data.ability.critRange"] = item.data.data.weaponData.critRange || 20;
     attackData["data.ability.critMult"] = item.data.data.weaponData.critMult || 2;
-    attackData["data.actionType"] = (item.data.data.weaponData.isMelee ? "mwak" : "rwak");
+    attackData["data.actionType"] = (item.data.data.weaponSubtype === "ranged" ? "rwak" : "mwak");
     attackData["data.activation.type"] = "attack";
     attackData["data.duration.units"] = "inst";
     attackData["img"] = item.data.img;
@@ -2286,7 +2315,8 @@ export class ActorPF extends Actor {
       if (die.match(/^([0-9]+)d([0-9]+)$/)) {
         dieCount = parseInt(RegExp.$1);
         dieSides = parseInt(RegExp.$2);
-        const weaponSize = Object.keys(CONFIG.D35E.sizeChart).indexOf(item.data.data.weaponData.size) - 4;
+        let weaponSize = "@size"
+        if (!game.settings.get("D35E", "autosizeWeapons"))  weaponSize = Object.keys(CONFIG.D35E.sizeChart).indexOf(item.data.data.weaponData.size) - 4;
         part = `sizeRoll(${dieCount}, ${dieSides}, ${weaponSize}, @critMult)`;
       }
       const bonusFormula = getProperty(item.data, "data.weaponData.damageFormula");
@@ -2863,9 +2893,13 @@ export class ActorPF extends Actor {
    * @return {Promise}
    */
   static async applyDamage(value) {
-    
+    let tokensList;
+    if (game.user.targets.size > 0)
+      tokensList = game.user.targets;
+    else
+      tokensList = canvas.tokens.controlled;
     const promises = [];
-    for (let t of canvas.tokens.controlled) {
+    for (let t of tokensList) {
       let a = t.actor,
           hp = a.data.data.attributes.hp,
           tmp = parseInt(hp.temp) || 0,
@@ -3065,8 +3099,10 @@ export class ActorPF extends Actor {
     // Determine carried weight
     const physicalItems = srcData.items.filter(o => { return o.data.weight != null; });
     return physicalItems.reduce((cur, o) => {
+
+      let weightMult = o.data.containerWeightless ? 0 : 1
       if (!o.data.carried) return cur;
-      return cur + (o.data.weight * o.data.quantity);
+      return cur + (o.data.weight * o.data.quantity * weightMult);
     }, this._calculateCoinWeight(srcData));
   }
 
@@ -3115,7 +3151,6 @@ export class ActorPF extends Actor {
     const pack = game.packs.find(p => p.collection === collection);
     if (pack.metadata.entity !== "Item") return;
     await pack.getIndex();
-    console.log('Finding item',name)
     const entry = pack.index.find(e => e.name === name)
     return pack.getEntity(entry._id).then(ent => {
       if (unique) {
@@ -3144,7 +3179,12 @@ export class ActorPF extends Actor {
 
   static applyAction(action, actor) {
     const promises = [];
-    for (let t of canvas.tokens.controlled) {
+    let tokensList;
+    if (game.user.targets.size > 0)
+      tokensList = game.user.targets;
+    else
+      tokensList = canvas.tokens.controlled;
+    for (let t of tokensList) {
       promises.push(t.actor.applyActionOnSelf(action, actor));
     }
     return Promise.all(promises);
@@ -3225,7 +3265,7 @@ export class ActorPF extends Actor {
             const item = items[0]
             let updateObject = {}
             updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
-            console.log(updateObject)
+
             await item.update(updateObject)
           }
         } else
@@ -3265,5 +3305,64 @@ export class ActorPF extends Actor {
     const newQuantity = Math.max(0, curQuantity + add);
     item.update({ "data.quantity": newQuantity });
   }
+
+  //
+  _createConsumableSpellDialog(itemData) {
+    new Dialog({
+      title: game.i18n.localize("D35E.CreateItemForSpell").format(itemData.name),
+      content: game.i18n.localize("D35E.CreateItemForSpellD").format(itemData.name),
+      buttons: {
+        potion: {
+          icon: '<i class="fas fa-prescription-bottle"></i>',
+          label: "Potion",
+          callback: () => this.createConsumableSpell(itemData, "potion"),
+        },
+        scroll: {
+          icon: '<i class="fas fa-scroll"></i>',
+          label: "Scroll",
+          callback: () => this.createConsumableSpell(itemData, "scroll"),
+        },
+        wand: {
+          icon: '<i class="fas fa-magic"></i>',
+          label: "Wand",
+          callback: () => this.createConsumableSpell(itemData, "wand"),
+        },
+      },
+      default: "potion",
+    }).render(true);
+  }
+
+  _createConsumablePowerDialog(itemData) {
+    new Dialog({
+      title: game.i18n.localize("D35E.CreateItemForPower").format(itemData.name),
+      content: game.i18n.localize("D35E.CreateItemForPowerD").format(itemData.name),
+      buttons: {
+        potion: {
+          icon: '<i class="fas fa-prescription-bottle"></i>',
+          label: "Tattoo",
+          callback: () => this.createConsumableSpell(itemData, "tattoo"),
+        },
+        scroll: {
+          icon: '<i class="fas fa-scroll"></i>',
+          label: "Power Stone",
+          callback: () => this.createConsumableSpell(itemData, "powerstone"),
+        },
+        wand: {
+          icon: '<i class="fas fa-magic"></i>',
+          label: "Dorje",
+          callback: () => this.createConsumableSpell(itemData, "dorje"),
+        },
+      },
+      default: "tattoo",
+    }).render(true);
+  }
+
+  async createConsumableSpell(itemData, type) {
+    let data = await ItemPF.toConsumable(itemData, type);
+
+    if (data._id) delete data._id;
+    await this.createEmbeddedEntity("OwnedItem", data);
+  }
+
 }
 

@@ -20,6 +20,7 @@ export class ItemSheetPF extends ItemSheet {
 
     this.items = [];
     this.childItemMap = new Map()
+    this.containerMap = new Map()
   }
 
   /* -------------------------------------------- */
@@ -55,7 +56,6 @@ export class ItemSheetPF extends ItemSheet {
   async getData() {
     const data = await super.getData();
     data.labels = this.item.labels;
-    console.log("Reloading", data)
     // Include sub-items
     data.items = [];
     if (this.item.items != null) {
@@ -77,6 +77,8 @@ export class ItemSheetPF extends ItemSheet {
     data.isSpell = this.item.type === "spell";
     data.isClass = this.item.type === "class";
     data.isRace = this.item.type === "race";
+    data.isAmmo = this.item.data.data.subType === "ammo";
+    data.isContainer = this.item.data.data.subType  === "container";
     data.owner = this.item.actor != null;
     data.isGM = game.user.isGM;
     data.showIdentifyDescription = data.isGM && data.isPhysical;
@@ -111,6 +113,20 @@ export class ItemSheetPF extends ItemSheet {
     if (data.item.type === "feat") {
       data.isClassFeature = true; //Any feat can be a class feature
     }
+
+    data.availableContainers = {}
+    data.availableContainers['none'] = "None"
+
+
+    if (this.actor != null) {
+      this.actor.items.forEach(i => {
+        if (i.data.type === "loot" && i.data.data.subType === "container") {
+          data.availableContainers[i._id] = i.name
+          this.containerMap.set(i._id,i)
+        }
+      })
+    }
+
 
     // Prepare weapon specific stuff
     if (data.item.type === "weapon") {
@@ -539,12 +555,21 @@ export class ItemSheetPF extends ItemSheet {
     formData["data.specialActions"] = actions.reduce((arr, entry) => {
       let [i, j] = entry[0].split(".").slice(2);
       if ( !arr[i] ) arr[i] = {name: "", action: ""};
-      console.log(i,j)
+
       arr[i][j] = entry[1];
       return arr;
     }, []);
 
     // Update the Item
+
+    if (this.containerMap.has(formData['data.containerId'])) {
+      formData['data.container'] = this.containerMap.get(formData['data.containerId']).name
+      formData['data.containerWeightless'] = this.containerMap.get(formData['data.containerId']).data.data.bagOfHoldingLike
+    }
+    else {
+      formData['data.container'] = "None"
+      formData['data.containerWeightless'] = false
+    }
     super._updateObject(event, formData);
   }
 
@@ -694,7 +719,6 @@ export class ItemSheetPF extends ItemSheet {
   async _onSpecialControl(event) {
     event.preventDefault();
     const a = event.currentTarget;
-    console.log(this.item.data.data.specialActions)
     // Add new attack component
     if ( a.classList.contains("add-special") ) {
       await this._onSubmit(event);  // Submit any unsaved changes
@@ -820,7 +844,7 @@ export class ItemSheetPF extends ItemSheet {
     const li = event.currentTarget;
     const packName = li.parentElement.getAttribute("data-pack");
     const pack = game.packs.get(packName);
-    console.log(event)
+    // console.log(event)
     if ( !pack ) return;
     // Set the transfer data
     event.dataTransfer.setData("text/plain", JSON.stringify({

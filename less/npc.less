@@ -6,4 +6,36 @@
 .D35E.sheet.actor.npc {
   min-width: 600px;
   min-height: 658px;
+
+
+  .race-container {
+
+    flex: 1;
+    padding: 0 0 0 4px;
+    .item-controls {
+      align-items: flex-start;
+      a {
+        flex: 0 0 16px;
+        font-size: 10px;
+        text-align: center;
+        color: #666;
+      }
+    }
+    &.norace {
+      padding: 0 0 0 6px;
+    }
+    .race {
+      flex: 0 0 24px;
+      background-size: contain;
+      line-height: 22px;
+      text-align: center;
+      vertical-align: baseline;
+      margin-right: 4px;
+      height: 22px;
+      .rollable:hover {
+        background-image: url("/icons/svg/d20-black.svg") !important;
+      }
+    }
+  }
 }
+

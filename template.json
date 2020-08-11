@@ -876,6 +876,7 @@
     },
     "character": {
       "templates": ["common"],
+      "isPartyMember": false,
       "details": {
         "xp": {
           "value": 0,
@@ -964,7 +965,10 @@
           "price": 0,
           "name": ""
         },
-        "identifiedName": ""
+        "identifiedName": "",
+        "container": "",
+        "containerId": "",
+        "containerWeightless": false
       },
       "activatedEffect": {
         "activation": {
@@ -1151,6 +1155,7 @@
         "acp": 0,
         "enh": 0
       },
+      "masterwork": false,
       "armorType": {
         "value": "",
         "_deprecated": true
@@ -1178,7 +1183,8 @@
     "loot": {
       "templates": ["itemDescription", "physicalItem"],
       "subType": "misc",
-      "bonusAmmoDamage": ""
+      "bonusAmmoDamage": "",
+      "bagOfHoldingLike": false
     },
     "spell": {
       "templates": ["itemDescription", "activatedEffect", "action"],
