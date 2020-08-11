@@ -63,7 +63,6 @@ Hooks.once("init", async function() {
 
   // Record Configuration Values
   CONFIG.D35E = D35E;
-  CONFIG.debug.hooks = true;
   CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;

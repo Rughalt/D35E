@@ -1,4 +1,9 @@
 # Changelog
+## 0.82.1
+### Bug Fixes
+- Disabled Foundry VTT debug mode
+
+
 ## 0.82
 ### SRD
 - Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
