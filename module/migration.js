@@ -5,6 +5,7 @@
 export const migrateWorld = async function() {
   if (!game.user.isGM) return ui.notifications.error(game.i18n.localize("D35E.ErrorUnauthorizedAction"));
   ui.notifications.info(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
+  console.log(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
 
   // Migrate World Actors
   for ( let a of game.actors.entities ) {
@@ -146,6 +147,7 @@ export const migrateItemData = function(item) {
   _migrateWeaponCategories(item, updateData);
   _migrateEquipmentCategories(item, updateData);
   _migrateWeaponSize(item, updateData);
+  _migrateContainer(item, updateData);
 
   // Return the migrated update data
   return updateData;
@@ -509,6 +511,16 @@ const _migrateWeaponSize = function(ent, updateData) {
   
   if (!getProperty(ent.data, "data.weaponData.size")) {
     updateData["data.weaponData.size"] = "med";
+  }
+};
+
+const _migrateContainer = function(ent, updateData) {
+  if (!getProperty(ent.data, "data.quantity")) return;
+
+  if (!getProperty(ent.data, "data.container")) {
+    updateData["data.container"] = "None";
+    updateData["data.containerId"] = "none";
+    updateData["data.containerWeightless"] = false;
   }
 };
 

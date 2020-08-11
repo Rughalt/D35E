@@ -25,6 +25,7 @@ import { TokenQuickActions } from "./module/token-quick-actions.js";
 import { TopPortraitBar } from "./module/top-portrait-bar.js";
 import * as chat from "./module/chat.js";
 import * as migrations from "./module/migration.js";
+import {SemanticVersion} from "./semver.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -63,6 +64,7 @@ Hooks.once("init", async function() {
 
   // Record Configuration Values
   CONFIG.D35E = D35E;
+  CONFIG.debug.hooks = true;
   CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
@@ -128,8 +130,15 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = 0.43;
-  let needMigration = game.settings.get("D35E", "systemMigrationVersion") < NEEDS_MIGRATION_VERSION;
+  const NEEDS_MIGRATION_VERSION = "0.82.2";
+  let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
+  if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
+    PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
+  }
+  else if (typeof PREVIOUS_MIGRATION_VERSION === "string" && PREVIOUS_MIGRATION_VERSION.match(/^([0-9]+)\.([0-9]+)$/)) {
+    PREVIOUS_MIGRATION_VERSION = `${PREVIOUS_MIGRATION_VERSION}.0`;
+  }
+  let needMigration = SemanticVersion.fromString(NEEDS_MIGRATION_VERSION).isHigherThan(SemanticVersion.fromString(PREVIOUS_MIGRATION_VERSION));
   if (needMigration && game.user.isGM) {
     await migrations.migrateWorld();
   }
