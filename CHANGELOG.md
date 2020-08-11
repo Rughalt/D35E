@@ -4,6 +4,7 @@
 - Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
 - Added Soulknife special abilities
 - Converted Backpacks etc. to Containers
+- Added Magic Items from SRD - currently description and typing, no special properties
 
 ### Features
 - Container item type and ability to assign items to containers (with support for Bags of Holding)
