@@ -1839,8 +1839,8 @@ export class ActorPF extends Actor {
     this.sourceDetails = sourceDetails;
   }
 
-  async refresh() {
-    if (this.hasPerm(game.user, "OWNER")) {
+  async refresh(options={}) {
+    if (this.hasPerm(game.user, "OWNER") && options.stopUpdates !== true) {
       return this.update({});
     }
   }
@@ -1929,6 +1929,49 @@ export class ActorPF extends Actor {
   /*  Socket Listeners and Handlers
   /* -------------------------------------------- */
 
+
+  updateContainerData(updateData) {
+
+    // Update item containers data
+    let itemUpdates = []
+    for (let i of this.items.values()) {
+      if (!i.data.data.hasOwnProperty("quantity")) continue;
+      let itemUpdateData = {}
+
+      let hasContainerChanged = false
+      if (i.data.data.containerId !== undefined && i.data.data.containerId !== "none") {
+        const container = this.getOwnedItem(i.data.data.containerId);
+        if (container === undefined || container === null) {
+          updateData[`data.items/${i._id}.data.containerId`] = "none";
+          updateData[`data.items/${i._id}.data.container`] = "None";
+          updateData[`data.items/${i._id}.data.containerWeightless`] = false;
+
+          hasContainerChanged = true;
+        } else {
+          if (i.data.data.name !== container.name) {
+            updateData[`data.items/${i._id}.data.container`] = container.name;
+            hasContainerChanged = true
+          }
+
+          if (i.data.data.containerWeightless !== container.data.data.containerWeightless) {
+            updateData[`data.items/${i._id}.data.containerWeightless`] = container.data.data.containerWeightless;
+            hasContainerChanged = true
+          }
+        }
+      } else {
+        if (i.data.data.containerId !== "none")
+          continue; // Do nothing!
+        updateData[`data.items/${i._id}.data.containerId`] = "none";
+        updateData[`data.items/${i._id}.data.container`] = "None";
+        updateData[`data.items/${i._id}.data.containerWeightless`] = false;
+        hasContainerChanged = true
+      }
+      if (hasContainerChanged)
+        itemUpdates.push(itemUpdateData,{stopUpdates: true})
+    }
+    console.log(updates)
+  }
+
   /**
    * Extend the default update method to enhance data before submission.
    * See the parent Entity.update method for full details.
@@ -2004,29 +2047,43 @@ export class ActorPF extends Actor {
     }
 
     // Update item containers data
-
+    let itemUpdates = []
     for (let i of this.items.values()) {
       if (!i.data.data.hasOwnProperty("quantity")) continue;
       let itemUpdateData = {}
 
+      itemUpdateData["_id"] = i.id;
+      let hasContainerChanged = false
       if (i.data.data.containerId !== undefined && i.data.data.containerId !== "none") {
         const container = this.getOwnedItem(i.data.data.containerId);
         if (container === undefined || container === null) {
           itemUpdateData["data.containerId"] = "none";
           itemUpdateData["data.container"] = "None";
           itemUpdateData["data.containerWeightless"] = false;
+          hasContainerChanged = true;
         } else {
-          itemUpdateData["data.container"] = container.name;
-          itemUpdateData["data.containerWeightless"] = container.data.data.containerWeightless;
+          if (i.data.data.name !== container.name) {
+            itemUpdateData["data.container"] = container.name;
+            hasContainerChanged = true
+          }
+
+          if (i.data.data.containerWeightless !== container.data.data.containerWeightless) {
+            itemUpdateData["data.containerWeightless"] = container.data.data.containerWeightless;
+            hasContainerChanged = true
+          }
         }
       } else {
+        if (i.data.data.containerId !== "none")
+          continue; // Do nothing!
         itemUpdateData["data.containerId"] = "none";
         itemUpdateData["data.container"] = "None";
         itemUpdateData["data.containerWeightless"] = false;
+        hasContainerChanged = true
       }
-      await i.update(itemUpdateData)
+      if (hasContainerChanged)
+        itemUpdates.push(itemUpdateData)
     }
-
+    await this.updateOwnedItem(itemUpdates, {stopUpdates: true});
     // Send resource updates to item
     let updatedResources = [];
     for (let key of Object.keys(data)) {

@@ -130,7 +130,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = "0.82.2";
+  const NEEDS_MIGRATION_VERSION = "0.82.4";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
     PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
@@ -221,10 +221,11 @@ Hooks.on("renderChatMessage", (app, html, data) => {
 Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
-Hooks.on("updateOwnedItem", (actor, _, changedData) => {
-  if (!(actor instanceof Actor)) return;
-  actor.refresh();
 
+Hooks.on("updateOwnedItem", (actor, _, changedData, options) => {
+  if (!(actor instanceof Actor)) return;
+  actor.refresh(options); //We do not want to update actor again if we are in first update loop
+  //actor.updateContainerData(updateData)
   const item = actor.getOwnedItem(changedData._id);
   if (item == null) return;
   actor.updateItemResources(item);
@@ -295,7 +296,6 @@ Hooks.on("updateActor",  (actor) => {
   if (!(actor instanceof Actor)) return;
   TopPortraitBar.render(actor)
 });
-
 
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
