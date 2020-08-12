@@ -2736,6 +2736,9 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   border-radius: 50%;
   background: #595959;
   background: radial-gradient(circle, #595959 0%, #000000 100%);
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 .portrait-bar .portrait .overlay {
   width: 100px;
@@ -2774,6 +2777,10 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   height: 50px;
 }
 .portrait-bar .portrait.narrow .overlay {
+  width: 50px;
+  height: 50px;
+}
+.portrait-bar .portrait.narrow img {
   width: 50px;
   height: 50px;
 }
