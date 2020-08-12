@@ -197,6 +197,12 @@ Hooks.on("renderSceneNavigation", function() {
   }
 });
 
+Hooks.on("deleteActor", function() {
+  TopPortraitBar.clear()
+  for (let key of game.actors.keys()) {
+    TopPortraitBar.render(game.actors.get(key))
+  }
+});
 
 
 /* -------------------------------------------- */

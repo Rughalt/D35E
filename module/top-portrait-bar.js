@@ -1,5 +1,8 @@
 export class TopPortraitBar {
 
+  static async clear() {
+    $('#portrait-bar').empty()
+  }
 
   static async render(actor) {
     let partyHudType = game.settings.get("D35E", "showPartyHud")
