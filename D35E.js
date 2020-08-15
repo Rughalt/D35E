@@ -90,6 +90,7 @@ Hooks.once("init", async function() {
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
+  $('body').toggleClass('d35gm', game.user.isGM);
 });
 
 
