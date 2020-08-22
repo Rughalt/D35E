@@ -163,6 +163,6 @@
   "compatibleCoreVersion": "0.6.5",
   
   "url": "https://github.com/Rughalt/d35e",
-  "manifest": "https://raw.githubusercontent.com/Rughalt/d35e/master/system.json",
-  "download": "http://dragonshorn.info/download/dnd35e.0.82.5.zip"
+  "manifest": "http://dragonshorn.info/dnd35e/system.json",
+  "download": "http://dragonshorn.info/dnd35e/dnd35e.zip"
 }
