@@ -10,11 +10,12 @@
     - Wildshape - melds used items and attacks, copies natural attack of monster and sets abilities
     - Polymorph - melds natural attacks, copies natural attack of monster and sets abilities
     - Alter self - changes appearance
-    
 - [#15](https://github.com/Rughalt/D35E/issues/15) - Rolling NPC Hit Die
 
 ### Bug Fixes   
 - Golem bonus HP now depends on size
+- Undead HP and Fortitude are no longer calculated using their Charisma modifier anymore
+- Sped up container updates
 - [#34](https://github.com/Rughalt/D35E/issues/34) - Racial HD compendium bugs
 - [#32](https://github.com/Rughalt/D35E/issues/32) - Bonus PowerPoints doesn't acount for item/custom racial Ability Score modifiers
 - [#35](https://github.com/Rughalt/D35E/issues/35) - Rogue class calculates sneak attack damage based on char level instead of rogue level
