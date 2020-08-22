@@ -2,7 +2,9 @@
 
   {{!-- Item Sheet Header --}}
   <header class="sheet-header flexrow">
-    <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    <div class="sheet-header-profile">
+      <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    </div>
 
     <div class="header-details flexrow">
       <h1 class="charname">
@@ -30,6 +32,7 @@
   <nav class="sheet-navigation tabs" data-group="primary">
     <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
     <a class="item" data-tab="timeline">{{ localize "D35E.Timeline" }}</a>
+    <a class="item" data-tab="special-actions">{{ localize "D35E.SpecialActions" }}</a>
     <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
   </nav>
 
@@ -69,6 +72,40 @@
           <label>{{localize "D35E.TimelineDeleteOnExpiry"}}</label>
           <input type="checkbox" name="data.timeline.deleteOnExpiry" {{checked data.timeline.deleteOnExpiry}}/>
         </div>
+    </div>
+    <div class="tab flexcol" data-group="primary" data-tab="special-actions">
+      <h4 class="attack-header">
+        {{localize "D35E.Activate"}} {{localize "D35E.SpecialActions"}}
+        <a class="a-special-control add-special"><i class="fas fa-plus"></i></a>
+      </h4>
+      <ol class="special-parts form-group">
+        {{#each data.activateActions as |part a|}}
+        <li class="special-part flexcol" data-activate-actions="{{a}}">
+          <div class="flexrow"><span>Name:</span><input type="text" name="data.activateActions.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "name"}}"/></div>
+          <div class="flexrow"><span>Action:</span><input type="text" name="data.activateActions.{{a}}.action" placeholder="{{localize "D35E.Action"}}" value="{{lookup this "action"}}"/></div>
+          <div class="flexrow"><span>Condition:</span><input type="text" name="data.activateActions.{{a}}.condition" placeholder="{{localize "D35E.Condition"}}" value="{{lookup this "condition"}}"/></div>
+          <div class="flexrow"><span>Icon path:</span><input type="text" name="data.activateActions.{{a}}.img" placeholder="{{localize "D35E.Image"}}" value="{{lookup this "img"}}"/></div>
+          <a class="a-special-control delete-special"><i class="fas fa-minus"></i>Remove</a>
+
+        </li>
+        {{/each}}
+      </ol>
+      <h4 class="attack-header">
+        {{localize "D35E.Deactivate"}} {{localize "D35E.SpecialActions"}}
+        <a class="d-special-control add-special"><i class="fas fa-plus"></i></a>
+      </h4>
+      <ol class="special-parts form-group">
+        {{#each data.deactivateActions as |part a|}}
+        <li class="special-part flexcol" data-deactivate-actions="{{a}}">
+          <div class="flexrow"><span>Name:</span><input type="text" name="data.deactivateActions.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "name"}}"/></div>
+          <div class="flexrow"><span>Action:</span><input type="text" name="data.deactivateActions.{{a}}.action" placeholder="{{localize "D35E.Action"}}" value="{{lookup this "action"}}"/></div>
+          <div class="flexrow"><span>Condition:</span><input type="text" name="data.deactivateActions.{{a}}.condition" placeholder="{{localize "D35E.Condition"}}" value="{{lookup this "condition"}}"/></div>
+          <div class="flexrow"><span>Icon path:</span><input type="text" name="data.deactivateActions.{{a}}.img" placeholder="{{localize "D35E.Image"}}" value="{{lookup this "img"}}"/></div>
+          <a class="d-special-control delete-special"><i class="fas fa-minus"></i>Remove</a>
+
+        </li>
+        {{/each}}
+      </ol>
     </div>
     <div class="tab flexcol" data-group="primary" data-tab="changes">
       <div class="form-group select">

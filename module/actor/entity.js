@@ -37,7 +37,7 @@ export class ActorPF extends Actor {
 
   get spellFailure() {
     if (this.items == null) return 0;
-    return this.items.filter(o => { return o.type === "equipment" && o.data.data.equipped === true; }).reduce((cur, o) => {
+    return this.items.filter(o => { return o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded; }).reduce((cur, o) => {
       if (typeof o.data.data.spellFailure === "number") return cur + o.data.data.spellFailure;
       return cur;
     }, 0);
@@ -296,21 +296,28 @@ export class ActorPF extends Actor {
         return "data.attributes.vigor.max";
       case "str":
         if (changeType === "penalty") return "data.abilities.str.penalty";
+        if (changeType === "replace") return "data.abilities.str.replace";
         return "data.abilities.str.total";
       case "dex":
         if (changeType === "penalty") return "data.abilities.dex.penalty";
+        if (changeType === "replace") return "data.abilities.dex.replace";
         return "data.abilities.dex.total";
       case "con":
         if (changeType === "penalty") return "data.abilities.con.penalty";
+        if (changeType === "replace") return "data.abilities.con.replace";
+        if (changeType === "total") return "data.abilities.con.total";
         return "data.abilities.con.total";
       case "int":
         if (changeType === "penalty") return "data.abilities.int.penalty";
+        if (changeType === "replace") return "data.abilities.int.replace";
         return "data.abilities.int.total";
       case "wis":
         if (changeType === "penalty") return "data.abilities.wis.penalty";
+        if (changeType === "replace") return "data.abilities.wis.replace";
         return "data.abilities.wis.total";
       case "cha":
         if (changeType === "penalty") return "data.abilities.cha.penalty";
+        if (changeType === "replace") return "data.abilities.cha.replace";
         return "data.abilities.cha.total";
       case "ac":
         if (changeType === "dodge") return ["data.attributes.ac.normal.total", "data.attributes.ac.touch.total", "data.attributes.cmd.total"];
@@ -448,14 +455,19 @@ export class ActorPF extends Actor {
         }
         return result;
       case "landSpeed":
+        if (changeType === "replace") return "data.attributes.speed.land.replace";
         return "data.attributes.speed.land.total";
       case "climbSpeed":
+        if (changeType === "replace") return "data.attributes.speed.climb.replace";
         return "data.attributes.speed.climb.total";
       case "swimSpeed":
+        if (changeType === "replace") return "data.attributes.speed.swim.replace";
         return "data.attributes.speed.swim.total";
       case "burrowSpeed":
+        if (changeType === "replace") return "data.attributes.speed.burrow.replace";
         return "data.attributes.speed.burrow.total";
       case "flySpeed":
+        if (changeType === "replace") return "data.attributes.speed.fly.replace";
         return "data.attributes.speed.fly.total";
       case "cmb":
         return "data.attributes.cmb.total";
@@ -471,6 +483,8 @@ export class ActorPF extends Actor {
         return "data.attributes.init.total";
       case "spellResistance":
         return "data.attributes.sr.total";
+      case "size":
+        return "size";
     }
 
     if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -501,7 +515,8 @@ export class ActorPF extends Actor {
     return this.isPC;
   }
 
-  _addDefaultChanges(data, changes, flags, sourceInfo, conditionFlags) {
+
+  async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride) {
     // Class hit points
     const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
       return a.sort - b.sort;
@@ -558,13 +573,14 @@ export class ActorPF extends Actor {
 
     // Add Constitution to HP
     changes.push({
-      raw: ["@abilities.con.mod * @attributes.hd.total", "misc", "mhp", "base", 0],
+      raw: ["@abilities.con.origMod * @attributes.hd.total", "misc", "mhp", "base", 0],
       source: {name: "Constitution"}
     });
     changes.push({
-      raw: ["2 * (@abilities.con.total + @abilities.con.drain)", "misc", "wounds", "base", 0],
+      raw: ["2 * (@abilities.con.origTotal + @abilities.con.drain)", "misc", "wounds", "base", 0],
       source: {name: "Constitution"}
     });
+
 
     // Natural armor
     {
@@ -578,8 +594,10 @@ export class ActorPF extends Actor {
         });
       }
     }
+
+
     // Add armor bonuses from equipment
-    data.items.filter(obj => { return obj.type === "equipment" && obj.data.equipped; }).forEach(item => {
+    data.items.filter(obj => { return obj.type === "equipment" && obj.data.equipped && !obj.data.melded; }).forEach(item => {
       let armorTarget = "aac";
       if (item.data.equipmentType === "shield") armorTarget = "sac";
       // Push base armor
@@ -641,7 +659,10 @@ export class ActorPF extends Actor {
     }
 
     // Add size bonuses to various attributes
-    const sizeKey = data.data.traits.size;
+    let sizeKey = data.data.traits.size;
+    if (sizeOverride !== undefined && sizeOverride !== null && sizeOverride !== "") {
+      sizeKey = sizeOverride;
+    }
     if (sizeKey !== "med") {
       // AC
       changes.push({
@@ -681,11 +702,32 @@ export class ActorPF extends Actor {
     }
 
 
-    // Add conditions
-    let fullConditions = data.data.attributes.conditions || {}
+    // Apply changes in Actor size to Token width/height
     {
-      fullConditions.dazzled = conditionFlags.dazzled || fullConditions.dazzled;
+      let size = CONFIG.D35E.tokenSizes[sizeKey];
+      console.log(size)
+      if (this.isToken) {
+        let tokens = []
+        tokens.push(this.token);
+        tokens.forEach(o => {
+          if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale)
+            o.update({ width: size.w, height: size.h, scale: size.scale },{stopUpdates: true});
+        });
+      }
+      if (!this.isToken) {
+        let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
+        tokens.forEach(o => {
+          if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale)
+            o.update({ width: size.w, height: size.h, scale: size.scale },{stopUpdates: true});
+        });
+        data["token.width"] = size.w;
+        data["token.height"] = size.h;
+        data["token.scale"] = size.scale;
+      }
     }
+
+
+
     for (let [con, v] of Object.entries(fullConditions)) {
       if (!v) continue;
 
@@ -816,6 +858,10 @@ export class ActorPF extends Actor {
           sourceInfo["data.attributes.ac.touch.total"].negative.push({ name: "Stunned", value: "Lose Dex to AC" });
           sourceInfo["data.attributes.cmd.total"].negative.push({ name: "Stunned", value: "Lose Dex to AC" });
           break;
+        case "wildshaped":
+          sourceInfo["data.attributes.ac.normal.total"] = sourceInfo["data.attributes.ac.normal.total"] || { positive: [], negative: [] };
+          sourceInfo["data.attributes.ac.normal.total"].positive.push({ name: "Wild Shape", value: "Item bonuses disabled" });
+          break;
       }
     }
 
@@ -854,6 +900,14 @@ export class ActorPF extends Actor {
     }
   }
 
+  isChangeAllowed(item,change,fullConditions) {
+    if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ac" && change[2] === "natural") return false;
+    if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ability" && change[2] === "str") return false;
+    if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ability" && change[2] === "dex") return false;
+    if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "speed") return false;
+    return true;
+  }
+
   async _updateChanges({data=null}={}) {
     let updateData = {};
     let srcData1 = mergeObject(this.data, expandObject(data || {}), { inplace: false });
@@ -863,9 +917,37 @@ export class ActorPF extends Actor {
       else cur.push(i.data);
       return cur;
     }, []);
+
+    const allChangeObjects = srcData1.items.filter(obj => { return obj.data.changes != null; }).filter(obj => {
+      if (obj.type === "buff") return obj.data.active;
+      if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.equipped);
+      return true;
+    });
+
+
+    let conditionFlags = {};
+    // Condition flags
+    for (let obj of allChangeObjects) {
+      if (!obj.data.conditionFlags) continue;
+      for (let [flagKey, flagValue] of Object.entries(obj.data.conditionFlags)) {
+        if (flagValue === true) {
+          conditionFlags[flagKey] = true;
+        }
+      }
+    }
+
+    let sizeOverride = "";
+    // Add conditions
+    let fullConditions = srcData1.data.attributes.conditions || {}
+    {
+      fullConditions.dazzled = conditionFlags.dazzled || fullConditions.dazzled;
+      fullConditions.wildshaped = conditionFlags.wildshaped || fullConditions.wildshaped;
+      fullConditions.polymorphed = conditionFlags.polymorphed || fullConditions.polymorphed;
+    }
+
     const changeObjects = srcData1.items.filter(obj => { return obj.data.changes != null; }).filter(obj => {
       if (obj.type === "buff") return obj.data.active;
-      if (obj.type === "equipment" || obj.type === "weapon") return obj.data.equipped;
+      if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.equipped && !obj.data.melded);
       return true;
     });
 
@@ -927,6 +1009,7 @@ export class ActorPF extends Actor {
     let allChanges = [];
     changeObjects.forEach(item => {
       item.data.changes.forEach(change => {
+        if (!this.isChangeAllowed(item,change,fullConditions)) return;
         allChanges.push({
           raw: change,
           source: {
@@ -942,11 +1025,14 @@ export class ActorPF extends Actor {
 
     // Add more changes
     let flags = {},
-        conditionFlags = {},
       sourceInfo = {};
 
     // Check flags
     for (let obj of changeObjects) {
+
+      if (obj.data.sizeOverride !== undefined && obj.data.sizeOverride !== null && obj.data.sizeOverride !== "") {
+        sizeOverride = obj.data.sizeOverride;
+      }
       if (!obj.data.changeFlags) continue;
       for (let [flagKey, flagValue] of Object.entries(obj.data.changeFlags)) {
         if (flagValue === true) {
@@ -1000,45 +1086,11 @@ export class ActorPF extends Actor {
         }
       }
     }
-    for (let flagKey of Object.keys(flags)) {
-      if (!flags[flagKey]) continue;
 
-      switch (flagKey) {
-        case "noDex":
-          linkData(srcData1, updateData, "data.abilities.dex.total", 0);
-          linkData(srcData1, updateData, "data.abilities.dex.mod", -5);
-          break;
-        case "noStr":
-          linkData(srcData1, updateData, "data.abilities.str.total", 0);
-          linkData(srcData1, updateData, "data.abilities.str.mod", -5);
-          break;
-        case "oneInt":
-          linkData(srcData1, updateData, "data.abilities.int.total", 1);
-          linkData(srcData1, updateData, "data.abilities.int.mod", -5);
-          break;
-        case "oneWis":
-          linkData(srcData1, updateData, "data.abilities.wis.total", 1);
-          linkData(srcData1, updateData, "data.abilities.wis.mod", -5);
-          break;
-        case "oneCha":
-          linkData(srcData1, updateData, "data.abilities.cha.total", 1);
-          linkData(srcData1, updateData, "data.abilities.cha.mod", -5);
-          break;
-      }
-    }
-    // Condition flags
-    for (let obj of changeObjects) {
-      if (!obj.data.conditionFlags) continue;
-      for (let [flagKey, flagValue] of Object.entries(obj.data.conditionFlags)) {
-        if (flagValue === true) {
-          conditionFlags[flagKey] = true;
-        }
-      }
-    }
 
     // Initialize data
     this._resetData(updateData, srcData1, flags, sourceInfo);
-    this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, conditionFlags);
+    await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride);
 
     // Sort changes
     allChanges.sort(this._sortChanges.bind(this));
@@ -1078,6 +1130,34 @@ export class ActorPF extends Actor {
       }
     });
 
+
+    for (let flagKey of Object.keys(flags)) {
+      if (!flags[flagKey]) continue;
+
+      switch (flagKey) {
+        case "noDex":
+          linkData(srcData1, updateData, "data.abilities.dex.total", 0);
+          linkData(srcData1, updateData, "data.abilities.dex.mod", -5);
+          break;
+        case "noStr":
+          linkData(srcData1, updateData, "data.abilities.str.total", 0);
+          linkData(srcData1, updateData, "data.abilities.str.mod", -5);
+          break;
+        case "oneInt":
+          linkData(srcData1, updateData, "data.abilities.int.total", 1);
+          linkData(srcData1, updateData, "data.abilities.int.mod", -5);
+          break;
+        case "oneWis":
+          linkData(srcData1, updateData, "data.abilities.wis.total", 1);
+          linkData(srcData1, updateData, "data.abilities.wis.mod", -5);
+          break;
+        case "oneCha":
+          linkData(srcData1, updateData, "data.abilities.cha.total", 1);
+          linkData(srcData1, updateData, "data.abilities.cha.mod", -5);
+          break;
+      }
+    }
+
     // Update encumbrance
     this._computeEncumbrance(updateData, srcData1);
     switch (srcData1.data.attributes.encumbrance.level) {
@@ -1097,8 +1177,8 @@ export class ActorPF extends Actor {
     // Reduce final speed under certain circumstances
     let armorItems = srcData1.items.filter(o => o.type === "equipment");
     if ((updateData["data.attributes.encumbrance.level"] >= 1 && !flags.noEncumbrance) ||
-    (armorItems.filter(o => getProperty(o.data, "equipmentSubtype") === "mediumArmor" && o.data.equipped).length && !flags.mediumArmorFullSpeed) ||
-    (armorItems.filter(o => getProperty(o.data, "equipmentSubtype") === "heavyArmor" && o.data.equipped).length && !flags.heavyArmorFullSpeed)) {
+    (armorItems.filter(o => getProperty(o.data, "equipmentSubtype") === "mediumArmor" && o.data.equipped && !o.data.melded).length && !flags.mediumArmorFullSpeed) ||
+    (armorItems.filter(o => getProperty(o.data, "equipmentSubtype") === "heavyArmor" && o.data.equipped && !o.data.melded).length && !flags.heavyArmorFullSpeed)) {
       for (let speedKey of Object.keys(srcData1.data.attributes.speed)) {
         let value = updateData[`data.attributes.speed.${speedKey}.total`];
         linkData(srcData1, updateData, `data.attributes.speed.${speedKey}.total`, ActorPF.getReducedMovementSpeed(value));
@@ -1158,6 +1238,57 @@ export class ActorPF extends Actor {
         linkData(srcData1, updateData, "data.attributes.vigor.value", Math.min(updateData["data.attributes.vigor.max"], srcData1.data.attributes.vigor.value + vDiff));
       }
     }
+    if (srcData1 !== null) {
+      if (srcData1.img !== this.data.data.tokenImg && this.data.data.tokenImg === "icons/svg/mystery-man.svg") {
+        srcData1.tokenImg = srcData1.img;
+        linkData(srcData1, updateData, "data.tokenImg", srcData1.img);
+      }
+    }
+
+    let shapechangeImg = updateData["data.shapechangeImg"];
+    let tokenImg = updateData["data.tokenImg"];
+
+    if (shapechangeImg !== "icons/svg/mystery-man.svg") {
+      if (this.isToken) {
+        let tokens = []
+        tokens.push(this.token);
+        for (const o of tokens) {
+          if (shapechangeImg !== o.data.img)
+            o.update({ 'img': shapechangeImg },{stopUpdates: true});
+        }
+      }
+      if (!this.isToken) {
+        let tokens = this.getActiveTokens().filter(o => o.data.actorLink);;
+        for (const o of tokens) {
+          if (shapechangeImg !== o.data.img)
+            o.update({ 'img': shapechangeImg },{stopUpdates: true});
+        }
+        if (srcData1 !== null)
+          srcData1["token.img"] = shapechangeImg;
+      }
+    } else {
+      if (this.isToken) {
+        let tokens = []
+        tokens.push(this.token);
+        for (const o of tokens) {
+          if (tokenImg && tokenImg !== o.data.img)
+            o.update({ 'img': tokenImg },{stopUpdates: true});
+        }
+      }
+      if (!this.isToken) {
+        let tokens = this.getActiveTokens().filter(o => o.data.actorLink);;
+        for (const o of tokens) {
+          if (tokenImg && tokenImg !== o.data.img)
+            o.update({ 'img': tokenImg },{stopUpdates: true});
+        }
+
+        if (srcData1 !== null) {
+          srcData1["token.img"] = tokenImg;
+        }
+      }
+    }
+
+
 
 
     // Refresh source info
@@ -1180,6 +1311,14 @@ export class ActorPF extends Actor {
         }
       }
     }
+    if (fullConditions.wildshaped || fullConditions.polymorphed) //This retains max HP
+      linkData(srcData1, updateData, "data.attributes.hp.max", prevValues.mhp);
+
+
+
+
+    this._updateAbilityRelatedFields(srcData1, updateData, sourceInfo);
+
 
     this._setSourceDetails(mergeObject(this.data, srcData1, { inplace: false }), sourceInfo, flags);
 
@@ -1192,6 +1331,21 @@ export class ActorPF extends Actor {
       return { data: newData, diff: diffData };
     }
     return { data: {}, diff: {} };
+  }
+
+  _updateAbilityRelatedFields(srcData1, updateData, sourceInfo) {
+    {
+      const k = "data.attributes.turnUndeadUsesTotal";
+      let chaMod = getProperty(srcData1, `data.abilities.cha.mod`)
+      if (getProperty(srcData1, `data.attributes.turnUndeadHdTotal`) > 0) {
+        linkData(srcData1, updateData, k, new Roll("3+@chaMod", {chaMod: chaMod}).roll().total);
+
+        sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+        sourceInfo[k].positive.push({name: "Base", value: 3});
+        sourceInfo[k].positive.push({name: "Charisma", value: chaMod});
+      } else
+        linkData(srcData1, updateData, k, 0);
+    }
   }
 
   _applyChanges(buffTarget, changeData, rollData) {
@@ -1342,7 +1496,7 @@ export class ActorPF extends Actor {
     // Reset ACP and Max Dex bonus
     linkData(data, updateData, "data.attributes.acp.gear", 0);
     linkData(data, updateData, "data.attributes.maxDexBonus", null);
-    items.filter(obj => { return obj.type === "equipment" && obj.data.equipped; }).forEach(obj => {
+    items.filter(obj => { return obj.type === "equipment" && obj.data.equipped && !obj.data.melded; }).forEach(obj => {
       let itemAcp = Math.abs(obj.data.armor.acp);
       if (obj.data.masterwork)
         itemAcp = Math.max(0,itemAcp-1)
@@ -1362,7 +1516,7 @@ export class ActorPF extends Actor {
 
     // Reset movement speed
     for (let speedKey of Object.keys(this.data.data.attributes.speed)) {
-      const base = getProperty(data, `data.attributes.speed.${speedKey}.base`);
+      let base = getProperty(data, `data.attributes.speed.${speedKey}.base`);
       linkData(data, updateData, `data.attributes.speed.${speedKey}.total`, base || 0);
     }
 
@@ -1416,21 +1570,6 @@ export class ActorPF extends Actor {
           return cur;
         }
       }, 0));
-    }
-
-
-    {
-      const k = "data.attributes.turnUndeadUsesTotal";
-      let chaMod = getProperty(data, `data.abilities.cha.mod`)
-      if (getProperty(data, `data.attributes.turnUndeadHdTotal`) > 0) {
-        linkData(data, updateData, k, new Roll("3+@chaMod", {chaMod: chaMod}).roll().total);
-
-        sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
-        sourceInfo[k].positive.push({name: "Base", value: 3});
-        sourceInfo[k].positive.push({name: "Charisma", value: chaMod});
-      }
-      else
-        linkData(data, updateData, k, 0);
     }
 
     {
@@ -1522,6 +1661,7 @@ export class ActorPF extends Actor {
         linkData(data, updateData, `data.skills.${k}.subSkills.${k2}.cs`, isClassSkill);
       }
     }
+
   }
 
   _addDynamicData(updateData, changes, flags, abilities, data, forceModUpdate=false) {
@@ -1532,22 +1672,37 @@ export class ActorPF extends Actor {
     // Reset ability modifiers
     for (let a of abilities) {
       prevMods[a] = forceModUpdate ? 0 : updateData[`data.abilities.${a}.mod`];
-      if (a === "str" && flags.noStr ||
-        a === "dex" && flags.noDex ||
-        a === "int" && flags.oneInt ||
-        a === "wis" && flags.oneWis ||
-        a === "cha" && flags.oneCha) {
+      if ((a === "str" && flags.noStr) ||
+          (a === "dex" && flags.noDex) ||
+          (a === "int" && flags.oneInt) ||
+          (a === "wis" && flags.oneWis) ||
+          (a === "cha" && flags.oneCha)) {
         modDiffs[a] = forceModUpdate ? -5 : 0;
         if (changes[`data.abilities.${a}.total`]) delete changes[`data.abilities.${a}.total`]; // Remove used mods to prevent doubling
         continue;
       }
       const ablPenalty = Math.abs(updateData[`data.abilities.${a}.penalty`] || 0) + (updateData[`data.abilities.${a}.userPenalty`] || 0);
-
-      linkData(data, updateData, `data.abilities.${a}.total`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
+      if (changes[`data.abilities.${a}.replace`]) {
+        linkData(data, updateData, `data.abilities.${a}.total`, changes[`data.abilities.${a}.replace`] + (changes[`data.abilities.${a}.total`] || 0));
+        linkData(data, updateData, `data.abilities.${a}.origTotal`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
+      } else {
+        linkData(data, updateData, `data.abilities.${a}.total`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
+        linkData(data, updateData, `data.abilities.${a}.origTotal`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
+      }
       if (changes[`data.abilities.${a}.total`]) delete changes[`data.abilities.${a}.total`]; // Remove used mods to prevent doubling
+      if (changes[`data.abilities.${a}.replace`]) delete changes[`data.abilities.${a}.replace`]; // Remove used mods to prevent doubling
       linkData(data, updateData, `data.abilities.${a}.mod`, Math.floor((updateData[`data.abilities.${a}.total`] - 10) / 2));
       linkData(data, updateData, `data.abilities.${a}.mod`, Math.max(-5, updateData[`data.abilities.${a}.mod`] - Math.floor(updateData[`data.abilities.${a}.damage`] / 2) - Math.floor(ablPenalty / 2)));
+      linkData(data, updateData, `data.abilities.${a}.origMod`, Math.floor((updateData[`data.abilities.${a}.origTotal`] - 10) / 2));
+      linkData(data, updateData, `data.abilities.${a}.origMod`, Math.max(-5, updateData[`data.abilities.${a}.origMod`] - Math.floor(updateData[`data.abilities.${a}.damage`] / 2) - Math.floor(ablPenalty / 2)));
+
       modDiffs[a] = updateData[`data.abilities.${a}.mod`] - prevMods[a];
+    }
+
+    // Force speed to creature speed
+    for (let speedKey of Object.keys(this.data.data.attributes.speed)) {
+      if (changes[`data.attributes.speed.${speedKey}.replace`])
+        linkData(data, updateData, `data.attributes.speed.${speedKey}.total`, changes[`data.attributes.speed.${speedKey}.replace`]);
     }
 
     // Add ability mods to CMB and CMD
@@ -1567,9 +1722,7 @@ export class ActorPF extends Actor {
     for (let [s, a] of Object.entries(CONFIG.D35E.savingThrowMods)) {
       linkData(data, updateData, `data.attributes.savingThrows.${s}.total`, updateData[`data.attributes.savingThrows.${s}.total`] + modDiffs[a]);
     }
-
     // Apply changes
-
     for (let [changeTarget, value] of Object.entries(changes)) {
       linkData(data, updateData, changeTarget, (updateData[changeTarget] || 0) + value);
     }
@@ -1969,7 +2122,6 @@ export class ActorPF extends Actor {
       if (hasContainerChanged)
         itemUpdates.push(itemUpdateData,{stopUpdates: true})
     }
-    console.log(updates)
   }
 
   /**
@@ -1981,6 +2133,7 @@ export class ActorPF extends Actor {
    * @return {Promise}        A Promise which resolves to the updated Entity
    */
   async update(data, options={}) {
+    let img = data.img;
     // Fix skill ranks after TinyMCE edit
     let expandedData = expandObject(data);
     if (expandedData.data != null && expandedData.data.skills != null) {
@@ -2013,6 +2166,7 @@ export class ActorPF extends Actor {
       }
       data = flattenObject(expandedData);
     }
+    data.img = img;
     for (let abl of Object.keys(this.data.data.abilities)) {
       if (data[`data.abilities.${abl}.tempvalue`] === undefined || data[`data.abilities.${abl}.tempvalue`] === null)
         continue
@@ -2033,18 +2187,7 @@ export class ActorPF extends Actor {
       data[k] = Math.abs(data[k]);
     }
 
-    // Apply changes in Actor size to Token width/height
-    if ( data["data.traits.size"] && this.data.data.traits.size !== data["data.traits.size"] ) {
-      let size = CONFIG.D35E.tokenSizes[data["data.traits.size"]];
-      let tokens = this.getActiveTokens();
-      if (this.isToken) tokens.push(this.token);
-      tokens.forEach(o => { o.update({ width: size.w, height: size.h, scale: size.scale }); });
-      if (!this.isToken) {
-        data["token.width"] = size.w;
-        data["token.height"] = size.h;
-        data["token.scale"] = size.scale;
-      }
-    }
+
 
     // Update item containers data
     let itemUpdates = []
@@ -2075,15 +2218,26 @@ export class ActorPF extends Actor {
       } else {
         if (i.data.data.containerId !== "none")
           continue; // Do nothing!
-        itemUpdateData["data.containerId"] = "none";
-        itemUpdateData["data.container"] = "None";
-        itemUpdateData["data.containerWeightless"] = false;
-        hasContainerChanged = true
+
+        if (i.data.data.containerId !== "none") {
+          itemUpdateData["data.containerId"] = "none";
+          hasContainerChanged = true
+        }
+        if (i.data.data.container !== "None") {
+          itemUpdateData["data.container"] = "None";
+          hasContainerChanged = true
+        }
+        if (i.data.data.containerWeightless !== false) {
+          itemUpdateData["data.containerWeightless"] = false;
+          hasContainerChanged = true
+        }
       }
       if (hasContainerChanged)
         itemUpdates.push(itemUpdateData)
     }
-    await this.updateOwnedItem(itemUpdates, {stopUpdates: true});
+    console.log('Item updates', itemUpdates)
+    if (itemUpdates.length > 0)
+      await this.updateOwnedItem(itemUpdates, {stopUpdates: true});
     // Send resource updates to item
     let updatedResources = [];
     for (let key of Object.keys(data)) {
@@ -2131,7 +2285,7 @@ export class ActorPF extends Actor {
             if (barAttr.attribute === `resources.${tag}`) {
               const tokenUpdateData = {};
               tokenUpdateData[`${b}.attribute`] = null;
-              token.update(token.scene._id, tokenUpdateData);
+              token.update(token.scene._id, tokenUpdateData, {stopUpdates: true});
             }
           });
         });
@@ -2143,6 +2297,10 @@ export class ActorPF extends Actor {
     }
 
     this._updateExp(data);
+
+    // Update portraits
+
+
 
     // Update changes
     let diff = data;
@@ -2175,7 +2333,6 @@ export class ActorPF extends Actor {
       const itemDiff = diffObject(flattenObject(i.data), itemUpdateData);
       if (Object.keys(itemDiff).length > 0) i.update(itemDiff);
     }
-
     return super._onUpdate(data, options, userId, context);
   }
 
@@ -3252,7 +3409,7 @@ export class ActorPF extends Actor {
     function cleanParam(parameter) {
       return parameter.replace(/"/gi,"");
     }
-    if (action.condition !== null && action.condition !== "" && !(new Roll(action.condition, this.getRollData()).roll().result))
+    if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actor.getRollData()).roll().result))
       return;
     switch (action.action) {
       case "Create":
@@ -3303,6 +3460,7 @@ export class ActorPF extends Actor {
           ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
           break;
       case "Set":
+        // Set "Sneak Attack" field data.level to (@class.rogue.level) on self
         if (action.parameters.length === 5 && action.parameters[1] === "field" && action.parameters[3] === "to") {
           let name = cleanParam(action.parameters[0])
 
@@ -3310,21 +3468,90 @@ export class ActorPF extends Actor {
           if (items.length > 0) {
             const item = items[0]
             let updateObject = {}
-            updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
-            await item.update(updateObject)
+
+            updateObject["_id"] = item.id;
+            if (action.parameters[4] === 'true' || action.parameters[4] === 'false')
+            {
+              updateObject[action.parameters[2]] = action.parameters[4] === 'true';
+            } else {
+              updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+            }
+            await this.updateOwnedItem(updateObject, {stopUpdates: true})
+            await this.update({})
           }
-        } else if (action.parameters.length === 6 && action.parameters[2] === "field" && action.parameters[4] === "to") {
+        }
+        // Set attack * field data.melded to true on self
+        else if (action.parameters.length === 6 && action.parameters[2] === "field" && action.parameters[4] === "to") {
           let type = cleanParam(action.parameters[0])
+          let subtype = null;
+          if (type.indexOf(":") !== -1) {
+            subtype = type.split(":")[1]
+            type = type.split(":")[0]
+          }
           let name = cleanParam(action.parameters[1])
 
-          let items = this.items.filter(o => o.name === name && o.type === type)
+          let items = this.items.filter(o => (o.name === name || name === "*") && o.type === type)
           if (items.length > 0) {
-            const item = items[0]
-            let updateObject = {}
-            updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
-
-            await item.update(updateObject)
+            if (name === '*') {
+              let itemUpdates = []
+              for (let item of items) {
+                if (type === "attack" && subtype !== null) {
+                  if (item.data.data.attackType !== subtype) continue;
+                }
+                let updateObject = {}
+                updateObject["_id"] = item.id;
+                if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
+                  updateObject[action.parameters[3]] = action.parameters[5] === 'true';
+                } else {
+                  updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                }
+                itemUpdates.push(updateObject)
+              }
+              await this.updateOwnedItem(itemUpdates, {stopUpdates: true})
+              await this.update({})
+            } else {
+              const item = items[0]
+              let updateObject = {}
+              updateObject["_id"] = item.id;
+              if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
+                updateObject[action.parameters[3]] = action.parameters[5] === 'true';
+              } else {
+                updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+              }
+              await this.updateOwnedItem(updateObject, {stopUpdates: true})
+              await this.update({})
+            }
           }
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
+      case "Condition":
+        // Condition set *name* to *value*
+        if (action.parameters.length === 4 && action.parameters[0] === "set" && action.parameters[2] === "to") {
+          let name = cleanParam(action.parameters[1])
+          let value = cleanParam(action.parameters[3])
+          let updateObject = {}
+          updateObject[`data.attributes.conditions.${name}`] = value === 'true'
+          await this.update(updateObject)
+        }
+        // Condition toggle *name*
+        else if (action.parameters.length === 2 && action.parameters[0] === "toggle") {
+          let name = cleanParam(action.parameters[1])
+          let updateObject = {}
+          updateObject[`data.attributes.conditions.${name}`] = !getProperty(this.data.data, `attributes.conditions.${name}`)
+          await this.update(updateObject)
+        } else
+          ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+        break;
+
+      case "Update":
+        // Update set *field* to *value*
+        if (action.parameters.length === 4 && action.parameters[0] === "set" && action.parameters[2] === "to") {
+          let field = cleanParam(action.parameters[1])
+          let value = cleanParam(action.parameters[3])
+          let updateObject = {}
+          updateObject[`${field}`] = value
+          await this.update(updateObject)
         } else
           ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
         break;
@@ -3414,6 +3641,36 @@ export class ActorPF extends Actor {
     }).render(true);
   }
 
+  _createPolymorphBuffDialog(itemData) {
+    new Dialog({
+      title: game.i18n.localize("D35E.CreateItemForActor").format(itemData.name),
+      content: game.i18n.localize("D35E.CreateItemForActorD").format(itemData.name),
+      buttons: {
+        potion: {
+          icon: '',
+          label: "Wild Shape",
+          callback: () => this.createWildShapeBuff(itemData),
+        },
+        scroll: {
+          icon: '',
+          label: "Polymorph",
+          callback: () => this.createPolymorphBuff(itemData),
+        },
+        wand: {
+          icon: '',
+          label: "Alter Self",
+          callback: () => this.createAlterSelfBuff(itemData),
+        },
+        lycantrophy: {
+          icon: '',
+          label: "Lycantrophy",
+          callback: () => this.createLycantrophyBuff(itemData),
+        },
+      },
+      default: "Polymorph",
+    }).render(true);
+  }
+
   async createConsumableSpell(itemData, type) {
     let data = await ItemPF.toConsumable(itemData, type);
 
@@ -3421,5 +3678,29 @@ export class ActorPF extends Actor {
     await this.createEmbeddedEntity("OwnedItem", data);
   }
 
+  async createWildShapeBuff(itemData) {
+    let data = await ItemPF.toPolymorphBuff(itemData, "wildshape");
+
+    if (data._id) delete data._id;
+    await this.createEmbeddedEntity("OwnedItem", data);
+  }
+  async createPolymorphBuff(itemData, type) {
+    let data = await ItemPF.toPolymorphBuff(itemData, "polymorph");
+
+    if (data._id) delete data._id;
+    await this.createEmbeddedEntity("OwnedItem", data);
+  }
+  async createAlterSelfBuff(itemData, type) {
+    let data = await ItemPF.toPolymorphBuff(itemData, "alter-self");
+
+    if (data._id) delete data._id;
+    await this.createEmbeddedEntity("OwnedItem", data);
+  }
+  async createLycantrophyBuff(itemData, type) {
+    let data = await ItemPF.toPolymorphBuff(itemData, "lycantrophy");
+
+    if (data._id) delete data._id;
+    await this.createEmbeddedEntity("OwnedItem", data);
+  }
 }
 

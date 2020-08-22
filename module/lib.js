@@ -179,6 +179,12 @@ export const CR = {
   },
 };
 
+export const sizeInt = function (targetSize="M") {
+  if (typeof targetSize === "string") targetSize = Object.values(CONFIG.D35E.sizeChart).indexOf(targetSize.toUpperCase());
+  else if (typeof targetSize === "number") targetSize = Math.max(0, Math.min(Object.values(CONFIG.D35E.sizeChart).length - 1, Object.values(CONFIG.D35E.sizeChart).indexOf("M") + targetSize));
+  return `${targetSize}`
+}
+
 export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
   if (typeof targetSize === "string") targetSize = Object.values(CONFIG.D35E.sizeChart).indexOf(targetSize.toUpperCase());
   else if (typeof targetSize === "number") targetSize = Math.max(0, Math.min(Object.values(CONFIG.D35E.sizeChart).length - 1, Object.values(CONFIG.D35E.sizeChart).indexOf("M") + targetSize));

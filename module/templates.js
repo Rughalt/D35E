@@ -45,6 +45,7 @@ export const preloadHandlebarsTemplates = async function() {
     // Internal Rendering Partials
     "systems/D35E/templates/internal/spell-description.html",
     "systems/D35E/templates/internal/consumable-description.html",
+    "systems/D35E/templates/internal/shapechange-description.html",
   ];
 
   // Load the template parts

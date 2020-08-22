@@ -919,6 +919,12 @@
   "D35E.ConsumableTypeCrystal": "Crysal",
   "D35E.ConsumableTypePowerStone": "Power Stone",
   "D35E.ConsumableTypeTattoo": "Tatoo",
+  "D35E.CondPolymorphed": "Polymorphed",
+  "D35E.CondWildshaped": "Wild-shaped",
+  "D35E.Shapechange": "Shapechange",
+  "D35E.ShapechangeDefault": "Default shape",
+  "D35E.CreateItemForActor": "Create Shapechange Buff",
+  "D35E.CreateItemForActorD": "You can create one of three types of shapechange buff - standard Polymorph, Wild-shape or appearance-only alerting Alter-self buff.",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

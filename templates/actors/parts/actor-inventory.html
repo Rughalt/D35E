@@ -66,11 +66,11 @@
       <ol class="item-list">
         {{#each section.items as |item iid|}}
         <li class="item flexrow" data-item-id="{{item._id}}">
-          <div class="item-name flexrow">
+          <div class="item-name flexrow  {{#if item.data.melded}}melded{{/if}}">
             <div class="item-image rollable" style="background-image: url('{{item.img}}')"></div>
             <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
               {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-              {{item.name~}}
+              {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
             </h4>
           </div>
 
@@ -87,7 +87,10 @@
             <div class="item-attack">
               {{#unless item.showUnidentifiedData}}
               {{#if item.hasAction}}
+
+              {{#unless item.data.melded}}
               <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+              {{/unless}}
               {{/if}}
               {{/unless}}
             </div>

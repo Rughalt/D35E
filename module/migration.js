@@ -336,6 +336,14 @@ const _migrateActorBaseStats = function(ent, updateData) {
       updateData[`data.${kList.join(".")}`] = null;
     }
   }
+
+  if (getProperty(ent.data, "data.attributes.conditions.wildshaped") == null) {
+    updateData["data.attributes.conditions.wildshaped"] = false;
+  }
+
+  if (getProperty(ent.data, "data.attributes.conditions.polymorphed") == null) {
+    updateData["data.attributes.conditions.polymorphed"] = false;
+  }
 };
 
 const _migrateActorCreatureType = function(ent, updateData) {

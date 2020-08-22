@@ -2,7 +2,13 @@
 
   {{#unless hasClasses}}
     <span class="warning">Your character is missing a class. Some attributes require a class to function.</span>{{/unless}}
-
+  <div class="working">
+    <div>
+      <h1>
+        Updating
+      </h1>
+    </div>
+  </div>
   {{!-- Sheet Header --}}
   <header class="sheet-header flexrow">
     <div class="profile"  >
@@ -18,6 +24,7 @@
         {{/each}}
       </div>
       <img src="{{actor.img}}"  data-edit="img">
+      <img src="{{actor.data.tokenImg}}" class="token-image"  data-edit="data.tokenImg">
     </div>
     <div class="header-details flexcol">
       <div class="flexrow">

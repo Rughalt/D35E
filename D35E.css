@@ -348,6 +348,9 @@
   height: 50px;
   font-size: 36px;
 }
+.D35E.sheet .sheet-header .profile {
+  position: relative;
+}
 .D35E.sheet .sheet-header img.profile {
   flex: 0 0 100px;
   width: 100px;
@@ -355,6 +358,10 @@
   object-fit: contain;
   border: none;
   border-right: 2px groove #eeede0;
+}
+.D35E.sheet .sheet-header img.profile.npc {
+  border-right: none;
+  margin-right: 0;
 }
 .D35E.sheet .sheet-header .summary {
   flex: 0 0 100%;
@@ -582,6 +589,27 @@
   border: 1px solid #909000;
   border-radius: 2px;
 }
+.D35E.sheet.actor .working {
+  display: none;
+  flex: none;
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 30px);
+  left: 0;
+  top: 30px;
+  z-index: 1;
+}
+.D35E.sheet.actor .working h1 {
+  text-align: center;
+  color: white;
+  font-family: "Signika", "Palatino Linotype", serif;
+  margin-top: 50%;
+  border-bottom: none;
+}
+.D35E.sheet.actor.isWorking .working {
+  display: block;
+}
 .D35E.sheet.actor .sheet-header .header-details {
   height: 100%;
   border-left: 2px groove #eeede0;
@@ -634,6 +662,22 @@
   height: 100%;
   object-fit: contain;
   border: none;
+}
+.D35E.sheet.actor .sheet-header div.profile img.token-image {
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+  flex: 0;
+  position: absolute;
+  right: 1px;
+  bottom: 6px;
+  margin-right: 0;
+  border: 1px white solid;
+  background: #4e4e4e;
+  background: radial-gradient(circle, #4e4e4e 0%, #000000 100%);
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
 }
 .D35E.sheet.actor .sheet-header div.profile .buffbox {
   position: absolute;
@@ -1359,6 +1403,22 @@
   margin-left: 8px;
   border-bottom: 2px groove #eeede0;
 }
+.D35E.sheet.actor .shapechange-info {
+  padding: 0 5px;
+  flex: 0;
+}
+.D35E.sheet.actor .shapechange-info .shapechange-img {
+  flex: 0 60;
+  margin-right: 8px;
+  width: 60px;
+  min-height: 60px;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+}
+.D35E.sheet.actor .shapechange-info h2 {
+  flex: 0;
+}
 .D35E.sheet.actor .inventory-list {
   list-style: none;
   margin: 0;
@@ -1380,6 +1440,10 @@
 .D35E.sheet.actor .inventory-list .item .item-name {
   cursor: pointer;
   white-space: nowrap;
+}
+.D35E.sheet.actor .inventory-list .item .item-name.melded {
+  color: #4b4a44;
+  text-decoration: line-through;
 }
 .D35E.sheet.actor .inventory-list .item .item-name .item-image {
   flex: 0 0 24px;
@@ -1443,6 +1507,7 @@
   font-size: 11px;
   color: #7a7971;
   text-align: center;
+  position: relative;
   border-right: 1px solid #c9c7b8;
   overflow: hidden;
   white-space: nowrap;
@@ -1528,6 +1593,10 @@
 .D35E.sheet.actor .inventory-list .item-active {
   flex: 0 0 60px;
   border-right: 1px solid #c9c7b8;
+}
+.D35E.sheet.actor .inventory-list .item-active .checkmark {
+  left: 20px;
+  top: 2px;
 }
 .D35E.sheet.actor .inventory-list .item-list {
   list-style: none;
@@ -1666,6 +1735,12 @@
 }
 .D35E.sheet.item .sheet-header img.profile {
   border: 2px solid #000;
+}
+.D35E.sheet.item .sheet-header .sheet-header-profile {
+  flex: 0 0 100px;
+  width: 100px;
+  margin-right: 6px;
+  position: relative;
 }
 .D35E.sheet.item .sheet-header .item-subtitle {
   flex: 0 0 80px;
@@ -1874,6 +1949,7 @@
   font-weight: bold;
   line-height: 24px;
   color: #4b4a44;
+  flex: 0;
 }
 .D35E.sheet.item .damage-parts,
 .D35E.sheet.item .attack-parts,
@@ -2450,19 +2526,16 @@
   padding: 0 0 0 6px;
 }
 .D35E.sheet.actor.character .sheet-header .race-container .race {
-  flex: 0 0 24px;
+  flex: 0 0 22px;
   background-size: contain;
   line-height: 24px;
   text-align: center;
   vertical-align: baseline;
   margin-right: 4px;
-  height: 24px;
+  height: 22px;
 }
-.D35E.sheet.actor.character .sheet-header .race-container .race .rollable:hover {
+.D35E.sheet.actor.character .sheet-header .race-container .race.rollable:hover {
   background-image: url("/icons/svg/d20-black.svg") !important;
-}
-.D35E.sheet.actor.character .sheet-header .summary {
-  border-bottom: 2px groove #eeede0;
 }
 .D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(1),
 .D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(2) {
@@ -2595,6 +2668,51 @@ form .form-group.stacked label.checkbox {
 form .form-group.stacked label.checkbox input[type="checkbox"] {
   height: unset;
   margin: unset;
+}
+form input[type="checkbox"].stylized {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+form .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  border: #782e22 2px solid;
+  background-color: #eee;
+  border-radius: 2px;
+}
+form input ~ .checkmark {
+  background-color: #ccc;
+}
+form input:checked ~ .checkmark {
+  background-color: #782e22;
+}
+form .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+form input:checked ~ .checkmark:after {
+  display: block;
+}
+form .checkmark:after {
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.dialog-content {
+  margin-bottom: 8px;
 }
 /* Tooltip text */
 .tooltip .tooltipcontent {
@@ -3068,6 +3186,37 @@ form .form-group.stacked label.checkbox input[type="checkbox"] {
   background-size: cover;
   border-radius: 0;
   background-color: #191919;
+}
+.d35ecustom .sheet-header-profile img {
+  border: none;
+}
+.d35ecustom .sheet-header-profile::after {
+  content: '';
+  background: url(/systems/D35E/icons/ui/large-item-frame-empty.png);
+  background-size: contain;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 0px;
+  top: 0;
+  pointer-events: none;
+}
+.d35ecustom .checkmark {
+  border: none;
+  background: url(/systems/D35E/icons/ui/checkbox-unchecked.png);
+  background-size: contain;
+  cursor: pointer;
+}
+.d35ecustom input ~ .checkmark {
+  background: url(/systems/D35E/icons/ui/checkbox-unchecked.png);
+  background-size: contain;
+}
+.d35ecustom input:checked ~ .checkmark {
+  background: url(/systems/D35E/icons/ui/checkbox-checked.png);
+  background-size: contain;
+}
+.d35ecustom .checkmark:after {
+  border: none;
 }
 .secret {
   display: none;

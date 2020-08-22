@@ -78,6 +78,14 @@
       </div>
       {{/if}}
 
+
+      {{#if canMeld}}
+      <div class="form-group">
+        <label>{{localize "D35E.Melded"}}</label>
+        <input type="checkbox" name="data.melded" {{checked data.melded}}/>
+      </div>
+      {{/if}}
+
       {{!-- Properties --}}
       <ol class="properties-list">
         {{#each itemProperties}}

@@ -311,6 +311,45 @@
     border-radius: 0;
     background-color: #191919;
   }
+
+  .sheet-header-profile {
+    img {
+      border: none
+    }
+
+    &::after{
+      content: '';
+      background: url(/systems/D35E/icons/ui/large-item-frame-empty.png);
+      background-size: contain;
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      left: 0px;
+      top: 0;
+      pointer-events: none;
+    }
+  }
+
+  .checkmark {
+    border: none;
+    background: url(/systems/D35E/icons/ui/checkbox-unchecked.png);
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  input ~ .checkmark {
+    background: url(/systems/D35E/icons/ui/checkbox-unchecked.png);
+    background-size: contain;
+  }
+  input:checked ~ .checkmark {
+
+    background: url(/systems/D35E/icons/ui/checkbox-checked.png);
+    background-size: contain;
+  }
+
+  .checkmark:after {
+    border: none;
+  }
 }
 
 .secret {

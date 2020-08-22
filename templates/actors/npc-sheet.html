@@ -2,7 +2,10 @@
 
   {{!-- NPC Sheet Header --}}
   <header class="sheet-header flexrow">
-    <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+    <div class="profile npc">
+    <img  src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+    <img src="{{actor.data.tokenImg}}" class="token-image"  data-edit="data.tokenImg">
+    </div>
 
     <div class="header-details flexcol">
       <div class="flexrow">

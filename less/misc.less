@@ -16,6 +16,57 @@ form {
       }
     }
   }
+
+  input[type="checkbox"] {
+    &.stylized {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    border: #782e22 2px solid;
+    background-color: #eee;
+    border-radius: 2px;
+  }
+  input ~ .checkmark {
+    background-color: #ccc;
+  }
+  input:checked ~ .checkmark {
+    background-color: #782e22;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  input:checked ~ .checkmark:after {
+    display: block;
+  }
+  .checkmark:after {
+    left: 4px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}
+
+.dialog-content {
+  margin-bottom: 8px;
 }
 
 /* Tooltip text */

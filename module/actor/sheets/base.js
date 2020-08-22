@@ -100,6 +100,7 @@ export class ActorSheetPF extends ActorSheet {
     // Ability Scores
     for ( let [a, abl] of Object.entries(data.actor.data.abilities)) {
       abl.label = CONFIG.D35E.abilitiesShort[a];
+      abl.tempvalue = data.actor.data.abilities[a].total;
       abl.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.abilities[a].total : [];
     }
 
@@ -148,6 +149,18 @@ export class ActorSheetPF extends ActorSheet {
       obj.isPrepared = obj.data.preparation.mode === "prepared";
     });
 
+    data.isShapechanged = false;
+    data.items.filter(obj => { return obj.type === "buff" && obj.data.buffType === "shapechange"; })
+        .forEach(obj => {
+          if (obj.data.active) {
+            data.isShapechanged = true;
+            data.shapechangeName = obj.name;
+          }
+        });
+    data.items.filter(obj => { return obj.type === "buff" && obj.data.buffType === "shapechange"; })
+        .forEach(obj => {
+          obj.canToggleShapechange = !data.isShapechanged || (data.isShapechanged && obj.data.active)
+        });
     // Update traits
     this._prepareTraits(data.actor.data.traits);
 
@@ -758,15 +771,30 @@ export class ActorSheetPF extends ActorSheet {
     });
   }
 
-  _setItemActive(event) {
+  async _setItemActive(event) {
     event.preventDefault();
+    if (this.actor.isToken) {
+      $(`#actor-${this.actor._id}-${this.actor.token.id}`).addClass('isWorking');
+    } else {
+      $(`#actor-${this.actor._id}`).addClass('isWorking');
+    }
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
 
     const value = $(event.currentTarget).prop("checked");
     const updateData = {};
     updateData["data.active"] = value;
-    if (item.hasPerm(game.user, "OWNER")) item.update(updateData);
+    if (item.hasPerm(game.user, "OWNER"))
+    {
+      await item.update(updateData);
+    }
+
+    if (this.actor.isToken) {
+      $(`#actor-${this.actor._id}-${this.actor.token.id}`).removeClass('isWorking');
+    } else {
+      $(`#actor-${this.actor._id}`).removeClass('isWorking');
+    }
+
   }
 
   /* -------------------------------------------- */
@@ -1170,14 +1198,20 @@ export class ActorSheetPF extends ActorSheet {
       all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
 
+    data.shapechanges = []
     for (let b of buffs) {
       let s = b.data.buffType;
+      if (s === 'shapechange') data.shapechanges.push(b)
       if (!buffSections[s]) continue;
       buffSections[s].items.push(b);
       buffSections.all.items.push(b);
     }
 
+
     // Attacks
+
+    data.useableAttacks = []
+
     const attackSections = {
       weapon: { label: game.i18n.localize("D35E.AttackTypeWeaponPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "weapon" } },
       natural: { label: game.i18n.localize("D35E.AttackTypeNaturalPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "natural" } },
@@ -1189,6 +1223,7 @@ export class ActorSheetPF extends ActorSheet {
 
     for (let a of attacks) {
       let s = a.data.attackType;
+      if (!a.data.melded) data.useableAttacks.push(a)
       if (!attackSections[s]) continue;
       attackSections[s].items.push(a);
       attackSections.all.items.push(a);
@@ -1340,40 +1375,67 @@ export class ActorSheetPF extends ActorSheet {
     let data;
     try {
       data = JSON.parse(event.dataTransfer.getData('text/plain'));
-      if (data.type !== "Item") return;
+      if (data.type !== "Item" && data.type !== "Actor") return;
     } catch (err) {
       return false;
     }
-
-    let itemData = {};
     let dataType = "";
-
-    // Case 1 - Import from a Compendium pack
     const actor = this.actor;
-    if (data.pack) {
-      dataType = "compendium";
-      const pack = game.packs.find(p => p.collection === data.pack);
-      const packItem = await pack.getEntity(data.id);
-      if (packItem != null) itemData = packItem.data;
+    if (data.type === "Item") {
+      let itemData = {};
+      // Case 1 - Import from a Compendium pack
+      if (data.pack) {
+        dataType = "compendium";
+        const pack = game.packs.find(p => p.collection === data.pack);
+        const packItem = await pack.getEntity(data.id);
+        if (packItem != null) itemData = packItem.data;
+      }
+
+      // Case 2 - Data explicitly provided
+      else if (data.data) {
+        let sameActor = data.actorId === actor._id;
+        if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
+        if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
+
+        dataType = "data";
+        itemData = data.data;
+      }
+
+      // Case 3 - Import from World entity
+      else {
+        dataType = "world";
+        itemData = game.items.get(data.id).data;
+      }
+
+      return this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+    } else if (data.type === "Actor") {
+      let actorData = {};
+      // Case 1 - Import from a Compendium pack
+      if (data.pack) {
+        dataType = "compendium";
+        const pack = game.packs.find(p => p.collection === data.pack);
+        const packItem = await pack.getEntity(data.id);
+        if (packItem != null) actorData = packItem.data;
+      }
+
+      // Case 2 - Data explicitly provided
+      else if (data.data) {
+        let sameActor = data.actorId === actor._id;
+        if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
+        if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
+
+        dataType = "data";
+        actorData = data.data;
+      }
+
+      // Case 3 - Import from World entity
+      else {
+        dataType = "world";
+        actorData = game.actors.get(data.id).data;
+      }
+
+      return this.importActor(mergeObject(actorData, this.getDropData(actorData), {inplace: false}), dataType);
     }
-
-    // Case 2 - Data explicitly provided
-    else if (data.data) {
-      let sameActor = data.actorId === actor._id;
-      if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
-      if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
-
-      dataType = "data";
-      itemData = data.data;
-    }
-
-    // Case 3 - Import from World entity
-    else {
-      dataType = "world";
-      itemData = game.items.get(data.id).data;
-    }
-
-    return this.importItem(mergeObject(itemData, this.getDropData(itemData), { inplace: false }), dataType);
   }
 
   get currentPrimaryTab() {
@@ -1390,8 +1452,17 @@ export class ActorSheetPF extends ActorSheet {
       return this.actor._createConsumablePowerDialog(itemData);
     }
 
+    if (itemData.type === "actor") {
+      return this.actor._createConsumablePowerDialog(itemData);
+    }
+
     if (itemData._id) delete itemData._id;
     return this.actor.createEmbeddedEntity("OwnedItem", itemData);
+  }
+  async importActor(itemData, dataType) {
+    if (itemData.type === "npc") {
+      return this.actor._createPolymorphBuffDialog(itemData);
+    }
   }
 
 

@@ -9,7 +9,10 @@
 
   <!-- BODY -->
   <section class="sheet-body" style="height: calc(100% - 80px);">
-    <img class="sheet-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+    <div class="sheet-profile">
+      <img  src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+      <img src="{{actor.data.tokenImg}}" class="token-image"  data-edit="data.tokenImg">
+    </div>
     <div class="tab biography">
       {{editor content=data.details.biography.value target="data.details.biography.value" button=true owner=owner editable=editable}}
     </div>

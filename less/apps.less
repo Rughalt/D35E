@@ -303,6 +303,10 @@
     }
 
     /* Profile Image */
+    .profile {
+      position: relative;
+    }
+
     img.profile {
       flex: 0 0 @headerHeight;
       width: @headerHeight;
@@ -310,7 +314,14 @@
       object-fit: contain;
       border: none;
       border-right: @borderGroove;
+
+      &.npc {
+        border-right: none;
+        margin-right: 0;
+      }
     }
+
+
 
     /* Header Summary Details */
     .summary {

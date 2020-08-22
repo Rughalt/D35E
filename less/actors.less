@@ -12,6 +12,32 @@
     border-radius: 2px;
   }
 
+  .working {
+    display: none;
+    //display: block;
+    flex: none;
+    background: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 30px);
+    left: 0;
+    top: 30px;
+    z-index: 1;
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-family: "Signika", "Palatino Linotype", serif;
+      margin-top: 50%;
+      border-bottom: none;
+    }
+  }
+  &.isWorking {
+    .working {
+      display: block;
+    }
+  }
+
   .sheet-header {
     .header-details {
       height: 100%;
@@ -74,6 +100,23 @@
         height: 100%;
         object-fit: contain;
         border: none;
+
+        &.token-image {
+          width: 30px;
+          height: 30px;
+          min-height: 30px;
+          flex: 0;
+          position: absolute;
+          right: 1px;
+          bottom: 6px;
+          margin-right: 0;
+          border: 1px white solid;
+          background: rgb(78,78,78);
+          background: radial-gradient(circle, rgba(78,78,78,1) 0%, rgba(0,0,0,1) 100%);
+          -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+          -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+          box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+        }
       }
 
       .buffbox {
@@ -947,6 +990,23 @@
       border-bottom: @borderGroove;
     }
   }
+  .shapechange-info {
+    padding: 0 5px;
+    flex: 0;
+    .shapechange-img {
+      flex: 0 60;
+      margin-right: 8px;
+      width: 60px;
+      min-height: 60px;
+      height: 100%;
+      object-fit: contain;
+      border: none;
+    }
+
+    h2 {
+      flex: 0;
+    }
+  }
 
   .inventory-list {
     list-style: none;
@@ -971,6 +1031,10 @@
         cursor: pointer;
         white-space: nowrap;
 
+        &.melded {
+          color: #4b4a44;
+          text-decoration: line-through;
+        }
         .item-image {
           flex: 0 0 24px;
           background-size: 24px;
@@ -979,6 +1043,7 @@
 
         h4 {
           margin: 0;
+
         }
 
         &:hover .item-image {
@@ -1054,6 +1119,7 @@
       font-size: 11px;
       color: @colorTan;
       text-align: center;
+      position: relative;
       border-right: 1px solid @colorFaint;
       overflow: hidden;
       white-space: nowrap;
@@ -1132,6 +1198,10 @@
     .item-active {
       flex: 0 0 60px;
       border-right: 1px solid @colorFaint;
+      .checkmark {
+        left: 20px;
+        top: 2px;
+      }
     }
 
     .item-list {
@@ -1259,6 +1329,8 @@
     margin: 4px 0 4px 0;
   }
 }
+
+
 
 .locked {
   img.sheet-profile {

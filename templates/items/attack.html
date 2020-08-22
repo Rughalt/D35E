@@ -2,7 +2,9 @@
 
   {{!-- Item Sheet Header --}}
   <header class="sheet-header flexrow">
-    <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    <div class="sheet-header-profile">
+      <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    </div>
 
     <div class="header-details flexrow">
       <h1 class="charname">
@@ -54,6 +56,9 @@
           <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
         </label>
 
+        <label class="checkbox">
+          <input type="checkbox" name="data.melded" {{checked data.melded}}/> {{localize "D35E.Melded"}}
+        </label>
         <div class="data-selector">
           <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
           <label for="data.tags">{{localize "D35E.Tags"}}</label>
