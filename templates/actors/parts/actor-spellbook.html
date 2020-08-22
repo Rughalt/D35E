@@ -23,6 +23,7 @@
       </footer>
     </li>
 
+    {{#if spellbook.orig.usePowerPoints}}
     <li class="attribute high powerPoints tooltip" data-attribute="powerPoints">
       <h4 class="attribute-name box-title">{{localize "D35E.PowerPoints"}}</h4>
       <div class="attribute-value">
@@ -35,6 +36,7 @@
                value="{{spellbook.orig.dailyPowerPointsFormula}}" placeholder="{{localize "D35E.DailyPowerPointsFormula"}}" />
       </footer>
     </li>
+    {{/if}}
   </ul>
   
   <div class="flexrow spellcasting-notes">

@@ -134,6 +134,9 @@
                 value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}" data-dtype="Number" title="{{localize "D35E.TempHP"}}"/>
               <input name="data.attributes.hp.nonlethal" type="text" class="temphp" placeholder="{{localize 'D35E.Nonlethal'}}"
                 value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}" data-dtype="Number" title="{{localize "D35E.Nonlethal"}}"/>
+              <br>
+
+              <a class="btn random-hp-roll" onkeydown="e.preventDefault();">Randomize HP</a>
             </footer>
           {{/if}}
           </li>

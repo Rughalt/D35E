@@ -705,7 +705,7 @@ export class ActorPF extends Actor {
     // Apply changes in Actor size to Token width/height
     {
       let size = CONFIG.D35E.tokenSizes[sizeKey];
-      console.log(size)
+      //console.log(size)
       if (this.isToken) {
         let tokens = []
         tokens.push(this.token);
@@ -1334,6 +1334,7 @@ export class ActorPF extends Actor {
   }
 
   _updateAbilityRelatedFields(srcData1, updateData, sourceInfo) {
+
     {
       const k = "data.attributes.turnUndeadUsesTotal";
       let chaMod = getProperty(srcData1, `data.abilities.cha.mod`)
@@ -1345,6 +1346,34 @@ export class ActorPF extends Actor {
         sourceInfo[k].positive.push({name: "Charisma", value: chaMod});
       } else
         linkData(srcData1, updateData, k, 0);
+    }
+
+    {
+
+      const classes = srcData1.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
+        return a.sort - b.sort;
+      });
+      const k = "data.attributes.powerPointsTotal";
+      linkData(srcData1, updateData, k, classes.reduce((cur, obj) => {
+        try {
+          if (obj.data.powerPointTable === undefined || obj.data.powerPointTable[obj.data.levels] === undefined)
+            return cur
+          let ablMod = 0;
+          if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
+            ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`);
+          const v = new Roll("ceil(0.5*@level*@ablMod)", {level: obj.data.levels, ablMod: ablMod}).roll().total + obj.data.powerPointTable[obj.data.levels];
+
+          if (v !== 0) {
+            sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+            sourceInfo[k].positive.push({name: getProperty(obj, "name"), value: v});
+          }
+
+          return cur + v;
+        } catch (e) {
+
+          return cur;
+        }
+      }, 0));
     }
   }
 
@@ -1585,29 +1614,7 @@ export class ActorPF extends Actor {
       }
     }
 
-    {
-      const k = "data.attributes.powerPointsTotal";
-      linkData(data, updateData, k, classes.reduce((cur, obj) => {
-        try {
-          if (obj.data.powerPointTable === undefined || obj.data.powerPointTable[obj.data.levels] === undefined)
-            return cur
-          let ablMod = 0;
-          if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
-            ablMod = getProperty(data, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`);
-          const v = new Roll("ceil(0.5*@level*@ablMod)", {level: obj.data.levels, ablMod: ablMod}).roll().total + obj.data.powerPointTable[obj.data.levels];
 
-          if (v !== 0) {
-            sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
-            sourceInfo[k].positive.push({name: getProperty(obj, "name"), value: v});
-          }
-
-          return cur + v;
-        } catch (e) {
-
-          return cur;
-        }
-      }, 0));
-    }
 
     // Total sneak attak dice
     {
@@ -2235,7 +2242,7 @@ export class ActorPF extends Actor {
       if (hasContainerChanged)
         itemUpdates.push(itemUpdateData)
     }
-    console.log('Item updates', itemUpdates)
+    //console.log('Item updates', itemUpdates)
     if (itemUpdates.length > 0)
       await this.updateOwnedItem(itemUpdates, {stopUpdates: true});
     // Send resource updates to item
@@ -3391,6 +3398,7 @@ export class ActorPF extends Actor {
     return result;
   }
 
+
   static applyAction(action, actor) {
     const promises = [];
     let tokensList;
@@ -3661,11 +3669,11 @@ export class ActorPF extends Actor {
           label: "Alter Self",
           callback: () => this.createAlterSelfBuff(itemData),
         },
-        lycantrophy: {
-          icon: '',
-          label: "Lycantrophy",
-          callback: () => this.createLycantrophyBuff(itemData),
-        },
+        // lycantrophy: {
+        //   icon: '',
+        //   label: "Lycantrophy",
+        //   callback: () => this.createLycantrophyBuff(itemData),
+        // },
       },
       default: "Polymorph",
     }).render(true);

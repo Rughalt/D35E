@@ -388,7 +388,7 @@ export class ItemPF extends Item {
             for (let actionValue of this.data.data.activateActions) {
                 let actions = ItemPF.parseAction(actionValue.action)
                 for (let actionData of actions) {
-                    console.log('applying active action', actionData.action)
+                    //console.log('applying active action', actionData.action)
                     if (actionData.target === "self") {
                         if (!this.actor) continue;
                         if (this.actor.token !== null) {
@@ -403,7 +403,7 @@ export class ItemPF extends Item {
                 if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
                     for (const i of this.data.data.shapechange.source.items) {
                         if (i.type === "attack" && i.data.attackType === "natural") {
-                            console.log('add polymorph attack')
+                            //console.log('add polymorph attack')
                             if (!this.actor) continue;
                             let data = duplicate(i);
                             data.name = i.name + ` (Polymorhped ${this.data.data.shapechange.source.name})`
@@ -424,7 +424,7 @@ export class ItemPF extends Item {
                         for (const i of this.actor.items) {
 
                             if (i.data.type === "attack" && i.data.data.attackType === "natural" && !i.data.data.melded) {
-                                console.log('remove polymorph attack',i,this.actor,this.actor.token)
+                                //console.log('remove polymorph attack',i,this.actor,this.actor.token)
                                 if (this.actor.token !== null) {
                                     await this.actor.token.actor.deleteOwnedItem(i._id,{stopUpdates: true})
                                 } else {
@@ -438,7 +438,7 @@ export class ItemPF extends Item {
             for (let actionValue of this.data.data.deactivateActions) {
                 let actions = ItemPF.parseAction(actionValue.action)
                 for (let actionData of actions) {
-                    console.log('applying deactivate action', actionData.action)
+                    //console.log('applying deactivate action', actionData.action)
                     if (actionData.target === "self") {
                         if (!this.actor) continue;
                         if (this.actor.token !== null) {

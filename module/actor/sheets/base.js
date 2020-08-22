@@ -555,6 +555,9 @@ export class ActorSheetPF extends ActorSheet {
     // Quick (un)identify item
     html.find("a.item-control.item-identify").click(ev => { this._quickIdentifyItem(ev); });
 
+
+    html.find("a.random-hp-roll").click(ev => { this._rollRandomHitDie(ev); });
+
     /* -------------------------------------------- */
     /*  Feats
     /* -------------------------------------------- */
@@ -606,6 +609,24 @@ export class ActorSheetPF extends ActorSheet {
       tabGroups["primary"]["spellbooks"][`spells_${a}`] = {};
     }
     createTabs.call(this, html, tabGroups);
+  }
+
+
+  _rollRandomHitDie(event) {
+    this.actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
+      let hd = item['data']['hd']
+      let hp = 0;
+      for (let i = 0; i < hd; i++) {
+        hp += this.getRandomInt(1,hd);
+      }
+      this.setItemUpdate(item._id, "data.hp", hp);
+    });
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   /* -------------------------------------------- */

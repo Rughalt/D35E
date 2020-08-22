@@ -645,6 +645,16 @@
   margin: 0;
   padding: 0;
 }
+.D35E.sheet.actor .sheet-header a.random-hp-roll {
+  border-radius: 4px;
+  height: 40px;
+  display: block;
+  margin: 0 5px 4px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
 .D35E.sheet.actor .sheet-header div.profile {
   flex: 0 0 120px;
   max-width: 120px;
