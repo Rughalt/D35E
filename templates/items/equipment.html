@@ -66,6 +66,7 @@
       <h3 class="form-header">{{localize "D35E.Details"}}</h3>
 
       {{!-- Equipment Type --}}
+      {{#unless showUnidentifiedData}}
       <div class="form-group">
         <label>{{localize "D35E.Category"}}</label>
         <select name="data.equipmentType">
@@ -76,9 +77,10 @@
           {{/select}}
         </select>
       </div>
+      {{/unless}}
 
       {{!-- Equipment Subtype --}}
-      <div class="form-group">
+      {{#unless showUnidentifiedData}}<div class="form-group">
         <label>{{localize "D35E.Type"}}</label>
         <select name="data.equipmentSubtype">
           {{#select data.equipmentSubtype}}
@@ -88,9 +90,10 @@
           {{/select}}
         </select>
       </div>
+      {{/unless}}
 
       {{!-- Equipment Slot --}}
-      {{#if hasMultipleSlots}}
+      {{#unless showUnidentifiedData}}{{#if hasMultipleSlots}}
       <div class="form-group">
         <label>{{localize "D35E.Slot"}}</label>
         <select name="data.slot">
@@ -104,6 +107,7 @@
       {{else}}
       <input type="hidden" name="data.slot" value="{{data.slot}}" />
       {{/if}}
+      {{/unless}}
 
       {{!-- Equipment Status --}}
       <div class="form-group stacked">

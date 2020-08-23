@@ -76,9 +76,11 @@
 
           {{#if section.hasSlots}}
           <div class="item-detail item-slot">
+            {{#unless item.showUnidentifiedData}}
             {{#if item.labels.slot}}
             <span>{{item.labels.slot}}</span>
             {{/if}}
+            {{/unless}}
           </div>
           {{/if}}
 
@@ -126,6 +128,7 @@
           {{/if}}
 
           <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+            {{#unless item.showUnidentifiedData}}
             {{#if item.isCharged}}
             <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
             <span class="sep"> of </span>
@@ -135,6 +138,7 @@
               @resources.{{item.tag}}.max : {{item.data.uses.max}}
             </span>
             {{/if}}
+            {{/unless}}
           </div>
 
           {{#if ../../owner}}

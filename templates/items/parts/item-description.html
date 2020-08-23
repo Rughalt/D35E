@@ -87,11 +87,14 @@
       {{/if}}
 
       {{!-- Properties --}}
+
+      {{#unless showUnidentifiedData}}
       <ol class="properties-list">
         {{#each itemProperties}}
         <li>{{this}}</li>
         {{/each}}
       </ol>
+      {{/unless}}
     </div>
 
     {{#if showIdentifyDescription}}

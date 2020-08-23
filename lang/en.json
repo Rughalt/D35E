@@ -925,6 +925,7 @@
   "D35E.ShapechangeDefault": "Default shape",
   "D35E.CreateItemForActor": "Create Shapechange Buff",
   "D35E.CreateItemForActorD": "You can create one of three types of shapechange buff - standard Polymorph, Wild-shape or appearance-only alerting Alter-self buff.",
+  "D35E.Melded": "Melded",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
