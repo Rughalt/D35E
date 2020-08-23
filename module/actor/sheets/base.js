@@ -491,9 +491,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".attribute.initiative .attribute-name").click(this._onRollInitiative.bind(this));
 
     // Saving Throw
-    html.find(".defenses .saving-throw .attribute-name").click(this._onRollSavingThrow.bind(this));
-
-    html.find(".attributes .saving-throw .attribute-name").click(this._onRollSavingThrow.bind(this));
+    html.find(".saving-throw .attribute-name").click(this._onRollSavingThrow.bind(this));
 
     // Add arbitrary skill
     html.find(".skill.arbitrary .skill-create").click(ev => this._onArbitrarySkillCreate(ev));
