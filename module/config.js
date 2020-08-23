@@ -550,6 +550,7 @@ D35E.bonusModifiers = {
   "circumstance": "Circumstance",
   "alchemical": "Alchemical",
   "penalty": "Penalty",
+  "replace": "Replace",
 };
 
 /* -------------------------------------------- */
@@ -875,12 +876,15 @@ D35E.conditions = {
   "fear": "D35E.CondFear",
   "sickened": "D35E.CondSickened",
   "stunned": "D35E.CondStunned",
+  "polymorphed": "D35E.CondPolymorphed",
+  "wildshaped": "D35E.CondWildshaped",
 };
 
 D35E.buffTypes = {
   "temp": "D35E.Temporary",
   "perm": "D35E.Permanent",
   "item": "D35E.Item",
+  "shapechange": "D35E.Shapechange",
   "misc": "D35E.Misc",
 };
 

@@ -2,7 +2,10 @@
 
   {{!-- NPC Sheet Header --}}
   <header class="sheet-header flexrow">
-    <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+    <div class="profile npc">
+    <img  src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+    <img src="{{actor.data.tokenImg}}" class="token-image"  data-edit="data.tokenImg">
+    </div>
 
     <div class="header-details flexcol">
       <div class="flexrow">
@@ -131,6 +134,9 @@
                 value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}" data-dtype="Number" title="{{localize "D35E.TempHP"}}"/>
               <input name="data.attributes.hp.nonlethal" type="text" class="temphp" placeholder="{{localize 'D35E.Nonlethal'}}"
                 value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}" data-dtype="Number" title="{{localize "D35E.Nonlethal"}}"/>
+              <br>
+
+              <a class="btn random-hp-roll" onkeydown="e.preventDefault();">Randomize HP</a>
             </footer>
           {{/if}}
           </li>

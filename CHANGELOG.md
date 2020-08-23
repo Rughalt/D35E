@@ -1,4 +1,28 @@
 # Changelog
+## 0.83
+### SRD
+- Monster compendium
+- Fixes for Racial HD compendium
+- Conditions compendium
+
+### Features
+- Shapechange feature - access it on Buff - Shapechange tab. Create shapechange buffs by dragging NPC Actors into character sheet.
+    - Wildshape - melds used items and attacks, copies natural attack of monster and sets abilities
+    - Polymorph - melds natural attacks, copies natural attack of monster and sets abilities
+    - Alter self - changes appearance
+- [#15](https://github.com/Rughalt/D35E/issues/15) - Rolling NPC Hit Die
+
+### Bug Fixes   
+- Golem bonus HP now depends on size
+- Undead HP and Fortitude are no longer calculated using their Charisma modifier anymore
+- Sped up container updates
+- [#33](https://github.com/Rughalt/D35E/issues/34) - Conditions Compendium using Pathfinder conditions not 3.5
+- [#34](https://github.com/Rughalt/D35E/issues/34) - Racial HD compendium bugs
+- [#32](https://github.com/Rughalt/D35E/issues/32) - Bonus PowerPoints doesn't acount for item/custom racial Ability Score modifiers
+- [#35](https://github.com/Rughalt/D35E/issues/35) - Rogue class calculates sneak attack damage based on char level instead of rogue level
+- [#36](https://github.com/Rughalt/D35E/issues/36) - Turn Undead Uses doesn't calculate correctly
+- [#38](https://github.com/Rughalt/D35E/issues/38) - Revealing details for unidentified items
+
 ## 0.82.1
 ### Bug Fixes
 - Disabled Foundry VTT debug mode

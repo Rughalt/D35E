@@ -34,12 +34,29 @@
     </label>
   </div>
 </div>
+
+<div class="form-group">
+  <div class="form-group">
+    <label>{{localize "D35E.Size"}}</label>
+    <select class="actor-size" name="data.sizeOverride">
+      <option value="">None</option>
+      {{#select data.sizeOverride}}
+      {{#each config.actorSizes as |label size|}}
+      <option value="{{size}}">{{label}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+</div>
 {{!-- Conditions --}}
 <div class="form-group">
   <label class="header">{{localize "D35E.ConditionPlural"}}</label>
   <div class="buff-flags">
     <label class="checkbox">
       <input type="checkbox" name="data.conditionFlags.dazzled" {{checked data.conditionFlags.dazzled}}/> {{localize "D35E.CondDazzled"}}
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" name="data.conditionFlags.wildshaped" {{checked data.conditionFlags.wildshaped}}/> {{localize "D35E.CondWildshaped"}}
     </label>
   </div>
 </div>

@@ -77,6 +77,8 @@ export class ItemSheetPF extends ItemSheet {
     data.isSpell = this.item.type === "spell";
     data.isClass = this.item.type === "class";
     data.isRace = this.item.type === "race";
+    data.isShapechangeBuff = this.item.type === "buff" && this.item.subType === "shapechange";
+    data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
     data.isAmmo = this.item.data.data.subType === "ammo";
     data.isContainer = this.item.data.data.subType  === "container";
     data.owner = this.item.actor != null;
@@ -314,7 +316,7 @@ export class ItemSheetPF extends ItemSheet {
           }
           )
         }
-      
+
       }
 
       if (this.actor != null) {
@@ -395,7 +397,9 @@ export class ItemSheetPF extends ItemSheet {
       data.item.data.contextNotes.forEach(item => {
         item.subNotes = {};
         // Add specific skills
-        if (item[1] === "skill" && this.item.actor != null) {
+        if (item[1] === "skill") {
+
+          if (this.item.actor != null) {
           const actorSkills = this.item.actor.data.data.skills;
           for (let [s, skl] of Object.entries(actorSkills)) {
             if (!skl.subSkills) {
@@ -405,6 +409,18 @@ export class ItemSheetPF extends ItemSheet {
             else {
               for (let [s2, skl2] of Object.entries(skl.subSkills)) {
                 item.subNotes[`skill.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+              }
+            }
+          }
+          } else {
+            for (let [s, skl] of Object.entries(CONFIG.D35E.skills)) {
+              if (!skl.subSkills) {
+                if (skl.custom) item.subNotes[`skill.${s}`] = skl.name;
+                else item.subNotes[`skill.${s}`] = CONFIG.D35E.skills[s];
+              } else {
+                for (let [s2, skl2] of Object.entries(skl.subSkills)) {
+                  item.subNotes[`skill.${s}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+                }
               }
             }
           }
@@ -560,6 +576,24 @@ export class ItemSheetPF extends ItemSheet {
       return arr;
     }, []);
 
+    let activateActions = Object.entries(formData).filter(e => e[0].startsWith("data.activateActions"));
+    formData["data.activateActions"] = activateActions.reduce((arr, entry) => {
+      let [i, j] = entry[0].split(".").slice(2);
+      if ( !arr[i] ) arr[i] = {name: "", action: ""};
+
+      arr[i][j] = entry[1];
+      return arr;
+    }, []);
+
+    let deactivateActions = Object.entries(formData).filter(e => e[0].startsWith("data.deactivateActions"));
+    formData["data.deactivateActions"] = deactivateActions.reduce((arr, entry) => {
+      let [i, j] = entry[0].split(".").slice(2);
+      if ( !arr[i] ) arr[i] = {name: "", action: ""};
+
+      arr[i][j] = entry[1];
+      return arr;
+    }, []);
+
     // Update the Item
 
     if (this.containerMap.has(formData['data.containerId'])) {
@@ -619,12 +653,17 @@ export class ItemSheetPF extends ItemSheet {
     // Add drop handler to textareas
     html.find("textarea").on("drop", this._onTextAreaDrop.bind(this));
 
+    // Shapechange source drop handles
+    html.find("shapechange").on("drop", this._onShapechangeDrop.bind(this));
+
     // Modify attack formula
     html.find(".attack-control").click(this._onAttackControl.bind(this));
 
 
     // Modify special formula
     html.find(".special-control").click(this._onSpecialControl.bind(this));
+    html.find(".a-special-control").click(this._onActivateSpecialControl.bind(this));
+    html.find(".d-special-control").click(this._onDeactivateSpecialControl.bind(this));
 
     // Modify damage formula
     html.find(".damage-control").click(this._onDamageControl.bind(this));
@@ -738,6 +777,50 @@ export class ItemSheetPF extends ItemSheet {
     }
   }
 
+  async _onActivateSpecialControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    // Add new attack component
+    if ( a.classList.contains("add-special") ) {
+      await this._onSubmit(event);  // Submit any unsaved changes
+      let activateActions = this.item.data.data.activateActions;
+      if (activateActions === undefined)
+        activateActions = []
+      return this.item.update({"data.activateActions": activateActions.concat([[{name:"",action:"",range:"",img:"",condition:""}]])});
+    }
+
+    // Remove an attack component
+    if ( a.classList.contains("delete-special") ) {
+      await this._onSubmit(event);  // Submit any unsaved changes
+      const li = a.closest(".special-part");
+      const activateActions = duplicate(this.item.data.data.activateActions);
+      activateActions.splice(Number(li.dataset.activateActions), 1);
+      return this.item.update({"data.activateActions": activateActions});
+    }
+  }
+
+  async _onDeactivateSpecialControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    // Add new attack component
+    if ( a.classList.contains("add-special") ) {
+      await this._onSubmit(event);  // Submit any unsaved changes
+      let deactivateActions = this.item.data.data.deactivateActions;
+      if (deactivateActions === undefined)
+        deactivateActions = []
+      return this.item.update({"data.deactivateActions": deactivateActions.concat([[{name:"",action:"",range:"",img:"",condition:""}]])});
+    }
+
+    // Remove an attack component
+    if ( a.classList.contains("delete-special") ) {
+      await this._onSubmit(event);  // Submit any unsaved changes
+      const li = a.closest(".special-part");
+      const deactivateActions = duplicate(this.item.data.data.deactivateActions);
+      deactivateActions.splice(Number(li.dataset.deactivateActions), 1);
+      return this.item.update({"data.deactivateActions": deactivateActions});
+    }
+  }
+
   async _onBuffControl(event) {
     event.preventDefault();
     const a = event.currentTarget;
@@ -778,6 +861,10 @@ export class ItemSheetPF extends ItemSheet {
       contextNotes.splice(Number(li.dataset.note), 1);
       return this.item.update({"data.contextNotes": contextNotes});
     }
+  }
+
+  async _onShapechangeDrop(event) {
+
   }
 
   async _createAttack(event) {
@@ -853,4 +940,6 @@ export class ItemSheetPF extends ItemSheet {
       id: li.getAttribute('data-item-id')
     }));
   }
+
+
 }

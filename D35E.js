@@ -26,6 +26,7 @@ import { TopPortraitBar } from "./module/top-portrait-bar.js";
 import * as chat from "./module/chat.js";
 import * as migrations from "./module/migration.js";
 import {SemanticVersion} from "./semver.js";
+import {sizeInt} from "./module/lib.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -57,14 +58,15 @@ Hooks.once("init", async function() {
     rollTurnUndead,
     CompendiumDirectoryPF,
     rollPreProcess: {
-      sizeRoll: sizeDie
+      sizeRoll: sizeDie,
+      sizeVal: sizeInt
     },
     migrateWorld: migrations.migrateWorld,
   };
 
   // Record Configuration Values
   CONFIG.D35E = D35E;
-  // CONFIG.debug.hooks = true;
+  CONFIG.debug.hooks = true;
   CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
@@ -90,6 +92,7 @@ Hooks.once("init", async function() {
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
+  $('body').toggleClass('d35gm', game.user.isGM);
 });
 
 
@@ -130,7 +133,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = "0.82.4";
+  const NEEDS_MIGRATION_VERSION = "0.83.0";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
     PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
@@ -228,23 +231,31 @@ Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
 
-Hooks.on("updateOwnedItem", (actor, _, changedData, options) => {
+Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
   if (!(actor instanceof Actor)) return;
+
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
   actor.refresh(options); //We do not want to update actor again if we are in first update loop
   //actor.updateContainerData(updateData)
   const item = actor.getOwnedItem(changedData._id);
   if (item == null) return;
   actor.updateItemResources(item);
 });
-Hooks.on("updateToken", (scene, sceneId, data) => {
+Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
   const actor = game.actors.tokens[data._id];
-  if (actor != null && hasProperty(data, "actorData.items")) {
-    actor.refresh();
+  if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
+    actor.refresh(options);
 
     // Update items
     for (let i of actor.items) {
       actor.updateItemResources(i);
     }
+  }
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
   }
 });
 
@@ -283,23 +294,38 @@ Hooks.on("preCreateOwnedItem", (actor, item) => {
   if (!(actor instanceof Actor)) return;
   if (actor.race == null) return;
 
+
   if (item.type === "race") {
     actor.race.update(item);
     return false;
   }
 });
 
-Hooks.on("createOwnedItem", (actor) => {
+Hooks.on("createOwnedItem", (actor, data, options, user) => {
   if (!(actor instanceof Actor)) return;
-  actor.refresh();
+
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
+  actor.refresh(options);
 });
-Hooks.on("deleteOwnedItem", (actor) => {
+Hooks.on("deleteOwnedItem", (actor, data, options, user) => {
   if (!(actor instanceof Actor)) return;
-  actor.refresh();
+
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
+  actor.refresh(options);
 });
 
-Hooks.on("updateActor",  (actor) => {
+Hooks.on("updateActor",  (actor, data, options, user) => {
   if (!(actor instanceof Actor)) return;
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
   TopPortraitBar.render(actor)
 });
 

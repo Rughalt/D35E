@@ -215,7 +215,7 @@
         </li>
 
         <ol class="item-list">
-          {{#each attacks.all.items as |item iid|}}
+          {{#each useableAttacks as |item iid|}}
             <li class="item flexrow" data-item-id="{{item._id}}">
               <div class="item-name flexrow rollable">
                 <div class="item-image" style="background-image: url('{{item.img}}')"></div>
