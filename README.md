@@ -43,5 +43,5 @@ Icons provided in source distribution (on this github repository) by
 - J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0
 - Various authors at [game-icons.net](https://game-icons.net/)
 
-Icons provided in binary distribution are used with persmission of the authors and licensed to use only in this application. Any other use is prohibited.
+Rest of icons - provided in binary distribution - are used with persmission of the authors and licensed to use only in this application. Any other use is prohibited.
 
