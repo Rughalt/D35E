@@ -21,6 +21,7 @@
 - [#32](https://github.com/Rughalt/D35E/issues/32) - Bonus PowerPoints doesn't acount for item/custom racial Ability Score modifiers
 - [#35](https://github.com/Rughalt/D35E/issues/35) - Rogue class calculates sneak attack damage based on char level instead of rogue level
 - [#36](https://github.com/Rughalt/D35E/issues/36) - Turn Undead Uses doesn't calculate correctly
+- [#38](https://github.com/Rughalt/D35E/issues/38) - Revealing details for unidentified items
 
 ## 0.82.1
 ### Bug Fixes
