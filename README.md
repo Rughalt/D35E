@@ -8,11 +8,11 @@ while the game content is distributed under the Open Gaming License v1.0a.
 
 ## Installation
 
-Install the following game system in FoundryVTT's game system tab: [https://raw.githubusercontent.com/Rughalt/d35e/master/system.json](https://raw.githubusercontent.com/Rughalt/d35e/master/system.json)
+Install the following game system in FoundryVTT's game system tab: [https://www.dragonshorn.info/dnd35e/system.json](https://www.dragonshorn.info/dnd35e/system.json)
 
 If you wish to manually install the system, you must clone or extract it into
 the Data/systems/D35E folder. You may do this by cloning the repository or
-downloading a zip archive from the [Releases Page](https://github.com/Rughalt/D35E/archive/master.zip).
+downloading a zip archive from the [here](https://www.dragonshorn.info/dnd35e/dnd35e.zip).
 
 ## Progress
 ### Compendium
