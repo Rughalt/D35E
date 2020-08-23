@@ -28,7 +28,9 @@ Most of the stuff that is the same as in PF1 works. For things that are differen
 You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
 
 ## Support
-This project is done in my free time and for free. If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
+This project is done in my free time and for free. You can discuss it, post bugs and get in tough with me on projects official [Discord Community](https://discord.gg/wDyUaZH)
+
+If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
 
 ## Packtool
 As changing compendiums is not very fun in foundry and nedb is not a proper json, packtool.py can be used to pack and unpack data to sources directory.
