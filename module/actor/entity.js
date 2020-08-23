@@ -1220,10 +1220,15 @@ export class ActorPF extends Actor {
       }
     }
     // Add current hit points
-    if (updateData["data.attributes.hp.max"]) {
-      const hpDiff = updateData["data.attributes.hp.max"] - prevValues.mhp;
-      if (hpDiff !== 0) {
-        linkData(srcData1, updateData, "data.attributes.hp.value", Math.min(updateData["data.attributes.hp.max"], srcData1.data.attributes.hp.value + hpDiff));
+
+    if (fullConditions.wildshaped || fullConditions.polymorphed) {
+      linkData(srcData1, updateData, "data.attributes.hp.value", Math.min(prevValues.mhp, srcData1.data.attributes.hp.value));
+    } else {
+      if (updateData["data.attributes.hp.max"]) {
+        const hpDiff = updateData["data.attributes.hp.max"] - prevValues.mhp;
+        if (hpDiff !== 0) {
+          linkData(srcData1, updateData, "data.attributes.hp.value", Math.min(updateData["data.attributes.hp.max"], srcData1.data.attributes.hp.value + hpDiff));
+        }
       }
     }
     if (updateData["data.attributes.wounds.max"]) {
