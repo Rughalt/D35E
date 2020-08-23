@@ -8,11 +8,11 @@ while the game content is distributed under the Open Gaming License v1.0a.
 
 ## Installation
 
-Install the following game system in FoundryVTT's game system tab: [https://raw.githubusercontent.com/Rughalt/d35e/master/system.json](https://raw.githubusercontent.com/Rughalt/d35e/master/system.json)
+Install the following game system in FoundryVTT's game system tab: [https://www.dragonshorn.info/dnd35e/system.json](https://www.dragonshorn.info/dnd35e/system.json)
 
 If you wish to manually install the system, you must clone or extract it into
 the Data/systems/D35E folder. You may do this by cloning the repository or
-downloading a zip archive from the [Releases Page](https://github.com/Rughalt/D35E/archive/master.zip).
+downloading a zip archive from the [here](https://www.dragonshorn.info/dnd35e/dnd35e.zip).
 
 ## Progress
 ### Compendium
@@ -28,7 +28,9 @@ Most of the stuff that is the same as in PF1 works. For things that are differen
 You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
 
 ## Support
-This project is done in my free time and for free. If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
+This project is done in my free time and for free. You can discuss it, post bugs and get in tough with me on projects official [Discord Community](https://discord.gg/wDyUaZH)
+
+If you enjoy it you can support me on [Patreon](https://www.patreon.com/rughalt)
 
 ## Packtool
 As changing compendiums is not very fun in foundry and nedb is not a proper json, packtool.py can be used to pack and unpack data to sources directory.
@@ -43,5 +45,5 @@ Icons provided in source distribution (on this github repository) by
 - J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0
 - Various authors at [game-icons.net](https://game-icons.net/)
 
-Icons provided in binary distribution are used with persmission of the authors and licensed to use only in this application. Any other use is prohibited.
+Rest of icons - provided in binary distribution - are used with persmission of the authors and licensed to use only in this application. Any other use is prohibited.
 
