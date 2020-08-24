@@ -1343,8 +1343,9 @@ export class ActorPF extends Actor {
     {
       const k = "data.attributes.turnUndeadUsesTotal";
       let chaMod = getProperty(srcData1, `data.abilities.cha.mod`)
+      console.log(updateData)
       if (getProperty(srcData1, `data.attributes.turnUndeadHdTotal`) > 0) {
-        linkData(srcData1, updateData, k, new Roll("3+@chaMod", {chaMod: chaMod}).roll().total);
+        linkData(srcData1, updateData, k, new Roll("3+@chaMod", {chaMod: chaMod}).roll().total + updateData[k]);
 
         sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
         sourceInfo[k].positive.push({name: "Base", value: 3});
@@ -1359,7 +1360,7 @@ export class ActorPF extends Actor {
         return a.sort - b.sort;
       });
       const k = "data.attributes.powerPointsTotal";
-      linkData(srcData1, updateData, k, classes.reduce((cur, obj) => {
+      linkData(srcData1, updateData, k, updateData[k] + classes.reduce((cur, obj) => {
         try {
           if (obj.data.powerPointTable === undefined || obj.data.powerPointTable[obj.data.levels] === undefined)
             return cur
@@ -1481,6 +1482,10 @@ export class ActorPF extends Actor {
     linkData(data, updateData, "data.attributes.damage.general", 0);
     linkData(data, updateData, "data.attributes.damage.weapon", 0);
     linkData(data, updateData, "data.attributes.damage.spell", 0);
+
+
+    linkData(data, updateData, "data.attributes.turnUndeadUsesTotal", 0);
+    linkData(data, updateData, "data.attributes.powerPointsTotal", 0);
 
     // Reset saving throws
     for (let a of Object.keys(data1.attributes.savingThrows)) {
@@ -2453,7 +2458,6 @@ export class ActorPF extends Actor {
   async createOwnedItem(itemData, options) {
     let t = itemData.type;
     let initial = {};
-
     // Assume NPCs are always proficient with weapons and always have spells prepared
     if ( !this.isPC ) {
       if ( t === "weapon" ) initial["data.proficient"] = true;
@@ -2464,8 +2468,8 @@ export class ActorPF extends Actor {
         initial["data.spellbook"] = this.sheet._spellbookTab;
       }
     }
-
     mergeObject(itemData, initial);
+
     return super.createOwnedItem(itemData, options);
   }
 
@@ -3266,7 +3270,6 @@ export class ActorPF extends Actor {
         obj.data.equipped = false;
       }
     }
-
     return super.createEmbeddedEntity(embeddedName, (noArray ? createData[0] : createData), options);
   }
 

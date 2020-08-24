@@ -1,4 +1,14 @@
 # Changelog
+## 0.83.2
+### SRD
+- Fixed Monster compendium to be SRD compliant
+
+### Bug Fixes 
+- Removed DND copyrighted names from description and packge title and readme
+- Fixed spell icon
+- [#39](https://github.com/Rughalt/D35E/issues/39) - Turn Undead Uses is still not calculating correctly.
+- [#40](https://github.com/Rughalt/D35E/issues/40) - Dragging an Item from the sidebar into a character sheet doesn't retain Action data.
+
 ## 0.83
 ### SRD
 - Monster compendium

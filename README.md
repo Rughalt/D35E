@@ -1,6 +1,6 @@
-# Foundry VTT 3.5 Edition
+# Foundry VTT DND 3.5e
 
-An implementation of the 3.5e Dungeons and Dragons system for Foundry Virtual
+An implementation of the 3.5e DND system for Foundry Virtual
 Tabletop (http://foundryvtt.com).
 
 The software component of this system is distributed under the GNUv3 license
@@ -15,17 +15,24 @@ the Data/systems/D35E folder. You may do this by cloning the repository or
 downloading a zip archive from the [here](https://www.dragonshorn.info/dnd35e/dnd35e.zip).
 
 ## Progress
-### Compendium
-- Base classes - Done
-- Base NPC classes - Done
-- Feats - In Compendium, not implemented
-- Racial Traits - Partially done
-- Racial HD - Partially done
+You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
 
 ### Systems
 Most of the stuff that is the same as in PF1 works. For things that are different:
+- Psionics - Implemented base system
+- Shapechange - Implemented Wildshape, Polymorph, Alter-self
 
-You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
+### Compendium
+
+- Base classes - Done
+- Base NPC classes - Done
+- Feats - In Compendium, partially implemented
+- Racial Traits - Partially done
+- Racial HD - Done
+- Monsters - Partially done
+- Items, Magic Items - Partially done
+- Spells - Partially done
+
 
 ## Support
 This project is done in my free time and for free. You can discuss it, post bugs and get in tough with me on projects official [Discord Community](https://discord.gg/wDyUaZH)

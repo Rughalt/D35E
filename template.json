@@ -1020,7 +1020,7 @@
           "overrideTexture": false,
           "customTexture": ""
         },
-        "actionType": null,
+        "actionType": "",
         "attackBonus": "",
         "critConfirmBonus": "",
         "damage": {
@@ -1168,7 +1168,7 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes"],
+      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes"],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
