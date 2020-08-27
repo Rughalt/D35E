@@ -3269,6 +3269,15 @@ export class ActorPF extends Actor {
       if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
         obj.data.equipped = false;
       }
+      console.log('AAAAAAAa',obj)
+      if (["spell"].includes(obj.type)) {
+        let spellbook = this.data.data.attributes.spells.spellbooks[obj.data.spellbook]
+        let spellbookClass = spellbook.class
+        obj.data.learnedAt.class.forEach(learnedAtObj => {
+          if (learnedAtObj[0].toLowerCase() === spellbookClass)
+            obj.data.level = learnedAtObj[1]
+        })
+      }
     }
     return super.createEmbeddedEntity(embeddedName, (noArray ? createData[0] : createData), options);
   }
@@ -3427,6 +3436,7 @@ export class ActorPF extends Actor {
     }
     if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actor.getRollData()).roll().result))
       return;
+    console.log(action.parameters)
     switch (action.action) {
       case "Create":
       case "Give":

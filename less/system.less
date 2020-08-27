@@ -76,7 +76,9 @@
     background-size: 100% 100%;
     border: none;
     color: white;
-
+    &:disabled {
+      filter: grayscale(1);
+    }
   }
 
   .D35E button:not(.tox-tbtn)  {
@@ -111,6 +113,9 @@
 
     :hover {
 
+    }
+    &:disabled {
+      filter: grayscale(1);
     }
   }
 

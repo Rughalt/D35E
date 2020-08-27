@@ -1,4 +1,12 @@
 # Changelog
+## 0.83.5
+### SRD
+- Fixed imported spells/powers with added fixes by BixSexy#9434
+
+### Features
+- Reduced module size by reducing icons size to 128x128
+- Spells automatically set correct level when dropping on spellbook with class set up
+
 ## 0.83.2
 ### SRD
 - Fixed Monster compendium to be SRD compliant

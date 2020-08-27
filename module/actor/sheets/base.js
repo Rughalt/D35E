@@ -1471,6 +1471,7 @@ export class ActorSheetPF extends ActorSheet {
       return this.actor._createConsumablePowerDialog(itemData);
     }
 
+
     if (itemData.type === "actor") {
       return this.actor._createConsumablePowerDialog(itemData);
     }
