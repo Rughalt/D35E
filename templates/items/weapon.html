@@ -2,9 +2,9 @@
 
   {{!-- Item Sheet Header --}}
   <header class="sheet-header flexrow">
-    <div class="sheet-header-profile">
-      <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
-    </div>
+      <div class="sheet-header-profile">
+        <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+      </div>
 
     <div class="header-details flexrow">
       {{#if isGM}}
@@ -43,9 +43,9 @@
           {{labels.weaponSubtype}}
         </li>
       </ul>
+
     </div>
   </header>
-
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
     <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
@@ -178,11 +178,6 @@
         </div>
       </div>
 
-      {{#if owner}}
-      <div class="form-group">
-        <button type="button" name="create-attack">{{localize "D35E.CreateAttack"}}</button>
-      </div>
-      {{/if}}
       {{/unless}}
     </div>
 
@@ -195,4 +190,13 @@
     </div>
     {{/unless}}
   </section>
+
+
+  {{#unless showUnidentifiedData}}
+  {{#if owner}}
+  <div class="form-group">
+    <button type="button" name="create-attack">{{localize "D35E.CreateAttack"}}</button>
+  </div>
+  {{/if}}
+  {{/unless}}
 </form>

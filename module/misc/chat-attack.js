@@ -148,13 +148,21 @@ export class ChatAttack {
     if (this.item.data.data.specialActions === undefined || this.item.data.data.specialActions === null)
       return;
     for (let action of this.item.data.data.specialActions) {
+      let cl = 0;
+      if (this.item.data.type === "spell") {
+        const spellbookIndex = this.item.data.data.spellbook;
+        const spellbook = this.item.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+        cl = spellbook.cl.total + (this.item.data.data.clOffset || 0);
+      }
+
       if (action.condition !== undefined && action.condition !== null && action.condition !== "") {
         // console.log('Condition', action.condition, this.rollData)
         if (!(new Roll(action.condition, this.rollData).roll().total)){
           continue;
         }
       }
-      this.special.push({label: action.name, value: action.action, isTargeted: action.action.endsWith("target") || action.action.endsWith("target;"), action: "customAction",img:action.img,hasImg:action.img!==undefined&&action.img!==null&&action.img!==""});
+
+      this.special.push({label: action.name, value: action.action.replace(/\(@cl\)/g, `${cl}`), isTargeted: action.action.endsWith("target") || action.action.endsWith("target;"), action: "customAction",img:action.img,hasImg:action.img!==undefined&&action.img!==null&&action.img!==""});
     }
   }
 }

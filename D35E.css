@@ -949,6 +949,7 @@
 .D35E.sheet.actor .ability-scores-simple {
   border: 2px groove #eeede0;
   border-radius: 4px;
+  flex: 0.7;
 }
 .D35E.sheet.actor .ability-scores-simple .ability-simple-header {
   flex: none;
@@ -969,6 +970,7 @@
 .D35E.sheet.actor .ability-scores-simple .ability-simple {
   height: 40px;
   flex: none;
+  text-align: center;
 }
 .D35E.sheet.actor .ability-scores-simple h4 {
   line-height: 40px;
@@ -3021,6 +3023,9 @@ form .checkmark:after {
   border: none;
   color: white;
 }
+.d35ecustom button:disabled {
+  filter: grayscale(1);
+}
 .d35ecustom .D35E button:not(.tox-tbtn) {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
@@ -3044,6 +3049,9 @@ form .checkmark:after {
   line-height: 32px;
   padding: 0;
   border-radius: 0;
+}
+.d35ecustom .D35E.chat-card .card-buttons button:disabled {
+  filter: grayscale(1);
 }
 .d35ecustom #navigation #nav-toggle {
   border-radius: 0;
