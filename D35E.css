@@ -949,6 +949,7 @@
 .D35E.sheet.actor .ability-scores-simple {
   border: 2px groove #eeede0;
   border-radius: 4px;
+  flex: 0.7;
 }
 .D35E.sheet.actor .ability-scores-simple .ability-simple-header {
   flex: none;
@@ -969,6 +970,7 @@
 .D35E.sheet.actor .ability-scores-simple .ability-simple {
   height: 40px;
   flex: none;
+  text-align: center;
 }
 .D35E.sheet.actor .ability-scores-simple h4 {
   line-height: 40px;

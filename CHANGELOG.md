@@ -2,10 +2,15 @@
 ## 0.83.5
 ### SRD
 - Fixed imported spells/powers with added fixes by BixSexy#9434
+- Fixed some monster import rules and added monster images/tokens
 
 ### Features
 - Reduced module size by reducing icons size to 128x128
+- Moved Create Attack button on Weapon details screen to front
 - Spells automatically set correct level when dropping on spellbook with class set up
+
+### Bug Fixes 
+- Multiple rolls with Dice So Nice! do not longer occur.
 
 ## 0.83.2
 ### SRD
