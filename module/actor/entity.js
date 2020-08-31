@@ -887,6 +887,91 @@ export class ActorPF extends Actor {
       });
     }
 
+    //Bluff
+    if (data.data.skills.blf.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.dip", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+      changes.push({
+        raw: ["2", "skill", "skill.int", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+      changes.push({
+        raw: ["2", "skill", "skill.slt", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    //Knowledge arcana
+    if (data.data.skills.kar.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.spl", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Kno Noblility
+    if (data.data.skills.kno.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.dip", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Kno local
+    if (data.data.skills.klo.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.gif", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Handle animals
+    if (data.data.skills.han.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.rid", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Sense motive
+    if (data.data.skills.sen.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.dip", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Jump
+    if (data.data.skills.jmp.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.tmb", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Tumble
+    if (data.data.skills.tmb.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.blc", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+
+      changes.push({
+        raw: ["2", "skill", "skill.jmp", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
+    // Survival
+    if (data.data.skills.sur.rank > 5) {
+      changes.push({
+        raw: ["2", "skill", "skill.kna", "untyped", 0],
+        source: { name: "Skill synergy" }
+      });
+    }
+
     // Apply level drain to hit points
     if (!Number.isNaN(data.data.attributes.energyDrain) && data.data.attributes.energyDrain > 0) {
       changes.push({
