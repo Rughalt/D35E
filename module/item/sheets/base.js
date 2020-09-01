@@ -148,6 +148,14 @@ export class ItemSheetPF extends ItemSheet {
       }
     }
 
+    // Prepare enhancement specific stuff
+    if (data.item.type === "enhancement") {
+      data.enhancementTypes = { types: {}, subTypes: {} };
+      for (let [k, v] of Object.entries(CONFIG.D35E.enhancementType)) {
+        data.enhancementTypes.types[k] = v;
+      }
+    }
+
     // Prepare equipment specific stuff
     if (data.item.type === "equipment") {
       // Prepare categories for equipment

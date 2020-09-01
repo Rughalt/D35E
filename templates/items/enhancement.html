@@ -1,0 +1,120 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+  {{!-- Item Sheet Header --}}
+  <header class="sheet-header flexrow">
+      <div class="sheet-header-profile">
+        <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+      </div>
+
+    <div class="header-details flexrow">
+      <h3 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
+      </h3>
+
+      <div class="item-subtitle">
+        <h4 class="item-type">{{localize "D35E.Item"}}</h4>
+        <span class="item-status">{{itemStatus}}</span>
+      </div>
+
+      <ul class="summary">
+        <li>
+          {{itemType}}
+        </li>
+      </ul>
+
+    </div>
+  </header>
+  {{!-- Item Sheet Navigation --}}
+  <nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+    <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
+  </nav>
+
+  {{!-- Item Sheet Body --}}
+  <section class="primary-body">
+
+    {{!-- Description Tab --}}
+    {{> "systems/D35E/templates/items/parts/item-description.html"}}
+
+    {{!-- Details Tab --}}
+    <div class="tab details" data-group="primary" data-tab="details">
+
+      <div class="form-group">
+        <label>{{localize "D35E.Category"}}</label>
+        <select name="data.enhancementType">
+          {{#select data.enhancementType}}
+          {{#each enhancementTypes.types as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+
+      <h3 class="form-header">Weapon Enhancement Details</h3>
+      {{!-- Weapon Damage --}}
+      <div class="form-group">
+        <label>{{localize "D35E.EnhancementBonus"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "D35E.BaseWeaponDamage"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.damageRoll" value="{{data.weaponData.damageRoll}}" placeholder="{{localize "D35E.DamageRoll"}}"/>
+          <input type="text" name="data.weaponData.damageType" value="{{data.weaponData.damageType}}" placeholder="{{localize "D35E.DamageType"}}"/>
+        </div>
+      </div>
+
+
+      <h3 class="form-header">{{localize "D35E.CraftingRequirements"}}</h3>
+      {{!-- Crafting requirements --}}
+      <div class="form-group">
+        <label>{{localize "D35E.Requirements"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.requirements" value="{{data.requirements}}" data-dtype="String" placeholder="0"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "D35E.Price"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
+
+      <h3 class="form-header">{{localize "D35E.SpellCasting"}}</h3>
+      {{!-- Item Activation Template --}}
+      {{> "systems/D35E/templates/items/parts/item-activation.html"}}
+
+      <h3 class="form-header">{{localize "D35E.SpellEffects"}}</h3>
+
+      {{!-- Item Action Template --}}
+      {{> "systems/D35E/templates/items/parts/item-action.html"}}
+
+      <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
+
+      {{!-- Item Measure Template --}}
+      {{> "systems/D35E/templates/items/parts/item-template.html"}}
+    </div>
+
+    {{!-- Changes Tab --}}
+    {{#unless showUnidentifiedData}}
+    <div class="tab flexcol" data-group="primary" data-tab="changes">
+      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
+
+      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+    </div>
+    {{/unless}}
+  </section>
+
+
+  {{#unless showUnidentifiedData}}
+  {{#if owner}}
+  <div class="form-group">
+    <button type="button" name="create-attack">{{localize "D35E.CreateAttack"}}</button>
+  </div>
+  {{/if}}
+  {{/unless}}
+</form>

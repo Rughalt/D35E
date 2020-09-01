@@ -1109,4 +1109,10 @@ D35E.CR_EXP_LEVELS = [
   3276800, 4915200, 6553600, 9830400
 ];
 
+D35E.enhancementType = {
+  'weapon': 'D35E.Weapon',
+  'armor': 'D35E.Armor',
+  'misc': 'D35E.Misc',
+}
+
 CONFIG.Combat.initiative.decimals = 2;

@@ -934,7 +934,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race"],
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement"],
     "templates": {
       "changes": {
         "changes": [],
@@ -956,8 +956,21 @@
         },
         "sizeOverride": ""
       },
+
       "contextNotes": {
         "contextNotes": []
+      },
+      "enhancements": {
+        "enhancements": {
+          "uses": {
+            "value": 0,
+            "max": 0,
+            "per": null,
+            "autoDeductCharges": true,
+            "allowMultipleUses": false
+          },
+          "items": []
+        }
       },
       "itemDescription": {
         "description": {
@@ -1168,7 +1181,7 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes"],
+      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements"],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
@@ -1266,7 +1279,7 @@
 
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes"],
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements"],
       "equipped": true,
       "masterwork": false,
       "weaponType": "simple",
@@ -1300,6 +1313,20 @@
         "value": "",
         "_deprecated": true
       }
+    },
+    "enhancement": {
+      "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect", "action"],
+      "enhancementType": "weapon",
+      "properties": {},
+      "enh": null,
+      "price": 0,
+      "requirements": "",
+      "weaponData": {
+        "damageRoll": "",
+        "damageType": ""
+      },
+      "weaponAttackNotes": [],
+      "allowedTypes": []
     },
     "attack": {
       "templates": ["itemDescription", "activatedEffect", "action"],
