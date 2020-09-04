@@ -52,6 +52,7 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
   }
 
   ChatMessage.create(chatData);
+  return true;
 };
 
 export const hideRollInfo = function(app, html, data) {

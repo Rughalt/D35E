@@ -1,5 +1,6 @@
 import { createTabs } from "../../lib.js";
 import { EntrySelector } from "../../apps/entry-selector.js";
+import {ItemPF} from "../entity.js";
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -20,6 +21,7 @@ export class ItemSheetPF extends ItemSheet {
 
     this.items = [];
     this.childItemMap = new Map()
+    this.ehnancementItemMap = new Map()
     this.containerMap = new Map()
   }
 
@@ -146,6 +148,16 @@ export class ItemSheetPF extends ItemSheet {
           if (!k.startsWith("_")) data.weaponCategories.subTypes[k] = v;
         }
       }
+      data.enhancements = []
+      this.item.data.data.enhancements.items.forEach(e => {
+        let item = new ItemPF(e, {owner: this.item.owner})
+        this.ehnancementItemMap.set(e._id,item);
+        e.hasAction = item.hasAction || item.isCharged;
+        e.hasUses = e.data.uses && (e.data.uses.max > 0);
+        e.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(e, "data.uses.per"));
+        data.enhancements.push(e)
+      })
+      data.hasEnhancements = true;
     }
 
     // Prepare enhancement specific stuff
@@ -154,6 +166,11 @@ export class ItemSheetPF extends ItemSheet {
       for (let [k, v] of Object.entries(CONFIG.D35E.enhancementType)) {
         data.enhancementTypes.types[k] = v;
       }
+
+      data.isWeaponEnhancement = data.item.data.enhancementType === 'weapon'
+      data.isArmorEnhancement = data.item.data.enhancementType === 'armor'
+      data.isMiscEnhancement = data.item.data.enhancementType === 'misc'
+
     }
 
     // Prepare equipment specific stuff
@@ -179,6 +196,17 @@ export class ItemSheetPF extends ItemSheet {
 
       // Whether the current equipment type has multiple slots
       data.hasMultipleSlots = Object.keys(data.equipmentSlots).length > 1;
+      data.enhancements = []
+
+      this.item.data.data.enhancements.items.forEach(e => {
+        let item = new ItemPF(e, {owner: this.item.owner})
+        this.ehnancementItemMap.set(e._id,item);
+        e.hasAction = item.hasAction || item.isCharged;
+        e.hasUses = e.data.uses && (e.data.uses.max > 0);
+        e.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(e, "data.uses.per"));
+        data.enhancements.push(e)
+      })
+      data.hasEnhancements = true;
     }
 
     // Prepare attack specific stuff
@@ -692,7 +720,8 @@ export class ItemSheetPF extends ItemSheet {
 
 
     // Item summaries
-    html.find('.item .item-name h4').click(event => this._onItemSummary(event));
+    html.find('.item .child-item h4').click(event => this._onChildItemSummary(event));
+    html.find('.item .enh-item h4').click(event => this._onEnhItemSummary(event));
     
     let handler = ev => this._onDragStart(ev);
     html.find('li.item').each((i, li) => {
@@ -702,6 +731,15 @@ export class ItemSheetPF extends ItemSheet {
     });
 
 
+    html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
+
+    html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
+    html.find("div[data-tab='enhancements'] .item-detail.item-uses input[type='text']:not(:disabled)").off("change").change(this._setEnhUses.bind(this));
+
+    html.find('div[data-tab="enhancements"] .item .item-image').click(event => this._onEnhRoll(event));
+
+    // Quick Item Action control
+    html.find(".item-actions a").mouseup(ev => this._quickItemActionControl(ev));
   }
 
   /* -------------------------------------------- */
@@ -911,7 +949,7 @@ export class ItemSheetPF extends ItemSheet {
     if (manualUpdate && Object.keys(updateData).length > 0) await this.item.update(updateData);
   }
 
-  _onItemSummary(event) {
+  _onChildItemSummary(event) {
     event.preventDefault();
     let li = $(event.currentTarget).parents(".item-box"),
         item = this.childItemMap.get(li.attr("data-item-id"));
@@ -934,6 +972,27 @@ export class ItemSheetPF extends ItemSheet {
     // li.toggleClass("expanded");
   }
 
+  _onEnhItemSummary(event) {
+    event.preventDefault();
+    let li = $(event.currentTarget).parents(".item-box"),
+        item = this.ehnancementItemMap.get(li.attr("data-item-id")),
+        chatData = item.getChatData({secrets: this.actor.owner});
+
+    // Toggle summary
+    if ( li.hasClass("expanded") ) {
+      let summary = li.children(".item-summary");
+      summary.slideUp(200, () => summary.remove());
+    } else {
+      let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
+      let props = $(`<div class="item-properties"></div>`);
+      chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
+      div.append(props);
+      li.append(div.hide());
+      div.slideDown(200);
+    }
+    li.toggleClass("expanded");
+  }
+
   _onDragStart(event) {
     // Get the Compendium pack
     const li = event.currentTarget;
@@ -949,5 +1008,169 @@ export class ItemSheetPF extends ItemSheet {
     }));
   }
 
+  async _onDrop(event) {
+    event.preventDefault();
+    console.log(event)
+    let data;
+    try {
+      data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+      if (data.type !== "Item") return;
+    } catch (err) {
+      return false;
+    }
+
+    let dataType = "";
+
+    if (data.type === "Item") {
+      let itemData = {};
+      // Case 1 - Import from a Compendium pack
+      if (data.pack) {
+        dataType = "compendium";
+        const pack = game.packs.find(p => p.collection === data.pack);
+        const packItem = await pack.getEntity(data.id);
+        if (packItem != null) itemData = packItem.data;
+      }
+
+      // Case 2 - Data explicitly provided
+      else if (data.data) {
+        let sameActor = data.actorId === actor._id;
+        if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
+        if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
+
+        dataType = "data";
+        itemData = data.data;
+      }
+
+      // Case 3 - Import from World entity
+      else {
+        dataType = "world";
+        itemData = game.items.get(data.id).data;
+      }
+      return this.importItem(itemData, dataType);
+    }
+
+
+  }
+
+  async importItem(itemData, itemType) {
+    const updateData = {};
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    const enhancement = itemData
+    _enhancements.push(enhancement);
+    updateData[`data.enhancements.items`] = _enhancements;
+    await this.item.update(updateData);
+
+  }
+
+  /**
+   * Handle deleting an existing Enhancement item
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onEnhItemDelete(event) {
+    event.preventDefault();
+
+    const button = event.currentTarget;
+    if (button.disabled) return;
+
+    const li = event.currentTarget.closest(".item");
+    if (keyboard.isDown("Shift")) {
+      const updateData = {};
+      let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+      _enhancements = _enhancements.filter(function( obj ) {
+        return obj._id !== li.dataset.itemId;
+      });
+      updateData[`data.enhancements.items`] = _enhancements;
+      this.item.update(updateData);
+    }
+    else {
+      button.disabled = true;
+
+      const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
+      Dialog.confirm({
+        title: game.i18n.localize("D35E.DeleteItem"),
+        content: msg,
+        yes: () => {
+          const updateData = {};
+          let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+          _enhancements = _enhancements.filter(function( obj ) {
+            return obj._id !== li.dataset.itemId;
+          });
+          updateData[`data.enhancements.items`] = _enhancements;
+          this.item.update(updateData);
+          button.disabled = false;
+        },
+        no: () => button.disabled = false
+      });
+    }
+  }
+
+  _setEnhUses(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const updateData = {};
+
+    const value = Number(event.currentTarget.value);
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    _enhancements.filter(function( obj ) {
+      return obj._id === itemId
+    }).forEach(i => {
+      i.data.uses.value = value;
+    });
+    updateData[`data.enhancements.items`] = _enhancements;
+    this.item.update(updateData);
+  }
+
+  /**
+   * Handle rolling of an item from the Actor sheet, obtaining the Item instance and dispatching to it's roll method
+   * @private
+   */
+  _onEnhRoll(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    //const item = this.actor.getOwnedItem(itemId);
+    let item = this.ehnancementItemMap.get(itemId);
+    return item.roll({}, this.item.actor);
+  }
+
+  async _quickItemActionControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+
+    let item = this.ehnancementItemMap.get(itemId);
+
+    // Quick Attack
+    if (a.classList.contains("item-attack")) {
+
+      if (this.item.data.data.enhancements.uses.commonPool) {
+        if (this.item.data.data.enhancements.uses.value < item.chargeCost) {
+          return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
+        }
+      }
+      let roll = await item.use({ev: event, skipDialog: event.shiftKey},this.item.actor,this.item.data.data.enhancements.uses.commonPool === true);
+      if (roll) {
+        if (this.item.data.data.enhancements.uses.commonPool) {
+          let updateData = {}
+          updateData[`data.enhancements.uses.value`] = this.item.data.data.enhancements.uses.value - item.chargeCost;
+          await this.item.update(updateData);
+        } else {
+          await this.addEnhancementCharges(item, -1*item.chargeCost)
+        }
+      }
+    }
+  }
+
+  async addEnhancementCharges(item, charges) {
+    let updateData = {}
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    _enhancements.filter(function( obj ) {
+      return obj._id === item._id
+    }).forEach(i => {
+      i.data.uses.value = i.data.uses.value + charges;
+    });
+    updateData[`data.enhancements.items`] = _enhancements;
+    await this.item.update(updateData);
+  }
 
 }

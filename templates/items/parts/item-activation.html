@@ -100,8 +100,14 @@
   <label class="checkbox">
     <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
   </label>
+
+
 </div>
 
+<div class="form-group input">
+  <label>{{localize "D35E.ChargesToDeduct"}}</label>
+  <input style="width: 40px" type="text" value="{{data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
+</div>
 
 <div class="form-group stacked">
   <label class="checkbox">

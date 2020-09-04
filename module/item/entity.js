@@ -61,6 +61,12 @@ export class ItemPF extends Item {
         return getProperty(this.data, "data.uses.value") || 0;
     }
 
+    get chargeCost() {
+        if (getProperty(this.data, "data.uses.per") === "single") return 1;
+        if (this.type === "spell") return 1;
+        return getProperty(this.data, "data.uses.chargesPerUse") || 1;
+    }
+
     /**
      * @param {String} type - The item type (such as "attack" or "equipment")
      * @param {Number} colorType - 0 for the primary color, 1 for the secondary color
@@ -514,6 +520,14 @@ export class ItemPF extends Item {
                 else data["data.uses.max"] = roll.total;
             }
         }
+
+        if (hasProperty(srcData, "data.enhancements.uses.maxFormula")) {
+            if (getProperty(srcData, "data.enhancements.uses.maxFormula") !== "") {
+                let roll = new Roll(getProperty(srcData, "data.enhancements.uses.maxFormula"), rollData).roll();
+                if (doLinkData) linkData(srcData, data, "data.enhancements.uses.max", roll.total);
+                else data["data.enhancements.uses.max"] = roll.total;
+            }
+        }
     }
 
     /* -------------------------------------------- */
@@ -522,14 +536,16 @@ export class ItemPF extends Item {
      * Roll the item to Chat, creating a chat card which contains follow up attack or damage roll options
      * @return {Promise}
      */
-    async roll(altChatData = {}) {
-        const actor = this.actor;
+    async roll(altChatData = {}, tempActor = null) {
+        let actor = this.actor;
+        if (tempActor != null)
+            actor = tempActor;
         if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         // Basic template rendering data
-        const token = this.actor.token;
+        const token = actor ? actor.token : null;
         const templateData = {
-            actor: this.actor,
+            actor: actor,
             tokenId: token ? `${token.scene._id}.${token.id}` : null,
             item: this.data,
             data: this.getChatData(),
@@ -562,7 +578,7 @@ export class ItemPF extends Item {
         const chatData = mergeObject({
             user: game.user._id,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            speaker: ChatMessage.getSpeaker({actor: actor}),
         }, altChatData);
 
         // Toggle default roll mode
@@ -800,39 +816,46 @@ export class ItemPF extends Item {
 
     /* -------------------------------------------- */
 
-    async use({ev = null, skipDialog = false}) {
+    async use({ev = null, skipDialog = false}, tempActor= null, skipChargeCheck=false) {
+        let actor = this.actor;
+        if (tempActor !== null) {
+            actor = tempActor;
+        }
         if (this.type === "spell") {
-            return this.actor.useSpell(this, ev, {skipDialog: skipDialog});
+            return actor.useSpell(this, ev, {skipDialog: skipDialog},actor);
         } else if (this.hasAction) {
-            return this.useAttack({ev: ev, skipDialog: skipDialog});
+            return this.useAttack({ev: ev, skipDialog: skipDialog},actor,skipChargeCheck);
         }
 
-        if (this.isCharged) {
-            if (this.charges <= 0) {
+        if (this.isCharged && !skipChargeCheck) {
+            if (this.charges < this.chargeCost) {
                 if (this.isSingleUse) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoQuantity"));
                 return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
             }
-            this.addCharges(-1);
+            this.addCharges(-1*this.chargeCost);
         }
-        this.roll();
+        return this.roll();
     }
 
-    async useAttack({ev = null, skipDialog = false} = {}) {
+    async useAttack({ev = null, skipDialog = false} = {}, tempActor= null, skipChargeCheck = false) {
         if (ev && ev.originalEvent) ev = ev.originalEvent;
-        const actor = this.actor;
+        let actor = this.actor;
+        if (tempActor !== null) {
+            actor = tempActor;
+        }
         if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         const itemQuantity = getProperty(this.data, "data.quantity");
-        if (itemQuantity != null && itemQuantity <= 0) {
+        if (itemQuantity != null && itemQuantity <= 0 && !skipChargeCheck) {
             return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoQuantity"));
         }
 
-        if (this.isCharged && this.charges <= 0) {
+        if (this.isCharged && this.charges < this.chargeCost && !skipChargeCheck) {
             return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
         }
 
         const itemData = this.data.data;
-        const rollData = this.actor.getRollData();
+        const rollData = actor.getRollData();
         rollData.item = duplicate(itemData);
         const itemUpdateData = {};
 
@@ -913,28 +936,31 @@ export class ItemPF extends Item {
             if (this.hasAttack) {
                 for (let atk of allAttacks) {
                     // Create attack object
-                    let attack = new ChatAttack(this, atk.label);
+                    let attack = new ChatAttack(this, atk.label, actor);
                     attack.rollData = rollData;
                     await attack.addAttack({
                         bonus: atk.bonus,
                         extraParts: attackExtraParts,
-                        primaryAttack: primaryAttack
+                        primaryAttack: primaryAttack,
+                        actor: actor
                     });
                     if (this.hasDamage) {
                         await attack.addDamage({
                             extraParts: damageExtraParts,
                             primaryAttack: primaryAttack,
-                            critical: false
+                            critical: false,
+                            actor: actor
                         });
                         if (attack.hasCritConfirm) {
                             await attack.addDamage({
                                 extraParts: damageExtraParts,
                                 primaryAttack: primaryAttack,
-                                critical: true
+                                critical: true,
+                                actor: actor
                             });
                         }
                     }
-                    await attack.addEffect({primaryAttack: primaryAttack});
+                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
 
                     // Add to list
                     attacks.push(attack);
@@ -942,24 +968,24 @@ export class ItemPF extends Item {
             }
             // Add damage only
             else if (this.hasDamage) {
-                let attack = new ChatAttack(this);
+                let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
                 await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
-                await attack.addEffect({primaryAttack: primaryAttack});
+                await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
                 // Add to list
                 attacks.push(attack);
             }
             // Add effect notes only
             else if (this.hasEffect) {
-                let attack = new ChatAttack(this);
+                let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
-                await attack.addEffect({primaryAttack: primaryAttack});
+                await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
                 // Add to list
                 attacks.push(attack);
             } else if (getProperty(this.data, "data.actionType") === "special") {
-                let attack = new ChatAttack(this);
+                let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
-                await attack.addSpecial();
+                await attack.addSpecial(actor);
                 // Add to list
                 attacks.push(attack);
             }
@@ -983,31 +1009,31 @@ export class ItemPF extends Item {
                 // Create template
                 const template = AbilityTemplate.fromData(templateOptions);
                 if (template) {
-                    if (getProperty(this, "actor.sheet.rendered")) this.actor.sheet.minimize();
+                    if (getProperty(this, "actor.sheet.rendered")) actor.sheet.minimize();
                     const success = await template.drawPreview(ev);
                     if (!success) {
-                        if (getProperty(this, "actor.sheet.rendered")) this.actor.sheet.maximize();
+                        if (getProperty(this, "actor.sheet.rendered")) actor.sheet.maximize();
                         return;
                     }
                 }
             }
 
             // Deduct charge
-            if (this.autoDeductCharges) {
+            if (this.autoDeductCharges && !skipChargeCheck) {
                 if (rollData.useAmount === undefined)
-                    this.addCharges(-1, itemUpdateData);
+                    this.addCharges(-1*this.chargeCost, itemUpdateData);
                 else
-                    this.addCharges(-1 * parseFloat(rollData.useAmount), itemUpdateData);
+                    this.addCharges(-1 * parseFloat(rollData.useAmount)*this.chargeCost, itemUpdateData);
             }
-            if (useAmmoId !== "none" && this.actor !== null) {
-                this.actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length)
+            if (useAmmoId !== "none" && actor !== null) {
+                actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length)
             }
             // Update item
             this.update(itemUpdateData);
 
             // Set chat data
             let chatData = {
-                speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                speaker: ChatMessage.getSpeaker({actor: actor}),
                 rollMode: rollMode,
                 sound: CONFIG.sounds.dice,
                 "flags.D35E.noRollRender": true,
@@ -1020,7 +1046,7 @@ export class ItemPF extends Item {
                 let props = [],
                     extraText = "";
                 let hasBoxInfo = this.hasAttack || this.hasDamage || this.hasEffect;
-                let attackNotes = this.actor.getContextNotes("attacks.attack").reduce((cur, o) => {
+                let attackNotes = actor.getContextNotes("attacks.attack").reduce((cur, o) => {
                     o.notes.reduce((cur2, n) => {
                         cur2.push(...n.split(/[\n\r]+/));
                         return cur2;
@@ -1052,12 +1078,14 @@ export class ItemPF extends Item {
                     properties: props,
                     hasProperties: props.length > 0,
                     item: this.data,
-                    actor: this.actor.data,
+                    actor: actor.data,
                     hasBoxInfo: hasBoxInfo
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData);
+                return true;
             }
+            return false;
         };
 
         // Handle fast-forwarding
@@ -1073,11 +1101,12 @@ export class ItemPF extends Item {
             hasAttack: this.hasAttack,
             hasDamage: this.hasDamage,
             allowMultipleUses: this.data.data.uses.allowMultipleUses,
+            multipleUsesMax: Math.floor(this.charges/this.chargeCost),
             hasDamageAbility: getProperty(this.data, "data.ability.damage") !== "",
             isNaturalAttack: getProperty(this.data, "data.attackType") === "natural",
             isWeaponAttack: getProperty(this.data, "data.attackType") === "weapon",
             isRangedWeapon: getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.actionType") === "rwak",
-            ammunition: this.actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
+            ammunition: actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
             extraAttacksCount: (getProperty(this.data, "data.attackParts") || []).length + 1,
             hasTemplate: this.hasTemplate,
         };
@@ -1085,36 +1114,47 @@ export class ItemPF extends Item {
 
         let roll;
         const buttons = {};
+        let wasRolled = false;
         if (this.hasAttack) {
             if (this.type !== "spell") {
                 buttons.normal = {
                     label: game.i18n.localize("D35E.SingleAttack"),
-                    callback: html => roll = _roll.call(this, false, html)
+                    callback: html => {
+                        wasRolled = true;
+                        roll = _roll.call(this, false, html)
+                    }
                 };
             }
             if ((getProperty(this.data, "data.attackParts") || []).length || this.type === "spell") {
                 buttons.multi = {
                     label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : (game.i18n.localize("D35E.FullAttack") + " (" + ((getProperty(this.data, "data.attackParts") || []).length + 1) + " attacks)"),
-                    callback: html => roll = _roll.call(this, true, html)
+                    callback: html => {
+                        wasRolled = true;
+                        roll = _roll.call(this, true, html)
+                    }
                 };
             }
         } else {
             buttons.normal = {
                 label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : game.i18n.localize("D35E.Use"),
-                callback: html => roll = _roll.call(this, false, html)
+                callback: html => {
+                    wasRolled = true;
+                    roll = _roll.call(this, false, html)
+                }
             };
         }
-        return new Promise(resolve => {
+        await new Promise(resolve => {
             new Dialog({
                 title: `${game.i18n.localize("D35E.Use")}: ${this.name}`,
                 content: html,
                 buttons: buttons,
                 default: buttons.multi != null ? "multi" : "normal",
                 close: html => {
-                    resolve(rolled ? roll : false);
+                    return resolve(rolled ? roll : false);
                 }
             }).render(true);
         });
+        return wasRolled;
     }
 
     /**
@@ -1211,9 +1251,14 @@ export class ItemPF extends Item {
     /**
      * Only roll the item's effect.
      */
-    rollEffect({critical = false, primaryAttack = true} = {}) {
+    rollEffect({critical = false, primaryAttack = true} = {}, tempActor = null) {
         const itemData = this.data.data;
-        const actorData = this.actor.data.data;
+        let actor = this.actor;
+        if (tempActor !== null) {
+            actor = tempActor;
+        }
+
+        const actorData = actor.data.data;
         const rollData = mergeObject(duplicate(actorData), {
             item: itemData,
             ablMult: 0
@@ -1226,7 +1271,7 @@ export class ItemPF extends Item {
         // Add spell data
         if (this.type === "spell") {
             const spellbookIndex = itemData.spellbook;
-            const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+            const spellbook = actor.data.data.attributes.spells.spellbooks[spellbookIndex];
             const cl = spellbook.cl.total + (itemData.clOffset || 0);
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
             rollData.cl = cl;
@@ -1241,7 +1286,7 @@ export class ItemPF extends Item {
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
 
         // Create effect string
-        let effectNotes = this.actor.getContextNotes("attacks.effect").reduce((cur, o) => {
+        let effectNotes = actor.getContextNotes("attacks.effect").reduce((cur, o) => {
             o.notes.reduce((cur2, n) => {
                 cur2.push(...n.split(/[\n\r]+/));
                 return cur2;
@@ -2223,6 +2268,5 @@ export class ItemPF extends Item {
 
         return data;
     }
-
 
 }

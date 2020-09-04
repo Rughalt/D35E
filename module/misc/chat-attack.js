@@ -1,6 +1,6 @@
 export class ChatAttack {
-  constructor(item, label="") {
-    this.setItem(item);
+  constructor(item, label="", actor = null) {
+    this.setItem(item, actor);
     this.label = label;
 
     this.attack = {
@@ -44,8 +44,9 @@ export class ChatAttack {
   /**
    * Sets the attack's item reference.
    * @param {ItemPF} item - The item to reference.
+   * @param actor
    */
-  setItem(item) {
+  setItem(item, actor = null) {
     if (item == null) {
       this.rollData = {};
       this.item = null;
@@ -53,7 +54,7 @@ export class ChatAttack {
     }
 
     this.item = item;
-    this.rollData = item.actor != null ? item.actor.getRollData() : {};
+    this.rollData = item.actor != null ? item.actor.getRollData() : actor != null ? actor.getRollData() : {};
     this.rollData.item = duplicate(this.item.data.data);
   }
 
@@ -137,13 +138,16 @@ export class ChatAttack {
     }, 0);
   }
 
-  async addEffect({primaryAttack=true}={}) {
+  async addEffect({primaryAttack=true, actor=null}={}) {
     if (!this.item) return;
-    this.effectNotes = this.item.rollEffect({ primaryAttack: primaryAttack });
-    this.addSpecial();
+    this.effectNotes = this.item.rollEffect({ primaryAttack: primaryAttack },actor);
+    this.addSpecial(actor);
   }
 
-  async addSpecial() {
+  async addSpecial(actor=null) {
+    let _actor = this.item.actor;
+    if (actor != null)
+      _actor = actor
     if (!this.item) return;
     if (this.item.data.data.specialActions === undefined || this.item.data.data.specialActions === null)
       return;
@@ -151,7 +155,7 @@ export class ChatAttack {
       let cl = 0;
       if (this.item.data.type === "spell") {
         const spellbookIndex = this.item.data.data.spellbook;
-        const spellbook = this.item.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+        const spellbook = _actor.data.data.attributes.spells.spellbooks[spellbookIndex];
         cl = spellbook.cl.total + (this.item.data.data.clOffset || 0);
       }
 

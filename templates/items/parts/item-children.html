@@ -12,7 +12,7 @@
             <ol class="item-list" data-pack="D35E.spelllike">
                 {{#each children.spelllikes as |item iid|}}
                     <li class="item item-box flexrow" data-item-id="{{item._id}}">
-                        <div class="item-name flexrow">
+                        <div class="item-name child-item flexrow">
                             <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                             <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
                                 {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
@@ -31,7 +31,7 @@
         <ol class="item-list" data-pack="D35E.racial-abilities">
             {{#each children.abilities as |item iid|}}
                 <li class="item item-box flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name flexrow">
+                    <div class="item-name child-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
                             {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
@@ -51,7 +51,7 @@
         <ol class="item-list" data-pack="D35E.racial-abilities">
             {{#each children.traits as |item iid|}}
                 <li class="item item-box  flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name flexrow">
+                    <div class="item-name child-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
                             {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
@@ -72,7 +72,7 @@
         <ol class="item-list" data-pack="D35E.class-abilities">
             {{#each children.abilities as |item iid|}}
                 <li class="item item-box  flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name flexrow">
+                    <div class="item-name child-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
                             {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
@@ -92,7 +92,7 @@
         <ol class="item-list" data-pack="D35E.class-abilities">
             {{#each children.traits as |item iid|}}
                 <li class="item item-box  flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name flexrow">
+                    <div class="item-name child-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
                             {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}

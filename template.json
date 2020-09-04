@@ -967,7 +967,8 @@
             "max": 0,
             "per": null,
             "autoDeductCharges": true,
-            "allowMultipleUses": false
+            "allowMultipleUses": false,
+            "commonPool": false
           },
           "items": []
         }
@@ -1021,7 +1022,8 @@
           "max": 0,
           "per": null,
           "autoDeductCharges": true,
-          "allowMultipleUses": false
+          "allowMultipleUses": false,
+          "chargesPerUse": 1
         }
       },
       "action": {
@@ -1318,8 +1320,9 @@
       "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect", "action"],
       "enhancementType": "weapon",
       "properties": {},
-      "enh": null,
+      "enh": 0,
       "price": 0,
+      "enhIncrease": 0,
       "requirements": "",
       "weaponData": {
         "damageRoll": "",

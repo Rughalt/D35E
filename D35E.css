@@ -147,13 +147,13 @@
   flex: auto;
   margin: 0;
   line-height: 20px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .D35E label.checkbox input[type="checkbox"] {
   height: auto;
   margin: 0 5px 0;
   position: relative;
-  top: 3px;
+  top: 0;
 }
 .D35E .form-group {
   flex: 0 0 24px;
@@ -2675,7 +2675,7 @@ form .form-group.stacked label.checkbox {
   flex: auto;
   text-align: left;
   line-height: 20px;
-  font-size: 11px;
+  font-size: 13px;
 }
 form .form-group.stacked label.checkbox input[type="checkbox"] {
   height: unset;

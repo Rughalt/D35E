@@ -45,12 +45,13 @@
         <select name="data.enhancementType">
           {{#select data.enhancementType}}
           {{#each enhancementTypes.types as |name type|}}
-          <option value="{{type}}">{{name}}</option>
+          <option value="{{type}}">{{localize name}}</option>
           {{/each}}
           {{/select}}
         </select>
       </div>
 
+      {{#if isWeaponEnhancement}}
       <h3 class="form-header">Weapon Enhancement Details</h3>
       {{!-- Weapon Damage --}}
       <div class="form-group">
@@ -66,12 +67,22 @@
           <input type="text" name="data.weaponData.damageType" value="{{data.weaponData.damageType}}" placeholder="{{localize "D35E.DamageType"}}"/>
         </div>
       </div>
+      {{/if}}
+      {{#if isArmorEnhancement}}
+      <h3 class="form-header">Armor Enhancement Details</h3>
+      {{!-- Weapon Damage --}}
+      <div class="form-group">
+        <label>{{localize "D35E.EnhancementBonus"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
+      {{/if}}
 
-
-      <h3 class="form-header">{{localize "D35E.CraftingRequirements"}}</h3>
+      <h3 class="form-header">{{localize "D35E.EnhancementChanges"}}</h3>
       {{!-- Crafting requirements --}}
       <div class="form-group">
-        <label>{{localize "D35E.Requirements"}}</label>
+        <label>{{localize "D35E.CraftingRequirements"}}</label>
         <div class="form-fields">
           <input type="text" name="data.requirements" value="{{data.requirements}}" data-dtype="String" placeholder="0"/>
         </div>
@@ -83,12 +94,18 @@
           <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
+      <div class="form-group">
+        <label>{{localize "D35E.EnhancementIncrease"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.enhIncrease" value="{{data.enhIncrease}}" data-dtype="Number" placeholder="0"/>
+        </div>
+      </div>
 
-      <h3 class="form-header">{{localize "D35E.SpellCasting"}}</h3>
+      <h3 class="form-header">{{localize "D35E.EquipmentUsage"}}</h3>
       {{!-- Item Activation Template --}}
       {{> "systems/D35E/templates/items/parts/item-activation.html"}}
 
-      <h3 class="form-header">{{localize "D35E.SpellEffects"}}</h3>
+      <h3 class="form-header">{{localize "D35E.Action"}}</h3>
 
       {{!-- Item Action Template --}}
       {{> "systems/D35E/templates/items/parts/item-action.html"}}
@@ -102,9 +119,44 @@
     {{!-- Changes Tab --}}
     {{#unless showUnidentifiedData}}
     <div class="tab flexcol" data-group="primary" data-tab="changes">
-      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
-
-      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+      <div>
+        {{!-- Changes --}}
+        <h4 class="change-header">
+          {{localize "D35E.Changes"}}
+          <a class="change-control add-change"><i class="fas fa-plus"></i></a>
+        </h4>
+        <ol class="changes form-group">
+          {{#each data.changes as |change a|}}
+          <li class="change flexrow" data-change="{{a}}">
+            <input type="text" name="data.changes.{{a}}.0" value="{{lookup this "0"}}"
+            placeholder="{{localize "D35E.Formula"}}" />
+            <select name="data.changes.{{a}}.1">
+              {{#select (lookup this "1") }}
+              <option value="">{{localize "D35E.None"}}</option>
+              {{#each ../changes.targets as |target type|}}
+              <option value="{{type}}">{{target}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+            <select name="data.changes.{{a}}.2">
+              {{#select (lookup this "2") }}
+              {{#each subTargets as |target type|}}
+              <option value="{{type}}">{{target}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+            <select name="data.changes.{{a}}.3">
+              {{#select (lookup this "3") }}
+              {{#each ../changes.modifiers as |name type|}}
+              <option value="{{type}}">{{name}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+            <a class="change-control delete-change"><i class="fas fa-minus"></i></a>
+          </li>
+          {{/each}}
+        </ol>
+      </div>
     </div>
     {{/unless}}
   </section>

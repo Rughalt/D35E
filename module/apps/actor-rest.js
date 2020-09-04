@@ -64,6 +64,10 @@ export class ActorRestDialog extends BaseEntitySheet {
           hasItemUpdates = true;
           itemUpdate["data.uses.value"] = itemData.uses.max;
         }
+        if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.per === "day" && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
+          hasItemUpdates = true;
+          itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+        }
         else if (item.type === "spell") {
           const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
             isSpontaneous = spellbook.spontaneous, 

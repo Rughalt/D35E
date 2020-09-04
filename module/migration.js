@@ -148,6 +148,7 @@ export const migrateItemData = function(item) {
   _migrateEquipmentCategories(item, updateData);
   _migrateWeaponSize(item, updateData);
   _migrateContainer(item, updateData);
+  _migrateEnhancement(item, updateData);
 
   // Return the migrated update data
   return updateData;
@@ -377,6 +378,23 @@ const _migrateWeaponDamage = function(ent, updateData) {
     updateData["data.weaponData"] = {};
     updateData["data.weaponData.critRange"] = 20;
     updateData["data.weaponData.critMult"] = 2;
+  }
+};
+
+const _migrateEnhancement = function(ent, updateData) {
+  if (ent.type !== "weapon" || ent.type !== "equipment" ) return;
+
+  const value = getProperty(ent.data.data, "enhancement");
+  if (typeof value !== "object") {
+    updateData["data.enhancement"] = {};
+    updateData["data.enhancement.items"] = [];
+    updateData["data.enhancement.uses"] = {
+          "value": 0,
+          "max": 0,
+          "per": null,
+          "autoDeductCharges": true,
+          "allowMultipleUses": false
+    };
   }
 };
 

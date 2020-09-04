@@ -926,6 +926,13 @@
   "D35E.CreateItemForActor": "Create Shapechange Buff",
   "D35E.CreateItemForActorD": "You can create one of three types of shapechange buff - standard Polymorph, Wild-shape or appearance-only alerting Alter-self buff.",
   "D35E.Melded": "Melded",
+  "D35E.Enhancements": "Enhancements",
+  "D35E.CommonUsesPool": "Common Uses Pool",
+  "D35E.EnhancementIncrease": "Enhancement Increase",
+  "D35E.CraftingRequirements": "Crafting Requirements",
+  "D35E.EnhancementChanges": "Enhancement Changes",
+  "D35E.Weapon": "Weapon",
+  "D35E.Armor": "Armor",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
