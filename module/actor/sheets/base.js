@@ -614,7 +614,8 @@ export class ActorSheetPF extends ActorSheet {
     this.actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
       let hd = item['data']['hd']
       let hp = 0;
-      for (let i = 0; i < hd; i++) {
+      let levels = item['data']['levels'];
+      for (let i = 0; i < levels; i++) {
         hp += this.getRandomInt(1,hd);
       }
       this.setItemUpdate(item._id, "data.hp", hp);
