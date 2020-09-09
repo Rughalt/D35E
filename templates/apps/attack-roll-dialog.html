@@ -11,19 +11,65 @@
     <input type="text" name="damage-bonus" value="" placeholder="e.g. +1d4"/>
   </div>
   {{/if}}
+  {{#if hasAttack}}{{#if hasDamage}}
+  <div class="form-group stacked">
+    <label><strong>{{localize "D35E.FeatPlural"}}</strong></label>
+  </div>
+  <div class="form-group">
+    {{#if canPowerAttack}}
+    <label class="slider">Power Attack
+    </label>
+    <input type="range" name="pa" min="0" max="{{maxPowerAttackValue}}" value="0" class="slider" style="flex: 1" onchange="this.nextElementSibling.value=this.value">
+    <input type="text" name="power-attack" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+    {{/if}}
+  </div>
+  <div class="form-group">
+    {{#if canManyshot}}
+    <label>{{localize "D35E.FeatManyshot"}}</label>
+    <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
+      <input type="checkbox" class="stylized" data-feat="manyshot" name="manyshot" onchange="enableDisableManyshotFeat()"/>
+      <span class="checkmark"></span>
+    </label>
+    <input type="range" name="manyshot-count-slider" disabled min="2" max="{{maxManyshotValue}}" value="2" class="slider" style="flex: 1" onchange="this.nextElementSibling.value=this.value;enableDisableManyshotFeat()">
+    <input type="text" name="manyshot-count" value="2" disabled style="flex: 0 30; margin-left: 8px"/>
 
+    {{/if}}
+  </div>
+  {{#if canGreaterManyshot}}
+  <div class="form-group">
+    <label>{{localize "D35E.FeatGreaterManyshot"}}</label>
+    <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
+      <input type="checkbox" class="stylized" data-feat="greater-manyshot" name="greater-manyshot" onchange="enableDisableManyshotFeat()"/>
+      <span class="checkmark"></span>
+    </label>
+    <input type="range" name="greater-manyshot-count-slider" disabled min="2" max="{{maxGreaterManyshotValue}}" value="2" class="slider" style="flex: 1" onchange="this.nextElementSibling.value=this.value;enableDisableManyshotFeat()">
+    <input type="text" name="greater-manyshot-count" value="2" disabled style="flex: 0 30; margin-left: 8px"/>
+
+  </div>
+  {{/if}}
+  {{/if}}{{/if}}
   {{!-- Flags --}}
   <div class="form-group stacked">
-    <label>{{localize "D35E.Misc"}}</label>
+    <label><strong>{{localize "D35E.Misc"}}</strong></label>
     {{#if hasAttack}}{{#if hasDamage}}
-    <label class="checkbox">
-      <input type="checkbox" name="power-attack"/> {{localize "D35E.PowerAttack"}}
-    </label>
     {{#if isNaturalAttack}}
     <label class="checkbox">
       <input type="checkbox" {{checked item.primaryAttack}} name="primary-attack"/> {{localize "D35E.PrimaryAttack"}}
     </label>
     {{/if}}
+
+    {{#unless isRangedWeapon}}
+    <div class="form-group">
+      <label>{{localize "D35E.TwoWeaponFightingMode"}}</label>
+      <select name="rollMode">
+        {{#select twoWeaponFightingMode}}
+        {{#each twoWeaponFightingMode as |label mode|}}
+        <option value="{{mode}}">{{localize label}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
+    </div>
+    {{/unless}}
     {{/if}}{{/if}}
   </div>
   {{#if hasDamage}}{{#if hasDamageAbility}}
@@ -45,7 +91,7 @@
     <label>{{localize "D35E.LootTypeAmmo"}}</label>
     <select name="ammunition-id" onchange="enableDisableFullAttack(this)">
       {{#select ammo}}
-      <option value="none"data-ammo-count="9999" data-dmg-formula="">None</option>
+      <option value="none" data-ammo-count="9999" data-dmg-formula="">None</option>
       {{#each ammunition as |item iid|}}
       <option value="{{item._id}}" data-ammo-count="{{item.data.data.quantity}}" data-dmg-formula="{{item.data.data.bonusAmmoDamage}}">{{item.name}} ({{item.data.data.quantity}})</option>
       {{/each}}
@@ -54,11 +100,41 @@
 
     <input type="hidden" name="ammo-dmg-formula"/>
     <script>
+      function enableDisableManyshotFeat() {
+        if ($("input[data-feat='manyshot']").length)
+          $("input[data-feat='greater-manyshot']").prop( "disabled", $("input[data-feat='manyshot']").is(":checked"));
+        if ($("input[data-feat='greater-manyshot']").length)
+          $("input[data-feat='manyshot']").prop( "disabled", $("input[data-feat='greater-manyshot']").is(":checked"));
+
+        $("input[name='greater-manyshot-count-slider']").prop( "disabled", !$("input[data-feat='greater-manyshot']").is(":checked"));
+        $("input[name='manyshot-count-slider']").prop( "disabled", !$("input[data-feat='manyshot']").is(":checked"));
+        enableDisableFullAttack(document.getElementsByName("ammunition-id")[0])
+      }
+
       function enableDisableFullAttack(select) {
         var option = $('option:selected', select).attr('data-ammo-count');
         var damage = $('option:selected', select).attr('data-dmg-formula');
+        var arrowsCount = parseInt(option)
+        var isManyshot = false;
+        var isGreaterManyshot = false;
+        var greaterManyshotCount = 0;
+        var manyshotCount = 0;
+        var baseExtraAttacks = {{extraAttacksCount}};
+        if ($("input[data-feat='manyshot']").length) {
+          isManyshot = $("input[feat='manyshot']").is(":checked");
+          manyshotCount = parseInt($("input[name='manyshot-count']").val())
+          if (isManyshot)
+            baseExtraAttacks = baseExtraAttacks*manyshotCount;
+        }
+        if ($("input[data-feat='greater-manyshot']").length) {
+          isGreaterManyshot = $("input[data-feat='greater-manyshot']").is(":checked");
+          greaterManyshotCount = parseInt($("input[name='greater-manyshot-count']").val())
+          if (isGreaterManyshot)
+            baseExtraAttacks = baseExtraAttacks*greaterManyshotCount;
+        }
+
         $('option:selected', select).closest("section").find("input[name='ammo-dmg-formula']").val(damage)
-        $('option:selected', select).closest("section").find("button[data-button='multi']").prop( "disabled", {{extraAttacksCount}} > parseInt(option));
+        $('option:selected', select).closest("section").find("button[data-button='multi']").prop( "disabled", baseExtraAttacks > arrowsCount);
       }
     </script>
   </div>
@@ -80,6 +156,7 @@
     <input type="text" name="useAmount" value="1" disabled style="flex: 0 30; margin-left: 8px"/>
     {{/if}}
   </div>
+
 
 
   <div class="form-group">

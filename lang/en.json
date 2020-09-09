@@ -933,6 +933,17 @@
   "D35E.EnhancementChanges": "Enhancement Changes",
   "D35E.Weapon": "Weapon",
   "D35E.Armor": "Armor",
+  "D35E.MagicItemUpdateName": "Auto-update item name on changes",
+  "D35E.MagicItemUpdatePrice": "Auto-update item properties on changes",
+  "D35E.BrowseEnhancements": "Browse Enhancements",
+  "D35E.EnhancementAllowedTypes": "Item Types Allowed",
+  "D35E.EnhancementIsLevel": "Don't add to base Enhancement Bonus",
+  "D35E.SubAttack": "Sub-Attack",
+  "D35E.BonusAmmoDamage": "Bonus Ammo Damage",
+  "D35E.BonusAmmoDamageFormula": "Bonus Ammo Damage Formula",
+  "D35E.FeatManyshot": "Manyshot",
+  "D35E.FeatGreaterManyshot": "Greater Manyshot",
+
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

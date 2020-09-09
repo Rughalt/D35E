@@ -149,11 +149,14 @@ export class ItemSheetPF extends ItemSheet {
         }
       }
       data.enhancements = []
-      this.item.data.data.enhancements.items.forEach(e => {
+      let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
+      _enhancements.forEach(e => {
         let item = new ItemPF(e, {owner: this.item.owner})
         this.ehnancementItemMap.set(e._id,item);
         e.hasAction = item.hasAction || item.isCharged;
+        e.incorrect = !((e.data.enhancementType === 'weapon' && this.item.type === 'weapon') || (e.data.enhancementType === 'armor' && this.item.type === 'equipment') || (e.data.enhancementType === 'misc'));
         e.hasUses = e.data.uses && (e.data.uses.max > 0);
+        e.calcPrice = e.data.enhIncrease !== undefined && e.data.enhIncrease !== null && e.data.enhIncrease > 0 ? `+${e.data.enhIncrease}` : `${e.data.price}`
         e.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(e, "data.uses.per"));
         data.enhancements.push(e)
       })
@@ -198,11 +201,14 @@ export class ItemSheetPF extends ItemSheet {
       data.hasMultipleSlots = Object.keys(data.equipmentSlots).length > 1;
       data.enhancements = []
 
-      this.item.data.data.enhancements.items.forEach(e => {
+      let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
+      _enhancements.forEach(e => {
         let item = new ItemPF(e, {owner: this.item.owner})
         this.ehnancementItemMap.set(e._id,item);
         e.hasAction = item.hasAction || item.isCharged;
+        e.incorrect = !((e.data.enhancementType === 'weapon' && this.item.type === 'weapon') || (e.data.enhancementType === 'armor' && this.item.type === 'equipment') || (e.data.enhancementType === 'misc'));
         e.hasUses = e.data.uses && (e.data.uses.max > 0);
+        e.calcPrice = e.data.enhIncrease !== undefined && e.data.enhIncrease !== null && e.data.enhIncrease > 0 ? `+${e.data.enhIncrease}` : `${e.data.price}`
         e.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(e, "data.uses.per"));
         data.enhancements.push(e)
       })
@@ -517,6 +523,11 @@ export class ItemSheetPF extends ItemSheet {
       )
     }
 
+    if ( item.type === "enhancement" ) {
+      props.push(...Object.entries(item.data.allowedTypes)
+          .map(e => e[1]));
+    }
+
     else if ( item.type === "equipment" ) {
       props.push(CONFIG.D35E.equipmentTypes[item.data.armor.type]);
       props.push(labels.armor);
@@ -735,8 +746,11 @@ export class ItemSheetPF extends ItemSheet {
 
     html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
     html.find("div[data-tab='enhancements'] .item-detail.item-uses input[type='text']:not(:disabled)").off("change").change(this._setEnhUses.bind(this));
+    html.find("div[data-tab='enhancements'] .item-detail.item-enh input[type='text']:not(:disabled)").off("change").change(this._setEnhValue.bind(this));
 
+    html.find('div[data-tab="enhancements"] .item-edit').click(this._onItemEdit.bind(this));
     html.find('div[data-tab="enhancements"] .item .item-image').click(event => this._onEnhRoll(event));
+    html.find("button[name='update-item-name']").click(event => this._onEnhUpdateName(event));
 
     // Quick Item Action control
     html.find(".item-actions a").mouseup(ev => this._quickItemActionControl(ev));
@@ -1055,11 +1069,119 @@ export class ItemSheetPF extends ItemSheet {
   async importItem(itemData, itemType) {
     const updateData = {};
     let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-    const enhancement = itemData
+    const enhancement = duplicate(itemData)
+    if (enhancement._id) enhancement._id = this.item._id+"-"+itemData._id;
     _enhancements.push(enhancement);
+    this.updateMagicItemName(updateData, _enhancements);
+    this.updateMagicItemProperties(updateData, _enhancements);
     updateData[`data.enhancements.items`] = _enhancements;
     await this.item.update(updateData);
 
+  }
+
+  updateMagicItemName(updateData, _enhancements, force = false) {
+    if ((this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
+      if (this.item.data.data.enhancements.automation.updateName || force) {
+        let baseName = this.item.data.data.unidentified.name
+        if (this.item.data.data.unidentified.name === '') {
+          updateData[`data.unidentified.name`] = this.item.name;
+          baseName = this.item.name
+        }
+        updateData[`data.identifiedName`] = this.buildName(baseName, _enhancements)
+      }
+    }
+  }
+
+  // This updates not only price, but also physical properties
+  updateMagicItemProperties(updateData, _enhancements, force = false) {
+    if ((this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
+      if (this.item.data.data.enhancements.automation.updateName || force) {
+        let basePrice = this.item.data.data.unidentified.price
+        if (this.item.data.data.unidentified.price === 0) {
+          updateData[`data.unidentified.price`] = this.item.data.data.price;
+          basePrice = this.item.data.data.price
+        }
+        updateData[`data.price`] = this.buildPrice(basePrice,_enhancements)
+      }
+    }
+  }
+
+  buildName(name, enhancements) {
+    let prefixes = []
+    let suffixes = []
+    let totalEnchancement = 0;
+    for (const obj of enhancements) {
+      if (obj.data.nameExtension !== undefined && obj.data.nameExtension !== null) {
+        if (obj.data.nameExtension.prefix !== null && obj.data.nameExtension.prefix.trim() !== "") prefixes.push(obj.data.nameExtension.prefix.trim())
+        if (obj.data.nameExtension.suffix !== null && obj.data.nameExtension.suffix.trim() !== "") suffixes.push(obj.data.nameExtension.suffix.trim())
+      }
+
+      if (obj.data.enhancementType === "weapon" && this.item.type === 'weapon')
+        if (!obj.data.enhIsLevel)
+          totalEnchancement += obj.data.enh
+      if (obj.data.enhancementType === "armor" && this.item.type === 'equipment')
+        if (!obj.data.enhIsLevel)
+          totalEnchancement += obj.data.enh
+    }
+    let enhSuffix = ''
+    let ofSuffix = ''
+    if (totalEnchancement > 0)
+      enhSuffix = ` +${totalEnchancement}`
+    if (suffixes.length > 0) {
+      ofSuffix = ` of ${suffixes.join(' and ').trim()}`
+    }
+    return `${prefixes.join(' ')} ${name}${ofSuffix}`.trim() + `${enhSuffix}`
+  }
+
+  buildPrice(basePrice,enhancements) {
+    let totalPrice = basePrice;
+    let totalEnchancementIncrease = 0;
+    let totalEnchancement = 0;
+    let maxSingleEnhancementIncrease = 0;
+    let flatPrice = 0;
+    for (const obj of enhancements) {
+      if (obj.data.enhancementType === "weapon" && this.item.type === 'weapon') {
+        totalEnchancementIncrease += obj.data.enhIncrease
+        if (!obj.data.enhIsLevel)
+          totalEnchancement += obj.data.enh
+        flatPrice += obj.data.price
+        maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease,maxSingleEnhancementIncrease)
+      }
+      if (obj.data.enhancementType === "armor" && this.item.type === 'equipment') {
+        totalEnchancementIncrease += obj.data.enhIncrease
+        if (!obj.data.enhIsLevel)
+          totalEnchancement += obj.data.enh
+        flatPrice += obj.data.price
+        maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease,maxSingleEnhancementIncrease)
+      }
+      if (obj.data.enhancementType === "misc") {
+        totalEnchancementIncrease += obj.data.enhIncrease
+        flatPrice += obj.data.price
+        maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease,maxSingleEnhancementIncrease)
+      }
+    }
+    let useEpicPricing = false
+    if (maxSingleEnhancementIncrease > 5 || totalEnchancement > 5)
+      useEpicPricing = true
+    // Base price for weapon
+    if (this.item.type === 'weapon') {
+      if (totalEnchancementIncrease > 0)
+        totalPrice += 300
+      if (!useEpicPricing)
+        totalPrice = totalEnchancementIncrease*totalEnchancementIncrease*2000+flatPrice
+      else
+        totalPrice = totalEnchancementIncrease*totalEnchancementIncrease*2000*10+10*flatPrice
+    }
+    else if (this.item.type === 'equipment') {
+      if (totalEnchancementIncrease > 0)
+        totalPrice += 150
+      if (!useEpicPricing)
+        totalPrice = totalEnchancementIncrease*totalEnchancementIncrease*1000+flatPrice
+      else
+        totalPrice = totalEnchancementIncrease*totalEnchancementIncrease*1000*10+10*flatPrice
+    }
+
+    return totalPrice;
   }
 
   /**
@@ -1080,6 +1202,9 @@ export class ItemSheetPF extends ItemSheet {
       _enhancements = _enhancements.filter(function( obj ) {
         return obj._id !== li.dataset.itemId;
       });
+
+      this.updateMagicItemName(updateData, _enhancements);
+      this.updateMagicItemProperties(updateData, _enhancements);
       updateData[`data.enhancements.items`] = _enhancements;
       this.item.update(updateData);
     }
@@ -1096,6 +1221,9 @@ export class ItemSheetPF extends ItemSheet {
           _enhancements = _enhancements.filter(function( obj ) {
             return obj._id !== li.dataset.itemId;
           });
+
+          this.updateMagicItemName(updateData, _enhancements);
+          this.updateMagicItemProperties(updateData, _enhancements);
           updateData[`data.enhancements.items`] = _enhancements;
           this.item.update(updateData);
           button.disabled = false;
@@ -1121,6 +1249,53 @@ export class ItemSheetPF extends ItemSheet {
     this.item.update(updateData);
   }
 
+  async _setEnhValue(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const updateData = {};
+
+    const value = Number(event.currentTarget.value);
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    _enhancements.filter(function( obj ) {
+      return obj._id === itemId
+    }).forEach(i => {
+      i.data.enh = value;
+      this._setEnhItemPrice(i);
+    });
+    updateData[`data.enhancements.items`] = _enhancements;
+    this.updateMagicItemName(updateData, _enhancements);
+    this.updateMagicItemProperties(updateData, _enhancements);
+    await this.item.update(updateData);
+  }
+
+  _setEnhItemPrice(item) {
+    {
+      let rollData = {};
+      if (this.actor != null) rollData = this.actor.getRollData();
+      rollData.enhancement = item.data.enh;
+      if (item.data.enhIncreaseFormula !== undefined && item.data.enhIncreaseFormula !== null && item.data.enhIncreaseFormula !== "") {
+        item.data.enhIncrease = new Roll(item.data.enhIncreaseFormula, rollData).roll().total;
+      }
+    }
+    {
+      let rollData = {};
+      if (this.actor != null) rollData = this.actor.getRollData();
+      rollData.enhancement = item.data.enh;
+      rollData.enhIncrease = item.data.enhIncrease;
+      if (item.data.priceFormula !== undefined && item.data.priceFormula !== null && item.data.priceFormula !== "") {
+        item.data.price = new Roll(item.data.priceFormula, rollData).roll().total;
+      }
+    }
+  }
+
+
+  _onItemEdit(event) {
+    event.preventDefault();
+    const li = event.currentTarget.closest(".item");
+    const item = this.ehnancementItemMap.get(li.dataset.itemId);
+    item.sheet.render(true);
+  }
+
   /**
    * Handle rolling of an item from the Actor sheet, obtaining the Item instance and dispatching to it's roll method
    * @private
@@ -1131,6 +1306,16 @@ export class ItemSheetPF extends ItemSheet {
     //const item = this.actor.getOwnedItem(itemId);
     let item = this.ehnancementItemMap.get(itemId);
     return item.roll({}, this.item.actor);
+  }
+
+  async _onEnhUpdateName(event) {
+    event.preventDefault();
+    const updateData = {};
+    console.log("updating name")
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    this.updateMagicItemName(updateData, _enhancements, true);
+    this.updateMagicItemProperties(updateData, _enhancements, true);
+    await this.item.update(updateData);
   }
 
   async _quickItemActionControl(event) {

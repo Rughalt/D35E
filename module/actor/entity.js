@@ -731,6 +731,46 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
+        {
+            let dimLight = 0;
+            let brightLight = 0;
+            let color = "black"
+            for (let i of this.items.values()) {
+                if (!i.data.data.hasOwnProperty("light")) continue;
+                if (i.data.data.equipped && !i.data.data.melded && i.data.data.light.emitLight) {
+                    dimLight = Math.floor(4 * i.data.data.light.radius / 5.0);
+                    brightLight = Math.floor(2 * i.data.data.light.radius / 5.0);
+                    color = i.data.data.light.color;
+                    break;
+                }
+            }
+            if (this.isToken) {
+                let tokens = []
+                tokens.push(this.token);
+                tokens.forEach(o => {
+                    if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor)
+                        o.update({
+                            dimLight: dimLight,
+                            brightLight: brightLight,
+                            lightColor: color
+                        }, {stopUpdates: true});
+                });
+            }
+            if (!this.isToken) {
+                let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
+                tokens.forEach(o => {
+                    if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor)
+                        o.update({
+                            dimLight: dimLight,
+                            brightLight: brightLight,
+                            lightColor: color
+                        }, {stopUpdates: true});
+                });
+                data[`token.dimLight`] = dimLight;
+                data[`token.brightLight`] = brightLight;
+                data[`token.lightColor`] = color;
+            }
+        }
 
 
         for (let [con, v] of Object.entries(fullConditions)) {
@@ -1183,12 +1223,12 @@ export class ActorPF extends Actor {
             });
 
             // Get changes from all enhancement
-            console.log(item)
             if (item.type === "weapon" || item.type === "equipment") {
                 if (item.data.enhancements !== undefined) {
                     item.data.enhancements.items.forEach(enhancementItem =>
                         enhancementItem.data.changes.forEach(change => {
                             if (!this.isChangeAllowed(item, change, fullConditions)) return;
+                            change[0] = change[0].replace('@enhancement',enhancementItem.data.enh)
                             allChanges.push({
                                 raw: change,
                                 source: {
@@ -2532,6 +2572,9 @@ export class ActorPF extends Actor {
         }
 
 
+
+
+
         // Clean up old item resources
         for (let [tag, res] of Object.entries(getProperty(this.data, "data.resources") || {})) {
             if (!res) continue;
@@ -2807,6 +2850,20 @@ export class ActorPF extends Actor {
             const bonusFormula = getProperty(item.data, "data.weaponData.attackFormula");
             if (bonusFormula != null && bonusFormula.length) attackData["data.attackBonus"] = bonusFormula;
         }
+
+        // Add things from Enhancements
+        let _enhancements = duplicate(getProperty(item.data, `data.enhancements.items`) || []);
+        _enhancements.forEach(i => {
+            if (i.data.enhancementType !== 'weapon') return;
+            if (i.data.weaponData.damageRoll !== '') {
+                attackData["data.damage.parts"].push([i.data.weaponData.damageRoll,i.data.weaponData.damageType])
+            }
+            if (i.data.attackNotes !== '') {
+                attackData["data.attackNotes"] += '\n' + i.data.attackNotes
+                attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
+            }
+
+        });
 
         // Add range
         if (!isMelee && getProperty(item.data, "data.weaponData.range") != null) {

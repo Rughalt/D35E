@@ -63,6 +63,8 @@ export class CompendiumBrowser extends Application {
         return game.i18n.localize("D35E.Spells");
       case "items":
         return game.i18n.localize("D35E.Items");
+      case "enhancements":
+        return game.i18n.localize("D35E.Enhancements");
     }
     return this.type;
   }
@@ -106,6 +108,7 @@ export class CompendiumBrowser extends Application {
     else if (this.type === "items") this._fetchItemFilters();
     else if (this.type === "bestiary") this._fetchBestiaryFilters();
     else if (this.type === "feats") this._fetchFeatFilters();
+    else if (this.type === "enhancements") this._fetchEnhancementFilters();
 
     this.activeFilters = this.filters.reduce((cur, f) => {
       cur[f.path] = [];
@@ -117,6 +120,7 @@ export class CompendiumBrowser extends Application {
     if (this.type === "spells" && item.type !== "spell") return false;
     if (this.type === "items" && !["weapon", "equipment", "loot", "consumable"].includes(item.type)) return false;
     if (this.type === "feats" && item.type !== "feat") return false;
+    if (this.type === "enhancements" && item.type !== "enhancement") return false;
     return true;
   }
 
@@ -131,6 +135,20 @@ export class CompendiumBrowser extends Application {
         data: item.data.data,
       },
     };
+
+    if (this.type === "enhancements") {
+      if (!this.extraFilters) {
+        this.extraFilters = {
+          "allowedTypes": []
+        };
+      }
+
+      result.item.allowedTypes = (getProperty(item.data, "data.allowedTypes") || []).reduce((cur, o) => {
+        if (!this.extraFilters["allowedTypes"].includes(o[0])) this.extraFilters["allowedTypes"].push(o[0]);
+        cur.push(o[0]);
+        return cur;
+      }, []);
+    }
 
     // Feat-specific variables
     if (this.type === "feats") {
@@ -148,6 +166,7 @@ export class CompendiumBrowser extends Application {
         cur.push(o[0]);
         return cur;
       }, []);
+
 
       result.item.assocations = {
         "class": (getProperty(item.data, "data.featType") === "classFeat" ? getProperty(item.data, "data.assocations.classes") || [] : []).reduce((cur, o) => {
@@ -503,6 +522,31 @@ export class CompendiumBrowser extends Application {
           return cur;
         }, []),
       },
+    ];
+  }
+
+  _fetchEnhancementFilters() {
+    this.filters = [
+      {
+        path: "data.enhancementType",
+        label: game.i18n.localize("D35E.Type"),
+        items: Object.entries(CONFIG.D35E.enhancementType).reduce((cur, o) => {
+          cur.push({ key: o[0], name: o[1] });
+          return cur;
+        }, []),
+      },
+      {
+        path: "allowedTypes",
+        label: game.i18n.localize("D35E.EnhancementAllowedTypes"),
+        items: this.extraFilters.allowedTypes.reduce((cur, o) => {
+          cur.push({ key: o, name: o });
+          return cur;
+        }, []).sort((a, b) => {
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
+          return 0;
+        }),
+      }
     ];
   }
 

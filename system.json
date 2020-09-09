@@ -94,6 +94,13 @@
       "entity": "Item"
     },
     {
+      "name": "enhancements",
+      "label": "Enhancements",
+      "system": "D35E",
+      "path": "./packs/enhancements.db",
+      "entity": "Item"
+    },
+    {
       "name": "weapons-and-ammo",
       "label": "Weapons and Ammo",
       "system": "D35E",

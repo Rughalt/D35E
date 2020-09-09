@@ -2,8 +2,16 @@
     {{!-- Children Tab --}}
 
     <div class="tab flexcol" data-group="children">
-        <div>
+        <div style="flex: none" class="enhancements">
             <h3 class="form-header">Uses</h3>
+
+            <div class="form-group stacked">
+                <label class="checkbox">
+                    <input type="checkbox" name="data.enhancements.uses.commonPool" {{checked
+                           data.enhancements.uses.commonPool}}/> {{localize "D35E.CommonUsesPool"}}
+                </label>
+            </div>
+            {{#if data.enhancements.uses.commonPool}}
             <div class="form-group uses-per">
                 <label>{{localize "D35E.LimitedUses"}}</label>
                 <div class="form-fields">
@@ -31,21 +39,34 @@
                            data.enhancements.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
                 </label>
             </div>
+            {{/if}}
 
+        </div>
+
+        <div style="flex: none" class="enhancements">
+            <h3 class="form-header">Magic Item Updates
+                <button type="button" class="update-magic-item" name="update-item-name">Update From Enhancements</button>
+            </h3>
             <div class="form-group stacked">
                 <label class="checkbox">
-                    <input type="checkbox" name="data.enhancements.uses.commonPool" {{checked
-                           data.enhancements.uses.commonPool}}/> {{localize "D35E.CommonUsesPool"}}
+                    <input type="checkbox" name="data.enhancements.automation.updateName" {{checked
+                           data.enhancements.automation.updateName}}/> {{localize "D35E.MagicItemUpdateName"}}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="data.enhancements.automation.updatePrice" {{checked
+                           data.enhancements.automation.updatePrice}}/> {{localize "D35E.MagicItemUpdatePrice"}}
                 </label>
             </div>
         </div>
-        <ol class="inventory-list sub-scroll scroll-inventory">
+        <ol class="inventory-list sub-scroll scroll-inventory" style="padding: 0">
 
             <li class="inventory-header flexrow">
                 <h3 class="item-name flexrow"></h3>
 
                 <div class="item-detail item-actions">
-                    <span>Enhancement</span></div>
+                    <span>Enh.</span></div>
+                <div class="item-detail item-actions">
+                    <span>Price</span></div>
                 <div class="item-detail item-actions">
                     <span>Action</span></div>
                 <div class="item-detail item-uses"><span>{{localize "D35E.ChargePlural"}}</span></div>
@@ -57,14 +78,19 @@
                 <li class="item item-box flexrow" data-item-id="{{item._id}}">
                     <div class="item-name enh-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                        <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
                             {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
                             {{item.name~}}
                         </h4>
                     </div>
+                    <div class="item-detail item-enh item-actions">
+                        <span>
+                            <input type="text" value="{{item.data.enh}}" data-dtype="Number"/>
+                        </span>
+                    </div>
                     <div class="item-detail item-actions">
                         <span>
-                            {{data.enhIncrease}}
+                            {{item.calcPrice}}
                         </span>
                     </div>
                     <div class="item-detail item-actions">
@@ -76,15 +102,20 @@
                         </div>
                     </div>
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
-                        {{#if item.isCharged}}
-                        <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
-                        <span class="sep"> of </span>
-                        <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
-                        <span class="tooltipcontent">
-                          @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
-                          @resources.{{item.tag}}.max : {{item.data.uses.max}}
-                        </span>
-                        {{/if}}
+
+                        {{#unless data.enhancements.uses.commonPool}}
+                            {{#if item.isCharged}}
+                            {{#unless item.incorrect}}
+                            <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
+                            <span class="sep"> of </span>
+                            <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
+                            <span class="tooltipcontent">
+                              @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
+                              @resources.{{item.tag}}.max : {{item.data.uses.max}}
+                            </span>
+                            {{/unless}}
+                            {{/if}}
+                        {{/unless}}
                     </div>
                     <div class="item-detail item-type flexrow">
                         <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>

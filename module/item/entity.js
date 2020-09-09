@@ -475,6 +475,31 @@ export class ItemPF extends Item {
             }
         }
 
+        {
+            let rollData = {};
+            if (this.actor != null) rollData = this.actor.getRollData();
+            rollData.enhancement = data["data.enh"] !== undefined ? data["data.enh"] : getProperty(this.data, "data.enh");
+            let rollFormula = getProperty(this.data, "data.enhIncreaseFormula");
+            if (data["data.enhIncreaseFormula"] != null && data["data.enhIncreaseFormula"] !== getProperty(this.data, "data.enhIncreaseFormula"))
+                rollFormula = data["data.enhIncreaseFormula"]
+            if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "") {
+                data["data.enhIncrease"] = new Roll(rollFormula, rollData).roll().total;
+            }
+        }
+        {
+            let rollData = {};
+            if (this.actor != null) rollData = this.actor.getRollData();
+
+            rollData.enhancement = data["data.enh"] !== undefined ? data["data.enh"] : getProperty(this.data, "data.enh");
+            rollData.enhIncrease = data["data.enhIncrease"] !== undefined ? data["data.enhIncrease"] : getProperty(this.data, "data.enhIncrease");
+            let rollFormula = getProperty(this.data, "data.priceFormula");
+            if (data["data.priceFormula"] != null && data["data.priceFormula"] !== getProperty(this.data, "data.priceFormula"))
+                rollFormula = data["data.priceFormula"]
+            if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "") {
+                data["data.price"] = new Roll(rollFormula, rollData).roll().total;
+            }
+        }
+
         // Set equipment subtype and slot
         if (data["data.equipmentType"] != null && data["data.equipmentType"] !== getProperty(this.data, "data.equipmentType")) {
             // Set subtype
@@ -494,6 +519,10 @@ export class ItemPF extends Item {
             }
         }
 
+        // Update enh from Enhancements
+        let _enhancements = duplicate(getProperty(srcData, `data.enhancements.items`) || []);
+        this._updateBaseEnhancement(data, _enhancements, this.type, srcData);
+
         this._updateMaxUses(data, {srcData: srcData});
 
         const diff = diffObject(flattenObject(this.data), data);
@@ -502,6 +531,32 @@ export class ItemPF extends Item {
         }
 
         return false;
+    }
+
+    _updateBaseEnhancement(data, enhancements, type, srcData) {
+        let doLinkData = true;
+        if (srcData == null) {
+            srcData = this.data;
+            doLinkData = false;
+        }
+        let totalEnchancement = 0;
+        enhancements.forEach(function( obj ) {
+            if (obj.data.enhancementType === "weapon" && type === 'weapon')
+                totalEnchancement += obj.data.enh
+            if (obj.data.enhancementType === "armor" && type === 'equipment')
+                totalEnchancement += obj.data.enh
+        });
+        console.log('Total enh',totalEnchancement, type)
+        if (totalEnchancement > 0) {
+            if (type === 'weapon') {
+                if (doLinkData) linkData(srcData, data, "data.enh", totalEnchancement);
+                else data['data.enh'] = totalEnchancement
+            }
+            else if (type === 'equipment') {
+                if (doLinkData) linkData(srcData, data, "data.armor.enh", totalEnchancement);
+                else data['data.armor.enh'] = totalEnchancement
+            }
+        }
     }
 
     _updateMaxUses(data, {srcData = null, actorData = null} = {}) {
@@ -867,9 +922,14 @@ export class ItemPF extends Item {
                 useMeasureTemplate = false,
                 useAmmoId = "none",
                 useAmmoDamage = "",
+                manyshot = false,
+                manyshotCount = 0,
+                greaterManyshot = false,
+                greaterManyshotCount = 0,
                 rollMode = null;
             // Get form data
             if (form) {
+                console.log('RollData', rollData);
                 rollData.attackBonus = form.find('[name="attack-bonus"]').val();
                 if (rollData.attackBonus) attackExtraParts.push("@attackBonus");
                 rollData.damageBonus = form.find('[name="damage-bonus"]').val();
@@ -894,11 +954,26 @@ export class ItemPF extends Item {
 
 
                 // Power Attack
-                if (form.find('[name="power-attack"]').prop("checked")) {
-                    rollData.powerAttackBonus = (1 + Math.floor(getProperty(rollData, "attributes.bab.total") / 4)) * 2;
+                rollData.powerAttackBonus = form.find('[name="power-attack"]').val();
+                if (rollData.powerAttackBonus !== undefined) {
+                    rollData.powerAttackBonus = parseInt(form.find('[name="power-attack"]').val())
                     damageExtraParts.push("floor(@powerAttackBonus * @ablMult) * @critMult");
-                    rollData.powerAttackPenalty = -(1 + Math.floor(getProperty(rollData, "attributes.bab.total") / 4));
+                    rollData.powerAttackPenalty = -rollData.powerAttackBonus;
                     attackExtraParts.push("@powerAttackPenalty");
+                }
+                if (form.find('[name="manyshot"]').prop("checked")) {
+                    manyshot = true;
+                    manyshotCount = parseInt(form.find('[name="manyshot-count"]').val())
+                    rollData.manyshotPenalty = -manyshotCount*2;
+                    attackExtraParts.push("@manyshotPenalty");
+                }
+
+
+                if (form.find('[name="greater-manyshot"]').prop("checked")) {
+                    greaterManyshotCount = parseInt(form.find('[name="greater-manyshot-count"]').val())
+                    greaterManyshot = true;
+                    rollData.greaterManyshotPenalty = -greaterManyshotCount*2;
+                    attackExtraParts.push("@greaterManyshotPenalty");
                 }
                 // Primary Attack (for natural attacks)
                 let html = form.find('[name="primary-attack"]');
@@ -914,6 +989,7 @@ export class ItemPF extends Item {
                 html = form.find('[name="damage-ability-multiplier"]');
                 if (html.length > 0) {
                     rollData.item.ability.damageMult = parseFloat(html.val());
+
                 }
             }
 
@@ -925,13 +1001,27 @@ export class ItemPF extends Item {
             };
 
             // Create attacks
-            const allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
+            let allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
                 cur.push({bonus: r[0], label: r[1]});
                 return cur;
             }, [{bonus: "", label: `${game.i18n.localize("D35E.Attack")}`}]) : [{
                 bonus: "",
                 label: `${game.i18n.localize("D35E.Attack")}`
             }];
+            let manyshotAttacks = []
+            if (greaterManyshot) {
+                console.log('Duplicationg attacks')
+                allAttacks.forEach(attack => {
+                    let label = attack.label;
+                    for (let i = 0; i < greaterManyshotCount; i++) {
+                        let _attack = duplicate(attack)
+                        _attack.label = label + ` (Greater Manyshot Arrow ${i+1})`
+                        manyshotAttacks.push(_attack)
+                    }
+                });
+                allAttacks = manyshotAttacks
+            }
+            console.log(allAttacks)
             let attacks = [];
             if (this.hasAttack) {
                 for (let atk of allAttacks) {
@@ -958,6 +1048,18 @@ export class ItemPF extends Item {
                                 critical: true,
                                 actor: actor
                             });
+                        }
+                        if (manyshot) {
+                            for (let i = 1; i < manyshotCount; i++){
+                                await attack.addDamage({
+                                    extraParts: damageExtraParts,
+                                    primaryAttack: primaryAttack,
+                                    critical: false,
+                                    actor: actor,
+                                    multiattack: i
+                                });
+                            }
+
                         }
                     }
                     await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
@@ -1026,7 +1128,7 @@ export class ItemPF extends Item {
                     this.addCharges(-1 * parseFloat(rollData.useAmount)*this.chargeCost, itemUpdateData);
             }
             if (useAmmoId !== "none" && actor !== null) {
-                actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length)
+                actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length * (1 + Math.max(0,manyshotCount - 1)))
             }
             // Update item
             this.update(itemUpdateData);
@@ -1109,6 +1211,12 @@ export class ItemPF extends Item {
             ammunition: actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
             extraAttacksCount: (getProperty(this.data, "data.attackParts") || []).length + 1,
             hasTemplate: this.hasTemplate,
+            canPowerAttack: actor.items.filter(o => o.type === "feat" && o.name === "Power Attack").length > 0,
+            maxPowerAttackValue: getProperty(actor.data, "data.attributes.bab.total"),
+            canManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Manyshot").length > 0,
+            maxManyshotValue: 2 + Math.floor((getProperty(actor.data, "data.attributes.bab.total") - 6) / 5),
+            canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
+            maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
         };
         const html = await renderTemplate(template, dialogData);
 
@@ -1519,6 +1627,8 @@ export class ItemPF extends Item {
         const result = {};
 
         if (this.type === "buff") result.level = this.data.data.level;
+        if (this.type === "enhancement") result.enhancement = this.data.data.enh;
+        if (this.type === "enhancement") result.enhIncrease = this.data.data.enhIncrease;
 
         return result;
     }

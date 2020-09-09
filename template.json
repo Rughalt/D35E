@@ -956,9 +956,16 @@
         },
         "sizeOverride": ""
       },
-
       "contextNotes": {
         "contextNotes": []
+      },
+      "light": {
+        "light": {
+          "color": "",
+          "radius": 0,
+          "opacity": 0,
+          "emitLight": false
+        }
       },
       "enhancements": {
         "enhancements": {
@@ -969,6 +976,10 @@
             "autoDeductCharges": true,
             "allowMultipleUses": false,
             "commonPool": false
+          },
+          "automation": {
+            "updateName": false,
+            "updatePrice": false
           },
           "items": []
         }
@@ -1183,7 +1194,7 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements"],
+      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light"],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
@@ -1281,7 +1292,7 @@
 
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements"],
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light"],
       "equipped": true,
       "masterwork": false,
       "weaponType": "simple",
@@ -1320,7 +1331,14 @@
       "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect", "action"],
       "enhancementType": "weapon",
       "properties": {},
+      "nameExtension": {
+        "prefix": "",
+        "suffix": ""
+      },
       "enh": 0,
+      "enhIsLevel": false,
+      "enhIncreaseFormula": 0,
+      "priceFormula": "",
       "price": 0,
       "enhIncrease": 0,
       "requirements": "",

@@ -783,6 +783,13 @@ D35E.weaponProperties = {
   "trp": "D35E.WeaponPropTrip",
 };
 
+D35E.weaponEnhancementProperties = {
+  "thr": "D35E.WeaponEnhPropThrown",
+  "kee": "D35E.WeaponEnhPropKeen",
+  "dis": "D35E.WeaponEnhPropDistance",
+  "mnk": "D35E.WeaponEnhPropKi",
+  "spd": "D35E.WeaponEnhPropSpeed",
+};
 
 // Spell Components
 D35E.spellComponents = {

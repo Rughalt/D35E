@@ -92,7 +92,8 @@
   /*  Item Details Form                        */
   /* ----------------------------------------- */
 
-  .details {
+
+  .details, .enhancements {
 
     // Item Sheet form fields
     input[type="text"], select {
@@ -132,6 +133,13 @@
       select {
         flex: 3;
       }
+    }
+
+    .update-magic-item {
+      width: 200px;
+      float: right;
+      height: 27px;
+      line-height: 27px;
     }
 
     span.sep {
@@ -212,6 +220,11 @@
       text-align: center;
       border-right: 1px solid @colorFaint;
       &:last-child { border-right: none; }
+
+      input[type='text'] {
+        border: 1px solid #7a7971;
+        background: rgba(0, 0, 0, 0.05)
+      }
     }
 
     .item-weight {
