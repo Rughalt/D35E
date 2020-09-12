@@ -1585,7 +1585,7 @@ export class ActorPF extends Actor {
         {
             const k = "data.attributes.turnUndeadUsesTotal";
             let chaMod = getProperty(srcData1, `data.abilities.cha.mod`)
-            console.log(updateData)
+            //console.log(updateData)
             if (getProperty(srcData1, `data.attributes.turnUndeadHdTotal`) > 0) {
                 linkData(srcData1, updateData, k, new Roll("3+@chaMod", {chaMod: chaMod}).roll().total + updateData[k]);
 
@@ -3653,7 +3653,7 @@ export class ActorPF extends Actor {
             if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
                 obj.data.equipped = false;
             }
-            console.log('AAAAAAAa', obj)
+            //console.log('AAAAAAAa', obj)
             if (["spell"].includes(obj.type)) {
                 let spellbook = this.data.data.attributes.spells.spellbooks[obj.data.spellbook]
                 let spellbookClass = spellbook.class
@@ -3824,7 +3824,7 @@ export class ActorPF extends Actor {
 
         if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actor.getRollData()).roll().result))
             return;
-        console.log(action.parameters)
+        //console.log(action.parameters)
         switch (action.action) {
             case "Create":
             case "Give":

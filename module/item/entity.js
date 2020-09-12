@@ -547,7 +547,7 @@ export class ItemPF extends Item {
             if (obj.data.enhancementType === "armor" && type === 'equipment')
                 totalEnchancement += obj.data.enh
         });
-        console.log('Total enh',totalEnchancement, type)
+        //console.log('Total enh',totalEnchancement, type)
         if (totalEnchancement > 0) {
             if (type === 'weapon') {
                 if (doLinkData) linkData(srcData, data, "data.enh", totalEnchancement);
@@ -926,6 +926,7 @@ export class ItemPF extends Item {
                 useAmmoAttack = "",
                 useAmmoDamageType = "",
                 useAmmoNote = "",
+                rapidShot = false,
                 manyshot = false,
                 manyshotCount = 0,
                 greaterManyshot = false,
@@ -987,6 +988,9 @@ export class ItemPF extends Item {
                     greaterManyshot = true;
                     rollData.greaterManyshotPenalty = -greaterManyshotCount*2;
                     attackExtraParts.push("@greaterManyshotPenalty");
+                }
+                if (form.find('[name="rapid-shot"]').prop("checked")) {
+                    rapidShot = true;
                 }
                 // Primary Attack (for natural attacks)
                 let html = form.find('[name="primary-attack"]');
@@ -1054,6 +1058,12 @@ export class ItemPF extends Item {
                 bonus: "",
                 label: `${game.i18n.localize("D35E.Attack")}`
             }];
+            if (fullAttack && rapidShot) {
+                allAttacks.push({
+                    bonus: "",
+                    label: `Rapid Shot`
+                })
+            }
             let manyshotAttacks = []
             if (greaterManyshot) {
                 allAttacks.forEach(attack => {
@@ -1277,6 +1287,7 @@ export class ItemPF extends Item {
             canManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Manyshot").length > 0,
             maxManyshotValue: 2 + Math.floor((getProperty(actor.data, "data.attributes.bab.total") - 6) / 5),
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
+            canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
         };
         const html = await renderTemplate(template, dialogData);

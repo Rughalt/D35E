@@ -15,6 +15,7 @@
   <div class="form-group stacked">
     <label><strong>{{localize "D35E.FeatPlural"}}</strong></label>
   </div>
+  {{#unless isRangedWeapon}}
   <div class="form-group">
     {{#if canPowerAttack}}
     <label class="slider">Power Attack
@@ -23,6 +24,7 @@
     <input type="text" name="power-attack" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
     {{/if}}
   </div>
+  {{/unless}}
 
   {{#if isRangedWeapon}}
   <div class="form-group">
@@ -47,6 +49,16 @@
     <input type="range" name="greater-manyshot-count-slider" disabled min="2" max="{{maxGreaterManyshotValue}}" value="2" class="slider" style="flex: 1" onchange="this.nextElementSibling.value=this.value;enableDisableManyshotFeat()">
     <input type="text" name="greater-manyshot-count" value="2" disabled style="flex: 0 30; margin-left: 8px"/>
 
+  </div>
+  {{/if}}
+
+  {{#if canRapidShot}}
+  <div class="form-group">
+    <label>{{localize "D35E.FeatRapidShot"}}</label>
+    <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative" >
+      <input type="checkbox" class="stylized" data-feat="rapid-shot" name="rapid-shot" onchange='enableDisableFullAttack(document.getElementsByName("ammunition-id")[0])'/>
+      <span class="checkmark"></span>
+    </label>
   </div>
   {{/if}}
 
@@ -148,8 +160,15 @@
         var greaterManyshotCount = 0;
         var manyshotCount = 0;
         var baseExtraAttacks = {{extraAttacksCount}};
+        var isRapidShot = false;
+        if ($("input[data-feat='rapid-shot']").length) {
+          isRapidShot = $("input[data-feat='rapid-shot']").is(":checked");
+        }
+        if (isRapidShot) {
+          baseExtraAttacks = baseExtraAttacks + 1;
+        }
         if ($("input[data-feat='manyshot']").length) {
-          isManyshot = $("input[feat='manyshot']").is(":checked");
+          isManyshot = $("input[data-feat='manyshot']").is(":checked");
           manyshotCount = parseInt($("input[name='manyshot-count']").val())
           if (isManyshot)
             baseExtraAttacks = baseExtraAttacks*manyshotCount;
@@ -160,7 +179,7 @@
           if (isGreaterManyshot)
             baseExtraAttacks = baseExtraAttacks*greaterManyshotCount;
         }
-
+      console.log('Attacks',baseExtraAttacks,isRapidShot)
         $('option:selected', select).closest("section").find("input[name='ammo-dmg-formula']").val(damage)
         $('option:selected', select).closest("section").find("input[name='ammo-dmg-type']").val(type)
         $('option:selected', select).closest("section").find("input[name='ammo-attack']").val(attack)

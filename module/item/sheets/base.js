@@ -1311,7 +1311,7 @@ export class ItemSheetPF extends ItemSheet {
   async _onEnhUpdateName(event) {
     event.preventDefault();
     const updateData = {};
-    console.log("updating name")
+    //console.log("updating name")
     let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
     this.updateMagicItemName(updateData, _enhancements, true);
     this.updateMagicItemProperties(updateData, _enhancements, true);

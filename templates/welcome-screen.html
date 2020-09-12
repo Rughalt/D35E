@@ -45,6 +45,10 @@
         flex: 0;
     }
 
+    .welcome-screen h1 {
+        margin: 0 !important;
+    }
+
     .welcome-screen h3 {
         margin: 0 !important;
     }
@@ -61,7 +65,17 @@
         text-align: center;
         margin: 0 0.7rem;
         max-height: 32px;
+        text-decoration: none;
+    }
 
+    .welcome-screen a.btn.bottom {
+        margin-top: auto;
+        margin-bottom: 4px;
+    }
+
+    .welcome-screen a.btn.mid {
+        margin-top: 4px;
+        margin-bottom: 16px;
     }
 
     .welcome-tabs {
@@ -79,9 +93,21 @@
         background-color: #782e22;
     }
 
+    .welcome-content h2.news {
+        font-family: "Nodesto", sans-serif;
+        text-align: center;
+        border: none;
+        flex: 0;
+        font-size: 28px;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);
+    }
+
 </style>
 
-<h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo-with-text.png" style="height: 64px; border: none"></h1>
+<h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png" style="height: 64px; border: none; float: left">
+    <span style='font-family: "Nodesto", sans-serif;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>DND 3.5e</span>
+    <br><span style="font-size: 14px">DND 3.5 SRD implementation for Foundry VTT</span></h1>
 <div class="flexrow">
 <nav class="welcome-tabs">
     <a class="item" data-tab="welcome">{{ localize "D35E.Welcome" }}</a>
@@ -98,24 +124,38 @@
     <p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
     <h2>News</h2>
 <div class="flexrow">
-    <div class="flexcol">
-        <img src="systems/D35E/icons/ui/welcome-screen/0.84-left.png" style="flex: 0">
+    <div class="flexcol" style="max-height: 410px">
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Enhancements & Magic Items</h2>
+        <img src="systems/D35E/icons/ui/welcome-screen/0.84-left.png" style="padding: 0 0.7rem; flex: 0">
         <p style="padding: 0 0.7rem; flex: 0">
             Release 0.84 brings Enhancement support and most of Magic Weapons and Shields from SRD fully featured. You can read more on how Enhancement system works on project Wiki (linked below).
         </p>
-        <a class="btn">Visit Enhancements page on Wiki</a>
+        <a class="btn bottom" href="https://dnd35e.dragonshorn.info/documentation/advanced/magic-item-creation">Visit Enhancements page on Wiki</a>
     </div>
-    <div class="flexcol">
-        <img src="systems/D35E/icons/ui/welcome-screen/0.84-middle.png" style="flex: 0">
+    <div class="flexcol" style="max-height: 410px">
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Attack Feats</h2>
+        <img src="systems/D35E/icons/ui/welcome-screen/0.84-middle.png" style="padding: 0 0.7rem; flex: 0">
         <p style="padding: 0 0.7rem; flex: 0">
             Release 0.84 adds new features to Attack dialog - ability to use Power Attack,
-            Manyshot, assigning weapons for Two-Weapon Fighting and more directly from Attack window, with correct calculations
-            happening in the background.
+            Manyshot, assigning weapons for Two-Weapon Fighting and more - directly from Attack window, with correct calculations
+            happening in the background.<br><br>
+            This release also brings full ammunition support for Bows, Crossbows and Slings.
         </p>
+        <a class="btn bottom" href="https://dnd35e.dragonshorn.info/documentation/attacking">Read more on Wiki</a>
     </div>
-    <div class="flexcol">
-        <img src="systems/D35E/icons/ui/welcome-screen/0.84-left.png" style="flex: 0">
+    <div class="flexcol" style="max-height: 410px">
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Wildshape and shapechange</h2>
+        <p style="padding: 0 0.7rem; flex: 0">
+            Release 0.83 brought Wildshape, Alter-Self and Polymorph to DND 3.5e.
+        </p>
 
+        <a class="btn mid">Learn more about Shapechange</a>
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Containers</h2>
+        <p style="padding: 0 0.7rem; flex: 0">
+            With 0.83 release, DND 3.5e supports Containers, with special containers like Bag of Holding also supported!
+        </p>
+        <a class="btn mid">Read more about Containers</a>
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Custom Theme</h2>
         <p style="padding: 0 0.7rem; flex: 0">
             Did you know DND 3.5E comes with custom skin for Foundry? You - or any of your players - can enable it in options for themselves!
         </p>
@@ -131,6 +171,39 @@
 </div>
 <div class="tab" data-tab="changelog">
 <h1>Changelog</h1>
+
+    <h2>v0.84.1</h2>
+    <h3>SRD</h3>
+
+    <ul>
+    <li>Base Weapon and Armor Enhancements</li>
+    <li>Specific Magic Weapons and Armor updates</li>
+    <li>Specific Shields - added abilities and enhancements</li>
+    <li>Specific Weapons - added abilities and enhancements</li>
+    </ul>
+    <h3>Features</h3>
+    <ul>
+    <li>Enhancement support</li>
+    <li>Base feats for attack rolls
+        <ul>
+            <li>Power Attack (this also fixed <a href="https://github.com/Rughalt/D35E/issues/39">#39</a>)</li>
+            <li>Manyshot and Greater Manyshot</li>
+            <li>Rapid Shot</li>
+        </ul>
+    </li>
+    <li>Two-Weapon Fighting support for attack rolls
+        <ul>
+            <li>Automatic penalty application</li>
+            <li>Automatic additional attacks for Greater and Improved Two-Weapon Fighting Feats</li>
+        </ul>
+    </li>
+    <li>Ability to set damage type on Ammunition</li>
+    </ul>
+    <h3>Bug Fixes</h3>
+    <ul>
+    <li>Fixed Ammunition Bonus Damage being incorrectly added to damage roll.</li>
+    <li><a href="https://github.com/Rughalt/D35E/issues/52">#52</a> Randomize HP rolls up to HD sides instead of levels</li>
+    </ul>
 
 <h2>v0.83.5</h2>
 <h3>SRD</h3>
