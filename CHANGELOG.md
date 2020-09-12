@@ -1,4 +1,25 @@
 # Changelog
+## 0.84
+### SRD
+- Base Weapon and Armor Enhancements
+- Specific Magic Weapons and Armor updates
+    - Specific Shields - added abilities and enhancements
+    - Specific Weapons - added abilities and enhancements
+
+### Features
+- Enhancement support
+- Base feats for attack rolls
+    - Power Attack (this also fixed [#39](https://github.com/Rughalt/D35E/issues/39))
+    - Manyshot and Greater Manyshot
+    - Rapid Shot
+- Two-Weapon Fighting support for attack rolls
+    - Automatic penalty application
+    - Automatic additional attacks for Greater and Improved Two-Weapon Fighting Feats
+- Ability to set damage type on Ammunition
+
+### Bug Fixes
+- Fixed Ammunition Bonus Damage being incorrectly added to damage roll.
+
 ## 0.83.5
 ### SRD
 - Fixed imported spells/powers with added fixes by BixSexy#9434

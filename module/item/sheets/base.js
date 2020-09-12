@@ -990,7 +990,7 @@ export class ItemSheetPF extends ItemSheet {
     event.preventDefault();
     let li = $(event.currentTarget).parents(".item-box"),
         item = this.ehnancementItemMap.get(li.attr("data-item-id")),
-        chatData = item.getChatData({secrets: this.actor.owner});
+        chatData = item.getChatData({secrets: this.actor ? this.actor.owner : false});
 
     // Toggle summary
     if ( li.hasClass("expanded") ) {

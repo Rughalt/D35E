@@ -1738,6 +1738,8 @@ export class ActorPF extends Actor {
         for (let a of Object.keys(data1.attributes.savingThrows)) {
             {
                 const k = `data.attributes.savingThrows.${a}.total`;
+                let totalLevel = 0;
+                let epicLevels = 0;
                 if (useFractionalBaseBonuses) {
                     let highStart = false;
                     linkData(data, updateData, k,
@@ -1759,21 +1761,35 @@ export class ActorPF extends Actor {
                         sourceInfo[k].positive.push({name: game.i18n.localize("D35E.Base"), value: updateData[k]});
                     }
                 } else {
-                    linkData(data, updateData, k,
-                        classes.reduce((cur, obj) => {
-                            const classType = getProperty(obj.data, "classType") || "base";
-                            let formula = CONFIG.D35E.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
-                            if (formula == null) formula = "0";
-                            const v = Math.floor(new Roll(formula, {level: obj.data.levels}).roll().total);
+                    let epicST = 0;
+                    let baseST = classes.reduce((cur, obj) => {
+                        const classType = getProperty(obj.data, "classType") || "base";
+                        let formula = CONFIG.D35E.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
+                        if (formula == null) formula = "0";
+                        let classLevel = obj.data.levels;
+                        if (totalLevel + classLevel > 20) {
+                            classLevel = 20 - totalLevel;
+                            totalLevel = 20;
+                            epicLevels += obj.data.levels-classLevel;
+                        } else {
+                            totalLevel = totalLevel + classLevel
+                        }
+                        const v = Math.floor(new Roll(formula, {level: classLevel}).roll().total);
 
-                            if (v !== 0) {
-                                sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
-                                sourceInfo[k].positive.push({name: getProperty(obj, "name"), value: v});
-                            }
+                        if (v !== 0) {
+                            sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+                            sourceInfo[k].positive.push({name: getProperty(obj, "name"), value: v});
+                        }
 
-                            return cur + v;
-                        }, 0) - data1.attributes.energyDrain
-                    );
+                        return cur + v;
+                    }, 0) - data1.attributes.energyDrain
+
+                    if (epicLevels > 0) {
+                        epicST = new Roll('floor(@level/2)', {level: epicLevels}).roll().total;
+                        sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+                        sourceInfo[k].positive.push({name: 'Epic Levels', value: epicST});
+                    }
+                    linkData(data, updateData, k, baseST+epicST);
                 }
             }
         }
@@ -1810,6 +1826,8 @@ export class ActorPF extends Actor {
         // Reset BAB, CMB and CMD
         {
             const k = "data.attributes.bab.total";
+            let totalLevel = 0;
+            let epicLevels = 0;
             if (useFractionalBaseBonuses) {
                 linkData(data, updateData, k, Math.floor(classes.reduce((cur, obj) => {
                     const babScale = getProperty(obj, "data.bab") || "";
@@ -1825,9 +1843,18 @@ export class ActorPF extends Actor {
                     sourceInfo[k].positive.push({name: game.i18n.localize("D35E.Base"), value: v});
                 }
             } else {
-                linkData(data, updateData, k, classes.reduce((cur, obj) => {
+                let epicBab = 0
+                let bab = classes.reduce((cur, obj) => {
                     const formula = CONFIG.D35E.classBABFormulas[obj.data.bab] != null ? CONFIG.D35E.classBABFormulas[obj.data.bab] : "0";
-                    const v = new Roll(formula, {level: obj.data.levels}).roll().total;
+                    let classLevel = obj.data.levels;
+                    if (totalLevel + classLevel > 20) {
+                        classLevel = 20 - totalLevel;
+                        totalLevel = 20;
+                        epicLevels += obj.data.levels-classLevel;
+                    } else {
+                        totalLevel = totalLevel + classLevel
+                    }
+                    const v = new Roll(formula, {level: classLevel}).roll().total;
 
                     if (v !== 0) {
                         sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
@@ -1835,7 +1862,13 @@ export class ActorPF extends Actor {
                     }
 
                     return cur + v;
-                }, 0));
+                }, 0)
+                if (epicLevels > 0) {
+                    epicBab = new Roll('ceil(@level/2)', {level: epicLevels}).roll().total;
+                    sourceInfo[k] = sourceInfo[k] || {positive: [], negative: []};
+                    sourceInfo[k].positive.push({name: 'Epic Levels', value: epicBab});
+                }
+                linkData(data, updateData, k, bab+epicBab);
             }
         }
 
@@ -2791,6 +2824,12 @@ export class ActorPF extends Actor {
 
         if (item.data.type !== "weapon") throw new Error("Wrong Item type");
 
+
+        let isKeen = false;
+        let isSpeed = false
+        let isDistance = false;
+        let _enhancements = duplicate(getProperty(item.data, `data.enhancements.items`) || []);
+
         // Get attack template
         let attackData = {data: {}};
         for (const template of game.data.system.template.Item.attack.templates) {
@@ -2799,22 +2838,43 @@ export class ActorPF extends Actor {
         mergeObject(attackData.data, duplicate(game.data.system.template.Item.attack));
         attackData = flattenObject(attackData);
 
+
+        // Add things from Enhancements
+        _enhancements.forEach(i => {
+            if (i.data.properties !== null && i.data.properties.kee) {
+                isKeen = true;
+            }
+            if (i.data.properties !== null && i.data.properties.spd) {
+                isSpeed = true;
+            }
+            if (i.data.properties !== null && i.data.properties.dis) {
+                isDistance = true;
+            }
+        });
+        let baseCrit = item.data.data.weaponData.critRange || 20;
+        if (isKeen) {
+            baseCrit = 21-2*(21-baseCrit)
+        }
         attackData["type"] = "attack";
         attackData["name"] = item.data.name;
         attackData["data.masterwork"] = item.data.data.masterwork;
         attackData["data.attackType"] = "weapon";
         attackData["data.enh"] = item.data.data.enh;
-        attackData["data.ability.critRange"] = item.data.data.weaponData.critRange || 20;
+        attackData["data.ability.critRange"] = baseCrit;
         attackData["data.ability.critMult"] = item.data.data.weaponData.critMult || 2;
         attackData["data.actionType"] = (item.data.data.weaponSubtype === "ranged" ? "rwak" : "mwak");
         attackData["data.activation.type"] = "attack";
         attackData["data.duration.units"] = "inst";
         attackData["img"] = item.data.img;
 
+
         // Add additional attacks
         let extraAttacks = [];
         for (let a = 5; a < this.data.data.attributes.bab.total; a += 5) {
             extraAttacks = extraAttacks.concat([[`-${a}`, `${game.i18n.localize("D35E.Attack")} ${Math.floor((a + 5) / 5)}`]]);
+        }
+        if (isSpeed) {
+            extraAttacks = extraAttacks.concat([[`0`, `${game.i18n.localize("D35E.Attack")} - Speed Enhancement`]])
         }
         if (extraAttacks.length > 0) attackData["data.attackParts"] = extraAttacks;
 
@@ -2852,7 +2912,6 @@ export class ActorPF extends Actor {
         }
 
         // Add things from Enhancements
-        let _enhancements = duplicate(getProperty(item.data, `data.enhancements.items`) || []);
         _enhancements.forEach(i => {
             if (i.data.enhancementType !== 'weapon') return;
             if (i.data.weaponData.damageRoll !== '') {
@@ -2862,13 +2921,20 @@ export class ActorPF extends Actor {
                 attackData["data.attackNotes"] += '\n' + i.data.attackNotes
                 attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
             }
-
         });
+
+        if (item.data.data.attackNotes !== '') {
+            attackData["data.attackNotes"] += '\n' + item.data.data.attackNotes
+            attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
+        }
 
         // Add range
         if (!isMelee && getProperty(item.data, "data.weaponData.range") != null) {
             attackData["data.range.units"] = "ft";
-            attackData["data.range.value"] = getProperty(item.data, "data.weaponData.range").toString();
+            let range = getProperty(item.data, "data.weaponData.range");
+            if (isDistance)
+                range = range*2;
+            attackData["data.range.value"] = range.toString();
         }
 
         if (hasProperty(attackData, "data.templates")) delete attackData["data.templates"];

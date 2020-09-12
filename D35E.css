@@ -2792,6 +2792,9 @@ form .checkmark:after {
 input[type=range]:disabled {
   filter: grayscale(1);
 }
+.welcome-content img {
+  border: none !important;
+}
 #token-hud .col.actions {
   height: calc(100% + 150px);
   width: 100%;

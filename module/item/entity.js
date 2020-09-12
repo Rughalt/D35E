@@ -4,6 +4,7 @@ import {createTag, alterRoll, linkData, isMinimumCoreVersion} from "../lib.js";
 import {ActorPF} from "../actor/entity.js";
 import {AbilityTemplate} from "../pixi/ability-template.js";
 import {ChatAttack} from "../misc/chat-attack.js";
+import {D35E} from "../config.js";
 
 /**
  * Override and extend the basic :class:`Item` implementation
@@ -922,14 +923,20 @@ export class ItemPF extends Item {
                 useMeasureTemplate = false,
                 useAmmoId = "none",
                 useAmmoDamage = "",
+                useAmmoAttack = "",
+                useAmmoDamageType = "",
+                useAmmoNote = "",
                 manyshot = false,
                 manyshotCount = 0,
                 greaterManyshot = false,
                 greaterManyshotCount = 0,
+                twoWeaponFightingOffhand = false,
+                hasTwoWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Two-Weapon Fighting").length > 0,
+                hasTwoImprovedWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Improved Two-Weapon Fighting").length > 0,
+                hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Greater Two-Weapon Fighting").length > 0,
                 rollMode = null;
             // Get form data
             if (form) {
-                console.log('RollData', rollData);
                 rollData.attackBonus = form.find('[name="attack-bonus"]').val();
                 if (rollData.attackBonus) attackExtraParts.push("@attackBonus");
                 rollData.damageBonus = form.find('[name="damage-bonus"]').val();
@@ -947,8 +954,14 @@ export class ItemPF extends Item {
                 if (form.find('[name="ammunition-id"]').val() !== undefined) {
                     useAmmoId = form.find('[name="ammunition-id"]').val()
                     useAmmoDamage = form.find('[name="ammo-dmg-formula"]').val()
+                    useAmmoDamageType = form.find('[name="ammo-dmg-type"]').val()
+                    useAmmoAttack = form.find('[name="ammo-attack"]').val()
+                    useAmmoNote = form.find('[name="ammo-note"]').val()
                     if (useAmmoDamage !== '') {
-                        damageExtraParts.push(useAmmoDamage);
+                        damageExtraParts.push([useAmmoDamage,useAmmoDamageType]);
+                    }
+                    if (useAmmoAttack !== '') {
+                        attackExtraParts.push(useAmmoAttack);
                     }
                 }
 
@@ -991,6 +1004,39 @@ export class ItemPF extends Item {
                     rollData.item.ability.damageMult = parseFloat(html.val());
 
                 }
+
+
+                let twoWeaponMode = ''
+                if (form.find('[name="twf-attack-mode"]').val() !== undefined) {
+                    twoWeaponMode = form.find('[name="twf-attack-mode"]').val()
+                    if (twoWeaponMode === 'main-offhand-light') {
+                        rollData.twoWeaponPenalty = -4;
+                        if (hasTwoWeaponFightingFeat)
+                            rollData.twoWeaponPenalty = -2;
+                        attackExtraParts.push("@twoWeaponPenalty");
+                    }
+                    else if (twoWeaponMode === 'main-offhand-normal') {
+                        rollData.twoWeaponPenalty = -6;
+                        if (hasTwoWeaponFightingFeat)
+                            rollData.twoWeaponPenalty = -4;
+                        attackExtraParts.push("@twoWeaponPenalty");
+                    }
+                    else if (twoWeaponMode === 'offhand-light') {
+                        rollData.twoWeaponPenalty = -8;
+                        if (hasTwoWeaponFightingFeat)
+                            rollData.twoWeaponPenalty = -2;
+                        attackExtraParts.push("@twoWeaponPenalty");
+                        twoWeaponFightingOffhand = true;
+                    }
+                    else if (twoWeaponMode === 'offhand-normal') {
+                        rollData.twoWeaponPenalty = -10;
+                        if (hasTwoWeaponFightingFeat)
+                            rollData.twoWeaponPenalty = -4;
+                        attackExtraParts.push("@twoWeaponPenalty");
+                        twoWeaponFightingOffhand = true;
+                    }
+
+                }
             }
 
             // Prepare the chat message data
@@ -1010,7 +1056,6 @@ export class ItemPF extends Item {
             }];
             let manyshotAttacks = []
             if (greaterManyshot) {
-                console.log('Duplicationg attacks')
                 allAttacks.forEach(attack => {
                     let label = attack.label;
                     for (let i = 0; i < greaterManyshotCount; i++) {
@@ -1021,7 +1066,18 @@ export class ItemPF extends Item {
                 });
                 allAttacks = manyshotAttacks
             }
-            console.log(allAttacks)
+            if (hasTwoImprovedWeaponFightingFeat && twoWeaponFightingOffhand) {
+                allAttacks.push({
+                    bonus: "-5",
+                    label: `${game.i18n.localize("D35E.Attack")} 2`
+                })
+            }
+            if (hasTwoGreaterFightingFeat && twoWeaponFightingOffhand) {
+                allAttacks.push({
+                    bonus: "-10",
+                    label: `${game.i18n.localize("D35E.Attack")} 3`
+                })
+            }
             let attacks = [];
             if (this.hasAttack) {
                 for (let atk of allAttacks) {
@@ -1160,6 +1216,10 @@ export class ItemPF extends Item {
                 if (typeof itemData.attackNotes === "string" && itemData.attackNotes.length) {
                     attackNotes.push(...itemData.attackNotes.split(/[\n\r]+/));
                 }
+
+                if (useAmmoNote !== '') {
+                    attackNotes.push(...useAmmoNote.split(/[\n\r]+/));
+                }
                 let attackStr = "";
                 for (let an of attackNotes) {
                     attackStr += `<span class="tag">${an}</span>`;
@@ -1200,6 +1260,7 @@ export class ItemPF extends Item {
             item: this.data.data,
             rollMode: game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
+            twoWeaponAttackTypes: D35E.twoWeaponAttackType,
             hasAttack: this.hasAttack,
             hasDamage: this.hasDamage,
             allowMultipleUses: this.data.data.uses.allowMultipleUses,
@@ -1482,7 +1543,11 @@ export class ItemPF extends Item {
             if (rollData.critMult !== 1) parts[0].extra.push("@attributes.damage.spell * @critMult");
             else parts[0].extra.push("@attributes.damage.spell");
         }
+        let simpleExtraParts = extraParts.filter(p => !Array.isArray(p));
+        parts = parts.concat(extraParts.filter(p => Array.isArray(p)).map(p => {
+            return {base: p[0], extra: [], damageType: p[1]}
 
+        }));
         // Create roll
         let rolls = [];
         for (let a = 0; a < parts.length; a++) {
@@ -1490,7 +1555,7 @@ export class ItemPF extends Item {
             let roll = {}
             if (a === 0) {
                 roll = {
-                    roll: new Roll([part.base, ...part.extra, ...extraParts].join("+"), rollData).roll(),
+                    roll: new Roll([part.base, ...part.extra, ...simpleExtraParts].join("+"), rollData).roll(),
                     damageType: part.damageType,
                 };
             } else {

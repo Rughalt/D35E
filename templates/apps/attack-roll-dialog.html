@@ -23,9 +23,11 @@
     <input type="text" name="power-attack" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
     {{/if}}
   </div>
+
+  {{#if isRangedWeapon}}
   <div class="form-group">
     {{#if canManyshot}}
-    <label>{{localize "D35E.FeatManyshot"}}</label>
+    <label>{{localize "D35E.FeatManyshot"}} (Arrows Count)</label>
     <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
       <input type="checkbox" class="stylized" data-feat="manyshot" name="manyshot" onchange="enableDisableManyshotFeat()"/>
       <span class="checkmark"></span>
@@ -37,7 +39,7 @@
   </div>
   {{#if canGreaterManyshot}}
   <div class="form-group">
-    <label>{{localize "D35E.FeatGreaterManyshot"}}</label>
+    <label>{{localize "D35E.FeatGreaterManyshot"}} (Arrows Count)</label>
     <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
       <input type="checkbox" class="stylized" data-feat="greater-manyshot" name="greater-manyshot" onchange="enableDisableManyshotFeat()"/>
       <span class="checkmark"></span>
@@ -46,6 +48,8 @@
     <input type="text" name="greater-manyshot-count" value="2" disabled style="flex: 0 30; margin-left: 8px"/>
 
   </div>
+  {{/if}}
+
   {{/if}}
   {{/if}}{{/if}}
   {{!-- Flags --}}
@@ -58,20 +62,37 @@
     </label>
     {{/if}}
 
-    {{#unless isRangedWeapon}}
-    <div class="form-group">
-      <label>{{localize "D35E.TwoWeaponFightingMode"}}</label>
-      <select name="rollMode">
-        {{#select twoWeaponFightingMode}}
-        {{#each twoWeaponFightingMode as |label mode|}}
-        <option value="{{mode}}">{{localize label}}</option>
-        {{/each}}
-        {{/select}}
-      </select>
-    </div>
-    {{/unless}}
     {{/if}}{{/if}}
   </div>
+  {{#if hasAttack}}{{#if hasDamage}}
+  {{#unless isRangedWeapon}}
+  <div class="form-group">
+    <label>{{localize "D35E.TwoWeaponFighting"}}</label>
+    <select name="twf-attack-mode" onchange="changeTWF(this)">
+      {{#select twoWeaponAttackType}}
+      {{#each twoWeaponAttackTypes as |label mode|}}
+      <option value="{{mode}}">{{localize label}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    <script>
+      function changeTWF(select) {
+        let singleAttackLabel = '{{localize "D35E.SingleAttack"}}'
+        let offhandAttackLabel = '{{localize "D35E.OffhandAttack"}}'
+        var option = $('option:selected', select).attr('value');
+        if (option === 'offhand-light' || option === 'offhand-normal' ) {
+          $('option:selected', select).closest("section").find("button[data-button='multi']").hide();
+          $('option:selected', select).closest("section").find("button[data-button='normal']").text(offhandAttackLabel)
+        }
+        else {
+          $('option:selected', select).closest("section").find("button[data-button='multi']").show();
+          $('option:selected', select).closest("section").find("button[data-button='normal']").text(singleAttackLabel)
+        }
+      }
+    </script>
+  </div>
+  {{/unless}}
+  {{/if}}{{/if}}
   {{#if hasDamage}}{{#if hasDamageAbility}}
   <div class="form-group select">
     <label>{{localize "D35E.DamageAbility"}}</label>
@@ -93,12 +114,16 @@
       {{#select ammo}}
       <option value="none" data-ammo-count="9999" data-dmg-formula="">None</option>
       {{#each ammunition as |item iid|}}
-      <option value="{{item._id}}" data-ammo-count="{{item.data.data.quantity}}" data-dmg-formula="{{item.data.data.bonusAmmoDamage}}">{{item.name}} ({{item.data.data.quantity}})</option>
+      <option value="{{item._id}}" data-attack="{{item.data.data.bonusAmmoAttack}}" data-note="{{item.data.data.bonusAmmoAttackNote}}" data-ammo-count="{{item.data.data.quantity}}" data-dmg-type="{{item.data.data.bonusAmmoDamageType}}" data-dmg-formula="{{item.data.data.bonusAmmoDamage}}">{{item.name}} ({{item.data.data.quantity}})</option>
       {{/each}}
       {{/select}}
     </select>
 
     <input type="hidden" name="ammo-dmg-formula"/>
+    <input type="hidden" name="ammo-dmg-type"/>
+    <input type="hidden" name="ammo-dmg-attack"/>
+    <input type="hidden" name="ammo-attack"/>
+    <input type="hidden" name="ammo-note"/>
     <script>
       function enableDisableManyshotFeat() {
         if ($("input[data-feat='manyshot']").length)
@@ -114,6 +139,9 @@
       function enableDisableFullAttack(select) {
         var option = $('option:selected', select).attr('data-ammo-count');
         var damage = $('option:selected', select).attr('data-dmg-formula');
+        var type = $('option:selected', select).attr('data-dmg-type');
+        var attack = $('option:selected', select).attr('data-attack');
+        var attackNote = $('option:selected', select).attr('data-note');
         var arrowsCount = parseInt(option)
         var isManyshot = false;
         var isGreaterManyshot = false;
@@ -134,9 +162,13 @@
         }
 
         $('option:selected', select).closest("section").find("input[name='ammo-dmg-formula']").val(damage)
+        $('option:selected', select).closest("section").find("input[name='ammo-dmg-type']").val(type)
+        $('option:selected', select).closest("section").find("input[name='ammo-attack']").val(attack)
+        $('option:selected', select).closest("section").find("input[name='ammo-note']").val(attackNote)
         $('option:selected', select).closest("section").find("button[data-button='multi']").prop( "disabled", baseExtraAttacks > arrowsCount);
       }
     </script>
+
   </div>
   {{/if}}
 
