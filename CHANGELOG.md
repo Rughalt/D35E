@@ -1,6 +1,7 @@
 # Changelog
 ## 0.84.1
 ### SRD
+- Additional Spells have full implementation, thanks to BixSexy#9434
 - Base Weapon and Armor Enhancements
 - Specific Magic Weapons and Armor updates
     - Specific Shields - added abilities and enhancements
