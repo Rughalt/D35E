@@ -9,6 +9,7 @@ export class CompendiumDirectoryPF extends CompendiumDirectory {
       items: new CompendiumBrowser({ type: "items", entityType: "Item" }),
       bestiary: new CompendiumBrowser({ type: "bestiary", entityType: "Actor" }),
       feats: new CompendiumBrowser({ type: "feats", entityType: "Item" }),
+      enhancements: new CompendiumBrowser({ type: "enhancements", entityType: "Item" }),
     };
   }
 
@@ -25,6 +26,7 @@ export class CompendiumDirectoryPF extends CompendiumDirectory {
     html.find(".compendium-footer .compendium.items").click(e => this._onBrowseCompendium(e, "items"));
     html.find(".compendium-footer .compendium.bestiary").click(e => this._onBrowseCompendium(e, "bestiary"));
     html.find(".compendium-footer .compendium.feats").click(e => this._onBrowseCompendium(e, "feats"));
+    html.find(".compendium-footer .compendium.enhancements").click(e => this._onBrowseCompendium(e, "enhancements"));
   }
 
   _onBrowseCompendium(event, type) {

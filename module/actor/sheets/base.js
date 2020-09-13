@@ -589,6 +589,11 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".race-container .item-control").click(this._onRaceControl.bind(this));
 
 
+    // Open Compendium packs
+    html.find(".open-compendium-pack").click(ev => this._openCompendiumPack(ev));
+
+
+    html.find(".warning").click(ev => this._openClassTab());
   }
 
   createTabs(html) {
@@ -1190,13 +1195,13 @@ export class ActorSheetPF extends ActorSheet {
 
     // Organize Features
     const features = {
-      classes: { label: game.i18n.localize("D35E.ClassPlural"), items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true },
-      feat: { label: game.i18n.localize("D35E.FeatPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" } },
-      classFeat: { label: game.i18n.localize("D35E.ClassFeaturePlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" } },
-      trait: { label: game.i18n.localize("D35E.TraitPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
-      racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
-      misc: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
-      all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, hasActions: true, dataset: { type: "feat" } },
+      classes: { label: game.i18n.localize("D35E.ClassPlural"), hasPack: true, pack: "D35E.classes", emptyLabel: "D35E.ListDragAndDropClass", items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true },
+      feat: { label: game.i18n.localize("D35E.FeatPlural"), hasPack: true, pack: "D35E.feats", emptyLabel: "D35E.ListDragAndDropFeat", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" } },
+      classFeat: { label: game.i18n.localize("D35E.ClassFeaturePlural"), hasPack: true, pack: 'actor-first-class', emptyLabel: "D35E.ListDragAndDropClassFeature", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" } },
+      trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
+      racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
+      all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" } },
     };
 
     for (let f of feats) {
@@ -1495,5 +1500,23 @@ export class ActorSheetPF extends ActorSheet {
     if (getProperty(origData, "type") === "spell") setProperty(result, "data.spellbook", this.currentSpellbookKey);
 
     return result;
+  }
+
+
+  _openCompendiumPack(event) {
+    event.preventDefault();
+    let div = $(event.currentTarget),
+        pack = div.attr("data-pack");
+    console.log(pack)
+    if (pack !== 'actor-race' && pack !== 'actor-first-class') {
+      game.packs.get(pack).render(true)
+    } else if (pack === 'actor-race') {
+      if (this.entity.race !== null) {
+        this.entity.race.sheet.render(true)
+      }
+    } else if (pack === 'actor-first-class')
+    {
+      this.entity.items.find(o => o.type === "class").sheet.render(true)
+    }
   }
 }

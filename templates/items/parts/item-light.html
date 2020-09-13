@@ -1,0 +1,19 @@
+<div class="form-group stacked">
+  <label class="checkbox">
+    <input type="checkbox" name="data.light.emitLight" {{checked data.light.emitLight}}/> {{localize "D35E.LightEmitLight"}}
+  </label>
+</div>
+
+{{!-- Template Size --}}
+<div class="form-group">
+  <label>{{localize "D35E.Size"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.light.radius" value="{{data.light.radius}}" placeholder="0" data-dtype="Number" />
+  </div>
+</div>
+
+{{!-- Override Color --}}
+<div class="form-group">
+  <label>{{localize "D35E.CustomColor"}}</label>
+  <input type="color" name="data.light.color" value="{{data.light.color}}" data-dtype="String"/>
+</div>

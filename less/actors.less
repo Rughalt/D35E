@@ -7,9 +7,10 @@
 
   .warning {
     flex: 0;
-    background-color: #CECE00;
-    border: 1px solid #909000;
+    background-color: #ffd14e;
+    border: 1px solid #ffbc00;
     border-radius: 2px;
+    padding: 4px;
   }
 
   .working {
@@ -1044,6 +1045,8 @@
       .item-name {
         cursor: pointer;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &.melded {
           color: #4b4a44;
@@ -1057,7 +1060,8 @@
 
         h4 {
           margin: 0;
-
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         &:hover .item-image {

@@ -1,3 +1,5 @@
+import { createTabs } from "./lib.js";
+
 export default function renderWelcomeScreen() {
     const system = game.system;
     const moduleId = system.id;
@@ -19,16 +21,17 @@ export default function renderWelcomeScreen() {
             const options = super.defaultOptions;
             options.template = `systems/D35E/templates/welcome-screen.html`;
             options.resizable = true;
-            options.width = 450;
-            options.height = 600;
+            options.width = 920;
+            options.height = 730;
             options.classes = ["welcome-screen"];
             options.title = `${title} - Welcome Screen`;
+
             return options;
         }
 
         activateListeners(html) {
             super.activateListeners(html);
-
+            this.createTabs($('html')[0])
             html.find('.show-again').on('change', ev => {
                 let val = "0.0.0";
                 if (ev.currentTarget.checked)
@@ -36,6 +39,11 @@ export default function renderWelcomeScreen() {
 
                 game.settings.set(title, "version", val);
             })
+        }
+
+        createTabs(html) {
+            const __tabs = new TabsV2({navSelector: ".welcome-tabs", contentSelector: ".welcome-content", initial: "welcome", active: "welcome"});
+            __tabs.bind(html);
         }
     }
 

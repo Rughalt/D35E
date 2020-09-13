@@ -8,7 +8,7 @@ form {
       flex: auto;
       text-align: left;
       line-height: 20px;
-      font-size: 11px;
+      font-size: 13px;
 
       input[type="checkbox"] {
         height: unset;
@@ -28,7 +28,7 @@ form {
   }
   .checkmark {
     position: absolute;
-    top: 0;
+    top: 3px;
     left: 0;
     height: 18px;
     width: 18px;
@@ -43,6 +43,12 @@ form {
     background-color: #782e22;
   }
 
+  input:disabled ~ .checkmark {
+    filter: grayscale(1);
+
+    cursor: initial;
+  }
+
   .checkmark:after {
     content: "";
     position: absolute;
@@ -52,9 +58,10 @@ form {
   input:checked ~ .checkmark:after {
     display: block;
   }
+
   .checkmark:after {
     left: 4px;
-    top: 0px;
+    top: -1px;
     width: 5px;
     height: 10px;
     border: solid white;
@@ -97,4 +104,15 @@ form {
   visibility: visible;
   pointer-events: none;
   opacity: 1;
+}
+
+
+input[type=range]:disabled {
+  filter: grayscale(1);
+}
+
+.welcome-content {
+  img {
+    border: none !important;
+  }
 }

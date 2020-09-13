@@ -1,7 +1,7 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
   {{#unless hasClasses}}
-    <span class="warning">Your character is missing a class. Some attributes require a class to function.</span>{{/unless}}
+    <span class="warning">Your character is missing a class. Some attributes require a class to function. Navigate to Features - Classes to set up a Class.</span>{{/unless}}
   <div class="working">
     <div>
       <h1>
@@ -81,13 +81,16 @@
               {{#unless race}}{{localize "D35E.Race"}}
               {{/unless}}
             </div>
+
             {{#if race}}
               <span>{{race.name}}</span>
+            {{else}}
+          <span style='font-family: "Signika", sans-serif; font-size: 13px; opacity: 0.7;'>(Drop from <a style="color: #782e22;" class="open-compendium-pack" data-pack="D35E.racialfeatures">Race Compendium</a> or click + create new)</span>
             {{/if}}
             <div class="item-controls flexrow" style="flex: 0 40px;">
               {{#if owner}}
                 {{#unless race}}
-                  <a class="item-control add" title="{{localize "D35E.CreateItem"}}">
+                <a class="item-control add" title="{{localize "D35E.CreateItem"}}">
                     <i class="fas fa-plus"></i>
                   </a>
                 {{/unless}}

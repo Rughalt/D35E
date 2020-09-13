@@ -934,7 +934,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race"],
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement"],
     "templates": {
       "changes": {
         "changes": [],
@@ -958,6 +958,31 @@
       },
       "contextNotes": {
         "contextNotes": []
+      },
+      "light": {
+        "light": {
+          "color": "",
+          "radius": 0,
+          "opacity": 0,
+          "emitLight": false
+        }
+      },
+      "enhancements": {
+        "enhancements": {
+          "uses": {
+            "value": 0,
+            "max": 0,
+            "per": null,
+            "autoDeductCharges": true,
+            "allowMultipleUses": false,
+            "commonPool": false
+          },
+          "automation": {
+            "updateName": false,
+            "updatePrice": false
+          },
+          "items": []
+        }
       },
       "itemDescription": {
         "description": {
@@ -1008,7 +1033,8 @@
           "max": 0,
           "per": null,
           "autoDeductCharges": true,
-          "allowMultipleUses": false
+          "allowMultipleUses": false,
+          "chargesPerUse": 1
         }
       },
       "action": {
@@ -1168,7 +1194,7 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes"],
+      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light"],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
@@ -1207,7 +1233,10 @@
     "loot": {
       "templates": ["itemDescription", "physicalItem"],
       "subType": "misc",
+      "bonusAmmoAttack": "",
       "bonusAmmoDamage": "",
+      "bonusAmmoDamageType": "",
+      "bonusAmmoAttackNote": "",
       "bagOfHoldingLike": false
     },
     "spell": {
@@ -1266,7 +1295,7 @@
 
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes"],
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light"],
       "equipped": true,
       "masterwork": false,
       "weaponType": "simple",
@@ -1284,6 +1313,7 @@
         "damageFormula": "",
         "size": "med"
       },
+      "attackNotes": "",
       "bonus": {
         "value": 0,
         "_deprecated": true
@@ -1300,6 +1330,28 @@
         "value": "",
         "_deprecated": true
       }
+    },
+    "enhancement": {
+      "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect", "action"],
+      "enhancementType": "weapon",
+      "properties": {},
+      "nameExtension": {
+        "prefix": "",
+        "suffix": ""
+      },
+      "enh": 0,
+      "enhIsLevel": false,
+      "enhIncreaseFormula": 0,
+      "priceFormula": "",
+      "price": 0,
+      "enhIncrease": 0,
+      "requirements": "",
+      "weaponData": {
+        "damageRoll": "",
+        "damageType": ""
+      },
+      "weaponAttackNotes": [],
+      "allowedTypes": []
     },
     "attack": {
       "templates": ["itemDescription", "activatedEffect", "action"],

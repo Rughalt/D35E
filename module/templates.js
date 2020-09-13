@@ -30,6 +30,8 @@ export const preloadHandlebarsTemplates = async function() {
     "systems/D35E/templates/items/parts/item-notes.html",
     "systems/D35E/templates/items/parts/item-template.html",
     "systems/D35E/templates/items/parts/item-children.html",
+    "systems/D35E/templates/items/parts/item-enhancement.html",
+    "systems/D35E/templates/items/parts/item-light.html",
 
     // Misc
     "systems/D35E/templates/misc/token-config.html",

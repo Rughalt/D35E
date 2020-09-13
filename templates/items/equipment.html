@@ -52,6 +52,7 @@
     <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
     {{#unless showUnidentifiedData}}
     <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
+    <a class="item" data-tab="enhancements">{{ localize "D35E.Enhancements" }}</a>
     {{/unless}}
   </nav>
 
@@ -184,6 +185,9 @@
 
       {{!-- Item Measure Template --}}
       {{> "systems/D35E/templates/items/parts/item-template.html"}}
+
+      <h3 class="form-header">{{localize "D35E.LightItemLight"}}</h3>
+      {{> "systems/D35E/templates/items/parts/item-light.html"}}
       {{/unless}}
     </div>
 
@@ -193,6 +197,9 @@
       {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
       {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+    </div>
+    <div class="tab flexcol" data-group="primary" data-tab="enhancements">
+      {{> "systems/D35E/templates/items/parts/item-enhancement.html"}}
     </div>
     {{/unless}}
   </section>

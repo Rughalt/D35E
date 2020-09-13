@@ -783,6 +783,14 @@ D35E.weaponProperties = {
   "trp": "D35E.WeaponPropTrip",
 };
 
+D35E.weaponEnhancementProperties = {
+  "thr": "D35E.WeaponEnhPropThrown",
+  "kee": "D35E.WeaponEnhPropKeen",
+  "dis": "D35E.WeaponEnhPropDistance",
+  "mnk": "D35E.WeaponEnhPropKi",
+  "spd": "D35E.WeaponEnhPropSpeed",
+  "def": "D35E.WeaponEnhPropDefending",
+};
 
 // Spell Components
 D35E.spellComponents = {
@@ -1108,5 +1116,19 @@ D35E.CR_EXP_LEVELS = [
   38400, 51200, 76800, 102400, 153600, 204800, 307200, 409600, 614400, 819200, 1228800, 1638400, 2457600,
   3276800, 4915200, 6553600, 9830400
 ];
+
+D35E.enhancementType = {
+  'weapon': 'D35E.Weapon',
+  'armor': 'D35E.Armor',
+  'misc': 'D35E.Misc',
+};
+
+D35E.twoWeaponAttackType = {
+  'primary': 'D35E.TwoWeaponPrimary',
+  'main-offhand-light': 'D35E.TwoWeaponMainOffhandLight',
+  'main-offhand-normal': 'D35E.TwoWeaponMainOffhandNormal',
+  'offhand-light': 'D35E.TwoWeaponOffhandLight',
+  'offhand-normal': 'D35E.TwoWeaponOffhandNormal',
+};
 
 CONFIG.Combat.initiative.decimals = 2;

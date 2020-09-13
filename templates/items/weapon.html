@@ -7,6 +7,7 @@
       </div>
 
     <div class="header-details flexrow">
+      <div class="flexcol">
       {{#if isGM}}
       <h3 class="charname">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
@@ -26,6 +27,7 @@
       </h1>
       {{/if}}
       {{/if}}
+      </div>
 
       <div class="item-subtitle">
         <h4 class="item-type">{{localize "D35E.Item"}}</h4>
@@ -52,6 +54,7 @@
     <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
     {{#unless showUnidentifiedData}}
     <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
+    <a class="item" data-tab="enhancements">{{ localize "D35E.Enhancements" }}</a>
     {{/unless}}
   </nav>
 
@@ -178,6 +181,13 @@
         </div>
       </div>
 
+      <div class="form-group stacked">
+        <label>{{localize "D35E.AttackNotes"}}</label>
+        <textarea type="text" name="data.attackNotes">{{data.attackNotes}}</textarea>
+      </div>
+
+      <h3 class="form-header">{{localize "D35E.LightItemLight"}}</h3>
+      {{> "systems/D35E/templates/items/parts/item-light.html"}}
       {{/unless}}
     </div>
 
@@ -187,6 +197,9 @@
       {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
       {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+    </div>
+    <div class="tab flexcol" data-group="primary" data-tab="enhancements">
+      {{> "systems/D35E/templates/items/parts/item-enhancement.html"}}
     </div>
     {{/unless}}
   </section>

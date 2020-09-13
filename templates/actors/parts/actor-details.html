@@ -1,6 +1,6 @@
 <div class="flexrow">
   {{!-- Ability Scores --}}
-  <div class="flexcol" style="flex: 0 60%">
+  <div class="flexcol" style="flex: 0 420px">
     <div class="flexrow">
       <div class="ability-scores-simple flexcol">
         <h4 class="ability-box-name">
@@ -138,7 +138,7 @@
     <div class="attribute-value tooltip">
       <span>{{data.attributes.bab.total}}</span>
       <span class="tooltipcontent">
-                @attributes.init.total : {{data.attributes.bab.total}}
+                @attributes.bab.total : {{data.attributes.bab.total}}
                 {{#if sourceDetails.data.attributes.bab.total.length}}
                   <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
@@ -204,7 +204,7 @@
       <h4 class="box-name">
         {{ localize "D35E.Attacks" }}
       </h4>
-      <ol class="inventory-list sub-scroll scroll-attacks">
+      <ol class="inventory-list sub-scroll scroll-attacks" style="max-width: 420px">
         <li class="inventory-header flexrow">
           <h3 class="item-name flexrow"></h3>
           <div class="item-detail item-actions">

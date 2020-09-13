@@ -1,6 +1,6 @@
 export class ChatAttack {
-  constructor(item, label="") {
-    this.setItem(item);
+  constructor(item, label="", actor = null) {
+    this.setItem(item, actor);
     this.label = label;
 
     this.attack = {
@@ -17,6 +17,7 @@ export class ChatAttack {
       isCrit: false,
       isFumble: false,
     };
+
     this.hasAttack = false;
     this.hasCritConfirm = false;
 
@@ -30,6 +31,9 @@ export class ChatAttack {
       tooltip: "",
       total: 0,
     };
+
+    this.subDamage = [];
+    this.hasSubdamage = false;
     this.hasDamage = false;
 
     this.cards = [];
@@ -44,8 +48,9 @@ export class ChatAttack {
   /**
    * Sets the attack's item reference.
    * @param {ItemPF} item - The item to reference.
+   * @param actor
    */
-  setItem(item) {
+  setItem(item, actor = null) {
     if (item == null) {
       this.rollData = {};
       this.item = null;
@@ -53,7 +58,7 @@ export class ChatAttack {
     }
 
     this.item = item;
-    this.rollData = item.actor != null ? item.actor.getRollData() : {};
+    this.rollData = item.actor != null ? item.actor.getRollData() : actor != null ? actor.getRollData() : {};
     this.rollData.item = duplicate(this.item.data.data);
   }
 
@@ -87,12 +92,17 @@ export class ChatAttack {
     }
   }
 
-  async addDamage({extraParts=[], primaryAttack=true, critical=false}={}) {
+  async addDamage({extraParts=[], primaryAttack=true, critical=false, multiattack=0}={}) {
     if (!this.item) return;
 
-
+    let isMultiattack = multiattack > 0;
     this.hasDamage = true;
     let data = this.damage;
+    if (isMultiattack) data = {
+      flavor: "",
+      tooltip: "",
+      total: 0,
+    }
     if (critical === true) data = this.critDamage;
     
     const rolls = this.item.rollDamage({data: this.rollData, extraParts: extraParts, primaryAttack: primaryAttack, critical: critical});
@@ -113,7 +123,8 @@ export class ChatAttack {
     }
     // Add normal data
     let flavor;
-    if (!critical) flavor = this.item.isHealing ? game.i18n.localize("D35E.Healing")         : game.i18n.localize("D35E.Damage");
+    if (isMultiattack) flavor = game.i18n.localize("D35E.Damage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`;
+    else if (!critical) flavor = this.item.isHealing ? game.i18n.localize("D35E.Healing")         : game.i18n.localize("D35E.Damage");
     else           flavor = this.item.isHealing ? game.i18n.localize("D35E.HealingCritical") : game.i18n.localize("D35E.DamageCritical");
     const damageTypes = this.item.data.data.damage.parts.reduce((cur, o) => {
       if (o[1] !== "" && cur.indexOf(o[1]) === -1) cur.push(o[1]);
@@ -127,6 +138,7 @@ export class ChatAttack {
     }
     else {
       if (this.item.isHealing) this.cards.push({ label: game.i18n.localize("D35E.ApplyHealing"), value: -totalDamage, action: "applyDamage", });
+      else if (isMultiattack)  this.cards.push({ label: game.i18n.localize("D35E.ApplyDamage")  + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`, value:  totalDamage, action: "applyDamage", });
       else                     this.cards.push({ label: game.i18n.localize("D35E.ApplyDamage") , value:  totalDamage, action: "applyDamage", });
     }
 
@@ -135,15 +147,22 @@ export class ChatAttack {
     data.total = rolls.reduce((cur, roll) => {
       return cur + roll.roll.total;
     }, 0);
+    if (isMultiattack) {
+      this.subDamage.push(data);
+      this.hasSubdamage = true;
+    }
   }
 
-  async addEffect({primaryAttack=true}={}) {
+  async addEffect({primaryAttack=true, actor=null}={}) {
     if (!this.item) return;
-    this.effectNotes = this.item.rollEffect({ primaryAttack: primaryAttack });
-    this.addSpecial();
+    this.effectNotes = this.item.rollEffect({ primaryAttack: primaryAttack },actor);
+    this.addSpecial(actor);
   }
 
-  async addSpecial() {
+  async addSpecial(actor=null) {
+    let _actor = this.item.actor;
+    if (actor != null)
+      _actor = actor
     if (!this.item) return;
     if (this.item.data.data.specialActions === undefined || this.item.data.data.specialActions === null)
       return;
@@ -151,7 +170,7 @@ export class ChatAttack {
       let cl = 0;
       if (this.item.data.type === "spell") {
         const spellbookIndex = this.item.data.data.spellbook;
-        const spellbook = this.item.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+        const spellbook = _actor.data.data.attributes.spells.spellbooks[spellbookIndex];
         cl = spellbook.cl.total + (this.item.data.data.clOffset || 0);
       }
 

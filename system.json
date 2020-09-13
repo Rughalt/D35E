@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "DND 3.5e",
   "description": "DND 3.5E implementation for Foundry VTT. Aiming to provide 100% SRD coverage.<br><br>Originaly based LoopeeDK conversion of Furyspark's Pathfinder1 system.",
-  "version": "0.83.5",
+  "version": "0.84.1",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -91,6 +91,13 @@
       "label": "Armor and Shields",
       "system": "D35E",
       "path": "./packs/armors-and-shields.db",
+      "entity": "Item"
+    },
+    {
+      "name": "enhancements",
+      "label": "Enhancements",
+      "system": "D35E",
+      "path": "./packs/enhancements.db",
       "entity": "Item"
     },
     {

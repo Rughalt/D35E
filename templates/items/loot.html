@@ -82,6 +82,19 @@
         <label>{{localize "D35E.BonusAmmoDamage"}}</label>
         <input type="text" name="data.bonusAmmoDamage" value="{{data.bonusAmmoDamage}}" placeholder="{{localize "D35E.BonusAmmoDamageFormula"}}"/>
       </div>
+      <div class="form-group ammo-formula">
+        <label>{{localize "D35E.BonusAmmoDamageType"}}</label>
+        <input type="text" name="data.bonusAmmoDamageType" value="{{data.bonusAmmoDamageType}}" placeholder="{{localize "D35E.BonusAmmoDamageTypePlaceholder"}}"/>
+      </div>
+      <div class="form-group ammo-formula">
+        <label>{{localize "D35E.BonusAmmoAttack"}}</label>
+        <input type="text" name="data.bonusAmmoAttack" value="{{data.bonusAmmoAttack}}" placeholder="{{localize "D35E.BonusAmmoAttackPlaceholder"}}"/>
+      </div>
+
+      <div class="form-group stacked">
+        <label>{{localize "D35E.AttackNotes"}}</label>
+        <textarea type="text" name="data.bonusAmmoAttackNote">{{data.bonusAmmoAttackNote}}</textarea>
+      </div>
       {{/if}}
 
       {{#if isGM}}

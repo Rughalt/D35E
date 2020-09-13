@@ -1,34 +1,212 @@
+
 <style>
+    .welcome-screen .window-content {
+        background: url(systems/D35E/ui/parchment-dark.jpg) repeat !important;
+        color: white;
+    }
+    .social-button {
+        flex: 0 140px;
+        text-align: center;
+        max-height: 26px;
+        margin-top: 3px;
+        margin-left: 4px;
+    }
+
     .welcome-screen a.patreon {
         background-color: #F96854;
         padding: 4px 10px;
         color: white;
         border-radius: 16px;
         text-decoration: none;
+        border: 1px #f38374 solid;
     }
+
+    .welcome-screen a.discord {
+        flex: 0 100px;
+        background-color: #7289DA;
+        padding: 4px 10px;
+        color: white;
+        border-radius: 16px;
+        text-decoration: none;
+        border: 1px #9eacde solid;
+    }
+
+    .welcome-screen a.github {
+        flex: 0 100px;
+        background-color: #333;
+        padding: 4px 10px;
+        color: white;
+        border-radius: 16px;
+        text-decoration: none;
+        border: 1px #6a6969 solid;
+    }
+
     .welcome-screen .window-content > * {
         flex: 0;
+    }
+
+    .welcome-screen h1 {
+        margin: 0 !important;
     }
 
     .welcome-screen h3 {
         margin: 0 !important;
     }
+
+    .welcome-screen a.btn {
+        background: url(systems/D35E/icons/ui/long-button.png);
+        background-size: 100% 100%;
+        border: none;
+        color: white;
+        line-height: 32px;
+        padding: 0;
+        border-radius: 0;
+        height: 24px;
+        text-align: center;
+        margin: 0 0.7rem;
+        max-height: 32px;
+        text-decoration: none;
+    }
+
+    .welcome-screen a.btn.bottom {
+        margin-top: auto;
+        margin-bottom: 4px;
+    }
+
+    .welcome-screen a.btn.mid {
+        margin-top: 4px;
+        margin-bottom: 16px;
+    }
+
+    .welcome-tabs {
+        border: 1px #782e22 solid;
+        border-radius: 4px;
+        padding: 2px;
+    }
+
+    .welcome-tabs a.item {
+        line-height: 26px;
+        padding: 4px 4px 5px;
+        border-radius: 2px;
+    }
+    .welcome-tabs a.item.active {
+        background-color: #782e22;
+    }
+
+    .welcome-content h2.news {
+        font-family: "Nodesto", sans-serif;
+        text-align: center;
+        border: none;
+        flex: 0;
+        font-size: 28px;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);
+    }
+
 </style>
 
-<h1>DND 3.5E SRD</h1>
-<p>Welcome to DND 3.5E SRD implementation for Foundry VTT! It was created from love for old DND editions and aims to provide full 3.5E SRD implementation and system flexible enough for anything else.</p>
-<p>If you have any questions, you can talk to with me and other users on <a href="https://discord.gg/wDyUaZH">project Discord</a></p>
-<p>You can check current status of SRD implementation <a href="https://github.com/Rughalt/D35E/projects/1">here</a></p>
-<p>If you find any bugs you can post them directly to <a href="https://github.com/Rughalt/D35E/issues">GitHub issues</a>.
-    You can also post them on dedicated discord channel, but keeping a copy on GitHub will make it easier for anyone to see
-    if issue has already been posted.</p>
+<h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png" style="height: 64px; border: none; float: left">
+    <span style='font-family: "Nodesto", sans-serif;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>DND 3.5e</span>
+    <br><span style="font-size: 14px">DND 3.5 SRD implementation for Foundry VTT</span></h1>
+<div class="flexrow">
+<nav class="welcome-tabs">
+    <a class="item" data-tab="welcome">{{ localize "D35E.Welcome" }}</a>
+    <a class="item" data-tab="changelog">{{ localize "D35E.Changelog" }}</a>
+   </nav>
+</div>
 
-<p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
-<h2></h2>
-<p style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;"><input type="checkbox" class='show-again' id="welcome-screen-show-again"/> <label for="welcome-screen-show-again">Don't show this screen again until next update.</label></p>
-<p style="text-align: right">Want to support development? <a class="patreon" href="https://www.patreon.com/Rughalt">Become a Patron</a></p>
-<h2></h2>
+<section class="welcome-content">
+<div class="tab" data-tab="welcome">
+
+    <p>Welcome to DND 3.5E SRD implementation for Foundry VTT! It was created from love for old DND editions and aims to provide full 3.5E SRD implementation and system flexible enough for anything else.</p>
+
+
+    <p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
+    <h2>News</h2>
+<div class="flexrow">
+    <div class="flexcol" style="max-height: 410px">
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Enhancements & Magic Items</h2>
+        <img src="systems/D35E/icons/ui/welcome-screen/0.84-left.png" style="padding: 0 0.7rem; flex: 0">
+        <p style="padding: 0 0.7rem; flex: 0">
+            Release 0.84 brings Enhancement support and most of Magic Weapons and Shields from SRD fully featured. You can read more on how Enhancement system works on project Wiki (linked below).
+        </p>
+        <a class="btn bottom" href="https://dnd35e.dragonshorn.info/documentation/advanced/magic-item-creation">Visit Enhancements page on Wiki</a>
+    </div>
+    <div class="flexcol" style="max-height: 410px">
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Attack Feats</h2>
+        <img src="systems/D35E/icons/ui/welcome-screen/0.84-middle.png" style="padding: 0 0.7rem; flex: 0">
+        <p style="padding: 0 0.7rem; flex: 0">
+            Release 0.84 adds new features to Attack dialog - ability to use Power Attack,
+            Manyshot, assigning weapons for Two-Weapon Fighting and more - directly from Attack window, with correct calculations
+            happening in the background.<br><br>
+            This release also brings full ammunition support for Bows, Crossbows and Slings.
+        </p>
+        <a class="btn bottom" href="https://dnd35e.dragonshorn.info/en/documentation/actions/attacking">Read more on Wiki</a>
+    </div>
+    <div class="flexcol" style="max-height: 410px">
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Wildshape and shapechange</h2>
+        <p style="padding: 0 0.7rem; flex: 0">
+            Release 0.83 brought Wildshape, Alter-Self and Polymorph to DND 3.5e.
+        </p>
+
+        <a class="btn mid" href="https://dnd35e.dragonshorn.info/en/documentation/advanced/shapechange">Learn more about Shapechange</a>
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Containers</h2>
+        <p style="padding: 0 0.7rem; flex: 0">
+            With 0.83 release, DND 3.5e supports Containers, with special containers like Bag of Holding also supported!
+        </p>
+        <a class="btn mid" href="https://dnd35e.dragonshorn.info/en/documentation/advanced/containers">Read more about Containers</a>
+        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Custom Theme</h2>
+        <p style="padding: 0 0.7rem; flex: 0">
+            Did you know DND 3.5E comes with custom skin for Foundry? You - or any of your players - can enable it in options for themselves!
+        </p>
+    </div>
+</div>
+
+    <h2></h2>
+
+    <div class="flexrow">
+    <p style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;"><input type="checkbox" class='show-again' id="welcome-screen-show-again"/> <label for="welcome-screen-show-again">Don't show this screen again until next update.</label></p>
+    <a href="https://discord.gg/wDyUaZH" class="discord social-button" style="float: right">Discord</a><a class="github social-button" style="float: right" href="https://www.github.com/Rughalt/D35E">GitHub</a><a class="patreon social-button" style="float: right" href="https://www.patreon.com/Rughalt">Become a Patron</a>
+    </div>
+</div>
+<div class="tab" data-tab="changelog">
 <h1>Changelog</h1>
+
+    <h2>v0.84.1</h2>
+    <h3>SRD</h3>
+    <ul>
+        <li>Additional Spells have full implementation, thanks to BixSexy#9434</li>
+        <li>Base Weapon and Armor Enhancements</li>
+        <li>Specific Magic Weapons and Armor updates
+        <ul>
+            <li>Specific Shields - added abilities and enhancements</li>
+            <li>Specific Weapons - added abilities and enhancements</li>
+        </ul>
+        </li>
+    </ul>
+    <h3>Features</h3>
+    <ul>
+    <li>Enhancement support</li>
+    <li>Base feats for attack rolls
+        <ul>
+            <li>Power Attack (this also fixed <a href="https://github.com/Rughalt/D35E/issues/39">#39</a>)</li>
+            <li>Manyshot and Greater Manyshot</li>
+            <li>Rapid Shot</li>
+        </ul>
+    </li>
+    <li>Two-Weapon Fighting support for attack rolls
+        <ul>
+            <li>Automatic penalty application</li>
+            <li>Automatic additional attacks for Greater and Improved Two-Weapon Fighting Feats</li>
+        </ul>
+    </li>
+    <li>Ability to set damage type on Ammunition</li>
+    </ul>
+    <h3>Bug Fixes</h3>
+    <ul>
+    <li>Fixed Ammunition Bonus Damage being incorrectly added to damage roll.</li>
+    <li><a href="https://github.com/Rughalt/D35E/issues/52">#52</a> Randomize HP rolls up to HD sides instead of levels</li>
+    </ul>
 
 <h2>v0.83.5</h2>
 <h3>SRD</h3>
@@ -145,3 +323,5 @@
     <li> <a href="https://github.com/Rughalt/D35E/issues/2">#2</a> - Limited character sheet scrollbars</li>
     <li> <a href="https://github.com/Rughalt/D35E/issues/3">#3</a> - Saving throws rolled multiple times</li>
 </ul>
+</div>
+</section>

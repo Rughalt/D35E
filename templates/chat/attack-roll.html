@@ -23,7 +23,9 @@
         {{{atk.critConfirm.tooltip}}}
       </div>
     </div>
-    {{/if}}{{/if}}
+    {{/if}}
+
+    {{/if}}
 
     {{#if atk.hasDamage}}
     <div class="dice-roll damage-roll">
@@ -45,7 +47,22 @@
         {{{atk.critDamage.tooltip}}}
       </div>
     </div>
-    {{/if}}{{/if}}
+    {{/if}}
+    {{#if atk.hasSubdamage}}
+
+    {{#each atk.subDamage as |dmg|}}
+    <div class="dice-roll damage-roll">
+      {{#if dmg.flavor}}
+      <div class="dice-flavor">{{dmg.flavor}}</div>
+      {{/if}}
+      <div class="dice-result">
+        <h4 class="dice-total">{{dmg.total}}</h4>
+        {{{dmg.tooltip}}}
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+    {{/if}}
 
     {{#if atk.cards.length}}
     <div class="flexcol card-buttons">
