@@ -18,7 +18,7 @@ the Data/systems/D35E folder. You may do this by cloning the repository or
 downloading a zip archive from the [here](https://www.dragonshorn.info/dnd35e/dnd35e.zip).
 
 ## Documentation
-You can find documentation on [wiki](https://github.com/Rughalt/D35E/wiki). Be advised that this is heavy work in progress. You can find FAQ [here](https://github.com/Rughalt/D35E/wiki/FAQ)
+You can find documentation on [wiki](https://dnd35e.dragonshorn.info/). Be advised that this is heavy work in progress. You can find FAQ [here](https://github.com/Rughalt/D35E/wiki/FAQ)
 
 ## Progress
 You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
@@ -35,9 +35,9 @@ Most of the stuff that is the same as in PF1 works. For things that are differen
 - Feats - In Compendium, partially implemented
 - Racial Traits - Partially done
 - Racial HD - Done
-- Monsters - Partially done
-- Items, Magic Items - Partially done
-- Spells - Partially done
+- Monsters - Dome (there may be minor errors as they are imported using tool)
+- Items, Magic Items - Partially done, Shields and Weapons implemented
+- Spells - Partially done, most of the work done by BigSexy#9434
 
 
 ## Support
