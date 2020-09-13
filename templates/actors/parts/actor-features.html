@@ -80,6 +80,18 @@
           </div>
           {{/if}}
         </li>
+        {{else}}
+        {{#if section.canCreate}}
+        <li>
+          <div style="text-align: center; padding: 5rem; color: #000000a6;">
+
+            {{#if section.hasPack}}
+            <p style="font-size: 1rem">{{localize "D35E.ListDragAndDrop"}} <a style="color: #782e22;" class="open-compendium-pack" data-pack="{{section.pack}}">{{localize section.emptyLabel}}</a></p>
+            {{/if}}
+            <p>{{localize "D35E.ListDragAndDropOrAdd"}}</p>
+          </div>
+        </li>
+        {{/if}}
         {{/each}}
       </ol>
     </ol>

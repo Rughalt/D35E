@@ -957,6 +957,16 @@
   "D35E.Welcome": "Welcome",
   "D35E.Changelog": "Changelog",
   "D35E.FeatRapidShot": "Rapid Shot",
+  "D35E.BagOfHoldingLike": "Works like Bag of Holding (Weightless)",
+  "D35E.LightItemLight": "Light",
+  "D35E.LightEmitLight": "Item emits light",
+  "D35E.ListDragAndDropOrAdd": "Use + button to create new",
+  "D35E.ListDragAndDrop": "Drag and drop from ",
+  "D35E.ListDragAndDropClass": "Class Compendium",
+  "D35E.ListDragAndDropFeat": "Feats Compendium",
+  "D35E.ListDragAndDropClassFeature": "Class Details",
+  "D35E.ListDragAndDropRacialTrait": "Race Details",
+  "D35E.ListDragAndDropNone": "",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
