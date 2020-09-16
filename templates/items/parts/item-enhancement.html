@@ -61,7 +61,7 @@
         <ol class="inventory-list sub-scroll scroll-inventory" style="padding: 0">
 
             <li class="inventory-header flexrow">
-                <h3 class="item-name flexrow"></h3>
+                <h3 class="item-name flexrow">Basic Enhancements</h3>
 
                 <div class="item-detail item-actions">
                     <span>Enh.</span></div>
@@ -70,17 +70,19 @@
                 <div class="item-detail item-actions">
                     <span>Action</span></div>
                 <div class="item-detail item-uses"><span>{{localize "D35E.ChargePlural"}}</span></div>
-                <div class="item-detail item-type">
+                <div class="item-detail item-per-use" style="flex: 0 48px"><span>Per Use</span></div>
+                <div class="item-detail item-type" style="flex: 0 32px">
                     <span></span></div>
             </li>
             <ol class="item-list" data-pack="D35E.enhancement">
-                {{#each enhancements as |item iid|}}
+                {{#each enhancementsBase as |item iid|}}
                 <li class="item item-box flexrow" data-item-id="{{item._id}}">
                     <div class="item-name enh-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
                             {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
                             {{item.name~}}
+                            {{#if item.data.isFromSpell}} <em style="opacity: 0.7">spell</em>{{/if}}
                         </h4>
                     </div>
                     <div class="item-detail item-enh item-actions">
@@ -106,18 +108,134 @@
                         {{#unless data.enhancements.uses.commonPool}}
                             {{#if item.isCharged}}
                             {{#unless item.incorrect}}
-                            <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
+                            <input type="text" class="uses" value="{{item.data.uses.value}}" data-dtype="Number"/>
                             <span class="sep"> of </span>
                             <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
-                            <span class="tooltipcontent">
-                              @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
-                              @resources.{{item.tag}}.max : {{item.data.uses.max}}
-                            </span>
                             {{/unless}}
                             {{/if}}
                         {{/unless}}
                     </div>
-                    <div class="item-detail item-type flexrow">
+
+                    <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
+
+                        {{#unless data.enhancements.uses.commonPool}}
+                        {{#if item.isCharged}}
+                        {{#unless item.incorrect}}
+                        <input type="text" value="{{item.data.uses.chargesPerUse}}" data-dtype="Number"/>
+                        {{/unless}}
+                        {{/if}}
+                        {{/unless}}
+                    </div>
+                    <div class="item-detail item-type flexrow" style="flex: 0 32px">
+                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </div>
+
+                </li>
+                {{/each}}
+            </ol>
+            <li class="inventory-header flexrow">
+                <h3 class="item-name flexrow">Buffs</h3>
+
+                <div class="item-detail item-actions">
+                    <span>Level</span></div>
+                <div class="item-detail item-actions">
+                    <span>Price</span></div>
+                <div class="item-detail item-per-use" style="flex: 0 166px"><span></span></div>
+                <div class="item-detail item-type" style="flex: 0 32px">
+                    <span></span></div>
+            </li>
+            <ol class="item-list" data-pack="D35E.enhancement">
+                {{#each enhancementsFromBuff as |item iid|}}
+                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                    <div class="item-name enh-item flexrow">
+                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
+                        <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
+                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                            {{item.name~}}
+                        </h4>
+                    </div>
+                    <div class="item-detail item-enh item-actions">
+                        <span>
+                            <input type="text" value="{{item.data.enh}}" data-dtype="Number"/>
+                        </span>
+                    </div>
+                    <div class="item-detail item-per-use" style="flex: 0 166px"><span></span></div>
+                    <div class="item-detail item-actions">
+                        <span>
+                            {{item.calcPrice}}
+                        </span>
+                    </div>
+                    <div class="item-detail item-type flexrow" style="flex: 0 32px">
+                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </div>
+
+                </li>
+                {{/each}}
+            </ol>
+            <li class="inventory-header flexrow">
+                <h3 class="item-name flexrow">Spell Uses</h3>
+
+                <div class="item-detail item-actions">
+                    <span>CL</span></div>
+                <div class="item-detail item-actions">
+                    <span>Price</span></div>
+                <div class="item-detail item-actions">
+                    <span>Action</span></div>
+                <div class="item-detail item-uses"><span>{{localize "D35E.ChargePlural"}}</span></div>
+                <div class="item-detail item-per-use" style="flex: 0 48px"><span>Per Use</span></div>
+                <div class="item-detail item-type" style="flex: 0 32px">
+                    <span></span></div>
+            </li>
+            <ol class="item-list" data-pack="D35E.enhancement">
+                {{#each enhancementsFromSpell as |item iid|}}
+                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                    <div class="item-name enh-item flexrow">
+                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
+                        <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
+                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+                            {{item.name~}}<em style="opacity: 0.7"> {{item.data.uses.per}}</em>
+                        </h4>
+                    </div>
+                    <div class="item-detail item-enh item-actions">
+                        <span>
+                            <input type="text" value="{{item.data.enh}}" data-dtype="Number"/>
+                        </span>
+                    </div>
+                    <div class="item-detail item-actions">
+                        <span>
+                            {{item.calcPrice}}
+                        </span>
+                    </div>
+                    <div class="item-detail item-actions">
+                        <div class="item-attack">
+                            {{#if item.hasAction}}
+                            <a class="item-control item-attack"><img class="icon"
+                                                                     src="systems/D35E/icons/actions/gladius.svg"></a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+
+                        {{#unless data.enhancements.uses.commonPool}}
+                        {{#if item.isCharged}}
+                        {{#unless item.incorrect}}
+                        <input type="text" class="uses" value="{{item.data.uses.value}}" data-dtype="Number"/>
+                        <span class="sep"> of </span>
+                        <input type="text" class="maxuses" value="{{item.data.uses.max}}" data-dtype="Number"/>
+                        {{/unless}}
+                        {{/if}}
+                        {{/unless}}
+
+                    </div>
+                    <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
+
+                        {{#if item.isCharged}}
+                        {{#unless item.incorrect}}
+                        <input type="text" value="{{item.data.uses.chargesPerUse}}" data-dtype="Number"/>
+                        {{/unless}}
+                        {{/if}}
+                    </div>
+                    <div class="item-detail item-type flexrow" style="flex: 0 32px">
                         <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                     </div>
 

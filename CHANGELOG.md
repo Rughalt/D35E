@@ -1,4 +1,12 @@
 # Changelog
+## 0.84.2
+### SRD
+- Added various missing Enhancements from SRD
+
+### Features
+- Added ability to use Magic Item Abilities directly from Char Sheet
+- Added ability to create Enhancements from Spells and Buffs
+
 ## 0.84.1
 ### SRD
 - Additional Spells have full implementation, thanks to BixSexy#9434

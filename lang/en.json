@@ -967,6 +967,8 @@
   "D35E.ListDragAndDropClassFeature": "Class Details - Special Features",
   "D35E.ListDragAndDropRacialTrait": "Race Details - Special Features",
   "D35E.ListDragAndDropNone": "",
+  "D35E.CreateEnhForSpell": "Create Enhancement from Spell",
+  "D35E.CreateEnhForSpellD": "You can create Enhancement from Spell either as Charges (eg. for Wands) or per Day use.",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

@@ -508,6 +508,7 @@ export class ActorSheetPF extends ActorSheet {
     // Quick Item Action control
     html.find(".item-actions a").mouseup(ev => this._quickItemActionControl(ev));
 
+
     // Roll Skill Checks
     html.find(".skill > .skill-name > .rollable").click(this._onRollSkillCheck.bind(this));
     html.find(".sub-skill > .skill-name > .rollable").click(this._onRollSubSkillCheck.bind(this));
@@ -538,6 +539,7 @@ export class ActorSheetPF extends ActorSheet {
 
     // Item Rolling
     html.find('.item .item-image').click(event => this._onItemRoll(event));
+    html.find('.item .item-enh-image').click(event => this._onEnhRoll(event));
 
     // Quick add item quantity
     html.find("a.item-control.item-quantity-add").click(ev => { this._quickChangeItemQuantity(ev, 1); });
@@ -854,13 +856,70 @@ export class ActorSheetPF extends ActorSheet {
       summary.slideUp(200, () => summary.remove());
     } else {
       let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
+      let enhList = $(`<ul class="item-enh-list"></ul>`);
       let props = $(`<div class="item-properties"></div>`);
       chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
+      (getProperty(item.data, `data.enhancements.items`) || []).forEach(enh => {
+        if (enh.hasAction) {
+          let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
+                    <div class="item-name  flexrow">
+                        <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
+                        <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
+                            ${enh.name} <em style="opacity: 0.7">${enh.data.uses.per}</em>
+                        </h4>
+                    </div>
+                    <div class="item-detail item-actions">
+                        <div class="item-attack">
+                            <a class="item-control item-enh-attack"><img class="icon"
+                                                                     src="systems/D35E/icons/actions/gladius.svg"></a>
+                        </div>
+                    </div>`+ (enh.isCharged ? `
+                    <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                        <input type="text" class="uses" disabled value="${enh.data.uses.value}" data-dtype="Number"/>
+                        <span class="sep"> of </span>
+                        <input type="text" class="maxuses" disabled value="${enh.data.uses.max}" data-dtype="Number"/>
+                    </div>
+                    <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
+                        <input type="text" disabled value="${enh.data.uses.chargesPerUse}" data-dtype="Number"/>
+                    </div>
+
+                </li>` : `</li>`)
+          enhList.append(enhString)
+        }
+      })
+      div.append(enhList);
       div.append(props);
+
+      div.find(".item-enh-attack").mouseup(ev => this._quickItemEnhActionControl(ev));
+      div.find(".item-enh-image").mouseup(ev => this._onEnhRoll(ev));
       li.append(div.hide());
       div.slideDown(200);
+
     }
     li.toggleClass("expanded");
+  }
+
+  async _quickItemEnhActionControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const itemId = $(event.currentTarget).parents(".enh-item").attr("data-item-id");
+    const enhId = $(event.currentTarget).parents(".enh-item").attr("data-enh-id");
+    const item = this.actor.getOwnedItem(itemId);
+
+    // Quick Attack
+    if (a.classList.contains("item-enh-attack")) {
+      item.useEnhancementItem(item.getEnhancementItem(enhId));
+    }
+  }
+
+
+  _onEnhRoll(event) {
+    event.preventDefault();
+    const itemId = $(event.currentTarget).parents(".enh-item").attr("data-item-id");
+    const enhId = $(event.currentTarget).parents(".enh-item").attr("data-enh-id");
+    const item = this.actor.getOwnedItem(itemId);
+    let enh = item.getEnhancementItem(enhId);
+    return enh.roll({}, this.actor);
   }
 
   /* -------------------------------------------- */

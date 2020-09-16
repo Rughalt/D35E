@@ -132,6 +132,7 @@ export class ItemPF extends Item {
         return this.constructor.getTypeColor(this.type, 1);
     }
 
+
     /**
      * Generic charge addition (or subtraction) function that either adds charges
      * or quantity, based on item data.
@@ -1208,7 +1209,7 @@ export class ItemPF extends Item {
             };
 
             // Post message
-            if (this.data.type === "spell") await this.roll({rollMode: rollMode});
+            if (this.data.type === "spell" || this.data.data.isFromSpell) await this.roll({rollMode: rollMode});
             if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
                 // Get extra text and properties
                 let props = [],
@@ -2296,6 +2297,159 @@ export class ItemPF extends Item {
         return data;
     }
 
+    static async toEnhancement(origData, type) {
+        let data = duplicate(game.system.template.Item.enhancement);
+        for (let t of data.templates) {
+            mergeObject(data, duplicate(game.system.template.Item.templates[t]));
+        }
+        delete data.templates;
+        data = {
+            type: "enhancement",
+            name: origData.name,
+            data: data,
+        };
+
+        const slcl = this.getMinimumCasterLevelBySpellData(origData.data);
+
+        data.data.enhancementType = "misc";
+
+        // Set name
+        data.name = `${origData.name}`;
+        data.img = origData.img;
+        data.id = origData._id
+        if (type === 'command' || type === 'use') {
+            data.data.uses.per = "day";
+            data.data.uses.maxFormula = "1";
+            data.data.uses.value = 1;
+            data.data.uses.max = 1;
+        } else {
+            data.data.uses.per = "charges";
+            data.data.uses.maxFormula = "50";
+            data.data.uses.value = 50;
+            data.data.uses.max = 50;
+        }
+
+        data.data.uses.chargesPerUse = 1
+
+
+        data.data.enh = slcl[1]
+        data.data.enhIncreaseFormula = ""
+        data.data.priceFormula = ""
+        data.data.price = 0
+
+        data.data.isFromSpell = true;
+
+        // Set activation method
+        data.data.activation.type = "standard";
+
+        data.data.measureTemplate = getProperty(origData, "data.measureTemplate");
+
+
+        // Set damage formula
+        data.data.actionType = origData.data.actionType;
+        for (let d of getProperty(origData, "data.damage.parts")) {
+            d[0] = d[0].replace(/@sl/g, slcl[0]);
+            d[0] = d[0].replace(/@cl/g, '@enhancement');
+            data.data.damage.parts.push(d);
+        }
+
+        // Set saves
+        data.data.save.description = origData.data.save.description;
+        data.data.save.dc = 10 + slcl[0] + Math.floor(slcl[0] / 2);
+
+        // Copy variables
+        data.data.attackNotes = origData.data.attackNotes;
+        data.data.effectNotes = origData.data.effectNotes;
+        data.data.attackBonus = origData.data.attackBonus;
+        data.data.critConfirmBonus = origData.data.critConfirmBonus;
+        data.data.specialActions = origData.data.specialActions;
+
+        // Determine aura power
+        let auraPower = "faint";
+        for (let a of CONFIG.D35E.magicAuraByLevel.item) {
+            if (a.level <= slcl[1]) auraPower = a.power;
+        }
+        let clLabel;
+        switch (slcl[1]) {
+            case 1:
+                clLabel = "1st";
+                break;
+            case 2:
+                clLabel = "2nd";
+                break;
+            case 3:
+                clLabel = "3rd";
+                break;
+            default:
+                clLabel = `${slcl[1]}th`;
+                break;
+        }
+        // Determine spell level label
+        let slLabel;
+        switch (slcl[0]) {
+            case 1:
+                slLabel = "1st";
+                break;
+            case 2:
+                slLabel = "2nd";
+                break;
+            case 3:
+                slLabel = "3rd";
+                break;
+            default:
+                slLabel = `${slcl[1]}th`;
+                break;
+        }
+
+        // Set description
+        data.data.description.value = getProperty(origData, "data.description.value");
+
+        return data;
+    }
+
+    static async toEnhancementBuff(origData) {
+        let data = duplicate(game.system.template.Item.enhancement);
+        for (let t of data.templates) {
+            mergeObject(data, duplicate(game.system.template.Item.templates[t]));
+        }
+        delete data.templates;
+        data = {
+            type: "enhancement",
+            name: origData.name,
+            data: data,
+        };
+
+
+        data.data.enhancementType = "misc";
+
+        // Set name
+        data.name = `${origData.name}`;
+        data.img = origData.img;
+        data.id = origData._id
+
+        data.data.isFromBuff = true;
+
+        data.data.enh = 1
+        data.data.enhIncreaseFormula = ""
+        data.data.priceFormula = ""
+        data.data.price = 0
+
+
+        data.data.changes = origData.data.changes;
+        for (const c of data.data.changes) {
+            c[0] = c[0].replace(new RegExp('@item.level', 'g'), '@enhancement');
+        }
+        data.data.contextNotes = origData.data.contextNotes;
+        for (const c of data.data.contextNotes) {
+            c[0] = c[0].replace(new RegExp('@item.level', 'g'), '@enhancement');
+        }
+
+
+        data.data.description.value = getProperty(origData, "data.description.value");
+
+        return data;
+    }
+
     static async toConsumable(origData, type) {
         let data = duplicate(game.system.template.Item.consumable);
         for (let t of data.templates) {
@@ -2394,6 +2548,7 @@ export class ItemPF extends Item {
         data.data.effectNotes = origData.data.effectNotes;
         data.data.attackBonus = origData.data.attackBonus;
         data.data.critConfirmBonus = origData.data.critConfirmBonus;
+        data.data.specialActions = origData.data.specialActions;
 
         // Determine aura power
         let auraPower = "faint";
@@ -2453,6 +2608,46 @@ export class ItemPF extends Item {
         });
 
         return data;
+    }
+
+
+    getEnhancementItem(id) {
+        let itemData = (getProperty(this.data, `data.enhancements.items`) || []).find(i => i._id === id)
+        if (itemData != null)
+            return new ItemPF(itemData, {owner: this.owner})
+        else
+            return itemData;
+    }
+
+    async useEnhancementItem(item) {
+        if (this.data.data.enhancements.uses.commonPool) {
+            if (this.data.data.enhancements.uses.value < item.chargeCost) {
+                return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
+            }
+        }
+        let roll = await item.use({ev: event, skipDialog: event.shiftKey},this.actor,this.data.data.enhancements.uses.commonPool === true);
+        if (roll) {
+            if (this.data.data.enhancements.uses.commonPool) {
+                let updateData = {}
+                updateData[`data.enhancements.uses.value`] = this.data.data.enhancements.uses.value - item.chargeCost;
+                await this.update(updateData);
+            } else {
+                await this.addEnhancementCharges(item, -1*item.chargeCost)
+            }
+        }
+    }
+
+
+    async addEnhancementCharges(item, charges) {
+        let updateData = {}
+        let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
+        _enhancements.filter(function( obj ) {
+            return obj._id === item._id
+        }).forEach(i => {
+            i.data.uses.value = i.data.uses.value + charges;
+        });
+        updateData[`data.enhancements.items`] = _enhancements;
+        await this.update(updateData);
     }
 
 }

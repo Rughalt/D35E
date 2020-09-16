@@ -1034,7 +1034,8 @@
           "per": null,
           "autoDeductCharges": true,
           "allowMultipleUses": false,
-          "chargesPerUse": 1
+          "chargesPerUse": 1,
+          "maxFormula": ""
         }
       },
       "action": {
@@ -1346,6 +1347,8 @@
       "price": 0,
       "enhIncrease": 0,
       "requirements": "",
+      "isFromSpell": false,
+      "isFromBuff": false,
       "weaponData": {
         "damageRoll": "",
         "damageType": ""
