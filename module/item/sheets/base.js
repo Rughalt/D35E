@@ -149,6 +149,9 @@ export class ItemSheetPF extends ItemSheet {
         }
       }
       data.enhancements = []
+      data.enhancementsBase = []
+      data.enhancementsFromSpell = []
+      data.enhancementsFromBuff = []
       let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
       _enhancements.forEach(e => {
         let item = new ItemPF(e, {owner: this.item.owner})
@@ -159,6 +162,12 @@ export class ItemSheetPF extends ItemSheet {
         e.calcPrice = e.data.enhIncrease !== undefined && e.data.enhIncrease !== null && e.data.enhIncrease > 0 ? `+${e.data.enhIncrease}` : `${e.data.price}`
         e.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(e, "data.uses.per"));
         data.enhancements.push(e)
+        if (e.data.isFromSpell)
+          data.enhancementsFromSpell.push(e)
+        else if (e.data.isFromBuff)
+          data.enhancementsFromBuff.push(e)
+        else
+          data.enhancementsBase.push(e)
       })
       data.hasEnhancements = true;
     }
@@ -200,7 +209,9 @@ export class ItemSheetPF extends ItemSheet {
       // Whether the current equipment type has multiple slots
       data.hasMultipleSlots = Object.keys(data.equipmentSlots).length > 1;
       data.enhancements = []
-
+      data.enhancementsBase = []
+      data.enhancementsFromSpell = []
+      data.enhancementsFromBuff = []
       let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
       _enhancements.forEach(e => {
         let item = new ItemPF(e, {owner: this.item.owner})
@@ -211,6 +222,12 @@ export class ItemSheetPF extends ItemSheet {
         e.calcPrice = e.data.enhIncrease !== undefined && e.data.enhIncrease !== null && e.data.enhIncrease > 0 ? `+${e.data.enhIncrease}` : `${e.data.price}`
         e.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(e, "data.uses.per"));
         data.enhancements.push(e)
+        if (e.data.isFromSpell)
+          data.enhancementsFromSpell.push(e)
+        else if (e.data.isFromBuff)
+          data.enhancementsFromBuff.push(e)
+        else
+          data.enhancementsBase.push(e)
       })
       data.hasEnhancements = true;
     }
@@ -745,7 +762,9 @@ export class ItemSheetPF extends ItemSheet {
     html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
 
     html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
-    html.find("div[data-tab='enhancements'] .item-detail.item-uses input[type='text']:not(:disabled)").off("change").change(this._setEnhUses.bind(this));
+    html.find("div[data-tab='enhancements'] .item-detail.item-uses input.uses").off("change").change(this._setEnhUses.bind(this));
+    html.find("div[data-tab='enhancements'] .item-detail.item-uses input.maxuses").off("change").change(this._setEnhMaxUses.bind(this));
+    html.find("div[data-tab='enhancements'] .item-detail.item-per-use input[type='text']:not(:disabled)").off("change").change(this._setEnhPerUse.bind(this));
     html.find("div[data-tab='enhancements'] .item-detail.item-enh input[type='text']:not(:disabled)").off("change").change(this._setEnhValue.bind(this));
 
     html.find('div[data-tab="enhancements"] .item-edit').click(this._onItemEdit.bind(this));
@@ -1024,7 +1043,6 @@ export class ItemSheetPF extends ItemSheet {
 
   async _onDrop(event) {
     event.preventDefault();
-    console.log(event)
     let data;
     try {
       data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
@@ -1067,20 +1085,80 @@ export class ItemSheetPF extends ItemSheet {
   }
 
   async importItem(itemData, itemType) {
+    console.log(itemData)
+    if (itemData.type === 'enhancement') {
+      const updateData = {};
+      let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+      const enhancement = duplicate(itemData)
+      if (enhancement._id) enhancement._id = this.item._id + "-" + itemData._id;
+      _enhancements.push(enhancement);
+      this.updateMagicItemName(updateData, _enhancements);
+      this.updateMagicItemProperties(updateData, _enhancements);
+      updateData[`data.enhancements.items`] = _enhancements;
+      await this.item.update(updateData);
+    } if (itemData.type === 'spell') {
+      this._createEnhancementSpellDialog(itemData)
+    } if (itemData.type === 'buff') {
+      await this.createEnhBuff(itemData)
+    }
+
+
+  }
+
+
+
+  _createEnhancementSpellDialog(itemData) {
+    new Dialog({
+      title: game.i18n.localize("D35E.CreateEnhForSpell").format(itemData.name),
+      content: game.i18n.localize("D35E.CreateEnhForSpellD").format(itemData.name),
+      buttons: {
+        potion: {
+          icon: '<i class="fas fa-prescription-bottle"></i>',
+          label: "50 Charges",
+          callback: () => this.createEnhSpell(itemData, "charges"),
+        },
+        scroll: {
+          icon: '<i class="fas fa-scroll"></i>',
+          label: "Per Day (Command Word)",
+          callback: () => this.createEnhSpell(itemData, "command"),
+        },
+        wand: {
+          icon: '<i class="fas fa-magic"></i>',
+          label: "Per Day (Use)",
+          callback: () => this.createEnhSpell(itemData, "use"),
+        },
+      },
+      default: "command",
+    }).render(true);
+  }
+
+  async createEnhSpell(itemData, type) {
     const updateData = {};
     let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-    const enhancement = duplicate(itemData)
-    if (enhancement._id) enhancement._id = this.item._id+"-"+itemData._id;
+    let enhancement = await ItemPF.toEnhancement(itemData, type);
+    if (enhancement.id) enhancement._id = this.item._id + "-" + enhancement.id;
     _enhancements.push(enhancement);
     this.updateMagicItemName(updateData, _enhancements);
     this.updateMagicItemProperties(updateData, _enhancements);
     updateData[`data.enhancements.items`] = _enhancements;
     await this.item.update(updateData);
+  }
 
+  async createEnhBuff(itemData) {
+    const updateData = {};
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    let enhancement = await ItemPF.toEnhancementBuff(itemData);
+    if (enhancement.id) enhancement._id = this.item._id + "-" + enhancement.id;
+    _enhancements.push(enhancement);
+    this.updateMagicItemName(updateData, _enhancements);
+    this.updateMagicItemProperties(updateData, _enhancements);
+    updateData[`data.enhancements.items`] = _enhancements;
+    await this.item.update(updateData);
   }
 
   updateMagicItemName(updateData, _enhancements, force = false) {
-    if ((this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
+
+    if ((this.item.data.data.enhancements !== undefined && this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
       if (this.item.data.data.enhancements.automation.updateName || force) {
         let baseName = this.item.data.data.unidentified.name
         if (this.item.data.data.unidentified.name === '') {
@@ -1094,7 +1172,7 @@ export class ItemSheetPF extends ItemSheet {
 
   // This updates not only price, but also physical properties
   updateMagicItemProperties(updateData, _enhancements, force = false) {
-    if ((this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
+    if ((this.item.data.data.enhancements !== undefined && this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
       if (this.item.data.data.enhancements.automation.updateName || force) {
         let basePrice = this.item.data.data.unidentified.price
         if (this.item.data.data.unidentified.price === 0) {
@@ -1249,6 +1327,39 @@ export class ItemSheetPF extends ItemSheet {
     this.item.update(updateData);
   }
 
+  _setEnhMaxUses(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const updateData = {};
+
+    const value = Number(event.currentTarget.value);
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    _enhancements.filter(function( obj ) {
+      return obj._id === itemId
+    }).forEach(i => {
+      i.data.uses.max = value;
+      i.data.uses.maxFormula = `${value}`;
+    });
+    updateData[`data.enhancements.items`] = _enhancements;
+    this.item.update(updateData);
+  }
+
+  _setEnhPerUse(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const updateData = {};
+
+    const value = Number(event.currentTarget.value);
+    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+    _enhancements.filter(function( obj ) {
+      return obj._id === itemId
+    }).forEach(i => {
+      i.data.uses.chargesPerUse = value;
+    });
+    updateData[`data.enhancements.items`] = _enhancements;
+    this.item.update(updateData);
+  }
+
   async _setEnhValue(event) {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
@@ -1323,39 +1434,12 @@ export class ItemSheetPF extends ItemSheet {
     const a = event.currentTarget;
     const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
 
-    let item = this.ehnancementItemMap.get(itemId);
-
+    let item = this.item.getEnhancementItem(itemId);
     // Quick Attack
     if (a.classList.contains("item-attack")) {
-
-      if (this.item.data.data.enhancements.uses.commonPool) {
-        if (this.item.data.data.enhancements.uses.value < item.chargeCost) {
-          return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
-        }
-      }
-      let roll = await item.use({ev: event, skipDialog: event.shiftKey},this.item.actor,this.item.data.data.enhancements.uses.commonPool === true);
-      if (roll) {
-        if (this.item.data.data.enhancements.uses.commonPool) {
-          let updateData = {}
-          updateData[`data.enhancements.uses.value`] = this.item.data.data.enhancements.uses.value - item.chargeCost;
-          await this.item.update(updateData);
-        } else {
-          await this.addEnhancementCharges(item, -1*item.chargeCost)
-        }
-      }
+      await this.item.useEnhancementItem(item)
     }
   }
 
-  async addEnhancementCharges(item, charges) {
-    let updateData = {}
-    let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-    _enhancements.filter(function( obj ) {
-      return obj._id === item._id
-    }).forEach(i => {
-      i.data.uses.value = i.data.uses.value + charges;
-    });
-    updateData[`data.enhancements.items`] = _enhancements;
-    await this.item.update(updateData);
-  }
 
 }
