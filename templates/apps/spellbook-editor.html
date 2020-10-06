@@ -1,0 +1,130 @@
+<form autocomplete="off" onsubmit="event.preventDefault();">
+
+
+    <div class="flexcol">
+
+        <div class="flexrow formulas form-group">
+            <label><span>{{localize "D35E.SpellbookName"}}</span></label>
+            <input type="text" name="name"
+                   value="{{spellbook.name}}" placeholder="{{localize " D35E.SpellbookName"}}" />
+        </div>
+        <div class="form-group spellcasting-class tooltip flexrow">
+            <label><span>{{localize "D35E.SpellcastingClass"}}</span></label>
+            <select name="class" data-dtype="String">
+                {{#select spellbook.class}}
+                <option value="">{{localize "D35E.None"}}</option>
+                <option value="_hd">{{localize "D35E.HitDie"}}</option>
+                {{#each actor.data.classes as |cls a|}}
+                <option value="{{a}}">{{cls.name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        <div class="flexrow form-group-stacked">
+            <label class="checkbox">
+                <input type="checkbox" name="autoSetup"
+                       {{checked spellbook.autoSetup}}/> {{localize "D35E.SpellbookAutoSetup"}}
+            </label>
+        </div>
+        {{#unless spellbook.autoSetup}}
+        <div class="form-group">
+            <label>{{localize "D35E.SpellcastingType"}}</label>
+            <select name="spellcastingType">
+                {{#select spellbook.spellcastingType}}
+                {{#each config.spellcastingType as |name type|}}
+                <option value="{{type}}">{{name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        <div class="form-group spellcasting-ability flexrow">
+            <label><span>{{localize "D35E.SpellcastingAbility"}}</span></label>
+            <select name="ability" data-dtype="String">
+                {{#select spellbook.ability}}
+                <option value="">{{localize "D35E.None"}}</option>
+                {{#each config.abilities as |abl a|}}
+                <option value="{{a}}">{{abl}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+            <div class="flexrow formulas form-group">
+            <label><span>{{localize "D35E.BaseDCFormula"}}</span></label>
+            <input type="text" name="baseDCFormula"
+                   value="{{spellbook.baseDCFormula}}" placeholder="{{localize " D35E.BaseDCFormula"}}" />
+        </div>
+        <div class="flexrow form-group-stacked">
+            <label class="checkbox">
+                <input type="checkbox" name="autoSpellLevels"
+                       {{checked spellbook.autoSpellLevels}}/> {{localize "D35E.AutomaticSpellSlots"}}
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" name="spontaneous"
+                       {{checked spellbook.spontaneous}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+            </label>
+            <label class="checkbox">
+                <input type="checkbox"
+                       name="arcaneSpellFailure"
+                       {{checked spellbook.arcaneSpellFailure}}/> {{localize "D35E.ArcaneSpellFailure"}}
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" name="usePowerPoints"
+                       {{checked spellbook.usePowerPoints}}/> {{localize "D35E.UsePowerPoints"}}
+            </label>
+
+        </div>
+        {{else}}
+        <h4 style="text-align: center; opacity: 0.7">Options set from Class</h4>
+        <div class="form-group">
+            <label>{{localize "D35E.SpellcastingType"}}</label>
+            <select name="spellcastingType" disabled>
+                {{#select spellbook.spellcastingType}}
+                {{#each config.spellcastingType as |name type|}}
+                <option value="{{type}}">{{localize name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        <div class="form-group spellcasting-ability flexrow">
+            <label><span>{{localize "D35E.SpellcastingAbility"}}</span></label>
+            <select name="ability" data-dtype="String" disabled>
+                {{#select spellbook.ability}}
+                <option value="">{{localize "D35E.None"}}</option>
+                {{#each config.abilities as |abl a|}}
+                <option value="{{a}}">{{abl}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        <div class="flexrow formulas form-group">
+            <label><span>{{localize "D35E.BaseDCFormula"}}</span></label>
+            <input type="text" name="baseDCFormula" disabled
+                   value="{{spellbook.baseDCFormula}}" placeholder="{{localize " D35E.BaseDCFormula"}}" />
+        </div>
+        <div class="flexrow form-group-stacked">
+            <label class="checkbox">
+                <input type="checkbox" name="autoSpellLevels" disabled
+                       {{checked spellbook.autoSpellLevels}}/> {{localize "D35E.AutomaticSpellSlots"}}
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" name="spontaneous" disabled
+                       {{checked spellbook.spontaneous}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+            </label>
+            <label class="checkbox">
+                <input type="checkbox"
+                       name="arcaneSpellFailure" disabled
+                       {{checked spellbook.arcaneSpellFailure}}/> {{localize "D35E.ArcaneSpellFailure"}}
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" name="usePowerPoints" disabled
+                       {{checked spellbook.usePowerPoints}}/> {{localize "D35E.UsePowerPoints"}}
+            </label>
+
+        </div>
+        {{/unless}}
+    </div>
+
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.UpdateSpellbook"}}</button>
+</form>

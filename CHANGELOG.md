@@ -1,4 +1,16 @@
 # Changelog
+## 0.85
+### SRD
+- Finished Base and Prestige classes implementation
+- Added Base and Prestige classes descriptions and art
+
+### Features
+- Onboarding/Tutorial for new players
+- Automatic Class Features adding and removing
+- Automatic Spell slot calculation
+- Ability to set up spellbook from Class
+
+
 ## 0.84.2
 ### SRD
 - Added various missing Enhancements from SRD

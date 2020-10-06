@@ -37,6 +37,74 @@
         line-height: 24px;
       }
     }
+
+    ul.attributes {
+      list-style: none;
+      margin: 8px 0 0;
+      padding: 0;
+
+      &.nomargin {
+        margin: 0;
+      }
+
+      li.attribute {
+        height: 90px;
+        margin: 0 5px;
+        border: @borderGroove;
+        border-radius: 4px;
+        .nodesto();
+        text-align: center;
+
+        .attribute-name {
+          flex: 0 0 18px;
+        }
+
+        &.high {
+          height: 90px;
+        }
+
+        .attribute-value {
+          height: 48px;
+          line-height: 40px;
+
+          input {
+            display: inline;
+            max-width: 80%;
+            margin: 0;
+            font-size: 34px;
+            height: 48px;
+          }
+
+          div.attribute {
+            display: inline-block;
+            min-width: 24px;
+            max-width: 33%;
+            font-size: 34px;
+            width: calc(100% - 2px);
+          }
+
+          span.sep {
+            display: inline;
+            position: relative;
+            top: 2px;
+            font-size: 28px;
+            color: @colorTan;
+          }
+
+          &.multiple {
+            input { max-width: 33%; }
+          }
+        }
+
+        .attribute-footer {
+          flex: 0 0 18px;
+          margin-top: -1px;
+          line-height: 18px;
+          font-family: "Signika", "Palatino Linotype", serif;
+          font-size: 12px;
+        }
+      }
+    }
   }
 
   .sheet-navigation {
@@ -63,7 +131,7 @@
       .form-group {
         margin: 0;
         label {
-          line-height: 20px;
+          line-height: 24px;
         }
         input {
           text-align: right;
@@ -327,6 +395,15 @@
         margin-left: 5px;
       }
     }
+
+  }
+
+
+  input {
+    &.bordered {
+      border: 1px solid #7a7971;
+      background: rgba(0, 0, 0, 0.05);
+    }
   }
 
   .damage-control, .attack-control, .change-control, .context-note-control, .special-control {
@@ -582,6 +659,78 @@
       }
     }
 
+    .progression-bab {
+      flex: 0 32px;
+      border-left: 1px solid #c9c7b8;
+      padding: 0 2px 0 2px;
+      text-align: center;
+    }
+    .progression-bab-wide {
+      flex: 0 104px;
+      border-left: 1px solid #c9c7b8;
+      padding: 0 2px 0 2px;
+    }
+    .progression-save {
+      flex: 0 32px;
+      border-left: 1px solid #c9c7b8;
+      padding: 0 2px 0 2px;
+      text-align: center;
+    }
+
+    .progression-level {
+      flex: 0 40px;
+      border-left: 1px solid #c9c7b8;
+      padding: 0 2px 0 2px;
+    }
+
+    progression-pp {
+      flex: 0 60px;
+      border-left: 1px solid #c9c7b8;
+      padding: 0 2px 0 2px;
+      text-align: center;
+    }
+
+    .progression-abilities {
+      border-left: 1px solid #c9c7b8;
+      padding: 0 2px 0 2px;
+    }
+
+    .progression-ability-img {
+      width: 20px;
+      vertical-align: middle;
+    }
+
+    .progression-ability-h4 {
+      display: inline;
+    }
+
+    .progression-row {
+      padding: 0 2px;
+      border-bottom: 1px solid #c9c7b8;
+    }
+
+
+    .progression-item {
+      border: 1px #782e22 solid !important;
+      height: 24px;
+      border-radius: 2px;
+      display: inline-block;
+      background: rgba(255,255,255,0.4);
+
+      .item-name {
+        line-height: 20px;
+      }
+    }
+
+    .progression-text {
+      height: 24px;
+      display: inline-block;
+      background: none;
+      .h4 {
+        line-height: 24px;
+      }
+    }
+
     // Item Dropdown Summary
     .item-summary {
       flex: 0 0 100%;
@@ -590,5 +739,20 @@
       padding: 0.25em 0.5em;
       border-top: 1px solid @colorFaint;
     }
+
+
   }
+
+
+  .progression-ability-description {
+    margin-bottom: 0.5rem;
+    div, p {
+      display: inline;
+    }
+    br {
+      margin: 1rem;
+    }
+  }
+
+
 }

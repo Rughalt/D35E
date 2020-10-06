@@ -1,9 +1,14 @@
 import { ActorTraitSelector } from "../../apps/trait-selector.js";
 import { ActorRestDialog } from "../../apps/actor-rest.js";
+import { LevelUpDialog } from "../../apps/level-up-box.js";
 import { ActorSheetFlags } from "../../apps/actor-flags.js";
 import { DicePF } from "../../dice.js";
 import { TokenConfigPF } from "../../token-config.js";
 import { createTag, createTabs, isMinimumCoreVersion } from "../../lib.js";
+import { NoteEditor } from "../../apps/note-editor.js";
+import {SpellbookEditor} from "../../apps/spellbook-editor.js";
+import {D35E} from "../../config.js";
+import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -40,6 +45,8 @@ export class ActorSheetPF extends ActorSheet {
      * @type {Object[]}
      */
     this._itemUpdates = [];
+
+
   }
 
   get currentSpellbookKey() {
@@ -98,11 +105,18 @@ export class ActorSheetPF extends ActorSheet {
     else data.sourceDetails = null;
 
     // Ability Scores
+
+    data.abilitiesChanged = false;
+
     for ( let [a, abl] of Object.entries(data.actor.data.abilities)) {
       abl.label = CONFIG.D35E.abilitiesShort[a];
       abl.tempvalue = data.actor.data.abilities[a].total;
+      if (data.actor.data.abilities[a].value !== 10)
+        data.abilitiesChanged = true
       abl.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.abilities[a].total : [];
     }
+
+
 
     // Armor Class
     for (let [a, ac] of Object.entries(data.actor.data.attributes.ac)) {
@@ -297,7 +311,10 @@ export class ActorSheetPF extends ActorSheet {
         canCreate: owner === true,
         canPrepare: (data.actor.type === "character"),
         label: CONFIG.D35E.spellLevels[a],
+        slotsLeft: false,
         spells: [],
+        maxPrestigeClSources: (data.sourceDetails !== null && data.sourceDetails.data.attributes.prestigeCl !== undefined && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType] !== undefined
+            && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max != null) ? data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max : [],
         uses: book.spells === undefined ? 0 : book.spells["spell"+a].value || 0,
         baseSlots: book.spells === undefined ? 0 : book.spells["spell"+a].base,
         slots: book.spells === undefined ? 0 : book.spells["spell"+a].max || 0,
@@ -308,6 +325,13 @@ export class ActorSheetPF extends ActorSheet {
       const lvl = spell.data.level || 0;
       spellbook[lvl].spells.push(spell);
     });
+
+
+    for (let a = 0; a < 10; a++) {
+      spellbook[a].slotsLeft = spellbook[a].spells.map(item => item.data.preparation.maxAmount || 0).reduce((prev, next) => prev + next, 0) < spellbook[a].slots
+    }
+
+
 
     // Sort the spellbook by section order
     spellbook = Object.values(spellbook);
@@ -528,6 +552,13 @@ export class ActorSheetPF extends ActorSheet {
     // Rest
     html.find(".rest").click(this._onRest.bind(this));
 
+    // Level up
+    html.find(".level-up").click(this._onLevelUp.bind(this));
+    html.find(".point-buy").click(this._onPointBuy.bind(this));
+
+
+    html.find(".note-editor").click(this._onNoteEditor.bind(this));
+    html.find(".configure-spellbook").click(this._onSpellbookEditor.bind(this));
     /* -------------------------------------------- */
     /*  Inventory
     /* -------------------------------------------- */
@@ -537,9 +568,18 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.item-edit').click(this._onItemEdit.bind(this));
     html.find('.item-delete').click(this._onItemDelete.bind(this));
 
+
+    html.find('.spell-add-uses').click(ev => this._onSpellAddUses(ev));
+    html.find('.spell-remove-uses').click(this._onSpellRemoveUses.bind(this));
+    html.find('.spell-add-metamagic').click(this._onSpellAddMetamagic.bind(this));
+
+
     // Item Rolling
     html.find('.item .item-image').click(event => this._onItemRoll(event));
     html.find('.item .item-enh-image').click(event => this._onEnhRoll(event));
+
+
+    html.find(".item .feat-group-selector").change(ev => { this._onFeatChangeGroup(ev) });
 
     // Quick add item quantity
     html.find("a.item-control.item-quantity-add").click(ev => { this._quickChangeItemQuantity(ev, 1); });
@@ -596,6 +636,11 @@ export class ActorSheetPF extends ActorSheet {
 
 
     html.find(".warning").click(ev => this._openClassTab());
+
+
+    // Quick add item quantity
+    html.find("a.remove-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, -1); });
+    html.find("a.add-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, 1); });
   }
 
   createTabs(html) {
@@ -668,6 +713,16 @@ export class ActorSheetPF extends ActorSheet {
   _onRest(event) {
     event.preventDefault();
     new ActorRestDialog(this.actor).render(true);
+  }
+
+  _onPointBuy(event) {
+    event.preventDefault();
+    new PointBuyCalculator(this).render(true);
+  }
+
+  _onLevelUp(event) {
+    event.preventDefault();
+    new LevelUpDialog(this.actor).render(true);
   }
 
   /* -------------------------------------------- */
@@ -837,6 +892,7 @@ export class ActorSheetPF extends ActorSheet {
     const item = this.actor.getOwnedItem(itemId);
     return item.rollRecharge();
   };
+
 
   /* -------------------------------------------- */
 
@@ -1011,6 +1067,27 @@ export class ActorSheetPF extends ActorSheet {
     }
   }
 
+  async _changeSpellbokPrestigeCl(event, add = 1) {
+    event.preventDefault();
+    const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
+
+    const currentCl = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${spellbookKey}.bonusPrestigeCl`) || 0;
+    const newCl = Math.max(0, currentCl + add);
+    const k = `data.attributes.spells.spellbooks.${spellbookKey}.bonusPrestigeCl`;
+    let updateData = {}
+    updateData[k] = newCl
+    this.actor.update(updateData);
+  }
+
+  async _onFeatChangeGroup(event) {
+    
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.getOwnedItem(itemId);
+    const newSource = $(event.currentTarget).val();
+    item.update({ "data.classSource": newSource });
+  }
+
   async _quickChangeItemQuantity(event, add=1) {
     event.preventDefault();
     const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
@@ -1115,6 +1192,32 @@ export class ActorSheetPF extends ActorSheet {
         no: () => button.disabled = false
       });
     }
+  }
+
+  _onSpellAddUses(event) {
+    event.preventDefault();
+    let add = 1
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = this.actor.getOwnedItem(itemId);
+
+    const curQuantity = getProperty(item.data, "data.preparation.maxAmount") || 0;
+    const newQuantity = Math.max(0, curQuantity + add);
+    item.update({ "data.preparation.maxAmount": newQuantity });
+  }
+
+  _onSpellRemoveUses(event) {
+    event.preventDefault();
+    let add = -1
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = this.actor.getOwnedItem(itemId);
+
+    const curQuantity = getProperty(item.data, "data.preparation.maxAmount") || 0;
+    const newQuantity = Math.max(0, curQuantity + add);
+    item.update({ "data.preparation.maxAmount": newQuantity });
+  }
+
+  _onSpellAddMetamagic(event) {
+
   }
 
   /**
@@ -1235,8 +1338,10 @@ export class ActorSheetPF extends ActorSheet {
         data: this._prepareSpellbook(data, spellbookSpells, a),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
         orig: spellbook,
-        concentration: this.actor.data.data.skills["coc"].mod
+        concentration: this.actor.data.data.skills["coc"].mod,
+        spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
       };
+
     }
 
     // Organize Inventory
@@ -1254,9 +1359,9 @@ export class ActorSheetPF extends ActorSheet {
 
     // Organize Features
     const features = {
-      classes: { label: game.i18n.localize("D35E.ClassPlural"), hasPack: true, pack: "D35E.classes", emptyLabel: "D35E.ListDragAndDropClass", items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true },
-      feat: { label: game.i18n.localize("D35E.FeatPlural"), hasPack: true, pack: "D35E.feats", emptyLabel: "D35E.ListDragAndDropFeat", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" } },
-      classFeat: { label: game.i18n.localize("D35E.ClassFeaturePlural"), hasPack: true, pack: 'actor-first-class', emptyLabel: "D35E.ListDragAndDropClassFeature", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" } },
+      classes: { label: game.i18n.localize("D35E.ClassPlural"), hasPack: true, pack: "D35E.classes", emptyLabel: "D35E.ListDragAndDropClass", items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true},
+      feat: { label: game.i18n.localize("D35E.FeatPlural"), hasPack: true, pack: "D35E.feats", emptyLabel: "D35E.ListDragAndDropFeat", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" }, isFeat: true },
+      classFeat: { label: game.i18n.localize("D35E.ClassFeaturePlural"), hasPack: true, pack: 'actor-first-class', emptyLabel: "D35E.ListDragAndDropClassFeature", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" }, isClassFeat: true },
       trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
       racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
       misc: { label: game.i18n.localize("D35E.Misc"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
@@ -1319,6 +1424,15 @@ export class ActorSheetPF extends ActorSheet {
     data.features = Object.values(features);
     data.buffs = buffSections;
     data.attacks = attackSections;
+    data.counters = this.actor.data.data.counters;
+    data.featCounters = []
+    for (let [a, s] of Object.entries(data.actor.data.counters.feat || [])) {
+        if (a === "base") continue;
+        data.featCounters.push({name: a.charAt(0).toUpperCase() + a.substr(1).toLowerCase(), val: a})
+    }
+
+    // Handlebars.registerPartial('myPartial', 'This is a tab generated from something!{{prefix}}');
+    // data.myVariable = "myPartial";
   }
 
   /**
@@ -1524,7 +1638,7 @@ export class ActorSheetPF extends ActorSheet {
 
   get currentPrimaryTab() {
     const primaryElem = this.element.find('nav[data-group="primary"] .item.active');
-    if (primaryElem.length !== 1 || primaryElem.attr("data-tab") !== "inventory") return null;
+    if (primaryElem.length !== 1) return null;
     return primaryElem.attr("data-tab");
   }
 
@@ -1556,7 +1670,8 @@ export class ActorSheetPF extends ActorSheet {
     let result = {};
 
     // Set spellbook for spell
-    if (getProperty(origData, "type") === "spell") setProperty(result, "data.spellbook", this.currentSpellbookKey);
+    console.log(this.currentPrimaryTab)
+    if (getProperty(origData, "type") === "spell") setProperty(result, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
 
     return result;
   }
@@ -1566,7 +1681,6 @@ export class ActorSheetPF extends ActorSheet {
     event.preventDefault();
     let div = $(event.currentTarget),
         pack = div.attr("data-pack");
-    console.log(pack)
     if (pack !== 'actor-race' && pack !== 'actor-first-class') {
       game.packs.get(pack).render(true)
     } else if (pack === 'actor-race') {
@@ -1577,5 +1691,30 @@ export class ActorSheetPF extends ActorSheet {
     {
       this.entity.items.find(o => o.type === "class").sheet.render(true)
     }
+  }
+
+  _onNoteEditor(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const options = {
+      name: a.getAttribute("for"),
+      title: a.innerText,
+      fields: a.dataset.fields,
+      dtypes: a.dataset.dtypes,
+    };
+    new NoteEditor(this.actor, options).render(true);
+  }
+
+
+  _onSpellbookEditor(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const options = {
+      name: a.getAttribute("for"),
+      title: a.innerText,
+      fields: a.dataset.fields,
+      dtypes: a.dataset.dtypes,
+    };
+    new SpellbookEditor(this.actor, options).render(true);
   }
 }

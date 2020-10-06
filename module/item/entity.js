@@ -587,6 +587,22 @@ export class ItemPF extends Item {
         }
     }
 
+    static setMaxUses(data, rollData) {
+        if (hasProperty(data, "data.uses.maxFormula")) {
+            if (getProperty(data, "data.uses.maxFormula") !== "") {
+                let roll = new Roll(getProperty(data, "data.uses.maxFormula"), rollData).roll();
+                data.data.uses.max = roll.total;
+            }
+        }
+        
+        if (hasProperty(data, "data.enhancements.uses.maxFormula")) {
+            if (getProperty(data, "data.enhancements.uses.maxFormula") !== "") {
+                let roll = new Roll(getProperty(data, "data.enhancements.uses.maxFormula"), rollData).roll();
+                data.data.enhancements.uses.max = roll.total;
+            }
+        }
+    }
+
     /* -------------------------------------------- */
 
     /**

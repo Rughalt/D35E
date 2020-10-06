@@ -186,6 +186,23 @@
           "turnUndeadHdTotal": 0,
           "turnUndeadUsesBonusFormula": "",
           "turnUndeadUses": 0,
+          "prestigeCl": {
+            "psionic": {
+              "max": 0,
+              "value": 0,
+              "total": 0
+            },
+            "arcane": {
+              "max": 0,
+              "value": 0,
+              "total": 0
+            },
+            "divine": {
+              "max": 0,
+              "value": 0,
+              "total": 0
+            }
+          },
           "turnUndeadUsesTotal": 0,
           "sneakAttackDiceTotal": 0,
           "spellPointsTotal": [],
@@ -259,12 +276,15 @@
                   "formula": ""
                 },
                 "concentration": 0,
+                "bonusPrestigeCl": 0,
                 "concentrationFormula": "",
                 "concentrationNotes": "",
                 "clNotes": "",
                 "ability": "int",
                 "autoSpellLevels": true,
                 "usePowerPoints": false,
+                "autoSetup": true,
+                "spellcastingType": null,
                 "powerPointsFormula": "",
                 "dailyPowerPointsFormula": "",
                 "powerPoints": 0,
@@ -282,12 +302,15 @@
                   "formula": ""
                 },
                 "concentration": 0,
+                "bonusPrestigeCl": 0,
                 "concentrationFormula": "",
                 "concentrationNotes": "",
                 "clNotes": "",
                 "ability": "int",
                 "autoSpellLevels": true,
                 "usePowerPoints": false,
+                "autoSetup": true,
+                "spellcastingType": null,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
@@ -304,12 +327,15 @@
                   "formula": ""
                 },
                 "concentration": 0,
+                "bonusPrestigeCl": 0,
                 "concentrationFormula": "",
                 "concentrationNotes": "",
                 "clNotes": "",
                 "ability": "int",
                 "autoSpellLevels": true,
                 "usePowerPoints": false,
+                "autoSetup": true,
+                "spellcastingType": null,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
@@ -326,12 +352,15 @@
                   "formula": ""
                 },
                 "concentration": 0,
+                "bonusPrestigeCl": 0,
                 "concentrationFormula": "",
                 "concentrationNotes": "",
                 "clNotes": "",
                 "ability": "cha",
                 "autoSpellLevels": true,
                 "usePowerPoints": false,
+                "autoSetup": false,
+                "spellcastingType": "None",
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
@@ -954,7 +983,8 @@
           "wildshaped": false,
           "polymorphed": false
         },
-        "sizeOverride": ""
+        "sizeOverride": "",
+        "counterName": ""
       },
       "contextNotes": {
         "contextNotes": []
@@ -990,7 +1020,11 @@
           "chat": "",
           "unidentified": ""
         },
-        "tags": []
+        "tags": [],
+        "uniqueId": "",
+        "source": "",
+        "classSource": "",
+        "userNonRemovable": false
       },
       "physicalItem": {
         "quantity": 1,
@@ -1080,11 +1114,21 @@
       "templates": ["itemDescription", "changes"],
       "classType": "base",
       "levels": 1,
+      "maxLevel": 20,
       "prestigeLevels": 0,
       "turnUndeadLevelFormula": "0",
       "sneakAttackGroup": "none",
+      "automaticFeatures": false,
       "sneakAttackFormula": "0",
+      "spellcastingType": null,
+      "spellcastingSpontaneus": false,
+      "spellsPerLevel": [],
+      "spellsKnownPerLevel": [],
+      "spellcastingDescription": "None",
+      "spellcastingSpellname": "Spell",
+      "spellcastingSpellnamePl": "Spells",
       "spellPointGroup": "wizard",
+      "spellcastingAbility": "int",
       "spellPointBonusFormula": "0",
       "spellPointTable": {
         "1":0,
@@ -1131,6 +1175,50 @@
         "19":0,
         "20":0
       },
+      "powersKnown": {
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+        "6":0,
+        "7":0,
+        "8":0,
+        "9":0,
+        "10":0,
+        "11":0,
+        "12":0,
+        "13":0,
+        "14":0,
+        "15":0,
+        "16":0,
+        "17":0,
+        "18":0,
+        "19":0,
+        "20":0
+      },
+      "powersMaxLevel": {
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+        "6":0,
+        "7":0,
+        "8":0,
+        "9":0,
+        "10":0,
+        "11":0,
+        "12":0,
+        "13":0,
+        "14":0,
+        "15":0,
+        "16":0,
+        "17":0,
+        "18":0,
+        "19":0,
+        "20":0
+      },
       "hd": 8,
       "hp": 8,
       "bab": "low",
@@ -1146,7 +1234,8 @@
         "skill": { "value": 0 },
         "alt": { "value": 0 }
       },
-      "classSkills": {}
+      "classSkills": {},
+      "nonActiveClassAbilities": []
     },
     "buff": {
       "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect"],

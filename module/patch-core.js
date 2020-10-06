@@ -3,7 +3,7 @@ import { _preProcessDiceFormula } from "./dice.js";
 
 const FormApplication_close = FormApplication.prototype.close;
 
-export function PatchCore() {
+export async function PatchCore() {
   // Patch getTemplate to prevent unwanted indentation in things things like <textarea> elements.
   async function D35E_getTemplate(path) {
     if ( !_templateCache.hasOwnProperty(path) ) {
@@ -41,18 +41,39 @@ export function PatchCore() {
   };
 
   // Patch Roll._replaceData
-  const Roll__replaceData = Roll.prototype._replaceData;
-  Roll.prototype._replaceData = function(formula) {
-    let result = Roll__replaceData.call(this, formula);
-    result = _preProcessDiceFormula(result, this.data);
-    return result;
-  };
-
+  if (!isMinimumCoreVersion("0.7.2")) {
+    const Roll__replaceData = Roll.prototype._replaceData;
+    Roll.prototype._replaceData = function(formula) {
+      let result = Roll__replaceData.call(this, formula);
+      result = _preProcessDiceFormula(result, this.data);
+      return result;
+    };
+  }
+  else {
+    const Roll__identifyTerms = Roll.prototype._identifyTerms;
+    Roll.prototype._identifyTerms = function(formula) {
+      formula = _preProcessDiceFormula(formula, this.data);
+      const terms = Roll__identifyTerms.call(this, formula);
+      return terms;
+    };
+  }
   // Patch, patch, patch
   Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
   Combat.prototype.rollInitiative = _rollInitiative;
   window.getTemplate = D35E_getTemplate;
+
+  if (isMinimumCoreVersion("0.7.2")) {
+    await import("./low-light-vision.js");
+  }
+  else {
+    await import("./legacy/low-light-vision.js");
+  }
+
 }
 
-import "./low-light-vision.js";
+
+
+
+import { isMinimumCoreVersion } from "./lib.js";
+
 import "./measure.js";

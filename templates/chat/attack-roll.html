@@ -33,7 +33,10 @@
       <div class="dice-flavor">{{atk.damage.flavor}}</div>
       {{/if}}
       <div class="dice-result">
-        <h4 class="dice-total">{{atk.damage.total}}</h4>
+        <h4 class="dice-total">
+        {{atk.damage.total}}
+        {{{atk.damage.shortTooltip}}}
+        </h4>
         {{{atk.damage.tooltip}}}
       </div>
     </div>
@@ -43,7 +46,10 @@
       <div class="dice-flavor">{{atk.critDamage.flavor}}</div>
       {{/if}}
       <div class="dice-result">
-        <h4 class="dice-total">{{atk.critDamage.total}}</h4>
+        <h4 class="dice-total">
+        {{atk.critDamage.total}}
+        {{{atk.critDamage.critShortTooltip}}}
+        </h4>
         {{{atk.critDamage.tooltip}}}
       </div>
     </div>

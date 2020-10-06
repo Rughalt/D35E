@@ -1,0 +1,63 @@
+<form autocomplete="off" onsubmit="event.preventDefault();">
+    <ol class="item-list">
+        {{#each abilities as |abl|}}
+        <li class="item flexrow" data-ability="{{abl.key}}">
+            <div class="item-name">
+                <h4>
+                    {{abl.name}}
+                </h4>
+            </div>
+
+            {{!-- Subtract --}}
+            <div class="ability-controls">
+                <a class="ability-control subtract">
+                    <i class="fas fa-minus"></i>
+                </a>
+            </div>
+
+            {{!-- Current Value --}}
+            <span class="item-detail ability-value">
+        {{abl.value}}
+      </span>
+
+            {{!-- Add --}}
+            <div class="ability-controls">
+                <a class="ability-control add">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
+        </li>
+        {{/each}}
+    </ol>
+
+    <div class="info">
+        <p>{{localize "D35E.PointBuyCalculatorSpent"}}: {{points}}</p>
+        <table>
+            <tr>
+                <th>{{localize "D35E.PointBuyCalculatorCampaignType"}}</th>
+                <th>{{localize "D35E.PointBuyCalculatorPoints"}}</th>
+            </tr>
+            <tr>
+                <td>{{localize "D35E.PointBuyCalculatorLowFantasy"}}</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>{{localize "D35E.PointBuyCalculatorStandardFantasy"}}</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>{{localize "D35E.PointBuyCalculatorHighFantasy"}}</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>{{localize "D35E.PointBuyCalculatorEpicFantasy"}}</td>
+                <td>25</td>
+            </tr>
+        </table>
+        <p>
+            <i class="fas fa-exclamation-triangle"></i> {{localize "D35E.PointBuyCalculatorWarning"}}
+        </p>
+    </div>
+
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.Confirm"}}</button>
+</form>
