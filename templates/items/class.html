@@ -358,6 +358,13 @@
                 <label>{{localize "D35E.MaxLevel"}}</label>
                 <input type="text" name="data.maxLevel" value="{{data.maxLevel}}" data-dtype="Number"/>
             </div>
+
+            <div class="form-group">
+            <label class="checkbox skill-cs">
+                <label>{{localize "D35E.AutomaticFeatures"}}</label>
+                <input type="checkbox" name="data.automaticFeatures" {{checked data.automaticFeatures}}/>
+            </label>
+            </div>
             <em>{{localize "D35E.MaxLevelAutomationInfo"}}</em>
 
             <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>

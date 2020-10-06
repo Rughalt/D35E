@@ -2851,10 +2851,11 @@ export class ActorPF extends Actor {
 
         if (getProperty(this.data, "data.details.level.value") !== level) {
             data["data.details.level.value"] = level;
-
-            let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
+            let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial" && o.data.data.automaticFeatures).sort((a, b) => {
                 return a.sort - b.sort;
             });
+
+            console.log('Classes',classes)
             let itemsWithUid = new Map()
             let existingAbilities = new Set()
             for (let i of this.items.values()) {

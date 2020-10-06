@@ -993,6 +993,8 @@
   "D35E.PointBuyCalculatorStandardFantasy": "Standard Fantasy",
   "D35E.PointBuyCalculatorHighFantasy": "High Fantasy",
   "D35E.PointBuyCalculatorEpicFantasy": "Epic Fantasy",
+  "D35E.AutomaticFeatures": "Automate Class Features addition/deletion",
+  "D35E.MaxLevelAutomationInfo": "If you enter a value in Max Level field, class description will automatically generate progression tables based on BAB and Throws. Enabling Automate Class Features will cause clas to automatically add Class features to Charactes on level up and remove them when lowering level.",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
