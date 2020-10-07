@@ -365,3 +365,65 @@
     display: block;
   }
 }
+
+.onboarding {
+
+  background: url(/systems/D35E/icons/ui/onboarding.png);
+  background-size: 100% 100%;
+  height: auto !important;
+
+  header.window-header {
+    border-bottom: none;
+  }
+  .window-content {
+    background: none;
+    color: white;
+  }
+
+  .dialogue {
+    strong {
+      color: #d89753;
+    }
+
+    font-size: 14px;
+    padding: 0 1rem 1.5rem;
+
+    .portrait {
+      flex: 0;
+      width: 150px;
+      height: 150px;
+      background-image: url(/systems/D35E/icons/ui/onboarding-hero.png);
+      background-size: cover;
+      position: absolute;
+      left: -160px;
+      top: 0
+    }
+    .content {
+      font-size: 14px;
+
+      img {
+        display: inline;
+        height: 18px;
+        border: white 1px solid;
+        vertical-align: middle;
+      }
+    }
+
+    .tip {
+      position: absolute;
+      padding: 1em;
+      background: black;
+      font-family: "Signika", "Palatino Linotype", serif;
+      font-size: unset;
+      top: -94px;
+      margin-right: 1rem;
+      border: 2px solid #946C54;
+      border-radius: 2px;
+      -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+      box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    }
+
+
+  }
+}

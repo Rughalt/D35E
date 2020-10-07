@@ -22,6 +22,10 @@ export class EntrySelector extends FormApplication {
     return this.options.name;
   }
 
+  get progression() {
+    return this.options.isProgression || false;
+  }
+
   get fields() {
     return this.options.fields.split(";");
   }
@@ -69,12 +73,25 @@ export class EntrySelector extends FormApplication {
 
     if (a.classList.contains("add-entry")) {
       let obj = [];
-      for (let a = 0; a < this.dataCount; a++) {
-        let dataType = this.dtypes[a];
-        if (dataType === "Number") obj.push(0);
-        else obj.push("");
+      if (this.progression) {
+        for (let a = 0; a < this.dataCount; a++) {
+          let dataType = this.dtypes[a];
+          if (a > 0) {
+            if (dataType === "Number") obj.push(this.entries.length === 0 ? -1 : this.entries[this.entries.length - 1][a]);
+            else obj.push("");
+          } else {
+            obj.push(this.entries.length+1);
+          }
+        }
+        this.entries.push(obj);
+      } else {
+        for (let a = 0; a < this.dataCount; a++) {
+          let dataType = this.dtypes[a];
+          if (dataType === "Number") obj.push(0);
+          else obj.push("");
+        }
+        this.entries.push(obj);
       }
-      this.entries.push(obj);
       this._render(false);
     }
 
@@ -97,7 +114,7 @@ export class EntrySelector extends FormApplication {
     if (a.dataset.dtype === "Number") {
       let v = parseFloat(value);
       if (isNaN(v)) v = 0;
-      this.entries[index][index2] = Math.floor(v * 100) / 100;
+      this.entries[index][index2] = v === 0 ? 0 : Math.floor(v * 100) / 100;
     }
     else this.entries[index][index2] = value;
   }

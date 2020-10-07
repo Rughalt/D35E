@@ -345,6 +345,8 @@ const _migrateActorBaseStats = function(ent, updateData) {
   if (getProperty(ent.data, "data.attributes.conditions.polymorphed") == null) {
     updateData["data.attributes.conditions.polymorphed"] = false;
   }
+
+
 };
 
 const _migrateActorCreatureType = function(ent, updateData) {
@@ -456,6 +458,29 @@ const _migrateClassType = function(ent, updateData) {
   if (ent.type !== "class") return;
 
   if (getProperty(ent.data.data, "classType") == null) updateData["data.classType"] = "base";
+
+
+  if (getProperty(ent.data.data, "powersKnown" === null)) {
+    let powersKnown = {}
+    for (let i = 1; i <= 20; i++) {
+      powersKnown[i] = 0;
+    }
+    updateData["data.powersKnown"] = powersKnown
+  }
+  if (getProperty(ent.data.data, "powerPointTable" === null)) {
+    let powerPointTable = {}
+    for (let i = 1; i <= 20; i++) {
+      powerPointTable[i] = 0;
+    }
+    updateData["data.powerPointTable"] = powerPointTable
+  }
+  if (getProperty(ent.data.data, "powersMaxLevel" === null)) {
+    let powersMaxLevel = {}
+    for (let i = 1; i <= 20; i++) {
+      powersMaxLevel[i] = 0;
+    }
+    updateData["data.powersMaxLevel"] = powersMaxLevel
+  }
 };
 
 const _migrateWeaponCategories = function(ent, updateData) {

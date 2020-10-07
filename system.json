@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "DND 3.5e",
   "description": "DND 3.5E implementation for Foundry VTT. Aiming to provide 100% SRD coverage.<br><br>Originaly based LoopeeDK conversion of Furyspark's Pathfinder1 system.",
-  "version": "0.84.2",
+  "version": "0.85.3",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -115,6 +115,13 @@
       "entity": "Item"
     },
     {
+      "name": "srd-rules",
+      "label": "SRD Rules Extended Descriptions",
+      "system": "D35E",
+      "path": "./packs/srd-rules.db",
+      "entity": "JournalEntry"
+    },
+    {
       "name": "sample-macros",
       "label": "Sample Macros",
       "system": "D35E",
@@ -141,6 +148,13 @@
       "system": "D35E",
       "path": "./packs/conditions.db",
       "entity": "JournalEntry"
+    },
+    {
+      "name": "scenes",
+      "label": "Scenes",
+      "system": "D35E",
+      "path": "./packs/scenes.db",
+      "entity": "Scene"
     }
   ],
   "languages": [

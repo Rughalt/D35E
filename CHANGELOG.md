@@ -1,4 +1,17 @@
 # Changelog
+## 0.85.2
+### SRD
+- Finished Base classes implementation
+- Added Base classes descriptions and art
+
+### Features
+- Onboarding/Tutorial for new players
+- Automatic Class Features adding and removing
+- Automatic Spell slot calculation
+- Ability to set up spellbook from Class
+- Point-Buy system based on Pathfinder 1 rules - ported from PF1
+
+
 ## 0.84.2
 ### SRD
 - Added various missing Enhancements from SRD

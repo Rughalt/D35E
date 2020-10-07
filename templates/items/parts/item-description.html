@@ -86,6 +86,8 @@
       </div>
       {{/if}}
 
+
+
       {{!-- Properties --}}
 
       {{#unless showUnidentifiedData}}
@@ -94,7 +96,34 @@
         <li>{{this}}</li>
         {{/each}}
       </ol>
-      {{/unless}}
+      {{/unless}} 
+
+      {{#if isFeat}}
+      <div class="form-group">
+        <label>{{localize "D35E.FeatPool"}}</label>
+        <select name="data.classSource" data-dtype="String">
+            {{#select data.classSource}}
+            <option value="">{{localize "D35E.Base"}}</option>
+            {{#each featCounters as |ftt a|}}
+            <option value="{{ftt.val}}" style="text-transform: capitalize">{{ftt.name}}</option>
+            {{/each}}
+            {{/select}}
+        </select>
+      </div>
+      {{/if}}
+
+
+      {{#if isGM}}
+      <div class="form-group">
+        <label>UID</label>
+        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+      </div>
+
+      <div class="form-group">
+        <label>Non Removable</label>
+        <input type="checkbox" name="data.userNonRemovable" {{checked data.userNonRemovable}}/>
+      </div>
+      {{/if}}
     </div>
 
     {{#if showIdentifyDescription}}

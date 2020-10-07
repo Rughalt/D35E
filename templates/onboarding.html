@@ -1,0 +1,202 @@
+<style>
+    .navlink {
+        color: #ffbc00;
+    }
+</style>
+<div>
+    <div class="flexrow dialogue">
+        <div class="portrait">
+
+        </div>
+        <div class="content merienda">
+            <div id="onboarding-welcome">
+                <p>Welcome, traveller!</p>
+                <p>I was expecting you, and I was waiting eagerly to show you around the system where you'll be having your next great adventure.</p>
+                <p id="char-selector-exists" style="display: none">Before continuing, select a character in window that appeared in the middle and click Save Settings.</p>
+                <p id="char-selector-gm" style="display: none; color: #d89753">To see how onboarding will look as a Player, right click on your name on player list, then Player Configuration and select a Character to take control. You can release control after tutorial ends.</p>
+                <a class="navlink" onclick="showCharacterMovementTutorial()"><i class="fas fa-chevron-right"></i> Show me around <em style="color: white; opacity: 0.7">(you are new to Foundry VTT)</em></a><br>
+                <a class="navlink" onclick="showCharacterCardTutorial()"><i class="fas fa-chevron-right"></i> I have a feeling I've been here, but in a different adventure <em style="color: white; opacity: 0.7">(you know basis of Foundry VTT but not Legacies of the Dragon/DND 3.5e)</em></a><br>
+                <a class="navlink show-again"><i class="fas fa-chevron-right"></i> I know my way around here, old man! <em style="color: white; opacity: 0.7">(dismiss tutorials)</em></a>
+                <p class="tip" id="gm-tip" style="display: none; top: -110px"><em>Tip!</em> To make sure your players get the most of the onboarding, create empty character sheets for each of them and link them to tokens. Then create a scene - or use Introduction scene from scene compendium - and place player tokens there. This way they will be able to take full advantage of the tutorial.</p>
+            </div>
+            <div id="onboarding-character-movement" style="display: none">
+                <p>First thing first - you have to know how to move. Look for a Token that represents your character and click it, so it becomes selected. You can then use <strong>Arrow Keys</strong> to move around the map. Take a note that you can only see things that are in your vision, and you cannot pass through walls.</p>
+                <p>If you encounter things looking like a Door, you can click them to open or close - if the doors are unlocked of course.</p>
+                <a class="navlink" onclick="showCharacterCardTutorial()"><i class="fas fa-chevron-right"></i> It seems I didn't forget how to walk.</a><br>
+            </div>
+            <div id="onboarding-character-card" style="display: none">
+                <p>One of the most important things is knowing how to access your <strong>Character Sheet</strong>. Navigate to actors tab on sidebar using <i class="fas fa-users"></i> icon and find your Character on the list and click it!</p>
+                <p>Look around the card - your Game Master may have set it up for you, but if not, I can tell you how to do it</p>
+                <p style="color: #ff5b41; font-size: 11px">You can proceed only after opening your character sheet!</p>
+                <a class="navlink" onclick="showAddRaceTutorial()"><i class="fas fa-chevron-right"></i> Sheet is empty, what should I do?</a><br>
+                <a class="navlink" onclick="showSkillTutorial()"><i class="fas fa-chevron-right"></i> It seems it was already prepared, what is next?</a>
+            </div>
+            <div id="onboarding-character-race" style="display: none">
+                <p>First thing you have to do is you need to add a <strong>Race</strong> and a <strong>Class</strong> to your hero and set his abilities.</p>
+                <p>You can set abilities in <strong>Summary</strong> tab of a Character sheet. Do this first, and then open <strong>Races Compendium</strong> (<i class="fas fa-atlas"></i> icon on sidebar) and <strong>Drag and Drop</strong> a Race from Compendium to Race field</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open to proceed!</p>
+                <a class="navlink" onclick="showAddClassTutorial()"><i class="fas fa-chevron-right"></i> Done and done! What's next?</a>
+                <p class="tip"><em>Tip!</em> Most of SRD data is provided in Compendiums, so you do not have to create anything by yourself! If you need however, most of lists have <strong>+ Add</strong> button that allow manual creation of specific things. You can read more in Documentation.</p>
+            </div>
+            <div id="onboarding-character-class" style="display: none">
+                <p>To add Class to you character, navigate to <strong>Features</strong> tab and select <strong>Classes</strong>. Then open Classes compendium, and <strong>Drag and Drop</strong> a Class from Compendium to Classes list.</p>
+                <p>To set level and HP rolled for the class, you'll need to open <strong>Class Details</strong> using <i class="fas fa-edit"></i> button located in the line with Class name</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and open Class details to proceed!</p>
+                <a class="navlink" onclick="showSetClassDetailsTutorial()"><i class="fas fa-chevron-right"></i> OK, I have it open.</a>
+                <p class="tip" style="top: -110px"><em>Tip!</em> Most of the lists in Character Sheet work in similar way. You can drop things on the lists, edit them using <i class="fas fa-edit"></i> button, delete them and in some cases activate their actions. To quickly look at item details, click on its name, and to show it to others (in the chat), click on its icon. You can read more in Documentation.</p>
+            </div>
+            <div id="onboarding-character-class-details" style="display: none">
+                <p>On this page you can see all information about the Class. You can even change how it works in Details tab, but you shouldn't have to do it! On thing you have to do, it so set <strong>Level</strong> and <strong>HP</strong></p>
+                <p>You can edit <strong>Level</strong> and <strong>Hit Point</strong> fields and they will be passed back to your Character. Remember, that when setting HP here, you only set Rolled Hit Points, without Constitution bonus.</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and close Class Details to proceed!</p>
+                <a class="navlink" onclick="showSkillTutorial()"><i class="fas fa-chevron-right"></i> HP and Level set, what now?</a>
+                <p class="tip"><em>Tip!</em> Classes and other non-character things in Foundry - like Feats, Weapons, Spells etc. are <strong>Items</strong> - and each Item Details Window look similar. You can read more in Documentation.</p>
+            </div>
+            <div id="onboarding-character-skills" style="display: none">
+                <p>One of the most importent things about your hero are Skills. You can see and adjust skill ranks on <strong>Skills</strong> tab. Go there and set up your Skills - enter Skill rank in <strong>Rank</strong> field in the correct line.</p>
+                <p>To roll a skill, use <i class="fas fa-dice-d20"></i> icon. You can then select if you want to make a standard roll or take 10 or 20. Try it!</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open to proceed!</p>
+                <a class="navlink" onclick="showAddWeaponTutorial()"><i class="fas fa-chevron-right"></i> Nice! This looks easy.</a>
+            </div>
+            <div id="onboarding-character-weapons" style="display: none">
+                <p>Lets add a <strong>Weapon</strong> to your character. To do this, navigate to <strong>Inventory</strong> - <strong>Weapons</strong> tab on your character Sheet, then open <strong>Weapons and Ammo</strong> compendium, and drag and drop <strong>Dagger</strong> from Compendium to Character Sheet</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open to proceed!</p>
+                <a class="navlink" onclick="showAddAttackTutorial()"><i class="fas fa-chevron-right"></i> I have a Weapon! How to attack with it?</a>
+            </div>
+            <div id="onboarding-character-attacks" style="display: none">
+                <p>First, open <strong>Weapon Details</strong> window (again, using <i class="fas fa-edit"></i> button located in the line with Weapon name - in ths case a <strong>Dagger</strong>). After you have opened it, use <strong>Create Attack</strong> button to create an Attack.</p>
+                <p>Afterwards, close Weapon Details Window and navigate to <strong>Summary</strong> tab. You should see <strong>Dagger</strong> in the <strong>Attacks</strong> list with <img src="/systems/D35E/icons/actions/gladius.svg"> icon besides it. Click on the <img src="/systems/D35E/icons/actions/gladius.svg"> icon to attack! In the window that appears, click Single Attack to make a roll and display it in chat.</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open to proceed!</p>
+                <a class="navlink" onclick="showHotbarTutorial()"><i class="fas fa-chevron-right"></i> Great! Let enemies feel my wrath!</a>
+            </div>
+            <div id="onboarding-character-hotbar" style="display: none">
+                <p>To have easier access to your <strong>Items</strong> and <strong>Attacks</strong> you can use <strong>Hotbar</strong>. Hotbar is located below this window. Try dragging Attack you just created to Hotbar. To use it, just click it or press hotkey (number from 1 to 9)</p>
+                <p style="color: #ff5b41; font-size: 11px">You can close your character sheet after that.</p>
+                <a class="navlink" onclick="showRollingChatTutorial()"><i class="fas fa-chevron-right"></i> This makes it easier.</a>
+            </div>
+            <div id="onboarding-rolling-chat" style="display: none">
+                <p>One more important thing - if you want to make any arbitrary roll, be it because you Game Master asked you to or you are just feeling like it, you can do it right in chat. Navigate to <strong>Chat</strong> in sidebar (using <i class="fas fa-comments"></i> icon) and type a roll there.</p>
+                <p>For example, to roll 1d20+4, type <pre>/r 1d20+4</pre> and press enter. Try this!</p>
+                <a class="navlink" onclick="showDocumentationHub()"><i class="fas fa-chevron-right"></i> This was easy enough. Anything else?</a>
+            </div>
+            <div id="onboarding-documentation-hub" style="display: none">
+                <p>This is all I wanted for you to know for now - unless you have more questions. I can tell you about some other topics, or I can open a portal to place where you can read more or meet other people using this system.</p>
+
+                <a class="navlink" href="https://docs.legaciesofthedragon.com" style="text-decoration: none"><i class="fas fa-chevron-right"></i> Take me to Documentation! I crave knowledge! <em style="color: #ffd14e; opacity: 0.7">(open a website)</em></a><br>
+                <a class="navlink" href="https://discord.gg/wDyUaZH" style="text-decoration: none"><i class="fas fa-chevron-right"></i> I want to meet fellow Adventurers. Take me to the Discord! <em style="color: #ffd14e; opacity: 0.7">(open Discord)</em></a><br>
+                <a class="navlink show-again"><i class="fas fa-chevron-right"></i> I think I know everything! Thanks, Stranger! <em style="color: white; opacity: 0.7">(close tutorial)</em></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function showSetClassDetailsTutorial() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        // User character is null
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length) && $(`.sheet.item`).length){
+            $('#onboarding-character-class').hide();
+            $('#onboarding-character-class-details').show();
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and open any Class Details to continue!`)
+        }
+    }
+
+    function showRollingChatTutorial() {
+        $('#onboarding-character-hotbar').hide();
+        $('#onboarding-rolling-chat').show();
+    }
+
+
+    function showHotbarTutorial() {
+        $('#onboarding-character-attacks').hide();
+        $('#onboarding-character-hotbar').show();
+    }
+
+    function showDocumentationHub() {
+        $('#onboarding-rolling-chat').hide();
+        $('#onboarding-documentation-hub').show();
+    }
+
+    function showAddAttackTutorial() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+            $('#onboarding-character-weapons').hide();
+            $('#onboarding-character-attacks').show();
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+
+    function showAddWeaponTutorial() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+            $('#onboarding-character-skills').hide();
+            $('#onboarding-character-weapons').show();
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+
+    function showSkillTutorial() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+            $('#onboarding-character-card').hide();
+            $('#onboarding-character-class-details').hide();
+            $('#onboarding-character-skills').show();
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+
+    function showAddClassTutorial() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null ||
+            ($(`#actor-${userCharacter}`).length
+                && game.user.character.data.items.some(i => i.type === "race")))){
+            $('#onboarding-character-race').hide();
+            $('#onboarding-character-class').show();
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and add a Race to character to continue!`)
+        }
+    }
+
+    function showAddRaceTutorial() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null ||
+            $(`#actor-${userCharacter}`).length)){
+            $('#onboarding-character-card').hide();
+            $('#onboarding-character-race').show();
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+
+    function showCharacterCardTutorial() {
+        if (!$('#player-config').length && (game.user.character !== null)) {
+            $('#onboarding-welcome').hide();
+            $('#onboarding-character-movement').hide();
+            $('#onboarding-character-card').show();
+        } else{
+            ui.notifications.warn(`Select Character in Player Setting windows and save setting to continue.`)
+        }
+    }
+
+    function showCharacterMovementTutorial() {
+        if (!$('#player-config').length && (game.user.character !== null)) {
+            $('#onboarding-welcome').hide();
+            $('#onboarding-character-movement').show();
+            canvas.tokens.cycleTokens(1, true);
+        } else{
+            ui.notifications.warn(`Select Character in Player Setting windows and save setting to continue.`)
+        }
+    }
+
+    if ($('#player-config').length) {
+        $('#char-selector-exists').show();
+    }
+    if (game.user.isGM) {
+        $('#gm-tip').show();
+        $('#char-selector-gm').show();
+    }
+</script>

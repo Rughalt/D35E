@@ -27,6 +27,8 @@ import * as chat from "./module/chat.js";
 import * as migrations from "./module/migration.js";
 import {SemanticVersion} from "./semver.js";
 import {sizeInt} from "./module/lib.js";
+import * as cache from "./module/cache.js";
+import {CACHE} from "./module/cache.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -133,7 +135,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = "0.84.0";
+  const NEEDS_MIGRATION_VERSION = "0.85.0";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
     PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
@@ -148,6 +150,8 @@ Hooks.once("ready", async function() {
     await migrations.migrateWorld();
   }
 
+  await cache.buildCache();
+  console.log("D35E | Cache is ", CACHE)
   game.actors.entities.forEach(obj => { obj._updateChanges({ sourceOnly: true }); });
   
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Attacks(app, html, data) });
@@ -157,8 +161,14 @@ Hooks.once("ready", async function() {
     TopPortraitBar.render(game.actors.get(key))
   }
 
-  if (!game.user.isGM)
+  if (!game.user.isGM) {
+    (await import(
+            /* webpackChunkName: "welcome-screen" */
+            './module/onboarding.js'
+            )
+    ).default();
     return;
+  }
   // Edit next line to match module.
   const system = game.system;
   const title = system.data.title;
@@ -173,7 +183,11 @@ Hooks.once("ready", async function() {
 
   if (!isNewerVersion(moduleVersion, oldVersion))
     return;
-
+  (await import(
+          /* webpackChunkName: "welcome-screen" */
+          './module/onboarding.js'
+          )
+  ).default();
   (await import(
           /* webpackChunkName: "welcome-screen" */
           './module/welcome-screen.js'

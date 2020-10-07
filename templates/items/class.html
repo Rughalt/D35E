@@ -1,207 +1,565 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
-  {{!-- Item Sheet Header --}}
-  <header class="sheet-header flexrow">
-    <div class="sheet-header-profile">
-    <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
-    </div>
-    <div class="header-details flexrow">
-      <h1 class="charname">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
-      </h1>
+    {{!-- Item Sheet Header --}}
+    <header class="sheet-header flexrow">
+        <div class="sheet-header-profile">
+            <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+        </div>
+        <div class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize " D35E.ItemName"}}"/>
+            </h1>
 
-      <div class="item-subtitle">
-        <h4 class="item-type">{{itemType}}</h4>
-        <span class="item-status">{{itemStatus}}</span>
-      </div>
+            <ul class="summary">
+                <li>
+                    {{lookup config.classTypes data.classType}}
+                </li>
+            </ul>
+        </div>
+        <ul class="attributes flexrow">
+            <li class="attribute high tooltip" data-attribute="levels">
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
+                <h4 class="attribute-name box-title">{{localize "D35E.Level"}}</h4>
+                <div class="attribute-value">
+                    <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize " D35E.Level"}}"
+                    data-dtype="Number"/>
+                </div>
+                <footer class="attribute-footer">
 
-      <ul class="summary">
-        <li>
-          {{lookup config.classTypes data.classType}}
-        </li>
-        <li class="tooltip">
-          <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
-          <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize "D35E.Level"}}" data-dtype="Number"/>
-        </li>
-      </ul>
-    </div>
-  </header>
+                </footer>
+            </li>
 
-  {{!-- Item Sheet Navigation --}}
-  <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
-    <a class="item" data-tab="children">{{ localize "D35E.Children" }}</a>
-    <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
-  </nav>
+            <li class="attribute high tooltip" data-attribute="hp">
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.hp : {{data.hp}}</span>
+                <h4 class="attribute-name box-title">{{localize "D35E.HitPoints"}} {{#if healthConfig.auto}}(Auto){{/if}}</h4>
+                <div class="attribute-value">
+                    {{!-- Hit Points --}}
+                    {{#unless healthConfig.auto}}
+                        <input type="text" name="data.hp" value="{{data.hp}}" data-dtype="Number"/>
+                    {{else}}
+                        <input type="text" name="data.hp" disabled value="{{data.hp}}" data-dtype="Number"/>
+                    {{/unless}}
+                </div>
+                <footer class="attribute-footer">
 
-  {{!-- Item Sheet Body --}}
-  <section class="primary-body">
+                </footer>
+            </li>
+        </ul>
+    </header>
 
-    {{!-- Description Tab --}}
-    <div class="tab flexcol active" data-group="primary" data-tab="description">
-      {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
-    </div>
+    {{!-- Item Sheet Navigation --}}
+    <nav class="sheet-navigation tabs" data-group="primary">
+        <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+        <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+        <a class="item" data-tab="children">{{ localize "D35E.Children" }}</a>
+        <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
+    </nav>
 
-    {{!-- Details Tab --}}
-    <div class="tab details" data-group="primary" data-tab="details">
+    {{!-- Item Sheet Body --}}
+    <section class="primary-body" style="overflow: hidden">
 
-      {{!-- Class Type --}}
-      <div class="form-group">
-        <label>{{localize "D35E.ClassType"}}</label>
-        <select name="data.classType">
-          {{#select data.classType}}
-          {{#each config.classTypes as |name type|}}
-          <option value="{{type}}">{{name}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
+        {{!-- Description Tab --}}
+        {{#if hasMaxLevel}}
+            <div class="tab flexcol active" data-group="primary" data-tab="description">
+                <nav class="sheet-navigation tabs subtabs description" data-group="description">
+                    <a class="item active" data-tab="sub-description">{{ localize "D35E.Description" }}</a>
+                    <a class="item" data-tab="sub-progression">{{ localize "D35E.Progression" }}</a>
+                    {{#if isNonPsionSpellcaster}}
+                    <a class="item" data-tab="sub-spellcasting">{{ localize "D35E.ProgressionSpells" }}</a>
+                    {{/if}}
+                    {{#if isPsionSpellcaster}}
+                    <a class="item" data-tab="sub-psionics">{{ localize "D35E.ProgressionPsionics" }}</a>
+                    {{/if}}
+                </nav>
+                <div class="flexrow description-container" style="overflow: hidden; height: 100%">
+                    <section class="description-body" style="display: block; height: 100%">
+                        <div class="tab description-group flexcol" data-group="description"
+                             data-tab="sub-description">
+                            {{editor content=data.description.value target="data.description.value" button=true owner=owner
+                            editable=editable}}
+                        </div>
+                        <div class="tab description-group flexcol" data-group="description" data-tab="sub-progression">
+                            <div class="inventory-group flexcol">
+                                <ol class="inventory-list sub-scroll" style="padding: 0">
+                                    <li class="flexrow inventory-header spellbook-header">
+                                        <div class="item-name flexrow progression-level">
+                                            <h3>Level</h3>
+                                        </div>
+                                        <div class="bab progression-bab-wide">
+                                            BAB
+                                        </div>
+                                        <div class="fort progression-save">
+                                            Fort<br>Save
+                                        </div>
+                                        <div class="will progression-save">
+                                            Will<br>Save
+                                        </div>
+                                        <div class="ref progression-save">
+                                            Ref<br>Save
+                                        </div>
+                                        <div class="progression-abilities">Abilities</div>
 
-      {{!-- Racial Type --}}
-      {{#if isRacialHD}}
-      <div class="form-group">
-        <label>{{localize "D35E.CreatureType"}}</label>
-        <select name="data.creatureType">
-          {{#select data.creatureType}}
-          {{#each config.creatureTypes as |name type|}}
-          <option value="{{type}}">{{name}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
-      {{/if}}
+                                    </li>
 
-      {{!-- HD --}}
-      <div class="form-group">
-        <label>{{localize "D35E.HitDie"}}</label>
-        <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number" />
-      </div>
+                                    <ol class="item-list">
+                                        {{#each progression as |item i|}}
+                                        <li class="item progression-row flexrow">
+                                            <div class="item-name flexrow progression-level">
+                                                <h4>{{item.level}}</h4>
+                                            </div>
+                                            <div class="bab progression-bab-wide">
+                                                {{item.bab}}
+                                            </div>
+                                            <div class="fort progression-save">
+                                                +{{item.fort}}
+                                            </div>
+                                            <div class="will progression-save">
+                                                +{{item.will}}
+                                            </div>
+                                            <div class="ref progression-save">
+                                                +{{item.ref}}
+                                            </div>
+                                            <div class="progression-abilities">
+                                                <ol class="item-list" data-pack="D35E.class-abilities">
+                                                    {{#each item.abilities as |ability iid|}}
+                                                    <li class="item item-box progression-item  flexrow"
+                                                        data-item-id="{{ability._id}}">
+                                                        <div class="item-name child-item">
+                                                            <img src="{{ability.img}}" class="progression-ability-img">
+                                                            <h4 class="progression-ability-h4 rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                                                                {{ability.name~}}
+                                                            </h4>
+                                                        </div>
+                                                    </li>
+                                                    {{/each}}
+                                                    {{#if item.hasNonActive}}
+                                                    {{#each item.nonActive as |ability iid|}}
+                                                    <li class="item item-box progression-text" style="padding: 0"><span class="progression-ability-h4">{{ability.name}}{{#unless @last}}, {{/unless}}</span></li>
+                                                    {{/each}}
+                                                    {{/if}}
+
+                                                </ol>
+                                            </div>
+                                        </li>
+                                        {{/each}}
+                                    </ol>
+                                </ol>
+                            </div>
+
+                            <div>
+                                <h2 class="p1" style="margin-top: 1rem">Class Features</h2>
+                                {{#each abilitiesDescription as |item i|}}
+                                <div class="progression-ability-description">
+                                    <strong>{{item.name}}:</strong> {{{item.description}}}
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{#if isNonPsionSpellcaster}}
+                        <div class="tab description-group flexcol" data-group="description" data-tab="sub-spellcasting">
+
+                            {{{data.spellcastingDescription}}}
+
+                            <h2>{{data.spellcastingSpellname}} Progression Table</h2>
+                            <div class="inventory-group flexcol">
+                                <ol class="inventory-list sub-scroll" style="padding: 0">
+                                    <li class="flexrow inventory-header spellbook-header">
+                                        <div class="item-name flexrow progression-level">
+                                            <h3>Level</h3>
+                                        </div>
+                                        <div class="progression-bab">0</div>
+                                        <div class="progression-bab">1</div>
+                                        <div class="progression-bab">2</div>
+                                        <div class="progression-bab">3</div>
+                                        <div class="progression-bab">4</div>
+                                        <div class="progression-bab">5</div>
+                                        <div class="progression-bab">6</div>
+                                        <div class="progression-bab">7</div>
+                                        <div class="progression-bab">8</div>
+                                        <div class="progression-bab">9</div>
+
+                                    </li>
+
+                                    <ol class="item-list">
+                                        {{#each spellProgression as |item i|}}
+                                        <li class="item progression-row flexrow">
+                                            <div class="item-name flexrow progression-level">
+                                                <h4>{{item.level}}</h4>
+                                            </div>
+                                            <div class="progression-bab">{{item.spells0}}</div>
+                                            <div class="progression-bab">{{item.spells1}}</div>
+                                            <div class="progression-bab">{{item.spells2}}</div>
+                                            <div class="progression-bab">{{item.spells3}}</div>
+                                            <div class="progression-bab">{{item.spells4}}</div>
+                                            <div class="progression-bab">{{item.spells5}}</div>
+                                            <div class="progression-bab">{{item.spells6}}</div>
+                                            <div class="progression-bab">{{item.spells7}}</div>
+                                            <div class="progression-bab">{{item.spells8}}</div>
+                                            <div class="progression-bab">{{item.spells9}}</div>
+                                        </li>
+                                        {{/each}}
+                                    </ol>
+                                </ol>
+                            </div>
+
+                            {{#if hasKnownSpells}}
+                            <h2>{{data.spellcastingSpellnamePl}} Known</h2>
+                            <div class="inventory-group flexcol">
+                                <ol class="inventory-list sub-scroll" style="padding: 0">
+                                    <li class="flexrow inventory-header spellbook-header">
+                                        <div class="item-name flexrow progression-level">
+                                            <h3>Level</h3>
+                                        </div>
+                                        <div class="progression-bab">0</div>
+                                        <div class="progression-bab">1</div>
+                                        <div class="progression-bab">2</div>
+                                        <div class="progression-bab">3</div>
+                                        <div class="progression-bab">4</div>
+                                        <div class="progression-bab">5</div>
+                                        <div class="progression-bab">6</div>
+                                        <div class="progression-bab">7</div>
+                                        <div class="progression-bab">8</div>
+                                        <div class="progression-bab">9</div>
+
+                                    </li>
+
+                                    <ol class="item-list">
+                                        {{#each knownSpellProgression as |item i|}}
+                                        <li class="item progression-row flexrow">
+                                            <div class="item-name flexrow progression-level">
+                                                <h4>{{item.level}}</h4>
+                                            </div>
+                                            <div class="progression-bab">{{item.spells0}}</div>
+                                            <div class="progression-bab">{{item.spells1}}</div>
+                                            <div class="progression-bab">{{item.spells2}}</div>
+                                            <div class="progression-bab">{{item.spells3}}</div>
+                                            <div class="progression-bab">{{item.spells4}}</div>
+                                            <div class="progression-bab">{{item.spells5}}</div>
+                                            <div class="progression-bab">{{item.spells6}}</div>
+                                            <div class="progression-bab">{{item.spells7}}</div>
+                                            <div class="progression-bab">{{item.spells8}}</div>
+                                            <div class="progression-bab">{{item.spells9}}</div>
+                                        </li>
+                                        {{/each}}
+                                    </ol>
+                                </ol>
+                            </div>
+                            {{/if}}
+                        </div>
+                        {{/if}}
+                        {{#if isPsionSpellcaster}}
+                        <div class="tab description-group flexcol" data-group="description" data-tab="sub-psionics">
+
+                            {{{data.spellcastingDescription}}}
+
+                            <h2>{{data.spellcastingSpellname}} Progression Table</h2>
+                            <div class="inventory-group flexcol">
+                                <ol class="inventory-list sub-scroll" style="padding: 0">
+                                    <li class="flexrow inventory-header spellbook-header">
+                                        <div class="item-name flexrow progression-level">
+                                            <h3>Level</h3>
+                                        </div>
+                                        <div class="progression-pp">Power Points</div>
+                                        <div class="progression-pp">Known Powers</div>
+                                        <div class="progression-pp">Max Power Level</div>
+
+                                    </li>
+
+                                    <ol class="item-list">
+                                        {{#each powerPointLevels as |powerpoint key|}}
+                                        <li class="item progression-row flexrow">
+                                            <div class="item-name flexrow progression-level">
+                                                <h4>{{key}}</h4>
+                                            </div>
+                                            <div class="progression-pp">{{powerpoint.value}}</div>
+                                            <div class="progression-pp">{{powerpoint.known}}</div>
+                                            <div class="progression-pp">{{powerpoint.maxLevel}}</div>
+                                        </li>
+                                        {{/each}}
+                                    </ol>
+                                </ol>
+                            </div>
+
+                        </div>
+                        {{/if}}
+                    </section>
+                </div>
+            </div>
+        {{else}}
+
+            <div class="tab flexcol active" data-group="primary" data-tab="description">
+        <section class="description-body" style="padding: 0 10px">
+            <div class="flexcol">
+                {{editor content=data.description.value target="data.description.value" button=true owner=owner
+                editable=editable}}
+            </div>
+        </section>
+        </div>
+        {{/if}}
+
+        {{!-- Details Tab --}}
+        <div class="tab details" data-group="primary" data-tab="details">
+
+            {{!-- Class Type --}}
+            <div class="form-group">
+                <label>{{localize "D35E.ClassType"}}</label>
+                <select name="data.classType">
+                    {{#select data.classType}}
+                    {{#each config.classTypes as |name type|}}
+                    <option value="{{type}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+
+            {{!-- Racial Type --}}
+            {{#if isRacialHD}}
+            <div class="form-group">
+                <label>{{localize "D35E.CreatureType"}}</label>
+                <select name="data.creatureType">
+                    {{#select data.creatureType}}
+                    {{#each config.creatureTypes as |name type|}}
+                    <option value="{{type}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+            {{/if}}
+
+            {{!-- HD --}}
+            <div class="form-group">
+                <label>{{localize "D35E.HitDie"}}</label>
+                <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number"/>
+            </div>
 
 
 
-      {{!-- Hit Points --}}
-      {{#unless healthConfig.auto}}
-      <div class="form-group">
-        <label>{{localize "D35E.HitPoints"}}</label>
-        <input type="text" name="data.hp" value="{{data.hp}}" data-dtype="Number" />
-      </div>
-      {{/unless}}
+            {{!-- BAB --}}
+            <div class="form-group">
+                <label>{{localize "D35E.BABAbbr"}}</label>
+                <select name="data.bab">
+                    {{#select data.bab}}
+                    <option value="">{{localize "D35E.None"}}</option>
+                    {{#each config.classBAB as |name value|}}
+                    <option value="{{value}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
 
-      {{!-- BAB --}}
-      <div class="form-group">
-        <label>{{localize "D35E.BABAbbr"}}</label>
-        <select name="data.bab">
-          {{#select data.bab}}
-          <option value="">{{localize "D35E.None"}}</option>
-          {{#each config.classBAB as |name value|}}
-          <option value="{{value}}">{{name}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
-
-      {{!-- Skills/Level --}}
-      <div class="form-group">
-        <label>{{localize "D35E.SkillsPerLevel"}}</label>
-        <input type="text" name="data.skillsPerLevel" value="{{data.skillsPerLevel}}" data-dtype="Number" />
-      </div>
-
-      <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>
-
-      {{!-- Saving Throws --}}
-      {{#each data.savingThrows as |savingThrow id|}}
-      <div class="form-group">
-        <label>{{savingThrow.label}}</label>
-        <select name="data.savingThrows.{{id}}.value">
-          {{#select savingThrow.value}}
-          <option value="">{{localize "D35E.None"}}</option>
-          {{#each ../config.classSavingThrows as |name value|}}
-          <option value="{{value}}">{{name}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
-      {{/each}}
+            {{!-- Skills/Level --}}
+            <div class="form-group">
+                <label>{{localize "D35E.SkillsPerLevel"}}</label>
+                <input type="text" name="data.skillsPerLevel" value="{{data.skillsPerLevel}}" data-dtype="Number"/>
+            </div>
 
 
-      <h4 class="form-header">{{localize "D35E.AdditionalClassFeatures"}}</h4>
-      <div class="form-group">
-        <label>{{localize "D35E.TurnUndeadFormula"}}</label>
-        <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}" data-dtype="String" />
-      </div>
+            <div class="form-group">
+                <label>{{localize "D35E.MaxLevel"}}</label>
+                <input type="text" name="data.maxLevel" value="{{data.maxLevel}}" data-dtype="Number"/>
+            </div>
 
-      <div class="form-group">
-        <label>{{localize "D35E.SneakAttackGroup"}}</label>
-        <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String" />
-      </div>
+            <div class="form-group">
+            <label class="checkbox skill-cs">
+                <label>{{localize "D35E.AutomaticFeatures"}}</label>
+                <input type="checkbox" name="data.automaticFeatures" {{checked data.automaticFeatures}}/>
+            </label>
+            </div>
+            <em>{{localize "D35E.MaxLevelAutomationInfo"}}</em>
 
-      <div class="form-group">
-        <label>{{localize "D35E.SneakAttackFormula"}}</label>
-        <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}" data-dtype="String" />
-      </div>
+            <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>
 
-      {{#if isBaseClass}}
-      <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
-
-      {{!-- Favoured Class Bonuses --}}
-      {{#each data.fc as |fc id|}}
-      <div class="form-group">
-        <label>{{fc.label}}</label>
-        <input type="text" name="data.fc.{{id}}.value" value="{{fc.value}}" data-dtype="Number" />
-      </div>
-      {{/each}}
-      {{/if}}
-
-      <h4 class="form-header">{{localize "D35E.ClassSkills"}}</h4>
-
-      <div class="form-group">
-        <ol class="item-list">
-        {{#each skills as |skill key|}}
-        <li class="item flexrow" data-skill="{{key}}">
-          <label class="checkbox skill-cs">
-            <input type="checkbox" name="data.classSkills.{{key}}" {{checked skill.classSkill}} />
-          </label>
-          <h4>{{skill.name}}</h4>
-        </li>
-        {{/each}}
-        </ol>
-      </div>
-
-      <h4 class="form-header">{{localize "D35E.PowerPointsTable"}}</h4>
-
-      <div class="form-group spellcasting-ability">
-        <label><h3>{{localize "D35E.PowerPointsBaseAbility"}}</h3></label>
-        <select name="data.powerPointBonusBaseAbility" data-dtype="String">
-          {{#select powerPointBonusBaseAbility}}
-          <option value="">{{localize "D35E.None"}}</option>
-          {{#each abilities as |abl a|}}
-          <option value="{{a}}">{{localize abl.label}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
-      <div class="form-group">
-        <ol class="item-list">
-          {{#each powerPointLevels as |powerpoint key|}}
-          <li class="item flexrow">
-              <label>{{key}}</label>
-              <input type="text" name="data.powerPointTable.{{key}}" value="{{powerpoint.value}}" data-dtype="Number" />
-          </li>
-          {{/each}}
-        </ol>
-      </div>
-    </div>
+            {{!-- Saving Throws --}}
+            {{#each data.savingThrows as |savingThrow id|}}
+            <div class="form-group">
+                <label>{{savingThrow.label}}</label>
+                <select name="data.savingThrows.{{id}}.value">
+                    {{#select savingThrow.value}}
+                    <option value="">{{localize "D35E.None"}}</option>
+                    {{#each ../config.classSavingThrows as |name value|}}
+                    <option value="{{value}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+            {{/each}}
 
 
-    <div class="tab flexcol" data-group="primary" data-tab="children">
-      {{> "systems/D35E/templates/items/parts/item-children.html"}}
-    </div>
+            <h4 class="form-header">{{localize "D35E.AdditionalClassFeatures"}}</h4>
+            <div class="form-group">
+                <label>{{localize "D35E.TurnUndeadFormula"}}</label>
+                <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}"
+                       data-dtype="String"/>
+            </div>
 
-    <div class="tab flexcol" data-group="primary" data-tab="changes">
-      {{> "systems/D35E/templates/items/parts/item-changes.html"}}
+            <div class="form-group">
+                <label>{{localize "D35E.SneakAttackGroup"}}</label>
+                <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String"/>
+            </div>
 
-      {{> "systems/D35E/templates/items/parts/item-notes.html"}}
-    </div>
-  </section>
+            <div class="form-group">
+                <label>{{localize "D35E.SneakAttackFormula"}}</label>
+                <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}"
+                       data-dtype="String"/>
+            </div>
+
+            {{#if isBaseClass}}
+            <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
+
+            {{!-- Favoured Class Bonuses --}}
+            {{#each data.fc as |fc id|}}
+            <div class="form-group">
+                <label>{{fc.label}}</label>
+                <input type="text" name="data.fc.{{id}}.value" value="{{fc.value}}" data-dtype="Number"/>
+            </div>
+            {{/each}}
+            {{/if}}
+
+
+            <h4 class="form-header">{{localize "D35E.ClassAbilities"}}</h4>
+            <div class="data-selector">
+                <div class="form-group">
+                    <label>{{localize "D35E.NonActiveClassAbilities"}}</label><a class="entry-selector"
+                                                                                 for="data.nonActiveClassAbilities"
+                                                                                 data-fields="{{localize " D35E.Level"}};Ability;Description"
+                    data-dtypes="Number;String;String"><i class="fas fa-edit"></i></a>
+                </div>
+            </div>
+            <h4 class="form-header">{{localize "D35E.ClassSkills"}}</h4>
+
+            <div class="form-group">
+                <ol class="item-list">
+                    {{#each skills as |skill key|}}
+                    <li class="item flexrow" data-skill="{{key}}">
+                        <label class="checkbox skill-cs">
+                            <input type="checkbox" name="data.classSkills.{{key}}" {{checked skill.classSkill}}/>
+                        </label>
+                        <h4>{{skill.name}}</h4>
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+            <h4 class="form-header">{{localize "D35E.SpellCasting"}}</h4>
+
+            <div class="form-group">
+                <label>{{localize "D35E.SpellcastingType"}}</label>
+                <select name="data.spellcastingType">
+                    {{#select data.spellcastingType}}
+                    {{#each config.spellcastingType as |name type|}}
+                    <option value="{{type}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+
+
+            {{#if isSpellcaster}}
+            <div class="form-group spellcasting-ability flexrow">
+                <label><span>{{localize "D35E.SpellcastingAbility"}}</span></label>
+                <select name="data.spellcastingAbility" data-dtype="String">
+                    {{#select data.spellcastingAbility}}
+                    <option value="">{{localize "D35E.None"}}</option>
+                    {{#each config.abilities as |abl a|}}
+                    <option value="{{a}}">{{abl}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+
+            <div class="data-selector">
+                <div class="form-group">
+                    <label>{{localize "D35E.SpellsPerLevel"}}</label><a class="entry-selector" for="data.spellsPerLevel"
+                                                                        data-progression="true"
+                                                                        data-fields="{{localize " D35E.Level"}};0;1;2;3;4;5;6;7;8;9"
+                    data-dtypes="Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;"><i
+                        class="fas fa-edit"></i></a>
+                </div>
+            </div>
+
+
+            <div class="data-selector">
+                <div class="form-group">
+                    <label>{{localize "D35E.SpellsKnownPerLevel"}}</label><a class="entry-selector" for="data.spellsKnownPerLevel"
+                                                                        data-progression="true"
+                                                                        data-fields="{{localize " D35E.Level"}};0;1;2;3;4;5;6;7;8;9"
+                    data-dtypes="Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;"><i
+                        class="fas fa-edit"></i></a>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label>{{localize "D35E.SpellcastingSpellname"}}</label>
+                <input type="text" name="data.spellcastingSpellname" value="{{data.spellcastingSpellname}}" data-dtype="String"/>
+            </div>
+            <div class="form-group">
+                <label>{{localize "D35E.SpellcastingSpellnamePl"}}</label>
+                <input type="text" name="data.spellcastingSpellnamePl" value="{{data.spellcastingSpellnamePl}}" data-dtype="String"/>
+            </div>
+
+            <label>{{localize "D35E.SpellcastingDescription"}}</label>
+            {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
+            editable=editable}}
+
+
+            <div class="form-group stacked">
+                <label class="checkbox">
+                    <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
+                           data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+                </label>
+            </div>
+            {{#if isPsionSpellcaster}}
+            <h4 class="form-header">{{localize "D35E.PowerPointsTable"}}</h4>
+
+            <div class="form-group spellcasting-ability">
+                <label>{{localize "D35E.PowerPointsBaseAbility"}}</label>
+                <select name="data.powerPointBonusBaseAbility" data-dtype="String">
+                    {{#select powerPointBonusBaseAbility}}
+                    <option value="">{{localize "D35E.None"}}</option>
+                    {{#each abilities as |abl a|}}
+                    <option value="{{a}}">{{localize abl.label}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+            <div class="form-group">
+                <ol class="item-list">
+
+                    <li class="inventory-header flexrow">
+                        <h3 class="item-name flexrow">Level</h3>
+                        <div class="item-detail item-type">
+                            <span>Power Points</span></div>
+                        <div class="item-detail item-type">
+                            <span>Powers Known</span></div>
+                        <div class="item-detail item-type">
+                            <span>Max Power Level</span></div>
+                    </li>
+                    {{#each powerPointLevels as |powerpoint key|}}
+                    <li class="item flexrow">
+                        <label>{{key}}</label>
+                        <input class="item-detail item-type" type="text" name="data.powerPointTable.{{key}}"
+                               value="{{powerpoint.value}}" data-dtype="Number"/>
+                        <input class="item-detail item-type" type="text" name="data.powersKnown.{{key}}"
+                               value="{{powerpoint.known}}" data-dtype="Number"/>
+                        <input class="item-detail item-type" type="text" name="data.powersMaxLevel.{{key}}"
+                               value="{{powerpoint.maxLevel}}" data-dtype="Number"/>
+                    </li>
+                    {{/each}}
+                </ol>
+            </div>
+            {{/if}}
+            {{/if}}
+        </div>
+
+
+        <div class="tab flexcol" data-group="primary" data-tab="children">
+            {{> "systems/D35E/templates/items/parts/item-children.html"}}
+        </div>
+
+        <div class="tab flexcol" data-group="primary" data-tab="changes">
+            {{> "systems/D35E/templates/items/parts/item-changes.html"}}
+
+            {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+        </div>
+    </section>
 </form>

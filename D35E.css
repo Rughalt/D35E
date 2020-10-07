@@ -10,6 +10,14 @@
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
 }
+@font-face {
+  font-family: "Merienda";
+  src: url("fonts/MeriendaRegular.otf");
+}
+.merienda {
+  font-family: "Merienda", "Signika", "Palatino Linotype", serif;
+  font-size: 14px;
+}
 /* ----------------------------------------- */
 /*  Sheet Styles                             */
 /* ----------------------------------------- */
@@ -590,6 +598,30 @@
   border-radius: 2px;
   padding: 4px;
 }
+.D35E.sheet.actor a.level-up {
+  border-radius: 4px;
+  height: 30px;
+  line-height: 28px;
+  padding: 0 22px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  float: left;
+  box-shadow: 0 0 8px red;
+  border-color: #ff6400;
+}
+.D35E.sheet.actor a.point-buy-button {
+  flex: 0 100px;
+  border-radius: 4px;
+  height: 30px;
+  display: block;
+  margin: 0 5px 4px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 18px;
+  float: right;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+}
 .D35E.sheet.actor .working {
   display: none;
   flex: none;
@@ -610,6 +642,24 @@
 }
 .D35E.sheet.actor.isWorking .working {
   display: block;
+}
+.D35E.sheet.actor h2.block-header {
+  position: relative;
+  flex: 0 0 20px;
+  margin: 0.25rem;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 20px;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+.D35E.sheet.actor h2.block-header::after {
+  content: '';
+  flex: 1;
+  margin-left: 0.5rem;
+  height: 0px;
+  background-color: transparent;
+  border-top: 2px groove #eeede0;
 }
 .D35E.sheet.actor .sheet-header .header-details {
   height: 100%;
@@ -762,7 +812,7 @@
 }
 .D35E.sheet.actor .sheet-header .charlevel .experience {
   width: 100%;
-  height: 20px;
+  height: 22px;
   padding-right: 5px;
   font-size: 16px;
   color: #4b4a44;
@@ -857,6 +907,18 @@
   top: 2px;
   font-size: 28px;
   color: #7a7971;
+}
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .add-prestige-cl,
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .remove-prestige-cl {
+  margin: 0.5rem;
+  font-size: 14px;
+  opacity: 0.9;
+}
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .add-prestige-cl-disabled,
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .remove-prestige-cl-disabled {
+  margin: 0.5rem;
+  font-size: 14px;
+  opacity: 0.5;
 }
 .D35E.sheet.actor ul.attributes li.attribute .attribute-value.multiple input {
   max-width: 33%;
@@ -1599,6 +1661,12 @@
 .D35E.sheet.actor .inventory-list a.item-control {
   height: 100%;
 }
+.D35E.sheet.actor .inventory-list a.item-control.spell-add-uses,
+.D35E.sheet.actor .inventory-list a.item-control.spell-remove-uses,
+.D35E.sheet.actor .inventory-list a.item-control.spell-add-metamagic {
+  flex: 0 16px;
+  font-size: 10px;
+}
 .D35E.sheet.actor .inventory-list .item-level {
   flex: 0 0 40px;
   border-right: 1px solid #c9c7b8;
@@ -1657,6 +1725,16 @@
   line-height: 16px;
   padding: 0.25em 0.5em;
   border-top: 1px solid #c9c7b8;
+}
+.D35E.sheet.actor a.configure-spellbook {
+  border-radius: 4px;
+  height: 40px;
+  display: block;
+  margin: 0 5px 4px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
 }
 .D35E.sheet.actor .spell-slots,
 .D35E.sheet.actor .spell-comps,
@@ -1776,6 +1854,64 @@
   font-size: 16px;
   line-height: 24px;
 }
+.D35E.sheet.item .sheet-header ul.attributes {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.D35E.sheet.item .sheet-header ul.attributes.nomargin {
+  margin: 0;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute {
+  height: 90px;
+  margin: 0 5px;
+  border: 2px groove #eeede0;
+  border-radius: 4px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 20px;
+  text-align: center;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-name {
+  flex: 0 0 18px;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute.high {
+  height: 90px;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-value {
+  height: 48px;
+  line-height: 40px;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-value input {
+  display: inline;
+  max-width: 80%;
+  margin: 0;
+  font-size: 34px;
+  height: 48px;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-value div.attribute {
+  display: inline-block;
+  min-width: 24px;
+  max-width: 33%;
+  font-size: 34px;
+  width: calc(100% - 2px);
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-value span.sep {
+  display: inline;
+  position: relative;
+  top: 2px;
+  font-size: 28px;
+  color: #7a7971;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-value.multiple input {
+  max-width: 33%;
+}
+.D35E.sheet.item .sheet-header ul.attributes li.attribute .attribute-footer {
+  flex: 0 0 18px;
+  margin-top: -1px;
+  line-height: 18px;
+  font-family: "Signika", "Palatino Linotype", serif;
+  font-size: 12px;
+}
 .D35E.sheet.item .sheet-navigation {
   margin-bottom: 5px;
 }
@@ -1798,7 +1934,7 @@
   margin: 0;
 }
 .D35E.sheet.item .primary-body .item-properties .form-group label {
-  line-height: 20px;
+  line-height: 24px;
 }
 .D35E.sheet.item .primary-body .item-properties .form-group input {
   text-align: right;
@@ -2081,6 +2217,10 @@
   width: 96px;
   margin-left: 5px;
 }
+.D35E.sheet.item input.bordered {
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+}
 .D35E.sheet.item .damage-control,
 .D35E.sheet.item .attack-control,
 .D35E.sheet.item .change-control,
@@ -2319,6 +2459,67 @@
   text-align: center;
   color: #666;
 }
+.D35E.sheet.item .inventory-list .progression-bab {
+  flex: 0 32px;
+  border-left: 1px solid #c9c7b8;
+  padding: 0 2px 0 2px;
+  text-align: center;
+}
+.D35E.sheet.item .inventory-list .progression-bab-wide {
+  flex: 0 104px;
+  border-left: 1px solid #c9c7b8;
+  padding: 0 2px 0 2px;
+}
+.D35E.sheet.item .inventory-list .progression-save {
+  flex: 0 32px;
+  border-left: 1px solid #c9c7b8;
+  padding: 0 2px 0 2px;
+  text-align: center;
+}
+.D35E.sheet.item .inventory-list .progression-level {
+  flex: 0 40px;
+  border-left: 1px solid #c9c7b8;
+  padding: 0 2px 0 2px;
+}
+.D35E.sheet.item .inventory-list progression-pp {
+  flex: 0 60px;
+  border-left: 1px solid #c9c7b8;
+  padding: 0 2px 0 2px;
+  text-align: center;
+}
+.D35E.sheet.item .inventory-list .progression-abilities {
+  border-left: 1px solid #c9c7b8;
+  padding: 0 2px 0 2px;
+}
+.D35E.sheet.item .inventory-list .progression-ability-img {
+  width: 20px;
+  vertical-align: middle;
+}
+.D35E.sheet.item .inventory-list .progression-ability-h4 {
+  display: inline;
+}
+.D35E.sheet.item .inventory-list .progression-row {
+  padding: 0 2px;
+  border-bottom: 1px solid #c9c7b8;
+}
+.D35E.sheet.item .inventory-list .progression-item {
+  border: 1px #782e22 solid !important;
+  height: 24px;
+  border-radius: 2px;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.4);
+}
+.D35E.sheet.item .inventory-list .progression-item .item-name {
+  line-height: 20px;
+}
+.D35E.sheet.item .inventory-list .progression-text {
+  height: 24px;
+  display: inline-block;
+  background: none;
+}
+.D35E.sheet.item .inventory-list .progression-text .h4 {
+  line-height: 24px;
+}
 .D35E.sheet.item .inventory-list .item-summary {
   flex: 0 0 100%;
   font-size: 12px;
@@ -2326,12 +2527,34 @@
   padding: 0.25em 0.5em;
   border-top: 1px solid #c9c7b8;
 }
+.D35E.sheet.item .progression-ability-description {
+  margin-bottom: 0.5rem;
+}
+.D35E.sheet.item .progression-ability-description div,
+.D35E.sheet.item .progression-ability-description p {
+  display: inline;
+}
+.D35E.sheet.item .progression-ability-description br {
+  margin: 1rem;
+}
 /* ----------------------------------------- */
 /*  Chat Cards
 /* ----------------------------------------- */
 .D35E.chat-card {
   font-style: normal;
   font-size: 12px;
+}
+.D35E.chat-card.item-card h2 {
+  padding: 3px 0;
+  border-top: 2px groove #FFF;
+  border-bottom: 2px groove #FFF;
+  flex: 1;
+  margin: 0;
+  line-height: 36px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 20px;
+  color: #4b4a44;
+  margin-bottom: 4px;
 }
 .D35E.chat-card .card-header {
   padding: 3px 0;
@@ -2512,6 +2735,13 @@
 .chat-card.defense-card .saving-throws {
   margin-top: 4px;
 }
+.dmg-type-icon {
+  display: inline;
+  width: 14px;
+  border: none;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
 /* ----------------------------------------- */
 /*  Basic Structure                          */
 /* ----------------------------------------- */
@@ -2537,14 +2767,15 @@
   line-height: 16px;
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .experience input[type="text"] {
-  width: 100px;
+  width: 80px;
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .xpbar {
-  width: 100%;
+  width: calc(100% - 100px);
   flex: 0 0 8px;
   background: #666;
   border: 1px solid #000;
   border-radius: 3px;
+  float: right;
 }
 .D35E.sheet.actor.character .sheet-header .charlevel .xpbar .bar {
   height: 4px;
@@ -3284,4 +3515,56 @@ input[type=range]:disabled {
 }
 .d35gm .secret {
   display: block;
+}
+.onboarding {
+  background: url(/systems/D35E/icons/ui/onboarding.png);
+  background-size: 100% 100%;
+  height: auto !important;
+}
+.onboarding header.window-header {
+  border-bottom: none;
+}
+.onboarding .window-content {
+  background: none;
+  color: white;
+}
+.onboarding .dialogue {
+  font-size: 14px;
+  padding: 0 1rem 1.5rem;
+}
+.onboarding .dialogue strong {
+  color: #d89753;
+}
+.onboarding .dialogue .portrait {
+  flex: 0;
+  width: 150px;
+  height: 150px;
+  background-image: url(/systems/D35E/icons/ui/onboarding-hero.png);
+  background-size: cover;
+  position: absolute;
+  left: -160px;
+  top: 0;
+}
+.onboarding .dialogue .content {
+  font-size: 14px;
+}
+.onboarding .dialogue .content img {
+  display: inline;
+  height: 18px;
+  border: white 1px solid;
+  vertical-align: middle;
+}
+.onboarding .dialogue .tip {
+  position: absolute;
+  padding: 1em;
+  background: black;
+  font-family: "Signika", "Palatino Linotype", serif;
+  font-size: unset;
+  top: -94px;
+  margin-right: 1rem;
+  border: 2px solid #946C54;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }

@@ -1,7 +1,12 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
-  {{#unless hasClasses}}
-    <span class="warning">Your character is missing a class. Some attributes require a class to function. Navigate to Features - Classes to set up a Class.</span>{{/unless}}
+  {{#unless hasClasses}}<span class="warning">Your character is missing a Class. Some attributes require a class to function. Navigate to Features - Classes to set up a Class.</span>{{/unless}}
+  {{#if hasClasses}}
+  {{#unless abilitiesChanged}}
+  <span class="warning">Your character Ability scores are not set up. Set them up manually or use <a class="point-buy" style="text-decoration: underline">Point Buy Dialog</a>.</span>
+  {{/unless}}
+  {{/if}}
+
   <div class="working">
     <div>
       <h1>
@@ -23,7 +28,7 @@
           {{/if}}
         {{/each}}
       </div>
-      <img src="{{actor.img}}"  data-edit="img">
+      <img src="{{actor.img}}" class="profile"  data-edit="img">
       <img src="{{actor.data.tokenImg}}" class="token-image"  data-edit="data.tokenImg">
     </div>
     <div class="header-details flexcol">
@@ -44,6 +49,9 @@
           </div>
           {{#unless disableExperience}}
             <div class="experience">
+            {{#if data.canLevelUp}}
+            <a class="btn level-up" onkeydown="e.preventDefault();">Level up</a>
+            {{/if}}
               <input name="data.details.xp.value" type="text" value="{{data.details.xp.value}}"
                                                             placeholder="0"/>
               <span class="max"> / {{data.details.xp.max}}</span>
@@ -176,6 +184,8 @@
     <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
       {{> "systems/D35E/templates/actors/parts/actor-spellbook-front.html"}}
     </div>
+
+    
 
     {{!-- Biography Tab --}}
     <div class="tab biography flexcol" data-group="primary" data-tab="biography">

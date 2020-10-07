@@ -28,6 +28,22 @@ D35E.abilitiesShort = {
   "cha": "D35E.AbilityShortCha"
 };
 
+D35E.abilityCost = {
+  "7": -4,
+  "8": -2,
+  "9": -1,
+  "10": 0,
+  "11": 1,
+  "12": 2,
+  "13": 3,
+  "14": 5,
+  "15": 7,
+  "16": 10,
+  "17": 13,
+  "18": 17,
+};
+
+
 /**
  * The set of Saving Throws
  * @type {Object}
@@ -978,7 +994,13 @@ D35E.buffTargets = {
     "vigor": "D35E.Vigor",
     "sneakAttack": "D35E.SneakAttackBonusDice",
     "turnUndead": "D35E.TurnUndeadUses",
-    "spellResistance": "D35E.SpellResistance"
+    "spellResistance": "D35E.SpellResistance",
+  },
+  "prestigeCl": {
+    "_label": "D35E.PrestigeCl",
+    "arcaneCl": "D35E.Arcane",
+    "psionicCl": "D35E.Psionic",
+    "divineCl": "D35E.Divine"
   },
 };
 
@@ -1102,7 +1124,7 @@ D35E.CHARACTER_EXP_LEVELS =  {
   ],
   medium: [
     0, 1000, 3000, 6000, 10000, 15000, 21000, 28000, 36000, 45000, 55000, 66000,
-    78000, 91000, 105000, 120000, 136000, 153000, 171000, 190000
+    78000, 91000, 105000, 120000, 136000, 153000, 171000, 190000, 210000, 231000, 253000, 276000, 300000, 325000, 351000, 378000, 406000, 435000, 465000, 496000, 528000, 561000, 595000, 630000, 666000, 703000, 741000, 780000, 820000, 861000, 903000, 946000, 990000, 1035000, 1081000, 1128000, 1176000, 1225000
   ],
   fast: [
     0, 750, 2250, 4500, 7500, 11250, 15750, 21000, 27000, 33750, 41250, 49500,
@@ -1129,6 +1151,14 @@ D35E.twoWeaponAttackType = {
   'main-offhand-normal': 'D35E.TwoWeaponMainOffhandNormal',
   'offhand-light': 'D35E.TwoWeaponOffhandLight',
   'offhand-normal': 'D35E.TwoWeaponOffhandNormal',
+};
+
+D35E.spellcastingType = {
+  'none': 'D35E.None',
+  'arcane': 'D35E.Arcane',
+  'divine': 'D35E.Divine',
+  'psionic': 'D35E.Psionic',
+  'other': 'D35E.Other',
 };
 
 CONFIG.Combat.initiative.decimals = 2;
