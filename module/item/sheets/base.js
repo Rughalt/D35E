@@ -1,6 +1,7 @@
 import {createTabs} from "../../lib.js";
 import {EntrySelector} from "../../apps/entry-selector.js";
 import {ItemPF} from "../entity.js";
+import {CACHE} from "../../cache.js";
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -349,39 +350,31 @@ export class ItemSheetPF extends ItemSheet {
             let alreadyAddedDescriptions = new Set()
             data.abilitiesDescription = []
             {
-                let itemPack = game.packs.get("D35E.class-abilities");
-                let items = []
-                await itemPack.getIndex().then(index => items = index);
-                for (let entry of items) {
-                    await itemPack.getEntity(entry._id).then(e => {
-                            if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined && e.data.data.associations.classes.some(el => el[0] === this.item.data.name)) {
-                                if (e.data.type === "feat")
-                                    data.children.traits.push(e);
-                                else
-                                    data.children.abilities.push(e);
+                for (let e of CACHE.ClassFeatures.get(this.item.data.name) || []) {
+                    if (e.data.type === "feat")
+                        data.children.traits.push(e);
+                    else
+                        data.children.abilities.push(e);
 
-                                this.childItemMap.set(entry._id, e);
+                    this.childItemMap.set(e._id, e);
 
-                                let levels = e.data.data.associations.classes.filter(el => el[0] === this.item.data.name)
-                                for (let _level of levels) {
-                                    const level = _level[1]
-                                    if (!data.childItemLevels.has(level)) {
-                                        data.childItemLevels.set(level, [])
-                                    }
-                                    data.childItemLevels.get(level).push(e);
-                                    if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(entry._id)) {
-                                        data.abilitiesDescription.push({
-                                            level: level,
-                                            name: e.name,
-                                            description: TextEditor.enrichHTML(e.data.data.description.value)
-                                        })
-                                        alreadyAddedDescriptions.add(entry._id)
-                                    }
-
-                                }
-                            }
+                    let levels = e.data.data.associations.classes.filter(el => el[0] === this.item.data.name)
+                    for (let _level of levels) {
+                        const level = _level[1]
+                        if (!data.childItemLevels.has(level)) {
+                            data.childItemLevels.set(level, [])
                         }
-                    )
+                        data.childItemLevels.get(level).push(e);
+                        if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
+                            data.abilitiesDescription.push({
+                                level: level,
+                                name: e.name,
+                                description: TextEditor.enrichHTML(e.data.data.description.value)
+                            })
+                            alreadyAddedDescriptions.add(e._id)
+                        }
+
+                    }
                 }
 
             }

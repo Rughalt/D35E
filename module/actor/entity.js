@@ -3,6 +3,7 @@ import {ItemPF} from "../item/entity.js";
 import {createTag, linkData, isMinimumCoreVersion} from "../lib.js";
 import {createCustomChatMessage} from "../chat.js";
 import {_getInitiativeFormula} from "../combat.js";
+import {CACHE} from "../cache.js";
 
 /**
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
@@ -2876,38 +2877,69 @@ export class ActorPF extends Actor {
             await itemPack.getIndex().then(index => items = index);
             let itemsToAdd = []
             let itemsToRemove = []
-            for (let entry of items) {
-                await itemPack.getEntity(entry._id).then(e => {
-                        let added = false;
-                        for (const classInfo of classNames) {
-                            if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
-                            let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
-                            for (let _level of levels) {
-                                const level = _level[1]
-                                let uniqueId = e.data.data.uniqueId;
-                                if (uniqueId.endsWith("*")) {
-                                    uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+
+
+            for (const classInfo of classNames) {
+                let added = false;
+                for (let e of CACHE.ClassFeatures.get(classInfo[0]) || []) {
+                    if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
+                    let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
+                    for (let _level of levels) {
+                        const level = _level[1]
+                        let uniqueId = e.data.data.uniqueId;
+                        if (uniqueId.endsWith("*")) {
+                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                        }
+                        let canAdd = !addedAbilities.has(uniqueId)
+                        if (canAdd) {
+                            if (level <= classInfo[1]) {
+                                if (!existingAbilities.has(uniqueId)) {
+                                    let eItem = duplicate(e.data)
+                                    ItemPF.setMaxUses(eItem, this.getRollData());
+                                    eItem.data.uniqueId = uniqueId;
+                                    eItem.data.source = `${classInfo[0]} ${level}`
+                                    eItem.data.userNonRemovable = true;
+                                    itemsToAdd.push(eItem)
                                 }
-                                let canAdd = !addedAbilities.has(uniqueId)
-                                if (canAdd) {
-                                    if (level <= classInfo[1]) {
-                                        if (!existingAbilities.has(uniqueId)) {
-                                            let eItem = duplicate(e.data)
-                                            ItemPF.setMaxUses(eItem, this.getRollData());
-                                            eItem.data.uniqueId = uniqueId;
-                                            eItem.data.source = `${classInfo[0]} ${level}`
-                                            eItem.data.userNonRemovable = true;
-                                            itemsToAdd.push(eItem)
-                                        }
-                                        addedAbilities.add(uniqueId)
-                                        added = true;
-                                    }
-                                }
+                                addedAbilities.add(uniqueId)
+                                added = true;
                             }
                         }
                     }
-                )
+                }
             }
+            // for (let entry of items) {
+            //     await itemPack.getEntity(entry._id).then(e => {
+            //             let added = false;
+            //             for (const classInfo of classNames) {
+            //                 if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
+            //                 let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
+            //                 for (let _level of levels) {
+            //                     const level = _level[1]
+            //                     let uniqueId = e.data.data.uniqueId;
+            //                     if (uniqueId.endsWith("*")) {
+            //                         uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+            //                     }
+            //                     let canAdd = !addedAbilities.has(uniqueId)
+            //                     if (canAdd) {
+            //                         if (level <= classInfo[1]) {
+            //                             if (!existingAbilities.has(uniqueId)) {
+            //                                 let eItem = duplicate(e.data)
+            //                                 ItemPF.setMaxUses(eItem, this.getRollData());
+            //                                 eItem.data.uniqueId = uniqueId;
+            //                                 eItem.data.source = `${classInfo[0]} ${level}`
+            //                                 eItem.data.userNonRemovable = true;
+            //                                 itemsToAdd.push(eItem)
+            //                             }
+            //                             addedAbilities.add(uniqueId)
+            //                             added = true;
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     )
+            // }
             for (let abilityUid of existingAbilities) {
                 if (!addedAbilities.has(abilityUid)) {
                     itemsToRemove.push(abilityUid)

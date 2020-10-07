@@ -27,6 +27,8 @@ import * as chat from "./module/chat.js";
 import * as migrations from "./module/migration.js";
 import {SemanticVersion} from "./semver.js";
 import {sizeInt} from "./module/lib.js";
+import * as cache from "./module/cache.js";
+import {CACHE} from "./module/cache.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -148,6 +150,8 @@ Hooks.once("ready", async function() {
     await migrations.migrateWorld();
   }
 
+  await cache.buildCache();
+  console.log("D35E | Cache is ", CACHE)
   game.actors.entities.forEach(obj => { obj._updateChanges({ sourceOnly: true }); });
   
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Attacks(app, html, data) });
