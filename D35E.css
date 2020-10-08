@@ -2481,7 +2481,7 @@
   border-left: 1px solid #c9c7b8;
   padding: 0 2px 0 2px;
 }
-.D35E.sheet.item .inventory-list progression-pp {
+.D35E.sheet.item .inventory-list .progression-pp {
   flex: 0 60px;
   border-left: 1px solid #c9c7b8;
   padding: 0 2px 0 2px;
@@ -2528,10 +2528,31 @@
   border-top: 1px solid #c9c7b8;
 }
 .D35E.sheet.item .progression-ability-description {
+  font-size: 13px;
   margin-bottom: 0.5rem;
 }
-.D35E.sheet.item .progression-ability-description div,
+.D35E.sheet.item .progression-ability-description div {
+  display: inline;
+}
 .D35E.sheet.item .progression-ability-description p {
+  display: inline;
+}
+.D35E.sheet.item .progression-ability-description p:first-of-type::after {
+  content: "\a";
+  white-space: pre;
+}
+.D35E.sheet.item .progression-ability-description p:not(:first-of-type) {
+  display: block;
+}
+.D35E.sheet.item .progression-ability-description h1,
+.D35E.sheet.item .progression-ability-description h2,
+.D35E.sheet.item .progression-ability-description h3 {
+  font-size: 13px;
+  text-decoration: underline;
+}
+.D35E.sheet.item .progression-ability-description h1:first-child,
+.D35E.sheet.item .progression-ability-description h2:first-child,
+.D35E.sheet.item .progression-ability-description h3:first-child {
   display: inline;
 }
 .D35E.sheet.item .progression-ability-description br {

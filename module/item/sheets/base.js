@@ -350,7 +350,7 @@ export class ItemSheetPF extends ItemSheet {
             let alreadyAddedDescriptions = new Set()
             data.abilitiesDescription = []
             {
-                for (let e of CACHE.ClassFeatures.get(this.item.data.name) || []) {
+                for (let e of new Set(CACHE.ClassFeatures.get(this.item.data.name) || [])) {
                     if (e.data.type === "feat")
                         data.children.traits.push(e);
                     else
@@ -436,7 +436,7 @@ export class ItemSheetPF extends ItemSheet {
                         data.progression[a[0] - 1]['nonActive'].push({'name': a[1], 'desc': a[2]});
                     }
                     if (a[2] !== '') {
-                        data.abilitiesDescription.push({level: a[0], name: a[1], description: a[2]})
+                        data.abilitiesDescription.push({level: a[0], name: a[1], description: TextEditor.enrichHTML(a[2])})
                     }
                 })
             }
