@@ -1642,7 +1642,7 @@ export class ActorPF extends Actor {
                         return cur
                     let ablMod = 0;
                     if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
-                        ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`);
+                        ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`) || 0;
                     const v = new Roll("ceil(0.5*@level*@ablMod)", {
                         level: obj.data.levels,
                         ablMod: ablMod
@@ -3003,7 +3003,7 @@ export class ActorPF extends Actor {
         let classLevels = new Map()
         let classHP = new Map()
         // Iterate over all levl ups
-        if (data1.details.levelUpData) {
+        if (data1.details.levelUpData && data1.details.levelUpProgression) {
             data1.details.levelUpData.forEach(lud => {
                 if (lud.classId === null || lud.classId === "") return;
                 let _class = this.items.find(cls => cls._id === lud.classId)
@@ -3333,6 +3333,32 @@ export class ActorPF extends Actor {
             parts: ["@mod - @drain"],
             data: {mod: this.data.data.attributes.bab.total, drain: this.data.data.attributes.energyDrain},
             title: game.i18n.localize("D35E.BAB"),
+            speaker: ChatMessage.getSpeaker({actor: this}),
+            takeTwenty: false
+        });
+    }
+
+    rollMelee(options = {}) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        return DicePF.d20Roll({
+            event: options.event,
+            parts: ["@mod - @drain + @ablMod"],
+            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain},
+            title: game.i18n.localize("D35E.Melee"),
+            speaker: ChatMessage.getSpeaker({actor: this}),
+            takeTwenty: false
+        });
+    }
+
+    rollRanged(options = {}) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        return DicePF.d20Roll({
+            event: options.event,
+            parts: ["@mod - @drain + @ablMod"],
+            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain},
+            title: game.i18n.localize("D35E.Ranged"),
             speaker: ChatMessage.getSpeaker({actor: this}),
             takeTwenty: false
         });

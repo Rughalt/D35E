@@ -10,7 +10,17 @@
   <div class="tab feats-group flexcol" data-group="feats" data-tab="{{sid}}">
 
     {{#if section.isClass}}
-      <h2 class="block-header" style="flex: none">Level Progression</h2>
+    <div class="flexrow" style="flex: none">
+      <h2 class="block-header" style="flex: 1">Level Progression</h2>
+      <div class="form-group flexrow" style="flex: 0 150px;">
+        <label>Use Class Progression</label>
+        <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
+          <input type="checkbox" class="stylized" name="data.details.levelUpProgression"  data-dtype="Boolean" {{checked ../data.details.levelUpProgression}} />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+      {{#if ../data.details.levelUpProgression}}
       <div class="flexrow" style="flex: 110px 0; padding: 5px; position: relative">
         <div class="flexrow" style="position: absolute; left: 5px; top: 5px; width: 100%; flex: 1;max-width: calc(100% - 70px); height: 100px">
 
@@ -68,6 +78,7 @@
           </li>
         </ul>
       </div>
+      {{/if}}
     {{/if}}
     {{#if section.isFeat}}
       <ul class="attributes misc flexrow" style="flex:0">

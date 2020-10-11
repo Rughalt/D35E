@@ -429,6 +429,24 @@
 }
 
 .level-up-data {
+  .header {
+    background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+    background-position-y: bottom;
+    background-repeat: no-repeat, repeat;
+    margin: -12px -12px;
+    padding: 12px;
+    background-size: cover;
+    h1 {
+
+      position: relative;
+      flex: 0 0 20px;
+      margin: 0.25rem;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      font-size: 2rem;
+      border-bottom: none;
+    }
+  }
+
   h2 {
     &.block-header {
 
@@ -501,6 +519,11 @@
   .skill {
     flex: 0 205px;
     padding: 5px;
+
+    &:nth-of-type(4n-1),  &:nth-of-type(4n-2),  &:nth-of-type(4n-3){
+      border-right: rgba(0,0,0,0.4) 1px solid;
+    }
+
     .item-control {
       flex: 0 16px;
       font-size: 10px;

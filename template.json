@@ -384,17 +384,6 @@
             "available": 0
           },
           "levelUpData": [
-            {
-              "id": null,
-              "level": 0,
-              "classId": null,
-              "class": null,
-              "classImage": null,
-              "skills": {},
-              "hp": 0,
-              "hasFeat": false,
-              "hasAbility": false
-            }
           ],
           "alignment": "",
           "biography": {
@@ -944,7 +933,8 @@
         "weight": "",
         "gender": "",
         "deity": "",
-        "age": ""
+        "age": "",
+        "levelUpProgression": true
       },
       "traits": {
         "weaponProf": {
@@ -972,7 +962,8 @@
         "cr": 1,
         "xp": {
           "value": 10
-        }
+        },
+        "levelUpProgression": false
       }
     }
   },

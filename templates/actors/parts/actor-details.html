@@ -285,6 +285,7 @@
               <div class="rollable image-d20"></div>
               <h4 style>{{skill.label}} ({{subSkill.name}})
                 {{#if skill.rt}}■{{/if}}
+                {{#if skill.cs}}*{{/if}}
               </h4>
             </div>
             <h4>{{subSkill.rank}}</h4>
@@ -309,10 +310,12 @@
             {{#if skill.custom}}
               <h4>{{skill.name}}
                 {{#if skill.rt}}■{{/if}}
+                {{#if skill.cs}}*{{/if}}
               </h4>
             {{else}}
               <h4>{{skill.label}}
                 {{#if skill.rt}}■{{/if}}
+                {{#if skill.cs}}*{{/if}}
               </h4>
             {{/if}}
           </div>

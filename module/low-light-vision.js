@@ -25,7 +25,7 @@ SightLayer.prototype.hasLowLight = function () {
     if (game.user.isGM) {
         return lowLightTokens.filter(o => o._controlled).length > 0;
     }
-    if (game.settings.get("pf1", "lowLightVisionMode")) {
+    if (game.settings.get("D35E", "lowLightVisionMode")) {
         return lowLightTokens.filter(o => o._controlled).length > 0;
     }
     return (!relevantTokens.filter(o => o._controlled).length && lowLightTokens.length) || lowLightTokens.filter(o => o._controlled).length > 0;

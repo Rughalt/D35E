@@ -997,6 +997,8 @@
   "D35E.MaxLevelAutomationInfo": "If you enter a value in Max Level field, class description will automatically generate progression tables based on BAB and Throws. Enabling Automate Class Features will cause clas to automatically add Class features to Charactes on level up and remove them when lowering level.",
   "D35E.NonActiveClassAbilities": "Non-Active Class Abilities",
   "D35E.MaxLevel": "Max Level",
+  "D35E.Combat": "Combat",
+  "D35E.SetLevelData": "Save Level Data",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

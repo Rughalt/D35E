@@ -594,15 +594,21 @@
 .D35E.sheet.actor .window-content {
   background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
   background-size: contain;
-  background-position-y: -60px;
+  background-position-y: -70px;
   background-repeat: no-repeat, repeat;
 }
 .D35E.sheet.actor .warning {
   flex: 0;
   background-color: #ffd14e;
   border: 1px solid #ffbc00;
-  border-radius: 2px;
   padding: 4px;
+  position: absolute;
+  z-index: 100;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  border-top: 0;
+  border-radius: 0 0 2px 2px;
 }
 .D35E.sheet.actor a.level-up {
   border-radius: 4px;
@@ -3722,6 +3728,22 @@ input[type=range]:disabled {
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }
+.level-up-data .header {
+  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background-position-y: bottom;
+  background-repeat: no-repeat, repeat;
+  margin: -12px -12px;
+  padding: 12px;
+  background-size: cover;
+}
+.level-up-data .header h1 {
+  position: relative;
+  flex: 0 0 20px;
+  margin: 0.25rem;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 2rem;
+  border-bottom: none;
+}
 .level-up-data h2.block-header {
   position: relative;
   flex: 0 0 20px;
@@ -3782,6 +3804,11 @@ input[type=range]:disabled {
 .level-up-data .skill {
   flex: 0 205px;
   padding: 5px;
+}
+.level-up-data .skill:nth-of-type(4n-1),
+.level-up-data .skill:nth-of-type(4n-2),
+.level-up-data .skill:nth-of-type(4n-3) {
+  border-right: rgba(0, 0, 0, 0.4) 1px solid;
 }
 .level-up-data .skill .item-control {
   flex: 0 16px;

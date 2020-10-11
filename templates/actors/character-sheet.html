@@ -6,6 +6,9 @@
   <span class="warning">Your character Ability scores are not set up. Set them up manually or use <a class="point-buy" style="text-decoration: underline">Point Buy Dialog</a>.</span>
   {{/unless}}
   {{/if}}
+  {{#if notAllLevelsAssigned}}
+  <span class="warning">Your character has gained a level but you did not set in. To do this navigate to Features - Classes to set up a Class.</span>
+  {{/if}}
 
   <div class="working">
     <div>

@@ -1071,13 +1071,13 @@ export class ItemPF extends Item {
             let allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
                 cur.push({bonus: r[0], label: r[1]});
                 return cur;
-            }, [{bonus: "", label: `${game.i18n.localize("D35E.Attack")}`}]) : [{
-                bonus: "",
+            }, [{bonus: 0, label: `${game.i18n.localize("D35E.Attack")}`}]) : [{
+                bonus: 0,
                 label: `${game.i18n.localize("D35E.Attack")}`
             }];
             if (fullAttack && rapidShot) {
                 allAttacks.push({
-                    bonus: "",
+                    bonus: 0,
                     label: `Rapid Shot`
                 })
             }
@@ -1112,7 +1112,7 @@ export class ItemPF extends Item {
                     let attack = new ChatAttack(this, atk.label, actor);
                     attack.rollData = rollData;
                     await attack.addAttack({
-                        bonus: atk.bonus,
+                        bonus: atk.bonus || 0,
                         extraParts: attackExtraParts,
                         primaryAttack: primaryAttack,
                         actor: actor
@@ -1430,7 +1430,7 @@ export class ItemPF extends Item {
         if (options.primaryAttack === false) parts.push("-5");
         // Add bonus
 
-        if (options.bonus != null) {
+        if (options.bonus) {
             rollData.bonus = options.bonus;
             parts.push("@bonus");
         }

@@ -48,76 +48,80 @@
   {{/each}}
 </ul>
 <ul class="attributes armor-class flexrow" style="flex: none">
-  <li>
-    <h3 class="block-header">Base Combat Stats</h3>
-  </li>
-  <li>
-    <h3 class="block-header">Attack Bonuses</h3>
-  </li>
-</ul>
-<ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
-  <li class="attribute initiative" data-attribute="init">
+  <div class="flexcol">
 
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.init.total}}</span>
-      <span class="tooltipcontent">
+    <li>
+      <h3 class="block-header">Base Combat Stats</h3>
+    </li>
+    <ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
+      <li class="attribute initiative" data-attribute="init">
+
+        <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
+        <div class="attribute-value tooltip">
+          <span>{{data.attributes.init.total}}</span>
+          <span class="tooltipcontent">
                 @attributes.init.total : {{data.attributes.init.total}}
                 {{#if sourceDetails.data.attributes.init.total.length}}
                   <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.init.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
-    </div>
-  </li>
+        </div>
+      </li>
 
-  <li class="attribute bab" data-attribute="bab">
+      <li class="attribute bab" data-attribute="bab">
 
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.BAB"}}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.bab.total}}</span>
-      <span class="tooltipcontent">
+        <h4 class="attribute-name box-title rollable">{{localize "D35E.BAB"}}</h4>
+        <div class="attribute-value tooltip">
+          <span>{{data.attributes.bab.total}}</span>
+          <span class="tooltipcontent">
                 @attributes.bab.total : {{data.attributes.bab.total}}
                 {{#if sourceDetails.data.attributes.bab.total.length}}
                   <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                   {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
-    </div>
-  </li>
-  <li class="attribute cmb" data-attribute="cmb">
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.cmb.total}}</span>
-      <span class="tooltipcontent">
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="flexcol">
+
+    <li>
+      <h3 class="block-header">Attack Bonuses</h3>
+
+    </li>
+    <ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
+      <li class="attribute cmb" data-attribute="cmb">
+        <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
+        <div class="attribute-value tooltip">
+          <span>{{data.attributes.cmb.total}}</span>
+          <span class="tooltipcontent">
                   @attributes.cmb.total : {{data.attributes.cmb.total}}
                   {{#if sourceDetails.data.attributes.cmb.total.length}}
                     <br/><br/>{{localize "D35E.FromSources"}}:<br/>
                     {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                   {{/if}}
                 </span>
-    </div>
-  </li>
+        </div>
+      </li>
 
-  <li class="attribute bab" data-attribute="melee-ab">
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.Melee"}}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.bab.total}}</span>
-    </div>
-  </li>
-  <li class="attribute bab" data-attribute="ranged-ab">
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.Ranged"}}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.bab.total}}</span>
-    </div>
-  </li>
-  <li class="attribute bab" data-attribute="unarmed-ab">
-    <h4 class="attribute-name box-title rollable">{{localize "D35E.Melee"}}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.bab.total}}</span>
-    </div>
-  </li>
+      <li class="attribute melee-bab" data-attribute="melee-ab">
+        <h4 class="attribute-name box-title rollable">{{localize "D35E.Melee"}}</h4>
+        <div class="attribute-value tooltip">
+          <span>{{attackBonuses.melee}}</span>
+        </div>
+      </li>
+      <li class="attribute ranged-bab" data-attribute="ranged-ab">
+        <h4 class="attribute-name box-title rollable">{{localize "D35E.Ranged"}}</h4>
+        <div class="attribute-value tooltip">
+          <span>{{attackBonuses.ranged}}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
 </ul>
+
 <ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
 
   {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}

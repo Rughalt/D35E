@@ -248,6 +248,10 @@ const _migrateCharacterLevel = function(ent, updateData) {
       updateData["data."+k] = 0;
     }
   }
+  const value = getProperty(ent.data.data, k);
+  if (value == null) {
+    updateData["data.details.levelUpProgression"] = false;
+  }
 };
 
 const _migrateActorEncumbrance = function(ent, updateData) {

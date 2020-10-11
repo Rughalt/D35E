@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "DND 3.5e",
   "description": "DND 3.5E implementation for Foundry VTT. Aiming to provide 100% SRD coverage.<br><br>Originaly based LoopeeDK conversion of Furyspark's Pathfinder1 system.",
-  "version": "0.85.4",
+  "version": "0.86.0",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],

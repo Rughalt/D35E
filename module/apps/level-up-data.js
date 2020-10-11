@@ -14,7 +14,7 @@ export class LevelUpDataDialog extends FormApplication {
             classes: ["D35E", "entry", "level-up-data"],
             title: "Level Data",
             template: "systems/D35E/templates/apps/level-up-data.html",
-            width: 640,
+            width: 840,
             height: "auto",
             closeOnSubmit: false,
             submitOnClose: false,
@@ -34,6 +34,9 @@ export class LevelUpDataDialog extends FormApplication {
                 label: this.options.skillset.all.skills[s].label,
                 arbitrary: this.options.skillset.all.skills[s].arbitrary,
                 custom: this.options.skillset.all.skills[s].custom,
+                baseRank: this.options.skillset.all.skills[s].rank - (this.levelUpData.skills[s] !== undefined ? this.levelUpData.skills[s].rank : 0),
+                rt: this.options.skillset.all.skills[s].rt,
+                cs: this.options.skillset.all.skills[s].cs,
                 subSkills: {}
             }
 
@@ -44,6 +47,9 @@ export class LevelUpDataDialog extends FormApplication {
                     label: this.options.skillset.all.skills[s].subSkills[sb].label,
                     arbitrary: this.options.skillset.all.skills[s].subSkills[sb].arbitrary,
                     custom: this.options.skillset.all.skills[s].subSkills[sb].custom,
+                    baseRank: this.options.skillset.all.skills[s].subSkills[sb].rank - ((this.levelUpData.skills[s] !== undefined && this.levelUpData.skills[s].subskills[sb] !== undefined) ? this.levelUpData.skills[s].subskills[sb].rank : 0),
+                    rt: this.options.skillset.all.skills[s].rt,
+                    cs: this.options.skillset.all.skills[s].cs,
                 }
             })
         })
@@ -53,7 +59,9 @@ export class LevelUpDataDialog extends FormApplication {
                 return a.sort - b.sort;
             }),
             level: this.actor.data.details.levelUpData.findIndex(a => a.id === this.levelUpId) + 1,
+            totalLevel: this.actor.data.details.level.available,
             skillset: skillset,
+            maxSkillRank: this.actor.data.details.level.available + 3,
             levelUpData: this.levelUpData,
             config: CONFIG.D35E}
         return data

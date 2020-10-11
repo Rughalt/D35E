@@ -328,7 +328,7 @@ export const _preProcessDiceFormula = function(formula, data={}) {
 
   // Match parenthetical groups
   let nOpen = 0,
-    nOpenPreProcess = [];
+      nOpenPreProcess = [];
   terms = terms.reduce((arr, t) => {
 
     // Handle cases where the prior term is a math function
@@ -350,13 +350,13 @@ export const _preProcessDiceFormula = function(formula, data={}) {
         if (obj[1] === nOpen) {
           const sliceLen = arr.length - obj[0];
           let fnData = arr.splice(obj[0], sliceLen),
-            fn = fnData[0],
-            fnParams = fnData.slice(2, -1).reduce((cur, s) => {
-              cur.push(...s.split(/\s*,\s*/));
-              return cur;
-            }, []).map(o => {
-              return new Roll(o, data).roll().total;
-            }).filter(o => o !== "" && o != null);
+              fn = fnData[0];
+          let fnParams = fnData.slice(2, -1).reduce((cur, s) => {
+            cur.push(...s.split(/\s*,\s*/));
+            return cur;
+          }, []).map(o => {
+            return new Roll(o, data).roll().total;
+          }).filter(o => o !== "" && o != null);
           if (fn in Math) {
             arr.push(Math[fn](...fnParams).toString());
           }
@@ -371,6 +371,7 @@ export const _preProcessDiceFormula = function(formula, data={}) {
     }
     return arr;
   }, []);
-  
+
   return terms.join("");
 };
+

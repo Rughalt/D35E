@@ -251,6 +251,8 @@ export class ActorSheetPF extends ActorSheet {
     }
     data.skillRanks = skillRanks;
 
+    data.attackBonuses = { melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod }
+
     // Fetch the game settings relevant to sheet rendering.
     data.healthConfig =  game.settings.get("D35E", "healthConfig");
 
@@ -511,6 +513,9 @@ export class ActorSheetPF extends ActorSheet {
 
     // BAB Check
     html.find(".attribute.bab .attribute-name").click(this._onRollBAB.bind(this));
+
+    html.find(".attribute.melee-bab .attribute-name").click(this._onRollSimpleMelee.bind(this));
+    html.find(".attribute.ranged-bab .attribute-name").click(this._onRollSimpleRanged.bind(this));
 
     // CMB Check
     html.find(".attribute.cmb .attribute-name").click(this._onRollCMB.bind(this));
@@ -1243,6 +1248,16 @@ export class ActorSheetPF extends ActorSheet {
   _onRollBAB(event) {
     event.preventDefault();
     this.actor.rollBAB({event: event});
+  }
+
+  _onRollSimpleMelee(event) {
+    event.preventDefault();
+    this.actor.rollMelee({event: event});
+  }
+
+  _onRollSimpleRanged(event) {
+    event.preventDefault();
+    this.actor.rollRanged({event: event});
   }
 
   _onRollCMB(event) {
