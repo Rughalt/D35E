@@ -1,21 +1,8 @@
 <form autocomplete="off" onsubmit="event.preventDefault();">
 
     <p>You have advanced to a new level!</p>
-    <h2>Class</h2>
-   <div class="flexcol">
-        <div class="form-group spellcasting-class tooltip flexrow">
-            <label><span>{{localize "D35E.Class"}}</span></label>
-            <select name="class" data-dtype="String">
-                {{#select levelup.class}}
-                {{#each actor.data.classes as |cls a|}}
-                <option value="{{cls._id}}">{{cls.name}}</option>
-                {{/each}}
-                <option value="">New Class</option>
-                {{/select}}
-            </select>
-        </div>
-  </div>
-    <p>If you want to add new class, select New Class in select above, and drag and drop a class to your character afterwards.</p>
+    <h2>Class and Skills</h2>
+    <p>You can set Class and Skills gained this level on the Features - Classes tab.</p>
 
     <h2>Level up changes</h2>
     {{#if hasNewAbility}}
@@ -36,8 +23,11 @@
     <h3>Feat</h3>
     <p>You have reached a level that allows you to have a new Feat. <a onclick="game.packs.get('D35E.feats').render(true)" style="color: #782e22;">Open Feats compendium.</a></p>
     {{/if}}
-    <h3>Skills</h3>
-    <p>Remember to assign skill points in skills tab.</p>
+    {{#unless hasNewAbility}}
+    {{#unless hasNewFeat}}
+    On this level there are no major changes to your character.
+    {{/unless}}
+    {{/unless}}
 
   <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.LevelUp"}}</button>
 </form>

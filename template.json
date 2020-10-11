@@ -380,8 +380,22 @@
           "level": {
             "value": 0,
             "min": 0,
-            "max": 40
+            "max": 40,
+            "available": 0
           },
+          "levelUpData": [
+            {
+              "id": null,
+              "level": 0,
+              "classId": null,
+              "class": null,
+              "classImage": null,
+              "skills": {},
+              "hp": 0,
+              "hasFeat": false,
+              "hasAbility": false
+            }
+          ],
           "alignment": "",
           "biography": {
             "value": "",
@@ -924,7 +938,7 @@
         "xp": {
           "value": 0,
           "min": 0,
-          "max": 300
+          "max": 0
         },
         "height": "",
         "weight": "",

@@ -66,6 +66,16 @@
       <ol class="item-list">
         {{#each section.items as |item iid|}}
         <li class="item flexrow" data-item-id="{{item._id}}">
+
+          {{#if section.isContainer}}
+          <div class="item-name-ne flexrow  {{#if item.data.melded}}melded{{/if}}">
+            <div class="item-image rollable" style="background-image: url('{{item.img}}')"></div>
+            <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+              {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
+              {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
+            </h4>
+          </div>
+          {{else}}
           <div class="item-name flexrow  {{#if item.data.melded}}melded{{/if}}">
             <div class="item-image rollable" style="background-image: url('{{item.img}}')"></div>
             <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
@@ -73,6 +83,7 @@
               {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
             </h4>
           </div>
+          {{/if}}
 
           {{#if section.hasSlots}}
           <div class="item-detail item-slot">
@@ -147,6 +158,32 @@
             <a class="item-control item-quantity-subtract"><i class="fas fa-minus"></i></a>
             <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+          </div>
+          {{/if}}
+          {{#if section.isContainer}}
+          <div class="item-summary" style="border-top: none; border-bottom: 1px solid #c9c7b8;">
+            <h3 class="block-header">Container Contents</h3>
+            <ol class="item-list">
+              {{#each item.containerItems as |iitem iiid|}}
+              <li class="item flexrow" data-item-id="{{iitem._id}}">
+                <div class="item-name flexrow rollable">
+                  <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
+                  <h4>{{iitem.name}}</h4>
+                </div>
+
+                {{#if ../../../owner}}
+                <div class="item-controls">
+                  <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                  {{#unless iitem.data.userNonRemovable}}
+                  <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                  {{/unless}}
+                </div>
+                {{/if}}
+              </li>
+              {{else}}
+              <h3 class="sublist-empty">Container is empty</h3>
+              {{/each}}
+            </ol>
           </div>
           {{/if}}
         </li>

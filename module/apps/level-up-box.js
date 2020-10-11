@@ -23,7 +23,7 @@ export class LevelUpDialog extends FormApplication {
     }
 
     getData() {
-        let data = {actor: this.actor, hasNewFeat: (this.actor.data.classLevels + 1) % 3 == 0, hasNewAbility: (this.actor.data.classLevels + 1) % 4 == 0,
+        let data = {actor: this.actor, hasNewFeat: (this.actor.data.details.level.available + 1) % 3 == 0, hasNewAbility: (this.actor.data.details.level.available + 1) % 4 == 0,
             config: CONFIG.D35E}
         return data
     }
@@ -40,16 +40,11 @@ export class LevelUpDialog extends FormApplication {
 
     async _updateObject(event, formData) {
         const updateData = {};
-        let classId = formData['class'];
-        if (classId !== "") {
-            let itemUpdateData = {}
-            itemUpdateData["_id"] = classId;
-            itemUpdateData["data.levels"] = this.object.getOwnedItem(classId).data.data.levels + 1
-            await this.object.updateOwnedItem(itemUpdateData);
-        }
         let ability = formData['ability'];
         if (ability !== undefined)
             updateData[`data.abilities.${ability}.value`] = this.actor.data.abilities[ability].value + 1
+
+        updateData[`data.details.level.available`] = (this.actor.data.details.level.available || 0) + 1
         return this.object.update(updateData);
     }
 

@@ -1,3 +1,60 @@
+{{!-- AC --}}
+<ul class="attributes armor-class flexrow" style="flex: none">
+  <li>
+    <h3 class="block-header">Armor Class
+      <a title="AC Notes" class="note-editor small" for="data.attributes.acNotes"><i class="fas fa-edit"></i></a></h3>
+  </li>
+  <li>
+    <h3 class="block-header">Saving Throws
+      <a title="Saving Throws Notes"  class="note-editor small" for="data.attributes.saveNotes"><i class="fas fa-edit"></i></a></h3>
+  </li>
+</ul>
+<ul class="attributes armor-class flexrow" style="flex: none">
+  {{#each data.attributes.ac as |ac id|}}
+  <li class="attribute armor-class tooltip" data-armorclass="{{id}}">
+    <div class="tooltipcontent">
+      @attributes.ac.{{id}}.total : {{ac.total}}
+
+      {{#if ac.sourceDetails.length}}
+      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+      {{#each ac.sourceDetails as |src|}}
+      {{src.name}}: {{src.value}}<br/>
+      {{/each}}
+      {{/if}}
+    </div>
+    <h4 class="attribute-name box-title">{{ac.label}}</h4>
+    <div class="attribute-value">
+      <span class="large">{{numberFormat ac.total decimals=0 sign=false}}</span>
+    </div>
+  </li>
+  {{/each}}
+  {{#each data.attributes.savingThrows as |savingThrow id|}}
+  <li class="attribute saving-throw tooltip" data-savingthrow="{{id}}">
+    <div class="tooltipcontent">
+      @attributes.savingThrows.{{id}}.total : {{savingThrow.total}}
+
+      {{#if savingThrow.sourceDetails.length}}
+      <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+      {{#each savingThrow.sourceDetails as |src|}}
+      {{src.name}}: {{src.value}}<br/>
+      {{/each}}
+      {{/if}}
+    </div>
+    <h4 class="attribute-name box-title rollable">{{savingThrow.label}}</h4>
+    <div class="attribute-value">
+      <span class="large">{{savingThrow.total}}</span>
+    </div>
+  </li>
+  {{/each}}
+</ul>
+<ul class="attributes armor-class flexrow" style="flex: none">
+  <li>
+    <h3 class="block-header">Base Combat Stats</h3>
+  </li>
+  <li>
+    <h3 class="block-header">Attack Bonuses</h3>
+  </li>
+</ul>
 <ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
   <li class="attribute initiative" data-attribute="init">
 
@@ -39,6 +96,25 @@
                     {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                   {{/if}}
                 </span>
+    </div>
+  </li>
+
+  <li class="attribute bab" data-attribute="melee-ab">
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.Melee"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.bab.total}}</span>
+    </div>
+  </li>
+  <li class="attribute bab" data-attribute="ranged-ab">
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.Ranged"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.bab.total}}</span>
+    </div>
+  </li>
+  <li class="attribute bab" data-attribute="unarmed-ab">
+    <h4 class="attribute-name box-title rollable">{{localize "D35E.Melee"}}</h4>
+    <div class="attribute-value tooltip">
+      <span>{{data.attributes.bab.total}}</span>
     </div>
   </li>
 </ul>
