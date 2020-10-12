@@ -144,6 +144,9 @@ export class ActorPF extends Actor {
             case "rattack":
                 result.attributes.attack = null;
                 break;
+            case "babattack":
+                result.attributes.bab = null;
+                break;
             case "damage":
             case "wdamage":
             case "sdamage":
@@ -193,7 +196,7 @@ export class ActorPF extends Actor {
                 "allChecks", "strChecks", "dexChecks", "conChecks", "intChecks", "wisChecks", "chaChecks",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
                 "ac", "aac", "sac", "nac",
-                "attack", "mattack", "rattack",
+                "attack", "mattack", "rattack",'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will","turnUndead","spellResistance","powerPoints","sneakAttack",
                 "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl"
@@ -343,6 +346,8 @@ export class ActorPF extends Actor {
                 return "data.attributes.attack.melee";
             case "rattack":
                 return "data.attributes.attack.ranged";
+            case "babattack":
+                return "data.attributes.bab.total";
             case "damage":
                 return "data.attributes.damage.general";
             case "wdamage":
@@ -3015,11 +3020,11 @@ export class ActorPF extends Actor {
                 classHP.set(_class._id, classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
                     if (lud.skills[s].rank) {
-                        updateData[`data.skills.${s}.rank`] = lud.skills[s].rank + (updateData[`data.skills.${s}.rank`] || 0);
+                        updateData[`data.skills.${s}.rank`] = Math.floor(lud.skills[s].rank * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
                     }
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
-                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = lud.skills[s].subskills[sb].rank + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
                         })
                     }
                 })

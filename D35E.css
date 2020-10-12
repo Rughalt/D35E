@@ -3818,4 +3818,5 @@ input[type=range]:disabled {
 }
 .level-up-data .skill input {
   flex: 0 20px;
+  text-align: center;
 }

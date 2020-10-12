@@ -925,6 +925,7 @@ D35E.buffTargets = {
     "attack": "D35E.All",
     "mattack": "D35E.Melee",
     "rattack": "D35E.Ranged",
+    "babattack": "D35E.BAB",
   },
   "damage": {
     "_label": "D35E.Damage",

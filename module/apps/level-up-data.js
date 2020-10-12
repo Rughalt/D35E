@@ -98,7 +98,7 @@ export class LevelUpDataDialog extends FormApplication {
                         let key = s.split(".");
                         if (key[0] === "skills" && key.length === 3) {
                             if (a.skills[key[1]] === undefined) {
-                                a.skills[key[1]] = {rank: 0}
+                                a.skills[key[1]] = {rank: 0, cls: this.actor.data.skills[key[1]]}
                             }
                             a.skills[key[1]].rank = parseInt(formData[s])
                         }
@@ -107,7 +107,7 @@ export class LevelUpDataDialog extends FormApplication {
                                 a.skills[key[1]] = {subskills: {}}
                             }
                             if (a.skills[key[1]].subskills[key[3]] === undefined) {
-                                a.skills[key[1]].subskills[key[3]] = {rank: 0}
+                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: this.actor.data.skills[key[1]].subskills[key[3]]}
                             }
                             a.skills[key[1]].subskills[key[3]].rank = parseInt(formData[s])
                         }
@@ -135,11 +135,11 @@ export class LevelUpDataDialog extends FormApplication {
                 classHP.set(_class._id,classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
                     if (lud.skills[s].rank) {
-                        updateData[`data.skills.${s}.rank`] = lud.skills[s].rank + (updateData[`data.skills.${s}.rank`] || 0);
+                        updateData[`data.skills.${s}.rank`] = Math.floor(lud.skills[s].rank * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
                     }
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
-                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = lud.skills[s].subskills[sb].rank + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
                         })
                     }
                 })
