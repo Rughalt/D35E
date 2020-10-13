@@ -2312,7 +2312,7 @@ export class ActorPF extends Actor {
                 spellbook.cl.total += data.classes[spellbook.class].level;
                 let spellcastingType = spellbook.spellcastingType;
                 if (spellcastingType !== undefined && spellcastingType !== null && spellcastingType !== "none" && spellcastingType !== "other") {
-                    if (data.attributes.prestigeCl[spellcastingType].max !== undefined) {
+                    if (data.attributes.prestigeCl[spellcastingType]?.max !== undefined) {
                         spellbook.maxPrestigeCl = data.attributes.prestigeCl[spellcastingType].max;
                         spellbook.availablePrestigeCl = data.attributes.prestigeCl[spellcastingType].max - spellcastingBonusTotalUsed[spellcastingType];
                     }
