@@ -2180,6 +2180,7 @@ export class ActorPF extends Actor {
         // Set class tags
         let totalNonRacialLevels = 0;
         data.classes = {};
+        data.totalNonEclLevels = 0;
         actorData.items.filter(obj => {
             return obj.type === "class";
         }).forEach(cls => {
@@ -2192,7 +2193,7 @@ export class ActorPF extends Actor {
                 tag = createTag(cls.name) + count.toString();
             }
             cls.data.tag = tag;
-
+            data.totalNonEclLevels += cls.data.levels
             let healthConfig = game.settings.get("D35E", "healthConfig");
             healthConfig = cls.data.classType === "racial" ? healthConfig.hitdice.Racial : this.isPC ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
             const classType = cls.data.classType || "base";
@@ -2244,7 +2245,7 @@ export class ActorPF extends Actor {
             if (data.counters[group][name] === undefined) {
                 data.counters[group][name] = {value: 0, counted: 0}
             }
-            data.counters[group][name].value = Math.floor(totalNonRacialLevels / 3.0) + 1; 
+            data.counters[group][name].value = Math.floor(data.totalNonEclLevels / 3.0) + 1;
             
         }
         actorData.items.forEach(obj => {
