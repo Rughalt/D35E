@@ -1,4 +1,13 @@
 # Changelog
+## 0.86
+
+### Features
+- Character sheet redesign
+- New change type: BAB
+
+### Bug Fixes
+- Fixes loading characters that had no Prestige Caster Level
+
 ## 0.85.4
 ### Features
 - [#55](https://github.com/Rughalt/D35E/issues/55) - Updated French translation by @red5h4d0w
