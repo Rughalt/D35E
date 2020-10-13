@@ -3399,6 +3399,97 @@ input[type=range]:disabled {
 #hitdice .switch-check:checked + .switch-label .switch-manual {
   display: none;
 }
+.level-up-data .header {
+  background: url(ui/parchment.jpg) repeat;
+  background-position-y: bottom;
+  margin: -12px -12px;
+  padding: 12px;
+  background-size: cover;
+}
+.level-up-data .header h1 {
+  position: relative;
+  flex: 0 0 20px;
+  margin: 0.25rem;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 2rem;
+  border-bottom: none;
+}
+.level-up-data h2.block-header {
+  position: relative;
+  flex: 0 0 20px;
+  margin: 0.25rem;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 20px;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+.level-up-data h2.block-header::after {
+  content: '';
+  flex: 1;
+  margin-left: 0.5rem;
+  height: 0px;
+  background-color: transparent;
+  border-top: 2px groove #eeede0;
+}
+.level-up-data h3.block-header {
+  position: relative;
+  flex: 0 0 20px;
+  margin: 0.25rem;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 18px;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+.level-up-data h3.block-header::after {
+  content: '';
+  flex: 1;
+  margin-left: 0.5rem;
+  height: 0px;
+  background-color: transparent;
+  border-top: 2px groove #eeede0;
+}
+.level-up-data h3.block-header::before {
+  content: '';
+  flex: 1;
+  margin-right: 0.5rem;
+  height: 0px;
+  background-color: transparent;
+  border-top: 2px groove #eeede0;
+}
+.level-up-data #hp-input {
+  flex: 0 60px;
+}
+.level-up-data a.roll-hp {
+  flex: 0 60px;
+  border-radius: 4px;
+  height: 25px;
+  display: block;
+  margin: 0 5px 4px;
+  line-height: 24px;
+  text-align: center;
+  font-size: 13px;
+}
+.level-up-data .skill {
+  flex: 0 205px;
+  padding: 5px;
+}
+.level-up-data .skill:nth-of-type(4n-1),
+.level-up-data .skill:nth-of-type(4n-2),
+.level-up-data .skill:nth-of-type(4n-3) {
+  border-right: rgba(0, 0, 0, 0.4) 1px solid;
+}
+.level-up-data .skill .item-control {
+  flex: 0 16px;
+  font-size: 10px;
+  opacity: 0.8;
+  text-align: center;
+}
+.level-up-data .skill input {
+  flex: 0 20px;
+  text-align: center;
+}
 .d35ecustom #hotbar #macro-list {
   border: none;
   flex: 0 0 522px;
@@ -3670,6 +3761,53 @@ input[type=range]:disabled {
 .d35ecustom .checkmark:after {
   border: none;
 }
+.d35ecustom .sheet.window-app .window-header {
+  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background-size: auto;
+  background-position-y: -70px;
+  background-repeat: no-repeat, repeat;
+  color: black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.d35ecustom .sheet.actor.character .window-content {
+  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background-size: contain;
+  background-position-y: -50px;
+  background-repeat: no-repeat, repeat;
+}
+.d35ecustom .sheet.actor.npc .window-content {
+  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background-position-y: -330px;
+  background-repeat: no-repeat, repeat;
+}
+.d35ecustom .sheet .sheet-header {
+  border-bottom: none;
+  margin: 4px;
+}
+.d35ecustom .sheet .sheet-header .header-details {
+  border-left: none!important;
+}
+.d35ecustom .sheet .sheet-header .header-details .attribute {
+  border: none !important;
+}
+.d35ecustom .sheet .sheet-header .summary {
+  border-top: none;
+}
+.d35ecustom .sheet .sheet-header .summary li {
+  border: none !important;
+  margin-bottom: 4px;
+}
+.d35ecustom .sheet .sheet-header .summary li input {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.d35ecustom .sheet .sheet-header .attributes input {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.d35ecustom .level-up-data {
+  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background-position-y: bottom;
+  background-repeat: no-repeat, repeat;
+}
 .secret {
   display: none;
 }
@@ -3727,96 +3865,4 @@ input[type=range]:disabled {
   -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
-}
-.level-up-data .header {
-  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-  background-position-y: bottom;
-  background-repeat: no-repeat, repeat;
-  margin: -12px -12px;
-  padding: 12px;
-  background-size: cover;
-}
-.level-up-data .header h1 {
-  position: relative;
-  flex: 0 0 20px;
-  margin: 0.25rem;
-  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
-  font-size: 2rem;
-  border-bottom: none;
-}
-.level-up-data h2.block-header {
-  position: relative;
-  flex: 0 0 20px;
-  margin: 0.25rem;
-  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
-  font-size: 20px;
-  border: none;
-  display: flex;
-  align-items: center;
-}
-.level-up-data h2.block-header::after {
-  content: '';
-  flex: 1;
-  margin-left: 0.5rem;
-  height: 0px;
-  background-color: transparent;
-  border-top: 2px groove #eeede0;
-}
-.level-up-data h3.block-header {
-  position: relative;
-  flex: 0 0 20px;
-  margin: 0.25rem;
-  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
-  font-size: 18px;
-  border: none;
-  display: flex;
-  align-items: center;
-}
-.level-up-data h3.block-header::after {
-  content: '';
-  flex: 1;
-  margin-left: 0.5rem;
-  height: 0px;
-  background-color: transparent;
-  border-top: 2px groove #eeede0;
-}
-.level-up-data h3.block-header::before {
-  content: '';
-  flex: 1;
-  margin-right: 0.5rem;
-  height: 0px;
-  background-color: transparent;
-  border-top: 2px groove #eeede0;
-}
-.level-up-data #hp-input {
-  flex: 0 60px;
-}
-.level-up-data a.roll-hp {
-  flex: 0 60px;
-  border-radius: 4px;
-  height: 25px;
-  display: block;
-  margin: 0 5px 4px;
-  line-height: 24px;
-  text-align: center;
-  font-size: 13px;
-}
-.level-up-data .skill {
-  flex: 0 205px;
-  padding: 5px;
-}
-.level-up-data .skill:nth-of-type(4n-1),
-.level-up-data .skill:nth-of-type(4n-2),
-.level-up-data .skill:nth-of-type(4n-3) {
-  border-right: rgba(0, 0, 0, 0.4) 1px solid;
-}
-.level-up-data .skill .item-control {
-  flex: 0 16px;
-  font-size: 10px;
-  opacity: 0.8;
-  text-align: center;
-}
-.level-up-data .skill input {
-  flex: 0 20px;
-  text-align: center;
 }

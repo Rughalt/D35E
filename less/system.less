@@ -1,5 +1,114 @@
 
 
+.level-up-data {
+  .header {
+    background: url(ui/parchment.jpg) repeat;
+    background-position-y: bottom;
+    margin: -12px -12px;
+    padding: 12px;
+    background-size: cover;
+    h1 {
+
+      position: relative;
+      flex: 0 0 20px;
+      margin: 0.25rem;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      font-size: 2rem;
+      border-bottom: none;
+    }
+  }
+
+  h2 {
+    &.block-header {
+
+      position: relative;
+      flex: 0 0 20px;
+      margin: 0.25rem;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      font-size: 20px;
+      border: none;
+      display: flex;
+      align-items: center;
+
+      &::after {
+        content: '';
+        flex: 1;
+        margin-left: 0.5rem;
+        height: 0px;
+        background-color: transparent;
+        border-top: 2px groove #eeede0;
+      }
+    }
+  }
+
+  h3 {
+    &.block-header {
+
+      position: relative;
+      flex: 0 0 20px;
+      margin: 0.25rem;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      font-size: 18px;
+      border: none;
+      display: flex;
+      align-items: center;
+
+      &::after {
+        content: '';
+        flex: 1;
+        margin-left: 0.5rem;
+        height: 0px;
+        background-color: transparent;
+        border-top: 2px groove #eeede0;
+      }
+      &::before {
+        content: '';
+        flex: 1;
+        margin-right: 0.5rem;
+        height: 0px;
+        background-color: transparent;
+        border-top: 2px groove #eeede0;
+      }
+    }
+  }
+
+  #hp-input {
+    flex: 0 60px;
+  }
+
+  a.roll-hp {
+    flex: 0 60px;
+    border-radius: 4px;
+    height: 25px;
+    display: block;
+    margin: 0 5px 4px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .skill {
+    flex: 0 205px;
+    padding: 5px;
+
+    &:nth-of-type(4n-1),  &:nth-of-type(4n-2),  &:nth-of-type(4n-3){
+      border-right: rgba(0,0,0,0.4) 1px solid;
+    }
+
+    .item-control {
+      flex: 0 16px;
+      font-size: 10px;
+      opacity: 0.8;
+      text-align: center;
+    }
+    input {
+      flex: 0 20px;
+      text-align: center;
+    }
+  }
+}
+
+
 .d35ecustom {
   #hotbar {
     #macro-list {
@@ -357,6 +466,74 @@
   .checkmark:after {
     border: none;
   }
+
+
+
+
+  .sheet {
+    &.window-app {
+      .window-header {
+        background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+        background-size: auto;
+        background-position-y: -70px;
+        background-repeat: no-repeat, repeat;
+        color: black;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    &.actor {
+      &.character {
+        .window-content {
+          background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+          background-size: contain;
+          background-position-y: -50px;
+          background-repeat: no-repeat, repeat;
+        }
+      }
+
+      &.npc {
+        .window-content {
+          background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+
+          background-position-y: -330px;
+          background-repeat: no-repeat, repeat;
+        }
+      }
+    }
+
+    .sheet-header {
+      border-bottom: none;
+      margin: 4px;
+      .header-details {
+        border-left: none!important;
+        .attribute {
+          border: none !important;
+        }
+      }
+      .summary {
+        border-top: none;
+        li {
+          border: none !important;
+          margin-bottom: 4px;
+          input {
+            border: 1px solid rgba(0,0,0,0.2)
+          }
+        }
+      }
+      .attributes {
+        input {
+          border: 1px solid rgba(0,0,0,0.2);
+        }
+      }
+    }
+  }
+
+  .level-up-data {
+    background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+    background-position-y: bottom;
+    background-repeat: no-repeat, repeat;
+  }
 }
 
 .secret {
@@ -426,113 +603,5 @@
 
 
   }
-}
 
-.level-up-data {
-  .header {
-    background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-    background-position-y: bottom;
-    background-repeat: no-repeat, repeat;
-    margin: -12px -12px;
-    padding: 12px;
-    background-size: cover;
-    h1 {
-
-      position: relative;
-      flex: 0 0 20px;
-      margin: 0.25rem;
-      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
-      font-size: 2rem;
-      border-bottom: none;
-    }
-  }
-
-  h2 {
-    &.block-header {
-
-      position: relative;
-      flex: 0 0 20px;
-      margin: 0.25rem;
-      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
-      font-size: 20px;
-      border: none;
-      display: flex;
-      align-items: center;
-
-      &::after {
-        content: '';
-        flex: 1;
-        margin-left: 0.5rem;
-        height: 0px;
-        background-color: transparent;
-        border-top: 2px groove #eeede0;
-      }
-    }
-  }
-
-  h3 {
-    &.block-header {
-
-      position: relative;
-      flex: 0 0 20px;
-      margin: 0.25rem;
-      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
-      font-size: 18px;
-      border: none;
-      display: flex;
-      align-items: center;
-
-      &::after {
-        content: '';
-        flex: 1;
-        margin-left: 0.5rem;
-        height: 0px;
-        background-color: transparent;
-        border-top: 2px groove #eeede0;
-      }
-      &::before {
-        content: '';
-        flex: 1;
-        margin-right: 0.5rem;
-        height: 0px;
-        background-color: transparent;
-        border-top: 2px groove #eeede0;
-      }
-    }
-  }
-
-  #hp-input {
-    flex: 0 60px;
-  }
-
-  a.roll-hp {
-    flex: 0 60px;
-    border-radius: 4px;
-    height: 25px;
-    display: block;
-    margin: 0 5px 4px;
-    line-height: 24px;
-    text-align: center;
-    font-size: 13px;
-  }
-
-  .skill {
-    flex: 0 205px;
-    padding: 5px;
-
-    &:nth-of-type(4n-1),  &:nth-of-type(4n-2),  &:nth-of-type(4n-3){
-      border-right: rgba(0,0,0,0.4) 1px solid;
-    }
-
-    .item-control {
-      flex: 0 16px;
-      font-size: 10px;
-      opacity: 0.8;
-      text-align: center;
-    }
-    input {
-      flex: 0 20px;
-      text-align: center;
-    }
-  }
 }
