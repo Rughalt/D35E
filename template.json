@@ -381,9 +381,20 @@
             "value": 0,
             "min": 0,
             "max": 40,
-            "available": 0
+            "available": 1
           },
           "levelUpData": [
+            {
+              "level": 1,
+              "id": "_level1",
+              "classId": null,
+              "class": null,
+              "classImage": null,
+              "skills": {},
+              "hp": 0,
+              "hasFeat": true,
+              "hasAbility": false
+            }
           ],
           "alignment": "",
           "biography": {
@@ -927,14 +938,14 @@
         "xp": {
           "value": 0,
           "min": 0,
-          "max": 0
+          "max": 1000
         },
         "height": "",
         "weight": "",
         "gender": "",
         "deity": "",
         "age": "",
-        "levelUpProgression": true
+        "levelUpProgression": null
       },
       "traits": {
         "weaponProf": {
@@ -999,6 +1010,7 @@
           "color": "",
           "radius": 0,
           "opacity": 0,
+          "type": "",
           "emitLight": false
         }
       },

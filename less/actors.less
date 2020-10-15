@@ -1,11 +1,5 @@
 @import "./variables.less";
 .D35E.sheet.actor {
-  .window-content {
-    background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-    background-size: contain;
-    background-position-y: -70px;
-    background-repeat: no-repeat, repeat;
-  }
 
   /* ----------------------------------------- */
   /*  Sheet Header                             */
@@ -312,7 +306,9 @@
       .buffbox {
         position: absolute;
         width: 120px;
+        z-index: 2;
         div {
+
           height: 16px;
           width: 16px;
           flex: 0 16px;

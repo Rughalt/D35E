@@ -4,7 +4,6 @@ import { LevelUpDialog } from "../../apps/level-up-box.js";
 import { LevelUpDataDialog } from "../../apps/level-up-data.js";
 import { ActorSheetFlags } from "../../apps/actor-flags.js";
 import { DicePF } from "../../dice.js";
-import { TokenConfigPF } from "../../token-config.js";
 import { createTag, createTabs, isMinimumCoreVersion } from "../../lib.js";
 import { NoteEditor } from "../../apps/note-editor.js";
 import {SpellbookEditor} from "../../apps/spellbook-editor.js";
@@ -1543,19 +1542,6 @@ export class ActorSheetPF extends ActorSheet {
     new ActorTraitSelector(this.actor, options).render(true)
   }
 
-  _onConfigureToken(event) {
-    event.preventDefault();
-
-    // Determine the Token for which to configure
-    const token = this.token || new Token(this.actor.data.token);
-
-    // Render the Token Config application
-    new TokenConfigPF(token, {
-      left: Math.max(this.position.left - 560 - 10, 10),
-      top: this.position.top,
-      configureDefault: !this.token
-    }).render(true);
-  }
 
   async saveMCEContent(updateData=null) {
     let manualUpdate = false;

@@ -88,7 +88,7 @@
   }
 
   .skill {
-    flex: 0 205px;
+    flex: 0 203px;
     padding: 5px;
 
     &:nth-of-type(4n-1),  &:nth-of-type(4n-2),  &:nth-of-type(4n-3){
@@ -110,6 +110,14 @@
 
 
 .d35ecustom {
+
+  .chat-message {
+    background: url(/systems/D35E/icons/background/paper.png), url(/ui/parchment.jpg) repeat;
+    background-size: contain;
+    background-position-y: -50px;
+    background-repeat: no-repeat, repeat;
+  }
+
   #hotbar {
     #macro-list {
       border: none;
@@ -511,6 +519,12 @@
           border: none !important;
         }
       }
+
+      img.profile {
+
+
+      }
+
       .summary {
         border-top: none;
         li {
@@ -530,9 +544,20 @@
   }
 
   .level-up-data {
-    background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-    background-position-y: bottom;
-    background-repeat: no-repeat, repeat;
+    .window-header {
+
+      background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+      background-size: auto;
+      background-position-y: -70px;
+      background-repeat: no-repeat, repeat;
+      color: black;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    .header {
+      background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+      background-repeat: no-repeat, repeat;
+      background-position-y: bottom;
+    }
   }
 }
 

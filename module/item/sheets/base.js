@@ -2,6 +2,7 @@ import {createTabs} from "../../lib.js";
 import {EntrySelector} from "../../apps/entry-selector.js";
 import {ItemPF} from "../entity.js";
 import {CACHE} from "../../cache.js";
+import {isMinimumCoreVersion} from "../../lib.js";
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -115,6 +116,8 @@ export class ItemSheetPF extends ItemSheet {
         if (data.item.type === "feat") {
             data.isClassFeature = true; //Any feat can be a class feature
         }
+
+        data.is07Xup = isMinimumCoreVersion("0.7.2");
 
         data.availableContainers = {}
         data.availableContainers['none'] = "None"

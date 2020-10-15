@@ -17,3 +17,17 @@
   <label>{{localize "D35E.CustomColor"}}</label>
   <input type="color" name="data.light.color" value="{{data.light.color}}" data-dtype="String"/>
 </div>
+
+{{#if is07Xup}}
+<div class="form-group select">
+  <label>{{localize "TOKEN.LightAnimation"}}</label>
+  <select name="data.light.type">
+    {{#select data.light.type}}
+    <option value="">None</option>
+    <option value="torch">Torch</option>
+    <option value="dome">Dome</option>
+    <option value="pulse">Pulse</option>
+    {{/select}}
+  </select>
+</div>
+{{/if}}

@@ -2,11 +2,15 @@
 ## 0.86
 
 ### Features
-- Character sheet redesign
+- Added compatibility with 0.7.X series
+- Small theme redesign, theme now enabled by default for new clients
 - New change type: BAB
+- Support for new 0.7.X series lighting effects for items, added lighting to existing magic items and standard light sources
+- 
 
 ### Bug Fixes
 - Fixes loading characters that had no Prestige Caster Level
+- [#55](https://github.com/Rughalt/D35E/issues/55) - Fixed Ranger class Favorite Enemy 
 
 ## 0.85.4
 ### Features

@@ -110,6 +110,8 @@ export const migrateActorData = async function(actor) {
   _migrateActorCreatureType(actor, updateData);
   _migrateActorSpellbookDCFormula(actor, updateData);
   _migrateActorRace(actor, updateData)
+  _migrateActorTokenVision(actor, updateData);
+
 
   if ( !actor.items ) return updateData;
 
@@ -170,6 +172,9 @@ export const migrateSceneData = async function(scene) {
       continue;
     }
     const token = new Token(t);
+
+    migrateTokenVision(token, t)
+
     if (!token.actor) {
       t.actorId = null;
       t.actordata = {};
@@ -186,6 +191,24 @@ export const migrateSceneData = async function(scene) {
   }
   return result;
 };
+
+const _migrateActorTokenVision = function(ent, updateData) {
+  const vision = getProperty(ent.data, "data.attributes.vision");
+  if (!vision) return;
+
+  updateData["data.attributes.-=vision"] = null;
+  updateData["token.flags.D35E.lowLightVision"] = vision.lowLight;
+  if (!getProperty(ent.data, "token.brightSight")) updateData["token.brightSight"] = vision.darkvision;
+};
+
+const migrateTokenVision = function(token, updateData) {
+  if (!token.actor) return;
+
+  setProperty(updateData, "flags.D35E.lowLightVision", getProperty(token.actor.data, "token.flags.D35E.lowLightVision"));
+  setProperty(updateData, "brightSight", getProperty(token.actor.data, "token.brightSight"));
+};
+
+
 
 /* -------------------------------------------- */
 /*  Low level migration utilities
@@ -248,8 +271,11 @@ const _migrateCharacterLevel = function(ent, updateData) {
       updateData["data."+k] = 0;
     }
   }
+  let k = "details.levelUpProgression"
   const value = getProperty(ent.data.data, k);
-  if (value == null) {
+  console.log(`D35E | Migrate | Level up progression ${value}`)
+  if (value === null || value === undefined) {
+
     updateData["data.details.levelUpProgression"] = false;
   }
 };

@@ -135,7 +135,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = "0.86.0";
+  const NEEDS_MIGRATION_VERSION = "0.86.1";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
     PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
@@ -221,7 +221,15 @@ Hooks.on("deleteActor", function() {
   }
 });
 
-
+Hooks.on('createActor', (actor, data, options) => {
+  if( actor.data.type === 'character') {
+    if (actor.data.data.details?.levelUpProgression === undefined || actor.data.data.details?.levelUpProgression === null) {
+      let updateData = {}
+      updateData["data.details.levelUpProgression"] = true;
+      actor.update(updateData)
+    }
+  }
+});
 /* -------------------------------------------- */
 /*  Other Hooks                                 */
 /* -------------------------------------------- */
@@ -272,6 +280,14 @@ Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
     console.log("Not updating actor as action was started by other user")
   }
 });
+
+Hooks.on("renderTokenConfig", async (app, html) => {
+  let newHTML = await renderTemplate("systems/D35E/templates/internal/token-config.html", {
+    object: duplicate(app.object.data),
+  });
+  html.find('.tab[data-tab="vision"] > *:nth-child(2)').after(newHTML);
+});
+
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {
   const actor = game.actors.tokens[combatant.tokenId];

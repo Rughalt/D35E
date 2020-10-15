@@ -1,4 +1,5 @@
 import { _rollInitiative, _getInitiativeFormula } from "./combat.js";
+import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
 
 const FormApplication_close = FormApplication.prototype.close;

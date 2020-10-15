@@ -591,12 +591,6 @@
   /*  Misc                                     */
   /* ----------------------------------------- */
 }
-.D35E.sheet.actor .window-content {
-  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-  background-size: contain;
-  background-position-y: -70px;
-  background-repeat: no-repeat, repeat;
-}
 .D35E.sheet.actor .warning {
   flex: 0;
   background-color: #ffd14e;
@@ -855,6 +849,7 @@
 .D35E.sheet.actor .sheet-header div.profile .buffbox {
   position: absolute;
   width: 120px;
+  z-index: 2;
 }
 .D35E.sheet.actor .sheet-header div.profile .buffbox div {
   height: 16px;
@@ -2706,14 +2701,14 @@
 }
 .D35E.chat-card.item-card h2 {
   padding: 3px 0;
-  border-top: 2px groove #FFF;
-  border-bottom: 2px groove #FFF;
+  border: none;
   flex: 1;
   margin: 0;
   line-height: 36px;
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
   font-size: 20px;
-  color: #4b4a44;
+  color: black;
+  opacity: 0.9;
   margin-bottom: 4px;
 }
 .D35E.chat-card .card-header {
@@ -3472,7 +3467,7 @@ input[type=range]:disabled {
   font-size: 13px;
 }
 .level-up-data .skill {
-  flex: 0 205px;
+  flex: 0 203px;
   padding: 5px;
 }
 .level-up-data .skill:nth-of-type(4n-1),
@@ -3489,6 +3484,12 @@ input[type=range]:disabled {
 .level-up-data .skill input {
   flex: 0 20px;
   text-align: center;
+}
+.d35ecustom .chat-message {
+  background: url(/systems/D35E/icons/background/paper.png), url(/ui/parchment.jpg) repeat;
+  background-size: contain;
+  background-position-y: -50px;
+  background-repeat: no-repeat, repeat;
 }
 .d35ecustom #hotbar #macro-list {
   border: none;
@@ -3803,10 +3804,18 @@ input[type=range]:disabled {
 .d35ecustom .sheet .sheet-header .attributes input {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
-.d35ecustom .level-up-data {
+.d35ecustom .level-up-data .window-header {
   background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-  background-position-y: bottom;
+  background-size: auto;
+  background-position-y: -70px;
   background-repeat: no-repeat, repeat;
+  color: black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.d35ecustom .level-up-data .header {
+  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background-repeat: no-repeat, repeat;
+  background-position-y: bottom;
 }
 .secret {
   display: none;
