@@ -18,6 +18,13 @@
   <input type="color" name="data.light.color" value="{{data.light.color}}" data-dtype="String"/>
 </div>
 
+
+{{!-- Override Color --}}
+<div class="form-group">
+  <label>{{localize "D35E.CustomAlpha"}}</label>
+  <input type="range" min="0.0" max="1.0" step="0.1" name="data.light.alpha" value="{{data.light.alpha}}" data-dtype="Number"/>
+</div>
+
 {{#if is07Xup}}
 <div class="form-group select">
   <label>{{localize "TOKEN.LightAnimation"}}</label>

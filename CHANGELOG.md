@@ -6,7 +6,7 @@
 - Small theme redesign, theme now enabled by default for new clients
 - New change type: BAB
 - Support for new 0.7.X series lighting effects for items, added lighting to existing magic items and standard light sources
-- 
+- Ported vision persmission dialog from PF1
 
 ### Bug Fixes
 - Fixes loading characters that had no Prestige Caster Level

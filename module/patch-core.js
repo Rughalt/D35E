@@ -70,6 +70,8 @@ export async function PatchCore() {
     await import("./legacy/low-light-vision.js");
   }
 
+  import("./lib/intro.js")
+
 }
 
 

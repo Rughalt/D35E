@@ -1010,6 +1010,7 @@
           "color": "",
           "radius": 0,
           "opacity": 0,
+          "alpha": 0.5,
           "type": "",
           "emitLight": false
         }

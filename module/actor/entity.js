@@ -746,6 +746,7 @@ export class ActorPF extends Actor {
         {
             let dimLight = 0;
             let brightLight = 0;
+            let alpha = 0.0;
             let color = "black"
             let type = ""
             for (let i of this.items.values()) {
@@ -755,6 +756,7 @@ export class ActorPF extends Actor {
                     brightLight = Math.floor(2 * i.data.data.light.radius / 5.0);
                     color = i.data.data.light.color;
                     type = i.data.data.light.type;
+                    alpha = i.data.data.light.alpha;
                     break;
                 }
             }
@@ -767,6 +769,7 @@ export class ActorPF extends Actor {
                             dimLight: dimLight,
                             brightLight: brightLight,
                             lightColor: color,
+                            lightAlpha: alpha,
                             lightAnimation: {type: type}
                         }, {stopUpdates: true});
                 });
@@ -779,6 +782,7 @@ export class ActorPF extends Actor {
                             dimLight: dimLight,
                             brightLight: brightLight,
                             lightColor: color,
+                            lightAlpha: alpha,
                             lightAnimation: {type: type}
                         }, {stopUpdates: true});
                 });
@@ -786,6 +790,7 @@ export class ActorPF extends Actor {
                 data[`token.brightLight`] = brightLight;
                 data[`token.lightColor`] = color;
                 data[`token.lightAnimation.type`] = type;
+                data[`token.lightAlpha`] = alpha;
             }
         }
 

@@ -28,6 +28,7 @@
                 <p>One of the most important things is knowing how to access your <strong>Character Sheet</strong>. Navigate to actors tab on sidebar using <i class="fas fa-users"></i> icon and find your Character on the list and click it!</p>
                 <p>Look around the card - your Game Master may have set it up for you, but if not, I can tell you how to do it</p>
                 <p style="color: #ff5b41; font-size: 11px">You can proceed only after opening your character sheet!</p>
+                <a class="navlink" onclick="displaySheetIntro()"><i class="fas fa-chevron-right"></i> I've opened it but I dont know what to do? <em style="color: white; opacity: 0.7">(show Character Sheet overview)</em></a><br>
                 <a class="navlink" onclick="showAddRaceTutorial()"><i class="fas fa-chevron-right"></i> Sheet is empty, what should I do?</a><br>
                 <a class="navlink" onclick="showSkillTutorial()"><i class="fas fa-chevron-right"></i> It seems it was already prepared, what is next?</a>
             </div>
@@ -40,20 +41,20 @@
             </div>
             <div id="onboarding-character-class" style="display: none">
                 <p>To add Class to you character, navigate to <strong>Features</strong> tab and select <strong>Classes</strong>. Then open Classes compendium, and <strong>Drag and Drop</strong> a Class from Compendium to Classes list.</p>
-                <p>To set level and HP rolled for the class, you'll need to open <strong>Class Details</strong> using <i class="fas fa-edit"></i> button located in the line with Class name</p>
-                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and open Class details to proceed!</p>
+                <p>As you see, Class has no level. To add information for First Level - Class, HP and Skills, you'll need to open <strong>Level Details</strong> using a box with up arrow and number 1 located near the top of this tab.</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and open Level Details to proceed!</p>
+                <a class="navlink" onclick="displayLevelIntro()"><i class="fas fa-chevron-right"></i> I'm feeling a bit lost. Can you show me what is where? <em style="color: white; opacity: 0.7">(show Leveling overview)</em></a><br>
                 <a class="navlink" onclick="showSetClassDetailsTutorial()"><i class="fas fa-chevron-right"></i> OK, I have it open.</a>
                 <p class="tip" style="top: -110px"><em>Tip!</em> Most of the lists in Character Sheet work in similar way. You can drop things on the lists, edit them using <i class="fas fa-edit"></i> button, delete them and in some cases activate their actions. To quickly look at item details, click on its name, and to show it to others (in the chat), click on its icon. You can read more in Documentation.</p>
             </div>
             <div id="onboarding-character-class-details" style="display: none">
-                <p>On this page you can see all information about the Class. You can even change how it works in Details tab, but you shouldn't have to do it! On thing you have to do, it so set <strong>Level</strong> and <strong>HP</strong></p>
-                <p>You can edit <strong>Level</strong> and <strong>Hit Point</strong> fields and they will be passed back to your Character. Remember, that when setting HP here, you only set Rolled Hit Points, without Constitution bonus.</p>
-                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and close Class Details to proceed!</p>
+                <p>On this page you can see all information about the Level - Class you selected when leveling up, Hit Points rolled, Skills points assignment. You can select a <strong>Class</strong> using a dropdown, and <strong>HP</strong> wil be rolled for you. You can also add <strong>Skill Points</strong> to skills. If any of the number turns red, this means you have assigned too many ranks for the Skill!</p>
+                <p><strong>Hit Point</strong> and <strong>Skill</strong> fields will be passed back to your Character, and <strong>Class</strong> level be updated. Remember, that when setting HP here, you only set Rolled Hit Points, without Constitution bonus.</p>
+                <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and close Level Details to proceed!</p>
                 <a class="navlink" onclick="showSkillTutorial()"><i class="fas fa-chevron-right"></i> HP and Level set, what now?</a>
-                <p class="tip"><em>Tip!</em> Classes and other non-character things in Foundry - like Feats, Weapons, Spells etc. are <strong>Items</strong> - and each Item Details Window look similar. You can read more in Documentation.</p>
             </div>
             <div id="onboarding-character-skills" style="display: none">
-                <p>One of the most importent things about your hero are Skills. You can see and adjust skill ranks on <strong>Skills</strong> tab. Go there and set up your Skills - enter Skill rank in <strong>Rank</strong> field in the correct line.</p>
+                <p>One of the most importent things about your hero are Skills. You can see and adjust skill ranks on <strong>Skills</strong> tab. Go there - Skills you entered in previous step, for you first Level, should already be filled for you.</p>
                 <p>To roll a skill, use <i class="fas fa-dice-d20"></i> icon. You can then select if you want to make a standard roll or take 10 or 20. Try it!</p>
                 <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open to proceed!</p>
                 <a class="navlink" onclick="showAddWeaponTutorial()"><i class="fas fa-chevron-right"></i> Nice! This looks easy.</a>
@@ -68,6 +69,7 @@
                 <p>Afterwards, close Weapon Details Window and navigate to <strong>Summary</strong> tab. You should see <strong>Dagger</strong> in the <strong>Attacks</strong> list with <img src="/systems/D35E/icons/actions/gladius.svg"> icon besides it. Click on the <img src="/systems/D35E/icons/actions/gladius.svg"> icon to attack! In the window that appears, click Single Attack to make a roll and display it in chat.</p>
                 <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open to proceed!</p>
                 <a class="navlink" onclick="showHotbarTutorial()"><i class="fas fa-chevron-right"></i> Great! Let enemies feel my wrath!</a>
+                <p class="tip"><em>Tip!</em> Weapons and other non-character things in Foundry - like Feats, Classes, Attacks, Spells etc. are <strong>Items</strong> - and each Item Details Window look similar. You can read more in Documentation.</p>
             </div>
             <div id="onboarding-character-hotbar" style="display: none">
                 <p>To have easier access to your <strong>Items</strong> and <strong>Attacks</strong> you can use <strong>Hotbar</strong>. Hotbar is located below this window. Try dragging Attack you just created to Hotbar. To use it, just click it or press hotkey (number from 1 to 9)</p>
@@ -94,11 +96,11 @@
     function showSetClassDetailsTutorial() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
         // User character is null
-        if((userCharacter === null || $(`#actor-${userCharacter}`).length) && $(`.sheet.item`).length){
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length) && $(`.sheet.level-up-data`).length){
             $('#onboarding-character-class').hide();
             $('#onboarding-character-class-details').show();
         }else{
-            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and open any Class Details to continue!`)
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and open Level Up window to continue!`)
         }
     }
 
@@ -189,6 +191,78 @@
             canvas.tokens.cycleTokens(1, true);
         } else{
             ui.notifications.warn(`Select Character in Player Setting windows and save setting to continue.`)
+        }
+    }
+
+    function displaySheetIntro() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+            let intro = introJs()
+            intro.addSteps([
+                {
+                element: document.querySelector(`#actor-${userCharacter} > section > form > header`),
+                intro: "This is header area. Here you can find some basic information about your character.",
+                position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter}  > section > form > nav`),
+                    intro: "This is main sheet navigation. ",
+                    position: 'right'
+                }
+            ]);
+            intro.onexit(function() {
+            });
+            intro.start()
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+
+    function displayLevelUpIntro() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+            let intro = introJs()
+            intro.addSteps([
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > header`),
+                    intro: "This is header area. Here you can find some basic information about your character.",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter}  > section > form > nav`),
+                    intro: "This is main sheet navigation. ",
+                    position: 'right'
+                }
+            ]);
+            intro.onexit(function() {
+            });
+            intro.start()
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+
+    function displayLevelUpDataWindowIntro() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length) && $(`.sheet.level-up-data`).length){
+            let intro = introJs()
+            intro.addSteps([
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > header`),
+                    intro: "This is header area. Here you can find some basic information about your character.",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter}  > section > form > nav`),
+                    intro: "This is main sheet navigation. ",
+                    position: 'right'
+                }
+            ]);
+            intro.onexit(function() {
+            });
+            intro.start()
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and open Level Up window to continue!`)
         }
     }
 
