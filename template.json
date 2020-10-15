@@ -1112,7 +1112,8 @@
           "damage": null,
           "damageMult": 1,
           "critRange": 20,
-          "critMult": 2
+          "critMult": 2,
+          "twoHandedOnly": false
         },
         "save": {
           "dc": 0,

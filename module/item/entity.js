@@ -988,7 +988,8 @@ export class ItemPF extends Item {
                 rollData.powerAttackBonus = form.find('[name="power-attack"]').val();
                 if (rollData.powerAttackBonus !== undefined) {
                     rollData.powerAttackBonus = parseInt(form.find('[name="power-attack"]').val())
-                    damageExtraParts.push("floor(@powerAttackBonus * @ablMult) * @critMult");
+                    rollData.weaponHands = 1
+                    damageExtraParts.push("floor(@powerAttackBonus * @weaponHands) * @critMult");
                     rollData.powerAttackPenalty = -rollData.powerAttackBonus;
                     attackExtraParts.push("@powerAttackPenalty");
                 }
@@ -1055,6 +1056,9 @@ export class ItemPF extends Item {
                             rollData.twoWeaponPenalty = -4;
                         attackExtraParts.push("@twoWeaponPenalty");
                         twoWeaponFightingOffhand = true;
+                    }
+                    else if (twoWeaponMode === 'two-handed') {
+                        rollData.weaponHands = 2
                     }
 
                 }
@@ -1534,7 +1538,7 @@ export class ItemPF extends Item {
         rollData.critMult = 1;
         if (critical) rollData.critMult = this.data.data.ability.critMult;
         // Determine ability multiplier
-        if (this.data.data.ability.damageMult != null) rollData.ablMult = this.data.data.ability.damageMult;
+        if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
 
         // Define Roll parts

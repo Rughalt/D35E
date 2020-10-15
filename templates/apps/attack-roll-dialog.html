@@ -79,7 +79,7 @@
   {{#if hasAttack}}{{#if hasDamage}}
   {{#unless isRangedWeapon}}
   <div class="form-group">
-    <label>{{localize "D35E.TwoWeaponFighting"}}</label>
+    <label>{{localize "D35E.WeaponFightingMode"}}</label>
     <select name="twf-attack-mode" onchange="changeTWF(this)">
       {{#select twoWeaponAttackType}}
       {{#each twoWeaponAttackTypes as |label mode|}}
@@ -95,10 +95,17 @@
         if (option === 'offhand-light' || option === 'offhand-normal' ) {
           $('option:selected', select).closest("section").find("button[data-button='multi']").hide();
           $('option:selected', select).closest("section").find("button[data-button='normal']").text(offhandAttackLabel)
+          $("damage-ability-multiplier").val("0.5");
+        }
+        else if (option === 'two-handed') {
+          $('option:selected', select).closest("section").find("button[data-button='multi']").show();
+          $('option:selected', select).closest("section").find("button[data-button='normal']").text(singleAttackLabel)
+          $("damage-ability-multiplier").val("2.0");
         }
         else {
           $('option:selected', select).closest("section").find("button[data-button='multi']").show();
           $('option:selected', select).closest("section").find("button[data-button='normal']").text(singleAttackLabel)
+          $("damage-ability-multiplier").val("0.5");
         }
       }
     </script>

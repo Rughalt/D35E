@@ -999,6 +999,8 @@
   "D35E.MaxLevel": "Max Level",
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",
+  "D35E.WeaponFightingMode": "Weapon Wield Mode",
+  "D35E.TwoWeaponTwoHanded": "Two-Handed",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

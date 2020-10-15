@@ -3,10 +3,18 @@
 
 ### Features
 - Added compatibility with 0.7.X series
+- Full Level Progression system rework:
+    - Ability to set which Class Level was gained at which Character Level
+    - Ability to set Hit Points per Level
+    - Ability to set Skill Points per level
+    - Compatibility with NPCs and old Characters (that will use simple progression system)
 - Small theme redesign, theme now enabled by default for new clients
 - New change type: BAB
-- Support for new 0.7.X series lighting effects for items, added lighting to existing magic items and standard light sources
-- Ported vision persmission dialog from PF1
+- Support for new 0.7.X series lighting effects
+    - New lighting options for items
+    - Added lighting to existing magic items and standard light sources
+- Ported Vision Permission dialog from PF1
+- Added ability to add custom class features when using special World Compendium
 
 ### Bug Fixes
 - Fixes loading characters that had no Prestige Caster Level

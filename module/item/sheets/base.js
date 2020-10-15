@@ -394,7 +394,8 @@ export class ItemSheetPF extends ItemSheet {
                 knownSpellProgressionData.level = level
                 for (let a of ['fort', 'ref', 'will']) {
                     const classType = getProperty(data.data, "classType") || "base";
-                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value];
+
+                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] != null ? CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] : "0";
                     progressionData[a] = Math.floor(new Roll(formula, {level: level}).roll().total);
                 }
                 {

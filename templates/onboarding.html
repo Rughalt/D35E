@@ -4,7 +4,7 @@
     }
 </style>
 <div>
-    <div class="flexrow dialogue">
+    <div class="flexrow dialogue" id="dialogue-box">
         <div class="portrait">
 
         </div>
@@ -28,7 +28,7 @@
                 <p>One of the most important things is knowing how to access your <strong>Character Sheet</strong>. Navigate to actors tab on sidebar using <i class="fas fa-users"></i> icon and find your Character on the list and click it!</p>
                 <p>Look around the card - your Game Master may have set it up for you, but if not, I can tell you how to do it</p>
                 <p style="color: #ff5b41; font-size: 11px">You can proceed only after opening your character sheet!</p>
-                <a class="navlink" onclick="displaySheetIntro()"><i class="fas fa-chevron-right"></i> I've opened it but I dont know what to do? <em style="color: white; opacity: 0.7">(show Character Sheet overview)</em></a><br>
+                <a class="navlink" id="display-si" onclick="displaySheetIntro()"><i class="fas fa-chevron-right"></i> I've opened it but I dont know what to do? <em style="color: white; opacity: 0.7">(show Character Sheet overview)</em></a><br>
                 <a class="navlink" onclick="showAddRaceTutorial()"><i class="fas fa-chevron-right"></i> Sheet is empty, what should I do?</a><br>
                 <a class="navlink" onclick="showSkillTutorial()"><i class="fas fa-chevron-right"></i> It seems it was already prepared, what is next?</a>
             </div>
@@ -43,7 +43,7 @@
                 <p>To add Class to you character, navigate to <strong>Features</strong> tab and select <strong>Classes</strong>. Then open Classes compendium, and <strong>Drag and Drop</strong> a Class from Compendium to Classes list.</p>
                 <p>As you see, Class has no level. To add information for First Level - Class, HP and Skills, you'll need to open <strong>Level Details</strong> using a box with up arrow and number 1 located near the top of this tab.</p>
                 <p style="color: #ff5b41; font-size: 11px">Keep you character sheet open and open Level Details to proceed!</p>
-                <a class="navlink" onclick="displayLevelIntro()"><i class="fas fa-chevron-right"></i> I'm feeling a bit lost. Can you show me what is where? <em style="color: white; opacity: 0.7">(show Leveling overview)</em></a><br>
+                <a class="navlink" id="display-lui" onclick="displayLevelUpIntro()"><i class="fas fa-chevron-right"></i> I'm feeling a bit lost. Can you show me what is where? <em style="color: white; opacity: 0.7">(show Leveling overview)</em></a><br>
                 <a class="navlink" onclick="showSetClassDetailsTutorial()"><i class="fas fa-chevron-right"></i> OK, I have it open.</a>
                 <p class="tip" style="top: -110px"><em>Tip!</em> Most of the lists in Character Sheet work in similar way. You can drop things on the lists, edit them using <i class="fas fa-edit"></i> button, delete them and in some cases activate their actions. To quickly look at item details, click on its name, and to show it to others (in the chat), click on its icon. You can read more in Documentation.</p>
             </div>
@@ -200,42 +200,87 @@
             let intro = introJs()
             intro.addSteps([
                 {
-                element: document.querySelector(`#actor-${userCharacter} > section > form > header`),
-                intro: "This is header area. Here you can find some basic information about your character.",
-                position: 'right'
-                },
-                {
-                    element: document.querySelector(`#actor-${userCharacter}  > section > form > nav`),
-                    intro: "This is main sheet navigation. ",
-                    position: 'right'
-                }
-            ]);
-            intro.onexit(function() {
-            });
-            intro.start()
-        }else{
-            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
-        }
-    }
-
-    function displayLevelUpIntro() {
-        let userCharacter = game.user.character == null ? null : game.user.character.id;
-        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
-            let intro = introJs()
-            intro.addSteps([
-                {
                     element: document.querySelector(`#actor-${userCharacter} > section > form > header`),
                     intro: "This is header area. Here you can find some basic information about your character.",
                     position: 'right'
                 },
                 {
                     element: document.querySelector(`#actor-${userCharacter}  > section > form > nav`),
-                    intro: "This is main sheet navigation. ",
+                    intro: "This is main sheet navigation. From here you can access all sub-sheets of you character card.",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.details.flexcol.active`),
+                    intro: "Is summary",
                     position: 'right'
                 }
             ]);
-            intro.onexit(function() {
+            intro.onbeforechange(function(targetElement) {
+                if ($(targetElement).data("tab") === "details") {
+                    document.querySelector(`#actor-${userCharacter} > section > form > nav > a:nth-child(1)`).click();
+                }
             });
+            intro.onexit(function() {
+                $('.window-app.onboarding').show()
+            });
+            $('.window-app.onboarding').hide()
+            $('#display-si').css('opacity',0.5)
+            $('#display-si > em').text('(Already viewed)')
+            intro.start()
+        }else{
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+        }
+    }
+    function displayLevelUpIntro() {
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+            let intro = introJs()
+            intro.addSteps([
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.feats.flexcol > section > div.tab.feats-group:nth-child(1)`),
+                    intro: "This sub-sheet holds all data about your character Classes. You can see class features, your current level, and manage everything class related from here.",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.feats > section > div.tab.feats-group.flexcol:nth-child(1) > ol`),
+                    intro: "This area holds a list of your classes. You can drag and drop Classes from Class compendium here - or user <strong>+ Add</strong> button to create new from scratch",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.feats > section > div.tab.feats-group.flexcol:nth-child(1) > div:nth-child(2) > ul > li`),
+                    intro: "This is your level.",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.feats > section > div.tab.feats-group.flexcol:nth-child(1) > div:nth-child(2)`),
+                    intro: "These fields represent your level details. This list displays all levels you gained during the course of your adventure",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter}  > section > form > section > div.tab.feats > section > div.tab.feats-group.flexcol:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(26)`),
+                    intro: "Gray fields means you have not yet progressed to a level. It will be enabled when you level up.",
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.feats > section > div.tab.feats-group.flexcol:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a`),
+                    intro: "Fields with arrow represent levels that you gained but not set up. You can click on arrow to set up level - a separate window will appear",
+                    position: 'right'
+                }
+
+
+        ]);
+            intro.onbeforechange(function(targetElement) {
+                if ($(targetElement).hasClass("feats-group")) {
+                    document.querySelector(`#actor-${userCharacter} > section > form > nav > a:nth-child(5)`).click();
+                    document.querySelector(`#actor-${userCharacter} > section > form > section > div.tab.feats.flexcol.active > nav > a:nth-child(1)`).click();
+                }
+            });
+            intro.onexit(function() {
+                $('.window-app.onboarding').show()
+            });
+            $('.window-app.onboarding').hide()
+            $('#display-lui').css('opacity',0.5)
+            $('#display-lui > em').text('(Already viewed)')
             intro.start()
         }else{
             ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
@@ -259,7 +304,9 @@
                 }
             ]);
             intro.onexit(function() {
+                $('#dialogue-box').show()
             });
+            $('#dialogue-box').hide()
             intro.start()
         }else{
             ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and open Level Up window to continue!`)

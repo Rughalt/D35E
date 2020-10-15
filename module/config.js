@@ -1148,6 +1148,7 @@ D35E.enhancementType = {
 
 D35E.twoWeaponAttackType = {
   'primary': 'D35E.TwoWeaponPrimary',
+  'two-handed': 'D35E.TwoWeaponTwoHanded',
   'main-offhand-light': 'D35E.TwoWeaponMainOffhandLight',
   'main-offhand-normal': 'D35E.TwoWeaponMainOffhandNormal',
   'offhand-light': 'D35E.TwoWeaponOffhandLight',
