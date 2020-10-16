@@ -996,6 +996,13 @@
   "D35E.AutomaticFeatures": "Rendre automatique l'ajout et le retrait d'aptitudes de classe",
   "D35E.MaxLevelAutomationInfo": "Si vous entrez une valeur dans Niveau max, des tables seront automatiquement générées pour les bonus de sauvegarde et de base à l'attaque. Activer l'option automatique fera que les aptitudes de classe seront automatiquement assignées lorsqu'un personnage atteindra le niveau de l'aptitude.",
   "D35E.MaxLevel": "Niveau max",
+  "D35E.PsionicDiscipline": "Discipline psionique",
+  "D35E.PsionicDisciplineDesc": "Discipline",
+  "D35E.SpellSchoolDesc": "École",
+  "D35E.ComponentPl": "Composantes",  
+  "D35E.ManifestingTime": "Temps de manifestation",
+  "D35E.CastingTime": "Temps d'incantation",
+  "D35E.Effect": "Effet",
 
   "SETTINGS.D35EShowPartyHudN": "Type d'affichage tête haute de l'équipe ",
   "SETTINGS.D35EShowPartyHudL": "Active l'affichage tête haute de l'équipe",
