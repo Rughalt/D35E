@@ -683,7 +683,7 @@
       padding: 0 2px 0 2px;
     }
 
-    progression-pp {
+    .progression-pp {
       flex: 0 60px;
       border-left: 1px solid #c9c7b8;
       padding: 0 2px 0 2px;
@@ -745,9 +745,27 @@
 
 
   .progression-ability-description {
+    font-size: 13px;
     margin-bottom: 0.5rem;
-    div, p {
+    div {
       display: inline;
+    }
+    p {
+      display: inline;
+      &:first-of-type::after{
+        content: "\a";
+        white-space: pre;
+      }
+      &:not(:first-of-type) {
+        display: block;
+      }
+    }
+    h1, h2, h3 {
+      font-size: 13px;
+      text-decoration: underline;
+      &:first-child {
+        display: inline;
+      }
     }
     br {
       margin: 1rem;

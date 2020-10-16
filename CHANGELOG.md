@@ -1,5 +1,12 @@
 # Changelog
-## 0.85.2
+## 0.85.4
+### Features
+- [#55](https://github.com/Rughalt/D35E/issues/55) - Updated French translation by @red5h4d0w
+- Updated Class Abilities/Features rendering style
+### Bug Fixes
+- Fixed regression caused by displaying damage type for typeless damage
+
+## 0.85.3
 ### SRD
 - Finished Base classes implementation
 - Added Base classes descriptions and art

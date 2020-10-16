@@ -99,6 +99,7 @@ export class ChatAttack {
 
     getShortToolTip(damageText) {
         var match = damageText.match(/([0-9]+) \((.*?)\)/)
+        if (match === null) return `<img src="/systems/D35E/icons/damage-type/unknown.svg" title="Part" class="dmg-type-icon" />${damageText}`
         let dmgVal = match[1];
         let dmgName = match[2];
         let dmgIconBase = match[2].toLowerCase();
