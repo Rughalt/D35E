@@ -1,40 +1,46 @@
 <div class="spell-description">
   <p>
     {{#if psionicPower}}
-    <strong>Discipline</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
+      <strong>{{localize "D35E.PsionicDiscipline"}}:</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
     {{else}}
-    <strong>School</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
+      <strong>{{localize "D35E.SpellSchoolDesc"}}:</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
     {{/if}}
-    {{#if learnedAt.class}}<strong>{{localize "D35E.Level"}}</strong>&nbsp;{{learnedAt.class}};{{/if}}
-    {{#if learnedAt.domain}}<strong>{{localize "D35E.Domain"}}</strong>&nbsp;{{learnedAt.domain}};{{/if}}
-    {{#if learnedAt.subDomain}}<strong>{{localize "D35E.SubDomain"}}</strong>&nbsp;{{learnedAt.subDomain}};{{/if}}
-    {{#if learnedAt.elementalSchool}}<strong>{{localize "D35E.ElementalSchool"}}</strong>&nbsp;{{learnedAt.elementalSchool}};{{/if}}
-    {{#if learnedAt.bloodline}}<strong>{{localize "D35E.Bloodline"}}</strong>&nbsp;{{learnedAt.bloodline}};{{/if}}
-  </p>
-  <p>
+    <br>
+    {{#if learnedAt.class}}<strong>{{localize "D35E.Level"}}:</strong>&nbsp;{{learnedAt.class}};{{/if}}
+    {{#if learnedAt.domain}}<strong>{{localize "D35E.Domain"}}:</strong>&nbsp;{{learnedAt.domain}};{{/if}}
+    {{#if learnedAt.subDomain}}<strong>{{localize "D35E.SubDomain"}}:</strong>&nbsp;{{learnedAt.subDomain}};{{/if}}
+    {{#if learnedAt.elementalSchool}}<strong>{{localize "D35E.ElementalSchool"}}:</strong>&nbsp;{{learnedAt.elementalSchool}};{{/if}}
+    {{#if learnedAt.bloodline}}<strong>{{localize "D35E.Bloodline"}}:</strong>&nbsp;{{learnedAt.bloodline}};{{/if}}
+    <br>
+    {{#if label.components}}<strong>{{localize "D35E.ComponentPl"}}:</strong>&nbsp;{{label.components}}<br>{{/if}}
+    {{#if label.display}}<strong>{{localize "D35E.PowerDisplay"}}:</strong>&nbsp;{{label.display}}<br>{{/if}}
     {{#if psionicPower}}
-    {{#if label.castingTime}}<strong>Manifesting Time</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
+      {{#if label.castingTime}}<strong>{{localize "D35E.ManifestingTime"}}:</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
     {{else}}
-    {{#if label.castingTime}}<strong>Casting Time</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
+      {{#if label.castingTime}}<strong>{{localize "D35E.CastingTime"}}:</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
     {{/if}}
-    {{#if label.components}}<strong>Components</strong>&nbsp;{{label.components}}<br>{{/if}}
-  </p>
-  <p>
-    {{#if label.display}}<strong>{{localize "D35E.PowerDisplay"}}</strong>&nbsp;{{label.display}}<br>{{/if}}
-    {{#if label.range}}<strong>Range</strong>&nbsp;{{label.range}}<br>{{/if}}
-    {{#if label.area}}<strong>Area</strong>&nbsp;{{label.area}}<br>{{/if}}
-    {{#if label.targets}}<strong>Targets</strong>&nbsp;{{label.targets}}<br>{{/if}}
-    {{#if label.effect}}<strong>Effect</strong>&nbsp;{{label.effect}}<br>{{/if}}
-    {{#if label.duration}}<strong>Duration</strong>&nbsp;{{label.duration}}<br>{{/if}}
-    {{#if label.powerPointsCost}}<strong>{{localize "D35E.PowerPointsCost"}}</strong>&nbsp;{{label.powerPointsCost}}<br>{{/if}}
+    {{#if label.range}}<strong>{{localize "D35E.Range"}}:</strong>&nbsp;{{label.range}}<br>{{/if}}
+    {{#if label.area}}<strong>{{localize "D35E.Area"}}:</strong>&nbsp;{{label.area}}<br>{{/if}}
+    {{#if label.targets}}<strong>{{localize "D35E.Target"}}:</strong>&nbsp;{{label.targets}}<br>{{/if}}
+    {{#if label.effect}}<strong>{{localize "D35E.Effect"}}:</strong>&nbsp;{{label.effect}}<br>{{/if}}
+    {{#if label.duration}}<strong>{{localize "D35E.Duration"}}:</strong>&nbsp;{{label.duration}}<br>{{/if}}
+    {{#if label.powerPointsCost}}<strong>{{localize "D35E.PowerPointsCost"}}:</strong>&nbsp;{{label.powerPointsCost}}<br>{{/if}}
     {{#if psionicPower}}
-    {{#if useDCandSR}}<strong>Saving Throw</strong>&nbsp;{{label.savingThrow}};&nbsp;<strong>Power Resistance</strong>&nbsp;{{label.pr}}<br>{{/if}}
+      {{#if useDCandSR}}
+        <strong>{{localize "D35E.SavingThrow"}}:</strong>&nbsp;{{label.savingThrow}}
+        <br>
+        <strong>{{localize "D35E.PowerResistance"}}:</strong>&nbsp;{{label.pr}}<br>
+      {{/if}}
     {{else}}
-    {{#if useDCandSR}}<strong>Saving Throw</strong>&nbsp;{{label.savingThrow}};&nbsp;<strong>Spell Resistance</strong>&nbsp;{{label.sr}}<br>{{/if}}
+      {{#if useDCandSR}}
+        <strong>{{localize "D35E.SavingThrow"}}:</strong>&nbsp;{{label.savingThrow}}
+        <br>
+        <strong>{{localize "D35E.SpellResistance"}}:</strong>&nbsp;{{label.sr}}<br>
+      {{/if}}
     {{/if}}
   </p>
   {{#if data.shortDescription}}
-  <h2>Description</h2>
+  <h2>{{localize "D35E.Description"}}</h2>
   {{{data.shortDescription}}}
   {{/if}}
 </div>
