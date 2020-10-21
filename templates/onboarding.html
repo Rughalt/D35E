@@ -96,7 +96,7 @@
     function showSetClassDetailsTutorial() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
         // User character is null
-        if((userCharacter === null || $(`#actor-${userCharacter}`).length) && $(`.sheet.level-up-data`).length){
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length) && $(`.entry.level-up-data`).length){
             $('#onboarding-character-class').hide();
             $('#onboarding-character-class-details').show();
         }else{
@@ -122,11 +122,12 @@
 
     function showAddAttackTutorial() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
-        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)
+            && game.user.character.data.items.some(i => i.name === "Dagger")){
             $('#onboarding-character-weapons').hide();
             $('#onboarding-character-attacks').show();
         }else{
-            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet to continue!`)
+            ui.notifications.warn(`Open ${game.user.character.name} Character Sheet and add a Dagger from compendium to continue!`)
         }
     }
 

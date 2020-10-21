@@ -565,13 +565,17 @@ export class ItemPF extends Item {
     }
 
     _updateMaxUses(data, {srcData = null, actorData = null} = {}) {
+        if (data['data.uses.max'] !== undefined) return;
         let doLinkData = true;
         if (srcData == null) {
             srcData = this.data;
             doLinkData = false;
         }
         let rollData = {};
-        if (actorData == null && this.actor != null) rollData = this.actor.getRollData();
+        if (this.actor != null) rollData = this.actor.getRollData();
+        if (actorData !== null) {
+            rollData = mergeObject(rollData,actorData.data, {inplace: false});
+        }
 
         if (hasProperty(srcData, "data.uses.maxFormula")) {
             if (getProperty(srcData, "data.uses.maxFormula") !== "") {

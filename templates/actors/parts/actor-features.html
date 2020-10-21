@@ -229,6 +229,26 @@
                   <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
                   <h4>{{iitem.name}}</h4>
                 </div>
+
+                <div class="item-detail item-actions">
+                  <div class="item-attack">
+                    {{#if iitem.hasAction}}
+                    <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+                    {{/if}}
+                  </div>
+                </div>
+
+                <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                  {{#if iitem.isCharged}}
+                  <input type="text" value="{{iitem.data.uses.value}}" data-dtype="Number"/>
+                  <span class="sep"> of </span>
+                  <input type="text" value="{{iitem.data.uses.max}}" disabled data-dtype="Number"/>
+                      <span class="tooltipcontent">
+                  @resources.{{iitem.tag}}.value : {{iitem.data.uses.value}}<br>
+                  @resources.{{iitem.tag}}.max : {{iitem.data.uses.max}}
+                </span>
+                      {{/if}}
+                </div>
                 <div class="item-detail item-usage">
                   <em style="opacity: 0.8">{{iitem.data.source}}</em>
                 </div>

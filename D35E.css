@@ -4444,6 +4444,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet input[type="text"] {
   border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  height: 24px;
 }
 .d35ecustom .sheet input[type="text"]:hover {
   border: 1px solid #2C606D !important;
@@ -4534,6 +4535,10 @@ tr.introjs-showElement > th {
   margin: 0px;
   border-radius: 2px;
   height: 420px;
+}
+.d35ecustom .sheet.item section.sheet-content.sheet-weapon {
+  height: 380px;
+  margin-bottom: 2px;
 }
 .d35ecustom .sheet.item section.primary-body {
   overflow: auto;
