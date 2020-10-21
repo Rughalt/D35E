@@ -1163,4 +1163,10 @@ D35E.spellcastingType = {
   'other': 'D35E.Other',
 };
 
+D35E.combatChangeType = {
+  'all': 'D35E.All',
+  'attack': 'D35E.Attack',
+  'spell': 'D35E.Spell',
+};
+
 CONFIG.Combat.initiative.decimals = 2;

@@ -14,6 +14,7 @@ import { ActorSheetPFCharacter } from "./module/actor/sheets/character.js";
 import { ActorSheetPFNPC } from "./module/actor/sheets/npc.js";
 import { ActorSheetPFNPCLite } from "./module/actor/sheets/npc-lite.js";
 import { ActorSheetPFNPCLoot } from "./module/actor/sheets/npc-loot.js";
+import { ActorSheetPFNPCMonster } from "./module/actor/sheets/npc-monster.js";
 import { ItemPF } from "./module/item/entity.js";
 import { ItemSheetPF } from "./module/item/sheets/base.js";
 import { CompendiumDirectoryPF } from "./module/sidebar/compendium.js";
@@ -89,6 +90,7 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
   Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack", "race", "enhancement"], makeDefault: true });
 

@@ -111,11 +111,24 @@
 
 .d35ecustom {
 
-  .chat-message {
-    background: url(/systems/D35E/icons/background/paper.png), url(/ui/parchment.jpg) repeat;
-    background-size: contain;
-    background-position-y: -50px;
-    background-repeat: no-repeat, repeat;
+  #chat-log .chat-message {
+    background: url(/systems/D35E/icons/ui/parchment-tile.png) repeat;
+    background-size: 288px;
+    background-position-y: 40px;
+    border: none;
+    hr {
+
+      border-top: 2px solid #4c3632;
+      border-bottom: none;
+    }
+    .card-footer {
+
+      border-top: 1px solid #967671;
+      span {
+        border-right: 1px solid rgba(0,0,0,0.3);
+      }
+    }
+
   }
 
   #hotbar {
@@ -313,7 +326,7 @@
       }
     }
 
-    header:not(.message-header):not(.folder-header):not(.card-header) {
+    header:not(.message-header):not(.folder-header):not(.card-header):not(.part-header) {
       background: url(/systems/D35E/icons/ui/sidebar-top.png);
       background-position: bottom;
       background-size: cover;
@@ -476,43 +489,256 @@
   }
 
 
+  .blue-button {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.0)100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 10%, rgba(255, 255, 255, 0.0) 90%, rgba(255, 255, 255, 0.3)100%), url(/systems/D35e/icons/ui/button-texture.png) repeat !important;
+    border: 1px solid rgba(0,0,0,0.7) !important;
+    color: rgba(255,255,255,0.9) !important;
+    border-radius: 2px !important;
+    &:hover {
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.0)100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 10%, rgba(255, 255, 255, 0.0) 90%, rgba(255, 255, 255, 0.3)100%), url(/systems/D35e/icons/ui/button-texture.png) repeat !important;
+      text-shadow: none !important;
+    }
+  }
 
+  .rollable.image-d20 {
+    filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
+  }
 
   .sheet {
+    border: 2px solid #55493B;
     &.window-app {
       .window-header {
-        background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-        background-size: auto;
-        background-position-y: -70px;
-        background-repeat: no-repeat, repeat;
-        color: black;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        color: white;
+        background: url(/systems/D35e/icons/ui/background-header.png) repeat;
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+        line-height: 30px;
+      }
+    }
+
+    h3 {
+      &.block-header {
+        &::before {
+          border-top: 2px solid #75514b !important;
+        }
+        &::after {
+          border-top: 2px solid #75514b !important;
+        }
+      }
+    }
+    h2 {
+      &.block-header {
+        &::after {
+          border-top: 2px solid #75514b !important;
+        }
       }
     }
 
     &.actor {
       &.character {
         .window-content {
-          background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
-          background-size: contain;
-          background-position-y: -50px;
-          background-repeat: no-repeat, repeat;
+
+          background: url(/systems/D35e/icons/ui/background-window.png) repeat;
+        }
+
+        .header-details {
+          h1 {
+            padding: 0;
+
+            input {
+              color: #193f48;
+              margin: 8px 3px;
+            }
+          }
         }
       }
 
       &.npc {
         .window-content {
-          background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
 
-          background-position-y: -330px;
-          background-repeat: no-repeat, repeat;
+          background: url(/systems/D35e/icons/ui/background-window.png) repeat;
+        }
+      }
+
+      .level-up-boxes {
+        flex: 110px 0; position: relative;
+        padding: 0;
+      }
+
+      .level-up-boxes-overlay {
+        position: absolute;
+        width: 100%;
+        flex: 1;
+        max-width: calc(100% - 60px);
+        height: 100px;
+        top:0;
+        left: 0;
+      }
+
+      .details-skills-list {
+
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0,0,0,0.3);
+        border-radius: 4px;
+        .skill-header {
+          border: none;
+          border-top: 1px solid rgba(0,0,0,0.3);
+          border-radius: 0;
+          border-bottom: 1px solid rgba(0,0,0,0.3);
+        }
+        .skill:nth-child(2n+1) {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1)!important;
+        }
+        .skill:nth-child(2n) {
+          background-color: rgba(255, 255, 255, 0.0) !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1)!important;
+        }
+      }
+      .inventory-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0,0,0,0.3);
+        border-radius: 4px;
+
+        &.borderless {
+          border: none;
+          border-top: 1px solid rgba(0,0,0,0.3);
+          border-radius: 0;
+        }
+
+        .inventory-header {
+          border: none;
+          border-bottom: 1px solid rgba(0,0,0,0.3);
+        }
+
+        .item:nth-child(2n+1) {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1)!important;
+        }
+        .item:nth-child(2n) {
+          background-color: rgba(255, 255, 255, 0.0) !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1)!important;
+        }
+        .item-detail {
+          border-left: 0 !important;
+          border-right: 0 !important;
+        }
+      }
+
+
+      .sheet-navigation {
+        margin-bottom: 0;
+
+        padding-bottom: 5px;
+        border-bottom: none;
+        /* margin: 0 0 4px; */
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+
+        background: linear-gradient( rgba(255,255,255,0.3) 100%, rgba(255,255,255,0.3)100%), url(/systems/D35e/icons/ui/parchment-2.png) repeat;
+        color: rgba(0,0,0,0.8);
+        border-bottom: rgba(0,0,0,0.2);
+
+        .item {
+          border-bottom-color: #75514b;
+          &.active {
+            border-bottom-color: #44191A;
+          }
+        }
+        &.subtabs {
+          border: 1px solid rgba(0,0,0,0.2);
+          border-radius: 2px;
+          margin: 2px -4px;
+        }
+      }
+
+      .primary-body {
+
+        background: url(/systems/D35e/icons/ui/parchment-2.png) repeat;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+        &>div {
+          padding: 4px;
+        }
+      }
+
+      .spellbook-spelllist {
+        padding: 4px;
+      }
+    }
+
+    ul {
+      &.attributes {
+        li {
+          &.attribute {
+            border: none !important;
+            background: rgba(255,255,255,0.2);
+            -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+            box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+          }
+        }
+      }
+    }
+
+    .ability-scores-simple, .details-attack-simple, .details-skills-list, .ability-scores .ability {
+      border: none !important;
+      background: rgba(255,255,255,0.2);
+      -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+      box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    }
+
+
+    h4 {
+      &.box-title.high {
+        line-height: 24px !important;
+      }
+    }
+
+    input[type="text"] {
+      border: 1px solid rgba(0, 0, 0, 0.2) !important;
+      &:hover {
+        border: 1px solid #2C606D !important;
+        box-shadow: 0 0 8px #4d8d9d;
+      }
+      &:focus {
+        border: 1px solid #2C606D !important;
+        box-shadow: 0 0 8px #2C606D;
+      }
+    }
+
+    .rollable{
+      color: #2C606D;
+      &:hover {
+      text-shadow: 0 0 10px #2C606D !important;
+        color: #2C606D !important;
+      }
+    }
+
+    .item-controls {
+      a {
+        color: #2C606D!important;
+        &:hover {
+          text-shadow: 0 0 10px #2C606D !important;
+          color: #2C606D !important;
         }
       }
     }
 
     .sheet-header {
       border-bottom: none;
-      margin: 4px;
+      margin: 0 0 4px;
+      padding: 4px;
+      background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35e/icons/ui/parchment-2.png) repeat;
+      border-radius: 2px;
       .header-details {
         border-left: none!important;
         .attribute {
@@ -538,6 +764,75 @@
       .attributes {
         input {
           border: 1px solid rgba(0,0,0,0.2);
+        }
+      }
+
+    }
+
+    &.item {
+      border: 2px solid #55493B;
+      .sheet-navigation {
+        background-color: rgba(255,255,255,0.3);
+        color: rgba(0,0,0,0.8);
+        border-bottom: rgba(0,0,0,0.2);
+
+        .item {
+          border-bottom-color: #75514b;
+          &.active {
+            border-bottom-color: #44191A;
+          }
+        }
+        &.subtabs {
+          border-top: 1px solid rgba(0,0,0,0.2);
+          border-bottom: 1px solid rgba(0,0,0,0.2);
+          margin: 2px -5px;
+        }
+      }
+
+      .form-header {
+        color: #193f48;
+        line-height: 14px;
+        /* text-align: end; */
+        border-bottom: 2px solid #193f48;
+        border-top: none;
+        margin: 8px 0;
+      }
+
+      .window-header {
+        color: white;
+        background: url(/systems/D35e/icons/ui/background-header.png) repeat;
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+        line-height: 24px;
+      }
+
+      section.window-content {
+
+        background: url(/systems/D35e/icons/ui/background-window.png) repeat;
+      }
+
+      section.sheet-content {
+        background: url(/systems/D35e/icons/ui/parchment-2.png) repeat;
+        margin: 0px;
+        border-radius: 2px;
+        height: 420px;
+      }
+
+      section.primary-body {
+        overflow: auto;
+      }
+      header {
+        background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35e/icons/ui/parchment-2.png) repeat;
+        padding: 4px;
+        border-radius: 2px;
+      }
+
+      .header-details {
+        h1 {
+          padding: 0;
+          input {
+            color: #2C606D;
+            margin: 8px 0;
+          }
         }
       }
     }

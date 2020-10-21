@@ -1792,7 +1792,7 @@ export class ActorPF extends Actor {
             while (levelUpData.length > data1.details.level.available) {
                 levelUpData.pop();
             }
-            await this.updateClassProgressionLevel(data, updateData, data1);
+            await this.updateClassProgressionLevel(data, updateData, data1, levelUpData);
             console.log('D35E | LevelUpData | ', levelUpData)
             linkData(data, updateData, "data.details.levelUpData", levelUpData);
         }
@@ -3019,7 +3019,7 @@ export class ActorPF extends Actor {
         if (resetExp) data["data.details.xp.value"] = minExp;
     }
 
-    async updateClassProgressionLevel(data, globalUpdateData, data1) {
+    async updateClassProgressionLevel(data, globalUpdateData, data1, levelUpData) {
 
         console.log('D35E | ActorPF | updateClassProgressionLevel | Starting update')
         const classes = this.items.filter(o => o.type === "class" && getProperty(o.data.data, "classType") !== "racial").sort((a, b) => {
@@ -3030,9 +3030,16 @@ export class ActorPF extends Actor {
         let classHP = new Map()
         // Iterate over all levl ups
         if (data1.details.levelUpData && data1.details.levelUpProgression) {
-            data1.details.levelUpData.forEach(lud => {
+            levelUpData.forEach(lud => {
                 if (lud.classId === null || lud.classId === "") return;
                 let _class = this.items.find(cls => cls._id === lud.classId)
+                if (_class == null) {
+                    lud.classId = null;
+                    lud.classImage = null;
+                    lud.skills = {};
+                    lud.class = null;
+                    return;
+                }
                 if (!classLevels.has(_class._id))
                     classLevels.set(_class._id, 0)
                 classLevels.set(_class._id, classLevels.get(_class._id) + 1)
@@ -3610,7 +3617,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod + @checkMod - @drain"],
-            data: {mod: abl.mod, checkMod: abl.checkMod, drain: this.data.data.attributes.energyDrain},
+            data: {mod: abl.mod, checkMod: abl.checkMod, drain: this.data.data.attributes.energyDrain || 0},
             title: game.i18n.localize("D35E.AbilityTest").format(label),
             speaker: ChatMessage.getSpeaker({actor: this}),
             chatTemplate: "systems/D35E/templates/chat/roll-ext.html",

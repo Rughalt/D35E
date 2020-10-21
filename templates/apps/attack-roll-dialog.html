@@ -62,7 +62,21 @@
   </div>
   {{/if}}
 
+
+
   {{/if}}
+
+  <div class="form-group">
+    <label><strong>{{localize "D35E.AdditionalFeats"}}</strong></label>
+  </div>
+
+  <div class="form-group">
+    <div class="flexcol">
+      {{#each weaponFeats as |feat|}}
+      <span>{{feat.data.name}}</span>
+      {{/each}}
+    </div>
+  </div>
   {{/if}}{{/if}}
   {{!-- Flags --}}
   <div class="form-group stacked">
@@ -95,17 +109,17 @@
         if (option === 'offhand-light' || option === 'offhand-normal' ) {
           $('option:selected', select).closest("section").find("button[data-button='multi']").hide();
           $('option:selected', select).closest("section").find("button[data-button='normal']").text(offhandAttackLabel)
-          $("damage-ability-multiplier").val("0.5");
+          $("select[data-type='dmg-mult']").val("0.5");
         }
         else if (option === 'two-handed') {
           $('option:selected', select).closest("section").find("button[data-button='multi']").show();
           $('option:selected', select).closest("section").find("button[data-button='normal']").text(singleAttackLabel)
-          $("damage-ability-multiplier").val("2.0");
+          $("select[data-type='dmg-mult']").val("1.5");
         }
         else {
           $('option:selected', select).closest("section").find("button[data-button='multi']").show();
           $('option:selected', select).closest("section").find("button[data-button='normal']").text(singleAttackLabel)
-          $("damage-ability-multiplier").val("0.5");
+          $("select[data-type='dmg-mult']").val("1");
         }
       }
     </script>
@@ -115,7 +129,7 @@
   {{#if hasDamage}}{{#if hasDamageAbility}}
   <div class="form-group select">
     <label>{{localize "D35E.DamageAbility"}}</label>
-    <select name="damage-ability-multiplier">
+    <select name="damage-ability-multiplier" data-type="dmg-mult">
       {{#select data.item.ability.damageMult}}
       <option value="0.5">x0.5</option>
       <option value="1">x1</option>

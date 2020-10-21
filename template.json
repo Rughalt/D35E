@@ -999,6 +999,7 @@
           "wildshaped": false,
           "polymorphed": false
         },
+        "combatChanges": [],
         "sizeOverride": "",
         "counterName": ""
       },
@@ -1475,7 +1476,9 @@
       "proficient": true,
       "primaryAttack": true,
       "showInQuickbar": true,
-      "melded": false
+      "melded": false,
+      "baseWeaponType": "",
+      "originalWeaponId": null
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],

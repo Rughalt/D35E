@@ -197,7 +197,7 @@ export const registerSystemSettings = function() {
     hint: "SETTINGS.D35ECustomSkinL",
     scope: "client",
     config: true,
-    default: false,
+    default: true,
     type: Boolean,
     onChange: () => {
       $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));

@@ -543,10 +543,13 @@ export class ItemPF extends Item {
         }
         let totalEnchancement = 0;
         enhancements.forEach(function( obj ) {
-            if (obj.data.enhancementType === "weapon" && type === 'weapon')
-                totalEnchancement += obj.data.enh
-            if (obj.data.enhancementType === "armor" && type === 'equipment')
-                totalEnchancement += obj.data.enh
+
+            if (!obj.data.enhIsLevel) {
+                if (obj.data.enhancementType === "weapon" && type === 'weapon')
+                    totalEnchancement += obj.data.enh
+                if (obj.data.enhancementType === "armor" && type === 'equipment')
+                    totalEnchancement += obj.data.enh
+            }
         });
         //console.log('Total enh',totalEnchancement, type)
         if (totalEnchancement > 0) {
@@ -695,6 +698,18 @@ export class ItemPF extends Item {
             rollData.cl = cl;
             rollData.sl = sl;
             rollData.ablMod = ablMod;
+        }
+
+        if (this.actor) {
+            let allCombatChanges = []
+            let attackType = this.type;
+            this.actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType, rollData)).forEach(i => {
+                allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+            })
+            allCombatChanges.forEach(change => {
+                console.log('D35E | Change', change[4])
+                setProperty(rollData, change[3], (getProperty(rollData, change[3]) || 0) + new Roll(change[4], rollData).roll().total)
+            })
         }
 
         // Rich text description
@@ -955,6 +970,8 @@ export class ItemPF extends Item {
                 rollMode = null;
             // Get form data
             if (form) {
+
+
                 rollData.attackBonus = form.find('[name="attack-bonus"]').val();
                 if (rollData.attackBonus) attackExtraParts.push("@attackBonus");
                 rollData.damageBonus = form.find('[name="damage-bonus"]').val();
@@ -1109,6 +1126,18 @@ export class ItemPF extends Item {
                     label: `${game.i18n.localize("D35E.Attack")} 3`
                 })
             }
+
+            // Getting all combat changes from items
+            let allCombatChanges = []
+            let attackType = this.type;
+            actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType,rollData)).forEach(i => {
+                allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+            })
+            allCombatChanges.forEach(change => {
+                console.log('D35E | Change', change[4])
+                setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + new Roll(change[4],rollData).roll().total)
+            })
+
             let attacks = [];
             if (this.hasAttack) {
                 for (let atk of allAttacks) {
@@ -1286,6 +1315,8 @@ export class ItemPF extends Item {
 
         // Render modal dialog
         let template = "systems/D35E/templates/apps/attack-roll-dialog.html";
+        let weaponName = this.data.data.baseWeaponType || "";
+        let featWeaponName = `(${weaponName})`;
         let dialogData = {
             data: rollData,
             item: this.data.data,
@@ -1310,6 +1341,7 @@ export class ItemPF extends Item {
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
+            weaponFeats: weaponName ? actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)) : []
         };
         const html = await renderTemplate(template, dialogData);
 
@@ -1356,6 +1388,22 @@ export class ItemPF extends Item {
             }).render(true);
         });
         return wasRolled;
+    }
+
+    hasCombatChange(itemType, rollData) {
+        let combatChanges = getProperty(this.data,"data.combatChanges") || [];
+        let attackType = getProperty(rollData,"item.actionType") || ""
+        return combatChanges.some(change => {
+            return (change[0] === 'all' || change[0] === itemType) && attackType === change[1] && (change[2] === '' || new Roll(change[2], rollData).roll().total === true)
+        });
+    }
+
+    getPossibleCombatChanges(itemType, rollData) {
+        let combatChanges = getProperty(this.data,"data.combatChanges") || [];
+        let attackType = getProperty(rollData,"item.actionType") || ""
+        return combatChanges.filter(change => {
+            return (change[0] === 'all' || change[0] === itemType) && attackType === change[1] && (change[2] === '' || new Roll(change[2], rollData).roll().total === true)
+        });
     }
 
     /**

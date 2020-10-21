@@ -1,6 +1,7 @@
 # Changelog
 ## 0.86
-
+### SRD
+- Added Prestige Classes: Archmage, Assassin, Blackguard, Dwarven Defender, Eldricht Knight
 ### Features
 - Added compatibility with 0.7.X series
 - Full Level Progression system rework:
