@@ -180,8 +180,8 @@
   "gridUnits": "ft",
   "primaryTokenAttribute": "attributes.hp",
   "secondaryTokenAttribute": null,
-  "minimumCoreVersion": "0.5.5",
-  "compatibleCoreVersion": "0.6.6",
+  "minimumCoreVersion": "0.7.4",
+  "compatibleCoreVersion": "0.7.5",
   
   "url": "https://github.com/Rughalt/d35e",
   "manifest": "http://dragonshorn.info/dnd35e/system.json",
