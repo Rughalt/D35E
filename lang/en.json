@@ -1005,6 +1005,11 @@
   "D35E.CastingTime": "Casting Time",
   "D35E.Effect": "Effect",
   
+  "D35E.Combat": "Combat",
+  "D35E.SetLevelData": "Save Level Data",
+  "D35E.WeaponFightingMode": "Weapon Wield Mode",
+  "D35E.TwoWeaponTwoHanded": "Two-Handed",
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",

@@ -9,6 +9,77 @@
   {{#each sections as |section sid|}}
   <div class="tab feats-group flexcol" data-group="feats" data-tab="{{sid}}">
 
+    {{#if section.isClass}}
+    <div class="flexrow" style="flex: none">
+      <h2 class="block-header" style="flex: 1">Level Progression</h2>
+      <div class="form-group flexrow" style="flex: 0 150px;">
+        <label>Use Class Progression</label>
+        <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
+          <input type="checkbox" class="stylized" name="data.details.levelUpProgression"  data-dtype="Boolean" {{checked ../data.details.levelUpProgression}} />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+      {{#if ../data.details.levelUpProgression}}
+      <div class="flexrow level-up-boxes">
+        <div class="flexrow level-up-boxes-overlay" >
+
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">1</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">2</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">3</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">4</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">5</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">6</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">7</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">8</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">9</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">10</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">11</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">12</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">13</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">14</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">15</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">16</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">17</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">18</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">19</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">20</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">21</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">22</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">23</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">24</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">25</span></div>
+          <div class="level-class-image" style="opacity: 0.6"><span class="level">26</span></div>
+
+        </div>
+        <div class="flexrow">
+
+          {{#each ../data.details.levelUpData as |levelUpData i|}}
+            <a for="{{levelUpData.id}}" class="level-class-image configure-level-up-data active" {{#if levelUpData.classImage}}style="background-image: url({{levelUpData.classImage}}){{/if}}">
+              <span class="level">{{levelUpData.level}}</span>
+              {{#if levelUpData.hasFeat}}
+                <span class="feat"  title="New Feat">
+                </span>
+              {{/if}}
+              {{#if levelUpData.hasAbility}}
+              <span class="ability" title="Ability Increase">
+              </span>
+              {{/if}}
+            </a>
+
+          {{/each}}
+        </div>
+        <ul class="attributes misc flexrow" style="flex: 0 40px;height: 100px; margin: 0;">
+          <li class="attribute high tooltip">
+            <h4 class="attribute-name box-title"><span style="text-transform: capitalize;">Level</span></h4>
+            <div class="attribute-value" style="font-size: 2rem">
+              <input style="font-size: 2rem; line-height: 30px; height: 50px;" type="text" name="data.details.level.available" value="{{../data.details.level.available}}" data-dtype="Number"/>
+            </div>
+          </li>
+        </ul>
+      </div>
+      {{/if}}
+    {{/if}}
     {{#if section.isFeat}}
       <ul class="attributes misc flexrow" style="flex:0">
 
@@ -62,10 +133,25 @@
       <ol class="item-list">
         {{#each section.items as |item iid|}}
         <li class="item flexrow {{#unless isCharged}}uncharged{{/unless}}" data-item-id="{{item._id}}">
+          {{#unless section.isClass}}
           <div class="item-name flexrow rollable">
             <div class="item-image" style="background-image: url('{{item.img}}')"></div>
             <h4>{{item.name}}</h4>
           </div>
+          {{else}}
+          <div class="item-name flexrow">
+            <div class="item-image class-icon rollable" style="background-image: url('{{item.img}}')"></div>
+            <div class="flexcol">
+              <h2 class="block-header" style="margin: 0; font-size: 2rem;">{{item.name}}</h2>
+              <div class="flexrow">
+                <span style="flex: none; margin-right: 10px"><strong>HD:</strong> {{item.data.hd}}</span>
+                <span style="flex: none; margin-right: 10px"><strong>Skill Points Per Level:</strong> {{item.data.skillsPerLevel}}</span>
+                <span style="flex: none; margin-right: 10px"><strong>BAB:</strong> {{item.data.bab}}</span>
+              </div>
+              <p>This is a short and concse desctiption of class</p>
+            </div>
+          </div>
+          {{/unless}}
 
           {{#if section.hasActions}}
           <div class="item-detail item-actions">
@@ -118,8 +204,9 @@
           </div>
           {{/if}}
           {{else if section.isClass}}
-          <div class="item-detail item-feat-level tooltip">
-            <span>Level {{item.data.levels}}</span>
+          <div class="flexcol item-feat-level class-level-box tooltip" style="text-align: center">
+            <p style="font-size: 1.2rem;flex: 0; margin: 0">Level</p>
+            <p style="font-size: 2rem; ">{{item.data.levels}}</p>
             <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{item.data.levels}}</span>
           </div>
           {{/if}}
@@ -130,6 +217,55 @@
             {{#unless item.data.userNonRemovable}}
               <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
             {{/unless}}
+          </div>
+          {{/if}}
+          {{#if section.isClass}}
+          <div class="item-summary" style="border-top: none; border-bottom: 1px solid #c9c7b8;">
+            <h3 class="block-header">Class Features</h3>
+            <ol class="item-list">
+              {{#each item.classFeatures as |iitem iiid|}}
+              <li class="item flexrow" data-item-id="{{iitem._id}}">
+                <div class="item-name flexrow rollable">
+                  <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
+                  <h4>{{iitem.name}}</h4>
+                </div>
+
+                <div class="item-detail item-actions">
+                  <div class="item-attack">
+                    {{#if iitem.hasAction}}
+                    <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+                    {{/if}}
+                  </div>
+                </div>
+
+                <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                  {{#if iitem.isCharged}}
+                  <input type="text" value="{{iitem.data.uses.value}}" data-dtype="Number"/>
+                  <span class="sep"> of </span>
+                  <input type="text" value="{{iitem.data.uses.max}}" disabled data-dtype="Number"/>
+                      <span class="tooltipcontent">
+                  @resources.{{iitem.tag}}.value : {{iitem.data.uses.value}}<br>
+                  @resources.{{iitem.tag}}.max : {{iitem.data.uses.max}}
+                </span>
+                      {{/if}}
+                </div>
+                <div class="item-detail item-usage">
+                  <em style="opacity: 0.8">{{iitem.data.source}}</em>
+                </div>
+
+                {{#if ../../../owner}}
+                <div class="item-controls">
+                  <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                  {{#unless iitem.data.userNonRemovable}}
+                  <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                  {{/unless}}
+                </div>
+                {{/if}}
+              </li>
+              {{else}}
+              <h3  class="sublist-empty">Class has not features</h3>
+              {{/each}}
+            </ol>
           </div>
           {{/if}}
         </li>

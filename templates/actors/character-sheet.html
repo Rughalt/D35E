@@ -6,6 +6,9 @@
   <span class="warning">Your character Ability scores are not set up. Set them up manually or use <a class="point-buy" style="text-decoration: underline">Point Buy Dialog</a>.</span>
   {{/unless}}
   {{/if}}
+  {{#if notAllLevelsAssigned}}
+  <span class="warning">Your character has gained a level but you did not set in. To do this navigate to Features - Classes to set up a Class.</span>
+  {{/if}}
 
   <div class="working">
     <div>
@@ -127,8 +130,7 @@
   <nav class="sheet-navigation tabs" data-group="primary">
     <a class="item active" data-tab="details">{{ localize "D35E.Summary" }}</a>
     <a class="item" data-tab="attributes">{{ localize "D35E.Attributes" }}</a>
-    <a class="item" data-tab="defenses">{{ localize "D35E.Defenses" }}</a>
-    <a class="item" data-tab="attacks">{{ localize "D35E.Attacks" }}</a>
+    <a class="item" data-tab="attacks">{{ localize "D35E.Combat" }}</a>
     <a class="item" data-tab="inventory">{{ localize "D35E.Inventory" }}</a>
     <a class="item" data-tab="feats">{{ localize "D35E.Features" }}</a>
     <a class="item" data-tab="skills">{{ localize "D35E.Skills" }}</a>

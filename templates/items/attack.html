@@ -40,6 +40,13 @@
 
     {{!-- Details Tab --}}
     <div class="tab details" data-group="primary" data-tab="details">
+
+      <h3 class="form-header">Weapon Details</h3>
+      <div class="form-group">
+        <label>Base Weapon Type</label>
+        <input type="text" name="data.baseWeaponType" value="{{data.baseWeaponType}}" data-dtype="String"/>
+      </div>
+
       <div class="form-group stacked">
         <label class="checkbox">
           <input type="checkbox" name="data.proficient" {{checked data.proficient}}/> {{localize "D35E.Proficient"}}

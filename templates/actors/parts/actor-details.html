@@ -40,11 +40,11 @@
       </div>
       <ul class="attributes nomargin">
         <li>
-          <a class="btn rest" onkeydown="e.preventDefault();">Rest</a>
+          <a class="btn rest  blue-button" onkeydown="e.preventDefault();">Rest</a>
         </li>
         <li class="attribute health">
           {{#if healthConfig.variants.pc.useWoundsAndVigor}}
-            <h4 class="attribute-name box-title tooltip">
+            <h4 class="attribute-name box-title tooltip high">
               {{ localize "D35E.Vigor" }}
               <div class="tooltipcontent">
                 @attributes.vigor.min : {{data.attributes.vigor.min}}<br/>
@@ -86,7 +86,7 @@
               <div class="attribute">{{data.attributes.wounds.max}}</div>
             </div>
           {{else}}
-            <h4 class="attribute-name box-title tooltip">
+            <h4 class="attribute-name box-title tooltip high">
               {{ localize "D35E.Health" }}
               <div class="tooltipcontent">
                 @attributes.hp.value : {{data.attributes.hp.value}}<br/>
@@ -116,7 +116,7 @@
 
         <li>
           <ul class="attributes armor-class  flexrow">
-  <li class="attribute initiative high" data-attribute="init">
+  <li class="attribute initiative" style="height: 50px" data-attribute="init">
 
     <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
     <div class="attribute-value tooltip">
@@ -132,7 +132,7 @@
   </li>
 
 
-  <li class="attribute bab  high" data-attribute="bab">
+  <li class="attribute bab" style="height: 50px" data-attribute="bab">
 
     <h4 class="attribute-name box-title rollable">{{localize "D35E.BABAbbr"}}</h4>
     <div class="attribute-value tooltip">
@@ -204,7 +204,7 @@
       <h4 class="box-name">
         {{ localize "D35E.Attacks" }}
       </h4>
-      <ol class="inventory-list sub-scroll scroll-attacks" style="max-width: 420px">
+      <ol class="inventory-list borderless sub-scroll scroll-attacks" style="max-width: 420px">
         <li class="inventory-header flexrow">
           <h3 class="item-name flexrow"></h3>
           <div class="item-detail item-actions">
@@ -285,6 +285,7 @@
               <div class="rollable image-d20"></div>
               <h4 style>{{skill.label}} ({{subSkill.name}})
                 {{#if skill.rt}}■{{/if}}
+                {{#if skill.cs}}*{{/if}}
               </h4>
             </div>
             <h4>{{subSkill.rank}}</h4>
@@ -309,10 +310,12 @@
             {{#if skill.custom}}
               <h4>{{skill.name}}
                 {{#if skill.rt}}■{{/if}}
+                {{#if skill.cs}}*{{/if}}
               </h4>
             {{else}}
               <h4>{{skill.label}}
                 {{#if skill.rt}}■{{/if}}
+                {{#if skill.cs}}*{{/if}}
               </h4>
             {{/if}}
           </div>

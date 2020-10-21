@@ -49,6 +49,7 @@ export class ActorSheetPFCharacter extends ActorSheetPF {
     data["disableExperience"] = game.settings.get("D35E", "disableExperienceTracking");
 
     data.hasClasses = this.actor.items.filter(o => o.type === "class").length > 0;
+    data.notAllLevelsAssigned = this.actor.data.data.details.levelUpProgression && (this.actor.data.data.details.levelUpData || []).filter(o => o.classId).length < (this.actor.data.data.details.levelUpData || []).length;
 
     // Return data for rendering
     return data;

@@ -7,10 +7,16 @@
 
   .warning {
     flex: 0;
-    background-color: #ffd14e;
+    background-color: rgba(255, 209, 78, 1);
     border: 1px solid #ffbc00;
-    border-radius: 2px;
     padding: 4px;
+    position: absolute;
+    z-index: 100;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    border-top: 0;
+    border-radius: 0 0 2px 2px;
   }
 
 
@@ -88,6 +94,122 @@
       }
     }
   }
+
+  h3 {
+    &.block-header {
+
+      position: relative;
+      flex: 0 0 20px;
+      margin: 0.25rem;
+      font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+      font-size: 18px;
+      border: none;
+      display: flex;
+      align-items: center;
+
+      &::after {
+        content: '';
+        flex: 1;
+        margin-left: 0.5rem;
+        height: 0px;
+        background-color: transparent;
+        border-top: 2px groove #eeede0;
+      }
+      &::before {
+        content: '';
+        flex: 1;
+        margin-right: 0.5rem;
+        height: 0px;
+        background-color: transparent;
+        border-top: 2px groove #eeede0;
+      }
+    }
+  }
+
+  .note-editor {
+    &.small {
+      margin-left: 5px;
+      font-size: 12px;
+    }
+  }
+
+  .level-class-image {
+    height: 45px;
+    flex: 45px 0;
+    margin: 2px;
+    border-radius: 4px;
+    background-size: contain;
+    border: 1px solid #2f2220;
+    position: relative;
+    &.active {
+      background-image: url(/systems/D35E/icons/actions/upgrade.svg);
+    }
+
+
+    span.level {
+      width: 20px;
+      color: white;
+      font-size: 15px;
+      background: rgba(0, 0, 0, 0.6);
+      display: block;
+      border-bottom-right-radius: 3px;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border-top-left-radius: 3px;
+      text-align: center;
+      border-color: black;
+      border-left: 1px black solid;
+      border-top: 1px black solid;
+    }
+
+    span.feat {
+      width: 16px;
+      height: 16px;
+      padding: 1px;
+      color: white;
+      font-size: 15px;
+      background: black;
+      opacity: 0.7;
+      display: block;
+      border-bottom-right-radius: 3px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-top-left-radius: 3px;
+      text-align: center;
+      background-image: url(/systems/D35E/icons/actions/orb-direction.svg);
+      background-size: 14px;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 9999;
+    }
+
+    span.ability {
+      width: 16px;
+      height: 16px;
+      padding: 1px;
+      color: white;
+      font-size: 15px;
+      background: black;
+      opacity: 0.7;
+      display: block;
+      border-bottom-left-radius: 3px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-top-right-radius: 3px;
+      text-align: center;
+      background-image: url(/systems/D35E/icons/actions/growth.svg);
+      background-size: 14px;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 9999;
+    }
+
+
+  }
+
 
   .sheet-header {
     .header-details {
@@ -184,7 +306,9 @@
       .buffbox {
         position: absolute;
         width: 120px;
+        z-index: 2;
         div {
+
           height: 16px;
           width: 16px;
           flex: 0 16px;
@@ -393,6 +517,11 @@
           top: 2px;
           font-size: 28px;
           color: @colorTan;
+        }
+
+        span.large {
+          line-height: 40px;
+          font-size: 1.8rem;
         }
 
         .add-prestige-cl, .remove-prestige-cl {
@@ -1105,8 +1234,15 @@
         background-color: rgba(210, 210, 210, 0.3);
       }
 
+      h3.sublist-empty {
+        text-align: center;
+        padding: 0.5rem;
+        opacity: 0.6;
+
+      }
+
       // Item Header Name
-      .item-name {
+      .item-name, .item-name-ne {
         cursor: pointer;
         white-space: nowrap;
         overflow: hidden;
@@ -1120,6 +1256,14 @@
           flex: 0 0 24px;
           background-size: 24px;
           margin-right: 5px;
+
+          &.class-icon {
+            border-radius: 4px;
+            flex: 0 0 64px;
+            background-size: 64px;
+            height: 64px;
+            margin-right: 5px;
+          }
         }
 
         h4 {
@@ -1135,6 +1279,11 @@
         .item-image:hover {
           background-image: url("/icons/svg/d20-black.svg") !important;
         }
+      }
+
+      .class-level-box {
+        opacity: 0.7;
+        font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
       }
 
       input[type="checkbox"] {
@@ -1328,10 +1477,10 @@
   /* ----------------------------------------- */
     a.configure-spellbook {
       border-radius: 4px;
-      height: 40px;
+      height: 30px;
       display: block;
       margin: 0 5px 4px;
-      line-height: 40px;
+      line-height: 30px;
       text-align: center;
       font-size: 18px;
       font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
@@ -1427,6 +1576,14 @@
 
   hr {
     margin: 4px 0 4px 0;
+  }
+
+  .level-up-boxes {
+    flex: 110px 0; padding: 5px; position: relative
+  }
+
+  .level-up-boxes-overlay {
+    position: absolute; left: 5px; top: 5px; width: 100%; flex: 1;max-width: calc(100% - 70px); height: 100px
   }
 }
 

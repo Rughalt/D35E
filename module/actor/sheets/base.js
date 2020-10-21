@@ -1,14 +1,15 @@
 import { ActorTraitSelector } from "../../apps/trait-selector.js";
 import { ActorRestDialog } from "../../apps/actor-rest.js";
 import { LevelUpDialog } from "../../apps/level-up-box.js";
+import { LevelUpDataDialog } from "../../apps/level-up-data.js";
 import { ActorSheetFlags } from "../../apps/actor-flags.js";
 import { DicePF } from "../../dice.js";
-import { TokenConfigPF } from "../../token-config.js";
 import { createTag, createTabs, isMinimumCoreVersion } from "../../lib.js";
 import { NoteEditor } from "../../apps/note-editor.js";
 import {SpellbookEditor} from "../../apps/spellbook-editor.js";
 import {D35E} from "../../config.js";
 import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
+import {ItemPF} from "../../item/entity.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -83,8 +84,10 @@ export class ActorSheetPF extends ActorSheet {
     data.actor = duplicate(this.actor.data);
     data.items = this.actor.items.map(i => {
       i.data.labels = i.labels;
+      i.data.id = i._id;
       i.data.hasAttack = i.hasAttack;
       i.data.hasMultiAttack = i.hasMultiAttack;
+      i.data.containerId = getProperty(i.data, "data.containerId");
       i.data.hasDamage = i.hasDamage;
       i.data.hasEffect = i.hasEffect;
       i.data.container = getProperty(i.data, "data.container");
@@ -246,6 +249,8 @@ export class ActorSheetPF extends ActorSheet {
       }
     }
     data.skillRanks = skillRanks;
+
+    data.attackBonuses = { melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod }
 
     // Fetch the game settings relevant to sheet rendering.
     data.healthConfig =  game.settings.get("D35E", "healthConfig");
@@ -508,6 +513,9 @@ export class ActorSheetPF extends ActorSheet {
     // BAB Check
     html.find(".attribute.bab .attribute-name").click(this._onRollBAB.bind(this));
 
+    html.find(".attribute.melee-bab .attribute-name").click(this._onRollSimpleMelee.bind(this));
+    html.find(".attribute.ranged-bab .attribute-name").click(this._onRollSimpleRanged.bind(this));
+
     // CMB Check
     html.find(".attribute.cmb .attribute-name").click(this._onRollCMB.bind(this));
 
@@ -559,6 +567,7 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find(".note-editor").click(this._onNoteEditor.bind(this));
     html.find(".configure-spellbook").click(this._onSpellbookEditor.bind(this));
+    html.find(".configure-level-up-data").click(this._onLevelDataUp.bind(this));
     /* -------------------------------------------- */
     /*  Inventory
     /* -------------------------------------------- */
@@ -724,6 +733,8 @@ export class ActorSheetPF extends ActorSheet {
     event.preventDefault();
     new LevelUpDialog(this.actor).render(true);
   }
+
+
 
   /* -------------------------------------------- */
 
@@ -902,7 +913,7 @@ export class ActorSheetPF extends ActorSheet {
    */
   _onItemSummary(event) {
     event.preventDefault();
-    let li = $(event.currentTarget).parents(".item"),
+    let li = $(event.currentTarget).closest(".item"),
         item = this.actor.getOwnedItem(li.attr("data-item-id")),
         chatData = item.getChatData({secrets: this.actor.owner});
 
@@ -912,16 +923,18 @@ export class ActorSheetPF extends ActorSheet {
       summary.slideUp(200, () => summary.remove());
     } else {
       let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
-      let enhList = $(`<ul class="item-enh-list"></ul>`);
+      let subElements = $(`<ul class="item-enh-list"></ul>`);
       let props = $(`<div class="item-properties"></div>`);
       chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
-      (getProperty(item.data, `data.enhancements.items`) || []).forEach(enh => {
+      console.log('D35E | Enchancement item data',getProperty(item.data, `data.enhancements.items`) || [] );
+      (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
+        let enh = new ItemPF(_enh, {owner: this.owner})
         if (enh.hasAction) {
           let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
-                            ${enh.name} <em style="opacity: 0.7">${enh.data.uses.per}</em>
+                            ${enh.name} <em style="opacity: 0.7">${enh.data.data.uses.per}</em>
                         </h4>
                     </div>
                     <div class="item-detail item-actions">
@@ -931,19 +944,19 @@ export class ActorSheetPF extends ActorSheet {
                         </div>
                     </div>`+ (enh.isCharged ? `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
-                        <input type="text" class="uses" disabled value="${enh.data.uses.value}" data-dtype="Number"/>
+                        <input type="text" class="uses" disabled value="${enh.data.data.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
-                        <input type="text" class="maxuses" disabled value="${enh.data.uses.max}" data-dtype="Number"/>
+                        <input type="text" class="maxuses" disabled value="${enh.data.data.uses.max}" data-dtype="Number"/>
                     </div>
                     <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
-                        <input type="text" disabled value="${enh.data.uses.chargesPerUse}" data-dtype="Number"/>
+                        <input type="text" disabled value="${enh.data.data.uses.chargesPerUse}" data-dtype="Number"/>
                     </div>
 
                 </li>` : `</li>`)
-          enhList.append(enhString)
+          subElements.append(enhString)
         }
       })
-      div.append(enhList);
+      div.append(subElements);
       div.append(props);
 
       div.find(".item-enh-attack").mouseup(ev => this._quickItemEnhActionControl(ev));
@@ -1236,6 +1249,16 @@ export class ActorSheetPF extends ActorSheet {
     this.actor.rollBAB({event: event});
   }
 
+  _onRollSimpleMelee(event) {
+    event.preventDefault();
+    this.actor.rollMelee({event: event});
+  }
+
+  _onRollSimpleRanged(event) {
+    event.preventDefault();
+    this.actor.rollRanged({event: event});
+  }
+
   _onRollCMB(event) {
     event.preventDefault();
     this.actor.rollCMB({event: event});
@@ -1300,10 +1323,12 @@ export class ActorSheetPF extends ActorSheet {
       gear: { label: CONFIG.D35E.lootTypes["gear"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
       ammo: { label: CONFIG.D35E.lootTypes["ammo"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
       misc: { label: CONFIG.D35E.lootTypes["misc"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
-      container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" } },
+      container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" }, isContainer: true },
       tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
       all: { label: game.i18n.localize("D35E.All"), canCreate: false, hasActions: true, items: [], canEquip: true, dataset: {} },
     };
+
+    let containerItems = new Map()
 
     // Partition items by category
     let [items, spells, feats, classes, attacks] = data.items.reduce((arr, item) => {
@@ -1315,13 +1340,30 @@ export class ActorSheetPF extends ActorSheet {
       const itemQuantity = getProperty(item, "data.quantity") != null ? getProperty(item, "data.quantity") : 1;
       const itemCharges = getProperty(item, "data.uses.value") != null ? getProperty(item, "data.uses.value") : 1;
       item.empty = itemQuantity <= 0 || (item.isCharged && itemCharges <= 0);
+
       if ( item.type === "spell" ) arr[1].push(item);
       else if ( item.type === "feat" ) arr[2].push(item);
       else if ( item.type === "class" ) arr[3].push(item);
       else if (item.type === "attack") arr[4].push(item);
-      else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) arr[0].push(item);
+      else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
+        console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
+        if (item.data.containerId !== "none") {
+          if (!containerItems.has(item.data.containerId)) {
+            containerItems.set(item.data.containerId,[])
+          }
+          containerItems.get(item.data.containerId).push(item)
+        } else {
+          arr[0].push(item)
+        }
+      }
+
       return arr;
     }, [[], [], [], [], []]);
+
+
+    items.forEach(c => {
+      c['containerItems'] = containerItems.get(c.id) || []
+    })
 
     // Apply active item filters
     items = this._filterItems(items, this._filters.inventory);
@@ -1368,14 +1410,25 @@ export class ActorSheetPF extends ActorSheet {
       all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" } },
     };
 
+    let classFeaturesMap = new Map()
+
     for (let f of feats) {
       let k = f.data.featType;
-      features[k].items.push(f);
-      features.all.items.push(f);
+      if (f.data.source) {
+        let sourceClassName = f.data.source.split(' ')[0]
+        if (!classFeaturesMap.has(sourceClassName))
+          classFeaturesMap.set(sourceClassName,[])
+        classFeaturesMap.get(sourceClassName).push(f);
+      } else {
+        features[k].items.push(f);
+        features.all.items.push(f);
+      }
     }
     classes.sort((a, b) => b.levels - a.levels);
     features.classes.items = classes;
-
+    classes.forEach(c => {
+      c['classFeatures'] = classFeaturesMap.get(c.name) || []
+    })
     // Buffs
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });
     buffs = this._filterItems(buffs, this._filters.buffs);
@@ -1489,19 +1542,6 @@ export class ActorSheetPF extends ActorSheet {
     new ActorTraitSelector(this.actor, options).render(true)
   }
 
-  _onConfigureToken(event) {
-    event.preventDefault();
-
-    // Determine the Token for which to configure
-    const token = this.token || new Token(this.actor.data.token);
-
-    // Render the Token Config application
-    new TokenConfigPF(token, {
-      left: Math.max(this.position.left - 560 - 10, 10),
-      top: this.position.top,
-      configureDefault: !this.token
-    }).render(true);
-  }
 
   async saveMCEContent(updateData=null) {
     let manualUpdate = false;
@@ -1716,5 +1756,15 @@ export class ActorSheetPF extends ActorSheet {
       dtypes: a.dataset.dtypes,
     };
     new SpellbookEditor(this.actor, options).render(true);
+  }
+
+  _onLevelDataUp(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const options = {
+      id: a.getAttribute("for"),
+      skillset: this._prepareSkillsets(this.getData().actor.data.skills)
+    };
+    new LevelUpDataDialog(this.actor, options).render(true);
   }
 }

@@ -1,0 +1,33 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    <section class="primary-body">
+        <div class="form-group">
+            <label>{{ localize "PERMISSION.AllPlayers" }}</label>
+            <select name="default">
+                {{#select default}}
+                {{#each defaultLevels}}
+                <option value="{{this.level}}">{{this.name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        <hr/>
+
+        {{#each users}}
+        <div class="form-group{{#if this.hidden}} hidden{{/if}}">
+            <label>{{this.user.name}}</label>
+            <select name="users.{{this.user._id}}.level">
+                {{#select this.level}}
+                {{#each ../levels}}
+                <option value="{{this.level}}">{{this.name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        {{/each}}
+
+        <button type="submit" name="submit">
+            <i class="far fa-save"></i> {{ localize "Save Changes" }}
+        </button>
+    </section>
+</form>

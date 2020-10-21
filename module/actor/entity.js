@@ -144,6 +144,9 @@ export class ActorPF extends Actor {
             case "rattack":
                 result.attributes.attack = null;
                 break;
+            case "babattack":
+                result.attributes.bab = null;
+                break;
             case "damage":
             case "wdamage":
             case "sdamage":
@@ -193,7 +196,7 @@ export class ActorPF extends Actor {
                 "allChecks", "strChecks", "dexChecks", "conChecks", "intChecks", "wisChecks", "chaChecks",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
                 "ac", "aac", "sac", "nac",
-                "attack", "mattack", "rattack",
+                "attack", "mattack", "rattack",'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will","turnUndead","spellResistance","powerPoints","sneakAttack",
                 "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl"
@@ -343,6 +346,8 @@ export class ActorPF extends Actor {
                 return "data.attributes.attack.melee";
             case "rattack":
                 return "data.attributes.attack.ranged";
+            case "babattack":
+                return "data.attributes.bab.total";
             case "damage":
                 return "data.attributes.damage.general";
             case "wdamage":
@@ -741,13 +746,17 @@ export class ActorPF extends Actor {
         {
             let dimLight = 0;
             let brightLight = 0;
+            let alpha = 0.0;
             let color = "black"
+            let type = ""
             for (let i of this.items.values()) {
                 if (!i.data.data.hasOwnProperty("light")) continue;
                 if (i.data.data.equipped && !i.data.data.melded && i.data.data.light.emitLight) {
                     dimLight = Math.floor(4 * i.data.data.light.radius / 5.0);
                     brightLight = Math.floor(2 * i.data.data.light.radius / 5.0);
                     color = i.data.data.light.color;
+                    type = i.data.data.light.type;
+                    alpha = i.data.data.light.alpha;
                     break;
                 }
             }
@@ -759,7 +768,9 @@ export class ActorPF extends Actor {
                         o.update({
                             dimLight: dimLight,
                             brightLight: brightLight,
-                            lightColor: color
+                            lightColor: color,
+                            lightAlpha: alpha,
+                            lightAnimation: {type: type}
                         }, {stopUpdates: true});
                 });
             }
@@ -770,12 +781,16 @@ export class ActorPF extends Actor {
                         o.update({
                             dimLight: dimLight,
                             brightLight: brightLight,
-                            lightColor: color
+                            lightColor: color,
+                            lightAlpha: alpha,
+                            lightAnimation: {type: type}
                         }, {stopUpdates: true});
                 });
                 data[`token.dimLight`] = dimLight;
                 data[`token.brightLight`] = brightLight;
                 data[`token.lightColor`] = color;
+                data[`token.lightAnimation.type`] = type;
+                data[`token.lightAlpha`] = alpha;
             }
         }
 
@@ -1341,7 +1356,7 @@ export class ActorPF extends Actor {
 
 
         // Initialize data
-        this._resetData(updateData, srcData1, flags, sourceInfo);
+        await this._resetData(updateData, srcData1, flags, sourceInfo);
         await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride);
 
         // Sort changes
@@ -1642,7 +1657,7 @@ export class ActorPF extends Actor {
                         return cur
                     let ablMod = 0;
                     if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
-                        ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`);
+                        ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`) || 0;
                     const v = new Roll("ceil(0.5*@level*@ablMod)", {
                         level: obj.data.levels,
                         ablMod: ablMod
@@ -1705,7 +1720,7 @@ export class ActorPF extends Actor {
         return consolidatedChanges;
     }
 
-    _resetData(updateData, data, flags, sourceInfo) {
+    async _resetData(updateData, data, flags, sourceInfo) {
         const data1 = data.data;
         if (flags == null) flags = {};
         const items = data.items;
@@ -1768,6 +1783,21 @@ export class ActorPF extends Actor {
 
         linkData(data, updateData, "data.attributes.turnUndeadUsesTotal", 0);
         linkData(data, updateData, "data.attributes.powerPointsTotal", 0);
+
+        let levelUpData = duplicate(data1.details.levelUpData) || []
+        if (levelUpData.length !== data1.details.level.available) {
+            while (levelUpData.length < data1.details.level.available) {
+                levelUpData.push({'level': levelUpData.length + 1,'id': '_' + Math.random().toString(36).substr(2, 9), 'classId': null, 'class': null, 'classImage': null, 'skills': {}, 'hp': 0, hasFeat: (levelUpData.length + 1) % 3 === 0, hasAbility: (levelUpData.length + 1) % 4 === 0})
+            }
+            while (levelUpData.length > data1.details.level.available) {
+                levelUpData.pop();
+            }
+            await this.updateClassProgressionLevel(data, updateData, data1, levelUpData);
+            console.log('D35E | LevelUpData | ', levelUpData)
+            linkData(data, updateData, "data.details.levelUpData", levelUpData);
+        }
+
+
 
         if (data1.attributes.prestigeCl === undefined) {
             linkData(data, updateData, "data.attributes.prestigeCl", {
@@ -2022,6 +2052,84 @@ export class ActorPF extends Actor {
             }
         }
 
+        {
+            let level = classes.reduce((cur, o) => {
+                return cur + o.data.levels;
+            }, 0);
+            level += raceLA;
+            if (getProperty(data, "data.classLevels") !== this.data.classLevels) {
+                linkData(data, updateData, "data.details.level.value", level);
+                let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial" && o.data.data.automaticFeatures).sort((a, b) => {
+                    return a.sort - b.sort;
+                });
+
+                let itemsWithUid = new Map()
+                let existingAbilities = new Set()
+                for (let i of this.items.values()) {
+                    if (!i.data.data.hasOwnProperty("uniqueId")) continue;
+                    if (i.data.data.uniqueId === null) continue;
+                    if (i.data.data.uniqueId === "") continue;
+                    existingAbilities.add(i.data.data.uniqueId)
+                    itemsWithUid.set(i.data.data.uniqueId, i._id)
+                }
+                let classNames = new Set()
+                let addedAbilities = new Set()
+                for (let i of classes) {
+                    classNames.add([i.name, i.data.data.levels])
+                }
+
+                let itemPack = game.packs.get("D35E.class-abilities");
+                let items = []
+                await itemPack.getIndex().then(index => items = index);
+                let itemsToAdd = []
+                let itemsToRemove = []
+
+
+                for (const classInfo of classNames) {
+                    let added = false;
+                    for (let e of CACHE.ClassFeatures.get(classInfo[0]) || []) {
+                        if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
+                        let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
+                        for (let _level of levels) {
+                            const level = _level[1]
+                            let uniqueId = e.data.data.uniqueId;
+                            if (uniqueId.endsWith("*")) {
+                                uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                            }
+                            let canAdd = !addedAbilities.has(uniqueId)
+                            if (canAdd) {
+                                if (level <= classInfo[1]) {
+                                    if (!existingAbilities.has(uniqueId)) {
+                                        let eItem = duplicate(e.data)
+                                        ItemPF.setMaxUses(eItem, this.getRollData());
+                                        eItem.data.uniqueId = uniqueId;
+                                        eItem.data.source = `${classInfo[0]} ${level}`
+                                        eItem.data.userNonRemovable = true;
+                                        itemsToAdd.push(eItem)
+                                    }
+                                    addedAbilities.add(uniqueId)
+                                    added = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (let abilityUid of existingAbilities) {
+                    if (!addedAbilities.has(abilityUid)) {
+                        itemsToRemove.push(abilityUid)
+                    }
+                }
+                let idsToRemove = []
+                for (let entry of itemsToRemove) {
+                    idsToRemove.push(itemsWithUid.get(entry))
+                }
+                const deleted = await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
+                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
+
+            }
+        }
+
     }
 
     _addDynamicData(updateData, changes, flags, abilities, data, forceModUpdate = false) {
@@ -2157,6 +2265,7 @@ export class ActorPF extends Actor {
         // Set class tags
         let totalNonRacialLevels = 0;
         data.classes = {};
+        data.totalNonEclLevels = 0;
         actorData.items.filter(obj => {
             return obj.type === "class";
         }).forEach(cls => {
@@ -2169,7 +2278,7 @@ export class ActorPF extends Actor {
                 tag = createTag(cls.name) + count.toString();
             }
             cls.data.tag = tag;
-
+            data.totalNonEclLevels += cls.data.levels
             let healthConfig = game.settings.get("D35E", "healthConfig");
             healthConfig = cls.data.classType === "racial" ? healthConfig.hitdice.Racial : this.isPC ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
             const classType = cls.data.classType || "base";
@@ -2181,6 +2290,7 @@ export class ActorPF extends Actor {
                 bab: cls.data.bab,
                 hp: healthConfig.auto,
                 maxLevel: cls.data.maxLevel,
+                skillsPerLevel: cls.data.skillsPerLevel,
                 isSpellcaster: cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none",
                 isPsionSpellcaster: cls.data.spellcastingType !== null && cls.data.spellcastingType === "psionic",
                 isSpellcastingSpontaneus: cls.data.spellcastingSpontaneus === true,
@@ -2220,7 +2330,7 @@ export class ActorPF extends Actor {
             if (data.counters[group][name] === undefined) {
                 data.counters[group][name] = {value: 0, counted: 0}
             }
-            data.counters[group][name].value = Math.floor(totalNonRacialLevels / 3.0) + 1; 
+            data.counters[group][name].value = Math.floor(data.totalNonEclLevels / 3.0) + 1;
             
         }
         actorData.items.forEach(obj => {
@@ -2288,7 +2398,7 @@ export class ActorPF extends Actor {
                 spellbook.cl.total += data.classes[spellbook.class].level;
                 let spellcastingType = spellbook.spellcastingType;
                 if (spellcastingType !== undefined && spellcastingType !== null && spellcastingType !== "none" && spellcastingType !== "other") {
-                    if (data.attributes.prestigeCl[spellcastingType].max !== undefined) {
+                    if (data.attributes.prestigeCl[spellcastingType]?.max !== undefined) {
                         spellbook.maxPrestigeCl = data.attributes.prestigeCl[spellcastingType].max;
                         spellbook.availablePrestigeCl = data.attributes.prestigeCl[spellcastingType].max - spellcastingBonusTotalUsed[spellcastingType];
                     }
@@ -2484,13 +2594,16 @@ export class ActorPF extends Actor {
     }
 
     /**
-     * Prepare Character type specific data
+     * Prepare Character type specific
+     * data
      */
     _prepareCharacterData(actorData) {
+        if (!hasProperty(actorData, "data.details.level.value")) return;
+
         const data = actorData.data;
 
         // Experience bar
-        let prior = this.getLevelExp(data.details.level.value - 1 || 0),
+        let prior = this.getLevelExp(data.details.level.available - 1 || 0),
             req = data.details.xp.max - prior;
         data.details.xp.pct = Math.min(Math.round((data.details.xp.value - prior) * 100 / (req || 1)), 99.5);
     }
@@ -2501,6 +2614,8 @@ export class ActorPF extends Actor {
      * Prepare NPC type specific data
      */
     _prepareNPCData(data) {
+        if (!hasProperty(data, "data.details.cr.total")) return;
+
         // Kill Experience
         data.details.xp.value = this.getCRExp(data.details.cr);
     }
@@ -2619,6 +2734,11 @@ export class ActorPF extends Actor {
      * @return {Promise}        A Promise which resolves to the updated Entity
      */
     async update(data, options = {}) {
+        if (options['recursive'] !== undefined && options['recursive'] === false) {
+            console.log('D35E | Skipping update logic since it is not recursive')
+            await super.update(data,options);
+            return
+        }
         let img = data.img;
         let expandedData = expandObject(data);
         if (expandedData.data != null && expandedData.data.skills != null) {
@@ -2691,18 +2811,25 @@ export class ActorPF extends Actor {
                     itemUpdateData["data.containerWeightless"] = false;
                     hasContainerChanged = true;
                 } else {
+                    if (i.data.data.equipped === true) {
+                        itemUpdateData["data.equipped"] = false;
+                        hasContainerChanged = true
+                    }
                     if (i.data.data.name !== container.name) {
                         itemUpdateData["data.container"] = container.name;
                         hasContainerChanged = true
                     }
-
+                    if (i.data.data.carried !== container.data.data.carried) {
+                        itemUpdateData["data.carried"] = container.data.data.carried;
+                        hasContainerChanged = true
+                    }
                     if (i.data.data.containerWeightless !== container.data.data.containerWeightless) {
                         itemUpdateData["data.containerWeightless"] = container.data.data.containerWeightless;
                         hasContainerChanged = true
                     }
                 }
             } else {
-                if (i.data.data.containerId !== "none")
+                if (i.data.data.containerId === "none")
                     continue; // Do nothing!
 
                 if (i.data.data.containerId !== "none") {
@@ -2787,10 +2914,10 @@ export class ActorPF extends Actor {
             }
         }
 
-        await this._updateExp(data);
 
         // Update portraits
 
+        await this._updateExp(data);
 
         // Update changes
         let diff = data;
@@ -2799,15 +2926,18 @@ export class ActorPF extends Actor {
             if (updateObj.diff.items) delete updateObj.diff.items;
             diff = mergeObject(diff, updateObj.diff);
         }
+
         // Diff token data
         if (data.token != null) {
             diff.token = diffObject(this.data.token, data.token);
         }
 
         if (Object.keys(diff).length) {
-            return super.update(diff, options);
+            let updateOptions = mergeObject(options, { diff: true })
+            await super.update(diff,updateOptions);
+
         }
-        return false;
+        //return false;
     }
 
     _onUpdate(data, options, userId, context) {
@@ -2848,123 +2978,19 @@ export class ActorPF extends Actor {
         let level = classes.reduce((cur, o) => {
             return cur + o.data.data.levels;
         }, 0);
+        let racialHD = classes.filter(o => o.type === "class" && getProperty(o.data, "classType") === "racial").reduce((cur, o) => {
+            return cur + o.data.data.levels;
+        }, 0);
         level += raceLA;
 
-        if (getProperty(this.data, "data.details.level.value") !== level) {
-            data["data.details.level.value"] = level;
-            let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial" && o.data.data.automaticFeatures).sort((a, b) => {
-                return a.sort - b.sort;
-            });
 
-            console.log('Classes',classes)
-            let itemsWithUid = new Map()
-            let existingAbilities = new Set()
-            for (let i of this.items.values()) {
-                if (!i.data.data.hasOwnProperty("uniqueId")) continue;
-                if (i.data.data.uniqueId === null) continue;
-                if (i.data.data.uniqueId === "") continue;
-                existingAbilities.add(i.data.data.uniqueId)
-                itemsWithUid.set(i.data.data.uniqueId, i._id)
-            }
-            let classNames = new Set()
-            let addedAbilities = new Set()
-            for (let i of classes) {
-                classNames.add([i.name, i.data.data.levels])
-            }
-
-            let itemPack = game.packs.get("D35E.class-abilities");
-            let items = []
-            await itemPack.getIndex().then(index => items = index);
-            let itemsToAdd = []
-            let itemsToRemove = []
-
-
-            for (const classInfo of classNames) {
-                let added = false;
-                for (let e of CACHE.ClassFeatures.get(classInfo[0]) || []) {
-                    if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
-                    let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
-                    for (let _level of levels) {
-                        const level = _level[1]
-                        let uniqueId = e.data.data.uniqueId;
-                        if (uniqueId.endsWith("*")) {
-                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
-                        }
-                        let canAdd = !addedAbilities.has(uniqueId)
-                        if (canAdd) {
-                            if (level <= classInfo[1]) {
-                                if (!existingAbilities.has(uniqueId)) {
-                                    let eItem = duplicate(e.data)
-                                    ItemPF.setMaxUses(eItem, this.getRollData());
-                                    eItem.data.uniqueId = uniqueId;
-                                    eItem.data.source = `${classInfo[0]} ${level}`
-                                    eItem.data.userNonRemovable = true;
-                                    itemsToAdd.push(eItem)
-                                }
-                                addedAbilities.add(uniqueId)
-                                added = true;
-                            }
-                        }
-                    }
-                }
-            }
-            // for (let entry of items) {
-            //     await itemPack.getEntity(entry._id).then(e => {
-            //             let added = false;
-            //             for (const classInfo of classNames) {
-            //                 if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
-            //                 let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
-            //                 for (let _level of levels) {
-            //                     const level = _level[1]
-            //                     let uniqueId = e.data.data.uniqueId;
-            //                     if (uniqueId.endsWith("*")) {
-            //                         uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
-            //                     }
-            //                     let canAdd = !addedAbilities.has(uniqueId)
-            //                     if (canAdd) {
-            //                         if (level <= classInfo[1]) {
-            //                             if (!existingAbilities.has(uniqueId)) {
-            //                                 let eItem = duplicate(e.data)
-            //                                 ItemPF.setMaxUses(eItem, this.getRollData());
-            //                                 eItem.data.uniqueId = uniqueId;
-            //                                 eItem.data.source = `${classInfo[0]} ${level}`
-            //                                 eItem.data.userNonRemovable = true;
-            //                                 itemsToAdd.push(eItem)
-            //                             }
-            //                             addedAbilities.add(uniqueId)
-            //                             added = true;
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     )
-            // }
-            for (let abilityUid of existingAbilities) {
-                if (!addedAbilities.has(abilityUid)) {
-                    itemsToRemove.push(abilityUid)
-                }
-            }
-            let idsToRemove = []
-            for (let entry of itemsToRemove) {
-                idsToRemove.push(itemsWithUid.get(entry))
-            }
-            const deleted = await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
-            // for (let entry of itemsToRemove) {
-            //     await this.deleteOwnedItem(itemsWithUid.get(entry), {stopUpdates: true})
-            // }
-
-            await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
-            // for (let entry of itemsToAdd) {
-            //     await this.createOwnedItem(entry, {stopUpdates: true})
-            // }
-
-        }
 
 
         // The following is not for NPCs
         if (this.data.type !== "character") return;
-
+        console.log('D35E | ActorPF | _updateExp | Race LA, racial HD',raceLA,racialHD)
+        let dataLevel = (data["data.details.level.available"] || this.data.data.details.level.available) + raceLA + racialHD
+        console.log('D35E | ActorPF | _updateExp | Update exp data',dataLevel)
         // Translate update exp value to number
         let newExp = data["data.details.xp.value"],
             resetExp = false;
@@ -2984,13 +3010,76 @@ export class ActorPF extends Actor {
                 data["data.details.xp.value"] = newExp;
             }
         }
-        const maxExp = this.getLevelExp(level);
+        const maxExp = this.getLevelExp(dataLevel);
         if (maxExp !== getProperty(this.data, "data.details.xp.max")) {
             data["data.details.xp.max"] = maxExp;
         }
 
-        const minExp = level > 0 ? this.getLevelExp(level - 1) : 0;
+        const minExp = dataLevel > 0 ? this.getLevelExp(dataLevel - 1) : 0;
         if (resetExp) data["data.details.xp.value"] = minExp;
+    }
+
+    async updateClassProgressionLevel(data, globalUpdateData, data1, levelUpData) {
+
+        console.log('D35E | ActorPF | updateClassProgressionLevel | Starting update')
+        const classes = this.items.filter(o => o.type === "class" && getProperty(o.data.data, "classType") !== "racial").sort((a, b) => {
+            return a.sort - b.sort;
+        });
+        let updateData = {}
+        let classLevels = new Map()
+        let classHP = new Map()
+        // Iterate over all levl ups
+        if (data1.details.levelUpData && data1.details.levelUpProgression) {
+            levelUpData.forEach(lud => {
+                if (lud.classId === null || lud.classId === "") return;
+                let _class = this.items.find(cls => cls._id === lud.classId)
+                if (_class == null) {
+                    lud.classId = null;
+                    lud.classImage = null;
+                    lud.skills = {};
+                    lud.class = null;
+                    return;
+                }
+                if (!classLevels.has(_class._id))
+                    classLevels.set(_class._id, 0)
+                classLevels.set(_class._id, classLevels.get(_class._id) + 1)
+                if (!classHP.has(_class._id))
+                    classHP.set(_class._id, 0)
+                classHP.set(_class._id, classHP.get(_class._id) + (lud.hp || 0))
+                Object.keys(lud.skills).forEach(s => {
+                    if (lud.skills[s].rank) {
+                        updateData[`data.skills.${s}.rank`] = Math.floor(lud.skills[s].rank * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
+                    }
+                    if (lud.skills[s].subskills) {
+                        Object.keys(lud.skills[s].subskills).forEach(sb => {
+                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                        })
+                    }
+                })
+            })
+
+            for (var _class of classes) {
+                let itemUpdateData = {}
+                itemUpdateData["_id"] = _class._id;
+                itemUpdateData["data.levels"] = classLevels.get(_class._id) || 0;
+                itemUpdateData["data.hp"] = classHP.get(_class._id) || 0;
+                await this.updateOwnedItem(itemUpdateData,{stopUpdates:true});
+
+                console.log(`D35E | ActorPF | updateClassProgressionLevel | Updated class item ${_class.name}`)
+            }
+
+            for (let [k, s] of Object.entries(getProperty(data, "data.skills"))) {
+                linkData(data, globalUpdateData, `data.skills.${k}.rank`, updateData[`data.skills.${k}.rank`] || 0);
+                for (let k2 of Object.keys(getProperty(s, "subSkills") || {})) {
+                    linkData(data, globalUpdateData, `data.skills.${k}.subSkills.${k2}.rank`, updateData[`data.skills.${k}.subSkills.${k2}.rank`] || 0);
+                }
+            }
+
+            console.log('D35E | ActorPF | updateClassProgressionLevel | Update done')
+        } else {
+            console.log('D35E | ActorPF | updateClassProgressionLevel | Update skipped, no levelUpData')
+        }
+
     }
 
     async _onCreate(data, options, userId, context) {
@@ -3282,6 +3371,32 @@ export class ActorPF extends Actor {
         });
     }
 
+    rollMelee(options = {}) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        return DicePF.d20Roll({
+            event: options.event,
+            parts: ["@mod - @drain + @ablMod"],
+            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain},
+            title: game.i18n.localize("D35E.Melee"),
+            speaker: ChatMessage.getSpeaker({actor: this}),
+            takeTwenty: false
+        });
+    }
+
+    rollRanged(options = {}) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        return DicePF.d20Roll({
+            event: options.event,
+            parts: ["@mod - @drain + @ablMod"],
+            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain},
+            title: game.i18n.localize("D35E.Ranged"),
+            speaker: ChatMessage.getSpeaker({actor: this}),
+            takeTwenty: false
+        });
+    }
+
     rollCMB(options = {}) {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
@@ -3502,7 +3617,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod + @checkMod - @drain"],
-            data: {mod: abl.mod, checkMod: abl.checkMod, drain: this.data.data.attributes.energyDrain},
+            data: {mod: abl.mod, checkMod: abl.checkMod, drain: this.data.data.attributes.energyDrain || 0},
             title: game.i18n.localize("D35E.AbilityTest").format(label),
             speaker: ChatMessage.getSpeaker({actor: this}),
             chatTemplate: "systems/D35E/templates/chat/roll-ext.html",

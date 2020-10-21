@@ -1,4 +1,35 @@
 # Changelog
+## 0.86
+### SRD
+- Added Prestige Classes: Archmage, Assassin, Blackguard, Dwarven Defender, Eldricht Knight
+### Features
+- Added compatibility with 0.7.X series
+- Full Level Progression system rework:
+    - Ability to set which Class Level was gained at which Character Level
+    - Ability to set Hit Points per Level
+    - Ability to set Skill Points per level
+    - Compatibility with NPCs and old Characters (that will use simple progression system)
+- Theme redesign, theme now enabled by default for new clients
+- New change type: BAB
+- Support for new 0.7.X series lighting effects
+    - New lighting options for items
+    - Added lighting to existing magic items and standard light sources
+- Ported Vision Permission dialog from PF1
+- Added ability to add custom class features when using special World Compendium
+
+### Bug Fixes
+- Fixes loading characters that had no Prestige Caster Level
+- [#61](https://github.com/Rughalt/D35E/issues/61) - Fixed Ranger class Favorite Enemy 
+- [#57](https://github.com/Rughalt/D35E/issues/57) - Add possibility to give bab in the changes tab 
+- [#63](https://github.com/Rughalt/D35E/issues/55) - Monsters didn't get feats every 3 levels 
+- [#60](https://github.com/Rughalt/D35E/issues/55) - Spellslots tables are wrong 
+- [#64](https://github.com/Rughalt/D35E/issues/55) - Class details break when selecting *None* as saving throw progression.
+- [#58](https://github.com/Rughalt/D35E/issues/55) - Damage value doesn't overriding 
+- [#59](https://github.com/Rughalt/D35E/issues/55) - Power attack not working properly 
+- [#75](https://github.com/Rughalt/D35E/issues/55) - Fighter didn't get bonus feat at lvl 1 
+- [#77](https://github.com/Rughalt/D35E/issues/55) - Fixed Ranger class Favorite Enemy 
+  
+
 ## 0.85.4
 ### Features
 - [#55](https://github.com/Rughalt/D35E/issues/55) - Updated French translation by @red5h4d0w

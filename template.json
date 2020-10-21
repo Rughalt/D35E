@@ -380,8 +380,22 @@
           "level": {
             "value": 0,
             "min": 0,
-            "max": 40
+            "max": 40,
+            "available": 1
           },
+          "levelUpData": [
+            {
+              "level": 1,
+              "id": "_level1",
+              "classId": null,
+              "class": null,
+              "classImage": null,
+              "skills": {},
+              "hp": 0,
+              "hasFeat": true,
+              "hasAbility": false
+            }
+          ],
           "alignment": "",
           "biography": {
             "value": "",
@@ -924,13 +938,14 @@
         "xp": {
           "value": 0,
           "min": 0,
-          "max": 300
+          "max": 1000
         },
         "height": "",
         "weight": "",
         "gender": "",
         "deity": "",
-        "age": ""
+        "age": "",
+        "levelUpProgression": null
       },
       "traits": {
         "weaponProf": {
@@ -958,7 +973,8 @@
         "cr": 1,
         "xp": {
           "value": 10
-        }
+        },
+        "levelUpProgression": false
       }
     }
   },
@@ -983,6 +999,7 @@
           "wildshaped": false,
           "polymorphed": false
         },
+        "combatChanges": [],
         "sizeOverride": "",
         "counterName": ""
       },
@@ -994,6 +1011,8 @@
           "color": "",
           "radius": 0,
           "opacity": 0,
+          "alpha": 0.5,
+          "type": "",
           "emitLight": false
         }
       },
@@ -1094,7 +1113,8 @@
           "damage": null,
           "damageMult": 1,
           "critRange": 20,
-          "critMult": 2
+          "critMult": 2,
+          "twoHandedOnly": false
         },
         "save": {
           "dc": 0,
@@ -1456,7 +1476,9 @@
       "proficient": true,
       "primaryAttack": true,
       "showInQuickbar": true,
-      "melded": false
+      "melded": false,
+      "baseWeaponType": "",
+      "originalWeaponId": null
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],

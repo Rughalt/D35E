@@ -1,0 +1,212 @@
+<form autocomplete="off" onsubmit="event.preventDefault();">
+    <div class="header">
+
+        <h1>Level details for level {{level}}</h1>
+    </div>
+
+    <h2 class="block-header">Class</h2>
+    <p></p>
+       <div class="flexcol" style="padding: 5px">
+            <div class="form-group spellcasting-class tooltip flexrow">
+                <label><span>{{localize "D35E.Class"}}</span></label>
+                <select name="class" id="class-select" data-dtype="String" onchange="selectedClassData(this)">
+                    <option data-hd="0" data-skill="0" value="">Select Class</option>
+                    {{#select levelUpData.classId}}
+                    {{#each classes as |cls a|}}
+                    <option data-hd="{{cls.data.hd}}" data-skill="{{cls.data.skillsPerLevel}}" value="{{cls._id}}">{{cls.name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+      </div>
+    <h2 class="block-header">Hit Points</h2>
+    <p></p>
+    <div class="flexcol" style="padding: 5px">
+        <p>Class Hit Die is <strong id="class-hd">0</strong></p>
+        <div class="form-group spellcasting-class tooltip flexrow">
+            <label><span>{{localize "D35E.HitPoints"}}</span></label>
+            <input type="text" name="hp" id="hp-input" data-dtype="number" value="{{levelUpData.hp}}">
+            <a onclick="rollHP()" class="btn roll-hp">Roll HP</a>
+
+        </div>
+    </div>
+    <h2 class="block-header">Skills</h2>
+    <p>Skills in <strong>bold</strong> are Class Skills for selected class, and skills marked with ■ require training. </p>
+    <p>Max skill rank is currently <strong>{{maxSkillRank}}</strong> (level {{totalLevel}} + 3)</p>
+    <p>Skill points at level <strong id="skill-per-level">0</strong> (<strong id="skill-per-level-base">0</strong> + <strong id="skill-per-level-int">0</strong> from Intelligence modifier<span id="flb"></span>). Currently used <strong id="skill-used">0</strong>.</p>
+    <div class="flexrow">
+        <div class="flexcol">
+            <ul class="skills-list sub-scroll scroll-skillset flexrow" style="padding: 0">
+            {{#each skillset as |skill s|}}
+            {{#if skill.arbitrary}}
+                {{#each skill.subSkills as |subSkill b|}}
+                <li class="skill flexrow" data-skill="{{s}}.{{b}}">
+
+                    {{#if skill.cs}}
+                    <strong>{{skill.label}} - {{subSkill.name}}{{#if skill.rt}}■{{/if}}</strong>
+                    {{else}}
+                    <span>{{skill.label}} - {{subSkill.name}}{{#if skill.rt}}■{{/if}}</span>
+                    {{/if}}
+                    <a class="item-control" title="Remove Skill Point" onclick="addRemoveSkill('skills.{{s}}.subSkills.{{b}}.rank',-1,{{subSkill.cs}})">
+                        <i class="fas fa-minus remove-skill"></i>
+                    </a>
+                    <input type="text" class="skill-value" name="skills.{{s}}.subSkills.{{b}}.rank" value="{{subSkill.rank}}" readonly placeholder="0"/>
+                    <input type="hidden" class="skill-class"  value="{{subSkill.cs}}" readonly placeholder="0"/>
+                    <a class="item-control" title="Add Skill Point" onclick="addRemoveSkill('skills.{{s}}.subSkills.{{b}}.rank',1,{{subSkill.cs}})">
+                        <i class="fas fa-plus add-skill"></i>
+                    </a>
+
+
+                    <input type="hidden" class="original-skill-value"  value="{{subSkill.baseRank}}" readonly placeholder="0" style=""/>
+                    <input type="text" class="combined-skill-value" value="{{subSkill.baseRank}}" disabled placeholder="0" style="border: none; flex: 0 25px"/>
+                </li>
+
+                {{/each}}
+            {{else}}
+            <li class="skill flexrow" data-skill="{{s}}">
+
+                {{#if skill.custom}}
+                {{#if skill.cs}}
+                <strong>{{skill.name}}{{#if skill.rt}}■{{/if}}</strong>
+                {{else}}
+                <span>{{skill.name}}{{#if skill.rt}}■{{/if}}</span>
+                {{/if}}
+                {{else}}
+                {{#if skill.cs}}
+                <strong>{{skill.label}}{{#if skill.rt}}■{{/if}}
+                </strong>
+                {{else}}
+                <span>{{skill.label}}{{#if skill.rt}}■{{/if}}
+                </span>
+                {{/if}}
+                {{/if}}
+                <a class="item-control" title="Remove Skill Point" onclick="addRemoveSkill('skills.{{s}}.rank',-1,{{skill.cs}})">
+                    <i class="fas fa-minus remove-skill"></i>
+                </a>
+                <input type="text" class="skill-value" name="skills.{{s}}.rank" value="{{skill.rank}}" readonly placeholder="0"/>
+                <input type="hidden" class="skill-class"  value="{{skill.cs}}" readonly placeholder="0"/>
+                <a class="item-control" title="Add Skill Point" onclick="addRemoveSkill('skills.{{s}}.rank',1,{{skill.cs}})">
+                    <i class="fas fa-plus add-skill"></i>
+                </a>
+
+                <input type="hidden" class="original-skill-value" value="{{skill.baseRank}}" readonly placeholder="0" style="flex: 0 25px"/>
+                <input type="text" class="combined-skill-value" value="{{skill.baseRank}}" disabled placeholder="0" style="border: none; flex: 0 25px"/>
+            </li>
+            {{/if}}
+            {{/each}}
+            </ul>
+        </div>
+    </div>
+    <input type="hidden" id="spl">
+    <input type="hidden" id="spl-base">
+    <input type="hidden" id="usedSkillpoints">
+    <input type="hidden" id="hd">
+  <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.SetLevelData"}}</button>
+
+    <script>
+        function selectedClassData(select, force = false) {
+            var hd = parseInt($('option:selected', select).attr('data-hd'));
+            var skills = parseInt($('option:selected', select).attr('data-skill'));
+            $('#spl-base').val(skills)
+            $('#hd').val(hd)
+            let intSkills = {{actor.data.abilities.int.mod}};
+            skills += intSkills
+            let level = {{level}};
+            let isCharacter = '{{actor.type}}' === "character";
+            if (level === 1 && isCharacter)
+                skills = skills * 4
+
+            $('#spl').val(skills)
+            if (!force) $('#usedSkillpoints').val(0)
+            if (!force) $('.skill-value').val(0)
+            if (!force) rollHP();
+            updateFormData()
+        }
+
+        function updateFormData() {
+            let usedSkillpoints = parseInt($('#usedSkillpoints').val() || 0)
+            let spl = parseInt($('#spl').val() || 0)
+            let splBase = parseInt($('#spl-base').val() || 0)
+            let hd = parseInt($('#hd').val() || 0)
+            $('.skill').each(function( index ) {
+                let val = parseInt($(this).find('.skill-value').val() || 0)
+                let baseRank = parseInt($(this).find('.original-skill-value').val() || 0)
+                let skillClass = $(this).find('.skill-class').val() === "true";
+                if (val === 0) {
+                    $(this).find('.remove-skill').css('opacity',0.2);
+                    $(this).find('.remove-skill').parent().css('cursor','default');
+                } else {
+                    $(this).find('.remove-skill').css('opacity',0.8);
+                    $(this).find('.remove-skill').parent().css('cursor','pointer');
+                }
+
+                $(this).find('.add-skill').css('opacity',0.8);
+                $(this).find('.add-skill').parent().css('cursor','pointer');
+                $(this).find('.combined-skill-value').val(baseRank + val*(skillClass ? 1.0 : 0.5))
+                if (baseRank + val > {{totalLevel}} + 3) {
+                    $(this).find('.combined-skill-value').css('color','darkred')
+                } else {
+                    $(this).find('.combined-skill-value').css('color','black')
+                }
+            });
+
+            if (usedSkillpoints > spl) {
+                $('#skill-used').css('color','darkred')
+            } else {
+                $('#skill-used').css('color','black')
+            }
+            let intSkills = '{{actor.data.abilities.int.mod}}';
+            let level = {{level}};
+            if (level === 1) {
+                $('#flb').text(', first level multiplier')
+            }
+            $('#skill-per-level-base').text(splBase)
+            $('#skill-per-level-int').text(intSkills)
+            $('#skill-per-level').text(spl)
+            $('#skill-used').text(`${usedSkillpoints} / ${spl}`)
+            $('#class-hd').text(`${hd}`)
+        }
+
+        function addRemoveSkill(id, value, classSkill) {
+            let usedSkillpoints = parseInt($('#usedSkillpoints').val() || 0)
+            let spl = parseInt($('#spl').val() || 0)
+            if (usedSkillpoints + value < 0) return;
+            if (parseInt($(`input[name='${id}']`).val() || 0) + value < 0) return;
+            $(`input[name='${id}']`).val(parseInt($(`input[name='${id}']`).val() || 0) + value)
+            usedSkillpoints+=value;
+            $('#usedSkillpoints').val(usedSkillpoints)
+            updateFormData();
+        }
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function rollHP() {
+            let hd = parseInt($('#hd').val() || 0)
+            let level = {{level}};
+            let isCharacter = '{{actor.type}}' === "character";
+            if (level === 1 && isCharacter)
+                $('#hp-input').val(hd)
+            else {
+                $('#hp-input').val(getRandomInt(1, hd))
+            }
+        }
+
+        {
+            let maxVal = 0
+            $('.skill').each(function (index) {
+                let val = parseInt($(this).find('input').val() || 0)
+                maxVal += val;
+            })
+            $('#usedSkillpoints').val(maxVal)
+        }
+
+        selectedClassData($('#class-select'), true);
+        updateFormData();
+
+
+    </script>
+</form>

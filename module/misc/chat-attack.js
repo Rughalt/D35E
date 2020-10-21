@@ -72,7 +72,7 @@ export class ChatAttack {
         // Roll attack
         let roll = this.item.rollAttack({
             data: this.rollData,
-            bonus: bonus,
+            bonus: bonus || 0,
             extraParts: extraParts,
             primaryAttack: primaryAttack
         });
@@ -93,7 +93,7 @@ export class ChatAttack {
         // Add crit confirm
         if (!critical && d20.total >= this.critRange) {
             this.hasCritConfirm = true;
-            await this.addAttack({bonus: bonus, extraParts: extraParts, primaryAttack: primaryAttack, critical: true});
+            await this.addAttack({bonus: bonus || 0, extraParts: extraParts, primaryAttack: primaryAttack, critical: true});
         }
     }
 

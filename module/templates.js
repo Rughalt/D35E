@@ -34,10 +34,11 @@ export const preloadHandlebarsTemplates = async function() {
     "systems/D35E/templates/items/parts/item-light.html",
 
     // Misc
-    "systems/D35E/templates/misc/token-config.html",
+    "systems/D35E/templates/internal/token-config.html",
 
     // Apps
     "systems/D35E/templates/apps/attack-roll-dialog.html",
+    "systems/D35E/templates/apps/vision-permission.html",
 
     // Chat
     "systems/D35E/templates/chat/roll-ext.html",

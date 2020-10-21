@@ -102,4 +102,38 @@
     </li>
     {{/each}}
   </ol>
+
+  {{!-- Changes --}}
+  <h4 class="change-header">
+    {{localize "D35E.CombatChanges"}}
+    <a class="combat-change-control add-change"><i class="fas fa-plus"></i></a>
+  </h4>
+  <ol class="changes form-group">
+    {{#each data.combatChanges as |change a|}}
+    <li class="change flexrow" data-change="{{a}}">
+      <select name="data.combatChanges.{{a}}.0">
+        {{#select (lookup this "0") }}
+        {{#each ../config.combatChangeType as |name type|}}
+        <option value="{{type}}">{{name}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
+      <select name="data.combatChanges.{{a}}.1">
+        {{#select (lookup this "1") }}
+        {{#each ../config.itemActionTypes as |name type|}}
+          <option value="{{type}}">{{name}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
+      <input type="text" name="data.combatChanges.{{a}}.2" value="{{lookup this "2"}}"
+      placeholder="{{localize "D35E.Condition"}} {{localize "D35E.Formula"}}" />
+      <input type="text" name="data.combatChanges.{{a}}.3" value="{{lookup this "3"}}"
+      placeholder="{{localize "D35E.ModifiedField"}}" />
+      <input type="text" name="data.combatChanges.{{a}}.4" value="{{lookup this "4"}}"
+      placeholder="{{localize "D35E.ModificationFormula"}} {{localize "D35E.Formula"}}" />
+
+      <a class="combat-change-control delete-change"><i class="fas fa-minus"></i></a>
+    </li>
+    {{/each}}
+  </ol>
 </div>

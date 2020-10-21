@@ -2,6 +2,7 @@ import {createTabs} from "../../lib.js";
 import {EntrySelector} from "../../apps/entry-selector.js";
 import {ItemPF} from "../entity.js";
 import {CACHE} from "../../cache.js";
+import {isMinimumCoreVersion} from "../../lib.js";
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -115,6 +116,8 @@ export class ItemSheetPF extends ItemSheet {
         if (data.item.type === "feat") {
             data.isClassFeature = true; //Any feat can be a class feature
         }
+
+        data.is07Xup = isMinimumCoreVersion("0.7.2");
 
         data.availableContainers = {}
         data.availableContainers['none'] = "None"
@@ -391,7 +394,8 @@ export class ItemSheetPF extends ItemSheet {
                 knownSpellProgressionData.level = level
                 for (let a of ['fort', 'ref', 'will']) {
                     const classType = getProperty(data.data, "classType") || "base";
-                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value];
+
+                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] != null ? CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] : "0";
                     progressionData[a] = Math.floor(new Roll(formula, {level: level}).roll().total);
                 }
                 {
@@ -680,6 +684,14 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        let changes = Object.entries(formData).filter(e => e[0].startsWith("data.combatChanges"));
+        formData["data.combatChanges"] = changes.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         // Handle notes array
         let note = Object.entries(formData).filter(e => e[0].startsWith("data.contextNotes"));
         formData["data.contextNotes"] = note.reduce((arr, entry) => {
@@ -790,7 +802,9 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".damage-control").click(this._onDamageControl.bind(this));
 
         // Modify buff changes
-        html.find(".change-control").click(this._onBuffControl.bind(this));
+        html.find(".change-control").click(this._onChangeControl.bind(this));
+        html.find(".combat-change-control").click(this._onCombatChangeControl.bind(this));
+
 
         // Modify note changes
         html.find(".context-note-control").click(this._onNoteControl.bind(this));
@@ -981,7 +995,7 @@ export class ItemSheetPF extends ItemSheet {
         }
     }
 
-    async _onBuffControl(event) {
+    async _onChangeControl(event) {
         event.preventDefault();
         const a = event.currentTarget;
 
@@ -999,6 +1013,28 @@ export class ItemSheetPF extends ItemSheet {
             const changes = duplicate(this.item.data.data.changes);
             changes.splice(Number(li.dataset.change), 1);
             return this.item.update({"data.changes": changes});
+        }
+    }
+
+    async _onCombatChangeControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = this.item.data.data.combatChanges || [];
+            // Combat Changes are
+            return this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", 0]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.combatChanges);
+            changes.splice(Number(li.dataset.combatChanges), 1);
+            return this.item.update({"data.combatChanges": changes});
         }
     }
 

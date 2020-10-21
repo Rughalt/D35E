@@ -1,5 +1,9 @@
-<div class="inventory-filters spellbook-filters" style="margin: 0; padding-bottom: 4px; border-bottom: 2px groove #eeede0;">
-  <a class="btn configure-spellbook" for="data.attributes.spells.spellbooks.{{spellbookIndex}}" onkeydown="e.preventDefault();">Configure Spellbook</a>
+<div class="inventory-filters spellbook-filters" style="margin: 0; padding-bottom: 4px;">
+  <div class="flexrow"><h2 class="block-header" style="flex: 1">Spellbook for {{spellbook.orig.class}}</h2><a
+          class="btn configure-spellbook point-buy-button blue-button" for="data.attributes.spells.spellbooks.{{spellbookIndex}}" onkeydown="e.preventDefault();">
+    Configure
+  </a></div>
+
 
  <!--  <div class="flexrow">-->
 
@@ -160,7 +164,7 @@
 
 </div>
 
-<section class="spells_{{spellbookIndex}}-body">
+<section class="spells_{{spellbookIndex}}-body spellbook-spelllist">
 
   <ol class="inventory-list sub-scroll scroll-spells_{{../spellbookIndex}}">
   {{#each spellbook.data as |section sid|}}

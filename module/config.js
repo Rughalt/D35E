@@ -925,6 +925,7 @@ D35E.buffTargets = {
     "attack": "D35E.All",
     "mattack": "D35E.Melee",
     "rattack": "D35E.Ranged",
+    "babattack": "D35E.BAB",
   },
   "damage": {
     "_label": "D35E.Damage",
@@ -1147,6 +1148,7 @@ D35E.enhancementType = {
 
 D35E.twoWeaponAttackType = {
   'primary': 'D35E.TwoWeaponPrimary',
+  'two-handed': 'D35E.TwoWeaponTwoHanded',
   'main-offhand-light': 'D35E.TwoWeaponMainOffhandLight',
   'main-offhand-normal': 'D35E.TwoWeaponMainOffhandNormal',
   'offhand-light': 'D35E.TwoWeaponOffhandLight',
@@ -1159,6 +1161,12 @@ D35E.spellcastingType = {
   'divine': 'D35E.Divine',
   'psionic': 'D35E.Psionic',
   'other': 'D35E.Other',
+};
+
+D35E.combatChangeType = {
+  'all': 'D35E.All',
+  'attack': 'D35E.Attack',
+  'spell': 'D35E.Spell',
 };
 
 CONFIG.Combat.initiative.decimals = 2;
