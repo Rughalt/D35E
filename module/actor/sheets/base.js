@@ -1581,7 +1581,8 @@ export class ActorSheetPF extends ActorSheet {
 
   async _onSubmit(event, {updateData=null, preventClose=false}={}) {
     event.preventDefault();
-    await this._updateItems();
+    //todo: wait for foundry fix
+    this._updateItems();
 
     return super._onSubmit(event, {updateData, preventClose});
   }

@@ -1,9 +1,9 @@
-
 <style>
     .welcome-screen .window-content {
         background: url(systems/D35E/ui/parchment-dark.jpg) repeat !important;
         color: white;
     }
+
     .social-button {
         flex: 0 140px;
         text-align: center;
@@ -89,6 +89,7 @@
         padding: 4px 4px 5px;
         border-radius: 2px;
     }
+
     .welcome-tabs a.item.active {
         background-color: #782e22;
     }
@@ -104,263 +105,344 @@
 
 </style>
 
-<h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png" style="height: 64px; border: none; float: left">
+<h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png"
+                                    style="height: 64px; border: none; float: left">
     <span style='font-family: "Nodesto", sans-serif;
         text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>DND 3.5e</span>
     <br><span style="font-size: 14px">DND 3.5 SRD implementation for Foundry VTT</span></h1>
 <div class="flexrow">
-<nav class="welcome-tabs">
-    <a class="item" data-tab="welcome">{{ localize "D35E.Welcome" }}</a>
-    <a class="item" data-tab="changelog">{{ localize "D35E.Changelog" }}</a>
-   </nav>
+    <nav class="welcome-tabs">
+        <a class="item" data-tab="welcome">{{ localize "D35E.Welcome" }}</a>
+        <a class="item" data-tab="changelog">{{ localize "D35E.Changelog" }}</a>
+    </nav>
 </div>
 
 <section class="welcome-content">
-<div class="tab" data-tab="welcome">
+    <div class="tab" data-tab="welcome">
 
-    <p>Welcome to DND 3.5E SRD implementation for Foundry VTT! It was created from love for old DND editions and aims to provide full 3.5E SRD implementation and system flexible enough for anything else.</p>
+        <p>Welcome to DND 3.5E SRD implementation for Foundry VTT! It was created from love for old DND editions and
+            aims to provide full 3.5E SRD implementation and system flexible enough for anything else.</p>
 
 
-    <p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
-    <h2>News</h2>
-<div class="flexrow">
+        <p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
+        <h2>News</h2>
+        <div class="flexrow">
 
-    <div class="flexcol" style="max-height: 410px">
-        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Classes & Spellcasting</h2>
-        <img src="systems/D35E/icons/ui/welcome-screen/0.84-middle.png" style="padding: 0 0.7rem; flex: 0">
-        <p style="padding: 0 0.7rem; flex: 0">
-            Release 0.85 adds full class leveling automation, with all Base classes from SRD implemented, along with their Class Abilities. <span style="opacity: 0.8">(This option is turned off for classes already added to Actors)</span><br><br>
-            Version 0.85 brings also a lot of improvements to Spell management, with ability to automate Spellbook setup. No longer you need to look up how many spells a character can cast.
-        </p>
-        <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/classes">Learn more about Classes redesign</a>
-        <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/spells">Read more on Spell changes</a>
+            <div class="flexcol" style="max-height: 410px">
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Class progression</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.86-class-progression.png"
+                     style="padding: 0 0.7rem; flex: 0">
+                <p style="padding: 0 0.7rem; flex: 0">
+                    Release 0.86 bring proper class and level progression - no more guessing which skills were class
+                    skills on level 5 and how many Hit Points you got. Each gained level can have a class assigned to
+                    it, so everything is calculated properly. <span style="opacity: 0.8">(This option is turned off for existing Actors)</span><br><br>
+                </p>
+                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/classes">Learn
+                    more about Level progression</a>
 
+            </div>
+            <div class="flexcol" style="max-height: 410px">
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Updated Theme</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.86-theme.png" style="padding: 0 0.7rem; flex: 0">
+                <p style="padding: 0 0.7rem; flex: 0">
+                    Release 0.86 comes with a first version of redesigned theme - now enabled for all new players!
+                    <br><br>
+                    More theme changes and minor redesigns will come in minor updates in 0.86 line.
+                </p>
+<!--                <a class="btn bottom"-->
+<!--                   href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Visit-->
+<!--                    Enhancements page on Wiki</a>-->
+            </div>
+            <div class="flexcol" style="max-height: 410px">
+
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Onboarding</h2>
+                <p style="padding: 0 0.7rem; flex: 0">
+                    We introduced a new onboarding process for players. You can check it yourself - just interact with
+                    dialogue box below.
+                </p>
+                <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/gm/onboarding">Read more
+                    about Onboarding</a>
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Magic Items</h2>
+                <p style="padding: 0 0.7rem; flex: 0">
+                    Magic Items system allows for creating any magic item you want - from simple Longsword +1 to complex
+                    ones like Flame Tongue.
+                </p>
+
+                <a class="btn mid"
+                   href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Learn more
+                    about Magic Items</a>
+                <!--        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Custom Theme</h2>-->
+                <!--        <p style="padding: 0 0.7rem; flex: 0">-->
+                <!--            Did you know DND 3.5E comes with custom skin for Foundry? You - or any of your players - can enable it in options for themselves!-->
+                <!--        </p>-->
+            </div>
+        </div>
+
+        <h2></h2>
+
+        <div class="flexrow">
+            <p style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;"><input
+                    type="checkbox" class='show-again' id="welcome-screen-show-again"/> <label
+                    for="welcome-screen-show-again">Don't show this screen again until next update.</label></p>
+            <a href="https://discord.gg/wDyUaZH" class="discord social-button" style="float: right">Discord</a><a
+                class="github social-button" style="float: right"
+                href="https://www.github.com/Rughalt/D35E">GitHub</a><a class="patreon social-button"
+                                                                        style="float: right"
+                                                                        href="https://www.patreon.com/Rughalt">Become a
+            Patron</a>
+        </div>
     </div>
-    <div class="flexcol" style="max-height: 410px">
-        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Enhancements & Magic Items</h2>
-        <img src="systems/D35E/icons/ui/welcome-screen/0.84-left.png" style="padding: 0 0.7rem; flex: 0">
-        <p style="padding: 0 0.7rem; flex: 0">
-            Release 0.84 brings Enhancement support and most of Magic Weapons and Shields from SRD fully featured. You can read more on how Enhancement system works on project Wiki (linked below).<br><br>
-            <span style="color: #ffbc00">New!</span> System now supports dropping Spells and Buffs as Enhancements, as well as using them directly from the Char Sheet!
-        </p>
-        <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Visit Enhancements page on Wiki</a>
-    </div>
-    <div class="flexcol" style="max-height: 410px">
-
-        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Onboarding</h2>
-        <p style="padding: 0 0.7rem; flex: 0">
-            We introduced a new onboarding process for players. You can check it yourself - just interact with dialogue box below.
-        </p>
-        <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/gm/onboarding">Read more about Onboarding</a>
-        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Wildshape and shapechange</h2>
-        <p style="padding: 0 0.7rem; flex: 0">
-            Release 0.83 brought Wildshape, Alter-Self and Polymorph to DND 3.5e.
-        </p>
-
-        <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/advanced/shapechange">Learn more about Shapechange</a>
-        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Custom Theme</h2>
-        <p style="padding: 0 0.7rem; flex: 0">
-            Did you know DND 3.5E comes with custom skin for Foundry? You - or any of your players - can enable it in options for themselves!
-        </p>
-    </div>
-</div>
-
-    <h2></h2>
-
-    <div class="flexrow">
-    <p style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;"><input type="checkbox" class='show-again' id="welcome-screen-show-again"/> <label for="welcome-screen-show-again">Don't show this screen again until next update.</label></p>
-    <a href="https://discord.gg/wDyUaZH" class="discord social-button" style="float: right">Discord</a><a class="github social-button" style="float: right" href="https://www.github.com/Rughalt/D35E">GitHub</a><a class="patreon social-button" style="float: right" href="https://www.patreon.com/Rughalt">Become a Patron</a>
-    </div>
-</div>
-<div class="tab" data-tab="changelog">
-<h1>Changelog</h1>
-
-    <h2>v0.85.4</h2>
-    <h3>Features</h3>
-    <ul>
-        <li> <a href="https://github.com/Rughalt/D35E/issues/55">#55</a> - Updated French translation by @red5h4d0w
-        <li> Updated Class Abilities/Features rendering style
-    </ul>
-
-    <h3>Bug Fixes</h3>
-    <ul>
-        <li> Fixed regression caused by displaying damage type for typeless damage
-    </ul>
-    <h2>v0.85.2</h2>
-    <h3>SRD</h3>
-    <ul>
-        <li> Finished Base classes implementation
-        <li> Added Base classes descriptions and art
-    </ul>
-
-    <h3>Features</h3>
-    <ul>
-        <li> Onboarding/Tutorial for new players
-        <li> Automatic Class Features adding and removing
-        <li> Automatic Spell slot calculation
-        <li> Ability to set up spellbook from Class
-        <li> Point-Buy system based on Pathfinder 1 rules - ported from PF1
-    </ul>
-    <h2>v0.84.2</h2>
-    <h3>SRD</h3>
-    <ul>
-        <li>Added various missing Enhancements from SRD</li>
-    </ul>
-    <h3>Features</h3>
-    <ul>
-        <li>Added ability to use Magic Item Abilities directly from Char Sheet</li>
-        <li>Added ability to create Enhancements from Spells and Buffs</li>
-    </ul>
-    <h2>v0.84.1</h2>
-    <h3>SRD</h3>
-    <ul>
-        <li>Additional Spells have full implementation, thanks to BixSexy#9434</li>
-        <li>Base Weapon and Armor Enhancements</li>
-        <li>Specific Magic Weapons and Armor updates
+    <div class="tab" data-tab="changelog">
+        <h1>Changelog</h1>
+        <h2>v0.86.4</h2>
+        <h3>SRD</h3>
         <ul>
-            <li>Specific Shields - added abilities and enhancements</li>
-            <li>Specific Weapons - added abilities and enhancements</li>
+            <li> Added Prestige Classes: Archmage, Assassin, Blackguard, Dwarven Defender, Eldricht Knight
         </ul>
-        </li>
-    </ul>
-    <h3>Features</h3>
-    <ul>
-    <li>Enhancement support</li>
-    <li>Base feats for attack rolls
+        <h3>Features</h3>
         <ul>
-            <li>Power Attack (this also fixed <a href="https://github.com/Rughalt/D35E/issues/39">#39</a>)</li>
-            <li>Manyshot and Greater Manyshot</li>
-            <li>Rapid Shot</li>
+            <li> Added compatibility with 0.7.X series
+            <li> Full Level Progression system rework:
+            <li> Ability to set which Class Level was gained at which Character Level
+            <li> Ability to set Hit Points per Level
+            <li> Ability to set Skill Points per level
+            <li> Compatibility with NPCs and old Characters (that will use simple progression system)
+            <li> Theme redesign, theme now enabled by default for new clients
+            <li> New change type: BAB
+            <li> Support for new 0.7.X series lighting effects
+            <li> New lighting options for items
+            <li> Added lighting to existing magic items and standard light sources
+            <li> Ported Vision Permission dialog from PF1
+            <li> Added ability to add custom class features when using special World Compendium
         </ul>
-    </li>
-    <li>Two-Weapon Fighting support for attack rolls
-        <ul>
-            <li>Automatic penalty application</li>
-            <li>Automatic additional attacks for Greater and Improved Two-Weapon Fighting Feats</li>
-        </ul>
-    </li>
-    <li>Ability to set damage type on Ammunition</li>
-    </ul>
-    <h3>Bug Fixes</h3>
-    <ul>
-    <li>Fixed Ammunition Bonus Damage being incorrectly added to damage roll.</li>
-    <li><a href="https://github.com/Rughalt/D35E/issues/52">#52</a> Randomize HP rolls up to HD sides instead of levels</li>
-    </ul>
 
-<h2>v0.83.5</h2>
-<h3>SRD</h3>
-<ul>
-    <li> Fixed imported spells/powers with added fixes by BixSexy#9434
-    <li> Fixed some monster import rules and added monster images/tokens
-</ul>
-<h3>Features</h3>
-<ul>
-    <li> Reduced module size by reducing icons size to 128x128
-    <li> Moved Create Attack button on Weapon details screen to front
-    <li> Spells automatically set correct level when dropping on spellbook with class set up
-</ul>
-<h3>Bug Fixes</h3>
-<ul>
-    <li> Dice are again So Nice, as duplicated rolls do not longer occur.
-</ul>
-<h2>v0.83.2</h2>
-<h3>SRD</h3>
-<ul>
-    <li> Fixed Monster compendium to be SRD compliant
-</ul>
-<h3>Fixes</h3>
-<ul>
-    <li> Removed DND copyrighted names from description and packge title and readme</li>
-    <li> Fixed spell icon</li>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/39">#39</a> - Turn Undead Uses is still not calculating correctly. </li>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/40">#40</a> - Dragging an Item from the sidebar into a character sheet doesn't retain Action data.</li>
-</ul>
-<h2>v0.83</h2>
-<h3>SRD</h3>
-<ul>
-    <li> Monster compendium
-    <li> Fixes for Racial HD compendium
-    <li> Conditions compendium
-</ul>
-<h3>Features</h3>
-<ul>
-  <li> Shapechange feature - access it on Buff - Shapechange tab. Create shapechange buffs by dragging NPC Actors into character sheet.
-  <li> Wildshape - melds used items and attacks, copies natural attack of monster and sets abilities
-  <li> Polymorph - melds natural attacks, copies natural attack of monster and sets abilities
-  <li> Alter self - changes appearance
-  <li> <a href="https://github.com/Rughalt/D35E/issues/15">#15</a> - Rolling NPC Hit Die
-</ul>
-<h3>Fixes</h3>
-<ul>
-  <li> Golem bonus HP now depends on size
-  <li> Undead HP and Fortitude are no longer calculated using their Charisma modifier anymore
-  <li> Sped up container updates
-  <li> <a href="https://github.com/Rughalt/D35E/issues/33">#38</a> - Revealing details for unidentified items
-  <li> <a href="https://github.com/Rughalt/D35E/issues/33">#33</a> - Conditions Compendium using Pathfinder conditions not 3.5
-  <li> <a href="https://github.com/Rughalt/D35E/issues/34">#34</a> - Racial HD compendium bugs
-  <li> <a href="https://github.com/Rughalt/D35E/issues/32">#32</a> - Bonus PowerPoints doesn't acount for item/custom racial Ability Score modifiers
-  <li> <a href="https://github.com/Rughalt/D35E/issues/35">#35</a> - Rogue class calculates sneak attack damage based on char level instead of rogue level
-  <li> <a href="https://github.com/Rughalt/D35E/issues/36">#36</a> - Turn Undead Uses doesn't calculate correctly
-</ul>
-<h2>v0.82.5</h2>
-<h3>Fixes</h3>
-<ul>
-    <li> Containers should no longer break performance</li>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/29">#29</a> - Unable to remove character from party after sheet has been deleted.</li>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/30">#30</a> - Monk Class doesn't add Wisdom Mod to AC</li>
-</ul>
-<h2>v0.82</h2>
-<h3>SRD</h3>
-<ul>
-    <li> Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
-    <li> Added Soulknife special abilities
-    <li> Converted Backpacks etc. to Containers
-    <li> Added Magic Items from SRD - currently description and typing, no special properties
-</ul>
-<h3>New features</h3>
-<ul>
-    <li> Container item type and ability to assign items to containers (with support for Bags of Holding)
-    <li> Toggleable custom skin for Foundry VTT
-    <li> Application of Attack damage/Special buffs for targeted tokens
-    <li> Ported spell- and power-based consumable creation from PF1
-</ul>
-<h3>Fixes</h3>
-<ul>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/19">#19</a> - Armor doesn't have option for Masterwork bug
-    <li> <a href="https://github.com/Rughalt/D35E/issues/21">#21</a> - sizeRoll() given static value instead variable when creating an attack
-    <li> <a href="https://github.com/Rughalt/D35E/issues/13">#13</a> - Missing input for Ammo Bonus Damage formula
-    <li> <a href="https://github.com/Rughalt/D35E/issues/23">#23</a> - Applying a race from the compendium places a large color box on the NPC sheet in place of name or avatar
-    <li> <a href="https://github.com/Rughalt/D35E/issues/20">#20</a> - Attacks created from weapons are created as Ranged Weapon Attacks.
-    <li> <a href="https://github.com/Rughalt/D35E/issues/22">#22</a> - sizeRoll() increases the d4 and d6 by 2 steps instead of 1
-    <li> <a href="https://github.com/Rughalt/D35E/issues/16">#16</a> - Missing Grapple box on Player character sheet
-    <li> <a href="https://github.com/Rughalt/D35E/issues/17">#17</a> - Changes tab still references CMB/CMD no way to add to Grapple
-    <li> <a href="https://github.com/Rughalt/D35E/issues/14">#14</a> - Grapple size modifier uses PF vales not 3.5
-    <li> <a href="https://github.com/Rughalt/D35E/issues/8">#8</a> - Class Compendium bugs
-    <li> <a href="https://github.com/Rughalt/D35E/issues/25">#25</a> - Damage bonus applied twice if more than one type of damage is present
-    <li> <a href="https://github.com/Rughalt/D35E/issues/24">#24</a> - Skill roll-up on character sheet doesn't show specialized skills
-</ul>
-<h2>v0.81</h2>
-<h3>SRD</h3>
-<ul>
-    <li> Finished Base Classes (without Wilder and Soulknife special abilities)</li>
-    <li> Finished Races (without new icons)</li>
-    <li> Finished Racial HD</li>
-    <li> Added images for existing base items</li>
-</ul>
-<h3>New features</h3>
-<ul>
-    <li> Level adjustment for races</li>
-    <li> Buff time tracking</li>
-    <li> Use multiple items/features/classes charges at once</li>
-    <li> Ability to use ammunition with ranged weapon attacks</li>
-    <li> Ability to assign bonus damage to ammunition</li>
-    <li> Added party HUD</li>
-    <li> Added this screen</li>
-</ul>
-<h3>Fixes</h3>
-<ul>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/2">#2</a> - Limited character sheet scrollbars</li>
-    <li> <a href="https://github.com/Rughalt/D35E/issues/3">#3</a> - Saving throws rolled multiple times</li>
-</ul>
-</div>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li> Fixes loading characters that had no Prestige Caster Level
+            <li><a href="https://github.com/Rughalt/D35E/issues/61">#61</a> - Fixed Ranger class Favorite Enemy
+            <li><a href="https://github.com/Rughalt/D35E/issues/57">#57</a> - Add possibility to give bab in the changes
+                tab
+            <li><a href="https://github.com/Rughalt/D35E/issues/63">#63</a> - Monsters didn't get feats every 3 levels
+            <li><a href="https://github.com/Rughalt/D35E/issues/60">#60</a> - Spellslots tables are wrong
+            <li><a href="https://github.com/Rughalt/D35E/issues/64">#64</a> - Class details break when selecting *None*
+                as saving throw progression.
+            <li><a href="https://github.com/Rughalt/D35E/issues/58">#58</a> - Damage value doesn't overriding
+            <li><a href="https://github.com/Rughalt/D35E/issues/59">#59</a> - Power attack not working properly
+            <li><a href="https://github.com/Rughalt/D35E/issues/75">#75</a> - Fighter didn't get bonus feat at lvl 1
+            <li><a href="https://github.com/Rughalt/D35E/issues/77">#77</a> - Fixed Ranger class Favorite Enemy
+        </ul>
+
+        <h2>v0.85.4</h2>
+        <h3>Features</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/55">#55</a> - Updated French translation by @red5h4d0w
+            <li> Updated Class Abilities/Features rendering style
+        </ul>
+
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li> Fixed regression caused by displaying damage type for typeless damage
+        </ul>
+        <h2>v0.85.2</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li> Finished Base classes implementation
+            <li> Added Base classes descriptions and art
+        </ul>
+
+        <h3>Features</h3>
+        <ul>
+            <li> Onboarding/Tutorial for new players
+            <li> Automatic Class Features adding and removing
+            <li> Automatic Spell slot calculation
+            <li> Ability to set up spellbook from Class
+            <li> Point-Buy system based on Pathfinder 1 rules - ported from PF1
+        </ul>
+        <h2>v0.84.2</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li>Added various missing Enhancements from SRD</li>
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Added ability to use Magic Item Abilities directly from Char Sheet</li>
+            <li>Added ability to create Enhancements from Spells and Buffs</li>
+        </ul>
+        <h2>v0.84.1</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li>Additional Spells have full implementation, thanks to BixSexy#9434</li>
+            <li>Base Weapon and Armor Enhancements</li>
+            <li>Specific Magic Weapons and Armor updates
+                <ul>
+                    <li>Specific Shields - added abilities and enhancements</li>
+                    <li>Specific Weapons - added abilities and enhancements</li>
+                </ul>
+            </li>
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Enhancement support</li>
+            <li>Base feats for attack rolls
+                <ul>
+                    <li>Power Attack (this also fixed <a href="https://github.com/Rughalt/D35E/issues/39">#39</a>)</li>
+                    <li>Manyshot and Greater Manyshot</li>
+                    <li>Rapid Shot</li>
+                </ul>
+            </li>
+            <li>Two-Weapon Fighting support for attack rolls
+                <ul>
+                    <li>Automatic penalty application</li>
+                    <li>Automatic additional attacks for Greater and Improved Two-Weapon Fighting Feats</li>
+                </ul>
+            </li>
+            <li>Ability to set damage type on Ammunition</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li>Fixed Ammunition Bonus Damage being incorrectly added to damage roll.</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/52">#52</a> Randomize HP rolls up to HD sides instead of
+                levels
+            </li>
+        </ul>
+
+        <h2>v0.83.5</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li> Fixed imported spells/powers with added fixes by BixSexy#9434
+            <li> Fixed some monster import rules and added monster images/tokens
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li> Reduced module size by reducing icons size to 128x128
+            <li> Moved Create Attack button on Weapon details screen to front
+            <li> Spells automatically set correct level when dropping on spellbook with class set up
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li> Dice are again So Nice, as duplicated rolls do not longer occur.
+        </ul>
+        <h2>v0.83.2</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li> Fixed Monster compendium to be SRD compliant
+        </ul>
+        <h3>Fixes</h3>
+        <ul>
+            <li> Removed DND copyrighted names from description and packge title and readme</li>
+            <li> Fixed spell icon</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/39">#39</a> - Turn Undead Uses is still not calculating
+                correctly.
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/40">#40</a> - Dragging an Item from the sidebar into a
+                character sheet doesn't retain Action data.
+            </li>
+        </ul>
+        <h2>v0.83</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li> Monster compendium
+            <li> Fixes for Racial HD compendium
+            <li> Conditions compendium
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li> Shapechange feature - access it on Buff - Shapechange tab. Create shapechange buffs by dragging NPC
+                Actors into character sheet.
+            <li> Wildshape - melds used items and attacks, copies natural attack of monster and sets abilities
+            <li> Polymorph - melds natural attacks, copies natural attack of monster and sets abilities
+            <li> Alter self - changes appearance
+            <li><a href="https://github.com/Rughalt/D35E/issues/15">#15</a> - Rolling NPC Hit Die
+        </ul>
+        <h3>Fixes</h3>
+        <ul>
+            <li> Golem bonus HP now depends on size
+            <li> Undead HP and Fortitude are no longer calculated using their Charisma modifier anymore
+            <li> Sped up container updates
+            <li><a href="https://github.com/Rughalt/D35E/issues/33">#38</a> - Revealing details for unidentified items
+            <li><a href="https://github.com/Rughalt/D35E/issues/33">#33</a> - Conditions Compendium using Pathfinder
+                conditions not 3.5
+            <li><a href="https://github.com/Rughalt/D35E/issues/34">#34</a> - Racial HD compendium bugs
+            <li><a href="https://github.com/Rughalt/D35E/issues/32">#32</a> - Bonus PowerPoints doesn't acount for
+                item/custom racial Ability Score modifiers
+            <li><a href="https://github.com/Rughalt/D35E/issues/35">#35</a> - Rogue class calculates sneak attack damage
+                based on char level instead of rogue level
+            <li><a href="https://github.com/Rughalt/D35E/issues/36">#36</a> - Turn Undead Uses doesn't calculate
+                correctly
+        </ul>
+        <h2>v0.82.5</h2>
+        <h3>Fixes</h3>
+        <ul>
+            <li> Containers should no longer break performance</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/29">#29</a> - Unable to remove character from party
+                after sheet has been deleted.
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/30">#30</a> - Monk Class doesn't add Wisdom Mod to AC
+            </li>
+        </ul>
+        <h2>v0.82</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li> Fixes for Base Classes implementation (Paladin, Barbarian, NPC classes)
+            <li> Added Soulknife special abilities
+            <li> Converted Backpacks etc. to Containers
+            <li> Added Magic Items from SRD - currently description and typing, no special properties
+        </ul>
+        <h3>New features</h3>
+        <ul>
+            <li> Container item type and ability to assign items to containers (with support for Bags of Holding)
+            <li> Toggleable custom skin for Foundry VTT
+            <li> Application of Attack damage/Special buffs for targeted tokens
+            <li> Ported spell- and power-based consumable creation from PF1
+        </ul>
+        <h3>Fixes</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/19">#19</a> - Armor doesn't have option for Masterwork
+                bug
+            <li><a href="https://github.com/Rughalt/D35E/issues/21">#21</a> - sizeRoll() given static value instead
+                variable when creating an attack
+            <li><a href="https://github.com/Rughalt/D35E/issues/13">#13</a> - Missing input for Ammo Bonus Damage
+                formula
+            <li><a href="https://github.com/Rughalt/D35E/issues/23">#23</a> - Applying a race from the compendium places
+                a large color box on the NPC sheet in place of name or avatar
+            <li><a href="https://github.com/Rughalt/D35E/issues/20">#20</a> - Attacks created from weapons are created
+                as Ranged Weapon Attacks.
+            <li><a href="https://github.com/Rughalt/D35E/issues/22">#22</a> - sizeRoll() increases the d4 and d6 by 2
+                steps instead of 1
+            <li><a href="https://github.com/Rughalt/D35E/issues/16">#16</a> - Missing Grapple box on Player character
+                sheet
+            <li><a href="https://github.com/Rughalt/D35E/issues/17">#17</a> - Changes tab still references CMB/CMD no
+                way to add to Grapple
+            <li><a href="https://github.com/Rughalt/D35E/issues/14">#14</a> - Grapple size modifier uses PF vales not
+                3.5
+            <li><a href="https://github.com/Rughalt/D35E/issues/8">#8</a> - Class Compendium bugs
+            <li><a href="https://github.com/Rughalt/D35E/issues/25">#25</a> - Damage bonus applied twice if more than
+                one type of damage is present
+            <li><a href="https://github.com/Rughalt/D35E/issues/24">#24</a> - Skill roll-up on character sheet doesn't
+                show specialized skills
+        </ul>
+        <h2>v0.81</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li> Finished Base Classes (without Wilder and Soulknife special abilities)</li>
+            <li> Finished Races (without new icons)</li>
+            <li> Finished Racial HD</li>
+            <li> Added images for existing base items</li>
+        </ul>
+        <h3>New features</h3>
+        <ul>
+            <li> Level adjustment for races</li>
+            <li> Buff time tracking</li>
+            <li> Use multiple items/features/classes charges at once</li>
+            <li> Ability to use ammunition with ranged weapon attacks</li>
+            <li> Ability to assign bonus damage to ammunition</li>
+            <li> Added party HUD</li>
+            <li> Added this screen</li>
+        </ul>
+        <h3>Fixes</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/2">#2</a> - Limited character sheet scrollbars</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/3">#3</a> - Saving throws rolled multiple times</li>
+        </ul>
+    </div>
 </section>
