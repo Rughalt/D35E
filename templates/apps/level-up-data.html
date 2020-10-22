@@ -1,16 +1,16 @@
 <form autocomplete="off" onsubmit="event.preventDefault();">
     <div class="header">
 
-        <h1>Level details for level {{level}}</h1>
+        <h1>{{localize "D35E.LUDLevelDetails"}} {{level}}</h1>
     </div>
 
-    <h2 class="block-header">Class</h2>
+    <h2 class="block-header">{{localize "D35E.Class"}}</h2>
     <p></p>
        <div class="flexcol" style="padding: 5px">
             <div class="form-group spellcasting-class tooltip flexrow">
                 <label><span>{{localize "D35E.Class"}}</span></label>
                 <select name="class" id="class-select" data-dtype="String" onchange="selectedClassData(this)">
-                    <option data-hd="0" data-skill="0" value="">Select Class</option>
+                    <option data-hd="0" data-skill="0" value="">{{localize "D35E.SelectClass"}}</option>
                     {{#select levelUpData.classId}}
                     {{#each classes as |cls a|}}
                     <option data-hd="{{cls.data.hd}}" data-skill="{{cls.data.skillsPerLevel}}" value="{{cls._id}}">{{cls.name}}</option>
@@ -19,21 +19,21 @@
                 </select>
             </div>
       </div>
-    <h2 class="block-header">Hit Points</h2>
+    <h2 class="block-header">{{localize "D35E.HitPoints"}}</h2>
     <p></p>
     <div class="flexcol" style="padding: 5px">
-        <p>Class Hit Die is <strong id="class-hd">0</strong></p>
+        <p>{{localize "D35E.LUDClassHD"}} <strong id="class-hd">0</strong></p>
         <div class="form-group spellcasting-class tooltip flexrow">
             <label><span>{{localize "D35E.HitPoints"}}</span></label>
             <input type="text" name="hp" id="hp-input" data-dtype="number" value="{{levelUpData.hp}}">
-            <a onclick="rollHP()" class="btn roll-hp">Roll HP</a>
+            <a onclick="rollHP()" class="btn roll-hp">{{localize "D35E.LUDRollHp"}}</a>
 
         </div>
     </div>
-    <h2 class="block-header">Skills</h2>
-    <p>Skills in <strong>bold</strong> are Class Skills for selected class, and skills marked with ■ require training. </p>
-    <p>Max skill rank is currently <strong>{{maxSkillRank}}</strong> (level {{totalLevel}} + 3)</p>
-    <p>Skill points at level <strong id="skill-per-level">0</strong> (<strong id="skill-per-level-base">0</strong> + <strong id="skill-per-level-int">0</strong> from Intelligence modifier<span id="flb"></span>). Currently used <strong id="skill-used">0</strong>.</p>
+    <h2 class="block-header">{{localize "D35E.Skills"}}</h2>
+    <p>{{{localize "D35E.LUDSkillsDesc"}}} </p>
+    <p>{{localize "D35E.LUDSkillRank"}} <strong>{{maxSkillRank}}</strong> ({{localize "D35E._Level"}} {{totalLevel}} + 3)</p>
+    {{{localize "D35E.LUDSkillPointsAtLevel"}}}
     <div class="flexrow">
         <div class="flexcol">
             <ul class="skills-list sub-scroll scroll-skillset flexrow" style="padding: 0">
@@ -158,7 +158,7 @@
             let intSkills = '{{actor.data.abilities.int.mod}}';
             let level = {{level}};
             if (level === 1) {
-                $('#flb').text(', first level multiplier')
+                $('#flb').text(', {{localize "D35E.FirstLevelMultiplier"}}')
             }
             $('#skill-per-level-base').text(splBase)
             $('#skill-per-level-int').text(intSkills)

@@ -11,9 +11,9 @@
 
     {{#if section.isClass}}
     <div class="flexrow" style="flex: none">
-      <h2 class="block-header" style="flex: 1">Level Progression</h2>
+      <h2 class="block-header" style="flex: 1">{{localize "D35E.LevelProgression"}}</h2>
       <div class="form-group flexrow" style="flex: 0 150px;">
-        <label>Use Class Progression</label>
+        <label>{{localize "D35E.UseClassProgression"}}</label>
         <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative">
           <input type="checkbox" class="stylized" name="data.details.levelUpProgression"  data-dtype="Boolean" {{checked ../data.details.levelUpProgression}} />
           <span class="checkmark"></span>
@@ -71,7 +71,7 @@
         </div>
         <ul class="attributes misc flexrow" style="flex: 0 40px;height: 100px; margin: 0;">
           <li class="attribute high tooltip">
-            <h4 class="attribute-name box-title"><span style="text-transform: capitalize;">Level</span></h4>
+            <h4 class="attribute-name box-title"><span style="text-transform: capitalize;">{{localize "D35E.Level"}}</span></h4>
             <div class="attribute-value" style="font-size: 2rem">
               <input style="font-size: 2rem; line-height: 30px; height: 50px;" type="text" name="data.details.level.available" value="{{../data.details.level.available}}" data-dtype="Number"/>
             </div>
@@ -85,7 +85,7 @@
 
         {{#each ../counters.feat as |featcount ftc|}}
         <li class="attribute high tooltip">
-          <h4 class="attribute-name box-title"><span style="text-transform: capitalize;">{{ftc}}</span> Feat Pool</h4>
+          <h4 class="attribute-name box-title"><span style="text-transform: capitalize;">{{ftc}}</span> {{localize "D35E.FeatPool"}}</h4>
           <div class="attribute-value">
             <span>{{featcount.counted}}</span>
           </div>
@@ -144,9 +144,9 @@
             <div class="flexcol">
               <h2 class="block-header" style="margin: 0; font-size: 2rem;">{{item.name}}</h2>
               <div class="flexrow">
-                <span style="flex: none; margin-right: 10px"><strong>HD:</strong> {{item.data.hd}}</span>
-                <span style="flex: none; margin-right: 10px"><strong>Skill Points Per Level:</strong> {{item.data.skillsPerLevel}}</span>
-                <span style="flex: none; margin-right: 10px"><strong>BAB:</strong> {{item.data.bab}}</span>
+                <span style="flex: none; margin-right: 10px"><strong>{{localize "D35E.HD"}}:</strong> {{item.data.hd}}</span>
+                <span style="flex: none; margin-right: 10px"><strong>{{localize "D35E.SkillPointsPerLevel"}}:</strong> {{item.data.skillsPerLevel}}</span>
+                <span style="flex: none; margin-right: 10px"><strong>{{localize "D35E.BABAbbr"}}:</strong> {{item.data.bab}}</span>
               </div>
               <p></p>
             </div>
