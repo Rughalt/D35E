@@ -3381,8 +3381,8 @@ export class ActorPF extends Actor {
 
         return DicePF.d20Roll({
             event: options.event,
-            parts: ["@mod - @drain + @ablMod"],
-            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain},
+            parts: ["@mod - @drain + @ablMod - @sizeMod"],
+            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0},
             title: game.i18n.localize("D35E.Melee"),
             speaker: ChatMessage.getSpeaker({actor: this}),
             takeTwenty: false
@@ -3394,8 +3394,8 @@ export class ActorPF extends Actor {
 
         return DicePF.d20Roll({
             event: options.event,
-            parts: ["@mod - @drain + @ablMod"],
-            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain},
+            parts: ["@mod - @drain + @ablMod - @sizeMod"],
+            data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0},
             title: game.i18n.localize("D35E.Ranged"),
             speaker: ChatMessage.getSpeaker({actor: this}),
             takeTwenty: false
