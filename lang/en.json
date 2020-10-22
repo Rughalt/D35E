@@ -1004,6 +1004,8 @@
   "D35E.ManifestingTime": "Manifesting Time",
   "D35E.CastingTime": "Casting Time",
   "D35E.Effect": "Effect",
+  "D35E.ErrorProblemWithMigratingPack": "There was a problem when migrating pack. Check ",
+  "D35E.ClassFeatures": "Class Features",
   
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

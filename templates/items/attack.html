@@ -24,102 +24,105 @@
     </div>
   </header>
 
-  {{!-- Item Sheet Navigation --}}
-  <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
-    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
-  </nav>
 
-  {{!-- Item Sheet Body --}}
-  <section class="primary-body">
+  <section class="sheet-content flexcol">
+    {{!-- Item Sheet Navigation --}}
+    <nav class="sheet-navigation tabs" data-group="primary">
+      <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+      <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+    </nav>
 
-    {{!-- Description Tab --}}
-    <div class="tab flexcol active" data-group="primary" data-tab="description">
-      {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
-    </div>
+    {{!-- Item Sheet Body --}}
+    <section class="primary-body">
 
-    {{!-- Details Tab --}}
-    <div class="tab details" data-group="primary" data-tab="details">
-
-      <h3 class="form-header">Weapon Details</h3>
-      <div class="form-group">
-        <label>Base Weapon Type</label>
-        <input type="text" name="data.baseWeaponType" value="{{data.baseWeaponType}}" data-dtype="String"/>
+      {{!-- Description Tab --}}
+      <div class="tab flexcol active" data-group="primary" data-tab="description">
+        {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
       </div>
 
-      <div class="form-group stacked">
-        <label class="checkbox">
-          <input type="checkbox" name="data.proficient" {{checked data.proficient}}/> {{localize "D35E.Proficient"}}
-        </label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "D35E.Masterwork"}}
-        </label>
-        {{#if isNaturalAttack}}
-        <label class="checkbox">
-          <input type="checkbox" name="data.primaryAttack" {{checked data.primaryAttack}}/> {{localize "D35E.PrimaryAttack"}}
-        </label>
+      {{!-- Details Tab --}}
+      <div class="tab details" data-group="primary" data-tab="details">
+
+        <h3 class="form-header">Weapon Details</h3>
+        <div class="form-group">
+          <label>Base Weapon Type</label>
+          <input type="text" name="data.baseWeaponType" value="{{data.baseWeaponType}}" data-dtype="String"/>
+        </div>
+
+        <div class="form-group stacked">
+          <label class="checkbox">
+            <input type="checkbox" name="data.proficient" {{checked data.proficient}}/> {{localize "D35E.Proficient"}}
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "D35E.Masterwork"}}
+          </label>
+          {{#if isNaturalAttack}}
+          <label class="checkbox">
+            <input type="checkbox" name="data.primaryAttack" {{checked data.primaryAttack}}/> {{localize "D35E.PrimaryAttack"}}
+          </label>
+          {{/if}}
+          <label class="checkbox">
+            <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" name="data.melded" {{checked data.melded}}/> {{localize "D35E.Melded"}}
+          </label>
+          <div class="data-selector">
+            <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
+            <label for="data.tags">{{localize "D35E.Tags"}}</label>
+          </div>
+          <div class="data-selector">
+            <a class="entry-selector" for="data.associations.classes" data-fields="{{localize "D35E.ClassPlural"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+            <label for="data.associations.classes">{{localize "D35E.ClassPlural"}}</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "D35E.EnhancementBonus"}}</label>
+          <div class="form-fields">
+            <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+          </div>
+        </div>
+
+        <h3 class="form-header">{{localize "D35E.AttackDetails"}}</h3>
+
+        {{!-- Attack Type --}}
+        <div class="form-group">
+          <label>{{localize "D35E.AttackType"}}</label>
+          <select name="data.attackType">
+            {{#select data.attackType}}
+            {{#each config.attackTypes as |name type|}}
+            <option value="{{type}}">{{name}}</option>
+            {{/each}}
+            {{/select}}
+          </select>
+        </div>
+
+        <h3 class="form-header">{{localize "D35E.AttackUsage"}}</h3>
+
+        {{!-- Item Activation Template --}}
+        {{> "systems/D35E/templates/items/parts/item-activation.html"}}
+
+        <h3 class="form-header">{{localize "D35E.AttackAction"}}</h3>
+
+        {{!-- Item Action Template --}}
+        {{> "systems/D35E/templates/items/parts/item-action.html"}}
+
+        <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
+
+        {{!-- Item Measure Template --}}
+        {{> "systems/D35E/templates/items/parts/item-template.html"}}
+
+
+        {{#if isGM}}
+        <h3 class="form-header">System Properties</h3>
+        <div class="form-group">
+          <label>UID</label>
+          <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+        </div>
         {{/if}}
-        <label class="checkbox">
-          <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
-        </label>
-
-        <label class="checkbox">
-          <input type="checkbox" name="data.melded" {{checked data.melded}}/> {{localize "D35E.Melded"}}
-        </label>
-        <div class="data-selector">
-          <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
-          <label for="data.tags">{{localize "D35E.Tags"}}</label>
-        </div>
-        <div class="data-selector">
-          <a class="entry-selector" for="data.associations.classes" data-fields="{{localize "D35E.ClassPlural"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
-          <label for="data.associations.classes">{{localize "D35E.ClassPlural"}}</label>
-        </div>
       </div>
-
-      <div class="form-group">
-        <label>{{localize "D35E.EnhancementBonus"}}</label>
-        <div class="form-fields">
-          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
-        </div>
-      </div>
-
-      <h3 class="form-header">{{localize "D35E.AttackDetails"}}</h3>
-
-      {{!-- Attack Type --}}
-      <div class="form-group">
-        <label>{{localize "D35E.AttackType"}}</label>
-        <select name="data.attackType">
-          {{#select data.attackType}}
-          {{#each config.attackTypes as |name type|}}
-          <option value="{{type}}">{{name}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
-
-      <h3 class="form-header">{{localize "D35E.AttackUsage"}}</h3>
-
-      {{!-- Item Activation Template --}}
-      {{> "systems/D35E/templates/items/parts/item-activation.html"}}
-
-      <h3 class="form-header">{{localize "D35E.AttackAction"}}</h3>
-
-      {{!-- Item Action Template --}}
-      {{> "systems/D35E/templates/items/parts/item-action.html"}}
-
-      <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
-
-      {{!-- Item Measure Template --}}
-      {{> "systems/D35E/templates/items/parts/item-template.html"}}
-
-
-      {{#if isGM}}
-      <h3 class="form-header">System Properties</h3>
-      <div class="form-group">
-        <label>UID</label>
-        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
-      </div>
-      {{/if}}
-    </div>
+    </section>
   </section>
 </form>

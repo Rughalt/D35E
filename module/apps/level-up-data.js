@@ -107,7 +107,7 @@ export class LevelUpDataDialog extends FormApplication {
                                 a.skills[key[1]] = {subskills: {}}
                             }
                             if (a.skills[key[1]].subskills[key[3]] === undefined) {
-                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: this.actor.data.skills[key[1]].subskills[key[3]]}
+                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: this.actor.data.skills[key[1]].subSkills[key[3]]}
                             }
                             a.skills[key[1]].subskills[key[3]].rank = parseInt(formData[s])
                         }

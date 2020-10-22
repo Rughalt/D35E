@@ -148,7 +148,7 @@
                 <span style="flex: none; margin-right: 10px"><strong>Skill Points Per Level:</strong> {{item.data.skillsPerLevel}}</span>
                 <span style="flex: none; margin-right: 10px"><strong>BAB:</strong> {{item.data.bab}}</span>
               </div>
-              <p>This is a short and concse desctiption of class</p>
+              <p></p>
             </div>
           </div>
           {{/unless}}
@@ -221,8 +221,11 @@
           {{/if}}
           {{#if section.isClass}}
           <div class="item-summary" style="border-top: none; border-bottom: 1px solid #c9c7b8;">
-            <h3 class="block-header">Class Features</h3>
-            <ol class="item-list">
+            <h3 class="block-header" onclick="$('.item-list-class-{{iid}}').slideToggle(); $('.item-list-h-{{iid}}').toggle(); $('.item-list-s-{{iid}}').toggle();">
+              {{localize "D35E.ClassFeatures"}}
+              <span class="item-list-s-{{iid}}" style="margin-left: 4px; opacity: 0.7"><i class="fas fa-angle-double-down"></i></span>
+              <span class="item-list-h-{{iid}}" style="margin-left: 4px;display: none; opacity: 0.7"><i class="fas fa-angle-double-up"></i></span></h3>
+            <ol class="item-list item-list-class-{{iid}}">
               {{#each item.classFeatures as |iitem iiid|}}
               <li class="item flexrow" data-item-id="{{iitem._id}}">
                 <div class="item-name flexrow rollable">

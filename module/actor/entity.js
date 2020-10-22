@@ -2776,7 +2776,10 @@ export class ActorPF extends Actor {
             if (data[`data.abilities.${abl}.tempvalue`] === undefined || data[`data.abilities.${abl}.tempvalue`] === null)
                 continue
             for (let val of data[`data.abilities.${abl}.tempvalue`]) {
-                if (parseInt(val) != data[`data.abilities.${abl}.value`]) {
+                if (data[`data.abilities.${abl}.value`] !== undefined && parseInt(val) !== data[`data.abilities.${abl}.value`]) {
+                    data[`data.abilities.${abl}.value`] = parseInt(val);
+                    break;
+                } else if (parseInt(val) !== this.data.data.abilities[`${abl}`].value) {
                     data[`data.abilities.${abl}.value`] = parseInt(val);
                     break;
                 }
@@ -2983,14 +2986,16 @@ export class ActorPF extends Actor {
         }, 0);
         level += raceLA;
 
-
+        let dataLevel = level;
 
 
         // The following is not for NPCs
         if (this.data.type !== "character") return;
         console.log('D35E | ActorPF | _updateExp | Race LA, racial HD',raceLA,racialHD)
-        let dataLevel = (data["data.details.level.available"] || this.data.data.details.level.available) + raceLA + racialHD
-        console.log('D35E | ActorPF | _updateExp | Update exp data',dataLevel)
+        if (data["data.details.levelUpProgression"] || this.data.data.details.levelUpProgression) {
+            dataLevel = (data["data.details.level.available"] || this.data.data.details.level.available) + raceLA + racialHD
+            console.log('D35E | ActorPF | _updateExp | Update exp data from class level count', dataLevel)
+        }
         // Translate update exp value to number
         let newExp = data["data.details.xp.value"],
             resetExp = false;

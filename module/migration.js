@@ -64,9 +64,14 @@ export const migrateCompendium = async function(pack) {
   const entity = pack.metadata.entity;
   if ( !["Actor", "Item", "Scene"].includes(entity) ) return;
 
-  // Begin by requesting server-side data model migration and get the migrated content
-  await pack.migrate();
-  const content = await pack.getContent();
+  try {
+    // Begin by requesting server-side data model migration and get the migrated content
+    await pack.migrate();
+    const content = await pack.getContent();
+  } catch(err) {
+    ui.notifications.error(game.i18n.localize("D35E.ErrorProblemWithMigratingPack") + pack.collection);
+    console.error(err);
+  }
 
   // Iterate over compendium entries - applying fine-tuned migration functions
   for ( let ent of content ) {
