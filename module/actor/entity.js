@@ -3436,7 +3436,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain"],
-            data: {mod: this.data.data.attributes.cmb.total, drain: this.data.data.attributes.energyDrain},
+            data: {mod: this.data.data.attributes.cmb.total, drain: this.data.data.attributes.energyDrain || 0},
             title: game.i18n.localize("D35E.CMB"),
             speaker: ChatMessage.getSpeaker({actor: this}),
             takeTwenty: false,
