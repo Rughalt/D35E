@@ -171,6 +171,8 @@ export class ItemSheetPF extends ItemSheet {
                     data.enhancementsBase.push(e)
             })
             data.hasEnhancements = true;
+            data.lightMagical = (data.item.data.enh || 0) > 0 && (data.item.data.enh || 0) < 6;
+            data.veryMagical = (data.item.data.enh || 0) > 5;
         }
 
         // Prepare enhancement specific stuff

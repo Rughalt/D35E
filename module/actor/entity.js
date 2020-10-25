@@ -347,7 +347,7 @@ export class ActorPF extends Actor {
             case "rattack":
                 return "data.attributes.attack.ranged";
             case "babattack":
-                return "data.attributes.bab.total";
+                return ["data.attributes.bab.total","data.attributes.cmb.total"];
             case "damage":
                 return "data.attributes.damage.general";
             case "wdamage":
@@ -1020,7 +1020,7 @@ export class ActorPF extends Actor {
         }
 
         //Bluff
-        if (data.data.skills.blf.rank > 5) {
+        if (data.data.skills.blf.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.dip", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1036,7 +1036,7 @@ export class ActorPF extends Actor {
         }
 
         //Knowledge arcana
-        if (data.data.skills.kar.rank > 5) {
+        if (data.data.skills.kar.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.spl", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1044,7 +1044,7 @@ export class ActorPF extends Actor {
         }
 
         // Kno Noblility
-        if (data.data.skills.kno.rank > 5) {
+        if (data.data.skills.kno.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.dip", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1052,7 +1052,7 @@ export class ActorPF extends Actor {
         }
 
         // Kno local
-        if (data.data.skills.klo.rank > 5) {
+        if (data.data.skills.klo.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.gif", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1060,7 +1060,7 @@ export class ActorPF extends Actor {
         }
 
         // Handle animals
-        if (data.data.skills.han.rank > 5) {
+        if (data.data.skills.han.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.rid", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1068,7 +1068,7 @@ export class ActorPF extends Actor {
         }
 
         // Sense motive
-        if (data.data.skills.sen.rank > 5) {
+        if (data.data.skills.sen.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.dip", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1076,7 +1076,7 @@ export class ActorPF extends Actor {
         }
 
         // Jump
-        if (data.data.skills.jmp.rank > 5) {
+        if (data.data.skills.jmp.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.tmb", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1084,7 +1084,7 @@ export class ActorPF extends Actor {
         }
 
         // Tumble
-        if (data.data.skills.tmb.rank > 5) {
+        if (data.data.skills.tmb.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.blc", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -1097,7 +1097,7 @@ export class ActorPF extends Actor {
         }
 
         // Survival
-        if (data.data.skills.sur.rank > 5) {
+        if (data.data.skills.sur.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.kna", "untyped", 0],
                 source: {name: "Skill synergy"}
@@ -2775,14 +2775,18 @@ export class ActorPF extends Actor {
         for (let abl of Object.keys(this.data.data.abilities)) {
             if (data[`data.abilities.${abl}.tempvalue`] === undefined || data[`data.abilities.${abl}.tempvalue`] === null)
                 continue
-            for (let val of data[`data.abilities.${abl}.tempvalue`]) {
-                if (data[`data.abilities.${abl}.value`] !== undefined && parseInt(val) !== data[`data.abilities.${abl}.value`]) {
-                    data[`data.abilities.${abl}.value`] = parseInt(val);
-                    break;
-                } else if (parseInt(val) !== this.data.data.abilities[`${abl}`].value) {
-                    data[`data.abilities.${abl}.value`] = parseInt(val);
-                    break;
+            if (Array.isArray(data[`data.abilities.${abl}.tempvalue`])) {
+                for (let val of data[`data.abilities.${abl}.tempvalue`]) {
+                    if (data[`data.abilities.${abl}.value`] !== undefined && parseInt(val) !== data[`data.abilities.${abl}.value`]) {
+                        data[`data.abilities.${abl}.value`] = parseInt(val);
+                        break;
+                    } else if (parseInt(val) !== this.data.data.abilities[`${abl}`].value) {
+                        data[`data.abilities.${abl}.value`] = parseInt(val);
+                        break;
+                    }
                 }
+            } else {
+                data[`data.abilities.${abl}.value`] = parseInt(data[`data.abilities.${abl}.tempvalue`]);
             }
         }
 
@@ -3211,12 +3215,19 @@ export class ActorPF extends Actor {
         attackData["name"] = item.data.name;
         attackData["data.masterwork"] = item.data.data.masterwork;
         attackData["data.attackType"] = "weapon";
+        attackData["data.description.value"] = item.data.data.description.value;
         attackData["data.enh"] = item.data.data.enh;
         attackData["data.ability.critRange"] = baseCrit;
         attackData["data.ability.critMult"] = item.data.data.weaponData.critMult || 2;
         attackData["data.actionType"] = (item.data.data.weaponSubtype === "ranged" ? "rwak" : "mwak");
         attackData["data.activation.type"] = "attack";
         attackData["data.duration.units"] = "inst";
+        attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
+        attackData["data.originalWeaponCreated"] = true;
+        attackData["data.originalWeaponId"] = item.id;
+        attackData["data.originalWeaponName"] = item.name;
+        attackData["data.originalWeaponImg"] = item.img;
+        attackData["data.originalWeaponProperties"] = item.data.data.properties;
         attackData["img"] = item.data.img;
 
 
@@ -3381,7 +3392,7 @@ export class ActorPF extends Actor {
 
         return DicePF.d20Roll({
             event: options.event,
-            parts: ["@mod - @drain + @ablMod - @sizeMod"],
+            parts: ["@mod - @drain + @ablMod + @sizeMod"],
             data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0},
             title: game.i18n.localize("D35E.Melee"),
             speaker: ChatMessage.getSpeaker({actor: this}),
@@ -3394,7 +3405,7 @@ export class ActorPF extends Actor {
 
         return DicePF.d20Roll({
             event: options.event,
-            parts: ["@mod - @drain + @ablMod - @sizeMod"],
+            parts: ["@mod - @drain + @ablMod + @sizeMod"],
             data: {mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0},
             title: game.i18n.localize("D35E.Ranged"),
             speaker: ChatMessage.getSpeaker({actor: this}),

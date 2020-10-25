@@ -1019,6 +1019,13 @@
   "D35E.SelectClass": "Select Class",
   "D35E.LevelProgression": "Level Progression",
   "D35E.UseClassProgression": "Use Class Progression",
+  "D35E.Spellcasting": "Spellcasting",
+  "D35E.SpellsPerLevel": "Spells per Level Table",
+  "D35E.SpellsKnownPerLevel": "Spells Known per Level Table",
+  "D35E.SpellcastingSpellname": "Spell item name",
+  "D35E.SpellcastingSpellnamePl": "Spell item name (plural)",
+  "D35E.SpellcastingDescription": "Spellcasting Description",
+  "D35E.CreatedFrom": "Created From",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

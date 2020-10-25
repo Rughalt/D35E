@@ -2,7 +2,7 @@
 
   {{!-- Item Sheet Header --}}
   <header class="sheet-header flexrow">
-      <div class="sheet-header-profile">
+      <div class="sheet-header-profile {{#if lightMagical}}blue{{/if}}{{#if veryMagical}}purple{{/if}}">
         <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
       </div>
 

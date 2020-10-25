@@ -380,6 +380,13 @@
             </div>
 
             <section class="center-pane flexcol">
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.BuffTarACNatural"}}</label>
+                        <input name="data.attributes.naturalAC" type="text" placeholder="0"
+                               value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
+                    </div>
+                </div>
                 {{!-- Traits --}}
                 {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
             </section>

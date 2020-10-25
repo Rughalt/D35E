@@ -1445,6 +1445,9 @@ export class ItemPF extends Item {
         if (options.parts != null) parts = parts.concat(options.parts);
         // Add size bonus
         if (rollData.sizeBonus !== 0) parts.push("@sizeBonus");
+        if (rollData.featAttackBonus) {
+            if (rollData.featAttackBonus !== 0) parts.push("@featAttackBonus");
+        }
         // Add attack bonus
         if (itemData.attackBonus !== "") {
             let attackBonus = new Roll(itemData.attackBonus, rollData).roll().total;
@@ -1539,26 +1542,18 @@ export class ItemPF extends Item {
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
 
         // Create effect string
-        let effectNotes = actor.getContextNotes("attacks.effect").reduce((cur, o) => {
-            o.notes.reduce((cur2, n) => {
-                cur2.push(...n.split(/[\n\r]+/));
-                return cur2;
-            }, []).forEach(n => {
-                cur.push(n);
-            });
-            return cur;
-        }, []);
-        effectNotes.push(...(itemData.effectNotes || "").split(/[\n\r]+/));
-        let effectContent = "";
-        for (let fx of effectNotes) {
-            if (fx.length > 0) {
-                effectContent += `<span class="tag">${fx}</span>`;
+        let notes = []
+        const noteObjects = actor.getContextNotes("attacks.effect");
+        for (let noteObj of noteObjects) {
+            rollData.item = {};
+            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+
+            for (let note of noteObj.notes) {
+                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${o}</span>`, {rollData: rollData})));
             }
         }
 
-        if (effectContent.length === 0) return "";
-
-        const inner = TextEditor.enrichHTML(effectContent, {rollData: rollData});
+        const inner = notes.join('')
         return `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.EffectNotes")}</label><div class="flexrow">${inner}</div></div>`;
     }
 
@@ -1592,6 +1587,10 @@ export class ItemPF extends Item {
         // Determine ability multiplier
         if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
+
+        if (rollData.featDamageBonus) {
+            if (rollData.featDamageBonus !== 0) parts.push("@featDamageBonus");
+        }
 
         // Define Roll parts
         let parts = itemData.damage.parts.map(p => {

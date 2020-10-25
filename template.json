@@ -1478,7 +1478,11 @@
       "showInQuickbar": true,
       "melded": false,
       "baseWeaponType": "",
-      "originalWeaponId": null
+      "originalWeaponCreated": false,
+      "originalWeaponId": null,
+      "originalWeaponName": "",
+      "originalWeaponImg": "",
+      "originalWeaponProperties": {}
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],

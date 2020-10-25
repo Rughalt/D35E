@@ -5,7 +5,13 @@
   /* ----------------------------------------- */
   /*  Sheet Header                             */
   /* ----------------------------------------- */
+  .sheet-header-small {
 
+    flex: 0 0 40px;
+    width: 40px;
+    margin-right: 6px;
+    position: relative;
+  }
   .sheet-header {
     img.profile {
       border: 2px solid #000;
@@ -121,6 +127,36 @@
     &.sheet-weapon {
       min-height: 380px;
       height: 380px;
+    }
+
+    &.sheet-attack {
+      min-height: 370px;
+      height: 370px;
+    }
+  }
+
+  .original-weapon-box {
+    padding: 2px;
+    min-height: 44px;
+    height: 44px;
+    flex: 44px;
+
+    h3 {
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    img {
+      border: 2px solid #000;
+      flex: 0 0 40px;
+      max-width: 40px;
+      min-height: 40px;
+      max-height: 40px;
+      margin-right: 6px;
     }
   }
 

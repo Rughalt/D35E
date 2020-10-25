@@ -23,9 +23,27 @@
       </ul>
     </div>
   </header>
+  {{#if data.originalWeaponCreated}}
+  <section class="original-weapon-box flexrow">
+
+    <div class="sheet-header-small">
+    <img class="" src="{{data.originalWeaponImg}}" title="{{data.originalWeaponName}}" data-edit="img"/>
+    </div>
+    <div class="flexcol">
+      <h3 class="origin-weapon-name">
+        <strong>{{localize "D35E.CreatedFrom"}}</strong> {{data.originalWeaponName}}
+      </h3>
+      <ul>
+        {{#each config.weaponProperties as |name prop|}}
+          {{#if (lookup ../data.originalWeaponProperties prop)}}<li class="tag">{{ name }}</li>{{/if}}
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+  {{/if}}
 
 
-  <section class="sheet-content flexcol">
+  <section class="sheet-content flexcol sheet-attack">
     {{!-- Item Sheet Navigation --}}
     <nav class="sheet-navigation tabs" data-group="primary">
       <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>

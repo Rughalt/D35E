@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "DND 3.5e",
   "description": "DND 3.5e implementation for Foundry VTT. Aiming to provide 100% SRD coverage.",
-  "version": "0.86.5",
+  "version": "0.86.6",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],

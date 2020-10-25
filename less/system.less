@@ -464,8 +464,51 @@
       left: 0px;
       top: 0;
       pointer-events: none;
+
+
+    }
+    &.red {
+      &::after {
+        content: '';
+        background: url(/systems/D35E/icons/ui/large-item-frame-red.png);
+        background-size: contain;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        pointer-events: none;
+      }
+     }
+    &.blue {
+      &::after {
+        content: '';
+        background: url(/systems/D35E/icons/ui/large-item-frame-blue.png);
+        background-size: contain;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        pointer-events: none;
+      }
+    }
+    &.purple {
+      &::after {
+        content: '';
+        background: url(/systems/D35E/icons/ui/large-item-frame-purple.png);
+        background-size: contain;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        pointer-events: none;
+      }
     }
   }
+
+
 
   .checkmark {
     border: none;
@@ -822,6 +865,29 @@
           min-height: 380px;
           height: 380px;
           margin-bottom: 2px;
+        }
+      }
+
+      .original-weapon-box {
+        margin-bottom: 4px;
+        border-radius: 2px;
+        background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+        .sheet-header-small {
+          img {
+            border: none
+          }
+
+          &::after{
+            content: '';
+            background: url(/systems/D35E/icons/ui/item-frame.png);
+            background-size: contain;
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 0px;
+            top: 0;
+            pointer-events: none;
+          }
         }
       }
 
