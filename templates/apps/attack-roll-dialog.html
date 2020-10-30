@@ -13,7 +13,7 @@
   {{/if}}
   {{#if hasAttack}}{{#if hasDamage}}
   <div class="form-group stacked">
-    <label><strong>{{localize "D35E.FeatPlural"}}</strong></label>
+    <label class="block-header">{{localize "D35E.FeatPlural"}}</label>
   </div>
   {{#unless isRangedWeapon}}
   <div class="form-group">
@@ -67,7 +67,7 @@
   {{/if}}
 
   <div class="form-group">
-    <label><strong>{{localize "D35E.AdditionalFeats"}}</strong></label>
+    <label class="block-header">{{localize "D35E.AdditionalFeats"}}</label>
   </div>
 
   <div class="form-group">
@@ -77,10 +77,20 @@
       {{/each}}
     </div>
   </div>
+
+  {{#each weaponFeatsOptional as |feat|}}
+  <div class="form-group">
+    <label>{{feat.data.name}}</label>
+    <label class="checkbox"  style="flex: 0 16px; margin-right: 8px; position: relative" >
+      <input type="checkbox" class="stylized" data-feat-optional="{{feat.id}}" name="optional-{{feat.id}}" data-type="optional"/>
+      <span class="checkmark"></span>
+    </label>
+  </div>
+  {{/each}}
   {{/if}}{{/if}}
   {{!-- Flags --}}
   <div class="form-group stacked">
-    <label><strong>{{localize "D35E.Misc"}}</strong></label>
+    <label class="block-header">{{localize "D35E.Misc"}}</label>
     {{#if hasAttack}}{{#if hasDamage}}
     {{#if isNaturalAttack}}
     <label class="checkbox">

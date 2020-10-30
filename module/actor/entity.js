@@ -189,7 +189,7 @@ export class ActorPF extends Actor {
         const skillTargets = this._skillTargets;
         return {
             targets: [
-                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill"
+                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl"
             ], types: [
                 "str", "dex", "con", "int", "wis", "cha",
                 "skills", "strSkills", "dexSkills", "conSkills", "intSkills", "wisSkills", "chaSkills", ...skillTargets,
@@ -590,7 +590,7 @@ export class ActorPF extends Actor {
 
         // Add Constitution to HP
         changes.push({
-            raw: ["@abilities.con.origMod * @attributes.hd.total", "misc", "mhp", "base", 0],
+            raw: ["@abilities.con.origMod * @attributes.hd.total", "misc", "mhp", "untyped", 0],
             source: {name: "Constitution"}
         });
         changes.push({
@@ -1356,7 +1356,7 @@ export class ActorPF extends Actor {
 
 
         // Initialize data
-        await this._resetData(updateData, srcData1, flags, sourceInfo);
+        await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
         await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride);
 
         // Sort changes
@@ -1375,7 +1375,8 @@ export class ActorPF extends Actor {
 
             rollData.item = {};
             if (change.source.item != null) {
-                rollData.item = change.source.item.data;
+                rollData.item = mergeObject(duplicate(change.source.item.data), new ItemPF(change.source.item, {owner: this.owner}).getRollData(), {inplace: false})
+
             }
 
             const roll = new Roll(formula, rollData);
@@ -1720,7 +1721,7 @@ export class ActorPF extends Actor {
         return consolidatedChanges;
     }
 
-    async _resetData(updateData, data, flags, sourceInfo) {
+    async _resetData(updateData, data, flags, sourceInfo, changes, fullConditions) {
         const data1 = data.data;
         if (flags == null) flags = {};
         const items = data.items;
@@ -1747,6 +1748,7 @@ export class ActorPF extends Actor {
             } catch (e) {
             }
         }
+        console.log(`D35E | Setting attributes hd total | ${data1.details.level.value}`)
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
 
         // Reset abilities
@@ -2056,6 +2058,9 @@ export class ActorPF extends Actor {
             let level = classes.reduce((cur, o) => {
                 return cur + o.data.levels;
             }, 0);
+
+            console.log(`D35E | Setting attributes hd total | ${level}`)
+            linkData(data, updateData, "data.attributes.hd.total", level);
             level += raceLA;
             if (getProperty(data, "data.classLevels") !== this.data.classLevels) {
                 linkData(data, updateData, "data.details.level.value", level);
@@ -2105,6 +2110,21 @@ export class ActorPF extends Actor {
                                         eItem.data.uniqueId = uniqueId;
                                         eItem.data.source = `${classInfo[0]} ${level}`
                                         eItem.data.userNonRemovable = true;
+
+                                        eItem.data.changes.forEach(change => {
+                                            if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
+                                            changes.push({
+                                                raw: change,
+                                                source: {
+                                                    value: 0,
+                                                    type: eItem.type,
+                                                    subtype: this.constructor._getChangeItemSubtype(eItem),
+                                                    name: eItem.name,
+                                                    item: eItem
+                                                }
+                                            });
+                                        });
+
                                         itemsToAdd.push(eItem)
                                     }
                                     addedAbilities.add(uniqueId)
@@ -2117,6 +2137,8 @@ export class ActorPF extends Actor {
 
                 for (let abilityUid of existingAbilities) {
                     if (!addedAbilities.has(abilityUid)) {
+                        console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
+                        changes.splice(changes.findIndex(change => change.source.item.data.uniqueId === abilityUid), 1)
                         itemsToRemove.push(abilityUid)
                     }
                 }
@@ -2380,7 +2402,6 @@ export class ActorPF extends Actor {
                 spellcastingBonusTotalUsed[spellcastingType] += spellbook.bonusPrestigeCl;
             }
         }
-
 
         for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
             // Set CL
@@ -3222,6 +3243,8 @@ export class ActorPF extends Actor {
         attackData["data.actionType"] = (item.data.data.weaponSubtype === "ranged" ? "rwak" : "mwak");
         attackData["data.activation.type"] = "attack";
         attackData["data.duration.units"] = "inst";
+        attackData["data.finessable"] = false;
+        attackData["data.threatRangeExtended"] = isKeen;
         attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
         attackData["data.originalWeaponCreated"] = true;
         attackData["data.originalWeaponId"] = item.id;
@@ -3336,10 +3359,10 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`skill.${isSubSkill ? skillParts[2] : skillId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
-                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
         // Add untrained note
@@ -3422,7 +3445,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes("misc.cmb");
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -3434,7 +3457,7 @@ export class ActorPF extends Actor {
                         });
                     }
                     if (noteStr.length > 0) notes.push(...noteStr.split(/[\n\r]+/));
-                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
         // Add grapple note
@@ -3559,7 +3582,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`savingThrow.${savingThrowId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -3571,7 +3594,7 @@ export class ActorPF extends Actor {
                         });
                     }
                     if (noteStr.length > 0) notes.push(...noteStr.split(/[\n\r]+/));
-                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
 
@@ -3610,7 +3633,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`abilityChecks.${abilityId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -3622,7 +3645,7 @@ export class ActorPF extends Actor {
                         });
                     }
                     if (noteStr.length > 0) notes.push(...noteStr.split(/[\n\r]+/));
-                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
 
@@ -3745,7 +3768,7 @@ export class ActorPF extends Actor {
         const acNoteObjects = this.getContextNotes("misc.ac");
         for (let noteObj of acNoteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -3757,7 +3780,7 @@ export class ActorPF extends Actor {
                         });
                     }
                     if (noteStr.length > 0) acNotes.push(...noteStr.split(/[\n\r]+/));
-                } else acNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                } else acNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
 
@@ -3767,7 +3790,7 @@ export class ActorPF extends Actor {
         const cmdNoteObjects = this.getContextNotes("misc.cmd");
         for (let noteObj of cmdNoteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -3779,7 +3802,7 @@ export class ActorPF extends Actor {
                         });
                     }
                     if (noteStr.length > 0) cmdDotes.push(...noteStr.split(/[\n\r]+/));
-                } else cmdNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                } else cmdNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
 
@@ -3789,7 +3812,7 @@ export class ActorPF extends Actor {
         const srNoteObjects = this.getContextNotes("misc.sr");
         for (let noteObj of srNoteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner})); 
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -3801,7 +3824,7 @@ export class ActorPF extends Actor {
                         });
                     }
                     if (noteStr.length > 0) srNotes.push(...noteStr.split(/[\n\r]+/));
-                } else srNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(o, {rollData: rollData})));
+                } else srNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o,rollData), {rollData: rollData})));
             }
         }
 

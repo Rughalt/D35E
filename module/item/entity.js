@@ -363,17 +363,35 @@ export class ItemPF extends Item {
             // Add attack parts
             if (!data.attack) data.attack = {parts: []};
         }
+        itemData['custom'] = {}
+        if (data.hasOwnProperty('customAttributes')) {
+            console.log(data.customAttributes)
+            for (let prop in data.customAttributes || {}) {
+                let propData = data.customAttributes[prop];
+                itemData['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
+            }
+        }
+        //console.log('D35E | Custom properties', itemData['custom'])
 
         // Assign labels and return the Item
         this.labels = labels;
     }
 
+    static _fillTemplate(templateString, templateVars){
+        return new Function("return `"+templateString +"`;").call(templateVars);
+    }
+
     async update(data, options = {}) {
         const srcData = mergeObject(this.data, expandObject(data), {inplace: false});
-
+        //const srcDataWithRolls = mergeObject(srcData, this.getRollData(), {inplace: false});
+        const srcDataWithRolls = new ItemPF(srcData, {owner: this.owner}).data;
+        if (data['data.nameFromFormula'] || getProperty(this.data, "data.nameFromFormula"))
+            data["name"] = ItemPF._fillTemplate(data['data.nameFormula'] || getProperty(this.data, "data.nameFormula"), srcDataWithRolls) || data["name"]
         // Update name
         if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
         else if (data["name"]) data["data.identifiedName"] = data["name"];
+
+
 
         // Update description
         if (this.type === "spell") await this._updateSpellDescription(data, srcData);
@@ -393,7 +411,7 @@ export class ItemPF extends Item {
             //Buff or item was activated
             data["data.timeline.elapsed"] = 0
 
-            for (let actionValue of this.data.data.activateActions) {
+            for (let actionValue of this.data.data.activateActions || []) {
                 let actions = ItemPF.parseAction(actionValue.action)
                 for (let actionData of actions) {
                     //console.log('applying active action', actionData.action)
@@ -443,7 +461,7 @@ export class ItemPF extends Item {
                     }
                 }
             }
-            for (let actionValue of this.data.data.deactivateActions) {
+            for (let actionValue of this.data.data.deactivateActions || []) {
                 let actions = ItemPF.parseAction(actionValue.action)
                 for (let actionData of actions) {
                     //console.log('applying deactivate action', actionData.action)
@@ -576,6 +594,7 @@ export class ItemPF extends Item {
         if (actorData !== null) {
             rollData = mergeObject(rollData,actorData.data, {inplace: false});
         }
+        rollData.item = this.getRollData();
 
         if (hasProperty(srcData, "data.uses.maxFormula")) {
             if (getProperty(srcData, "data.uses.maxFormula") !== "") {
@@ -711,8 +730,11 @@ export class ItemPF extends Item {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
             })
             allCombatChanges.forEach(change => {
-                console.log('D35E | Change', change[4])
-                setProperty(rollData, change[3], (getProperty(rollData, change[3]) || 0) + new Roll(change[4], rollData).roll().total)
+                if (change[3].indexOf('$') !== -1) {
+                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
+                } else {
+                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
+                }
             })
         }
 
@@ -971,7 +993,8 @@ export class ItemPF extends Item {
                 hasTwoWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Two-Weapon Fighting").length > 0,
                 hasTwoImprovedWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Improved Two-Weapon Fighting").length > 0,
                 hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Greater Two-Weapon Fighting").length > 0,
-                rollMode = null;
+                rollMode = null,
+                optionalFeatIds = [];
             // Get form data
             if (form) {
 
@@ -1081,8 +1104,12 @@ export class ItemPF extends Item {
                     else if (twoWeaponMode === 'two-handed') {
                         rollData.weaponHands = 2
                     }
-
                 }
+                $(form).find('[data-type="optional"]').each(function() {
+                    if ($(this).prop("checked"))
+                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                })
+                console.log(optionalFeatIds)
             }
 
             // Prepare the chat message data
@@ -1134,13 +1161,27 @@ export class ItemPF extends Item {
             // Getting all combat changes from items
             let allCombatChanges = []
             let attackType = this.type;
-            actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType,rollData)).forEach(i => {
-                allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+            actor.items.filter(o => o.type === "feat").forEach(i => {
+                if (i.hasCombatChange(attackType,rollData)) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                }
             })
-            allCombatChanges.forEach(change => {
+            for (const change of allCombatChanges) {
                 console.log('D35E | Change', change[4])
-                setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + new Roll(change[4],rollData).roll().total)
-            })
+                if (change[3].indexOf('$') !== -1) {
+                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
+                } else {
+                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
+                }
+
+            }
+
+
+            if (rollData.featDamageBonus) {
+                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@featDamageBonus",'Feats']);
+            }
 
             let attacks = [];
             if (this.hasAttack) {
@@ -1268,15 +1309,17 @@ export class ItemPF extends Item {
                 let props = [],
                     extraText = "";
                 let hasBoxInfo = this.hasAttack || this.hasDamage || this.hasEffect;
-                let attackNotes = actor.getContextNotes("attacks.attack").reduce((cur, o) => {
-                    o.notes.reduce((cur2, n) => {
-                        cur2.push(...n.split(/[\n\r]+/));
-                        return cur2;
-                    }, []).forEach(n => {
-                        cur.push(n);
-                    });
-                    return cur;
-                }, []);
+                let attackNotes = []
+                const noteObjects = actor.getContextNotes("attacks.attack");
+                for (let noteObj of noteObjects) {
+                    rollData.item = {};
+                    if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+
+                    for (let note of noteObj.notes) {
+
+                        attackNotes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
+                    }
+                }
                 if (typeof itemData.attackNotes === "string" && itemData.attackNotes.length) {
                     attackNotes.push(...itemData.attackNotes.split(/[\n\r]+/));
                 }
@@ -1345,7 +1388,8 @@ export class ItemPF extends Item {
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
-            weaponFeats: weaponName ? actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)) : []
+            weaponFeats: weaponName ? actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)) : [],
+            weaponFeatsOptional: weaponName ? actor.items.filter(o => o.type === "feat" && o.hasCombatChange(`${this.type}Optional`,rollData)) : []
         };
         const html = await renderTemplate(template, dialogData);
 
@@ -1385,6 +1429,7 @@ export class ItemPF extends Item {
                 title: `${game.i18n.localize("D35E.Use")}: ${this.name}`,
                 content: html,
                 buttons: buttons,
+                classes: ['custom-dialog'],
                 default: buttons.multi != null ? "multi" : "normal",
                 close: html => {
                     return resolve(rolled ? roll : false);
@@ -1397,17 +1442,27 @@ export class ItemPF extends Item {
     hasCombatChange(itemType, rollData) {
         let combatChanges = getProperty(this.data,"data.combatChanges") || [];
         let attackType = getProperty(rollData,"item.actionType") || ""
+        let combatChangesRollData = duplicate(rollData);
+        combatChangesRollData.self =  mergeObject(this.data.data, this.getRollData(), {inplace: false})
         return combatChanges.some(change => {
-            return (change[0] === 'all' || change[0] === itemType) && attackType === change[1] && (change[2] === '' || new Roll(change[2], rollData).roll().total === true)
+            return (change[0] === 'all' || change[0] === itemType)&& (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
         });
     }
 
     getPossibleCombatChanges(itemType, rollData) {
         let combatChanges = getProperty(this.data,"data.combatChanges") || [];
         let attackType = getProperty(rollData,"item.actionType") || ""
+        let combatChangesRollData = duplicate(rollData);
+        combatChangesRollData.self =  mergeObject(this.data.data, this.getRollData(), {inplace: false})
         return combatChanges.filter(change => {
-            return (change[0] === 'all' || change[0] === itemType) && attackType === change[1] && (change[2] === '' || new Roll(change[2], rollData).roll().total === true)
+            return (change[0] === 'all' || change[0] === itemType) && (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
+        }).map(c => {
+            if (c[3].indexOf('$') === -1) {
+                c[4] = new Roll(c[4],combatChangesRollData).roll().total
+            }
+            return c;
         });
+
     }
 
     /**
@@ -1419,7 +1474,7 @@ export class ItemPF extends Item {
         let rollData;
         if (!options.data) {
             rollData = this.actor.getRollData();
-            rollData.item = duplicate(itemData);
+            rollData.item = mergeObject(duplicate(itemData), this.getRollData(), {inplace: false});
         } else rollData = options.data;
 
         // Add CL
@@ -1435,7 +1490,7 @@ export class ItemPF extends Item {
         rollData.item.proficiencyPenalty = -4;
 
         // Determine ability score modifier
-        let abl = itemData.ability.attack;
+        let abl = rollData.item.ability.attack;
 
         // Define Roll parts
         let parts = [];
@@ -1516,7 +1571,7 @@ export class ItemPF extends Item {
 
         const actorData = actor.data.data;
         const rollData = mergeObject(duplicate(actorData), {
-            item: itemData,
+            item: mergeObject(itemData, this.getRollData(), {inplace: false}),
             ablMult: 0
         }, {inplace: false});
 
@@ -1546,10 +1601,11 @@ export class ItemPF extends Item {
         const noteObjects = actor.getContextNotes("attacks.effect");
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            //if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
+            if (noteObj.item != null) rollData.item = mergeObject(duplicate(noteObj.item.data.data), noteObj.item.getRollData(), {inplace: false})
 
             for (let note of noteObj.notes) {
-                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${o}</span>`, {rollData: rollData})));
+                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
             }
         }
 
@@ -1588,9 +1644,6 @@ export class ItemPF extends Item {
         if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
 
-        if (rollData.featDamageBonus) {
-            if (rollData.featDamageBonus !== 0) parts.push("@featDamageBonus");
-        }
 
         // Define Roll parts
         let parts = itemData.damage.parts.map(p => {
@@ -1777,7 +1830,14 @@ export class ItemPF extends Item {
         if (this.type === "buff") result.level = this.data.data.level;
         if (this.type === "enhancement") result.enhancement = this.data.data.enh;
         if (this.type === "enhancement") result.enhIncrease = this.data.data.enhIncrease;
-
+        result['custom'] = {}
+        if (this.data.data.hasOwnProperty('customAttributes')) {
+            for (let prop in this.data.data.customAttributes || {}) {
+                let propData = this.data.data.customAttributes[prop];
+                result['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
+            }
+        }
+        //console.log('D35E | Roll data', result)
         return result;
     }
 

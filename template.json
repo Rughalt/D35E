@@ -1039,11 +1039,15 @@
           "chat": "",
           "unidentified": ""
         },
+        "nameFormula": "",
+        "nameFromFormula": false,
         "tags": [],
         "uniqueId": "",
         "source": "",
         "classSource": "",
-        "userNonRemovable": false
+        "userNonRemovable": false,
+        "customAttributes": {},
+        "customAttributesLocked": false
       },
       "physicalItem": {
         "quantity": 1,
@@ -1472,6 +1476,8 @@
       },
       "attackType": "weapon",
       "masterwork": false,
+      "threatRangeExtended": false,
+      "finesseable": false,
       "enh": null,
       "proficient": true,
       "primaryAttack": true,

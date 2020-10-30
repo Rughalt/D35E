@@ -127,6 +127,7 @@ export class LevelUpDataDialog extends FormApplication {
             data.forEach(lud => {
                 if (lud.classId === null || lud.classId === "") return;
                 let _class = this.actor.items.find(cls => cls._id === lud.classId)
+                if (_class === undefined) return;
                 if (!classLevels.has(_class._id))
                     classLevels.set(_class._id,0)
                 classLevels.set(_class._id,classLevels.get(_class._id)+1)

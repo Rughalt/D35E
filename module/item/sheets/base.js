@@ -304,7 +304,7 @@ export class ItemSheetPF extends ItemSheet {
 
         if (data.item.type === "feat") {
             data.isFeat = data.item.data.featType === "feat"
-            
+            data.hasCombatChanges = true;
             data.featCounters = []
             if (this.item.actor) {
                 for (let [a, s] of Object.entries(this.item.actor.data.data.counters.feat || [])) {
@@ -794,6 +794,8 @@ export class ItemSheetPF extends ItemSheet {
         // Modify attack formula
         html.find(".attack-control").click(this._onAttackControl.bind(this));
 
+        // Modify custom fields
+        html.find(".custom-field-control").click(this._onCustomFieldControl.bind(this));
 
         // Modify special formula
         html.find(".special-control").click(this._onSpecialControl.bind(this));
@@ -883,6 +885,35 @@ export class ItemSheetPF extends ItemSheet {
             const damage = duplicate(this.item.data.data.damage);
             damage.parts.splice(Number(li.dataset.damagePart), 1);
             return this.item.update({"data.damage.parts": damage.parts});
+        }
+    }
+
+    generateId() {
+        return '_' + Math.random().toString(36).substr(2, 9);
+    };
+
+    async _onCustomFieldControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new attack component
+        if (a.classList.contains("add")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            let _customAttributes = duplicate(this.item.data.data.customAttributes || {});
+            let newAttribute = {id: this.generateId(),name:'',value:''};
+            _customAttributes[newAttribute.id] = newAttribute;
+            console.log(`D35E | Adding custom attribute | `,_customAttributes)
+            return this.item.update({"data.customAttributes": _customAttributes});
+        }
+
+        // Remove an attack component
+        if (a.classList.contains("delete")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".custom-field");
+            console.log(`D35E | Removing custom attribute | ${li.dataset.customField}`, this.item.data.data.customAttributes)
+            const updateData = {};
+            updateData[`data.customAttributes.-=${li.dataset.customField}`] = null;
+            return this.item.update(updateData);
         }
     }
 
@@ -1035,7 +1066,7 @@ export class ItemSheetPF extends ItemSheet {
             //await this._onSubmit(event);  // Submit any unsaved changes
             const li = a.closest(".change");
             const changes = duplicate(this.item.data.data.combatChanges);
-            changes.splice(Number(li.dataset.combatChanges), 1);
+            changes.splice(Number(li.dataset.change), 1);
             return this.item.update({"data.combatChanges": changes});
         }
     }

@@ -1415,7 +1415,9 @@ export class ActorSheetPF extends ActorSheet {
     for (let f of feats) {
       let k = f.data.featType;
       if (f.data.source) {
-        let sourceClassName = f.data.source.split(' ')[0]
+        let className = f.data.source.split(' ')
+        className.pop()
+        let sourceClassName = className.join(' ')
         if (!classFeaturesMap.has(sourceClassName))
           classFeaturesMap.set(sourceClassName,[])
         classFeaturesMap.get(sourceClassName).push(f);

@@ -1,0 +1,45 @@
+
+
+<h3 class="form-header" style="position: relative">{{localize "D35E.CustomAttributes"}}
+  <div class="form-group flexrow" style="float: right; position: relative; margin-right: 10px;">
+
+    <label>{{localize "D35E.LockCustomAttributes"}} </label>
+  <label class="checkbox" style="position: relative;">
+    <input type="checkbox" class="stylized" name="data.customAttributesLocked"  data-dtype="Boolean" {{checked data.customAttributesLocked}} />
+    <span class="checkmark"></span>
+  </label>
+  </div>
+</h3>
+<ol class="custom-fields form-group form-group-stacked" style="padding: 0">
+  {{#unless data.customAttributesLocked}}<a class="custom-field-control add"><i class="fas fa-plus"></i> {{localize "D35E.AddCustomAttribute"}}</a>{{/unless}}
+  {{#each data.customAttributes as |part a|}}
+  <li class="custom-field flexrow" data-custom-field="{{a}}">
+    {{#if ../data.customAttributesLocked}}
+    <label>{{part.name}}</label>
+    {{else}}
+    <input type="text" name="data.customAttributes.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{part.name}}"/>
+    {{/if}}
+    <input style="flex: 0 160px" type="text" name="data.customAttributes.{{a}}.value" placeholder="{{localize "D35E.Value"}}" value="{{part.value}}"/>
+    {{#unless ../data.customAttributesLocked}}<a class="custom-field-control delete" style="flex: 0 20px; text-align: center"><i class="fas fa-minus"></i></a>{{/unless}}
+  </li>
+  {{/each}}
+</ol>
+{{#unless data.customAttributesLocked}}
+<div class="form-group">
+  <label>{{localize "D35E.UseNameFromFormula"}}</label>
+  <label class="checkbox" style="position: relative; flex: 0 20px">
+    <input type="checkbox" class="stylized" name="data.nameFromFormula" {{checked data.nameFromFormula}}/>
+    <span class="checkmark"></span>
+  </label>
+</div>
+<div class="form-group">
+  <label>{{localize "D35E.CustomNameFormula"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.nameFormula" value="{{data.nameFormula}}" placeholder="{{localize "D35E.Formula"}}"/>
+  </div>
+</div>
+{{else}}
+{{#if data.nameFromFormula}}
+<em>{{localize "D35E.UsesNameFromFormula"}}</em>
+{{/if}}
+{{/unless}}

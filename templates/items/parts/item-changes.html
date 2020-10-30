@@ -101,8 +101,16 @@
       <a class="change-control delete-change"><i class="fas fa-minus"></i></a>
     </li>
     {{/each}}
+    {{#unless data.changes}}
+    <li class="change flexrow">
+      <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.Changes"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
+    </li>
+    {{/unless}}
   </ol>
 
+</div>
+<div>
+{{#if hasCombatChanges}}
   {{!-- Changes --}}
   <h4 class="change-header">
     {{localize "D35E.CombatChanges"}}
@@ -110,30 +118,57 @@
   </h4>
   <ol class="changes form-group">
     {{#each data.combatChanges as |change a|}}
-    <li class="change flexrow" data-change="{{a}}">
-      <select name="data.combatChanges.{{a}}.0">
+    <li class="change flexcol" data-change="{{a}}" style="border-left: 2px solid rgba(0,0,0,0.2); padding-left: 0.5rem; margin-bottom: 0.5rem;">
+      <div class="form-group" style="width: 100%; margin: 0">
+        <label>{{localize "D35E.ItemType"}}</label>
+        <select name="data.combatChanges.{{a}}.0" style="flex: 0 0 240px">
         {{#select (lookup this "0") }}
         {{#each ../config.combatChangeType as |name type|}}
-        <option value="{{type}}">{{name}}</option>
+        <option value="{{type}}">{{localize name}}</option>
         {{/each}}
         {{/select}}
       </select>
-      <select name="data.combatChanges.{{a}}.1">
-        {{#select (lookup this "1") }}
-        {{#each ../config.itemActionTypes as |name type|}}
-          <option value="{{type}}">{{name}}</option>
-        {{/each}}
-        {{/select}}
-      </select>
-      <input type="text" name="data.combatChanges.{{a}}.2" value="{{lookup this "2"}}"
-      placeholder="{{localize "D35E.Condition"}} {{localize "D35E.Formula"}}" />
-      <input type="text" name="data.combatChanges.{{a}}.3" value="{{lookup this "3"}}"
-      placeholder="{{localize "D35E.ModifiedField"}}" />
-      <input type="text" name="data.combatChanges.{{a}}.4" value="{{lookup this "4"}}"
-      placeholder="{{localize "D35E.ModificationFormula"}} {{localize "D35E.Formula"}}" />
+      </div>
 
-      <a class="combat-change-control delete-change"><i class="fas fa-minus"></i></a>
+      <div class="form-group" style="width: 100%; margin: 0">
+        <label>{{localize "D35E.ActionType"}}</label>
+        <select name="data.combatChanges.{{a}}.1" style="flex: 0 0 240px">
+          {{#select (lookup this "1") }}
+          <option value="">{{localize "D35E.All"}}</option>
+          {{#each ../config.itemActionTypes as |name type|}}
+            <option value="{{type}}">{{localize name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+      <div class="form-group" style="width: 100%; margin: 0">
+        <label>{{localize "D35E.Condition"}}</label>
+      <input  class="bordered" type="text" name="data.combatChanges.{{a}}.2" value="{{lookup this "2"}}"
+      placeholder="{{localize "D35E.Condition"}} {{localize "D35E.Formula"}}" />
+      </div>
+
+      <div class="form-group" style="width: 100%; margin: 0">
+        <label>{{localize "D35E.ModifiedField"}}</label>
+      <input class="bordered"  type="text" name="data.combatChanges.{{a}}.3" value="{{lookup this "3"}}"
+      placeholder="{{localize "D35E.ModifiedField"}}" />
+      </div>
+
+      <div class="form-group" style="width: 100%; margin: 0">
+        <label>{{localize "D35E.ModificationFormula"}}</label>
+      <input class="bordered" type="text" name="data.combatChanges.{{a}}.4" value="{{lookup this "4"}}"
+      placeholder="{{localize "D35E.ModificationFormula"}} {{localize "D35E.Formula"}}" />
+      </div>
+
+      <div class="form-group" style="width: 100%; margin: 0">
+      <a style="flex: 1" class="combat-change-control delete-change">Remove <i class="fas fa-minus"></i></a>
+      </div>
     </li>
     {{/each}}
+    {{#unless data.combatChanges}}
+    <li class="change flexrow">
+      <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.CombatChanges"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
+    </li>
+    {{/unless}}
   </ol>
+  {{/if}}
 </div>

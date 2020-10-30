@@ -72,6 +72,8 @@
     }
   }
 
+
+
   #hp-input {
     flex: 0 60px;
   }
@@ -108,6 +110,39 @@
   }
 }
 
+.form-header {
+
+  .form-group {
+
+    label {
+      font-family: Signika;
+      line-height: 20px;
+      font-size: 13px;
+    }
+  }
+}
+
+.window-app.dialog {
+  label {
+    &.block-header {
+      position: relative;
+      border: none;
+      display: flex;
+      align-items: center;
+      font-weight: 800;
+
+      &::after {
+        content: '';
+        flex: 1;
+        margin-left: 0.5rem;
+        height: 0px;
+        background-color: transparent;
+        border-top: 2px groove #eeede0;
+      }
+    }
+  }
+}
+
 
 .d35ecustom {
 
@@ -126,6 +161,33 @@
       border-top: 1px solid #967671;
       span {
         border-right: 1px solid rgba(0,0,0,0.3);
+      }
+    }
+
+    &.whisper {
+      background-image: linear-gradient(black, black),url(/systems/D35E/icons/ui/parchment-tile.png);
+      /* background-size: cover; */
+      background-blend-mode: saturation;
+    }
+
+  }
+
+  .window-app.dialog {
+    border: 8px solid #55493B;
+    border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+    background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+    border-radius: 0;
+    .window-content {
+      background: none;
+      color: white;
+      input, select {
+        color: white
+      }
+
+      label.block-header {
+        &::after {
+          border-top: 1px solid #75514b !important;
+        }
       }
     }
 
@@ -548,7 +610,8 @@
   }
 
   .sheet {
-    border: 2px solid #55493B;
+    border: 6px solid #55493B;
+    border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 20 round;
     &.window-app {
       .window-header {
         color: white;
@@ -611,8 +674,8 @@
         position: absolute;
         width: 100%;
         flex: 1;
-        max-width: calc(100% - 60px);
-        height: 109px;
+        max-width: calc(100% - 50px);
+        height: 110px;
         top:0;
         left: 0;
       }
@@ -840,6 +903,16 @@
         border-bottom: 2px solid #193f48;
         border-top: none;
         margin: 8px 0;
+
+        .form-group {
+          margin-top: -10px;
+
+          label {
+            font-family: Signika;
+            line-height: 20px;
+            font-size: 13px;
+          }
+        }
       }
 
       .window-header {
@@ -1005,4 +1078,8 @@
   border-color: #75514b;
   font-family: Modesto, sans-serif;
   font-size: 13px;
+}
+
+a.inline-roll {
+  display: inline-block;
 }

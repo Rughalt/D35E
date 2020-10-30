@@ -387,9 +387,23 @@
                                value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
                     </div>
                 </div>
+
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.SpellResistance"}}</label>
+                        <input style="width: calc(100% - 60px);" name="data.attributes.sr.formula" type="text" placeholder="{{localize "D35E.Formula"}}"
+                        value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
+                        <span style="flex: 0 80px; text-align: end">Total: </span>
+                        <input style="flex: 0 30px" disabled type="text"
+                                                                        value="{{data.attributes.sr.total}}"/>
+                    </div>
+                </div>
+
                 {{!-- Traits --}}
                 {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
             </section>
+
+
         </div>
 
         {{!-- Defenses Tab --}}
