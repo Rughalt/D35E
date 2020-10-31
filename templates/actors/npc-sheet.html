@@ -398,6 +398,20 @@
                                                                         value="{{data.attributes.sr.total}}"/>
                     </div>
                 </div>
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.FastHealing"}}</label>
+                        <input name="data.traits.fastHealing" type="text" placeholder="0"
+                               value="{{#if data.traits.fastHealing}}{{data.traits.fastHealing}}{{/if}}"/>
+                    </div>
+                </div>
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.Regeneration"}}</label>
+                        <input name="data.traits.regen" type="text" placeholder="0"
+                               value="{{#if data.traits.regen}}{{data.traits.regen}}{{/if}}"/>
+                    </div>
+                </div>
 
                 {{!-- Traits --}}
                 {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}

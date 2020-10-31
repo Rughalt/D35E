@@ -143,7 +143,8 @@ export const migrateActorData = async function(actor) {
  */
 export const migrateItemData = function(item) {
   const updateData = {};
-  
+
+  _migrateIcon(item, updateData);
   _migrateItemSpellUses(item, updateData);
   _migrateWeaponDamage(item, updateData);
   _migrateWeaponImprovised(item, updateData);
@@ -398,6 +399,11 @@ const _migrateActorSpellbookDCFormula = function(ent, updateData) {
     const curFormula = getProperty(ent.data, key);
     if (curFormula == null) updateData[key] = "10 + @sl + @ablMod";
   }
+};
+
+const _migrateIcon = function(ent, updateData) {
+  const value = getProperty(ent.data, "img");
+  if (typeof value.endsWith("/con.png")) updateData["img"] = value.replace("/con.png","/con_.png");
 };
 
 const _migrateItemSpellUses = function(ent, updateData) {
