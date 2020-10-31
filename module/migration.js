@@ -403,7 +403,7 @@ const _migrateActorSpellbookDCFormula = function(ent, updateData) {
 
 const _migrateIcon = function(ent, updateData) {
   const value = getProperty(ent.data, "img");
-  if (typeof value.endsWith("/con.png")) updateData["img"] = value.replace("/con.png","/con_.png");
+  if (value.endsWith("/con.png")) updateData["img"] = value.replace("/con.png","/con_.png");
 };
 
 const _migrateItemSpellUses = function(ent, updateData) {
