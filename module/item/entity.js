@@ -1127,7 +1127,7 @@ export class ItemPF extends Item {
                 bonus: 0,
                 label: `${game.i18n.localize("D35E.Attack")}`
             }];
-            if (fullAttack && rapidShot) {
+            if ((fullAttack || this.data.data.attackParts.length === 0) && rapidShot) {
                 allAttacks.push({
                     bonus: 0,
                     label: `Rapid Shot`
@@ -1388,8 +1388,8 @@ export class ItemPF extends Item {
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
-            weaponFeats: weaponName ? actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)) : [],
-            weaponFeatsOptional: weaponName ? actor.items.filter(o => o.type === "feat" && o.hasCombatChange(`${this.type}Optional`,rollData)) : []
+            weaponFeats: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)),
+            weaponFeatsOptional: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(`${this.type}Optional`,rollData))
         };
         const html = await renderTemplate(template, dialogData);
 
@@ -1458,7 +1458,7 @@ export class ItemPF extends Item {
             return (change[0] === 'all' || change[0] === itemType) && (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
         }).map(c => {
             if (c[3].indexOf('$') === -1) {
-                c[4] = new Roll(c[4],combatChangesRollData).roll().total
+                c[4] = new Roll(`${c[4]}`,combatChangesRollData).roll().total
             }
             return c;
         });
