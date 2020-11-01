@@ -21,6 +21,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Version ${{ github.ref }}
-          body_path: changelogs/changelog.${{ GITHUB_REF#refs/tags/ }}.md
+          body_path: changelogs/changelog.${{ github.event.release.tag_name }}.md
           draft: false
           prerelease: false
