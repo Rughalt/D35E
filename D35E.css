@@ -1961,6 +1961,12 @@
   max-width: calc(100% - 70px);
   height: 100px;
 }
+.D35E.sheet.actor .spell-range {
+  flex: 0;
+  padding-left: 0.5rem;
+  padding-top: 4px;
+  border-top: 2px groove #eeede0;
+}
 .locked img.sheet-profile {
   max-height: 360px;
   max-width: 240px;
@@ -4711,6 +4717,15 @@ tr.introjs-showElement > th {
   background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
   background-repeat: no-repeat, repeat;
   background-position-y: bottom;
+}
+.d35ecustom .spell-range {
+  flex: 0;
+  padding-left: 0.5rem;
+  padding-top: 4px;
+  border-top: none !important;
+}
+.d35ecustom .scroll-spellbooks {
+  margin: 4px !important;
 }
 .secret {
   display: none;

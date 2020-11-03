@@ -1132,6 +1132,8 @@ export class ItemPF extends Item {
                     bonus: 0,
                     label: `Rapid Shot`
                 })
+                rollData.rapidShotPenalty = -2;
+                attackExtraParts.push("@rapidShotPenalty");
             }
             let manyshotAttacks = []
             if (greaterManyshot) {
