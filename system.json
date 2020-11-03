@@ -185,5 +185,11 @@
   
   "url": "https://github.com/Rughalt/d35e",
   "manifest": "http://dragonshorn.info/dnd35e/system.json",
-  "download": "http://dragonshorn.info/dnd35e/dnd35e.zip"
+  "download": "http://dragonshorn.info/dnd35e/dnd35e.zip",
+  "media": [
+    {
+      "type": "cover",
+      "link": "https://legaciesofthedragon.com/img/logo-dnd35e-bazaar.png"
+    }
+  ]
 }
