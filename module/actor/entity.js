@@ -2760,6 +2760,30 @@ export class ActorPF extends Actor {
             await super.update(data,options);
             return
         }
+        data = await this.prepareUpdateData(data);
+
+        // Update changes
+        let diff = data;
+        if (options.updateChanges !== false) {
+            const updateObj = await this._updateChanges({data: data});
+            if (updateObj.diff.items) delete updateObj.diff.items;
+            diff = mergeObject(diff, updateObj.diff);
+        }
+
+        // Diff token data
+        if (data.token != null) {
+            diff.token = diffObject(this.data.token, data.token);
+        }
+
+        if (Object.keys(diff).length) {
+            let updateOptions = mergeObject(options, { diff: true })
+            await super.update(diff,updateOptions);
+
+        }
+        //return false;
+    }
+
+    async prepareUpdateData(data) {
         let img = data.img;
         let expandedData = expandObject(data);
         if (expandedData.data != null && expandedData.data.skills != null) {
@@ -2946,26 +2970,7 @@ export class ActorPF extends Actor {
         // Update portraits
 
         await this._updateExp(data);
-
-        // Update changes
-        let diff = data;
-        if (options.updateChanges !== false) {
-            const updateObj = await this._updateChanges({data: data});
-            if (updateObj.diff.items) delete updateObj.diff.items;
-            diff = mergeObject(diff, updateObj.diff);
-        }
-
-        // Diff token data
-        if (data.token != null) {
-            diff.token = diffObject(this.data.token, data.token);
-        }
-
-        if (Object.keys(diff).length) {
-            let updateOptions = mergeObject(options, { diff: true })
-            await super.update(diff,updateOptions);
-
-        }
-        //return false;
+        return data;
     }
 
     _onUpdate(data, options, userId, context) {

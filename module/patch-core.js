@@ -1,6 +1,8 @@
 import { _rollInitiative, _getInitiativeFormula } from "./combat.js";
 import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
+import { ActorPF } from "./actor/entity.js";
+
 
 const FormApplication_close = FormApplication.prototype.close;
 
@@ -58,6 +60,29 @@ export async function PatchCore() {
       return terms;
     };
   }
+
+  const ActorTokenHelpers_update = ActorTokenHelpers.prototype.update;
+  ActorTokenHelpers.prototype.update = async function(data, options={}) {
+    // Pre update
+    if (isMinimumCoreVersion("0.7.4")) {
+      await this.prepareUpdateData(data);
+    }
+
+    // Update changes
+    let diff = data;
+    if (options.updateChanges !== false) {
+      const updateObj = await this._updateChanges({data: data});
+      if (updateObj.diff.items) delete updateObj.diff.items;
+      diff = mergeObject(diff, updateObj.diff);
+    }
+
+    if (Object.keys(diff).length) {
+      await ActorTokenHelpers_update.call(this, diff, options);
+    }
+    //await this.toggleConditionStatusIcons();
+  };
+
+
   // Patch, patch, patch
   Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
   Combat.prototype.rollInitiative = _rollInitiative;
