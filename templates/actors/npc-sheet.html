@@ -380,9 +380,44 @@
             </div>
 
             <section class="center-pane flexcol">
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.BuffTarACNatural"}}</label>
+                        <input name="data.attributes.naturalAC" type="text" placeholder="0"
+                               value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
+                    </div>
+                </div>
+
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.SpellResistance"}}</label>
+                        <input style="width: calc(100% - 60px);" name="data.attributes.sr.formula" type="text" placeholder="{{localize "D35E.Formula"}}"
+                        value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
+                        <span style="flex: 0 80px; text-align: end">Total: </span>
+                        <input style="flex: 0 30px" disabled type="text"
+                                                                        value="{{data.attributes.sr.total}}"/>
+                    </div>
+                </div>
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.FastHealing"}}</label>
+                        <input name="data.traits.fastHealing" type="text" placeholder="0"
+                               value="{{#if data.traits.fastHealing}}{{data.traits.fastHealing}}{{/if}}"/>
+                    </div>
+                </div>
+                <div class="traits">
+                    <div class="form-group">
+                        <label>{{localize "D35E.Regeneration"}}</label>
+                        <input name="data.traits.regen" type="text" placeholder="0"
+                               value="{{#if data.traits.regen}}{{data.traits.regen}}{{/if}}"/>
+                    </div>
+                </div>
+
                 {{!-- Traits --}}
                 {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
             </section>
+
+
         </div>
 
         {{!-- Defenses Tab --}}

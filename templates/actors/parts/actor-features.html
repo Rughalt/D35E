@@ -191,7 +191,7 @@
           {{#if item.data.source}}
              <em style="opacity: 0.8">{{item.data.source}}</em>
           {{else}}
-              <select name="item.data.classSource" data-dtype="String" class="feat-group-selector">
+              <select name="item.data.classSource" style="width: 100%" data-dtype="String" class="feat-group-selector">
                   {{#select item.data.classSource}}
                   <option value="">{{localize "D35E.Base"}}</option>
                   {{#each ../../featCounters as |ftt a|}}
@@ -266,7 +266,7 @@
                 {{/if}}
               </li>
               {{else}}
-              <h3  class="sublist-empty">Class has not features</h3>
+              <h3  class="sublist-empty">{{localize "D35E.ClassNoFeatures"}}</h3>
               {{/each}}
             </ol>
           </div>

@@ -23,9 +23,27 @@
       </ul>
     </div>
   </header>
+  {{#if data.originalWeaponCreated}}
+  <section class="original-weapon-box flexrow">
+
+    <div class="sheet-header-small">
+    <img class="" src="{{data.originalWeaponImg}}" title="{{data.originalWeaponName}}" data-edit="img"/>
+    </div>
+    <div class="flexcol">
+      <h3 class="origin-weapon-name">
+        <strong>{{localize "D35E.CreatedFrom"}}</strong> {{data.originalWeaponName}}
+      </h3>
+      <ul>
+        {{#each config.weaponProperties as |name prop|}}
+          {{#if (lookup ../data.originalWeaponProperties prop)}}<li class="tag">{{ name }}</li>{{/if}}
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+  {{/if}}
 
 
-  <section class="sheet-content flexcol">
+  <section class="sheet-content flexcol sheet-attack">
     {{!-- Item Sheet Navigation --}}
     <nav class="sheet-navigation tabs" data-group="primary">
       <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
@@ -76,6 +94,20 @@
             <a class="entry-selector" for="data.associations.classes" data-fields="{{localize "D35E.ClassPlural"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
             <label for="data.associations.classes">{{localize "D35E.ClassPlural"}}</label>
           </div>
+        </div>
+        <div class="form-group">
+          <label>{{localize "D35E.WeaponExtendedThreatRange"}}</label>
+          <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.threatRangeExtended" {{checked data.threatRangeExtended}}/>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>{{localize "D35E.Finesseable"}}</label>
+          <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.finesseable" {{checked data.finesseable}}/>
+            <span class="checkmark"></span>
+          </label>
         </div>
 
         <div class="form-group">

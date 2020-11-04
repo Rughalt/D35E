@@ -1,8 +1,8 @@
 {
   "name": "D35E",
-  "title": "DND 3.5e",
-  "description": "DND 3.5e implementation for Foundry VTT. Aiming to provide 100% SRD coverage.",
-  "version": "0.86.4",
+  "title": "3.5e SRD",
+  "description": "Implementation of 3.5 edition System Reference Document for Foundry VTT. Aiming to provide 100% SRD coverage.",
+  "version": "0.86.9",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -169,6 +169,11 @@
       "path": "lang/de.json"
     },
     {
+      "lang": "es",
+      "name": "Spanish",
+      "path": "lang/es.json"
+    },
+    {
       "lang": "fr",
       "name": "French",
       "path": "lang/fr.json"
@@ -185,5 +190,11 @@
   
   "url": "https://github.com/Rughalt/d35e",
   "manifest": "http://dragonshorn.info/dnd35e/system.json",
-  "download": "http://dragonshorn.info/dnd35e/dnd35e.zip"
+  "download": "http://dragonshorn.info/dnd35e/dnd35e.zip",
+  "media": [
+    {
+      "type": "cover",
+      "link": "https://legaciesofthedragon.com/img/logo-dnd35e-bazaar.png"
+    }
+  ]
 }

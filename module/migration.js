@@ -63,11 +63,11 @@ export const migrateWorld = async function() {
 export const migrateCompendium = async function(pack) {
   const entity = pack.metadata.entity;
   if ( !["Actor", "Item", "Scene"].includes(entity) ) return;
-
+  let content = []
   try {
     // Begin by requesting server-side data model migration and get the migrated content
     await pack.migrate();
-    const content = await pack.getContent();
+    content = await pack.getContent();
   } catch(err) {
     ui.notifications.error(game.i18n.localize("D35E.ErrorProblemWithMigratingPack") + pack.collection);
     console.error(err);
@@ -143,7 +143,8 @@ export const migrateActorData = async function(actor) {
  */
 export const migrateItemData = function(item) {
   const updateData = {};
-  
+
+  _migrateIcon(item, updateData);
   _migrateItemSpellUses(item, updateData);
   _migrateWeaponDamage(item, updateData);
   _migrateWeaponImprovised(item, updateData);
@@ -184,7 +185,7 @@ export const migrateSceneData = async function(scene) {
       t.actorId = null;
       t.actordata = {};
     }
-    const originalActor = game.actors.get(token.actor.id);
+    const originalActor = game.actors.get(token.actor?.id);
     if (!originalActor) {
       t.actorId = null;
       t.actorData = {};
@@ -400,6 +401,11 @@ const _migrateActorSpellbookDCFormula = function(ent, updateData) {
   }
 };
 
+const _migrateIcon = function(ent, updateData) {
+  const value = getProperty(ent.data, "img");
+  if (value.endsWith("/con.png")) updateData["img"] = value.replace("/con.png","/con_.png");
+};
+
 const _migrateItemSpellUses = function(ent, updateData) {
   if (getProperty(ent.data.data, "preparation") === undefined) return;
 
@@ -415,6 +421,13 @@ const _migrateWeaponDamage = function(ent, updateData) {
     updateData["data.weaponData"] = {};
     updateData["data.weaponData.critRange"] = 20;
     updateData["data.weaponData.critMult"] = 2;
+  }
+
+  if (getProperty(ent.data, "data.threatRangeExtended") == null) {
+    updateData["data.threatRangeExtended"] = false;
+  }
+  if (getProperty(ent.data, "data.finesseable") == null) {
+    updateData["data.finesseable"] = false;
   }
 };
 

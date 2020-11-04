@@ -1,13 +1,13 @@
-# DnD 3.5e implementation for [Foundry VTT](http://foundryvtt.com).
-Created from love for old DnD editions, this systems aims to provide full 3.5e SRD implementation and system flexible enough for anything else, with useful automations to help smooth out the gameplay both for GMs and Players.
+# 3.5e SRD implementation for [Foundry VTT](http://foundryvtt.com).
+Created from love for old RPGs based on 3.5 edition of System Reference Document, this systems aims to provide full 3.5e SRD implementation and system flexible enough for anything else, with useful automations to help smooth out the gameplay both for GMs and Players.
 
-![screen](docs/system-screen-skin.png)
+![screen](https://legaciesofthedragon.com/img/system-screen-skin.webp)
 
 This system provides character sheet support for Actors and Items, suport for systems like Psionics, Containers and Shapechange and ever growing compendiums with data on Monsters, Classes (along with features), Spells, Feats, Magic Items*!  (Plus we have a custom skin, if you are into those kind of things.)
 
 *Some of them are currently descriptive only, as system is in heavy developement.
 ## Installation
-Just search for DnD 3.5e in foundry system browser and click install! It is that simple!
+Just search for 3.5e SRD in foundry system browser and click install! It is that simple!
 
 ### Manual Install
 
@@ -18,7 +18,7 @@ the Data/systems/D35E folder. You may do this by cloning the repository or
 downloading a zip archive from the [here](https://www.dragonshorn.info/dnd35e/dnd35e.zip).
 
 ## Documentation
-You can find documentation on [wiki](https://dnd35e.dragonshorn.info/). Be advised that this is heavy work in progress. You can find FAQ [here](https://github.com/Rughalt/D35E/wiki/FAQ)
+You can find documentation on [wiki](https://docs.legaciesofthedragon.cp,/). Be advised that this is heavy work in progress.
 
 ## Progress
 You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
@@ -54,8 +54,8 @@ Use `packtool unpack <compendium file>` to unpack to json and `packtool pack <co
 The software component of this system is distributed under the GNUv3 license
 while the game content is distributed under the Open Gaming License v1.0a.
 
-The entire base work of this system is based on Furyspark's 
-on the PF1 system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1)  and LoopeeDK#9498 work 
+The base of this system is based on Furyspark's 
+on the PF1 system made over [here](https://gitlab.com/Furyspark/foundryvtt-pathfinder1) and LoopeeDK#9498 work 
 
 Icons provided in source distribution (on this github repository) by 
 - J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art  -- find this and other open art at: http://opengameart.org - CC-BY 3.0

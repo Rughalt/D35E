@@ -1166,6 +1166,7 @@ D35E.spellcastingType = {
 D35E.combatChangeType = {
   'all': 'D35E.All',
   'attack': 'D35E.Attack',
+  'attackOptional': 'D35E.AttackOptional',
   'spell': 'D35E.Spell',
 };
 

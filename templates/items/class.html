@@ -440,7 +440,7 @@
                     {{/each}}
                 </ol>
             </div>
-            <h4 class="form-header">{{localize "D35E.SpellCasting"}}</h4>
+            <h4 class="form-header">{{localize "D35E.Spellcasting"}}</h4>
 
             <div class="form-group">
                 <label>{{localize "D35E.SpellcastingType"}}</label>
@@ -498,17 +498,17 @@
                 <input type="text" name="data.spellcastingSpellnamePl" value="{{data.spellcastingSpellnamePl}}" data-dtype="String"/>
             </div>
 
-            <label>{{localize "D35E.SpellcastingDescription"}}</label>
-            {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
-            editable=editable}}
-
-
             <div class="form-group stacked">
                 <label class="checkbox">
                     <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
                            data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
                 </label>
             </div>
+            <label>{{localize "D35E.SpellcastingDescription"}}</label>
+            {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
+            editable=editable}}
+
+
             {{#if isPsionSpellcaster}}
             <h4 class="form-header">{{localize "D35E.PowerPointsTable"}}</h4>
 

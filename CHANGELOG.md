@@ -1,5 +1,28 @@
 # Changelog
-## 0.86
+*Newer changes are places in changelogs directory*
+## 0.86.6
+### Bug Fixes
+- [#89](https://github.com/Rughalt/D35E/issues/89) - Natural armor field missed in the NPC charlist
+- [#91](https://github.com/Rughalt/D35E/issues/91) - Grapple Modifier doesn't add up
+- [#92](https://github.com/Rughalt/D35E/issues/92) - Attack bonus/penalty for size is reverted for attack bonuses fields
+- [#93](https://github.com/Rughalt/D35E/issues/93) - Some monsters dragged from compendium can't be modified
+
+### Bug Fixes
+
+## 0.86.5
+
+### Bug Fixes
+- [#86](https://github.com/Rughalt/D35E/issues/86) - Rolling grapple displays null in roll data 
+- [#85](https://github.com/Rughalt/D35E/issues/85) - Add size modifiers to rolls for base Melee and Ranged attack
+- [#84](https://github.com/Rughalt/D35E/issues/84) - Cannot set Ability scores from Attribute tab 
+- [#83](https://github.com/Rughalt/D35E/issues/83) - Add ability to toggle Class Features list under classes
+- [#82](https://github.com/Rughalt/D35E/issues/82) - Using ECL for XP count if Level Progression is disabled
+- [#80](https://github.com/Rughalt/D35E/issues/80) - Subskills do not work in Level Up Details
+- [#78](https://github.com/Rughalt/D35E/issues/78) - Gracefully fail if cannot migrate a pack
+- [#79](https://github.com/Rughalt/D35E/issues/79) - No scrollbars in default skin
+
+
+## 0.86.4
 ### SRD
 - Added Prestige Classes: Archmage, Assassin, Blackguard, Dwarven Defender, Eldricht Knight
 ### Features
