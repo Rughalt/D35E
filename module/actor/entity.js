@@ -1104,6 +1104,14 @@ export class ActorPF extends Actor {
             });
         }
 
+        // Concentration
+        if (data.data.skills.coc.rank >= 5) {
+            changes.push({
+                raw: ["2", "skill", "skill.aut", "untyped", 0],
+                source: { name: "Skill synergy" }
+            });
+        }
+
         // Apply level drain to hit points
         if (!Number.isNaN(data.data.attributes.energyDrain) && data.data.attributes.energyDrain > 0) {
             changes.push({
@@ -4144,13 +4152,9 @@ export class ActorPF extends Actor {
         const size = srcData.data.traits.size;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
         else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
-        const table = CONFIG.D35E.encumbranceLoads;
+        let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, {"str": carryStr}).roll().total;
 
-        let heavy = Math.floor(table[carryStr] * carryMultiplier);
-        if (carryStr >= table.length) {
-            heavy = Math.floor(table[table.length - 1] * (1 + (0.3 * (carryStr - (table.length - 1)))));
-        }
-        // 1 Kg = 0.5 Kg
+        // 1 kg = 0.5 lb
         if (game.settings.get("D35E", "units") === "metric") {
             heavy = heavy / 2
         }
