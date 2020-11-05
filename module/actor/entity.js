@@ -2146,8 +2146,10 @@ export class ActorPF extends Actor {
                 for (let entry of itemsToRemove) {
                     idsToRemove.push(itemsWithUid.get(entry))
                 }
-                const deleted = await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
-                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
+                if (idsToRemove.length)
+                    await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
+                if (itemsToAdd.length)
+                    await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
 
             }
         }

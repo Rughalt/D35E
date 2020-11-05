@@ -75,12 +75,36 @@ export async function PatchCore() {
       if (updateObj.diff.items) delete updateObj.diff.items;
       diff = mergeObject(diff, updateObj.diff);
     }
-
     if (Object.keys(diff).length) {
       await ActorTokenHelpers_update.call(this, diff, options);
     }
     //await this.toggleConditionStatusIcons();
   };
+
+  const ActorTokenHelpers_createEmbeddedEntity = ActorTokenHelpers.prototype.createEmbeddedEntity;
+  ActorTokenHelpers.prototype.createEmbeddedEntity = async function(...args) {
+    await ActorTokenHelpers_createEmbeddedEntity.call(this, ...args);
+
+    return ActorPF.prototype.update.call(this, {});
+  };
+  // Patch ActorTokenHelpers.updateEmbeddedEntity
+  const ActorTokenHelpers_updateEmbeddedEntity = ActorTokenHelpers.prototype.updateEmbeddedEntity;
+  ActorTokenHelpers.prototype.updateEmbeddedEntity = async function(embeddedName, data, options={}) {
+    await ActorTokenHelpers_updateEmbeddedEntity.call(this, embeddedName, data, options);
+
+
+    return ActorPF.prototype.update.call(this, {});
+  };
+  // Patch ActorTokenHelpers.deleteEmbeddedEntity
+  const ActorTokenHelpers_deleteEmbeddedEntity = ActorTokenHelpers.prototype.deleteEmbeddedEntity;
+  ActorTokenHelpers.prototype.deleteEmbeddedEntity = async function(embeddedName, id, options={}) {
+    await ActorTokenHelpers_deleteEmbeddedEntity.call(this, embeddedName, id, options);
+
+
+    return ActorPF.prototype.update.call(this, {});
+  };
+
+
 
 
   // Patch, patch, patch
