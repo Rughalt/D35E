@@ -4137,13 +4137,9 @@ export class ActorPF extends Actor {
         const size = srcData.data.traits.size;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
         else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
-        const table = CONFIG.D35E.encumbranceLoads;
+        let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, {"str": carryStr}).roll().total;
 
-        let heavy = Math.floor(table[carryStr] * carryMultiplier);
-        if (carryStr >= table.length) {
-            heavy = Math.floor(table[table.length - 1] * (1 + (0.3 * (carryStr - (table.length - 1)))));
-        }
-        // 1 Kg = 0.5 Kg
+        // 1 kg = 0.5 lb
         if (game.settings.get("D35E", "units") === "metric") {
             heavy = heavy / 2
         }
