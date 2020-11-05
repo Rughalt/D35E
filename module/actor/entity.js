@@ -1104,6 +1104,14 @@ export class ActorPF extends Actor {
             });
         }
 
+        // Concentration
+        if (data.data.skills.coc.rank >= 5) {
+            changes.push({
+                raw: ["2", "skill", "skill.aut", "untyped", 0],
+                source: { name: "Skill synergy" }
+            });
+        }
+
         // Apply level drain to hit points
         if (!Number.isNaN(data.data.attributes.energyDrain) && data.data.attributes.energyDrain > 0) {
             changes.push({
