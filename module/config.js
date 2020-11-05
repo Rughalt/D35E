@@ -345,12 +345,7 @@ D35E.speedReduction = {
 
 /* -------------------------------------------- */
 
-D35E.encumbranceLoads = [
-  0,
-  10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
-  115, 130, 150, 175, 200, 230, 260, 300, 350,
-  400, 460, 520, 600, 700, 800, 920, 1040, 1200, 1400, 1600
-];
+D35E.carryingCapacityFormula = "(10*@str)*(max(@str,11)-@str)/(max(11-@str,1))+(5*pow(2,floor(@str/5)-2)*(20+floor(47*pow(2,0.1*(@str%5))-47))*(min(@str,10)-@str)/(min(10-@str,-1)";
 
 D35E.encumbranceMultipliers = {
   normal: {
