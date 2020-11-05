@@ -2111,7 +2111,7 @@ export class ActorPF extends Actor {
                                         eItem.data.source = `${classInfo[0]} ${level}`
                                         eItem.data.userNonRemovable = true;
 
-                                        eItem.data.changes.forEach(change => {
+                                        (eItem.data.changes || []).forEach(change => {
                                             if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
                                             changes.push({
                                                 raw: change,
