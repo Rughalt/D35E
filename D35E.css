@@ -3117,6 +3117,12 @@
 .D35E.sheet.actor.npc .race-container .race .rollable:hover {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
+.D35E.sheet.actor.npc .master-block {
+  border-right: 2px groove #eeede0;
+}
+.D35E.sheet.actor.npc .master-block .minion-name {
+  font-size: 35px;
+}
 .D35E.sheet.actor.npc.lite {
   min-width: 440px;
   min-height: 200px;
@@ -4726,6 +4732,26 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .scroll-spellbooks {
   margin: 4px !important;
+}
+.d35ecustom .master-block {
+  border-right: none;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 2px;
+  margin: 2px -1px;
+}
+.d35ecustom .master-block img {
+  flex: 0 0 51px !important;
+  height: 51px !important;
+  margin-right: 6px !important;
+}
+.d35ecustom .master-block .minion-name {
+  font-size: 30px;
+  line-height: 30px;
+}
+.d35ecustom .master-block .minion-of {
+  font-size: 18px;
 }
 .secret {
   display: none;

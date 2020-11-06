@@ -1705,6 +1705,10 @@ export class ActorSheetPF extends ActorSheet {
     if (itemData.type === "npc") {
       return this.actor._createPolymorphBuffDialog(itemData);
     }
+    if (this.actor.data.type === "npc" && itemData.type === "character") {
+      if (dataType === "world")
+        return this.actor._setMaster(itemData);
+    }
   }
 
 

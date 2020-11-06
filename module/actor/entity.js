@@ -2007,7 +2007,7 @@ export class ActorPF extends Actor {
             const k = "data.attributes.sr.total";
             // Set spell resistance
             if (getProperty(data, `data.attributes.sr.formula`).length > 0) {
-                let roll = new Roll(getProperty(data, `data.attributes.sr.formula`), data).roll();
+                let roll = new Roll(getProperty(data, `data.attributes.sr.formula`), data.data).roll();
                 linkData(data, updateData, k, roll.total);
             } else {
 
@@ -2024,7 +2024,7 @@ export class ActorPF extends Actor {
             let groupFormulas = new Map()
             classes.forEach(obj => {
                 try {
-                    if (obj.data.sneakAttackGroup == null || obj.data.sneakAttackGroup == "")
+                    if (obj.data.sneakAttackGroup == null || obj.data.sneakAttackGroup === "")
                         return;
                     if (!groupLevels.has(obj.data.sneakAttackGroup)) {
                         groupLevels.set(obj.data.sneakAttackGroup, 0)
@@ -2046,6 +2046,34 @@ export class ActorPF extends Actor {
                 totalSneakAttakDice = totalSneakAttakDice + v
             }
             linkData(data, updateData, k, totalSneakAttakDice);
+
+        }
+
+        // Total sneak attak dice
+        {
+            const k = "data.attributes.minionClassLevels";
+            let groupLevels = new Map()
+            let groupFormulas = new Map()
+            let minionLevels = {}
+            classes.forEach(obj => {
+                try {
+                    if (obj.data.minionGroup == null || obj.data.minionGroup === "")
+                        return;
+                    if (!groupLevels.has(obj.data.minionGroup)) {
+                        groupLevels.set(obj.data.minionGroup, 0)
+                    }
+                    if (!groupFormulas.has(obj.data.minionGroup)) {
+                        groupFormulas.set(obj.data.minionGroup, obj.data.minionLevelFormula)
+                    }
+                    groupLevels.set(obj.data.minionGroup, groupLevels.get(obj.data.minionGroup) + obj.data.levels)
+                } catch (e) {
+                }
+            })
+            for (var key of groupLevels.keys()) {
+                const v = new Roll(groupFormulas.get(key), {level: groupLevels.get(key)}).roll().total;
+                minionLevels[key.toLowerCase()] = v
+            }
+            linkData(data, updateData, k, minionLevels);
 
         }
 
@@ -2453,6 +2481,8 @@ export class ActorPF extends Actor {
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
+
+
     }
 
     _setSourceDetails(actorData, extraData, flags) {
@@ -2797,6 +2827,7 @@ export class ActorPF extends Actor {
             await super.update(diff,updateOptions);
 
         }
+        this._updateMinions();
         //return false;
     }
 
@@ -4542,6 +4573,20 @@ export class ActorPF extends Actor {
         }).render(true);
     }
 
+    _setMaster(itemData) {
+        let masterData = {
+            data : {
+                master : {
+                    id: itemData._id,
+                    img: itemData.img,
+                    name: itemData.name,
+                    data: game.actors.get(itemData._id).getRollData(),
+                }
+            }
+        };
+        this.update(masterData);
+    }
+
     async createConsumableSpell(itemData, type) {
         let data = await ItemPF.toConsumable(itemData, type);
 
@@ -4575,6 +4620,23 @@ export class ActorPF extends Actor {
 
         if (data._id) delete data._id;
         await this.createEmbeddedEntity("OwnedItem", data);
+    }
+
+    _updateMinions() {
+        game.actors.forEach(actor => {
+            if (actor.data.data?.master?.id === this.id) {
+                let masterData = {
+                    data : {
+                        master : {
+                            img: this.img,
+                            name: this.name,
+                            data: this.getRollData(),
+                        }
+                    }
+                };
+                actor.update(masterData, {stopUpdates: true});
+            }
+        })
     }
 }
 
