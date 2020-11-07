@@ -68,6 +68,7 @@ export async function PatchCore() {
       await this.prepareUpdateData(data);
     }
 
+
     // Update changes
     let diff = data;
     if (options.updateChanges !== false) {
@@ -87,6 +88,15 @@ export async function PatchCore() {
 
     return ActorPF.prototype.update.call(this, {});
   };
+
+  const Token_animateMovement = Token.prototype.animateMovement;
+  Token.prototype.animateMovement = async function(...args) {
+    await Token_animateMovement.call(this, ...args);
+    console.log("D35E | Calling _calculateMinionDistance")
+    ActorPF.prototype._calculateMinionDistance.call(this.actor, {});
+    // Do something?
+  };
+
   // Patch ActorTokenHelpers.updateEmbeddedEntity
   const ActorTokenHelpers_updateEmbeddedEntity = ActorTokenHelpers.prototype.updateEmbeddedEntity;
   ActorTokenHelpers.prototype.updateEmbeddedEntity = async function(embeddedName, data, options={}) {

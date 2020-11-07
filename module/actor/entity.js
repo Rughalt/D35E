@@ -533,7 +533,7 @@ export class ActorPF extends Actor {
     }
 
 
-    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride) {
+    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}) {
         // Class hit points
         const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
             return a.sort - b.sort;
@@ -721,6 +721,7 @@ export class ActorPF extends Actor {
 
 
         // Apply changes in Actor size to Token width/height
+        if (!options.skipToken)
         {
             let size = CONFIG.D35E.tokenSizes[sizeKey];
             //console.log(size)
@@ -743,6 +744,7 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
+        if (!options.skipToken)
         {
             let dimLight = 0;
             let brightLight = 0;
@@ -1140,7 +1142,7 @@ export class ActorPF extends Actor {
         return true;
     }
 
-    async _updateChanges({data = null} = {}) {
+    async _updateChanges({data = null} = {}, options = {}) {
         let updateData = {};
         let srcData1 = mergeObject(this.data, expandObject(data || {}), {inplace: false});
         srcData1.items = this.items.reduce((cur, i) => {
@@ -1372,7 +1374,7 @@ export class ActorPF extends Actor {
 
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
-        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride);
+        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options);
 
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
@@ -1381,12 +1383,13 @@ export class ActorPF extends Actor {
         const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, {inplace: false});
         updateData = flattenObject({data: mergeObject(origData.data, expandObject(updateData).data, {inplace: false})});
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
+        let srcRollData = this.getRollData(srcData1.data);
         allChanges.forEach((change, a) => {
             const formula = change.raw[0] || "";
             if (formula === "") return;
             const changeTarget = change.raw[2];
             if (changeData[changeTarget] == null) return;
-            const rollData = this.constructor._blacklistChangeData(this.getRollData(srcData1.data), changeTarget);
+            const rollData = this.constructor._blacklistChangeData(srcRollData, changeTarget);
 
             rollData.item = {};
             if (change.source.item != null) {
@@ -1560,45 +1563,46 @@ export class ActorPF extends Actor {
             tokenImg = data.token.img;
             linkData(srcData1, updateData, "data.tokenImg", tokenImg);
         }
+        if (!options.skipToken) {
+            if (shapechangeImg !== "icons/svg/mystery-man.svg") {
+                if (this.isToken) {
+                    let tokens = []
+                    tokens.push(this.token);
+                    for (const o of tokens) {
+                        if (shapechangeImg !== o.data.img)
+                            o.update({'img': shapechangeImg}, {stopUpdates: true});
+                    }
+                }
+                if (!this.isToken) {
+                    let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
+                    ;
+                    for (const o of tokens) {
+                        if (shapechangeImg !== o.data.img)
+                            o.update({'img': shapechangeImg}, {stopUpdates: true});
+                    }
+                    if (srcData1 !== null)
+                        srcData1["token.img"] = shapechangeImg;
+                }
+            } else {
+                if (this.isToken) {
+                    let tokens = []
+                    tokens.push(this.token);
+                    for (const o of tokens) {
+                        if (tokenImg && tokenImg !== o.data.img)
+                            o.update({'img': tokenImg}, {stopUpdates: true});
+                    }
+                }
+                if (!this.isToken) {
+                    let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
+                    ;
+                    for (const o of tokens) {
+                        if (tokenImg && tokenImg !== o.data.img)
+                            o.update({'img': tokenImg}, {stopUpdates: true});
+                    }
 
-        if (shapechangeImg !== "icons/svg/mystery-man.svg") {
-            if (this.isToken) {
-                let tokens = []
-                tokens.push(this.token);
-                for (const o of tokens) {
-                    if (shapechangeImg !== o.data.img)
-                        o.update({'img': shapechangeImg}, {stopUpdates: true});
-                }
-            }
-            if (!this.isToken) {
-                let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                ;
-                for (const o of tokens) {
-                    if (shapechangeImg !== o.data.img)
-                        o.update({'img': shapechangeImg}, {stopUpdates: true});
-                }
-                if (srcData1 !== null)
-                    srcData1["token.img"] = shapechangeImg;
-            }
-        } else {
-            if (this.isToken) {
-                let tokens = []
-                tokens.push(this.token);
-                for (const o of tokens) {
-                    if (tokenImg && tokenImg !== o.data.img)
-                        o.update({'img': tokenImg}, {stopUpdates: true});
-                }
-            }
-            if (!this.isToken) {
-                let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                ;
-                for (const o of tokens) {
-                    if (tokenImg && tokenImg !== o.data.img)
-                        o.update({'img': tokenImg}, {stopUpdates: true});
-                }
-
-                if (srcData1 !== null) {
-                    srcData1["token.img"] = tokenImg;
+                    if (srcData1 !== null) {
+                        srcData1["token.img"] = tokenImg;
+                    }
                 }
             }
         }
@@ -1803,6 +1807,8 @@ export class ActorPF extends Actor {
 
         let levelUpData = duplicate(data1.details.levelUpData) || []
         if (levelUpData.length !== data1.details.level.available) {
+
+            console.log('D35E | ActorPF | Will update actor level')
             while (levelUpData.length < data1.details.level.available) {
                 levelUpData.push({'level': levelUpData.length + 1,'id': '_' + Math.random().toString(36).substr(2, 9), 'classId': null, 'class': null, 'classImage': null, 'skills': {}, 'hp': 0, hasFeat: (levelUpData.length + 1) % 3 === 0, hasAbility: (levelUpData.length + 1) % 4 === 0})
             }
@@ -2812,7 +2818,7 @@ export class ActorPF extends Actor {
         // Update changes
         let diff = data;
         if (options.updateChanges !== false) {
-            const updateObj = await this._updateChanges({data: data});
+            const updateObj = await this._updateChanges({data: data}, options);
             if (updateObj.diff.items) delete updateObj.diff.items;
             diff = mergeObject(diff, updateObj.diff);
         }
@@ -2827,7 +2833,7 @@ export class ActorPF extends Actor {
             await super.update(diff,updateOptions);
 
         }
-        this._updateMinions();
+        this._updateMinions(options);
         //return false;
     }
 
@@ -2948,7 +2954,7 @@ export class ActorPF extends Actor {
             if (hasContainerChanged)
                 itemUpdates.push(itemUpdateData)
         }
-        //console.log('Item updates', itemUpdates)
+        console.log('D35E | Item updates', itemUpdates)
         if (itemUpdates.length > 0)
             await this.updateOwnedItem(itemUpdates, {stopUpdates: true});
         // Send resource updates to item
@@ -3026,13 +3032,15 @@ export class ActorPF extends Actor {
             canvas.sight.initializeTokens();
         }
 
+        let actorRollData = mergeObject(this.getRollData(), data, {inplace: false})
         for (let i of this.items.values()) {
             let itemUpdateData = {};
 
-            i._updateMaxUses(itemUpdateData, {actorData: data});
-
-            const itemDiff = diffObject(flattenObject(i.data), itemUpdateData);
-            if (Object.keys(itemDiff).length > 0) i.update(itemDiff);
+            i._updateMaxUses(itemUpdateData, {actorRollData: actorRollData});
+            if (Object.keys(itemUpdateData).length > 0) {
+                const itemDiff = diffObject(flattenObject(i.data), itemUpdateData);
+                if (Object.keys(itemDiff).length > 0) i.update(itemDiff);
+            }
         }
         return super._onUpdate(data, options, userId, context);
     }
@@ -4622,7 +4630,8 @@ export class ActorPF extends Actor {
         await this.createEmbeddedEntity("OwnedItem", data);
     }
 
-    _updateMinions() {
+    _updateMinions(options) {
+        if (options.skipMinions) return;
         game.actors.forEach(actor => {
             if (actor.data.data?.master?.id === this.id) {
                 let masterData = {
@@ -4637,6 +4646,58 @@ export class ActorPF extends Actor {
                 actor.update(masterData, {stopUpdates: true});
             }
         })
+    }
+
+    async _calculateMinionDistance() {
+        if (this.data.type === "npc") {
+            let myToken = this.getActiveTokens()[0];
+            let masterId = this.data.data?.master?.id;
+            let master = game.actors.get(masterId);
+            let masterToken = master.getActiveTokens()[0];
+            if (!!myToken && !!masterToken) {
+                let distance = Math.floor(canvas.grid.measureDistance(myToken, masterToken) / 5.0) * 5;
+                let masterData = {
+                    data: {
+                        master: {
+                            distance: distance
+                        }
+                    }
+                };
+                let minionData = {
+                    data: {
+                        attributes: {minionDistance: {}}
+                    }
+                };
+                minionData.data.attributes.minionDistance[this.data.name.toLowerCase()] = distance
+                master.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
+                this.update(masterData, {stopUpdates: true, skipToken: true});
+            }
+        } else if (this.data.type === "character") {
+            let myToken = this.getActiveTokens()[0];
+            let minionData = {
+                data: {
+                    attributes: {minionDistance: {}}
+                }
+            };
+            game.actors.forEach(minion => {
+                if (minion.data.data?.master?.id === this.id) {
+                    let minionToken = minion.getActiveTokens()[0]
+                    if (!!myToken && !!masterToken) {
+                        let distance = Math.floor(canvas.grid.measureDistance(myToken, masterToken) / 5.0) * 5;
+                        let masterData = {
+                            data: {
+                                master: {
+                                    distance: distance
+                                }
+                            }
+                        };
+                        minionData.data.attributes.minionDistance[this.data.name.toLowerCase()] = distance
+                        minion.update(masterData, {stopUpdates: true, skipToken: true});
+                    }
+                }
+            });
+            this.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
+        }
     }
 }
 

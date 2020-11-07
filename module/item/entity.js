@@ -365,7 +365,7 @@ export class ItemPF extends Item {
         }
         itemData['custom'] = {}
         if (data.hasOwnProperty('customAttributes')) {
-            console.log(data.customAttributes)
+            //console.log(data.customAttributes)
             for (let prop in data.customAttributes || {}) {
                 let propData = data.customAttributes[prop];
                 itemData['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
@@ -582,7 +582,7 @@ export class ItemPF extends Item {
         }
     }
 
-    _updateMaxUses(data, {srcData = null, actorData = null} = {}) {
+    _updateMaxUses(data, {srcData = null, actorData = null, actorRollData = null} = {}) {
         if (data['data.uses.max'] !== undefined) return;
         let doLinkData = true;
         if (srcData == null) {
@@ -590,9 +590,13 @@ export class ItemPF extends Item {
             doLinkData = false;
         }
         let rollData = {};
-        if (this.actor != null) rollData = this.actor.getRollData();
-        if (actorData !== null) {
-            rollData = mergeObject(rollData,actorData.data, {inplace: false});
+        if (actorRollData == null) {
+            if (this.actor != null) rollData = this.actor.getRollData();
+            if (actorData !== null) {
+                rollData = mergeObject(rollData, actorData.data, {inplace: false});
+            }
+        } else {
+            rollData = actorRollData;
         }
         rollData.item = this.getRollData();
 

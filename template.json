@@ -206,6 +206,7 @@
           "turnUndeadUsesTotal": 0,
           "sneakAttackDiceTotal": 0,
           "minionClassLevels": {},
+          "minionDistance": {},
           "spellPointsTotal": [],
           "powerPointsTotal": 0,
           "wounds": {
@@ -981,7 +982,8 @@
         "id": null,
         "img": null,
         "name": null,
-        "data": {}
+        "data": {},
+        "distance": 0
       }
     }
   },
