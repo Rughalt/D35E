@@ -157,6 +157,7 @@ export const migrateItemData = function(item) {
   _migrateWeaponSize(item, updateData);
   _migrateContainer(item, updateData);
   _migrateEnhancement(item, updateData);
+  _migrateSpellName(item, updateData);
 
   // Return the migrated update data
   return updateData;
@@ -457,6 +458,11 @@ const _migrateWeaponImprovised = function(ent, updateData) {
     updateData["data.properties.imp"] = true;
   }
 };
+
+const _migrateSpellName = function(ent, updateData) {
+  if (ent.type !== "spell") return;
+  updateData["name"] = ent.data.trim()
+}
 
 const _migrateSpellDescription = function(ent, updateData) {
   if (ent.type !== "spell") return;

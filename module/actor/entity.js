@@ -1241,7 +1241,7 @@ export class ActorPF extends Actor {
                 }
             }
         }
-        ;
+
 
         // Create an array of changes
         let allChanges = [];
@@ -1575,7 +1575,7 @@ export class ActorPF extends Actor {
                 }
                 if (!this.isToken) {
                     let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                    ;
+
                     for (const o of tokens) {
                         if (shapechangeImg !== o.data.img)
                             o.update({'img': shapechangeImg}, {stopUpdates: true});
@@ -1594,7 +1594,7 @@ export class ActorPF extends Actor {
                 }
                 if (!this.isToken) {
                     let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                    ;
+
                     for (const o of tokens) {
                         if (tokenImg && tokenImg !== o.data.img)
                             o.update({'img': tokenImg}, {stopUpdates: true});
@@ -4582,17 +4582,21 @@ export class ActorPF extends Actor {
     }
 
     _setMaster(itemData) {
-        let masterData = {
-            data : {
-                master : {
-                    id: itemData._id,
-                    img: itemData.img,
-                    name: itemData.name,
-                    data: game.actors.get(itemData._id).getRollData(),
+        if (itemData == null) {
+            this.update({data: { master : {}}});
+        } else {
+            let masterData = {
+                data: {
+                    master: {
+                        id: itemData._id,
+                        img: itemData.img,
+                        name: itemData.name,
+                        data: game.actors.get(itemData._id).getRollData(),
+                    }
                 }
-            }
-        };
-        this.update(masterData);
+            };
+            this.update(masterData);
+        }
     }
 
     async createConsumableSpell(itemData, type) {
@@ -4649,6 +4653,7 @@ export class ActorPF extends Actor {
     }
 
     async _calculateMinionDistance() {
+        if (this == null) return;
         if (this.data.type === "npc") {
             let myToken = this.getActiveTokens()[0];
             let masterId = this.data.data?.master?.id;
@@ -4668,7 +4673,7 @@ export class ActorPF extends Actor {
                         attributes: {minionDistance: {}}
                     }
                 };
-                minionData.data.attributes.minionDistance[this.data.name.toLowerCase()] = distance
+                minionData.data.attributes.minionDistance[this.data.name.toLowerCase().replace(/ /g, '').replace(/,/g, '')] = distance
                 master.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
                 this.update(masterData, {stopUpdates: true, skipToken: true});
             }
@@ -4682,8 +4687,8 @@ export class ActorPF extends Actor {
             game.actors.forEach(minion => {
                 if (minion.data.data?.master?.id === this.id) {
                     let minionToken = minion.getActiveTokens()[0]
-                    if (!!myToken && !!masterToken) {
-                        let distance = Math.floor(canvas.grid.measureDistance(myToken, masterToken) / 5.0) * 5;
+                    if (!!myToken && !!minionToken) {
+                        let distance = Math.floor(canvas.grid.measureDistance(myToken, minionToken) / 5.0) * 5;
                         let masterData = {
                             data: {
                                 master: {
@@ -4691,7 +4696,7 @@ export class ActorPF extends Actor {
                                 }
                             }
                         };
-                        minionData.data.attributes.minionDistance[this.data.name.toLowerCase()] = distance
+                        minionData.data.attributes.minionDistance[minion.data.name.toLowerCase().replace(/ /g, '').replace(/,/g, '')] = distance
                         minion.update(masterData, {stopUpdates: true, skipToken: true});
                     }
                 }

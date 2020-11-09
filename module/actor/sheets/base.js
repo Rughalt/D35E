@@ -607,6 +607,13 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find("a.random-hp-roll").click(ev => { this._rollRandomHitDie(ev); });
 
+
+    /* -------------------------------------------- */
+    /*  Master/Minion
+    /* -------------------------------------------- */
+
+    html.find('a.unbind-master').click(event => this._onMasterUnbind(event));
+
     /* -------------------------------------------- */
     /*  Feats
     /* -------------------------------------------- */
@@ -989,6 +996,13 @@ export class ActorSheetPF extends ActorSheet {
     const item = this.actor.getOwnedItem(itemId);
     let enh = item.getEnhancementItem(enhId);
     return enh.roll({}, this.actor);
+  }
+
+  /* -------------------------------------------- */
+
+  _onMasterUnbind(event) {
+    event.preventDefault();
+    this.actor._setMaster(null);
   }
 
   /* -------------------------------------------- */

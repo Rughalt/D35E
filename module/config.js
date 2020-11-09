@@ -68,6 +68,7 @@ D35E.classTypes = {
   "base": "D35E.ClassTypeBase",
   "prestige": "D35E.ClassTypePrestige",
   "racial": "D35E.ClassTypeRacial",
+  "minion": "D35E.Minion",
 };
 
 D35E.classBAB = {

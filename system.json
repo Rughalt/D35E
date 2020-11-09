@@ -143,6 +143,13 @@
       "entity": "Actor"
     },
     {
+      "name": "minion",
+      "label": "Minions (Familiars, Animal Companions)",
+      "system": "D35E",
+      "path": "./packs/minions.db",
+      "entity": "Actor"
+    },
+    {
       "name": "conditions",
       "label": "Conditions",
       "system": "D35E",
