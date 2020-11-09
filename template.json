@@ -126,7 +126,8 @@
           },
           "bab": {
             "value": 0,
-            "total": 0
+            "total": 0,
+            "base": 0
           },
           "cmd": {
             "value": 0,
@@ -166,13 +167,16 @@
           "quadruped": false,
           "savingThrows": {
             "fort": {
-              "total": 0
+              "total": 0,
+              "base": 0
             },
             "ref": {
-              "total": 0
+              "total": 0,
+              "base": 0
             },
             "will": {
-              "total": 0
+              "total": 0,
+              "base": 0
             }
           },
           "hp": {

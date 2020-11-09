@@ -1856,6 +1856,7 @@ export class ActorPF extends Actor {
         for (let a of Object.keys(data1.attributes.savingThrows)) {
             {
                 const k = `data.attributes.savingThrows.${a}.total`;
+                const j = `data.attributes.savingThrows.${a}.base`;
                 let totalLevel = 0;
                 let epicLevels = 0;
                 if (useFractionalBaseBonuses) {
@@ -1908,6 +1909,7 @@ export class ActorPF extends Actor {
                         sourceInfo[k].positive.push({name: 'Epic Levels', value: epicST});
                     }
                     linkData(data, updateData, k, baseST + epicST);
+                    linkData(data, updateData, j, baseST + epicST);
                 }
             }
         }
@@ -1944,6 +1946,7 @@ export class ActorPF extends Actor {
         // Reset BAB, CMB and CMD
         {
             const k = "data.attributes.bab.total";
+            const j = "data.attributes.bab.base";
             let totalLevel = 0;
             let epicLevels = 0;
             if (useFractionalBaseBonuses) {
@@ -1987,6 +1990,7 @@ export class ActorPF extends Actor {
                     sourceInfo[k].positive.push({name: 'Epic Levels', value: epicBab});
                 }
                 linkData(data, updateData, k, bab + epicBab);
+                linkData(data, updateData, j, bab + epicBab);
             }
         }
 
@@ -2061,6 +2065,10 @@ export class ActorPF extends Actor {
             let groupLevels = new Map()
             let groupFormulas = new Map()
             let minionLevels = {}
+
+            for (var key of Object.keys(data.data.attributes.minionClassLevels || {})) {
+                minionLevels[key.toLowerCase()] = 0
+            }
             classes.forEach(obj => {
                 try {
                     if (obj.data.minionGroup == null || obj.data.minionGroup === "")
@@ -2102,7 +2110,6 @@ export class ActorPF extends Actor {
                 linkData(data, updateData, `data.skills.${k}.subSkills.${k2}.cs`, isClassSkill);
             }
         }
-
         {
             let level = classes.reduce((cur, o) => {
                 return cur + o.data.levels;
@@ -4634,9 +4641,9 @@ export class ActorPF extends Actor {
         await this.createEmbeddedEntity("OwnedItem", data);
     }
 
-    _updateMinions(options) {
+    async _updateMinions(options) {
         if (options.skipMinions) return;
-        game.actors.forEach(actor => {
+        for (const actor of game.actors) {
             if (actor.data.data?.master?.id === this.id) {
                 let masterData = {
                     data : {
@@ -4647,9 +4654,21 @@ export class ActorPF extends Actor {
                         }
                     }
                 };
+
+                // Updating minion "Familiar class"
+                const classes = actor.data.items.filter(obj => {
+                    return obj.type === "class";
+                });
+                const minionClass = classes.find(o => getProperty(o.data, "classType") === "minion");
+                if (!!minionClass) {
+                    let updateObject = {}
+                    updateObject["_id"] = minionClass.id || minionClass._id;
+                    updateObject["data.levels"] = this.getRollData().attributes.minionClassLevels[minionClass.data.minionGroup] || 0;
+                    await actor.updateOwnedItem(updateObject, {stopUpdates: true})
+                }
                 actor.update(masterData, {stopUpdates: true});
             }
-        })
+        }
     }
 
     async _calculateMinionDistance() {

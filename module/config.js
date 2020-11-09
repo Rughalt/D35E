@@ -101,6 +101,10 @@ D35E.classSavingThrowFormulas = {
     "low": "floor(@level / 3)",
     "high": "2 + floor(@level / 2)",
   },
+  "minion": {
+    "low": "floor(@level / 3)",
+    "high": "2 + floor(@level / 2)",
+  },
 };
 
 D35E.favouredClassBonuses = {
