@@ -1383,13 +1383,13 @@ export class ActorPF extends Actor {
         const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, {inplace: false});
         updateData = flattenObject({data: mergeObject(origData.data, expandObject(updateData).data, {inplace: false})});
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
-        let srcRollData = this.getRollData(srcData1.data);
+        //let srcRollData = this.getRollData(srcData1.data);
         allChanges.forEach((change, a) => {
             const formula = change.raw[0] || "";
             if (formula === "") return;
             const changeTarget = change.raw[2];
             if (changeData[changeTarget] == null) return;
-            const rollData = this.constructor._blacklistChangeData(srcRollData, changeTarget);
+            const rollData = this.constructor._blacklistChangeData(this.getRollData(srcData1.data), changeTarget);
 
             rollData.item = {};
             if (change.source.item != null) {
@@ -1747,6 +1747,7 @@ export class ActorPF extends Actor {
         const classes = items.filter(obj => {
             return obj.type === "class";
         });
+
         const racialHD = classes.filter(o => getProperty(o.data, "classType") === "racial");
         const useFractionalBaseBonuses = game.settings.get("D35E", "useFractionalBaseBonuses") === true;
 
@@ -1886,12 +1887,16 @@ export class ActorPF extends Actor {
                         let formula = CONFIG.D35E.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
                         if (formula == null) formula = "0";
                         let classLevel = obj.data.levels;
-                        if (totalLevel + classLevel > 20) {
-                            classLevel = 20 - totalLevel;
-                            totalLevel = 20;
-                            epicLevels += obj.data.levels - classLevel;
-                        } else {
-                            totalLevel = totalLevel + classLevel
+
+                        // Epic level/total level should only be calculated when taking into account non-racial hd
+                        if (getProperty(obj.data, "classType") === "base" || (obj.data, "classType") === "prestige") {
+                            if (totalLevel + classLevel > 20) {
+                                classLevel = 20 - totalLevel;
+                                totalLevel = 20;
+                                epicLevels += obj.data.levels - classLevel;
+                            } else {
+                                totalLevel = totalLevel + classLevel
+                            }
                         }
                         const v = Math.floor(new Roll(formula, {level: classLevel}).roll().total);
 
@@ -1968,12 +1973,16 @@ export class ActorPF extends Actor {
                 let bab = classes.reduce((cur, obj) => {
                     const formula = CONFIG.D35E.classBABFormulas[obj.data.bab] != null ? CONFIG.D35E.classBABFormulas[obj.data.bab] : "0";
                     let classLevel = obj.data.levels;
-                    if (totalLevel + classLevel > 20) {
-                        classLevel = 20 - totalLevel;
-                        totalLevel = 20;
-                        epicLevels += obj.data.levels - classLevel;
-                    } else {
-                        totalLevel = totalLevel + classLevel
+
+                    // Epic level/total level should only be calculated when taking into account non-racial hd
+                    if (getProperty(obj.data, "classType") === "base" || (obj.data, "classType") === "prestige") {
+                        if (totalLevel + classLevel > 20) {
+                            classLevel = 20 - totalLevel;
+                            totalLevel = 20;
+                            epicLevels += obj.data.levels - classLevel;
+                        } else {
+                            totalLevel = totalLevel + classLevel
+                        }
                     }
                     const v = new Roll(formula, {level: classLevel}).roll().total;
 

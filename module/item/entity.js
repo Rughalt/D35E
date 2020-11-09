@@ -547,8 +547,11 @@ export class ItemPF extends Item {
 
         const diff = diffObject(flattenObject(this.data), data);
         if (Object.keys(diff).length) {
-            return super.update(diff, options);
+            await super.update(diff, options);
         }
+
+        if (this.actor !== null)
+            this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
 
         return false;
     }

@@ -1047,6 +1047,8 @@
   "D35E.Finesseable": "Finesseable",
   "D35E.MinionTooltip": "You can use any field from Master in Minion by using <strong>@master</strong>, for example<br>",
   "D35E.MinionOf": "Minion of",
+  "D35E.CreatureTypeElemental": "Elemental",
+  "D35E.CreatureTypeGiant": "Giant",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

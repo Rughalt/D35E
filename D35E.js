@@ -262,7 +262,6 @@ Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  actor.refresh(options); //We do not want to update actor again if we are in first update loop
   //actor.updateContainerData(updateData)
   const item = actor.getOwnedItem(changedData._id);
   if (item == null) return;

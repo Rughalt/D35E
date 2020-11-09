@@ -1089,6 +1089,8 @@ D35E.creatureTypes = {
   "plant": "D35E.CreatureTypePlant",
   "undead": "D35E.CreatureTypeUndead",
   "vermin": "D35E.CreatureTypeVermin",
+  "giant": "D35E.CreatureTypeGiant",
+  "elemental": "D35E.CreatureTypeElemental",
 };
 
 D35E.sizeDie = [

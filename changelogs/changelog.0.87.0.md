@@ -1,0 +1,3 @@
+- [#119](https://github.com/Rughalt/D35E/issues/119) - Racial HDs counts towards Epic calculations
+- [#120](https://github.com/Rughalt/D35E/issues/120) - Actor inventory weight calculated wrongly using containers
+- [#118](https://github.com/Rughalt/D35E/issues/118) - Elemental and Giant types missed in race details
