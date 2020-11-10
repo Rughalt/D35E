@@ -1,12 +1,16 @@
 <div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
-  {{#if name}}<h2>{{name}}</h2>{{/if}}
+<header class="card-header flexrow">
+  <img src="{{item.img}}" title="{{item.name}}" width="36" height="36"/>
+  {{#if name}}<h3>{{name}}</h3>{{/if}}
+</header>
 
+<div class="card-content">
   {{#each attacks as |atk|}}
   <div class="chat-attack">
     {{#if atk.hasAttack}}
     <div class="dice-roll attack-roll">
       {{#if atk.attack.flavor}}
-      <div class="dice-flavor">{{atk.attack.flavor}}</div>
+      <div class="dice-flavor">{{atk.attack.flavor}} {{#if ../item.data.ability.vsTouchAc}}(vs Touch AC){{/if}}</div>
       {{/if}}
       <div class="dice-result">
         <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">{{atk.attack.total}}</h4>
@@ -16,7 +20,7 @@
     {{#if atk.hasCritConfirm}}
     <div class="dice-roll crit-confirm-roll">
       {{#if atk.critConfirm.flavor}}
-      <div class="dice-flavor">{{atk.critConfirm.flavor}}</div>
+      <div class="dice-flavor">{{atk.critConfirm.flavor}} {{#if ../item.data.ability.vsTouchAc}}(vs Touch AC){{/if}}</div>
       {{/if}}
       <div class="dice-result">
         <h4 class="dice-total{{#if atk.critConfirm.isCrit}} success{{/if}}{{#if atk.cfirConfirm.isFumble}} failure{{/if}}">{{atk.critConfirm.total}}</h4>
@@ -24,6 +28,7 @@
       </div>
     </div>
     {{/if}}
+
 
     {{/if}}
 
@@ -68,6 +73,14 @@
     </div>
     {{/each}}
     {{/if}}
+    {{#if ../dc.description}}
+    <div class="dice-roll attack-roll">
+      <div class="dice-flavor">Saving throw</div>
+      <div class="dice-result">
+        <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">{{localize "D35E.DC"}} {{../dc.dc}} {{../dc.description}}</h4>
+      </div>
+    </div>
+    {{/if}}
     {{/if}}
 
     {{#if atk.cards.length}}
@@ -75,6 +88,10 @@
       {{#each atk.cards as |card|}}
       <button data-action="{{card.action}}" data-value="{{card.value}}">{{card.label}}</button>
       {{/each}}
+
+      {{#if ../dc.description}}
+      <button class="everyone" data-action="rollSave" data-value="{{../dc.type}}">{{localize "D35E.RollSavingThrow"}}</button>
+      {{/if}}
     </div>
     {{/if}}
 
@@ -96,9 +113,12 @@
   <div class="extra-text gm-sensitive">{{{extraText}}}</div>
   {{/if}}
 
+
+</div>
+<footer class="card-footer">
   {{#if hasProperties}}
   {{#each properties as |prop|}}
-  <div class="flexcol property-group gm-sensitive">
+  <div class="footer flexcol property-group gm-sensitive">
     <label>{{prop.header}}</label>
     <div class="flexrow">
       {{#each prop.value as |v|}}
@@ -108,6 +128,6 @@
   </div>
   {{/each}}
   {{/if}}
-
+</footer>
 
 </div>

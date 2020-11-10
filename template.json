@@ -1131,7 +1131,8 @@
           "damageMult": 1,
           "critRange": 20,
           "critMult": 2,
-          "twoHandedOnly": false
+          "twoHandedOnly": false,
+          "vsTouchAc": false
         },
         "save": {
           "dc": 0,

@@ -1049,6 +1049,7 @@
   "D35E.MinionOf": "Minion of",
   "D35E.CreatureTypeElemental": "Elemental",
   "D35E.CreatureTypeGiant": "Giant",
+  "D35E.RollSavingThrow": "Roll Saving Throw",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

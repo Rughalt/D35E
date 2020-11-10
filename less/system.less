@@ -143,6 +143,19 @@
   }
 }
 
+#chat-log .chat-message {
+  .message-content {
+  .property-group:not(.footer) {
+      .flexrow {
+        flex-direction: column !important;
+
+        .tag {
+          white-space: unset;
+        }
+      }
+    }
+  }
+}
 
 .d35ecustom {
 
@@ -297,19 +310,24 @@
 
   .D35E.chat-card .card-buttons button {
 
-    background: url(/systems/D35E/icons/ui/long-button.png);
-    background-size: 100% 100%;
-    border: none;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.0)100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 10%, rgba(255, 255, 255, 0.0) 90%, rgba(255, 255, 255, 0.3)100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+    border: 1px solid rgba(0,0,0,0.7) !important;
+    color: rgba(255,255,255,0.9) !important;
+    border-radius: 2px !important;
+    font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+    font-size: 19px;
+    cursor: pointer;
+    &:hover:not(:disabled) {
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.0)100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 10%, rgba(255, 255, 255, 0.0) 90%, rgba(255, 255, 255, 0.3)100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+      text-shadow: none !important;
+      box-shadow: none;
+    }
     color: white;
     line-height: 32px;
     padding: 0;
-    border-radius: 0;
-
-    :hover {
-
-    }
     &:disabled {
       filter: grayscale(1);
+      cursor: unset;
     }
   }
 

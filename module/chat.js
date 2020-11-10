@@ -11,7 +11,7 @@ export const displayChatActionButtons = function(message, html, data) {
     else if (game.user.isGM || (data.author.id === game.user.id)) return;
 
     // Otherwise make buttons disabled, but show the actions action buttons
-    const buttons = chatCard.find("button[data-action]");
+    const buttons = chatCard.find("button[data-action]:not(.everyone)");
     buttons.each((a, btn) => {
       btn.disabled = true
     });
