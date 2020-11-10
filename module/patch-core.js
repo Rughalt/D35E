@@ -82,6 +82,47 @@ export async function PatchCore() {
     //await this.toggleConditionStatusIcons();
   };
 
+  if (isMinimumCoreVersion("0.7.6") && !isMinimumCoreVersion("0.7.7")) {
+    const Roll__splitDiceTerms = Roll.prototype._splitDiceTerms;
+    Roll.prototype._splitDiceTerms = function (formula) {
+
+      // Split on arithmetic terms and operators
+      const operators = this.constructor.ARITHMETIC.concat(["(", ")"]);
+      const arith = new RegExp(operators.map(o => "\\" + o).join("|"), "g");
+      const split = formula.replace(arith, ";$&;").split(";");
+
+      // Strip whitespace-only terms
+      let terms = split.reduce((arr, term) => {
+        term = term.trim();
+        if (term === "") return arr;
+        arr.push(term);
+        return arr;
+      }, []);
+
+      // Categorize remaining non-whitespace terms
+      terms = terms.reduce((arr, term, i, split) => {
+
+        // Arithmetic terms
+        if (this.constructor.ARITHMETIC.includes(term)) {
+          if ((term !== "-" && !arr.length) || (i === (split.length - 1))) return arr; // Ignore leading or trailing arithmetic
+          arr.push(term);
+        }
+
+        // Numeric terms
+        else if (Number.isNumeric(term)) arr.push(Number(term));
+
+        // Dice terms
+        else {
+          const die = DiceTerm.fromExpression(term);
+          arr.push(die || term);
+        }
+        return arr;
+      }, []);
+      return terms;
+    };
+  }
+
+
   const ActorTokenHelpers_createEmbeddedEntity = ActorTokenHelpers.prototype.createEmbeddedEntity;
   ActorTokenHelpers.prototype.createEmbeddedEntity = async function(...args) {
     await ActorTokenHelpers_createEmbeddedEntity.call(this, ...args);

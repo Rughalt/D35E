@@ -407,6 +407,11 @@ export class ItemPF extends Item {
             }
         }
 
+        if (data["data.weaponData.size"] && data["data.weaponData.size"] !== this.data.data.weaponData.size) {
+            let newSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(data["data.weaponData.size"] || "");
+            let oldSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(this.data.data.weaponData.size || "");
+        }
+
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
             //Buff or item was activated
             data["data.timeline.elapsed"] = 0
