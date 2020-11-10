@@ -17,6 +17,13 @@
       "entity": "Item"
     },
     {
+      "name": "minion-classes",
+      "label": "Minion Classes",
+      "system": "D35E",
+      "path": "./packs/minion-classes.db",
+      "entity": "Item"
+    },
+    {
       "name": "commonbuffs",
       "label": "Common Buffs",
       "system": "D35E",
