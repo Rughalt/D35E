@@ -79,7 +79,6 @@ export class ActorSheetPF extends ActorSheet {
       race: this.entity.race != null ? duplicate(this.entity.race.data) : null,
 
     };
-
     // The Actor and its Items
     data.actor = duplicate(this.actor.data);
     data.items = this.actor.items.map(i => {

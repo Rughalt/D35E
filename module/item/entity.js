@@ -410,6 +410,8 @@ export class ItemPF extends Item {
         if (data["data.weaponData.size"] && data["data.weaponData.size"] !== this.data.data.weaponData.size) {
             let newSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(data["data.weaponData.size"] || "");
             let oldSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(this.data.data.weaponData.size || "");
+            let weightChange = Math.pow(2,newSize-oldSize);
+            data["data.weight"] = this.data.data.weight * weightChange;
         }
 
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
@@ -1924,6 +1926,7 @@ export class ItemPF extends Item {
         // Extract card data
         const button = event.currentTarget;
         button.disabled = true;
+        const canBeUsedByEveryone = $(button).hasClass('everyone');
         const card = button.closest(".chat-card");
         const messageId = card.closest(".message").dataset.messageId;
         const message = game.messages.get(messageId);
@@ -1932,8 +1935,11 @@ export class ItemPF extends Item {
         // Validate permission to proceed with the roll
         // const isTargetted = action === "save";
         const isTargetted = false;
-        let isOwnerOfToken = game.actors.get(message.data.speaker.actor).hasPerm(game.user, "OWNER");
-        if (!(isTargetted || game.user.isGM || message.isAuthor || isOwnerOfToken)) {
+        let _actor = game.actors.get(message.data.speaker.actor);
+        let isOwnerOfToken = false;
+        if (_actor)
+            isOwnerOfToken = _actor.hasPerm(game.user, "OWNER");
+        if (!(isTargetted || game.user.isGM || message.isAuthor || isOwnerOfToken || canBeUsedByEveryone)) {
             console.log('No permission', isTargetted, game.user.isGM, isOwnerOfToken)
             button.disabled = false;
             return;

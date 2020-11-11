@@ -241,6 +241,21 @@ D35E.actorSizes = {
   "col": "D35E.ActorSizeColossal",
 };
 
+// Token Sizes
+D35E.actorTokenSizes = {
+  "actor": "D35E.ActorSizeActor",
+  "fine": "D35E.ActorSizeFine",
+  "dim": "D35E.ActorSizeDiminutive",
+  "tiny": "D35E.ActorSizeTiny",
+  "sm": "D35E.ActorSizeSmall",
+  "med": "D35E.ActorSizeMedium",
+  "lg": "D35E.ActorSizeLarge",
+  "lglong": "D35E.ActorSizeLargeLong",
+  "huge": "D35E.ActorSizeHuge",
+  "grg": "D35E.ActorSizeGargantuan",
+  "col": "D35E.ActorSizeColossal",
+};
+
 D35E.sizeChart = {
   "fine": "F",
   "dim":  "D",

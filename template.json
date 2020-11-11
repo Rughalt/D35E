@@ -899,6 +899,7 @@
         "customSkills": {},
         "traits": {
           "size": "med",
+          "tokensize": "actor",
           "senses": "",
           "dr": "",
           "eres": "",

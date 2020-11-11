@@ -678,8 +678,13 @@ export class ActorPF extends Actor {
 
         // Add size bonuses to various attributes
         let sizeKey = data.data.traits.size;
+        let tokenSizeKey = data.data.traits.tokenSize || "actor";
         if (sizeOverride !== undefined && sizeOverride !== null && sizeOverride !== "") {
             sizeKey = sizeOverride;
+            tokenSizeKey = sizeOverride;
+        }
+        if (tokenSizeKey === "actor") {
+            tokenSizeKey = sizeKey;
         }
         if (sizeKey !== "med") {
             // AC
@@ -723,7 +728,7 @@ export class ActorPF extends Actor {
         // Apply changes in Actor size to Token width/height
         if (!options.skipToken)
         {
-            let size = CONFIG.D35E.tokenSizes[sizeKey];
+            let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
             //console.log(size)
             if (this.isToken) {
                 let tokens = []
@@ -3990,6 +3995,10 @@ export class ActorPF extends Actor {
         else
             tokensList = canvas.tokens.controlled;
         const promises = [];
+        if (!tokensList.length) {
+            ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+            return
+        }
         for (let t of tokensList) {
             let a = t.actor,
                 hp = a.data.data.attributes.hp,
@@ -4014,6 +4023,10 @@ export class ActorPF extends Actor {
         else
             tokensList = canvas.tokens.controlled;
         const promises = [];
+        if (!tokensList.length) {
+            ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+            return
+        }
         for (let t of tokensList) {
             if (t.actor == null) continue
             let a = t.actor
