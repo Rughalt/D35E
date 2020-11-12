@@ -461,7 +461,7 @@ const _migrateWeaponImprovised = function(ent, updateData) {
 
 const _migrateSpellName = function(ent, updateData) {
   if (ent.type !== "spell") return;
-  updateData["name"] = ent.data.trim()
+  updateData["name"] = ent.data.name.trim()
 }
 
 const _migrateSpellDescription = function(ent, updateData) {

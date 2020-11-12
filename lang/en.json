@@ -1054,6 +1054,7 @@
   "D35E.NoTokensSelected": "No Tokens are selected or targeted. You have to select tokens to use this action.",
   "D35E.ActorSizeActor": "Same as creature size",
   "D35E.ActorSizeLargeLong": "Large (long)",
+  "D35E.FamiliarNoMaster": "There is a Minion with no Master! You need to assign Master to a Minion for it to function properly.",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

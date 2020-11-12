@@ -1388,6 +1388,16 @@ export class ActorPF extends Actor {
         const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, { inplace: false });
         updateData = flattenObject({ data: mergeObject(origData.data, expandObject(updateData).data, { inplace: false }) });
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
+
+        if (!this.data.data?.master?.id) {
+            let _changesLength = allChanges.length;
+            allChanges = allChanges.filter((c) => (c.raw[0] || "").indexOf('@master') === -1)
+            if (_changesLength !== allChanges.length) {
+                return ui.notifications.warn(game.i18n.localize("D35E.FamiliarNoMaster"));
+                console.log('D35E | Minion has some changes removed |', _changesLength,allChanges.length);
+            }
+        }
+
         //let srcRollData = this.getRollData(srcData1.data);
         allChanges.forEach((change, a) => {
             const formula = change.raw[0] || "";
@@ -2840,8 +2850,9 @@ export class ActorPF extends Actor {
         let diff = data;
         if (options.updateChanges !== false) {
             const updateObj = await this._updateChanges({data: data}, options);
-            if (updateObj.diff.items) delete updateObj.diff.items;
-            diff = mergeObject(diff, updateObj.diff);
+
+            if (updateObj?.diff?.items) delete updateObj.diff.items;
+            diff = mergeObject(diff, updateObj?.diff || {});
         }
 
         // Diff token data
