@@ -10,6 +10,16 @@
     </select>
   </div>
 
+  <div class="form-group">
+    <label>{{localize "D35E.TokenSize"}}</label>
+    <select class="actor-size" name="data.traits.tokenSize">
+      {{#select data.traits.tokenSize}}
+      {{#each config.actorTokenSizes as |label size|}}
+      <option value="{{size}}">{{label}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
   <div class="form-group {{#unless data.traits.senses}}inactive{{/unless}}">
     <label>{{localize "D35E.Senses"}}</label>
     <input type="text" name="data.traits.senses" value="{{data.traits.senses}}" placeholder="{{localize "D35E.None"}}"/>

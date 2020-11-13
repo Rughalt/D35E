@@ -79,7 +79,6 @@ export class ActorSheetPF extends ActorSheet {
       race: this.entity.race != null ? duplicate(this.entity.race.data) : null,
 
     };
-
     // The Actor and its Items
     data.actor = duplicate(this.actor.data);
     data.items = this.actor.items.map(i => {
@@ -607,6 +606,13 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find("a.random-hp-roll").click(ev => { this._rollRandomHitDie(ev); });
 
+
+    /* -------------------------------------------- */
+    /*  Master/Minion
+    /* -------------------------------------------- */
+
+    html.find('a.unbind-minion').click(event => this._onMasterUnbind(event));
+
     /* -------------------------------------------- */
     /*  Feats
     /* -------------------------------------------- */
@@ -989,6 +995,13 @@ export class ActorSheetPF extends ActorSheet {
     const item = this.actor.getOwnedItem(itemId);
     let enh = item.getEnhancementItem(enhId);
     return enh.roll({}, this.actor);
+  }
+
+  /* -------------------------------------------- */
+
+  _onMasterUnbind(event) {
+    event.preventDefault();
+    this.actor._setMaster(null);
   }
 
   /* -------------------------------------------- */
@@ -1704,6 +1717,10 @@ export class ActorSheetPF extends ActorSheet {
   async importActor(itemData, dataType) {
     if (itemData.type === "npc") {
       return this.actor._createPolymorphBuffDialog(itemData);
+    }
+    if (this.actor.data.type === "npc" && itemData.type === "character") {
+      if (dataType === "world")
+        return this.actor._setMaster(itemData);
     }
   }
 

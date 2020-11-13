@@ -120,14 +120,25 @@
 <section class="welcome-content">
     <div class="tab" data-tab="welcome">
 
-        <p>Welcome to DND 3.5E SRD implementation for Foundry VTT! It was created from love for old DND editions and
+        <p>Welcome to 3.5E SRD implementation for Foundry VTT! It was created from love for old RPG systems  editions and
             aims to provide full 3.5E SRD implementation and system flexible enough for anything else.</p>
 
 
         <p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
         <h2>News</h2>
         <div class="flexrow">
+            <div class="flexcol" style="max-height: 410px">
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Familiars and companions</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-familiar.png"
+                     style="padding: 0 0.7rem; flex: 0">
+                <p style="padding: 0 0.7rem; flex: 0">
+                    With 0.87 release we introduced a system allowing creation of Familiars, Animal Companions, Paladin Mounts and any other Minion like creature.
+                    They can be bound to a Master and react to changes in Masters statistics. What is more both Master and Minion can sense distance between each other!<br>
+                </p>
+                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/classes">Learn
+                    more about Familiars</a>
 
+            </div>
             <div class="flexcol" style="max-height: 410px">
                 <h2 class="news" style="padding: 0 0.7rem; flex: 0">Class progression</h2>
                 <img src="systems/D35E/icons/ui/welcome-screen/0.86-class-progression.png"
@@ -141,18 +152,7 @@
                     more about Level progression</a>
 
             </div>
-            <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Updated Theme</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.86-theme.png" style="padding: 0 0.7rem; flex: 0">
-                <p style="padding: 0 0.7rem; flex: 0">
-                    Release 0.86 comes with a first version of redesigned theme - now enabled for all new players!
-                    <br><br>
-                    More theme changes and minor redesigns will come in minor updates in 0.86 line.
-                </p>
-<!--                <a class="btn bottom"-->
-<!--                   href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Visit-->
-<!--                    Enhancements page on Wiki</a>-->
-            </div>
+
             <div class="flexcol" style="max-height: 410px">
 
                 <h2 class="news" style="padding: 0 0.7rem; flex: 0">Onboarding</h2>
@@ -194,6 +194,33 @@
     </div>
     <div class="tab" data-tab="changelog">
         <h1>Changelog</h1>
+        <h3>SRD</h3>
+        <ul>
+            <li>Implemented numerous Magical Items
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Minions - Familiars, Animal Companions and Paladin Mounts
+            <li>
+
+                <ul>
+                    <li>Ability to assign Characters to NPCa as Masters. NPC that has a Master assigned becomes a Minion, and has access to Masters data</li>
+                    <li>Compendium with basic Minion Classes (Familiar, Animal Companion and Paladin Mount) and Minions (all Wizard Familiars and Paladins' Heavy War Horse mount), ready to be used</li>
+                    <li>Ability to use distance between Minion and Master as a variable in both Minion and Master formulas</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Bug Fixes</h3>
+        <ul>
+        <li><a href="https://github.com/Rughalt/D35E/issues/119">#119</a> - Racial HDs counts towards Epic calculations
+        <li><a href="https://github.com/Rughalt/D35E/issues/120">#120</a> - Actor inventory weight calculated wrongly using containers
+        <li><a href="https://github.com/Rughalt/D35E/issues/118">#118</a> - Elemental and Giant types missed in race details
+        <li><a href="https://github.com/Rughalt/D35E/issues/116">#116</a> - Ki strike and Purity of Body have empty "classes" list and not added automatically
+        <ul><a href="https://github.com/Rughalt/D35E/issues/110">#110</a> - Size modifiers to carrying weight stops applying if Strength is over 30 (thanks to @red5h4d0w)
+        </ul>
+
+
         <h2>v0.86.9</h2>
         <h3>SRD</h3>
         <ul>
