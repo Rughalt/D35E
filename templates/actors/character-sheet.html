@@ -1,19 +1,19 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
-  {{#unless hasClasses}}<span class="warning">Your character is missing a Class. Some attributes require a class to function. Navigate to Features - Classes to set up a Class.</span>{{/unless}}
+  {{#unless hasClasses}}<span class="warning">{{ localize 'D35E.WarningMissingClass' }}</span>{{/unless}}
   {{#if hasClasses}}
-  {{#unless abilitiesChanged}}
-  <span class="warning">Your character Ability scores are not set up. Set them up manually or use <a class="point-buy" style="text-decoration: underline">Point Buy Dialog</a>.</span>
-  {{/unless}}
+    {{#unless abilitiesChanged}}
+      <span class="warning">{{{ localize 'D35E.WarningMissingAbilityScores' }}}</span>
+    {{/unless}}
   {{/if}}
   {{#if notAllLevelsAssigned}}
-  <span class="warning">Your character has gained a level but you did not set in. To do this navigate to Features - Classes to set up a Class.</span>
+  <span class="warning">{{ localize 'D35E.WarningMissingLevelData' }}</span>
   {{/if}}
 
   <div class="working">
     <div>
       <h1>
-        Updating
+        {{ localize 'D35E.Updating' }}
       </h1>
     </div>
   </div>
@@ -24,9 +24,9 @@
         {{#each buffs.all.items as |buff bif|}}
           {{#if buff.data.active}}
             <div class="item-image tooltip" style="background-image: url('{{buff.img}}')">
-             <span class="tooltipcontent">
-                  {{buff.name}}
-                </span>
+              <span class="tooltipcontent">
+                {{buff.name}}
+              </span>
             </div>
           {{/if}}
         {{/each}}
@@ -37,7 +37,7 @@
     <div class="header-details flexcol">
       <div class="flexrow">
         <h1 class="charname">
-          <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize "D35E.CharacterName"}}" title="{{localize "D35E.CharacterName"}}"/>
+          <input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'D35E.CharacterName' }}" title="{{ localize 'D35E.CharacterName' }}"/>
         </h1>
 
         <div class="charlevel">
@@ -46,17 +46,17 @@
               @attributes.hd.total : {{data.attributes.hd.total}}<br>
               @details.level.value : {{data.details.level.value}}
             </span>
-            {{localize "D35E.ECL"}}
+            {{ localize 'D35E.ECL' }}
             {{data.details.level.value}}
             ({{classList}})
           </div>
           {{#unless disableExperience}}
             <div class="experience">
             {{#if data.canLevelUp}}
-            <a class="btn level-up blue-button" onkeydown="e.preventDefault();">Level up</a>
+            <a class="btn level-up blue-button" onkeydown="e.preventDefault();">{{ localize 'D35E.LevelUp' }}</a>
             {{/if}}
               <input name="data.details.xp.value" type="text" value="{{data.details.xp.value}}"
-                                                            placeholder="0"/>
+                     placeholder="0"/>
               <span class="max"> / {{data.details.xp.max}}</span>
             </div>
             <div class="xpbar">
@@ -70,46 +70,46 @@
       <div class="flexcol">
         <ul class="summary">
           <li>
-            <input type="text" name="data.details.gender" value="{{data.details.gender}}" placeholder="{{localize "D35E.Gender"}}" title="{{localize "D35E.Gender"}}"/>
+            <input type="text" name="data.details.gender" value="{{data.details.gender}}" placeholder="{{ localize 'D35E.Gender' }}" title="{{ localize 'D35E.Gender' }}"/>
           </li>
           <li>
-            <input type="text" name="data.details.alignment" value="{{data.details.alignment}}" placeholder="{{localize "D35E.Alignment"}}" title="{{localize "D35E.Alignment"}}"/>
+            <input type="text" name="data.details.alignment" value="{{data.details.alignment}}" placeholder="{{ localize 'D35E.Alignment' }}" title="{{ localize 'D35E.Alignment' }}"/>
           </li>
           <li>
-            <input type="text" name="data.details.deity" value="{{data.details.deity}}" placeholder="{{localize "D35E.Deity"}}" title="{{localize "D35E.Deity"}}"/>
+            <input type="text" name="data.details.deity" value="{{data.details.deity}}" placeholder="{{ localize 'D35E.Deity' }}" title="{{ localize 'D35E.Deity' }}"/>
           </li>
           <li>
-            <input type="text" name="data.details.age" value="{{data.details.age}}" placeholder="{{localize "D35E.Age"}}" title="{{localize "D35E.Age"}}"/>
+            <input type="text" name="data.details.age" value="{{data.details.age}}" placeholder="{{ localize 'D35E.Age'}}" title="{{ localize 'D35E.Age' }}"/>
           </li>
           <li>
-            <input type="text" name="data.details.height" value="{{data.details.height}}" placeholder="{{localize "D35E.Height"}}" title="{{localize "D35E.Height"}}"/>
+            <input type="text" name="data.details.height" value="{{data.details.height}}" placeholder="{{ localize 'D35E.Height' }}" title="{{ localize 'D35E.Height' }}"/>
           </li>
           <li>
-            <input type="text" name="data.details.weight" value="{{data.details.weight}}" placeholder="{{localize "D35E.Weight"}}" title="{{localize "D35E.Weight"}}"/>
+            <input type="text" name="data.details.weight" value="{{data.details.weight}}" placeholder="{{ localize 'D35E.Weight' }}" title="{{ localize 'D35E.Weight' }}"/>
           </li>
-          <li class="flexrow race-container item  {{#unless race}}norace{{/unless}}"  {{#if race}}data-item-id="{{race._id}}"{{/if}} style="width: 66.66%">
+          <li class="flexrow race-container item  {{#unless race}}norace{{/unless}}" {{#if race}}data-item-id="{{race._id}}"{{/if}} style="width: 66.66%">
             <div class="race item-image rollable" style="background-image: url({{race.img}})" title="{{labels.race}}">
-              {{#unless race}}{{localize "D35E.Race"}}
+              {{#unless race}}{{ localize 'D35E.Race' }}
               {{/unless}}
             </div>
 
             {{#if race}}
               <span>{{race.name}}</span>
             {{else}}
-          <span style='font-family: "Signika", sans-serif; font-size: 13px; opacity: 0.7;'>(Drop from <a style="color: #782e22;" class="open-compendium-pack" data-pack="D35E.racialfeatures">Race Compendium</a> or click + create new)</span>
+          <span style='font-family: "Signika", sans-serif; font-size: 13px; opacity: 0.7;'>{{{ localize 'D35E.DropFromRaceCompendium' }}}</span>
             {{/if}}
             <div class="item-controls flexrow" style="flex: 0 40px;">
               {{#if owner}}
                 {{#unless race}}
-                <a class="item-control add" title="{{localize "D35E.CreateItem"}}">
-                    <i class="fas fa-plus"></i>
-                  </a>
+                <a class="item-control add" title="{{ localize 'D35E.CreateItem' }}">
+                  <i class="fas fa-plus"></i>
+                </a>
                 {{/unless}}
                 {{#if race}}
-                  <a class="item-control edit" title="{{localize "D35E.EditItem"}}">
+                  <a class="item-control edit" title="{{ localize 'D35E.EditItem' }}">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a class="item-control delete" title="{{localize "D35E.DeleteItem"}}">
+                  <a class="item-control delete" title="{{ localize 'D35E.DeleteItem' }}">
                     <i class="fas fa-trash"></i>
                   </a>
                 {{/if}}
@@ -118,7 +118,7 @@
           </li>
 
           <li>
-           <span style="margin-left: 4px">{{data.attributes.speed.land.total}}ft {{ localize "D35E.SpeedLand" }} </span>
+           <span style="margin-left: 4px">{{data.attributes.speed.land.total}}{{ localize 'D35E.DistFtAbbr' }} ({{ localize 'D35E.SpeedLand' }}) </span>
           </li>
         </ul>
       </div>
@@ -128,16 +128,16 @@
 
   {{!-- NPC Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
-    <a class="item active" data-tab="details">{{ localize "D35E.Summary" }}</a>
-    <a class="item" data-tab="attributes">{{ localize "D35E.Attributes" }}</a>
-    <a class="item" data-tab="attacks">{{ localize "D35E.Combat" }}</a>
-    <a class="item" data-tab="inventory">{{ localize "D35E.Inventory" }}</a>
-    <a class="item" data-tab="feats">{{ localize "D35E.Features" }}</a>
-    <a class="item" data-tab="skills">{{ localize "D35E.Skills" }}</a>
-    <a class="item" data-tab="buffs">{{ localize "D35E.Buffs" }}</a>
-    <a class="item" data-tab="spellbook">{{ localize "D35E.Spells" }}</a>
-    <a class="item" data-tab="biography">{{ localize "D35E.Biography" }}</a>
-    <a class="item" data-tab="notes">{{ localize "D35E.Notes" }}</a>
+    <a class="item active" data-tab="details">{{ localize 'D35E.Summary' }}</a>
+    <a class="item" data-tab="attributes">{{ localize 'D35E.Attributes' }}</a>
+    <a class="item" data-tab="attacks">{{ localize 'D35E.Combat' }}</a>
+    <a class="item" data-tab="inventory">{{ localize 'D35E.Inventory' }}</a>
+    <a class="item" data-tab="feats">{{ localize 'D35E.Features' }}</a>
+    <a class="item" data-tab="skills">{{ localize 'D35E.Skills' }}</a>
+    <a class="item" data-tab="buffs">{{ localize 'D35E.Buffs' }}</a>
+    <a class="item" data-tab="spellbook">{{ localize 'D35E.Spells' }}</a>
+    <a class="item" data-tab="biography">{{ localize 'D35E.Biography' }}</a>
+    <a class="item" data-tab="notes">{{ localize 'D35E.Notes' }}</a>
   </nav>
 
   {{!-- NPC Sheet Body --}}

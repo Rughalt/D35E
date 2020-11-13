@@ -2,7 +2,7 @@
 
   <ol class="currency flexrow">
     <h3>
-      {{localize "D35E.Currency"}}
+      {{ localize 'D35E.Currency' }}
       <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
     </h3>
     {{#each data.currency as |v k|}}
@@ -13,7 +13,7 @@
   {{#if isCharacter}}
   <ol class="currency flexrow">
     <h3>
-      {{localize "D35E.WeightlessCurrency"}}
+      {{ localize 'D35E.WeightlessCurrency' }}
       <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
     </h3>
     {{#each data.altCurrency as |v k|}}
@@ -38,25 +38,25 @@
       <li class="inventory-header flexrow">
         <h3 class="item-name flexrow"></h3>
 
-        {{#if section.hasSlots}}<div class="item-detail item-slot"><span>{{localize "D35E.Slot"}}</span></div>{{/if}}
-        {{#if section.hasActions}}<div class="item-detail item-actions"><span>{{localize "D35E.ActionPlural"}}</span></div>{{/if}}
+        {{#if section.hasSlots}}<div class="item-detail item-slot"><span>{{ localize 'D35E.Slot' }}</span></div>{{/if}}
+        {{#if section.hasActions}}<div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>{{/if}}
 
-        <div class="item-detail item-weight"><span>{{localize "D35E.ItemWeight"}}</span></div>
+        <div class="item-detail item-weight"><span>{{ localize 'D35E.ItemWeight' }}</span></div>
         {{#if ../isGM}}
-        <div class="item-detail item-identified"><span>{{localize "D35E.IdentifiedShort"}}</span></div>
+        <div class="item-detail item-identified"><span>{{ localize 'D35E.IdentifiedShort' }}</span></div>
         {{/if}}
-        <div class="item-detail item-carried"><span>{{localize "D35E.Carried"}}</span></div>
-        <div class="item-detail item-container"><span>{{localize "D35E.Container"}}</span></div>
+        <div class="item-detail item-carried"><span>{{ localize 'D35E.Carried' }}</span></div>
+        <div class="item-detail item-container"><span>{{ localize 'D35E.Container' }}</span></div>
         {{#if section.canEquip}}
-        <div class="item-detail item-equipped"><span>{{localize "D35E.Equipped"}}</span></div>
+        <div class="item-detail item-equipped"><span>{{ localize 'D35E.Equipped' }}</span></div>
         {{/if}}
-        <div class="item-detail item-uses"><span>{{localize "D35E.ChargePlural"}}</span></div>
+        <div class="item-detail item-uses"><span>{{ localize 'D35E.ChargePlural' }}</span></div>
 
         {{#if ../owner}}
         <div class="item-controls">
           {{#if section.canCreate}}
-          <a class="item-control item-create" title="Create Item" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-            <i class="fas fa-plus"></i> {{localize "D35E.Add"}}
+          <a class="item-control item-create" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+            <i class="fas fa-plus"></i> {{ localize 'D35E.Add' }}
           </a>
           {{/if}}
         </div>
@@ -156,8 +156,8 @@
           <div class="item-controls">
             <a class="item-control item-quantity-add"><i class="fas fa-plus"></i></a>
             <a class="item-control item-quantity-subtract"><i class="fas fa-minus"></i></a>
-            <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
+            <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i class="fas fa-trash"></i></a>
           </div>
           {{/if}}
           {{#if section.isContainer}}
@@ -173,15 +173,15 @@
 
                 {{#if ../../../owner}}
                 <div class="item-controls">
-                  <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                  {{#unless iitem.data.userNonRemovable}}
-                  <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                  <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
+                  {{#unless item.data.userNonRemovable}}
+                  <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i class="fas fa-trash"></i></a>
                   {{/unless}}
                 </div>
                 {{/if}}
               </li>
               {{else}}
-              <h3 class="sublist-empty">Container is empty</h3>
+              <h3 class="sublist-empty">{{ localize 'D35E.ContainerIsEmpty' }}</h3>
               {{/each}}
             </ol>
           </div>
@@ -197,25 +197,25 @@
 
 {{#unless isLootSheet}}
 <div class="form-group carry-bonus">
-  <label>{{localize "D35E.BonusCarryStrength"}}</label>
+  <label>{{ localize 'D35E.BonusCarryStrength' }}</label>
   <input type="text" name="data.abilities.str.carryBonus" value="{{data.abilities.str.carryBonus}}" data-dtype="Number" placeholder="0"/>
-  <label>{{localize "D35E.Multiplier"}}</label>
-  <input type="text" name="data.abilities.str.carryMultiplier" value="{{data.abilities.str.carryMultiplier}}"
-                                                               data-dtype="Number" placeholder="1"/>
+  <label>{{ localize 'D35E.Multiplier' }}</label>
+  <input type="text" name="data.abilities.str.carryMultiplier" 
+         value="{{data.abilities.str.carryMultiplier}}" data-dtype="Number" placeholder="1"/>
 </div>
 {{#with encumbrance}}
 <span class="carry-label">{{carryLabel}}</span>
 <div class="encumbrance {{#if encumbered.light}}encumbered{{/if}}">
   <span class="encumbrance-bar" style="width:{{pct.light}}%"></span>
-  <span class="encumbrance-label">{{localize "D35E.CarryLightLoad"}} ({{light}})</span>
+  <span class="encumbrance-label">{{ localize 'D35E.CarryLightLoad' }} ({{light}})</span>
 </div>
 <div class="encumbrance {{#if encumbered.medium}}encumbered{{/if}}">
   <span class="encumbrance-bar" style="width:{{pct.medium}}%"></span>
-  <span class="encumbrance-label">{{localize "D35E.CarryMediumLoad"}} ({{medium}})</span>
+  <span class="encumbrance-label">{{ localize 'D35E.CarryMediumLoad' }} ({{medium}})</span>
 </div>
 <div class="encumbrance {{#if encumbered.medium}}encumbered{{/if}}">
   <span class="encumbrance-bar" style="width:{{pct.heavy}}%"></span>
-  <span class="encumbrance-label">{{localize "D35E.CarryHeavyLoad"}} ({{heavy}})</span>
+  <span class="encumbrance-label">{{ localize 'D35E.CarryHeavyLoad' }} ({{heavy}})</span>
 </div>
 {{/with}}
 {{else}}

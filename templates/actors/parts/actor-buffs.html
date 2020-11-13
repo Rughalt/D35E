@@ -2,8 +2,8 @@
 
 {{!-- Buff Navigation --}}
 <nav class="sheet-navigation tabs subtabs buffs" data-group="buffs">
-    <a class="item" data-tab="conditions">{{localize "D35E.ConditionPlural"}}</a>
-    <a class="item" data-tab="shapechange">{{localize "D35E.Shapechange"}}</a>
+    <a class="item" data-tab="conditions">{{ localize 'D35E.ConditionPlural' }}</a>
+    <a class="item" data-tab="shapechange">{{ localize 'D35E.Shapechange' }}</a>
     {{#each sections as |section sid|}}
     <a class="item" data-tab="{{sid}}">{{section.label}}</a>
     {{/each}}
@@ -27,7 +27,7 @@
                 {{#unless isShapechanged}}
                 <img class="shapechange-img" src="{{actor.data.tokenImg}}">
                 <div class="flexcol">
-                    <h2>{{localize "D35E.ShapechangeDefault"}}</h2>
+                    <h2>{{ localize 'D35E.ShapechangeDefault' }}</h2>
                 </div>
                 {{/unless}}
                 {{#if isShapechanged}}
@@ -44,20 +44,20 @@
 
 
                         <div class="item-detail item-timeline">
-                            <span>{{localize "D35E.TimelineTimed"}}</span>
+                            <span>{{ localize 'D35E.TimelineTimed' }}</span>
                         </div>
 
                         <div class="item-detail item-level">
-                            <span>{{localize "D35E.Level"}}</span>
+                            <span>{{ localize 'D35E.Level' }}</span>
                         </div>
 
                         <div class="item-detail item-active">
-                            <span>{{localize "D35E.Active"}}</span>
+                            <span>{{ localize 'D35E.Active' }}</span>
                         </div>
 
                         {{#if owner}}
                         <div class="item-detail item-controls">
-                            <span>Actions</span>
+                            <span>{{ localize 'D35E.ActionPlural' }}</span>
                         </div>
                         {{/if}}
                     </li>
@@ -92,8 +92,8 @@
                             {{#if ../owner}}
                             <div class="item-controls">
                                 {{#unless item.data.active}}
-                                <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
+                                <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i class="fas fa-trash"></i></a>
                                 {{/unless}}
                             </div>
                             {{/if}}
@@ -113,22 +113,22 @@
 
 
                 <div class="item-detail item-timeline">
-                    <span>{{localize "D35E.TimelineTimed"}}</span>
+                    <span>{{ localize 'D35E.TimelineTimed' }}</span>
                 </div>
 
                 <div class="item-detail item-level">
-                    <span>{{localize "D35E.Level"}}</span>
+                    <span>{{ localize 'D35E.Level' }}</span>
                 </div>
 
                 <div class="item-detail item-active">
-                    <span>{{localize "D35E.Active"}}</span>
+                    <span>{{ localize 'D35E.Active' }}</span>
                 </div>
 
                 {{#if ../owner}}
                 <div class="item-controls">
-                    <a class="item-control item-create" title="{{localize " D35E.CreateItem"}}" {{#each section.dataset
+                    <a class="item-control item-create" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset
                     as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-                    <i class="fas fa-plus"></i> {{localize "D35E.Add"}}
+                    <i class="fas fa-plus"></i> {{ localize 'D35E.Add' }}
                     </a>
                 </div>
                 {{/if}}
@@ -157,8 +157,8 @@
 
                     {{#if ../../owner}}
                     <div class="item-controls">
-                        <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
+                        <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i class="fas fa-trash"></i></a>
                     </div>
                     {{/if}}
                 </li>
