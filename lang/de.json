@@ -656,5 +656,8 @@
   "D35E.SeeText": "Siehe Text",
   "D35E.DCOffset": "DC Offset",
   "D35E.DCDescriptionExample": "z.B. halbierter Reflex",
-  "D35E.InitiativeBonus": "Initiative Bonus"
+  "D35E.InitiativeBonus": "Initiative Bonus",
+  "D35E.None-FrF": "Keine",
+  "D35E.None-FrM": "Keine"
+
 }
