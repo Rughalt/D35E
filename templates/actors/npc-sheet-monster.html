@@ -1,10 +1,10 @@
 <form class="{{cssClass}} flexcol monsterblock" autocomplete="off">
   <h1 class="handserif actor-name">{{actor.name}}</h1>
   <div class="flexcol">
-    <div><strong>Hit Dice:</strong> {{numberFormat data.attributes.hd.total decimals=0 sign=true}}</div>
-    <div><strong>Initiative:</strong> {{numberFormat data.attributes.init.total decimals=0 sign=true}}</div>
-    <div><strong>Speed:</strong></div>
-    <div><strong>Armor Class:</strong>
+    <div><strong>{{ localize 'D35E.HitDice' }}:</strong> {{numberFormat data.attributes.hd.total decimals=0 sign=true}}</div>
+    <div><strong>{{ localize 'D35E.Initiative' }}:</strong> {{numberFormat data.attributes.init.total decimals=0 sign=true}}</div>
+    <div><strong>{{ localize 'D35E.Speed' }}:</strong></div>
+    <div><strong>{{ localize 'D35E.ArmorClass' }}:</strong>
       {{#each data.attributes.ac as |ac id|}}
       {{ac.label}} {{numberFormat ac.total decimals=0 sign=false}} ({{#each ac.sourceDetails as |src|}}{{src.value}} {{src.name}}{{#unless @last}}, {{/unless}}{{/each}}){{#unless @last}}, {{/unless}}
       {{/each}}

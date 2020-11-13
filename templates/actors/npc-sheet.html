@@ -1,305 +1,305 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
-    {{!-- NPC Sheet Header --}}
-    <header class="sheet-header flexcol" style="flex-direction: column">
+  {{!-- NPC Sheet Header --}}
+  <header class="sheet-header flexcol" style="flex-direction: column">
 
-        <div class="flexrow" style="width: 100%">
-            {{#if data.master.id}}
-            <div class="master-block flexrow" style="position: relative">
-                <img src="{{data.master.img}}" title="{{data.master.name}}">
-                <div class="flexcol tooltip">  <span class="tooltipcontent">
-                    {{{localize "D35E.MinionTooltip"}}}
-                        @master.data.attributes.hd.total : {{data.master.data.attributes.hd.total}}
-                      </span>
-                    <span class="minion-of">{{localize "D35E.MinionOf"}}</span>
-                    <span class="minion-name">{{data.master.name}}</span>
+    <div class="flexrow" style="width: 100%">
+      {{#if data.master.id}}
+        <div class="master-block flexrow" style="position: relative">
+            <img src="{{data.master.img}}" title="{{data.master.name}}">
+            <div class="flexcol tooltip">  <span class="tooltipcontent">
+                {{{ localize 'D35E.MinionTooltip' }}}
+                    @master.data.attributes.hd.total : {{data.master.data.attributes.hd.total}}
+                  </span>
+                <span class="minion-of">{{ localize 'D35E.MinionOf' }}</span>
+                <span class="minion-name">{{data.master.name}}</span>
 
-                    <a class="unbind-minion" title="{{localize "D35E.UnbindMinion"}}"><i
-                            class="fas fa-trash"></i></a>
-                </div>
-            </div>
-            {{/if}}
-            <h1 class="charname">
-                <input name="name" style="margin: 0" type="text" value="{{actor.name}}" placeholder="{{localize " D35E.CharacterName"}}"
-                title="{{localize "D35E.CharacterName"}}"/>
-            </h1>
-
-            <div class="hd tooltip">
-          <span class="tooltipcontent">
-            @attributes.hd.total : {{data.attributes.hd.total}}
-          </span>
-                <Label>HD</label>
-                <input disabled type="text" value="{{data.attributes.hd.total}}" placeholder="1"
-                       data-dtype="Number"/>
-            </div>
-
-            <div class="charlevel">
-                <div class="level">
-                    <label>CR</label>
-                    <input name="data.details.cr" type="text" value="{{labels.cr}}" placeholder="1"/>
-                </div>
-                <div class="experience">
-                    <span>{{data.details.xp.value}} XP</span>
-                </div>
+                <a class="unbind-minion" title="{{ localize 'D35E.UnbindMinion' }}">
+                    <i class="fas fa-trash"></i>
+                </a>
             </div>
         </div>
-        <div class="flexrow">
+      {{/if}}
+      <h1 class="charname">
+          <input name="name" style="margin: 0" type="text" value="{{actor.name}}" placeholder="{{ localize 'D35E.CharacterName' }}"
+          title="{{ localize 'D35E.CharacterName' }}"/>
+      </h1>
 
-            <div class="profile npc">
-                <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
-                <img src="{{actor.data.tokenImg}}" class="token-image" data-edit="data.tokenImg">
-            </div>
-            <div class="header-details flexcol">
+      <div class="hd tooltip">
+        <span class="tooltipcontent">
+          @attributes.hd.total : {{data.attributes.hd.total}}
+        </span>
+        <Label>{{ localize 'D35E.HD' }}</label>
+        <input disabled type="text" value="{{data.attributes.hd.total}}" placeholder="1"
+               data-dtype="Number"/>
+      </div>
 
-                <div class="flexcol">
-                    <ul class="summary">
-                        <li>
-                            <input type="text" name="data.details.type" value="{{data.details.type}}"
-                                   placeholder="{{localize " D35E.TypeSubType"}}" title="{{localize
-                            "D35E.TypeSubType"}}"/>
-                        </li>
-                        <li>
-                            <input type="text" name="data.details.alignment" value="{{data.details.alignment}}"
-                                   placeholder="{{localize " D35E.Alignment"}}" title="{{localize "D35E.Alignment"}}"/>
-                        </li>
-                        <li>
-                            <div class="race-container item flexrow" {{#if race}}data-item-id="{{race._id}}"{{/if}} title="{{localize "D35E.Race"}}">
-                            <div class="race item-image rollable" style="background-image: url({{race.img}})"
-                                 title="{{labels.race}}">
-                                {{#unless race}}{{localize "D35E.Race"}}{{/unless}}
-                            </div>
-                            {{#if race}}
-                            <span>{{race.name}}</span>
-                            {{/if}}
-
-                            <div class="item-controls flexrow">
-                                {{#if owner}}
-                                {{#unless race}}
-                                <a class="item-control add" title="{{localize " D35E.CreateItem"}}"><i
-                                    class="fas fa-plus"></i></a>
-                                {{/unless}}
-                                {{#if race}}
-                                <a class="item-control edit" title="{{localize " D35E.EditItem"}}"><i
-                                    class="fas fa-edit"></i></a>
-                                <a class="item-control delete" title="{{localize " D35E.DeleteItem"}}"><i
-                                    class="fas fa-trash"></i></a>
-                                {{/if}}
-                                {{/if}}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                {{!-- Attributes --}}
-                <ul class="attributes flexrow">
-                    <li class="attribute health">
-                        {{#if healthConfig.variants.npc.useWoundsAndVigor}}
-                        <h4 class="attribute-name box-title tooltip">
-                            {{ localize "D35E.Vigor" }}
-                            <div class="tooltipcontent">
-                                @attributes.vigor.min : {{data.attributes.vigor.min}}<br/>
-                                @attributes.vigor.value : {{data.attributes.vigor.value}}<br/>
-                                @attributes.vigor.max : {{data.attributes.vigor.max}}<br/>
-                                @attributes.vigor.temp : {{data.attributes.vigor.temp}}
-
-                                {{#if sourceDetails.data.attributes.vigor.max.length}}
-                                <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                                {{#each sourceDetails.data.attributes.vigor.max as |src|}}{{src.name}}:
-                                {{src.value}}<br/>{{/each}}
-                                {{/if}}
-                            </div>
-                        </h4>
-                        <div class="attribute-value multiple">
-                            <input name="data.attributes.vigor.value" type="text"
-                                   value="{{data.attributes.vigor.value}}"
-                                   data-dtype="Number" placeholder="0"/>
-                            <span class="sep"> / </span>
-                            <div class="attribute">{{data.attributes.vigor.max}}</div>
-                        </div>
-                        <footer class="attribute-footer">
-                            <input name="data.attributes.vigor.temp" type="text" class="temphp"
-                                   placeholder="{{localize 'D35E.Temporary'}}"
-                                   value="{{#if data.attributes.vigor.temp}}{{data.attributes.vigor.temp}}{{/if}}"
-                                   data-dtype="Number"/>
-                        </footer>
-
-                        <h4 class="attribute-name box-title tooltip">
-                            {{ localize "D35E.Wounds" }}
-                            <div class="tooltipcontent">
-                                @attributes.wounds.min : {{data.attributes.wounds.min}}<br/>
-                                @attributes.wounds.value : {{data.attributes.wounds.value}}<br/>
-                                @attributes.wounds.max : {{data.attributes.wounds.max}}<br/>
-
-                                {{#if sourceDetails.data.attributes.wounds.max.length}}
-                                <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                                {{#each sourceDetails.data.attributes.wounds.max as |src|}}{{src.name}}:
-                                {{src.value}}<br/>{{/each}}
-                                {{/if}}
-                            </div>
-                        </h4>
-                        <div class="attribute-value multiple">
-                            <input name="data.attributes.wounds.value" type="text"
-                                   value="{{data.attributes.wounds.value}}"
-                                   data-dtype="Number" placeholder="0"/>
-                            <span class="sep"> / </span>
-                            <div class="attribute">{{data.attributes.wounds.max}}</div>
-                        </div>
-                        {{else}}
-                        <h4 class="attribute-name box-title tooltip">
-                            {{ localize "D35E.Health" }}
-                            <div class="tooltipcontent">
-                                @attributes.hp.value : {{data.attributes.hp.value}}<br/>
-                                @attributes.hp.max : {{data.attributes.hp.max}}<br/>
-                                @attributes.hp.temp : {{data.attributes.hp.temp}}<br/>
-                                @attributes.hp.nonlethal : {{data.attributes.hp.nonlethal}}
-
-                                {{#if sourceDetails.data.attributes.hp.max.length}}
-                                <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                                {{#each sourceDetails.data.attributes.hp.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                                {{/if}}
-                            </div>
-                        </h4>
-                        <div class="attribute-value multiple">
-                            <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}"
-                                   data-dtype="Number" placeholder="10"/>
-                            <span class="sep"> / </span>
-                            <div class="attribute">{{data.attributes.hp.max}}</div>
-                        </div>
-                        <footer class="attribute-footer">
-                            <input name="data.attributes.hp.temp" type="text" class="temphp"
-                                   placeholder="+{{localize 'D35E.TempShort'}}"
-                                   value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}"
-                                   data-dtype="Number" title="{{localize " D35E.TempHP"}}"/>
-                            <input name="data.attributes.hp.nonlethal" type="text" class="temphp"
-                                   placeholder="{{localize 'D35E.Nonlethal'}}"
-                                   value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}"
-                                   data-dtype="Number" title="{{localize " D35E.Nonlethal"}}"/>
-                            <br>
-
-                            <a class="btn random-hp-roll" onkeydown="e.preventDefault();">Randomize HP</a>
-                        </footer>
-                        {{/if}}
-                    </li>
-
-                    <li class="attribute speed">
-                        <div class="attribute-speed">
-                            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedLand" }}</h4>
-                            <div class="attribute-value">
-                                <div class="attribute">{{#if
-                                    data.attributes.speed.land.total}}{{data.attributes.speed.land.total}}{{/if}}
-                                </div>
-                            </div>
-                            <footer class="attribute-footer">
-                                <input name="data.attributes.speed.land.base" type="text"
-                                       value="{{#if data.attributes.speed.land.base}}{{data.attributes.speed.land.base}}{{/if}}"
-                                       data-dtype="Number" placeholder="{{localize " D35E.Base"}}"/>
-                            </footer>
-                        </div>
-                        <div class="attribute-speed">
-                            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedClimb" }}</h4>
-                            <div class="attribute-value">
-                                <div class="attribute">{{#if
-                                    data.attributes.speed.climb.total}}{{data.attributes.speed.climb.total}}{{/if}}
-                                </div>
-                            </div>
-                            <footer class="attribute-footer">
-                                <input name="data.attributes.speed.climb.base" type="text"
-                                       value="{{#if data.attributes.speed.climb.base}}{{data.attributes.speed.climb.base}}{{/if}}"
-                                       data-dtype="Number" placeholder="{{localize " D35E.Base"}}"/>
-                            </footer>
-                        </div>
-                        <div class="attribute-speed">
-                            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedSwim" }}</h4>
-                            <div class="attribute-value">
-                                <div class="attribute">{{#if
-                                    data.attributes.speed.swim.total}}{{data.attributes.speed.swim.total}}{{/if}}
-                                </div>
-                            </div>
-                            <footer class="attribute-footer">
-                                <input name="data.attributes.speed.swim.base" type="text"
-                                       value="{{#if data.attributes.speed.swim.base}}{{data.attributes.speed.swim.base}}{{/if}}"
-                                       data-dtype="Number" placeholder="{{localize " D35E.Base"}}"/>
-                            </footer>
-                        </div>
-                        <div class="attribute-speed">
-                            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedBurrow" }}</h4>
-                            <div class="attribute-value">
-                                <div class="attribute">{{#if
-                                    data.attributes.speed.burrow.total}}{{data.attributes.speed.burrow.total}}{{/if}}
-                                </div>
-                            </div>
-                            <footer class="attribute-footer">
-                                <input name="data.attributes.speed.burrow.base" type="text"
-                                       value="{{#if data.attributes.speed.burrow.base}}{{data.attributes.speed.burrow.base}}{{/if}}"
-                                       data-dtype="Number" placeholder="{{localize " D35E.Base"}}"/>
-                            </footer>
-                        </div>
-                        <div class="attribute-speed">
-                            <h4 class="attribute-name box-title">{{ localize "D35E.SpeedFly" }}</h4>
-                            <div class="attribute-value">
-                                <div class="attribute">{{#if
-                                    data.attributes.speed.fly.total}}{{data.attributes.speed.fly.total}}{{/if}}
-                                </div>
-                            </div>
-                            <footer class="attribute-footer">
-                                <input name="data.attributes.speed.fly.base" type="text"
-                                       value="{{#if data.attributes.speed.fly.base}}{{data.attributes.speed.fly.base}}{{/if}}"
-                                       data-dtype="Number" placeholder="{{localize " D35E.Base"}}"/>
-                            </footer>
-                        </div>
-                        <div class="attribute-speed">
-                            <h4 class="attribute-name box-title">{{ localize "D35E.FlyManeuverabilityShort" }}</h4>
-                            <select name="data.attributes.speed.fly.maneuverability">
-                                {{#select data.attributes.speed.fly.maneuverability}}
-                                {{#each config.flyManeuverabilities as |name type|}}
-                                <option value="{{type}}">{{name}}</option>
-                                {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+      <div class="charlevel">
+        <div class="level">
+          <label>{{ localize 'D35E.CR' }}</label>
+          <input name="data.details.cr" type="text" value="{{labels.cr}}" placeholder="1"/>
         </div>
-    </header>
+        <div class="experience">
+          <span>{{data.details.xp.value}} {{ localize 'D35E.XP' }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="flexrow">
 
-    {{!-- NPC Sheet Navigation --}}
-    <nav class="sheet-navigation tabs" data-group="primary">
-        <a class="item active" data-tab="attributes">{{ localize "D35E.Attributes" }}</a>
-        <a class="item" data-tab="attacks">{{ localize "D35E.Combat" }}</a>
-        <a class="item" data-tab="inventory">{{ localize "D35E.Inventory" }}</a>
-        <a class="item" data-tab="feats">{{ localize "D35E.Features" }}</a>
-        <a class="item" data-tab="skills">{{ localize "D35E.Skills" }}</a>
-        <a class="item" data-tab="buffs">{{ localize "D35E.Buffs" }}</a>
-        <a class="item" data-tab="spellbook">{{ localize "D35E.Spells" }}</a>
-        <a class="item" data-tab="biography">{{ localize "D35E.Biography" }}</a>
-        <a class="item" data-tab="notes">{{ localize "D35E.Notes" }}</a>
-    </nav>
+      <div class="profile npc">
+        <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+        <img src="{{actor.data.tokenImg}}" class="token-image" data-edit="data.tokenImg">
+      </div>
+      <div class="header-details flexcol">
 
-    {{!-- NPC Sheet Body --}}
-    <section class="primary-body">
-        <div class="tab attributes flexrow" data-group="primary" data-tab="attributes">
+        <div class="flexcol">
+          <ul class="summary">
+            <li>
+              <input type="text" name="data.details.type" value="{{data.details.type}}"
+                     placeholder="{{ localize 'D35E.TypeSubType' }}" title="{{ localize 'D35E.TypeSubType' }}"/>
+            </li>
+            <li>
+              <input type="text" name="data.details.alignment" value="{{data.details.alignment}}"
+                     placeholder="{{ localize 'D35E.Alignment' }}" title="{{ localize 'D35E.Alignment' }}"/>
+            </li>
+            <li>
+              <div class="race-container item flexrow" {{#if race}}data-item-id="{{race._id}}"{{/if}} title="{{ localize 'D35E.Race' }}">
+              <div class="race item-image rollable" style="background-image: url({{race.img}})"
+                   title="{{labels.race}}">
+                {{#unless race}}{{ localize 'D35E.Race' }}{{/unless}}
+              </div>
+              {{#if race}}
+                <span>{{race.name}}</span>
+              {{/if}}
 
-            {{!-- Ability Scores --}}
-            <ul class="ability-scores flexrow" style="width: 100%">
-                {{#each data.abilities as |ability id|}}
-                <li class="ability" data-ability="{{id}}">
-                    <div class="ability-header flexrow">
-                        <input class="ability-damage" name="data.abilities.{{id}}.damage" type="text"
-                               title="{{localize " D35E.Damage"}}"
-                        value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number" placeholder="{{
-                        localize "D35E.DMG" }}"/>
-                        <input class="ability-penalty" name="data.abilities.{{id}}.userPenalty" type="text"
-                               title="{{localize " D35E.Penalty"}}"
-                        value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number"
-                        placeholder="{{ localize "D35E.PNL" }}"/>
-                        <input class="ability-drain" name="data.abilities.{{id}}.drain" type="text" title="{{localize "
-                               D35E.Drain"}}"
-                        value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" placeholder="{{
-                        localize "D35E.DRN" }}"/>
-                    </div>
-                    <h4 class="ability-name box-title rollable">{{ability.label}}</h4>
-                    <span class="ability-score tooltip">
+              <div class="item-controls flexrow">
+                {{#if owner}}
+                  {{#unless race}}
+                    <a class="item-control add" title="{{ localize 'D35E.CreateItem' }}"><i
+                       class="fas fa-plus"></i></a>
+                  {{/unless}}
+                  {{#if race}}
+                    <a class="item-control edit" title="{{ localize 'D35E.EditItem' }}"><i
+                       class="fas fa-edit"></i></a>
+                    <a class="item-control delete" title="{{ localize 'D35E.DeleteItem' }}"><i
+                       class="fas fa-trash"></i></a>
+                  {{/if}}
+                {{/if}}
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        {{!-- Attributes --}}
+        <ul class="attributes flexrow">
+          <li class="attribute health">
+              {{#if healthConfig.variants.npc.useWoundsAndVigor}}
+                <h4 class="attribute-name box-title tooltip">
+                  {{ localize 'D35E.Vigor' }}
+                  <div class="tooltipcontent">
+                    @attributes.vigor.min : {{data.attributes.vigor.min}}<br/>
+                    @attributes.vigor.value : {{data.attributes.vigor.value}}<br/>
+                    @attributes.vigor.max : {{data.attributes.vigor.max}}<br/>
+                    @attributes.vigor.temp : {{data.attributes.vigor.temp}}
+
+                    {{#if sourceDetails.data.attributes.vigor.max.length}}
+                      <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                      {{#each sourceDetails.data.attributes.vigor.max as |src|}}{{src.name}}:
+                      {{src.value}}<br/>{{/each}}
+                    {{/if}}
+                  </div>
+                </h4>
+                <div class="attribute-value multiple">
+                  <input name="data.attributes.vigor.value" type="text"
+                         value="{{data.attributes.vigor.value}}"
+                         data-dtype="Number" placeholder="0"/>
+                  <span class="sep"> / </span>
+                  <div class="attribute">{{data.attributes.vigor.max}}</div>
+                </div>
+                <footer class="attribute-footer">
+                  <input name="data.attributes.vigor.temp" type="text" class="temphp"
+                         placeholder="{{ localize 'D35E.Temporary' }}"
+                         value="{{#if data.attributes.vigor.temp}}{{data.attributes.vigor.temp}}{{/if}}"
+                         data-dtype="Number"/>
+                </footer>
+
+                <h4 class="attribute-name box-title tooltip">
+                  {{ localize 'D35E.Wounds' }}
+                  <div class="tooltipcontent">
+                      @attributes.wounds.min : {{data.attributes.wounds.min}}<br/>
+                      @attributes.wounds.value : {{data.attributes.wounds.value}}<br/>
+                      @attributes.wounds.max : {{data.attributes.wounds.max}}<br/>
+
+                      {{#if sourceDetails.data.attributes.wounds.max.length}}
+                        <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                        {{#each sourceDetails.data.attributes.wounds.max as |src|}}{{src.name}}:
+                        {{src.value}}<br/>{{/each}}
+                      {{/if}}
+                  </div>
+                </h4>
+                <div class="attribute-value multiple">
+                  <input name="data.attributes.wounds.value" type="text"
+                         value="{{data.attributes.wounds.value}}"
+                         data-dtype="Number" placeholder="0"/>
+                  <span class="sep"> / </span>
+                  <div class="attribute">{{data.attributes.wounds.max}}</div>
+                </div>
+              {{else}}
+                <h4 class="attribute-name box-title tooltip">
+                  {{ localize 'D35E.Health' }}
+                  <div class="tooltipcontent">
+                    @attributes.hp.value : {{data.attributes.hp.value}}<br/>
+                    @attributes.hp.max : {{data.attributes.hp.max}}<br/>
+                    @attributes.hp.temp : {{data.attributes.hp.temp}}<br/>
+                    @attributes.hp.nonlethal : {{data.attributes.hp.nonlethal}}
+
+                    {{#if sourceDetails.data.attributes.hp.max.length}}
+                      <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                      {{#each sourceDetails.data.attributes.hp.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                    {{/if}}
+                  </div>
+                </h4>
+                <div class="attribute-value multiple">
+                  <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}"
+                         data-dtype="Number" placeholder="10"/>
+                  <span class="sep"> / </span>
+                  <div class="attribute">{{data.attributes.hp.max}}</div>
+                </div>
+                <footer class="attribute-footer">
+                  <input name="data.attributes.hp.temp" type="text" class="temphp"
+                         placeholder="+{{ localize 'D35E.TempShort' }}"
+                         value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}"
+                         data-dtype="Number" title="{{ localize 'D35E.TempHP' }}"/>
+                  <input name="data.attributes.hp.nonlethal" type="text" class="temphp"
+                         placeholder="{{ localize 'D35E.Nonlethal' }}"
+                         value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}"
+                         data-dtype="Number" title="{{ localize 'D35E.Nonlethal' }}"/>
+                  <br>
+
+                  <a class="btn random-hp-roll" onkeydown="e.preventDefault();">{{ localize 'D35E.RandomizeHP' }}</a>
+                </footer>
+              {{/if}}
+          </li>
+
+          <li class="attribute speed">
+            <div class="attribute-speed">
+              <h4 class="attribute-name box-title">{{ 'D35E.SpeedLand' }}</h4>
+              <div class="attribute-value">
+                <div class="attribute">
+                  {{#if data.attributes.speed.land.total}}{{data.attributes.speed.land.total}}{{/if}}
+                </div>
+              </div>
+                <footer class="attribute-footer">
+                  <input name="data.attributes.speed.land.base" type="text"
+                         value="{{#if data.attributes.speed.land.base}}{{data.attributes.speed.land.base}}{{/if}}"
+                         data-dtype="Number" placeholder="{{ localize 'D35E.Base' }}"/>
+                </footer>
+            </div>
+            <div class="attribute-speed">
+              <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedClimb' }}</h4>
+              <div class="attribute-value">
+                <div class="attribute">
+                  {{#if data.attributes.speed.climb.total}}{{data.attributes.speed.climb.total}}{{/if}}
+                </div>
+              </div>
+              <footer class="attribute-footer">
+                <input name="data.attributes.speed.climb.base" type="text"
+                       value="{{#if data.attributes.speed.climb.base}}{{data.attributes.speed.climb.base}}{{/if}}"
+                       data-dtype="Number" placeholder="{{ localize 'D35E.Base' }}"/>
+              </footer>
+            </div>
+            <div class="attribute-speed">
+              <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedSwim' }}</h4>
+              <div class="attribute-value">
+                <div class="attribute">
+                  {{#if data.attributes.speed.swim.total}}{{data.attributes.speed.swim.total}}{{/if}}
+                </div>
+              </div>
+              <footer class="attribute-footer">
+                <input name="data.attributes.speed.swim.base" type="text"
+                       value="{{#if data.attributes.speed.swim.base}}{{data.attributes.speed.swim.base}}{{/if}}"
+                       data-dtype="Number" placeholder="{{ localize 'D35E.Base' }}"/>
+              </footer>
+            </div>
+            <div class="attribute-speed">
+              <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedBurrow' }}</h4>
+              <div class="attribute-value">
+                <div class="attribute">
+                  {{#if data.attributes.speed.burrow.total}}{{data.attributes.speed.burrow.total}}{{/if}}
+                </div>
+              </div>
+              <footer class="attribute-footer">
+                <input name="data.attributes.speed.burrow.base" type="text"
+                       value="{{#if data.attributes.speed.burrow.base}}{{data.attributes.speed.burrow.base}}{{/if}}"
+                       data-dtype="Number" placeholder="{{ localize 'D35E.Base' }}"/>
+              </footer>
+            </div>
+            <div class="attribute-speed">
+              <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedFly' }}</h4>
+              <div class="attribute-value">
+                <div class="attribute">
+                  {{#if data.attributes.speed.fly.total}}{{data.attributes.speed.fly.total}}{{/if}}
+                </div>
+              </div>
+              <footer class="attribute-footer">
+                <input name="data.attributes.speed.fly.base" type="text"
+                       value="{{#if data.attributes.speed.fly.base}}{{data.attributes.speed.fly.base}}{{/if}}"
+                       data-dtype="Number" placeholder="{{ localize 'D35E.Base' }}"/>
+              </footer>
+            </div>
+            <div class="attribute-speed">
+              <h4 class="attribute-name box-title">{{ localize 'D35E.FlyManeuverabilityShort' }}</h4>
+              <select name="data.attributes.speed.fly.maneuverability">
+                  {{#select data.attributes.speed.fly.maneuverability}}
+                  {{#each config.flyManeuverabilities as |name type|}}
+                    <option value="{{type}}">{{name}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  {{!-- NPC Sheet Navigation --}}
+  <nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="attributes">{{ localize 'D35E.Attributes' }}</a>
+    <a class="item" data-tab="attacks">{{ localize 'D35E.Combat' }}</a>
+    <a class="item" data-tab="inventory">{{ localize 'D35E.Inventory' }}</a>
+    <a class="item" data-tab="feats">{{ localize 'D35E.Features' }}</a>
+    <a class="item" data-tab="skills">{{ localize 'D35E.Skills' }}</a>
+    <a class="item" data-tab="buffs">{{ localize 'D35E.Buffs' }}</a>
+    <a class="item" data-tab="spellbook">{{ localize 'D35E.Spells' }}</a>
+    <a class="item" data-tab="biography">{{ localize 'D35E.Biography' }}</a>
+    <a class="item" data-tab="notes">{{ localize 'D35E.Notes' }}</a>
+  </nav>
+
+  {{!-- NPC Sheet Body --}}
+  <section class="primary-body">
+    <div class="tab attributes flexrow" data-group="primary" data-tab="attributes">
+
+      {{!-- Ability Scores --}}
+      <ul class="ability-scores flexrow" style="width: 100%">
+        {{#each data.abilities as |ability id|}}
+          <li class="ability" data-ability="{{id}}">
+            <div class="ability-header flexrow">
+              <input class="ability-damage" name="data.abilities.{{id}}.damage" type="text"
+                     title="{{ localize 'D35E.Damage' }}"
+              value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number" 
+              placeholder="{{ localize 'D35E.DMG' }}"/>
+              <input class="ability-penalty" name="data.abilities.{{id}}.userPenalty" type="text"
+                     title="{{ localize 'D35E.Penalty' }}"
+              value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number"
+              placeholder="{{ localize 'D35E.PNL' }}"/>
+              <input class="ability-drain" name="data.abilities.{{id}}.drain" type="text" 
+                     title="{{ localize 'D35E.Drain' }}"
+              value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" 
+              placeholder="{{ localize 'D35E.DRN' }}"/>
+            </div>
+            <h4 class="ability-name box-title rollable">{{ability.label}}</h4>
+            <span class="ability-score tooltip">
               {{numberFormat ability.total decimals=0 sign=false}}
               <span class="tooltipcontent">
                 @abilities.{{id}}.total : {{ability.total}}<br/>
@@ -310,176 +310,176 @@
                 @abilities.{{id}}.penalty : {{ability.penalty}}
 
                 {{#if ability.sourceDetails.length}}
-                  <br/><br/>{{localize "D35E.FromSources"}}:<br/>
+                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
                   {{#each ability.sourceDetails as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
             </span>
-                    <div class="ability-modifiers flexrow">
-                        <span class="ability-mod">{{numberFormat ability.mod decimals=0 sign=true}}</span>
-                        <div class="ability-center"></div>
-                        <input class="ability-base" name="data.abilities.{{id}}.value" type="text"
-                               value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
-                    </div>
-                </li>
-                {{/each}}
-            </ul>
-
-            {{!-- Misc --}}
-            <div class="flexcol attributes-root">
-                <ul class="attributes misc-base flexrow">
-                    <li class="attribute bab" data-attribute="bab">
-                        <h4 class="attribute-name box-title rollable">{{localize "D35E.BABAbbr"}}</h4>
-                        <div class="attribute-value tooltip">
-                            <span>{{numberFormat data.attributes.bab.total decimals=0 sign=false}}</span>
-                            <span class="tooltipcontent">
-                  @attributes.bab.total : {{data.attributes.bab.total}}
-                  {{#if sourceDetails.data.attributes.bab.total.length}}
-                    <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                    {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                  {{/if}}
-                </span>
-                        </div>
-                    </li>
-
-                    <li class="attribute cmb" data-attribute="cmb">
-                        <h4 class="attribute-name box-title rollable">{{localize "D35E.CMBAbbr"}}</h4>
-                        <div class="attribute-value tooltip">
-                            <span>{{data.attributes.cmb.total}}</span>
-                            <span class="tooltipcontent">
-                  @attributes.cmb.total : {{data.attributes.cmb.total}}
-                  {{#if sourceDetails.data.attributes.cmb.total.length}}
-                    <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                    {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                  {{/if}}
-                </span>
-                        </div>
-                    </li>
-                </ul>
-
-                <ul class="attributes misc-base flexrow">
-                    <li class="attribute initiative" data-attribute="init">
-                        <h4 class="attribute-name box-title rollable">{{localize "D35E.Initiative"}}</h4>
-                        <div class="attribute-value tooltip">
-                            <span>{{data.attributes.init.total}}</span>
-                            <span class="tooltipcontent">
-                  @attributes.init.total : {{data.attributes.init.total}}
-                  {{#if sourceDetails.data.attributes.init.total.length}}
-                    <br/><br/>{{localize "D35E.FromSources"}}:<br/>
-                    {{#each sourceDetails.data.attributes.init.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                  {{/if}}
-                </span>
-                        </div>
-                    </li>
-                </ul>
-
-                <ul class="attributes misc-base2 flexrow">
-                    <li class="attribute acp" data-attribute="acp">
-                        <h4 class="attribute-name box-title">{{localize "D35E.ACP"}}</h4>
-                        <div class="attribute-value tooltip">
-                            <span>{{data.attributes.acp.total}}</span>
-                            <span class="tooltipcontent">@attributes.acp.total : {{data.attributes.acp.total}}</span>
-                        </div>
-                    </li>
-
-                    <li class="attribute maxdex" data-attribute="maxdex">
-                        <h4 class="attribute-name box-title">{{localize "D35E.MaxDexShort"}}</h4>
-                        <div class="attribute-value tooltip">
-                            <span>{{data.attributes.maxDexBonus}}</span>
-                            <span class="tooltipcontent">@attributes.maxDexBonus : {{data.attributes.maxDexBonus}}</span>
-                        </div>
-                    </li>
-                </ul>
-
-                <textarea name="data.attributes.cmbNotes" placeholder="CMB {{localize " D35E.Notes"}}">{{data.attributes.cmbNotes}}</textarea>
+            <div class="ability-modifiers flexrow">
+              <span class="ability-mod">{{numberFormat ability.mod decimals=0 sign=true}}</span>
+              <div class="ability-center"></div>
+              <input class="ability-base" name="data.abilities.{{id}}.value" type="text"
+                     value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
             </div>
+          </li>
+        {{/each}}
+      </ul>
 
-            <section class="center-pane flexcol">
-                <div class="traits">
-                    <div class="form-group">
-                        <label>{{localize "D35E.BuffTarACNatural"}}</label>
-                        <input name="data.attributes.naturalAC" type="text" placeholder="0"
-                               value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
-                    </div>
+      {{!-- Misc --}}
+      <div class="flexcol attributes-root">
+        <ul class="attributes misc-base flexrow">
+          <li class="attribute bab" data-attribute="bab">
+            <h4 class="attribute-name box-title rollable">{{ localize 'D35E.BABAbbr' }}</h4>
+            <div class="attribute-value tooltip">
+              <span>{{numberFormat data.attributes.bab.total decimals=0 sign=false}}</span>
+              <span class="tooltipcontent">
+                @attributes.bab.total : {{data.attributes.bab.total}}
+                {{#if sourceDetails.data.attributes.bab.total.length}}
+                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                  {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                {{/if}}
+              </span>
+            </div>
+          </li>
+
+            <li class="attribute cmb" data-attribute="cmb">
+                <h4 class="attribute-name box-title rollable">{{ localize 'D35E.CMBAbbr' }}</h4>
+                <div class="attribute-value tooltip">
+                    <span>{{data.attributes.cmb.total}}</span>
+                    <span class="tooltipcontent">
+          @attributes.cmb.total : {{data.attributes.cmb.total}}
+          {{#if sourceDetails.data.attributes.cmb.total.length}}
+            <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+            {{#each sourceDetails.data.attributes.cmb.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+          {{/if}}
+        </span>
                 </div>
+            </li>
+        </ul>
 
-                <div class="traits">
-                    <div class="form-group">
-                        <label>{{localize "D35E.SpellResistance"}}</label>
-                        <input style="width: calc(100% - 60px);" name="data.attributes.sr.formula" type="text" placeholder="{{localize "D35E.Formula"}}"
-                        value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
-                        <span style="flex: 0 80px; text-align: end">Total: </span>
-                        <input style="flex: 0 30px" disabled type="text"
-                                                                        value="{{data.attributes.sr.total}}"/>
-                    </div>
-                </div>
-                <div class="traits">
-                    <div class="form-group">
-                        <label>{{localize "D35E.FastHealing"}}</label>
-                        <input name="data.traits.fastHealing" type="text" placeholder="0"
-                               value="{{#if data.traits.fastHealing}}{{data.traits.fastHealing}}{{/if}}"/>
-                    </div>
-                </div>
-                <div class="traits">
-                    <div class="form-group">
-                        <label>{{localize "D35E.Regeneration"}}</label>
-                        <input name="data.traits.regen" type="text" placeholder="0"
-                               value="{{#if data.traits.regen}}{{data.traits.regen}}{{/if}}"/>
-                    </div>
-                </div>
+          <ul class="attributes misc-base flexrow">
+              <li class="attribute initiative" data-attribute="init">
+                  <h4 class="attribute-name box-title rollable">{{ localize 'D35E.Initiative' }}</h4>
+                  <div class="attribute-value tooltip">
+                      <span>{{data.attributes.init.total}}</span>
+                      <span class="tooltipcontent">
+            @attributes.init.total : {{data.attributes.init.total}}
+            {{#if sourceDetails.data.attributes.init.total.length}}
+              <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+              {{#each sourceDetails.data.attributes.init.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+            {{/if}}
+          </span>
+                  </div>
+              </li>
+          </ul>
 
-                {{!-- Traits --}}
-                {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
-            </section>
+          <ul class="attributes misc-base2 flexrow">
+              <li class="attribute acp" data-attribute="acp">
+                  <h4 class="attribute-name box-title">{{ localize 'D35E.ACP' }}</h4>
+                  <div class="attribute-value tooltip">
+                      <span>{{data.attributes.acp.total}}</span>
+                      <span class="tooltipcontent">@attributes.acp.total : {{data.attributes.acp.total}}</span>
+                  </div>
+              </li>
 
+              <li class="attribute maxdex" data-attribute="maxdex">
+                  <h4 class="attribute-name box-title">{{ localize 'D35E.MaxDexShort' }}</h4>
+                  <div class="attribute-value tooltip">
+                      <span>{{data.attributes.maxDexBonus}}</span>
+                      <span class="tooltipcontent">@attributes.maxDexBonus : {{data.attributes.maxDexBonus}}</span>
+                  </div>
+              </li>
+          </ul>
 
+          <textarea name="data.attributes.cmbNotes" placeholder="CMB {{ localize 'D35E.Notes' }}">{{data.attributes.cmbNotes}}</textarea>
+      </div>
+
+      <section class="center-pane flexcol">
+        <div class="traits">
+          <div class="form-group">
+            <label>{{ localize 'D35E.BuffTarACNatural' }}</label>
+            <input name="data.attributes.naturalAC" type="text" placeholder="0"
+                   value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
+          </div>
         </div>
 
-        {{!-- Defenses Tab --}}
-        <div class="tab defenses flexcol" data-group="primary" data-tab="defenses">
-            {{> "systems/D35E/templates/actors/parts/actor-defenses.html"}}
+        <div class="traits">
+          <div class="form-group">
+            <label>{{ localize 'D35E.SpellResistance' }}</label>
+            <input style="width: calc(100% - 60px);" name="data.attributes.sr.formula" type="text" placeholder="{{ localize 'D35E.Formula' }}"
+                   value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
+            <span style="flex: 0 80px; text-align: end">{{ localize 'D35E.Total' }}: </span>
+            <input style="flex: 0 30px" disabled type="text"
+                   value="{{data.attributes.sr.total}}"/>
+          </div>
         </div>
+          <div class="traits">
+            <div class="form-group">
+              <label>{{ localize 'D35E.FastHealing' }}</label>
+              <input name="data.traits.fastHealing" type="text" placeholder="0"
+                     value="{{#if data.traits.fastHealing}}{{data.traits.fastHealing}}{{/if}}"/>
+            </div>
+          </div>
+          <div class="traits">
+            <div class="form-group">
+              <label>{{ localize 'D35E.Regeneration' }}</label>
+              <input name="data.traits.regen" type="text" placeholder="0"
+                     value="{{#if data.traits.regen}}{{data.traits.regen}}{{/if}}"/>
+            </div>
+          </div>
 
-        {{!-- Attacks Tab --}}
-        <div class="tab attacks flexcol" data-group="primary" data-tab="attacks">
-            {{> "systems/D35E/templates/actors/parts/actor-attacks.html" sections=attacks}}
-        </div>
+          {{!-- Traits --}}
+          {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
+      </section>
 
-        {{!-- Inventory Tab --}}
-        <div class="tab inventory flexcol" data-group="primary" data-tab="inventory">
-            {{> "systems/D35E/templates/actors/parts/actor-inventory.html" sections=inventory}}
-        </div>
 
-        {{!-- Features Tab --}}
-        <div class="tab features flexcol" data-group="primary" data-tab="feats">
-            {{> "systems/D35E/templates/actors/parts/actor-features.html" sections=features}}
-        </div>
+    </div>
 
-        {{!-- Skills Tab --}}
-        <div class="tab skills flexcol" data-group="primary" data-tab="skills">
-            {{> "systems/D35E/templates/actors/parts/actor-skills-front.html"}}
-        </div>
+    {{!-- Defenses Tab --}}
+    <div class="tab defenses flexcol" data-group="primary" data-tab="defenses">
+      {{> "systems/D35E/templates/actors/parts/actor-defenses.html"}}
+    </div>
 
-        {{!-- Buffs Tab --}}
-        <div class="tab buffs flexcol" data-group="primary" data-tab="buffs">
-            {{> "systems/D35E/templates/actors/parts/actor-buffs.html" sections=buffs}}
-        </div>
+    {{!-- Attacks Tab --}}
+    <div class="tab attacks flexcol" data-group="primary" data-tab="attacks">
+      {{> "systems/D35E/templates/actors/parts/actor-attacks.html" sections=attacks}}
+    </div>
 
-        {{!-- Spellbook Tab --}}
-        <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
-            {{> "systems/D35E/templates/actors/parts/actor-spellbook-front.html"}}
-        </div>
+    {{!-- Inventory Tab --}}
+    <div class="tab inventory flexcol" data-group="primary" data-tab="inventory">
+      {{> "systems/D35E/templates/actors/parts/actor-inventory.html" sections=inventory}}
+    </div>
 
-        {{!-- Biography Tab --}}
-        <div class="tab biography flexcol" data-group="primary" data-tab="biography">
-            {{editor content=data.details.biography.value target="data.details.biography.value" button=true owner=owner
-            editable=editable}}
-        </div>
+    {{!-- Features Tab --}}
+    <div class="tab features flexcol" data-group="primary" data-tab="feats">
+      {{> "systems/D35E/templates/actors/parts/actor-features.html" sections=features}}
+    </div>
 
-        {{!-- Notes Tab --}}
-        <div class="tab actor-notes flexcol" data-group="primary" data-tab="notes">
-            {{editor content=data.details.notes.value target="data.details.notes.value" button=true owner=owner
-            editable=editable}}
-        </div>
-    </section>
+    {{!-- Skills Tab --}}
+    <div class="tab skills flexcol" data-group="primary" data-tab="skills">
+      {{> "systems/D35E/templates/actors/parts/actor-skills-front.html"}}
+    </div>
+
+    {{!-- Buffs Tab --}}
+    <div class="tab buffs flexcol" data-group="primary" data-tab="buffs">
+      {{> "systems/D35E/templates/actors/parts/actor-buffs.html" sections=buffs}}
+    </div>
+
+    {{!-- Spellbook Tab --}}
+    <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
+      {{> "systems/D35E/templates/actors/parts/actor-spellbook-front.html"}}
+    </div>
+
+    {{!-- Biography Tab --}}
+    <div class="tab biography flexcol" data-group="primary" data-tab="biography">
+      {{editor content=data.details.biography.value target="data.details.biography.value" button=true owner=owner
+      editable=editable}}
+    </div>
+
+    {{!-- Notes Tab --}}
+    <div class="tab actor-notes flexcol" data-group="primary" data-tab="notes">
+      {{editor content=data.details.notes.value target="data.details.notes.value" button=true owner=owner
+      editable=editable}}
+    </div>
+  </section>
 </form>

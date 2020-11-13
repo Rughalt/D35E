@@ -985,6 +985,9 @@
   "D35E.SetLevelData": "Guardar datos de nivel",
   "D35E.WeaponFightingMode": "Modo de empuñado de arma",
   "D35E.TwoWeaponTwoHanded": "A dos manos",
+  "D35E.None-FrF": "Ninguna",
+  "D35E.None-FrM": "Ninguna",
+
   "SETTINGS.D35EShowPartyHudN": "Interfaz tipo grupo",
   "SETTINGS.D35EShowPartyHudL": "Como mostrar la interfaz de grupo",
   "SETTINGS.D35ECustomSkinN": "Usar skin personalizada",
