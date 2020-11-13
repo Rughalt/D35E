@@ -533,7 +533,7 @@ export class ActorPF extends Actor {
     }
 
 
-    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride) {
+    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}) {
         // Class hit points
         const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
             return a.sort - b.sort;
@@ -678,8 +678,13 @@ export class ActorPF extends Actor {
 
         // Add size bonuses to various attributes
         let sizeKey = data.data.traits.size;
+        let tokenSizeKey = data.data.traits.tokenSize || "actor";
         if (sizeOverride !== undefined && sizeOverride !== null && sizeOverride !== "") {
             sizeKey = sizeOverride;
+            tokenSizeKey = sizeOverride;
+        }
+        if (tokenSizeKey === "actor") {
+            tokenSizeKey = sizeKey;
         }
         if (sizeKey !== "med") {
             // AC
@@ -721,8 +726,9 @@ export class ActorPF extends Actor {
 
 
         // Apply changes in Actor size to Token width/height
+        if (!options.skipToken)
         {
-            let size = CONFIG.D35E.tokenSizes[sizeKey];
+            let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
             //console.log(size)
             if (this.isToken) {
                 let tokens = []
@@ -743,6 +749,7 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
+        if (!options.skipToken)
         {
             let dimLight = 0;
             let brightLight = 0;
@@ -1112,6 +1119,13 @@ export class ActorPF extends Actor {
             });
         }
 
+        if (data.data.skills.aut.rank >= 5) {
+            changes.push({
+                raw: ["2", "skill", "skill.kps", "untyped", 0],
+                source: { name: "Skill synergy" }
+            });
+        }
+
         // Apply level drain to hit points
         if (!Number.isNaN(data.data.attributes.energyDrain) && data.data.attributes.energyDrain > 0) {
             changes.push({
@@ -1133,7 +1147,7 @@ export class ActorPF extends Actor {
         return true;
     }
 
-    async _updateChanges({ data = null } = {}) {
+    async _updateChanges({data = null} = {}, options = {}) {
         let updateData = {};
         let srcData1 = mergeObject(this.data, expandObject(data || {}), { inplace: false });
         srcData1.items = this.items.reduce((cur, i) => {
@@ -1232,7 +1246,7 @@ export class ActorPF extends Actor {
                 }
             }
         }
-        ;
+
 
         // Create an array of changes
         let allChanges = [];
@@ -1365,7 +1379,7 @@ export class ActorPF extends Actor {
 
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
-        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride);
+        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options);
 
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
@@ -1374,6 +1388,17 @@ export class ActorPF extends Actor {
         const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, { inplace: false });
         updateData = flattenObject({ data: mergeObject(origData.data, expandObject(updateData).data, { inplace: false }) });
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
+
+        if (!this.data.data?.master?.id) {
+            let _changesLength = allChanges.length;
+            allChanges = allChanges.filter((c) => (c.raw[0] || "").indexOf('@master') === -1)
+            if (_changesLength !== allChanges.length) {
+                return ui.notifications.warn(game.i18n.localize("D35E.FamiliarNoMaster"));
+                console.log('D35E | Minion has some changes removed |', _changesLength,allChanges.length);
+            }
+        }
+
+        //let srcRollData = this.getRollData(srcData1.data);
         allChanges.forEach((change, a) => {
             const formula = change.raw[0] || "";
             if (formula === "") return;
@@ -1553,45 +1578,46 @@ export class ActorPF extends Actor {
             tokenImg = data.token.img;
             linkData(srcData1, updateData, "data.tokenImg", tokenImg);
         }
+        if (!options.skipToken) {
+            if (shapechangeImg !== "icons/svg/mystery-man.svg") {
+                if (this.isToken) {
+                    let tokens = []
+                    tokens.push(this.token);
+                    for (const o of tokens) {
+                        if (shapechangeImg !== o.data.img)
+                            o.update({'img': shapechangeImg}, {stopUpdates: true});
+                    }
+                }
+                if (!this.isToken) {
+                    let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
 
-        if (shapechangeImg !== "icons/svg/mystery-man.svg") {
-            if (this.isToken) {
-                let tokens = []
-                tokens.push(this.token);
-                for (const o of tokens) {
-                    if (shapechangeImg !== o.data.img)
-                        o.update({ 'img': shapechangeImg }, { stopUpdates: true });
+                    for (const o of tokens) {
+                        if (shapechangeImg !== o.data.img)
+                            o.update({'img': shapechangeImg}, {stopUpdates: true});
+                    }
+                    if (srcData1 !== null)
+                        srcData1["token.img"] = shapechangeImg;
                 }
-            }
-            if (!this.isToken) {
-                let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                ;
-                for (const o of tokens) {
-                    if (shapechangeImg !== o.data.img)
-                        o.update({ 'img': shapechangeImg }, { stopUpdates: true });
+            } else {
+                if (this.isToken) {
+                    let tokens = []
+                    tokens.push(this.token);
+                    for (const o of tokens) {
+                        if (tokenImg && tokenImg !== o.data.img)
+                            o.update({'img': tokenImg}, {stopUpdates: true});
+                    }
                 }
-                if (srcData1 !== null)
-                    srcData1["token.img"] = shapechangeImg;
-            }
-        } else {
-            if (this.isToken) {
-                let tokens = []
-                tokens.push(this.token);
-                for (const o of tokens) {
-                    if (tokenImg && tokenImg !== o.data.img)
-                        o.update({ 'img': tokenImg }, { stopUpdates: true });
-                }
-            }
-            if (!this.isToken) {
-                let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                ;
-                for (const o of tokens) {
-                    if (tokenImg && tokenImg !== o.data.img)
-                        o.update({ 'img': tokenImg }, { stopUpdates: true });
-                }
+                if (!this.isToken) {
+                    let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
 
-                if (srcData1 !== null) {
-                    srcData1["token.img"] = tokenImg;
+                    for (const o of tokens) {
+                        if (tokenImg && tokenImg !== o.data.img)
+                            o.update({'img': tokenImg}, {stopUpdates: true});
+                    }
+
+                    if (srcData1 !== null) {
+                        srcData1["token.img"] = tokenImg;
+                    }
                 }
             }
         }
@@ -1736,6 +1762,7 @@ export class ActorPF extends Actor {
         const classes = items.filter(obj => {
             return obj.type === "class";
         });
+
         const racialHD = classes.filter(o => getProperty(o.data, "classType") === "racial");
         const useFractionalBaseBonuses = game.settings.get("D35E", "useFractionalBaseBonuses") === true;
 
@@ -1796,6 +1823,8 @@ export class ActorPF extends Actor {
 
         let levelUpData = duplicate(data1.details.levelUpData) || []
         if (levelUpData.length !== data1.details.level.available) {
+
+            console.log('D35E | ActorPF | Will update actor level')
             while (levelUpData.length < data1.details.level.available) {
                 levelUpData.push({ 'level': levelUpData.length + 1, 'id': '_' + Math.random().toString(36).substr(2, 9), 'classId': null, 'class': null, 'classImage': null, 'skills': {}, 'hp': 0, hasFeat: (levelUpData.length + 1) % 3 === 0, hasAbility: (levelUpData.length + 1) % 4 === 0 })
             }
@@ -1843,6 +1872,7 @@ export class ActorPF extends Actor {
         for (let a of Object.keys(data1.attributes.savingThrows)) {
             {
                 const k = `data.attributes.savingThrows.${a}.total`;
+                const j = `data.attributes.savingThrows.${a}.base`;
                 let totalLevel = 0;
                 let epicLevels = 0;
                 if (useFractionalBaseBonuses) {
@@ -1872,12 +1902,16 @@ export class ActorPF extends Actor {
                         let formula = CONFIG.D35E.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
                         if (formula == null) formula = "0";
                         let classLevel = obj.data.levels;
-                        if (totalLevel + classLevel > 20) {
-                            classLevel = 20 - totalLevel;
-                            totalLevel = 20;
-                            epicLevels += obj.data.levels - classLevel;
-                        } else {
-                            totalLevel = totalLevel + classLevel
+
+                        // Epic level/total level should only be calculated when taking into account non-racial hd
+                        if (getProperty(obj.data, "classType") === "base" || (obj.data, "classType") === "prestige") {
+                            if (totalLevel + classLevel > 20) {
+                                classLevel = 20 - totalLevel;
+                                totalLevel = 20;
+                                epicLevels += obj.data.levels - classLevel;
+                            } else {
+                                totalLevel = totalLevel + classLevel
+                            }
                         }
                         const v = Math.floor(new Roll(formula, { level: classLevel }).roll().total);
 
@@ -1895,6 +1929,7 @@ export class ActorPF extends Actor {
                         sourceInfo[k].positive.push({ name: 'Epic Levels', value: epicST });
                     }
                     linkData(data, updateData, k, baseST + epicST);
+                    linkData(data, updateData, j, baseST + epicST);
                 }
             }
         }
@@ -1931,6 +1966,7 @@ export class ActorPF extends Actor {
         // Reset BAB, CMB and CMD
         {
             const k = "data.attributes.bab.total";
+            const j = "data.attributes.bab.base";
             let totalLevel = 0;
             let epicLevels = 0;
             if (useFractionalBaseBonuses) {
@@ -1952,12 +1988,16 @@ export class ActorPF extends Actor {
                 let bab = classes.reduce((cur, obj) => {
                     const formula = CONFIG.D35E.classBABFormulas[obj.data.bab] != null ? CONFIG.D35E.classBABFormulas[obj.data.bab] : "0";
                     let classLevel = obj.data.levels;
-                    if (totalLevel + classLevel > 20) {
-                        classLevel = 20 - totalLevel;
-                        totalLevel = 20;
-                        epicLevels += obj.data.levels - classLevel;
-                    } else {
-                        totalLevel = totalLevel + classLevel
+
+                    // Epic level/total level should only be calculated when taking into account non-racial hd
+                    if (getProperty(obj.data, "classType") === "base" || (obj.data, "classType") === "prestige") {
+                        if (totalLevel + classLevel > 20) {
+                            classLevel = 20 - totalLevel;
+                            totalLevel = 20;
+                            epicLevels += obj.data.levels - classLevel;
+                        } else {
+                            totalLevel = totalLevel + classLevel
+                        }
                     }
                     const v = new Roll(formula, { level: classLevel }).roll().total;
 
@@ -1974,6 +2014,7 @@ export class ActorPF extends Actor {
                     sourceInfo[k].positive.push({ name: 'Epic Levels', value: epicBab });
                 }
                 linkData(data, updateData, k, bab + epicBab);
+                linkData(data, updateData, j, bab + epicBab);
             }
         }
 
@@ -2000,7 +2041,7 @@ export class ActorPF extends Actor {
             const k = "data.attributes.sr.total";
             // Set spell resistance
             if (getProperty(data, `data.attributes.sr.formula`).length > 0) {
-                let roll = new Roll(getProperty(data, `data.attributes.sr.formula`), data).roll();
+                let roll = new Roll(getProperty(data, `data.attributes.sr.formula`), data.data).roll();
                 linkData(data, updateData, k, roll.total);
             } else {
 
@@ -2017,7 +2058,7 @@ export class ActorPF extends Actor {
             let groupFormulas = new Map()
             classes.forEach(obj => {
                 try {
-                    if (obj.data.sneakAttackGroup == null || obj.data.sneakAttackGroup == "")
+                    if (obj.data.sneakAttackGroup == null || obj.data.sneakAttackGroup === "")
                         return;
                     if (!groupLevels.has(obj.data.sneakAttackGroup)) {
                         groupLevels.set(obj.data.sneakAttackGroup, 0)
@@ -2042,6 +2083,38 @@ export class ActorPF extends Actor {
 
         }
 
+        // Total sneak attak dice
+        {
+            const k = "data.attributes.minionClassLevels";
+            let groupLevels = new Map()
+            let groupFormulas = new Map()
+            let minionLevels = {}
+
+            for (var key of Object.keys(data.data.attributes.minionClassLevels || {})) {
+                minionLevels[key.toLowerCase()] = 0
+            }
+            classes.forEach(obj => {
+                try {
+                    if (obj.data.minionGroup == null || obj.data.minionGroup === "")
+                        return;
+                    if (!groupLevels.has(obj.data.minionGroup)) {
+                        groupLevels.set(obj.data.minionGroup, 0)
+                    }
+                    if (!groupFormulas.has(obj.data.minionGroup)) {
+                        groupFormulas.set(obj.data.minionGroup, obj.data.minionLevelFormula)
+                    }
+                    groupLevels.set(obj.data.minionGroup, groupLevels.get(obj.data.minionGroup) + obj.data.levels)
+                } catch (e) {
+                }
+            })
+            for (var key of groupLevels.keys()) {
+                const v = new Roll(groupFormulas.get(key), {level: groupLevels.get(key)}).roll().total;
+                minionLevels[key.toLowerCase()] = v
+            }
+            linkData(data, updateData, k, minionLevels);
+
+        }
+
         linkData(data, updateData, "data.attributes.cmb.total", updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
         linkData(data, updateData, "data.attributes.cmd.total", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
         linkData(data, updateData, "data.attributes.cmd.flatFootedTotal", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
@@ -2061,7 +2134,6 @@ export class ActorPF extends Actor {
                 linkData(data, updateData, `data.skills.${k}.subSkills.${k2}.cs`, isClassSkill);
             }
         }
-
         {
             let level = classes.reduce((cur, o) => {
                 return cur + o.data.levels;
@@ -2119,7 +2191,7 @@ export class ActorPF extends Actor {
                                         eItem.data.source = `${classInfo[0]} ${level}`
                                         eItem.data.userNonRemovable = true;
 
-                                        eItem.data.changes.forEach(change => {
+                                        (eItem.data.changes || []).forEach(change => {
                                             if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
                                             changes.push({
                                                 raw: change,
@@ -2154,8 +2226,10 @@ export class ActorPF extends Actor {
                 for (let entry of itemsToRemove) {
                     idsToRemove.push(itemsWithUid.get(entry))
                 }
-                const deleted = await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, { stopUpdates: true });
-                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, { stopUpdates: true });
+                if (idsToRemove.length)
+                    await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
+                if (itemsToAdd.length)
+                    await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
 
             }
         }
@@ -2444,6 +2518,8 @@ export class ActorPF extends Actor {
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
+
+
     }
 
     _setSourceDetails(actorData, extraData, flags) {
@@ -2768,6 +2844,32 @@ export class ActorPF extends Actor {
             await super.update(data, options);
             return
         }
+        data = await this.prepareUpdateData(data);
+
+        // Update changes
+        let diff = data;
+        if (options.updateChanges !== false) {
+            const updateObj = await this._updateChanges({data: data}, options);
+
+            if (updateObj?.diff?.items) delete updateObj.diff.items;
+            diff = mergeObject(diff, updateObj?.diff || {});
+        }
+
+        // Diff token data
+        if (data.token != null) {
+            diff.token = diffObject(this.data.token, data.token);
+        }
+
+        if (Object.keys(diff).length) {
+            let updateOptions = mergeObject(options, { diff: true })
+            await super.update(diff,updateOptions);
+
+        }
+        this._updateMinions(options);
+        //return false;
+    }
+
+    async prepareUpdateData(data) {
         let img = data.img;
         let expandedData = expandObject(data);
         if (expandedData.data != null && expandedData.data.skills != null) {
@@ -2884,7 +2986,7 @@ export class ActorPF extends Actor {
             if (hasContainerChanged)
                 itemUpdates.push(itemUpdateData)
         }
-        //console.log('Item updates', itemUpdates)
+        console.log('D35E | Item updates', itemUpdates)
         if (itemUpdates.length > 0)
             await this.updateOwnedItem(itemUpdates, { stopUpdates: true });
         // Send resource updates to item
@@ -2954,26 +3056,7 @@ export class ActorPF extends Actor {
         // Update portraits
 
         await this._updateExp(data);
-
-        // Update changes
-        let diff = data;
-        if (options.updateChanges !== false) {
-            const updateObj = await this._updateChanges({ data: data });
-            if (updateObj.diff.items) delete updateObj.diff.items;
-            diff = mergeObject(diff, updateObj.diff);
-        }
-
-        // Diff token data
-        if (data.token != null) {
-            diff.token = diffObject(this.data.token, data.token);
-        }
-
-        if (Object.keys(diff).length) {
-            let updateOptions = mergeObject(options, { diff: true })
-            await super.update(diff, updateOptions);
-
-        }
-        //return false;
+        return data;
     }
 
     _onUpdate(data, options, userId, context) {
@@ -2981,13 +3064,15 @@ export class ActorPF extends Actor {
             canvas.sight.initializeTokens();
         }
 
+        let actorRollData = mergeObject(this.getRollData(), data, {inplace: false})
         for (let i of this.items.values()) {
             let itemUpdateData = {};
 
-            i._updateMaxUses(itemUpdateData, { actorData: data });
-
-            const itemDiff = diffObject(flattenObject(i.data), itemUpdateData);
-            if (Object.keys(itemDiff).length > 0) i.update(itemDiff);
+            i._updateMaxUses(itemUpdateData, {actorRollData: actorRollData});
+            if (Object.keys(itemUpdateData).length > 0) {
+                const itemDiff = diffObject(flattenObject(i.data), itemUpdateData);
+                if (Object.keys(itemDiff).length > 0) i.update(itemDiff);
+            }
         }
         return super._onUpdate(data, options, userId, context);
     }
@@ -3615,7 +3700,7 @@ export class ActorPF extends Actor {
             event: options.event,
             parts: ["@mod - @drain"],
             situational: true,
-            data: { mod: savingThrow.total, drain: this.data.data.attributes.energyDrain },
+            data: { mod: savingThrow.total, drain: this.data.data.attributes.energyDrain || 0 },
             title: game.i18n.localize("D35E.SavingThrowRoll").format(label),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false,
@@ -3921,6 +4006,10 @@ export class ActorPF extends Actor {
         else
             tokensList = canvas.tokens.controlled;
         const promises = [];
+        if (!tokensList.length) {
+            ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+            return
+        }
         for (let t of tokensList) {
             let a = t.actor,
                 hp = a.data.data.attributes.hp,
@@ -3934,6 +4023,29 @@ export class ActorPF extends Actor {
                 "data.attributes.hp.temp": tmp - dt,
                 "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
             }));
+        }
+        return Promise.all(promises);
+    }
+
+    static async rollSave(type) {
+        let tokensList;
+        if (game.user.targets.size > 0)
+            tokensList = game.user.targets;
+        else
+            tokensList = canvas.tokens.controlled;
+        const promises = [];
+        if (!tokensList.length) {
+            ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+            return
+        }
+        for (let t of tokensList) {
+            if (t.actor == null) continue
+            let a = t.actor
+            if (!a.hasPerm(game.user, "OWNER")) {
+                ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+                continue;
+            }
+            promises.push(t.actor.rollSavingThrow(type,{}));
         }
         return Promise.all(promises);
     }
@@ -4528,6 +4640,26 @@ export class ActorPF extends Actor {
         }).render(true);
     }
 
+    _setMaster(itemData) {
+        if (itemData == null) {
+            let updateData = {};
+            updateData["data.-=master"] = null;
+            this.update(updateData);
+        } else {
+            let masterData = {
+                data: {
+                    master: {
+                        id: itemData._id,
+                        img: itemData.img,
+                        name: itemData.name,
+                        data: game.actors.get(itemData._id).getRollData(),
+                    }
+                }
+            };
+            this.update(masterData);
+        }
+    }
+
     async createConsumableSpell(itemData, type) {
         let data = await ItemPF.toConsumable(itemData, type);
 
@@ -4562,6 +4694,90 @@ export class ActorPF extends Actor {
         if (data._id) delete data._id;
         await this.createEmbeddedEntity("OwnedItem", data);
     }
+
+    async _updateMinions(options) {
+        if (options.skipMinions) return;
+        for (const actor of game.actors) {
+            if (actor.data.data?.master?.id === this.id) {
+                let masterData = {
+                    data : {
+                        master : {
+                            img: this.img,
+                            name: this.name,
+                            data: this.getRollData(),
+                        }
+                    }
+                };
+
+                // Updating minion "Familiar class"
+                const classes = actor.data.items.filter(obj => {
+                    return obj.type === "class";
+                });
+                const minionClass = classes.find(o => getProperty(o.data, "classType") === "minion");
+                if (!!minionClass) {
+                    let updateObject = {}
+                    updateObject["_id"] = minionClass.id || minionClass._id;
+                    updateObject["data.levels"] = this.getRollData().attributes.minionClassLevels[minionClass.data.minionGroup] || 0;
+                    await actor.updateOwnedItem(updateObject, {stopUpdates: true})
+                }
+                actor.update(masterData, {stopUpdates: true});
+            }
+        }
+    }
+
+    async _calculateMinionDistance() {
+        if (this == null) return;
+        if (this.data.type === "npc") {
+            let myToken = this.getActiveTokens()[0];
+            let masterId = this.data.data?.master?.id;
+            let master = game.actors.get(masterId);
+            let masterToken = master.getActiveTokens()[0];
+            if (!!myToken && !!masterToken) {
+                let distance = Math.floor(canvas.grid.measureDistance(myToken, masterToken) / 5.0) * 5;
+                let masterData = {
+                    data: {
+                        master: {
+                            distance: distance
+                        }
+                    }
+                };
+                let minionData = {
+                    data: {
+                        attributes: {minionDistance: {}}
+                    }
+                };
+                minionData.data.attributes.minionDistance[this.data.name.toLowerCase().replace(/ /g, '').replace(/,/g, '')] = distance
+                master.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
+                this.update(masterData, {stopUpdates: true, skipToken: true});
+            }
+        } else if (this.data.type === "character") {
+            let myToken = this.getActiveTokens()[0];
+            let minionData = {
+                data: {
+                    attributes: {minionDistance: {}}
+                }
+            };
+            game.actors.forEach(minion => {
+                if (minion.data.data?.master?.id === this.id) {
+                    let minionToken = minion.getActiveTokens()[0]
+                    if (!!myToken && !!minionToken) {
+                        let distance = Math.floor(canvas.grid.measureDistance(myToken, minionToken) / 5.0) * 5;
+                        let masterData = {
+                            data: {
+                                master: {
+                                    distance: distance
+                                }
+                            }
+                        };
+                        minionData.data.attributes.minionDistance[minion.data.name.toLowerCase().replace(/ /g, '').replace(/,/g, '')] = distance
+                        minion.update(masterData, {stopUpdates: true, skipToken: true});
+                    }
+                }
+            });
+            this.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
+        }
+    }
+
     rest(restoreHealth, restoreDailyUses, longTermCare) {
         const actorData = this.data.data;
 

@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "3.5e SRD",
   "description": "Implementation of 3.5 edition System Reference Document for Foundry VTT. Aiming to provide 100% SRD coverage.",
-  "version": "0.86.9",
+  "version": "0.87.0",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],
@@ -14,6 +14,13 @@
       "label": "Classes",
       "system": "D35E",
       "path": "./packs/classes.db",
+      "entity": "Item"
+    },
+    {
+      "name": "minion-classes",
+      "label": "Minion Classes",
+      "system": "D35E",
+      "path": "./packs/minion-classes.db",
       "entity": "Item"
     },
     {
@@ -143,6 +150,13 @@
       "entity": "Actor"
     },
     {
+      "name": "minion",
+      "label": "Minions (Familiars, Animal Companions)",
+      "system": "D35E",
+      "path": "./packs/minions.db",
+      "entity": "Actor"
+    },
+    {
       "name": "conditions",
       "label": "Conditions",
       "system": "D35E",
@@ -186,7 +200,7 @@
   "primaryTokenAttribute": "attributes.hp",
   "secondaryTokenAttribute": null,
   "minimumCoreVersion": "0.7.5",
-  "compatibleCoreVersion": "0.7.5",
+  "compatibleCoreVersion": "0.7.6",
   
   "url": "https://github.com/Rughalt/d35e",
   "manifest": "http://dragonshorn.info/dnd35e/system.json",

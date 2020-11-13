@@ -319,7 +319,13 @@ export class DicePF {
 }
 
 export const _preProcessDiceFormula = function(formula, data={}) {
-
+  function _fillTemplate(templateString, templateVars){
+    if (templateString.indexOf('$') !== -1)
+      return new Function("return `"+templateString +"`;").call(templateVars);
+    else
+      return formula;
+  }
+  formula = _fillTemplate(formula, data)
   // Replace parentheses with semicolons to use for splitting
   let toSplit = formula.replace(/([A-z]+)?\(/g, (match, prefix) => {
     return (prefix in game.D35E.rollPreProcess || prefix in Math) ? `;${prefix};(;` : ";(;";

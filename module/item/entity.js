@@ -365,7 +365,7 @@ export class ItemPF extends Item {
         }
         itemData['custom'] = {}
         if (data.hasOwnProperty('customAttributes')) {
-            console.log(data.customAttributes)
+            //console.log(data.customAttributes)
             for (let prop in data.customAttributes || {}) {
                 let propData = data.customAttributes[prop];
                 itemData['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
@@ -405,6 +405,13 @@ export class ItemPF extends Item {
             if (!subtype || !keys.includes(subtype)) {
                 data["data.weaponSubtype"] = keys[0];
             }
+        }
+
+        if (data["data.weaponData.size"] && data["data.weaponData.size"] !== this.data.data.weaponData.size) {
+            let newSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(data["data.weaponData.size"] || "");
+            let oldSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(this.data.data.weaponData.size || "");
+            let weightChange = Math.pow(2,newSize-oldSize);
+            data["data.weight"] = this.data.data.weight * weightChange;
         }
 
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
@@ -547,8 +554,11 @@ export class ItemPF extends Item {
 
         const diff = diffObject(flattenObject(this.data), data);
         if (Object.keys(diff).length) {
-            return super.update(diff, options);
+            await super.update(diff, options);
         }
+
+        if (this.actor !== null)
+            this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
 
         return false;
     }
@@ -582,7 +592,7 @@ export class ItemPF extends Item {
         }
     }
 
-    _updateMaxUses(data, {srcData = null, actorData = null} = {}) {
+    _updateMaxUses(data, {srcData = null, actorData = null, actorRollData = null} = {}) {
         if (data['data.uses.max'] !== undefined) return;
         let doLinkData = true;
         if (srcData == null) {
@@ -590,9 +600,13 @@ export class ItemPF extends Item {
             doLinkData = false;
         }
         let rollData = {};
-        if (this.actor != null) rollData = this.actor.getRollData();
-        if (actorData !== null) {
-            rollData = mergeObject(rollData,actorData.data, {inplace: false});
+        if (actorRollData == null) {
+            if (this.actor != null) rollData = this.actor.getRollData();
+            if (actorData !== null) {
+                rollData = mergeObject(rollData, actorData.data, {inplace: false});
+            }
+        } else {
+            rollData = actorRollData;
         }
         rollData.item = this.getRollData();
 
@@ -792,12 +806,12 @@ export class ItemPF extends Item {
 
 
             rollData.powerAbl = 0;
-            if (data.school == "bol") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.str.mod`)
-            if (data.school == "kin") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.con.mod`)
-            if (data.school == "por") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.dex.mod`)
-            if (data.school == "met") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.int.mod`)
-            if (data.school == "cla") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.wis.mod`)
-            if (data.school == "tel") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.cha.mod`)
+            if (data.school === "bol") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.str.mod`)
+            if (data.school === "kin") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.con.mod`)
+            if (data.school === "por") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.dex.mod`)
+            if (data.school === "met") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.int.mod`)
+            if (data.school === "cla") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.wis.mod`)
+            if (data.school === "tel") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.cha.mod`)
 
             // Add save DC
             if (data.hasOwnProperty("actionType") && getProperty(data, "save.description")) {
@@ -1338,6 +1352,8 @@ export class ItemPF extends Item {
                     const innerHTML = TextEditor.enrichHTML(attackStr, {rollData: rollData});
                     extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
                 }
+
+                let dc = this._getSpellDC()
                 const properties = this.getChatData().properties;
                 if (properties.length > 0) props.push({
                     header: game.i18n.localize("D35E.InfoShort"),
@@ -1350,7 +1366,8 @@ export class ItemPF extends Item {
                     hasProperties: props.length > 0,
                     item: this.data,
                     actor: actor.data,
-                    hasBoxInfo: hasBoxInfo
+                    hasBoxInfo: hasBoxInfo,
+                    dc: dc
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData);
@@ -1439,6 +1456,57 @@ export class ItemPF extends Item {
             }).render(true);
         });
         return wasRolled;
+    }
+
+    _getSpellDC() {
+        const data = duplicate(this.data.data);
+        let spellDC = {dc: null, type: null, description: null}
+
+        const rollData = this.actor ? this.actor.getRollData() : {};
+        rollData.item = data;
+
+        // Get the spell specific info
+        let spellbookIndex, spellAbility, ablMod = 0;
+        let spellbook = null;
+        let cl = 0;
+        let sl = 0;
+        if (this.type === "spell") {
+            spellbookIndex = data.spellbook;
+            spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${spellbookIndex}`) || {};
+            spellAbility = spellbook.ability;
+            if (spellAbility !== "") ablMod = getProperty(this.actor.data, `data.abilities.${spellAbility}.mod`);
+
+            cl += getProperty(spellbook, "cl.total") || 0;
+            cl += data.clOffset || 0;
+
+            sl += data.level;
+            sl += data.slOffset || 0;
+
+            rollData.cl = cl;
+            rollData.sl = sl;
+            rollData.ablMod = ablMod;
+        }
+
+        if (data.hasOwnProperty("actionType") && getProperty(data, "save.description")) {
+            let saveDC = new Roll(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
+            let saveType = data.save.description;
+            if (this.type === "spell") {
+                saveDC += new Roll(spellbook.baseDCFormula || "", rollData).roll().total;
+            }
+            if (saveDC > 0 && saveType) {
+                spellDC.dc = saveDC;
+                if (saveType.toLowerCase().indexOf('will') !== -1) {
+                    spellDC.type = 'will';
+                } else if (saveType.toLowerCase().indexOf('reflex') !== -1) {
+                    spellDC.type = 'ref';
+                } else if (saveType.toLowerCase().indexOf('fortitude') !== -1) {
+                    spellDC.type = 'fort';
+                }
+                spellDC.description = saveType;
+            }
+        }
+        console.log('D35E | Calculated spell DC', spellDC)
+        return spellDC;
     }
 
     hasCombatChange(itemType, rollData) {
@@ -1858,6 +1926,7 @@ export class ItemPF extends Item {
         // Extract card data
         const button = event.currentTarget;
         button.disabled = true;
+        const canBeUsedByEveryone = $(button).hasClass('everyone');
         const card = button.closest(".chat-card");
         const messageId = card.closest(".message").dataset.messageId;
         const message = game.messages.get(messageId);
@@ -1866,8 +1935,11 @@ export class ItemPF extends Item {
         // Validate permission to proceed with the roll
         // const isTargetted = action === "save";
         const isTargetted = false;
-        let isOwnerOfToken = game.actors.get(message.data.speaker.actor).hasPerm(game.user, "OWNER");
-        if (!(isTargetted || game.user.isGM || message.isAuthor || isOwnerOfToken)) {
+        let _actor = game.actors.get(message.data.speaker.actor);
+        let isOwnerOfToken = false;
+        if (_actor)
+            isOwnerOfToken = _actor.hasPerm(game.user, "OWNER");
+        if (!(isTargetted || game.user.isGM || message.isAuthor || isOwnerOfToken || canBeUsedByEveryone)) {
             console.log('No permission', isTargetted, game.user.isGM, isOwnerOfToken)
             button.disabled = false;
             return;
@@ -1892,6 +1964,11 @@ export class ItemPF extends Item {
         else if (action === "applyDamage") {
             const value = button.dataset.value;
             if (!isNaN(parseInt(value))) ActorPF.applyDamage(parseInt(value));
+        }
+        // Roll saving throw
+        else if (action === "rollSave") {
+            const type = button.dataset.value;
+            if (type) ActorPF.rollSave(type);
         } else if (action === "customAction") {
             const value = button.dataset.value;
             const actionValue = value;

@@ -1,6 +1,8 @@
 import { _rollInitiative, _getInitiativeFormula } from "./combat.js";
 import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
+import { ActorPF } from "./actor/entity.js";
+
 
 const FormApplication_close = FormApplication.prototype.close;
 
@@ -58,6 +60,104 @@ export async function PatchCore() {
       return terms;
     };
   }
+
+  const ActorTokenHelpers_update = ActorTokenHelpers.prototype.update;
+  ActorTokenHelpers.prototype.update = async function(data, options={}) {
+    // Pre update
+    if (isMinimumCoreVersion("0.7.4")) {
+      await this.prepareUpdateData(data);
+    }
+
+
+    // Update changes
+    let diff = data;
+    if (options.updateChanges !== false) {
+      const updateObj = await this._updateChanges({data: data});
+      if (updateObj.diff.items) delete updateObj.diff.items;
+      diff = mergeObject(diff, updateObj.diff);
+    }
+    if (Object.keys(diff).length) {
+      await ActorTokenHelpers_update.call(this, diff, options);
+    }
+    //await this.toggleConditionStatusIcons();
+  };
+
+  if (isMinimumCoreVersion("0.7.6") && !isMinimumCoreVersion("0.7.7")) {
+    const Roll__splitDiceTerms = Roll.prototype._splitDiceTerms;
+    Roll.prototype._splitDiceTerms = function (formula) {
+
+      // Split on arithmetic terms and operators
+      const operators = this.constructor.ARITHMETIC.concat(["(", ")"]);
+      const arith = new RegExp(operators.map(o => "\\" + o).join("|"), "g");
+      const split = formula.replace(arith, ";$&;").split(";");
+
+      // Strip whitespace-only terms
+      let terms = split.reduce((arr, term) => {
+        term = term.trim();
+        if (term === "") return arr;
+        arr.push(term);
+        return arr;
+      }, []);
+
+      // Categorize remaining non-whitespace terms
+      terms = terms.reduce((arr, term, i, split) => {
+
+        // Arithmetic terms
+        if (this.constructor.ARITHMETIC.includes(term)) {
+          if ((term !== "-" && !arr.length) || (i === (split.length - 1))) return arr; // Ignore leading or trailing arithmetic
+          arr.push(term);
+        }
+
+        // Numeric terms
+        else if (Number.isNumeric(term)) arr.push(Number(term));
+
+        // Dice terms
+        else {
+          const die = DiceTerm.fromExpression(term);
+          arr.push(die || term);
+        }
+        return arr;
+      }, []);
+      return terms;
+    };
+  }
+
+
+  const ActorTokenHelpers_createEmbeddedEntity = ActorTokenHelpers.prototype.createEmbeddedEntity;
+  ActorTokenHelpers.prototype.createEmbeddedEntity = async function(...args) {
+    await ActorTokenHelpers_createEmbeddedEntity.call(this, ...args);
+
+    return ActorPF.prototype.update.call(this, {});
+  };
+
+  const Token_animateMovement = Token.prototype.animateMovement;
+  Token.prototype.animateMovement = async function(...args) {
+    await Token_animateMovement.call(this, ...args);
+    console.log("D35E | Calling _calculateMinionDistance")
+    ActorPF.prototype._calculateMinionDistance.call(this.actor, {});
+    // Do something?
+  };
+
+  // Patch ActorTokenHelpers.updateEmbeddedEntity
+  const ActorTokenHelpers_updateEmbeddedEntity = ActorTokenHelpers.prototype.updateEmbeddedEntity;
+  ActorTokenHelpers.prototype.updateEmbeddedEntity = async function(embeddedName, data, options={}) {
+    await ActorTokenHelpers_updateEmbeddedEntity.call(this, embeddedName, data, options);
+
+
+    return ActorPF.prototype.update.call(this, {});
+  };
+  // Patch ActorTokenHelpers.deleteEmbeddedEntity
+  const ActorTokenHelpers_deleteEmbeddedEntity = ActorTokenHelpers.prototype.deleteEmbeddedEntity;
+  ActorTokenHelpers.prototype.deleteEmbeddedEntity = async function(embeddedName, id, options={}) {
+    await ActorTokenHelpers_deleteEmbeddedEntity.call(this, embeddedName, id, options);
+
+
+    return ActorPF.prototype.update.call(this, {});
+  };
+
+
+
+
   // Patch, patch, patch
   Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
   Combat.prototype.rollInitiative = _rollInitiative;

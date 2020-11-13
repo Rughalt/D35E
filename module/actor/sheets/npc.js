@@ -85,6 +85,8 @@ export class ActorSheetPFNPC extends ActorSheetPF {
 
     // Rollable Health Formula
     html.find(".health .rollable").click(this._onRollHealthFormula.bind(this));
+
+
   }
 
   /* -------------------------------------------- */

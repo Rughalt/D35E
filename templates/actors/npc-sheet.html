@@ -4,6 +4,21 @@
     <header class="sheet-header flexcol" style="flex-direction: column">
 
         <div class="flexrow" style="width: 100%">
+            {{#if data.master.id}}
+            <div class="master-block flexrow" style="position: relative">
+                <img src="{{data.master.img}}" title="{{data.master.name}}">
+                <div class="flexcol tooltip">  <span class="tooltipcontent">
+                    {{{localize "D35E.MinionTooltip"}}}
+                        @master.data.attributes.hd.total : {{data.master.data.attributes.hd.total}}
+                      </span>
+                    <span class="minion-of">{{localize "D35E.MinionOf"}}</span>
+                    <span class="minion-name">{{data.master.name}}</span>
+
+                    <a class="unbind-minion" title="{{localize "D35E.UnbindMinion"}}"><i
+                            class="fas fa-trash"></i></a>
+                </div>
+            </div>
+            {{/if}}
             <h1 class="charname">
                 <input name="name" style="margin: 0" type="text" value="{{actor.name}}" placeholder="{{localize " D35E.CharacterName"}}"
                 title="{{localize "D35E.CharacterName"}}"/>
@@ -31,7 +46,7 @@
         <div class="flexrow">
 
             <div class="profile npc">
-                <img src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+                <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
                 <img src="{{actor.data.tokenImg}}" class="token-image" data-edit="data.tokenImg">
             </div>
             <div class="header-details flexcol">

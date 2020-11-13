@@ -68,6 +68,7 @@ D35E.classTypes = {
   "base": "D35E.ClassTypeBase",
   "prestige": "D35E.ClassTypePrestige",
   "racial": "D35E.ClassTypeRacial",
+  "minion": "D35E.Minion",
 };
 
 D35E.classBAB = {
@@ -97,6 +98,10 @@ D35E.classSavingThrowFormulas = {
     "high": "2 + floor(@level / 2)",
   },
   "racial": {
+    "low": "floor(@level / 3)",
+    "high": "2 + floor(@level / 2)",
+  },
+  "minion": {
     "low": "floor(@level / 3)",
     "high": "2 + floor(@level / 2)",
   },
@@ -236,6 +241,21 @@ D35E.actorSizes = {
   "col": "D35E.ActorSizeColossal",
 };
 
+// Token Sizes
+D35E.actorTokenSizes = {
+  "actor": "D35E.ActorSizeActor",
+  "fine": "D35E.ActorSizeFine",
+  "dim": "D35E.ActorSizeDiminutive",
+  "tiny": "D35E.ActorSizeTiny",
+  "sm": "D35E.ActorSizeSmall",
+  "med": "D35E.ActorSizeMedium",
+  "lg": "D35E.ActorSizeLarge",
+  "lglong": "D35E.ActorSizeLargeLong",
+  "huge": "D35E.ActorSizeHuge",
+  "grg": "D35E.ActorSizeGargantuan",
+  "col": "D35E.ActorSizeColossal",
+};
+
 D35E.sizeChart = {
   "fine": "F",
   "dim":  "D",
@@ -255,6 +275,7 @@ D35E.tokenSizes = {
   "sm": { w: 1, h: 1, scale: 0.8 },
   "med": { w: 1, h: 1, scale: 1 },
   "lg": { w: 2, h: 2, scale: 1 },
+  "lglong": { w: 1, h: 2, scale: 1 },
   "huge": { w: 3, h: 3, scale: 1 },
   "grg": { w: 4, h: 4, scale: 1 },
   "col": { w: 6, h: 6, scale: 1 },
@@ -1084,6 +1105,8 @@ D35E.creatureTypes = {
   "plant": "D35E.CreatureTypePlant",
   "undead": "D35E.CreatureTypeUndead",
   "vermin": "D35E.CreatureTypeVermin",
+  "giant": "D35E.CreatureTypeGiant",
+  "elemental": "D35E.CreatureTypeElemental",
 };
 
 D35E.sizeDie = [

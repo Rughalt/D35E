@@ -126,7 +126,8 @@
           },
           "bab": {
             "value": 0,
-            "total": 0
+            "total": 0,
+            "base": 0
           },
           "cmd": {
             "value": 0,
@@ -166,13 +167,16 @@
           "quadruped": false,
           "savingThrows": {
             "fort": {
-              "total": 0
+              "total": 0,
+              "base": 0
             },
             "ref": {
-              "total": 0
+              "total": 0,
+              "base": 0
             },
             "will": {
-              "total": 0
+              "total": 0,
+              "base": 0
             }
           },
           "hp": {
@@ -205,6 +209,8 @@
           },
           "turnUndeadUsesTotal": 0,
           "sneakAttackDiceTotal": 0,
+          "minionClassLevels": {},
+          "minionDistance": {},
           "spellPointsTotal": [],
           "powerPointsTotal": 0,
           "wounds": {
@@ -893,6 +899,7 @@
         "customSkills": {},
         "traits": {
           "size": "med",
+          "tokensize": "actor",
           "senses": "",
           "dr": "",
           "eres": "",
@@ -975,6 +982,13 @@
           "value": 10
         },
         "levelUpProgression": false
+      },
+      "master": {
+        "id": null,
+        "img": null,
+        "name": null,
+        "data": {},
+        "distance": 0
       }
     }
   },
@@ -1118,7 +1132,8 @@
           "damageMult": 1,
           "critRange": 20,
           "critMult": 2,
-          "twoHandedOnly": false
+          "twoHandedOnly": false,
+          "vsTouchAc": false
         },
         "save": {
           "dc": 0,
@@ -1144,6 +1159,8 @@
       "sneakAttackGroup": "none",
       "automaticFeatures": false,
       "sneakAttackFormula": "0",
+      "minionGroup": "none",
+      "minionLevelFormula": "0",
       "spellcastingType": null,
       "spellcastingSpontaneus": false,
       "spellsPerLevel": [],
