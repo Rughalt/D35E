@@ -611,7 +611,7 @@ export class ActorSheetPF extends ActorSheet {
     /*  Master/Minion
     /* -------------------------------------------- */
 
-    html.find('a.unbind-master').click(event => this._onMasterUnbind(event));
+    html.find('a.unbind-minion').click(event => this._onMasterUnbind(event));
 
     /* -------------------------------------------- */
     /*  Feats

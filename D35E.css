@@ -3123,6 +3123,13 @@
 .D35E.sheet.actor.npc .master-block .minion-name {
   font-size: 35px;
 }
+.D35E.sheet.actor.npc .master-block .unbind-minion {
+  float: right;
+  position: absolute;
+  right: 5px;
+  font-size: 12px;
+  top: 5px;
+}
 .D35E.sheet.actor.npc.lite {
   min-width: 440px;
   min-height: 200px;
@@ -4600,6 +4607,13 @@ tr.introjs-showElement > th {
   color: #2C606D;
 }
 .d35ecustom .sheet .rollable:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .sheet .unbind-minion {
+  color: #2C606D;
+}
+.d35ecustom .sheet .unbind-minion:hover {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }

@@ -4642,7 +4642,9 @@ export class ActorPF extends Actor {
 
     _setMaster(itemData) {
         if (itemData == null) {
-            this.update({data: { master : {}}});
+            let updateData = {};
+            updateData["data.-=master"] = null;
+            this.update(updateData);
         } else {
             let masterData = {
                 data: {
