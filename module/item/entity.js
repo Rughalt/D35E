@@ -1669,12 +1669,16 @@ export class ItemPF extends Item {
         // Create effect string
         let notes = []
         const noteObjects = actor.getContextNotes("attacks.effect");
+
         for (let noteObj of noteObjects) {
             rollData.item = {};
             //if (noteObj.item != null) rollData.item = duplicate(noteObj.item.data.data);
             if (noteObj.item != null) rollData.item = mergeObject(duplicate(noteObj.item.data.data), noteObj.item.getRollData(), {inplace: false})
 
             for (let note of noteObj.notes) {
+                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
+            }
+            for (let note of (itemData.effectNotes || "").split(/[\n\r]+/)) {
                 notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
             }
         }

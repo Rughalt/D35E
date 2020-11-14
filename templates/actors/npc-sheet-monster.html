@@ -2,7 +2,7 @@
   <h1 class="handserif actor-name">{{actor.name}}</h1>
   <div class="flexcol">
     <div><strong>{{ localize 'D35E.HitDice' }}:</strong> {{numberFormat data.attributes.hd.total decimals=0 sign=true}}</div>
-    <div><strong>{{ localize 'D35E.Initiative' }}:</strong> {{numberFormat data.attributes.init.total decimals=0 sign=true}}</div>
+    <div><strong>{{ localize 'D35E.Initiative' }}:</strong> <a class="attribute initiative" data-attribute="init"><span class="attribute-name roll-link">{{numberFormat data.attributes.init.total decimals=0 sign=true}}<div class="rollable image-d20"></div></span></a></div>
     <div><strong>{{ localize 'D35E.Speed' }}:</strong></div>
     <div><strong>{{ localize 'D35E.ArmorClass' }}:</strong>
       {{#each data.attributes.ac as |ac id|}}
