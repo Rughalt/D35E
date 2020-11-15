@@ -82,8 +82,8 @@ if (isMinimumCoreVersion("0.7.5")) {
 
     const Token_updatesource = Token.prototype.updateSource;
     Token.prototype.updateSource = function ({defer = false, deleted = false, noUpdateFog = false} = {}) {
-
-        Token_updatesource.call(this, defer, deleted, noUpdateFog);
+        //Hooks.call('updateSource')
+        Token_updatesource.call(this, false, deleted, noUpdateFog);
         if ( CONFIG.debug.sight ) {
             SightLayer._performance = { start: performance.now(), tests: 0, rays: 0 }
         }
@@ -151,6 +151,8 @@ if (isMinimumCoreVersion("0.7.5")) {
             if ( isVisionSource && !defer ) canvas.sight.refresh();
         }
     };
+
+    if (PerfectVision)
 
     const AmbientLight__get__dimRadius = Object.getOwnPropertyDescriptor(AmbientLight.prototype, "dimRadius").get;
     Object.defineProperty(AmbientLight.prototype, "dimRadius", {
