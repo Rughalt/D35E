@@ -188,7 +188,7 @@
             <input class="base" type="text" name="data.attributes.spells.spellbooks.{{../spellbookIndex}}.spells.spell{{section.level}}.base"
                    value="{{section.baseSlots}}" placeholder="Base" />
             {{/unless}}
-            <input type="text" value="{{section.uses}}" placeholder="0" data-dtype="Number" />
+            <input type="text" value="{{section.uses}}" name="data.attributes.spells.spellbooks.{{../spellbookIndex}}.spells.spell{{section.level}}.value" placeholder="0" data-dtype="Number" />
               <span class="sep"> / </span>
             <input type="text" value="{{section.slots}}" disabled placeholder="0" data-dtype="Number" />
           {{/unless}}
