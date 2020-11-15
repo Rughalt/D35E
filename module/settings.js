@@ -126,6 +126,17 @@ export const registerSystemSettings = function() {
     type: Boolean,
   });
 
+  /**
+   * Option to display class features in other tabs as well
+   */
+  game.settings.register("D35E", "classFeaturesInTabs", {
+    name: "SETTINGS.D35EClassFeaturesInTabsN",
+    hint: "SETTINGS.D35EClassFeaturesInTabsL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 
   /**
    * Option to allow the background skills optional ruleset.

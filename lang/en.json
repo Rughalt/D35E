@@ -6,6 +6,7 @@
   "D35E.ActorSheetPFCharacter": "Character",
   "D35E.ActorSheetPFNPC": "NPC",
   "D35E.ActorSheetPFNPCLite": "NPC (Lite)",
+  "D35E.ActorSheetPFNPCMonster": "NPC (Statblock)",
   "D35E.ActorSheetPFNPCLoot": "Loot",
 
   "SETTINGS.D35EDiagN": "Diagonal Movement Rule",
@@ -1059,6 +1060,10 @@
   "D35E.MinionLevelFormula": "Minion Class Level formula",
   "D35E.TimelineInfo": "Enabling Timeline support allows a buff to auto-expire (and possibly remove itself from character item list) after enough combat rounds pass. This is best used for short duration buffs.",
   "D35E.TokenSize": "Token Size",
+  "D35E.ActorSizeDoNotLink": "Do not link Actor size with Token size",
+  "D35E.BaseAttackAndGrapple": "Base Attack/Grapple",
+  "D35E.AttacksAndSpecialAttacks": "Attacks/Special Attacks",
+  "D35E.NPC": "NPC",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",
@@ -1103,5 +1108,7 @@
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
   "SETTINGS.D35ECustomSkinL": "Use custom Foundry VTT skin designed for this system",
   "SETTINGS.D35EAutosizeWeaponsN": "Autosize weapons",
-  "SETTINGS.D35EAutosizeWeaponsL": "Attack created from weapon will use @size instead of weapon size"
+  "SETTINGS.D35EAutosizeWeaponsL": "Attack created from weapon will use @size instead of weapon size",
+  "SETTINGS.D35EClassFeaturesInTabsN": "Display Class Features in tabs",
+  "SETTINGS.D35EClassFeaturesInTabsL": "If selected, all Class Features will also be displayed in sub-tabs in Features Character sheet section"
 }

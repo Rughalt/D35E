@@ -197,6 +197,10 @@
         color: white
       }
 
+      select {
+        background-color: black;
+      }
+
       label.block-header {
         &::after {
           border-top: 1px solid #75514b !important;
@@ -1062,28 +1066,83 @@
     }
   }
 
-  .monsterblock {
-    padding: 4px;
-    border-radius: 2px;
-    background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  img.rollable {
+    filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
+  }
 
+  .npc {
+    &.monster {
+      padding: 0;
+      border-radius: 2px;
+      border: none !important;
+      background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
 
-    .roll-link{
-      color: #2C606D !important;
-      &:hover {
-        text-shadow: 0 0 10px #2C606D !important;
-        color: #2C606D !important;
+      input[type="text"],
+      textarea {
+        background: none;
+        border: 1px solid transparent;
+        &:hover,
+        &:focus {
+          border: 1px solid #111;
+        }
+      }
+
+      .window-header {
+        color: black;
+        background: none;
+        padding: 0 4px 0 0;
+
+        .window-title {
+
+          font-family: "HandSerif", "Signika", serif;
+          font-size: 24px;
+          color: #2C606D;
+          background: none;
+          padding: 0 5px;
+        }
+
+        .header-button {
+          font-size: 0;
+          line-height: 30px;
+          i {
+            font-size: 14px;
+            vertical-align: middle;
+
+          }
+        }
+      }
+      .window-content {
+        background: none !important;
+        height: auto;
+      }
+      .monsterblock {
+        height: unset !important;
+        overflow: unset !important;
+        .flexcol {
+          div {
+            flex: none;
+          }
+        }
+        .roll-link{
+          color: #2C606D !important;
+          &:hover {
+            text-shadow: 0 0 10px #2C606D !important;
+            color: #2C606D !important;
+          }
+        }
+        .image-d20 {
+          display: inline-block;
+          background-image: url(../../icons/dice/d20black.svg);
+          background-size: 100%;
+          height: 20px !important;
+          width: 20px !important;
+          vertical-align: middle;
+        }
       }
     }
-    .image-d20 {
-      display: inline-block;
-      background-image: url(../../icons/dice/d20black.svg);
-      background-size: 100%;
-      height: 20px !important;
-      width: 20px !important;
-      vertical-align: middle;
-    }
   }
+
+
 }
 
 .secret {

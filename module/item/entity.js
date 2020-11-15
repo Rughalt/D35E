@@ -1268,7 +1268,10 @@ export class ItemPF extends Item {
                 // Add to list
                 attacks.push(attack);
             }
-
+            let rolls = []
+            attacks.forEach(a => {
+                rolls.push(...a.rolls)
+            })
             chatTemplateData.attacks = attacks;
 
             // Prompt measure template
@@ -1370,7 +1373,7 @@ export class ItemPF extends Item {
                     dc: dc
                 }, {inplace: false});
                 // Create message
-                await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData);
+                await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
                 return true;
             }
             return false;
@@ -1678,10 +1681,8 @@ export class ItemPF extends Item {
             for (let note of noteObj.notes) {
                 notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
             }
-            for (let note of (itemData.effectNotes || "").split(/[\n\r]+/)) {
-                notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
-            }
         }
+        notes.push(...(itemData.effectNotes || "").split(/[\n\r]+/).filter(o => o.length > 0).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
 
         const inner = notes.join('')
         return `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.EffectNotes")}</label><div class="flexrow">${inner}</div></div>`;

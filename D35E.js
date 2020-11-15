@@ -370,6 +370,19 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
   return false;
 });
 
+Hooks.on('diceSoNiceReady', (dice3d) => {
+  dice3d.addColorset({
+    name: 'Legacies of the Dragon',
+    description: "Legacies of the Dragon",
+    category: "Standard",
+    foreground: '#fff4eb',
+    background: "#340403",
+    texture: 'dragon',
+    edge: '#340403'
+  },"default");
+
+})
+
 /**
  * Create a Macro from an Item drop.
  * Get an existing item macro if one exists, otherwise create a new one.

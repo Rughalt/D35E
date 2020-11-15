@@ -254,6 +254,7 @@ D35E.actorTokenSizes = {
   "huge": "D35E.ActorSizeHuge",
   "grg": "D35E.ActorSizeGargantuan",
   "col": "D35E.ActorSizeColossal",
+  "none": "D35E.ActorSizeDoNotLink",
 };
 
 D35E.sizeChart = {

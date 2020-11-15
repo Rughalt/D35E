@@ -3165,6 +3165,42 @@
   flex: 0;
   color: #3a5868;
 }
+.D35E.sheet.actor.npc.monster {
+  min-width: 340px;
+  min-height: 200px;
+  height: auto !important;
+}
+.D35E.sheet.actor.npc.monster .sheet-header img.profile {
+  flex: 0 0 140px;
+  max-width: 140px;
+  min-height: 100px;
+  max-height: 140px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top {
+  max-height: 40px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top .charname {
+  padding: 0;
+  margin: 0;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top .charname input[type="text"] {
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  height: 24px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top .charlevel {
+  flex: 0 0 128px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .attribute.health {
+  border-right: 0;
+}
+.D35E.sheet.actor.npc.monster .monsterblock .actor-name {
+  text-align: left;
+  text-transform: uppercase;
+  flex: 0;
+  color: #3a5868;
+}
 .icon.gladius {
   background-image: url(icons/actions/gladius.svg), none;
 }
@@ -4110,6 +4146,9 @@ tr.introjs-showElement > th {
 .d35ecustom .window-app.dialog .window-content select {
   color: white;
 }
+.d35ecustom .window-app.dialog .window-content select {
+  background-color: black;
+}
 .d35ecustom .window-app.dialog .window-content label.block-header::after {
   border-top: 1px solid #75514b !important;
 }
@@ -4782,19 +4821,65 @@ tr.introjs-showElement > th {
 .d35ecustom .master-block .minion-of {
   font-size: 18px;
 }
-.d35ecustom .monsterblock {
-  padding: 4px;
+.d35ecustom img.rollable {
+  filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
+}
+.d35ecustom .npc.monster {
+  padding: 0;
   border-radius: 2px;
+  border: none !important;
   background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
 }
-.d35ecustom .monsterblock .roll-link {
+.d35ecustom .npc.monster input[type="text"],
+.d35ecustom .npc.monster textarea {
+  background: none;
+  border: 1px solid transparent;
+}
+.d35ecustom .npc.monster input[type="text"]:hover,
+.d35ecustom .npc.monster textarea:hover,
+.d35ecustom .npc.monster input[type="text"]:focus,
+.d35ecustom .npc.monster textarea:focus {
+  border: 1px solid #111;
+}
+.d35ecustom .npc.monster .window-header {
+  color: black;
+  background: none;
+  padding: 0 4px 0 0;
+}
+.d35ecustom .npc.monster .window-header .window-title {
+  font-family: "HandSerif", "Signika", serif;
+  font-size: 24px;
+  color: #2C606D;
+  background: none;
+  padding: 0 5px;
+}
+.d35ecustom .npc.monster .window-header .header-button {
+  font-size: 0;
+  line-height: 30px;
+}
+.d35ecustom .npc.monster .window-header .header-button i {
+  font-size: 14px;
+  vertical-align: middle;
+}
+.d35ecustom .npc.monster .window-content {
+  background: none !important;
+  height: auto;
+}
+.d35ecustom .npc.monster .monsterblock {
+  height: unset !important;
+  overflow: unset !important;
+}
+.d35ecustom .npc.monster .monsterblock .flexcol div {
+  flex: none;
+}
+.d35ecustom .npc.monster .monsterblock .roll-link {
   color: #2C606D !important;
 }
-.d35ecustom .monsterblock .roll-link:hover {
+.d35ecustom .npc.monster .monsterblock .roll-link:hover {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
-.d35ecustom .monsterblock .image-d20 {
+.d35ecustom .npc.monster .monsterblock .image-d20 {
   display: inline-block;
   background-image: url(../../icons/dice/d20black.svg);
   background-size: 100%;

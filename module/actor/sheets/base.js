@@ -618,6 +618,7 @@ export class ActorSheetPF extends ActorSheet {
     /* -------------------------------------------- */
 
     html.find(".item-detail.item-uses input[type='text']:not(:disabled)").off("change").change(this._setFeatUses.bind(this));
+    html.find("input[type='text'].monsterblock-item-uses:not(:disabled)").off("change").change(this._setFeatUses.bind(this));
 
     /* -------------------------------------------- */
     /*  Spells
@@ -1420,7 +1421,7 @@ export class ActorSheetPF extends ActorSheet {
       trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
       racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
       misc: { label: game.i18n.localize("D35E.Misc"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
-      all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" } },
+      all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" }, isAll: true },
     };
 
     let classFeaturesMap = new Map()
@@ -1434,10 +1435,13 @@ export class ActorSheetPF extends ActorSheet {
         if (!classFeaturesMap.has(sourceClassName))
           classFeaturesMap.set(sourceClassName,[])
         classFeaturesMap.get(sourceClassName).push(f);
+        if (!!game.settings.get("D35E", "classFeaturesInTabs")) {
+          features[k].items.push(f);
+        }
       } else {
         features[k].items.push(f);
-        features.all.items.push(f);
       }
+      features.all.items.push(f);
     }
     classes.sort((a, b) => b.levels - a.levels);
     features.classes.items = classes;

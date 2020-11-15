@@ -39,6 +39,7 @@ export class ChatAttack {
         this.cards = [];
         this.special = [];
         this.effectNotes = "";
+        this.rolls = []
     }
 
     get critRange() {
@@ -76,6 +77,7 @@ export class ChatAttack {
             extraParts: extraParts,
             primaryAttack: primaryAttack
         });
+        this.rolls.push(roll)
         let d20 = roll.parts[0];
         let critType = 0;
         if ((d20.total >= this.critRange && !critical) || (d20.total === 20 && critical)) critType = 1;
@@ -167,6 +169,9 @@ export class ChatAttack {
             primaryAttack: primaryAttack,
             critical: critical
         });
+        rolls.forEach(r => {
+            this.rolls.push(r.roll || r)
+        })
         // Add tooltip
         let tooltips = "";
         let totalDamage = 0;

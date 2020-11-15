@@ -726,7 +726,7 @@ export class ActorPF extends Actor {
 
 
         // Apply changes in Actor size to Token width/height
-        if (!options.skipToken)
+        if (!options.skipToken && tokenSizeKey !== 'none')
         {
             let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
             //console.log(size)
@@ -3496,7 +3496,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain"],
-            data: { mod: this.data.data.attributes.bab.total, drain: this.data.data.attributes.energyDrain },
+            data: { mod: this.data.data.attributes.bab.total, drain: this.data.data.attributes.energyDrain || 0 },
             title: game.i18n.localize("D35E.BAB"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -3769,11 +3769,11 @@ export class ActorPF extends Actor {
         if (turnUndeadUses < 1) {
             return ui.notifications.warn(game.i18n.localize("D35E.CannotTurnUndead").format(this.name));
         }
-
+        let rolls = []
         let knowledgeMod = this.data.data.skills.kre.rank > 5 ? 2 : 0
         let chaMod = this.data.data.abilities.cha.mod
         let maxHdResult = new Roll("1d20 + @chaMod + @kMod", { kMod: knowledgeMod, chaMod: chaMod }).roll()
-
+        rolls.push(maxHdResult);
         let data = {}
         data.actor = this
         data.name = this.name
@@ -3820,6 +3820,7 @@ export class ActorPF extends Actor {
         }
 
         let damageHD = new Roll("2d6 + @chaMod + @level", { level: turnUndeadHdTotal, chaMod: chaMod }).roll()
+        rolls.push(damageHD)
         data.damageHD = damageHD
         {
             let tooltip = $(await damageHD.getTooltip()).prepend(`<div class="dice-formula">${damageHD.formula}</div>`)[0].outerHTML;
@@ -3837,11 +3838,9 @@ export class ActorPF extends Actor {
         };
 
 
-        data.level = turnUndeadHdTotal
+        data.level = turnUndeadHdTotal;
 
-            ;
-
-        createCustomChatMessage("systems/D35E/templates/chat/turn-undead.html", data, chatData);
+        createCustomChatMessage("systems/D35E/templates/chat/turn-undead.html", data, chatData, {rolls: rolls});
         let updateData = {}
         updateData[`data.attributes.turnUndeadUses`] = this.data.data.attributes.turnUndeadUses - 1;
         this.update(updateData)
@@ -4727,6 +4726,7 @@ export class ActorPF extends Actor {
 
     async _calculateMinionDistance() {
         if (this == null) return;
+        if (!this.hasPerm(game.user, "OWNER")) return;
         if (this.data.type === "npc") {
             let myToken = this.getActiveTokens()[0];
             let masterId = this.data.data?.master?.id;

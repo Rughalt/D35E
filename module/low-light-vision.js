@@ -78,20 +78,26 @@ SightLayer.prototype.update = function () {
     SightLayer_update.call(this);
 };
 
-if (isMinimumCoreVersion("0.7.3")) {
+if (isMinimumCoreVersion("0.7.5")) {
+
+    const Token_updatesource = Token.prototype.updateSource;
     Token.prototype.updateSource = function ({defer = false, deleted = false, noUpdateFog = false} = {}) {
-        if (CONFIG.debug.sight) {
-            SightLayer._performance = {start: performance.now(), tests: 0, rays: 0}
+
+        Token_updatesource.call(this, defer, deleted, noUpdateFog);
+        if ( CONFIG.debug.sight ) {
+            SightLayer._performance = { start: performance.now(), tests: 0, rays: 0 }
         }
 
         // Prepare some common data
         const origin = this.getSightOrigin();
         const sourceId = this.sourceId;
-        const maxR = canvas.scene.data.globalLight ? Math.max(canvas.dimensions.width, canvas.dimensions.height) : null;
+        const d = canvas.dimensions;
+        const maxR = canvas.lighting.globalLight ? Math.hypot(d.sceneWidth, d.sceneHeight) : null;
 
         // Update light source
-        const isLightSource = this.emitsLight && !this.data.hidden && !deleted;
-        if (isLightSource) {
+        const isLightSource = this.emitsLight && !this.data.hidden;
+        if ( isLightSource && !deleted ) {
+
             let bright = this.getLightRadius(this.data.brightLight);
             let dim = this.getLightRadius(this.data.dimLight);
             if (canvas.sight.hasLowLight()) {
@@ -110,18 +116,22 @@ if (isMinimumCoreVersion("0.7.3")) {
                 animation: this.data.lightAnimation
             });
             canvas.lighting.sources.set(sourceId, this.light);
-            if (!defer) {
+            if ( !defer ) {
                 this.light.drawLight();
                 this.light.drawColor();
             }
-        } else canvas.lighting.sources.delete(sourceId);
+        }
+        else {
+            canvas.lighting.sources.delete(sourceId);
+            if ( isLightSource && !defer ) canvas.lighting.refresh();
+        }
 
         // Update vision source
-        const isVisionSource = this._isVisionSource() && !deleted;
-        if (isVisionSource) {
-            const bright = maxR ?? this.getLightRadius(this.data.brightSight);
-            let dim = this.getLightRadius(this.data.dimSight);
-            if ((dim === 0) && (bright === 0)) dim = canvas.dimensions.size * 0.6;
+        const isVisionSource = this._isVisionSource();
+        if ( isVisionSource && !deleted ) {
+            let dim = maxR ?? this.getLightRadius(this.data.dimSight);
+            const bright = this.getLightRadius(this.data.brightSight);
+            if ((dim === 0) && (bright === 0)) dim = d.size * 0.6;
             this.vision.initialize({
                 x: origin.x,
                 y: origin.y,
@@ -131,11 +141,15 @@ if (isMinimumCoreVersion("0.7.3")) {
                 rotation: this.data.rotation
             });
             canvas.sight.sources.set(sourceId, this.vision);
-            if (!defer) {
+            if ( !defer ) {
                 this.vision.drawLight();
                 canvas.sight.refresh({noUpdateFog});
             }
-        } else canvas.sight.sources.delete(sourceId);
+        }
+        else {
+            canvas.sight.sources.delete(sourceId);
+            if ( isVisionSource && !defer ) canvas.sight.refresh();
+        }
     };
 
     const AmbientLight__get__dimRadius = Object.getOwnPropertyDescriptor(AmbientLight.prototype, "dimRadius").get;

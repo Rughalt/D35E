@@ -1,7 +1,20 @@
 <form class="{{cssClass}} flexcol monsterblock" autocomplete="off">
-  <h1 class="handserif actor-name">{{actor.name}}</h1>
   <div class="flexcol">
-    <div><strong>{{ localize 'D35E.HitDice' }}:</strong> {{numberFormat data.attributes.hd.total decimals=0 sign=true}}</div>
+    {{#each features as |section sid|}}
+    {{#if section.isClass}}
+    <div><strong>{{ localize 'D35E.HitDice' }}/{{ localize 'D35E.ClassPlural' }}:</strong> {{numberFormat ../data.attributes.hd.total decimals=0 sign=false}} ({{#each section.items as |item iid|}}{{item.name~}}<span style="margin-left: 4px">{{item.data.levels}}</span>{{#unless @last}}, {{/unless}}{{else}}<em>No Class/Racial HD</em>{{/each}})
+    </div>
+    {{/if}}
+    {{/each}}
+    <div><strong>{{ localize 'D35E.HitPoints' }}:</strong>
+      <div class="attribute-value multiple flexrow" style="display: inline-flex">
+        <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}" data-dtype="Number" placeholder="10"/>
+        <span class="sep" style="line-height: 24px; flex: none; padding: 0 4px"> / </span>
+        <div class="attribute" style="line-height: 24px">{{data.attributes.hp.max}}</div>
+      </div>
+    </div>
+
+    <div><strong>{{localize "D35E.CR"}} :</strong>{{labels.cr}}</div>
     <div><strong>{{ localize 'D35E.Initiative' }}:</strong> <a class="attribute initiative" data-attribute="init"><span class="attribute-name roll-link">{{numberFormat data.attributes.init.total decimals=0 sign=true}}<div class="rollable image-d20"></div></span></a></div>
     <div><strong>{{ localize 'D35E.Speed' }}:</strong></div>
     <div><strong>{{ localize 'D35E.ArmorClass' }}:</strong>
@@ -9,6 +22,51 @@
       {{ac.label}} {{numberFormat ac.total decimals=0 sign=false}} ({{#each ac.sourceDetails as |src|}}{{src.value}} {{src.name}}{{#unless @last}}, {{/unless}}{{/each}}){{#unless @last}}, {{/unless}}
       {{/each}}
     </div>
+    <div><strong>{{ localize 'D35E.BaseAttackAndGrapple' }}:</strong>
+      <a class="attribute bab" data-attribute="bab"><span class="attribute-name roll-link">{{numberFormat data.attributes.bab.total decimals=0 sign=true}}<div class="rollable image-d20"></div></span></a>/
+      <a class="attribute cmb" data-attribute="cmb"><span class="attribute-name roll-link">{{numberFormat data.attributes.cmb.total decimals=0 sign=true}}<div class="rollable image-d20"></div></span></a>
+    </div>
+    <div><strong>{{ localize 'D35E.AttacksAndSpecialAttacks' }}:</strong>
+      {{#each useableAttacks as |item iid|}}
+      <span class="item" data-item-id="{{item._id}}">
+        {{item.name~}}
+        <div class="item-detail item-actions" style="display: inline; margin-left: 2px">
+          <div class="item-attack"  style="display: inherit">
+            {{#if item.hasAction}}
+            <a class="item-control item-attack"><img class="icon rollable" style="vertical-align: middle" src="systems/D35E/icons/actions/gladius.svg"></a>
+            {{/if}}
+          </div>
+        </div>
+
+          {{#if item.isCharged}}
+          (
+            <input class="monsterblock-item-uses" type="text" value="{{item.data.uses.value}}" style="width: 30px; height: 20px" data-dtype="Number"/>
+            <span class="sep"> {{ localize 'D35E._Of' }} </span>
+            {{item.data.uses.max}}
+          )
+          {{/if}}
+      </span>
+      {{#unless @last}}, {{/unless}}
+      {{/each}}
+    </div>
+
+    <div><strong>{{ localize 'D35E.SavingThrow' }}:</strong>
+      {{#each data.attributes.savingThrows as |savingThrow id|}}
+      <a class="attribute saving-throw" data-savingthrow="{{id}}"><span class="attribute-name roll-link">{{savingThrow.label}} {{numberFormat savingThrow.total decimals=0 sign=true}}<div class="rollable image-d20"></div></span></a>{{#unless @last}}, {{/unless}}
+      {{/each}}
+    </div>
+
+    {{#each features as |section sid|}}
+    {{#if section.isAll}}
+    <div><strong>{{ localize 'D35E.FeatPlural' }}:</strong>
+      {{#each section.items as |item iid|}}
+      <span class="item" data-item-id="{{item._id}}">{{item.name~}}<div class="item-detail item-actions" style="display: inline; margin-left: 2px"><div class="item-attack"  style="display: inherit">{{#if item.hasAction}}<a class="item-control item-attack"><img class="icon rollable" style="vertical-align: middle" src="systems/D35E/icons/actions/gladius.svg"></a>{{/if}}</div></div>{{#if item.isCharged}}(<input class="monsterblock-item-uses" type="text" value="{{item.data.uses.value}}" data-dtype="Number" style="width: 30px; height: 20px"/><span class="sep"> {{ localize 'D35E._Of' }} </span>{{item.data.uses.max}}){{/if}}</span>{{#unless @last}}, {{/unless}}
+      {{else}}
+      <em>No feats</em>
+      {{/each}}
+    </div>
+    {{/if}}
+    {{/each}}
   </div>
   
 </form>
