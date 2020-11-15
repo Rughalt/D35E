@@ -44,7 +44,7 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
 
   // Dice So Nice integration
   if (chatData.roll != null && rolls.length === 0) rolls = [chatData.roll];
-  if (game.dice3d !== null) {
+  if (game.dice3d) {
     let promises = []
     for (let roll of rolls) {
       promises.push(game.dice3d.showForRoll(roll, game.user, false, chatData.whisper, chatData.blind));
