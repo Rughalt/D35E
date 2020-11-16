@@ -4026,7 +4026,11 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    static async rollSave(type) {
+    async rollSave(type) {
+        this.rollSavingThrow(type,{})
+    }
+
+    static async _rollSave(type) {
         let tokensList;
         if (game.user.targets.size > 0)
             tokensList = game.user.targets;

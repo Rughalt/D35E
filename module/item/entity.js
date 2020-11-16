@@ -1973,7 +1973,7 @@ export class ItemPF extends Item {
         // Roll saving throw
         else if (action === "rollSave") {
             const type = button.dataset.value;
-            if (type) ActorPF.rollSave(type);
+            if (type) ActorPF._rollSave(type);
         } else if (action === "customAction") {
             const value = button.dataset.value;
             const actionValue = value;
