@@ -143,8 +143,8 @@ export async function PatchCore() {
   ActorTokenHelpers.prototype.updateEmbeddedEntity = async function(embeddedName, data, options={}) {
     await ActorTokenHelpers_updateEmbeddedEntity.call(this, embeddedName, data, options);
 
-
-    return ActorPF.prototype.update.call(this, {});
+    if (options.stopUpdates) return;
+    return ActorPF.prototype.update.call(this, options);
   };
   // Patch ActorTokenHelpers.deleteEmbeddedEntity
   const ActorTokenHelpers_deleteEmbeddedEntity = ActorTokenHelpers.prototype.deleteEmbeddedEntity;
@@ -152,7 +152,8 @@ export async function PatchCore() {
     await ActorTokenHelpers_deleteEmbeddedEntity.call(this, embeddedName, id, options);
 
 
-    return ActorPF.prototype.update.call(this, {});
+    if (options.stopUpdates) return;
+    return ActorPF.prototype.update.call(this, options);
   };
 
 
