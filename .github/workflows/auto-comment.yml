@@ -1,0 +1,22 @@
+name: Auto Comment
+on: [issues, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bubkoo/auto-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          issuesOpened: >
+            Thanks for opening an issue, traveller!
+
+            If your issue is related to an actor or an item, sending thing that is broken will help a lot and speed up debugging.
+
+            > **How to send an item?**
+            > - If item is owned by a character, drag and drop it to world item list.
+            > - Right click on item in browser item list and click export.
+            > - Attach downloaded item to this ticket.
+
+            > **How to send an actor?**
+            > - Right click on actor in browser actor list and click export.
+            > - Attach downloaded actor to this ticket.

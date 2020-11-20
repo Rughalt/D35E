@@ -310,13 +310,19 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
   const actor = combat.combatant.actor;
   if (actor != null) {
     actor.refresh();
+    let itemUpdateData = []
+    let itemResourcesData = {}
     if (actor.items !== undefined && actor.items.size > 0) {
       // Update items
       for (let i of actor.items) {
-        actor.updateItemResources(i);
-        i.addElapsedTime(1);
+        actor.getItemResourcesUpdate(i, itemResourcesData);
+        let data = i.getElapsedTimeUpdateData(1)
+        if (data) itemUpdateData.push(data);
       }
     }
+
+    if (Object.keys(itemResourcesData).length > 0) this.update(itemResourcesData);
+    if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
   }
 });
 

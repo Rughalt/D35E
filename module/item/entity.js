@@ -2097,6 +2097,31 @@ export class ItemPF extends Item {
         }
     }
 
+    getElapsedTimeUpdateData(time) {
+        if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
+            if (!this.data.data.timeline.enabled)
+                return {'_id': this.data.id}
+            if (!this.data.data.active)
+                return {'_id': this.data.id}
+            if (this.data.data.timeline.elapsed + time >= this.data.data.timeline.total) {
+                if (!this.data.data.timeline.deleteOnExpiry) {
+                    let updateData = {}
+                    updateData["data.active"] = false;
+                    updateData["_id"] = this.data.id;
+                    return updateData;
+                } else {
+                    if (!this.actor) return;
+                    return null;
+                }
+            } else {
+                let updateData = {}
+                updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
+                updateData["_id"] = this.data.id;
+                return updateData;
+            }
+        }
+    }
+
     getTimelineTimeLeft() {
         if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
             if (!this.data.data.timeline.enabled)

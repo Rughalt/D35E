@@ -1155,6 +1155,8 @@
       "levels": 1,
       "maxLevel": 20,
       "prestigeLevels": 0,
+      "addedAbilities": [],
+      "disabledAbilities": [],
       "turnUndeadLevelFormula": "0",
       "sneakAttackGroup": "none",
       "automaticFeatures": false,
@@ -1511,7 +1513,9 @@
       "templates": ["itemDescription", "changes", "contextNotes", "links"],
       "creatureType": "humanoid",
       "la": 0,
-      "subTypes": []
+      "subTypes": [],
+      "addedAbilities": [],
+      "disabledAbilities": []
     }
   }
 }

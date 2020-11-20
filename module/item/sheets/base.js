@@ -1,4 +1,4 @@
-import {createTabs} from "../../lib.js";
+import {createTabs, uuidv4} from "../../lib.js";
 import {EntrySelector} from "../../apps/entry-selector.js";
 import {ItemPF} from "../entity.js";
 import {CACHE} from "../../cache.js";
@@ -69,6 +69,8 @@ export class ItemSheetPF extends ItemSheet {
 
         // Include CONFIG values
         data.config = CONFIG.D35E;
+
+        data.randomUuid = uuidv4();
 
         // Item Type, Status, and Details
         data.itemType = data.item.type.titleCase();
@@ -263,7 +265,10 @@ export class ItemSheetPF extends ItemSheet {
                 spelllikes: [],
                 abilities: [],
                 traits: [],
+                addedAbilities: []
             }
+
+            let alreadyAddedAbilities = new Set();
 
             {
                 let spellLikes = game.packs.get("D35E.spelllike");
@@ -282,22 +287,34 @@ export class ItemSheetPF extends ItemSheet {
             }
 
             {
-                let itemPack = game.packs.get("D35E.racial-abilities");
-                let items = []
-                await itemPack.getIndex().then(index => items = index);
-                for (let entry of items) {
-                    await itemPack.getEntity(entry._id).then(e => {
-                            if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
-                                if (e.data.type === "feat")
-                                    data.children.traits.push(e);
-                                else
-                                    data.children.abilities.push(e);
-                                this.childItemMap.set(entry._id, e);
-                            }
-                        }
-                    )
+
+                for (let e of new Set(CACHE.RacialFeatures.get(this.item.data.name) || [])) {
+                    if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
+                        data.children.abilities.push({
+                            item:e,
+                            pack:e.pack,
+                            disabled: (this.item.data.data.disabledAbilities || []).some(obj => obj.uid === e.data.data.uniqueId)
+                        });
+                        this.childItemMap.set(e._id, e);
+                    }
+
                 }
 
+            }
+
+            for (let ability of this.item.data.data.addedAbilities || []) {
+                let e = CACHE.AllAbilities.get(ability.uid);
+                data.children.addedAbilities.push({
+                    item:e,
+                    pack:e.pack,
+                });
+                if (e.data.data.uniqueId.indexOf("*" === -1)) alreadyAddedAbilities.add(e.data.data.uniqueId)
+            }
+
+            data.allAbilities = []
+            for (var e of CACHE.AllAbilities.values()) {
+                if (!alreadyAddedAbilities.has(e.data.data.uniqueId))
+                    data.allAbilities.push(e);
             }
         }
 
@@ -351,15 +368,13 @@ export class ItemSheetPF extends ItemSheet {
                 spelllikes: [],
                 abilities: [],
                 traits: [],
+                addedAbilities: []
             }
-            let alreadyAddedDescriptions = new Set()
+            let alreadyAddedAbilities = new Set();
+            let alreadyAddedDescriptions = new Set();
             data.abilitiesDescription = []
             {
                 for (let e of new Set(CACHE.ClassFeatures.get(this.item.data.name) || [])) {
-                    if (e.data.type === "feat")
-                        data.children.traits.push(e);
-                    else
-                        data.children.abilities.push(e);
 
                     this.childItemMap.set(e._id, e);
 
@@ -369,7 +384,15 @@ export class ItemSheetPF extends ItemSheet {
                         if (!data.childItemLevels.has(level)) {
                             data.childItemLevels.set(level, [])
                         }
+
+                        data.children.abilities.push({
+                            item:e,
+                            level:level,
+                            pack:e.pack,
+                            disabled: (this.item.data.data.disabledAbilities || []).some(obj => parseInt(obj.level || "0") === level && obj.uid === e.data.data.uniqueId)
+                        });
                         data.childItemLevels.get(level).push(e);
+                        if (e.data.data.uniqueId.indexOf("*" === -1)) alreadyAddedAbilities.add(e.data.data.uniqueId)
                         if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
                             data.abilitiesDescription.push({
                                 level: level,
@@ -382,8 +405,35 @@ export class ItemSheetPF extends ItemSheet {
                     }
                 }
 
+                for (let ability of this.item.data.data.addedAbilities || []) {
+                    let e = CACHE.AllAbilities.get(ability.uid);
+                    data.children.addedAbilities.push({
+                        item:e,
+                        level:ability.level,
+                        pack:e.pack,
+                    });
+                    if (!data.childItemLevels.has(ability.level)) {
+                        data.childItemLevels.set(ability.level, [])
+                    }
+                    data.childItemLevels.get(ability.level).push(e);
+                    if (e.data.data.uniqueId.indexOf("*" === -1)) alreadyAddedAbilities.add(e.data.data.uniqueId)
+                    if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
+                        data.abilitiesDescription.push({
+                            level: ability.level,
+                            name: e.name,
+                            description: TextEditor.enrichHTML(e.data.data.description.value)
+                        })
+                        alreadyAddedDescriptions.add(e._id)
+                    }
+                }
+
             }
 
+            data.allAbilities = []
+            for (var e of CACHE.AllAbilities.values()) {
+                if (!alreadyAddedAbilities.has(e.data.data.uniqueId))
+                    data.allAbilities.push(e);
+            }
 
 
             for (let level = 1; level < data.data.maxLevel + 1; level++) {
@@ -825,6 +875,12 @@ export class ItemSheetPF extends ItemSheet {
         // Item summaries
         html.find('.item .child-item h4').click(event => this._onChildItemSummary(event));
         html.find('.item .enh-item h4').click(event => this._onEnhItemSummary(event));
+        html.find('.item a.disable-ability').click(event => this._onDisableAbility(event));
+        html.find('.item a.enable-ability').click(event => this._onEnableAbility(event));
+        html.find('.item a.delete-ability').click(event => this._onDeleteAbility(event));
+        html.find('.item a.add-ability').click(event => this._onAddAbility(event));
+        html.find(".item .change-class-ability-level").off("change").change(this._onAbilityLevelChange.bind(this));
+
 
         let handler = ev => this._onDragStart(ev);
         html.find('li.item').each((i, li) => {
@@ -848,6 +904,8 @@ export class ItemSheetPF extends ItemSheet {
 
         // Quick Item Action control
         html.find(".item-actions a").mouseup(ev => this._quickItemActionControl(ev));
+
+        html.find(".search-list").on("change", event => event.stopPropagation());
     }
 
     /* -------------------------------------------- */
@@ -1133,27 +1191,91 @@ export class ItemSheetPF extends ItemSheet {
         if (manualUpdate && Object.keys(updateData).length > 0) await this.item.update(updateData);
     }
 
+    async _onAbilityLevelChange(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        const value = Number(event.currentTarget.value);
+        let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
+        _addedAbilities.filter(function (obj) {
+            return obj.uid === uid
+        }).forEach(i => {
+            i.level = value;
+        });
+        updateData[`data.addedAbilities`] = _addedAbilities;
+        this.item.update(updateData);
+    }
+
+    async _onAddAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
+        _addedAbilities.push({uid: uid, level: 0})
+        updateData[`data.addedAbilities`] = _addedAbilities;
+        await this.item.update(updateData);
+    }
+
+    async _onDeleteAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
+        _addedAbilities = _addedAbilities.filter(function (obj) {
+            return !(obj.uid === uid && (level === "" || parseInt(obj.level) === parseInt(level)));
+        });
+        updateData[`data.addedAbilities`] = _addedAbilities;
+        await this.item.update(updateData);
+    }
+    async _onEnableAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        let _disabledAbilities = duplicate(getProperty(this.item.data, `data.disabledAbilities`) || []);
+        _disabledAbilities = _disabledAbilities.filter(function (obj) {
+            return !(obj.uid === uid && (level === "" || parseInt(obj.level) === parseInt(level)));
+        });
+        updateData[`data.disabledAbilities`] = _disabledAbilities;
+        await this.item.update(updateData);
+    }
+
+    async _onDisableAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+        let updateData = {}
+        let _disabledAbilities = duplicate(getProperty(this.item.data, `data.disabledAbilities`) || []);
+        _disabledAbilities.push({uid: uid, level: level})
+        updateData[`data.disabledAbilities`] = _disabledAbilities;
+        await this.item.update(updateData);
+    }
+
     _onChildItemSummary(event) {
         event.preventDefault();
         let li = $(event.currentTarget).parents(".item-box"),
-            item = this.childItemMap.get(li.attr("data-item-id"));
+            item = CACHE.AllAbilities.get(li.attr("data-item-uid")),
+            pack = this.childItemMap.get(li.attr("data-pack"));
 
 
         item.sheet.render(true);
-
-        // // Toggle summary
-        // if ( li.hasClass("expanded") ) {
-        //   let summary = li.children(".item-summary");
-        //   summary.slideUp(200, () => summary.remove());
-        // } else {
-        //   let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
-        //   let props = $(`<div class="item-properties"></div>`);
-        //   chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
-        //   div.append(props);
-        //   li.append(div.hide());
-        //   div.slideDown(200);
-        // }
-        // li.toggleClass("expanded");
     }
 
     _onEnhItemSummary(event) {
@@ -1180,7 +1302,7 @@ export class ItemSheetPF extends ItemSheet {
     _onDragStart(event) {
         // Get the Compendium pack
         const li = event.currentTarget;
-        const packName = li.parentElement.getAttribute("data-pack");
+        const packName = li.getAttribute('data-pack');
         const pack = game.packs.get(packName);
         // console.log(event)
         if (!pack) return;
@@ -1256,6 +1378,8 @@ export class ItemSheetPF extends ItemSheet {
 
 
     }
+
+
 
 
     _createEnhancementSpellDialog(itemData) {

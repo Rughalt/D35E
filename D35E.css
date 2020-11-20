@@ -4085,6 +4085,53 @@ tr.introjs-showElement > th {
   flex: 0 20px;
   text-align: center;
 }
+.dropdown-select .select-field:hover .select-label,
+.dropdown-select .select-list li:hover {
+  text-decoration: dotted underline;
+}
+.dropdown-select .select-field {
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+}
+.dropdown-select .select-label {
+  cursor: pointer;
+}
+.dropdown-select .select-list,
+.dropdown-select .hover-list,
+.dropdown-select .simple-menu ul {
+  padding-left: 0.3em;
+  padding-right: 0.4em;
+  box-shadow: 0px 0px 1px 0px var(--shadow-color);
+}
+.dropdown-select .select-list,
+.dropdown-select .hover-list,
+.dropdown-select .menu ul {
+  visibility: hidden;
+  display: block;
+  position: absolute;
+  list-style: none;
+  background: var(--background-image), var(--background-filter);
+  background-repeat: repeat;
+  background-blend-mode: var(--background-blend);
+  z-index: 1;
+}
+.dropdown-select .menu ul {
+  text-align: left;
+}
+.dropdown-select .select-list {
+  width: 100%;
+  overflow: auto;
+  height: 100px;
+  top: 0.7em;
+  left: -0.3em;
+}
+.dropdown-select .select-list li {
+  cursor: pointer;
+}
+.dropdown-select .select-field:hover .select-list {
+  visibility: visible;
+}
 .form-header .form-group label {
   font-family: Signika;
   line-height: 20px;

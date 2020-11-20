@@ -2142,36 +2142,45 @@ export class ActorPF extends Actor {
             console.log(`D35E | Setting attributes hd total | ${level}`)
             linkData(data, updateData, "data.attributes.hd.total", level);
             level += raceLA;
+            let existingAbilities = new Set()
+            let classNames = new Set()
+            let addedAbilities = new Set()
+            let itemsWithUid = new Map()
+            let itemsToAdd = []
+            let itemsToRemove = []
+            for (let i of this.items.values()) {
+                if (!i.data.data.hasOwnProperty("uniqueId")) continue;
+                if (i.data.data.uniqueId === null) continue;
+                if (i.data.data.uniqueId === "") continue;
+                existingAbilities.add(i.data.data.uniqueId)
+                itemsWithUid.set(i.data.data.uniqueId, i._id)
+            }
+
             if (getProperty(data, "data.classLevels") !== this.data.classLevels) {
                 linkData(data, updateData, "data.details.level.value", level);
                 let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial" && o.data.data.automaticFeatures).sort((a, b) => {
                     return a.sort - b.sort;
                 });
 
-                let itemsWithUid = new Map()
-                let existingAbilities = new Set()
-                for (let i of this.items.values()) {
-                    if (!i.data.data.hasOwnProperty("uniqueId")) continue;
-                    if (i.data.data.uniqueId === null) continue;
-                    if (i.data.data.uniqueId === "") continue;
-                    existingAbilities.add(i.data.data.uniqueId)
-                    itemsWithUid.set(i.data.data.uniqueId, i._id)
-                }
-                let classNames = new Set()
-                let addedAbilities = new Set()
                 for (let i of classes) {
-                    classNames.add([i.name, i.data.data.levels])
+                    classNames.add([i.name, i.data.data.levels,i.data.data.addedAbilities || [],i.data.data.disabledAbilities || []])
                 }
 
                 let itemPack = game.packs.get("D35E.class-abilities");
                 let items = []
                 await itemPack.getIndex().then(index => items = index);
-                let itemsToAdd = []
-                let itemsToRemove = []
-
 
                 for (const classInfo of classNames) {
                     let added = false;
+                    for (let feature of classInfo[2]) {
+                        let e = CACHE.AllAbilities.get(feature.uid)
+                        const level = parseInt(feature.level)
+                        let uniqueId = e.data.data.uniqueId;
+                        if (uniqueId.endsWith("*")) {
+                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                        }
+                        this.addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added);
+                    }
                     for (let e of CACHE.ClassFeatures.get(classInfo[0]) || []) {
                         if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
                         let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
@@ -2181,59 +2190,136 @@ export class ActorPF extends Actor {
                             if (uniqueId.endsWith("*")) {
                                 uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
                             }
-                            let canAdd = !addedAbilities.has(uniqueId)
-                            if (canAdd) {
-                                if (level <= classInfo[1]) {
-                                    if (!existingAbilities.has(uniqueId)) {
-                                        let eItem = duplicate(e.data)
-                                        ItemPF.setMaxUses(eItem, this.getRollData());
-                                        eItem.data.uniqueId = uniqueId;
-                                        eItem.data.source = `${classInfo[0]} ${level}`
-                                        eItem.data.userNonRemovable = true;
-
-                                        (eItem.data.changes || []).forEach(change => {
-                                            if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
-                                            changes.push({
-                                                raw: change,
-                                                source: {
-                                                    value: 0,
-                                                    type: eItem.type,
-                                                    subtype: this.constructor._getChangeItemSubtype(eItem),
-                                                    name: eItem.name,
-                                                    item: eItem
-                                                }
-                                            });
-                                        });
-
-                                        itemsToAdd.push(eItem)
-                                    }
-                                    addedAbilities.add(uniqueId)
-                                    added = true;
-                                }
-                            }
+                            if ((classInfo[3] || []).some(a => a.uid === uniqueId && parseInt(level) === parseInt(a.level))) continue;
+                            this.addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added);
                         }
                     }
                 }
 
-                for (let abilityUid of existingAbilities) {
-                    if (!addedAbilities.has(abilityUid)) {
-                        console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
-                        changes.splice(changes.findIndex(change => change.source.item.data.uniqueId === abilityUid), 1)
-                        itemsToRemove.push(abilityUid)
-                    }
-                }
-                let idsToRemove = []
-                for (let entry of itemsToRemove) {
-                    idsToRemove.push(itemsWithUid.get(entry))
-                }
-                if (idsToRemove.length)
-                    await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
-                if (itemsToAdd.length)
-                    await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
 
             }
+            {
+                // Racial items
+                let raceObject = this.items.filter(o => o.type === "race")[0];
+                if (raceObject) {
+                    for (let feature of raceObject.data.data.addedAbilities || []) {
+                        let e = CACHE.AllAbilities.get(feature.uid)
+                        let uniqueId = e.data.data.uniqueId;
+                        if (uniqueId.endsWith("*")) {
+                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                        }
+                        let canAdd = !addedAbilities.has(uniqueId)
+                        if (canAdd) {
+                            if (!existingAbilities.has(uniqueId)) {
+                                let eItem = duplicate(e.data)
+                                ItemPF.setMaxUses(eItem, this.getRollData());
+                                eItem.data.uniqueId = uniqueId;
+                                eItem.data.source = `${raceObject.data.name}`
+                                eItem.data.userNonRemovable = true;
+                                (eItem.data.changes || []).forEach(change => {
+                                    if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
+                                    changes.push({
+                                        raw: change,
+                                        source: {
+                                            value: 0,
+                                            type: eItem.type,
+                                            subtype: this.constructor._getChangeItemSubtype(eItem),
+                                            name: eItem.name,
+                                            item: eItem
+                                        }
+                                    });
+                                });
+                                itemsToAdd.push(eItem)
+                            }
+                            addedAbilities.add(uniqueId)
+                        }
+                    }
+
+                    for (let e of CACHE.RacialFeatures.get(raceObject.data.name) || []) {
+                        let uniqueId = e.data.data.uniqueId;
+                        if (uniqueId.endsWith("*")) {
+                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                        }
+
+                        if ((raceObject.data.data.disabledAbilities || []).some(a => a.uid === uniqueId)) continue;
+                        let canAdd = !addedAbilities.has(uniqueId)
+                        if (canAdd) {
+                            if (!existingAbilities.has(uniqueId)) {
+                                let eItem = duplicate(e.data)
+                                ItemPF.setMaxUses(eItem, this.getRollData());
+                                eItem.data.uniqueId = uniqueId;
+                                eItem.data.source = `${raceObject.data.name}`
+                                eItem.data.userNonRemovable = true;
+                                (eItem.data.changes || []).forEach(change => {
+                                    if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
+                                    changes.push({
+                                        raw: change,
+                                        source: {
+                                            value: 0,
+                                            type: eItem.type,
+                                            subtype: this.constructor._getChangeItemSubtype(eItem),
+                                            name: eItem.name,
+                                            item: eItem
+                                        }
+                                    });
+                                });
+                                itemsToAdd.push(eItem)
+                            }
+                            addedAbilities.add(uniqueId)
+                        }
+                    }
+                }
+            }
+
+            for (let abilityUid of existingAbilities) {
+                if (!addedAbilities.has(abilityUid)) {
+                    console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
+                    changes.splice(changes.findIndex(change => change.source.item.data.uniqueId === abilityUid), 1)
+                    itemsToRemove.push(abilityUid)
+                }
+            }
+            let idsToRemove = []
+            for (let entry of itemsToRemove) {
+                idsToRemove.push(itemsWithUid.get(entry))
+            }
+            if (idsToRemove.length)
+                await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
+            if (itemsToAdd.length)
+                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
+
         }
 
+    }
+
+    addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added) {
+        let canAdd = !addedAbilities.has(uniqueId)
+        if (canAdd) {
+            if (level <= classInfo[1]) {
+                if (!existingAbilities.has(uniqueId)) {
+                    let eItem = duplicate(e.data)
+                    ItemPF.setMaxUses(eItem, this.getRollData());
+                    eItem.data.uniqueId = uniqueId;
+                    eItem.data.source = `${classInfo[0]} ${level}`
+                    eItem.data.userNonRemovable = true;
+                    (eItem.data.changes || []).forEach(change => {
+                        if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
+                        changes.push({
+                            raw: change,
+                            source: {
+                                value: 0,
+                                type: eItem.type,
+                                subtype: this.constructor._getChangeItemSubtype(eItem),
+                                name: eItem.name,
+                                item: eItem
+                            }
+                        });
+                    });
+                    itemsToAdd.push(eItem)
+                }
+                addedAbilities.add(uniqueId)
+                added = true;
+            }
+        }
     }
 
     _addDynamicData(updateData, changes, flags, abilities, data, forceModUpdate = false) {
@@ -3239,6 +3325,32 @@ export class ActorPF extends Actor {
                 updateData[`data.resources.${itemTag}._id`] = item._id;
             }
             if (Object.keys(updateData).length > 0) this.update(updateData);
+        }
+    }
+
+    getItemResourcesUpdate(item, updateData) {
+        if (!(item instanceof Item)) return;
+        if (!this.hasPerm(game.user, "OWNER")) return;
+
+        if (item.data.data.uses != null && item.data.data.activation != null && item.data.data.activation.type !== "") {
+            const itemTag = createTag(item.data.name);
+            let curUses = item.data.data.uses;
+
+            if (this.data.data.resources == null) this.data.data.resources = {};
+            if (this.data.data.resources[itemTag] == null) this.data.data.resources[itemTag] = {
+                value: 0,
+                max: 1,
+                _id: ""
+            };
+            if (this.data.data.resources[itemTag].value !== curUses.value) {
+                updateData[`data.resources.${itemTag}.value`] = curUses.value;
+            }
+            if (this.data.data.resources[itemTag].max !== curUses.max) {
+                updateData[`data.resources.${itemTag}.max`] = curUses.max;
+            }
+            if (this.data.data.resources[itemTag]._id !== item._id) {
+                updateData[`data.resources.${itemTag}._id`] = item._id;
+            }
         }
     }
 

@@ -110,6 +110,64 @@
   }
 }
 
+.dropdown-select {
+  .select-field:hover .select-label,
+  .select-list li:hover {
+    text-decoration: dotted underline;
+  }
+
+  .select-field {
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .select-label {
+    cursor: pointer;
+  }
+
+  .select-list,
+  .hover-list,
+  .simple-menu ul {
+    padding-left: .3em;
+    padding-right: .4em;
+    box-shadow: 0px 0px 1px 0px var(--shadow-color);
+  }
+
+  .select-list,
+  .hover-list,
+  .menu ul {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    list-style: none;
+    background: var(--background-image), var(--background-filter);
+    background-repeat: repeat;
+    background-blend-mode: var(--background-blend);
+    z-index: 1;
+  }
+
+  .menu ul {
+    text-align: left;
+  }
+
+  .select-list {
+    width: 100%;
+    overflow: auto;
+    height: 100px;
+    top: .7em;
+    left: -.3em;
+  }
+
+  .select-list li {
+    cursor: pointer;
+  }
+
+  .select-field:hover .select-list {
+    visibility: visible;
+  }
+}
+
 .form-header {
 
   .form-group {

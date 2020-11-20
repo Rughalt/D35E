@@ -1064,6 +1064,12 @@
   "D35E.BaseAttackAndGrapple": "Base Attack/Grapple",
   "D35E.AttacksAndSpecialAttacks": "Attacks/Special Attacks",
   "D35E.NPC": "NPC",
+  "D35E.ToggleUseProgression": "Toggle Level Progression",
+  "D35E.ToggleUseProgressionD": "Toggling this option can clear up your Skills and Hit Points. Do not use it if you are not sure and you do not have character backed up.",
+  "D35E.Change": "Change",
+  "D35E.DoNotChange": "Do not change",
+  "D35E.Filter": "Filter",
+  "D35E.FilterDescriptionAddAbilities": "Type here to filter available abilities",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

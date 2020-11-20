@@ -1,114 +1,188 @@
 <div class="links-body">
     {{!-- Children Tab --}}
-    <div class="tab flexcol" data-group="children">
+    <div class="tab flexcol special-abilities" data-group="children">
 
-        <ol class="inventory-list sub-scroll scroll-inventory" >
+        <ol class="inventory-list sub-scroll scroll-inventory">
 
             <li class="inventory-header flexrow">
                 <h3 class="item-name flexrow"></h3>
                 <div class="item-detail item-type">
-                    <span>Type</span></div>
+                    <span>{{localize "D35E.Action"}}</span></div>
             </li>
-            <ol class="item-list" data-pack="D35E.spelllike">
-                {{#each children.spelllikes as |item iid|}}
-                    <li class="item item-box flexrow" data-item-id="{{item._id}}">
-                        <div class="item-name child-item flexrow">
-                            <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                            <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
-                                {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                            {{item.name~}}
+
+            {{#if isRace}}
+            <ol class="item-list" data-pack="D35E.class-abilities">
+                {{#each children.abilities as |item iid|}}
+                <li class="item item-box  flexrow" data-item-id="{{item.item._id}}" data-pack="{{item.pack}}"
+                    data-item-level="{{item.level}}" data-item-uid="{{item.item.data.data.uniqueId}}">
+                    <div class="item-name child-item flexrow">
+                        <div class="item-image" style="background-image: url('{{item.item.img}}')"></div>
+                        <h4 class="rollable{{#if item.disabled}} strikethrough-text{{/if}}">
+                            {{~#if item.item.isStack}}({{item.item.data.quantity}}) {{/if}}
+                            {{item.item.name~}}
                         </h4>
                     </div>
 
                     <div class="item-detail item-type flexrow">
-                        <span>Spell-like</span>
+                        {{#if item.disabled}}
+                        <a class="enable-ability">+ Enable</a>
+                        {{else}}
+                        <a class="disable-ability">+ Disable</a>
+                        {{/if}}
                     </div>
 
-                    </li>
+                </li>
                 {{/each}}
-        </ol>
-        {{#if isRace}}
-        <ol class="item-list" data-pack="D35E.racial-abilities">
-            {{#each children.abilities as |item iid|}}
-                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+
+            </ol>
+
+            <ol class="item-list" data-pack="D35E.class-abilities">
+                {{#each children.addedAbilities as |item iid|}}
+                <li class="item item-box  flexrow" data-item-id="{{item.item._id}}" data-pack="{{item.pack}}"
+                    data-item-uid="{{item.item.data.data.uniqueId}}" data-item-level="{{item.level}}">
                     <div class="item-name child-item flexrow">
-                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
+                        <div class="item-image" style="background-image: url('{{item.item.img}}')"></div>
                         <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
-                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                        {{item.name~}}
+                            {{~#if item.item.isStack}}({{item.item.data.quantity}}) {{/if}}
+                            {{item.item.name~}}
+                        </h4>
+                    </div>
+
+                    <div class="item-detail item-type flexrow">
+                        <a class="delete-ability">+ Delete</a>
+                    </div>
+
+                </li>
+                {{/each}}
+
+            </ol>
+            <ol class="item-list" data-pack="D35E.class-abilities">
+
+                <li class="inventory-header flexrow">
+                    <h3 class="item-name flexrow">{{localize 'D35E.Filter'}} <input style="margin-left: 8px"
+                                                                                    placeholder="{{localize 'D35E.FilterDescriptionAddAbilities'}}"
+                                                                                    type="text" class="search-list"
+                                                                                    id="{{randomUuid}}-input"></h3>
+                    <div class="item-detail item-type">
+                        <span>{{localize "D35E.Action"}}</span>
+                    </div>
+                </li>
+            </ol>
+            <ol class="item-list full-ability-list" data-pack="D35E.class-abilities" id="{{randomUuid}}-list">
+                {{#each allAbilities as |e iid|}}
+                <li class="item item-box  flexrow" data-item-id="{{e._id}}" data-pack="{{e.pack}}"
+                    data-item-uid="{{e.data.data.uniqueId}}">
+                    <div class="item-name child-item flexrow">
+                        <div class="item-image" style="background-image: url('{{e.img}}')"></div>
+
+                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                            {{e.name~}}
+                        </h4>
+                    </div>
+
+                    <div class="item-detail item-type flexrow">
+                        <a class="add-ability">+ Add</a>
+                    </div>
+                </li>
+                {{~/each~}}
+            </ol>
+        </ol>
+        {{/if}}
+        {{#if isClass}}
+        <ol class="item-list" data-pack="D35E.class-abilities">
+            {{#each children.abilities as |item iid|}}
+            <li class="item item-box  flexrow" data-item-id="{{item.item._id}}" data-pack="{{item.pack}}"
+                data-item-level="{{item.level}}" data-item-uid="{{item.item.data.data.uniqueId}}">
+                <div class="item-name child-item flexrow">
+                    <div class="item-image" style="background-image: url('{{item.item.img}}')"></div>
+                    <h4 class="rollable{{#if item.disabled}} strikethrough-text{{/if}}">
+                        {{~#if item.item.isStack}}({{item.item.data.quantity}}) {{/if}}
+                        {{item.item.name~}}
+                    </h4>
+                </div>
+                <div style="flex: 0 60px; text-align: center; opacity: 0.7">
+                    <em>{{localize "D35E.Level"}} {{item.level}}</em>
+                </div>
+
+                <div class="item-detail item-type flexrow">
+                    {{#if item.disabled}}
+                    <a class="enable-ability">+ Enable</a>
+                    {{else}}
+                    <a class="disable-ability">+ Disable</a>
+                    {{/if}}
+                </div>
+
+            </li>
+            {{/each}}
+
+        </ol>
+
+        <ol class="item-list" data-pack="D35E.class-abilities">
+            {{#each children.addedAbilities as |item iid|}}
+            <li class="item item-box  flexrow" data-item-id="{{item.item._id}}" data-pack="{{item.pack}}"
+                data-item-uid="{{item.item.data.data.uniqueId}}" data-item-level="{{item.level}}">
+                <div class="item-name child-item flexrow">
+                    <div class="item-image" style="background-image: url('{{item.item.img}}')"></div>
+                    <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                        {{~#if item.item.isStack}}({{item.item.data.quantity}}) {{/if}}
+                        {{item.item.name~}}
+                    </h4>
+                </div>
+                <div style="flex: 0 60px; text-align: center">
+                    <input class="change-class-ability-level" type="text" value="{{item.level}}" data-dtype="Number"/>
+                </div>
+
+                <div class="item-detail item-type flexrow">
+                    <a class="delete-ability">+ Delete</a>
+                </div>
+
+            </li>
+            {{/each}}
+
+        </ol>
+        <ol class="item-list" data-pack="D35E.class-abilities">
+
+            <li class="inventory-header flexrow">
+                <h3 class="item-name flexrow">{{localize 'D35E.Filter'}} <input style="margin-left: 8px"
+                                                                                placeholder="{{localize 'D35E.FilterDescriptionAddAbilities'}}"
+                                                                                type="text" class="search-list"
+                                                                                id="{{randomUuid}}-input"></h3>
+                <div class="item-detail item-type">
+                    <span>{{localize "D35E.Action"}}</span>
+                </div>
+            </li>
+        </ol>
+        <ol class="item-list full-ability-list" data-pack="D35E.class-abilities" id="{{randomUuid}}-list">
+            {{#each allAbilities as |e iid|}}
+            <li class="item item-box  flexrow" data-item-id="{{e._id}}" data-pack="{{e.pack}}"
+                data-item-uid="{{e.data.data.uniqueId}}">
+                <div class="item-name child-item flexrow">
+                    <div class="item-image" style="background-image: url('{{e.img}}')"></div>
+
+                    <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                        {{e.name~}}
                     </h4>
                 </div>
 
                 <div class="item-detail item-type flexrow">
-                    <span>Special Ability</span>
+                    <a class="add-ability">+ Add</a>
                 </div>
-
-                </li>
-            {{/each}}
-
+            </li>
+            {{~/each~}}
         </ol>
-
-        <ol class="item-list" data-pack="D35E.racial-abilities">
-            {{#each children.traits as |item iid|}}
-                <li class="item item-box  flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name child-item flexrow">
-                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
-                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                        {{item.name~}}
-                    </h4>
-                    </div>
-
-                    <div class="item-detail item-type flexrow">
-                        <span>Trait</span>
-                    </div>
-
-                </li>
-            {{/each}}
         </ol>
-    </ol>
-    {{/if}}
-    {{#if isClass}}
-        <ol class="item-list" data-pack="D35E.class-abilities">
-            {{#each children.abilities as |item iid|}}
-                <li class="item item-box  flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name child-item flexrow">
-                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
-                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                        {{item.name~}}
-                    </h4>
-                </div>
+        {{/if}}
 
-                <div class="item-detail item-type flexrow">
-                    <span>Special Ability</span>
-                </div>
-
-                </li>
-            {{/each}}
-
-        </ol>
-
-        <ol class="item-list" data-pack="D35E.class-abilities">
-            {{#each children.traits as |item iid|}}
-                <li class="item item-box  flexrow" data-item-id="{{item._id}}">
-                    <div class="item-name child-item flexrow">
-                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                        <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
-                            {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                        {{item.name~}}
-                    </h4>
-                    </div>
-
-                    <div class="item-detail item-type flexrow">
-                        <span>Trait</span>
-                    </div>
-
-                </li>
-            {{/each}}
-        </ol>
-    </ol>
-    {{/if}}
-
+    </div>
 </div>
-</div>
+<script>
+    $(document).ready(function () {
+        $("#{{randomUuid}}-input").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#{{randomUuid}}-list li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+    });
+</script>

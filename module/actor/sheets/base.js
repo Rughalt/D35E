@@ -657,6 +657,9 @@ export class ActorSheetPF extends ActorSheet {
     // Quick add item quantity
     html.find("a.remove-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, -1); });
     html.find("a.add-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, 1); });
+
+    // Progression
+    html.find("input[type='checkbox'].level-up-progression").click(ev => this._onChangeUseProgression(ev));
   }
 
   createTabs(html) {
@@ -835,6 +838,27 @@ export class ActorSheetPF extends ActorSheet {
       chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
       chatTemplateData: { hasProperties: props.length > 0, properties: props }
     });
+  }
+
+  _onChangeUseProgression(event) {
+    event.preventDefault();
+    new Dialog({
+      title: game.i18n.localize("D35E.ToggleUseProgression"),
+      content: game.i18n.localize("D35E.ToggleUseProgressionD"),
+      buttons: {
+        do: {
+          icon: '<i class="fas fa-check"></i>',
+          label: game.i18n.localize("D35E.Change"),
+          callback: () => this.actor.update({data : {details: {levelUpProgression : !this.actor.data.data.details.levelUpProgression}}}),
+        },
+        dont: {
+          icon: '<i class="fas fa-times"></i>',
+          label: game.i18n.localize("D35E.DoNotChange"),
+          callback: () => {},
+        },
+      },
+      default: "dont",
+    }).render(true);
   }
 
   _onRollCL(event) {
