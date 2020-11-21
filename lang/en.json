@@ -1070,6 +1070,7 @@
   "D35E.DoNotChange": "Do not change",
   "D35E.Filter": "Filter",
   "D35E.FilterDescriptionAddAbilities": "Type here to filter available abilities",
+  "D35E.NotAddingAbilityWithNoUID": "Ability {0} was not automatically added to actor because it has no UID",
 
   "D35E.Combat": "Combat",
   "D35E.SetLevelData": "Save Level Data",

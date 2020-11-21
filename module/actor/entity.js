@@ -2176,6 +2176,10 @@ export class ActorPF extends Actor {
                         let e = CACHE.AllAbilities.get(feature.uid)
                         const level = parseInt(feature.level)
                         let uniqueId = e.data.data.uniqueId;
+                        if (!uniqueId) {
+                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithNoUID"));
+                            continue;
+                        }
                         if (uniqueId.endsWith("*")) {
                             uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
                         }
@@ -2205,6 +2209,10 @@ export class ActorPF extends Actor {
                     for (let feature of raceObject.data.data.addedAbilities || []) {
                         let e = CACHE.AllAbilities.get(feature.uid)
                         let uniqueId = e.data.data.uniqueId;
+                        if (!uniqueId || uniqueId === "") {
+                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithNoUID").format(e.data.name));
+                            continue;
+                        }
                         if (uniqueId.endsWith("*")) {
                             uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
                         }
@@ -2241,6 +2249,10 @@ export class ActorPF extends Actor {
                             uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
                         }
 
+                        if (!uniqueId || uniqueId === "") {
+                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithNoUID").format(e.data.name));
+                            continue;
+                        }
                         if ((raceObject.data.data.disabledAbilities || []).some(a => a.uid === uniqueId)) continue;
                         let canAdd = !addedAbilities.has(uniqueId)
                         if (canAdd) {
