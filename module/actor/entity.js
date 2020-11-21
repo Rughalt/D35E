@@ -1168,23 +1168,23 @@ export class ActorPF extends Actor {
 
         let conditionFlags = {};
         // Condition flags
-        for (let obj of allChangeObjects) {
-            if (!obj.data.conditionFlags) continue;
-            for (let [flagKey, flagValue] of Object.entries(obj.data.conditionFlags)) {
-                if (flagValue === true) {
-                    conditionFlags[flagKey] = true;
-                }
-            }
-        }
+        // for (let obj of allChangeObjects) {
+        //     if (!obj.data.conditionFlags) continue;
+        //     for (let [flagKey, flagValue] of Object.entries(obj.data.conditionFlags)) {
+        //         if (flagValue === true) {
+        //             conditionFlags[flagKey] = true;
+        //         }
+        //     }
+        // }
 
         let sizeOverride = "";
         // Add conditions
         let fullConditions = srcData1.data.attributes.conditions || {}
-        {
-            fullConditions.dazzled = conditionFlags.dazzled || fullConditions.dazzled;
-            fullConditions.wildshaped = conditionFlags.wildshaped || fullConditions.wildshaped;
-            fullConditions.polymorphed = conditionFlags.polymorphed || fullConditions.polymorphed;
-        }
+        // {
+        //     fullConditions.dazzled = conditionFlags.dazzfullColed || nditions.dazzled;
+        //     fullConditions.wildshaped = conditionFlags.wildshaped || fullConditions.wildshaped;
+        //     fullConditions.polymorphed = conditionFlags.polymorphed || fullConditions.polymorphed;
+        // }
 
         const changeObjects = srcData1.items.filter(obj => {
             return obj.data.changes != null;
@@ -4873,8 +4873,10 @@ export class ActorPF extends Actor {
                     attributes: {minionDistance: {}}
                 }
             };
+            let hasAnyMinion = false;
             game.actors.forEach(minion => {
                 if (minion.data.data?.master?.id === this.id) {
+                    hasAnyMinion = true;
                     let minionToken = minion.getActiveTokens()[0]
                     if (!!myToken && !!minionToken) {
                         let distance = Math.floor(canvas.grid.measureDistance(myToken, minionToken) / 5.0) * 5;
@@ -4890,7 +4892,8 @@ export class ActorPF extends Actor {
                     }
                 }
             });
-            this.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
+            if (hasAnyMinion)
+                this.update(minionData, {stopUpdates: true, skipToken: true, skipMinions: true});
         }
     }
 

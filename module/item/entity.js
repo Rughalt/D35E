@@ -2111,7 +2111,13 @@ export class ItemPF extends Item {
                     return updateData;
                 } else {
                     if (!this.actor) return;
-                    return null;
+                    if (this.actor.token) {
+                        let updateData = {}
+                        updateData["data.active"] = false;
+                        updateData["_id"] = this.data.id;
+                        return updateData;
+                    } else
+                        return {'_id': this.data.id, 'delete': true};
                 }
             } else {
                 let updateData = {}
