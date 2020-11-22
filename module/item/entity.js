@@ -2325,7 +2325,7 @@ export class ItemPF extends Item {
     async addSpellUses(value, data = null) {
         if (!this.actor) return;
         if (this.data.data.atWill) return;
-        if (this.data.data.level === 0) return;
+        //if (this.data.data.level === 0) return;
 
         const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
             isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
