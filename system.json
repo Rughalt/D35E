@@ -157,6 +157,13 @@
       "entity": "Actor"
     },
     {
+      "name": "sample-chars",
+      "label": "Sample Characters",
+      "system": "D35E",
+      "path": "./packs/minions.db",
+      "entity": "Actor"
+    },
+    {
       "name": "conditions",
       "label": "Conditions",
       "system": "D35E",

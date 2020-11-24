@@ -65,6 +65,7 @@ Hooks.once("init", async function() {
       sizeVal: sizeInt
     },
     migrateWorld: migrations.migrateWorld,
+    createdMeasureTemplates: new Set()
   };
 
   // Record Configuration Values
@@ -327,6 +328,11 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
     if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
     if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
   }
+});
+
+
+Hooks.on("createMeasuredTemplate", (scene, _template, data, user) => {
+  game.D35E.createdMeasureTemplates.add(_template._id)
 });
 
 // Create race on actor

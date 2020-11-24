@@ -2,7 +2,7 @@ import {DicePF} from "../dice.js";
 import {createCustomChatMessage} from "../chat.js";
 import {createTag, alterRoll, linkData, isMinimumCoreVersion} from "../lib.js";
 import {ActorPF} from "../actor/entity.js";
-import {AbilityTemplate} from "../pixi/ability-template.js";
+import AbilityTemplate from "../pixi/ability-template.js";
 import {ChatAttack} from "../misc/chat-attack.js";
 import {D35E} from "../config.js";
 
@@ -1276,20 +1276,10 @@ export class ItemPF extends Item {
 
             // Prompt measure template
             if (useMeasureTemplate) {
-                // Gather data
-                const templateOptions = {
-                    type: getProperty(this.data, "data.measureTemplate.type"),
-                    distance: getProperty(this.data, "data.measureTemplate.size"),
-                };
-                if (getProperty(this.data, "data.measureTemplate.overrideColor")) {
-                    templateOptions.color = getProperty(this.data, "data.measureTemplate.customColor");
-                }
-                if (getProperty(this.data, "data.measureTemplate.overrideTexture")) {
-                    templateOptions.texture = getProperty(this.data, "data.measureTemplate.customTexture");
-                }
 
+                console.log(`D35E | Creating measure template.`)
                 // Create template
-                const template = AbilityTemplate.fromData(templateOptions);
+                const template = AbilityTemplate.fromItem(this);
                 if (template) {
                     if (getProperty(this, "actor.sheet.rendered")) actor.sheet.minimize();
                     const success = await template.drawPreview(ev);
@@ -1300,8 +1290,10 @@ export class ItemPF extends Item {
                 }
             }
 
+            console.log(`D35E | Updating item on attack.`)
             // Deduct charge
             if (this.autoDeductCharges && !skipChargeCheck) {
+                console.log(`D35E | Deducting ${this.chargeCost} charges.`)
                 if (rollData.useAmount === undefined)
                     this.addCharges(-1*this.chargeCost, itemUpdateData);
                 else
@@ -1324,6 +1316,8 @@ export class ItemPF extends Item {
             // Post message
             if (this.data.type === "spell" || this.data.data.isFromSpell) await this.roll({rollMode: rollMode});
             if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
+
+                console.log(`D35E | Generating chat message.`)
                 // Get extra text and properties
                 let props = [],
                     extraText = "";
@@ -2327,6 +2321,7 @@ export class ItemPF extends Item {
         if (this.data.data.atWill) return;
         //if (this.data.data.level === 0) return;
 
+        console.log(`D35E | Adding spell uses ${value}`)
         const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
             isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
             spellbookKey = getProperty(this.data, "data.spellbook") || "primary",

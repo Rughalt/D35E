@@ -672,6 +672,19 @@ D35E.healingTypes = {
   "temphp": "D35E.HealingTemp"
 };
 
+D35E.areaTargetTypes = {
+  cone: "cone",
+  cube: "rect",
+  cylinder: "circle",
+  circle: "circle",
+  line: "ray",
+  radius: "circle",
+  sphere: "circle",
+  square: "rect",
+  wall: "ray"
+};
+
+
 /* -------------------------------------------- */
 
 /**

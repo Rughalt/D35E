@@ -1,55 +1,65 @@
+import { D35E } from "../config.js";
+
 /**
  * A helper class for building MeasuredTemplates for 5e spells and abilities
  * @extends {MeasuredTemplate}
  */
-export class AbilityTemplate extends MeasuredTemplate {
+export default class AbilityTemplate extends MeasuredTemplate {
 
   /**
-   * A factory method to create an AbilityTemplate instance using provided data
-   * @param {string} type -             The type of template ("cone", "circle", "rect" or "ray")
-   * @param {number} distance -         The distance/size of the template
-   * @return {AbilityTemplate|null}     The template object, or null if the data does not produce a template
+   * A factory method to create an AbilityTemplate instance using provided data from an Item5e instance
+   * @param {ItemPF1} item               The Item object for which to construct the template
+   * @return {AbilityTemplate|null}     The template object, or null if the item does not produce a template
    */
-  static fromData(options) {
-    let type = options.type;
-    let distance = options.distance;
-    if (!type) return null;
-    if (!distance) return null;
-    if (!["cone", "circle", "rect", "ray"].includes(type)) return null;
+  static fromItem(item) {
+    const target = getProperty(item.data, "data.measureTemplate") || {};
+    const templateShape = D35E.areaTargetTypes[target.type];
+    if ( !templateShape ) return null;
 
     // Prepare template data
     const templateData = {
-      t: type,
+      t: templateShape,
       user: game.user._id,
-      distance: distance || 5,
+      distance: target.size || 5,
       direction: 0,
       x: 0,
       y: 0,
-      fillColor: options.color ? options.color : game.user.color,
-      texture: options.texture ? options.texture : null,
-      _id: randomID(16),
+      fillColor: target.customColor || game.user.color,
     };
 
+    let path = target.customTexture;
+
+
     // Additional type-specific data
-    switch (type) {
-      case "cone":
+    switch ( templateShape ) {
+      case "cone": // 5e cone RAW should be 53.13 degrees
         if (game.settings.get("D35E", "measureStyle") === true) templateData.angle = 90;
-        else templateData.angle = 53.13;
+        templateData.angle = 53.13;
         break;
-      case "rect":
-        templateData.distance = distance || 5;
+      case "rect": // 5e rectangular AoEs are always cubes
+        templateData.distance = Math.hypot(target.size, target.size);
         templateData.width = target.value;
         templateData.direction = 45;
         break;
-      case "ray":
-        templateData.width = 5;
+      case "ray": // 5e rays are most commonly 1 square (5 ft) in width
+        templateData.width = target.width ?? canvas.dimensions.distance;
         break;
       default:
         break;
     }
 
     // Return the template constructed from the item data
-    return new this(templateData);
+    let template = new this(templateData)
+
+    if (path) {
+      loadTexture(path).then((tex) => {
+        template.texture = tex;
+        template.data.texture = path;
+        template.refresh();
+      })
+    }
+    template.item = item;
+    return template;
   }
 
   /* -------------------------------------------- */
@@ -161,3 +171,5 @@ export class AbilityTemplate extends MeasuredTemplate {
     return this;
   }
 }
+
+

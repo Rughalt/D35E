@@ -529,7 +529,7 @@ export class ActorPF extends Actor {
                 return data.permission[u._id] >= CONST.ENTITY_PERMISSIONS["OWNER"];
             });
         }
-        return this.isPC;
+        return this.hasPlayerOwner;
     }
 
 
@@ -1166,25 +1166,10 @@ export class ActorPF extends Actor {
         });
 
 
-        let conditionFlags = {};
-        // Condition flags
-        // for (let obj of allChangeObjects) {
-        //     if (!obj.data.conditionFlags) continue;
-        //     for (let [flagKey, flagValue] of Object.entries(obj.data.conditionFlags)) {
-        //         if (flagValue === true) {
-        //             conditionFlags[flagKey] = true;
-        //         }
-        //     }
-        // }
 
         let sizeOverride = "";
         // Add conditions
         let fullConditions = srcData1.data.attributes.conditions || {}
-        // {
-        //     fullConditions.dazzled = conditionFlags.dazzfullColed || nditions.dazzled;
-        //     fullConditions.wildshaped = conditionFlags.wildshaped || fullConditions.wildshaped;
-        //     fullConditions.polymorphed = conditionFlags.polymorphed || fullConditions.polymorphed;
-        // }
 
         const changeObjects = srcData1.items.filter(obj => {
             return obj.data.changes != null;
@@ -2482,7 +2467,7 @@ export class ActorPF extends Actor {
             cls.data.tag = tag;
             data.totalNonEclLevels += cls.data.levels
             let healthConfig = game.settings.get("D35E", "healthConfig");
-            healthConfig = cls.data.classType === "racial" ? healthConfig.hitdice.Racial : this.isPC ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
+            healthConfig = cls.data.classType === "racial" ? healthConfig.hitdice.Racial : this.hasPlayerOwner ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
             const classType = cls.data.classType || "base";
             data.classes[tag] = {
                 level: cls.data.levels,
@@ -3376,7 +3361,7 @@ export class ActorPF extends Actor {
         let t = itemData.type;
         let initial = {};
         // Assume NPCs are always proficient with weapons and always have spells prepared
-        if (!this.isPC) {
+        if (!this.hasPlayerOwner) {
             if (t === "weapon") initial["data.proficient"] = true;
             if (["weapon", "equipment"].includes(t)) initial["data.equipped"] = true;
         }
