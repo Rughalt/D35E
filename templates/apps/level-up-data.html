@@ -111,6 +111,7 @@
             $('#hd').val(hd)
             let intSkills = {{actor.data.abilities.int.mod}};
             skills += intSkills
+            skills = Math.max(1,skills)
             let level = {{level}};
             let isCharacter = '{{actor.type}}' === "character";
             if (level === 1 && isCharacter)
