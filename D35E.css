@@ -2137,6 +2137,9 @@
 .D35E.sheet.item .primary-body .item-properties .form-group label {
   line-height: 24px;
 }
+.D35E.sheet.item .primary-body .item-properties .form-group label.unit {
+  flex: 0 0 0px;
+}
 .D35E.sheet.item .primary-body .item-properties .form-group input {
   text-align: right;
 }
