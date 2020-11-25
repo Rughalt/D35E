@@ -105,6 +105,12 @@ export const registerSystemSettings = function() {
       "metric": "Metric (meters, kg)"
     },
     onChange: () => {
+      [...game.items.entities].filter( o => {
+        return hasProperty(o.data, "data.weight");
+      }).forEach(o => {
+        game.settings.get("D35E", "units") === "metric" ? o.update({"data":{"weight":o.data.data.weight/2}}): o.update({"data":{"weight":o.data.data.weight*2}});
+        if (o.sheet != null && o.sheet._state > 0) o.sheet.render();
+      });
       [...game.actors.entities, ...Object.values(game.actors.tokens)].filter(o => {
         return o.data.type === "character";
       }).forEach(o => {

@@ -70,6 +70,9 @@ export class ItemSheetPF extends ItemSheet {
         // Include CONFIG values
         data.config = CONFIG.D35E;
 
+        // Include relevant settings
+        data.usesImperialSystem = game.settings.get("D35E", "units") === "imperial";
+
         data.randomUuid = uuidv4();
 
         // Item Type, Status, and Details
