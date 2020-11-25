@@ -18,7 +18,7 @@
       {{!-- Weight --}}
       <div class="form-group">
         <label>{{localize "D35E.Weight"}}</label>
-        <input type="text" name="data.weight" value="{{data.weight}}" data-dtype="Number"/>
+        <input type="text" name="data.weight" value="{{convertedWeight}}" data-dtype="Number"/>
         {{#if usesImperialSystem}}
         <label class="unit">{{ localize 'D35E.Lbs' }}</label>
         {{else}}

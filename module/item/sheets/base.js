@@ -246,6 +246,11 @@ export class ItemSheetPF extends ItemSheet {
             data.isNaturalAttack = data.item.data.attackType === "natural";
         }
 
+        if (data.item.data.weight) {
+            const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
+            data.convertedWeight = data.item.data.weight * conversion;
+        }
+
         // Prepare spell specific stuff
         if (data.item.type === "spell") {
             let spellbook = null;
@@ -573,6 +578,23 @@ export class ItemSheetPF extends ItemSheet {
             });
         }
 
+        // Prepare stuff for attacks with conditionals
+        if (data.item.data.conditionals) {
+            data.conditionals = { targets: {}, conditionalModifierTypes: {} };
+            for (const conditional of data.item.data.conditionals) {
+                for (const modifier of conditional.modifiers) {
+                    modifier.targets = this.item.getConditionalTargets();
+                    modifier.subTargets = this.item.getConditionalSubTargets(modifier.target);
+                    modifier.conditionalModifierTypes = this.item.getConditionalModifierTypes(modifier.target);
+                    modifier.conditionalCritical = this.item.getConditionalCritical(modifier.target);
+                    modifier.isAttack = modifier.target === "attack";
+                    modifier.isDamage = modifier.target === "damage";
+                    modifier.isSpell = modifier.target === "spell";
+                }
+            }
+        }
+
+
         // Prepare stuff for items with context notes
         if (data.item.data.contextNotes) {
             data.contextNotes = {targets: {}};
@@ -730,6 +752,43 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        // Handle conditionals array
+        let conditionals = Object.entries(formData).filter((e) => e[0].startsWith("data.conditionals"));
+        formData["data.conditionals"] = conditionals.reduce((arr, entry) => {
+            let [i, j, k] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = ItemPF.defaultConditional;
+            if (k) {
+                const target = formData[`data.conditionals.${i}.${j}.target`];
+                if (!arr[i].modifiers[j]) arr[i].modifiers[j] = ItemPF.defaultConditionalModifier;
+                arr[i].modifiers[j][k] = entry[1];
+                // Target dependent keys
+                if (["subTarget", "critical", "type"].includes(k)) {
+                    const target = (conditionals.find((o) => o[0] === `data.conditionals.${i}.${j}.target`) || [])[1];
+                    const val = entry[1];
+                    if (typeof target === "string") {
+                        let keys;
+                        switch (k) {
+                            case "subTarget":
+                                keys = Object.keys(this.item.getConditionalSubTargets(target));
+                                break;
+                            case "type":
+                                keys = Object.keys(this.item.getConditionalModifierTypes(target));
+                                break;
+                            case "critical":
+                                keys = Object.keys(this.item.getConditionalCritical(target));
+                                break;
+                        }
+                        // Reset subTarget, non-damage type, and critical if necessary
+                        if (!keys.includes(val) && target !== "damage" && k !== "type") arr[i].modifiers[j][k] = keys[0];
+                    }
+                }
+            } else {
+                arr[i][j] = entry[1];
+            }
+            return arr;
+        }, []);
+
+
         // Handle change array
         let change = Object.entries(formData).filter(e => e[0].startsWith("data.changes"));
         formData["data.changes"] = change.reduce((arr, entry) => {
@@ -871,6 +930,11 @@ export class ItemSheetPF extends ItemSheet {
             html.find("button[name='create-attack']").click(this._createAttack.bind(this));
         }
 
+
+        // Modify conditionals
+        html.find(".conditional-control").click(this._onConditionalControl.bind(this));
+
+
         // Listen to field entries
         html.find(".entry-selector").click(this._onEntrySelector.bind(this));
 
@@ -909,6 +973,16 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".item-actions a").mouseup(ev => this._quickItemActionControl(ev));
 
         html.find(".search-list").on("change", event => event.stopPropagation());
+
+        // Conditional Dragging
+        html.find("li.conditional").each((i, li) => {
+            li.setAttribute("draggable", true);
+            li.addEventListener("dragstart", (ev) => this._onDragConditionalStart(ev), false);
+        });
+
+        // Conditional Dropping
+        html.find('div[data-tab="conditionals"]').on("drop", this._onConditionalDrop.bind(this));
+
     }
 
     /* -------------------------------------------- */
@@ -1714,6 +1788,88 @@ export class ItemSheetPF extends ItemSheet {
         // Quick Attack
         if (a.classList.contains("item-attack")) {
             await this.item.useEnhancementItem(item)
+        }
+    }
+
+    _onDragConditionalStart(event) {
+        const elem = event.currentTarget;
+        const conditional = this.object.data.data.conditionals[elem.dataset?.conditional];
+        event.dataTransfer.setData("text/plain", JSON.stringify(conditional));
+    }
+
+    async _onConditionalDrop(event) {
+        event.preventDefault();
+
+        let data;
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData("text/plain"));
+            // Surface-level check for conditional
+            if (!(data.default != null && typeof data.name === "string" && Array.isArray(data.modifiers))) return;
+        } catch (e) {
+            return false;
+        }
+
+        const item = this.object;
+        // Check targets and other fields for valid values, reset if necessary
+        for (let modifier of data.modifiers) {
+            if (!Object.keys(item.getConditionalTargets()).includes(modifier.target)) modifier.target = "";
+            let keys;
+            for (let [k, v] of Object.entries(modifier)) {
+                switch (k) {
+                    case "subTarget":
+                        keys = Object.keys(item.getConditionalSubTargets(modifier.target));
+                        break;
+                    case "type":
+                        keys = Object.keys(item.getConditionalModifierTypes(modifier.target));
+                        break;
+                    case "critical":
+                        keys = Object.keys(item.getConditionalCritical(modifier.target));
+                        break;
+                }
+                if (!keys?.includes(v)) v = keys?.[0] ?? "";
+            }
+        }
+
+        const conditionals = item.data.data.conditionals || [];
+        await this.object.update({ "data.conditionals": conditionals.concat([data]) });
+    }
+    async _onConditionalControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new conditional
+        if (a.classList.contains("add-conditional")) {
+            await this._onSubmit(event); // Submit any unsaved changes
+            const conditionals = this.item.data.data.conditionals || [];
+            return this.item.update({ "data.conditionals": conditionals.concat([ItemPF.defaultConditional]) });
+        }
+
+        // Remove a conditional
+        if (a.classList.contains("delete-conditional")) {
+            await this._onSubmit(event); // Submit any unsaved changes
+            const li = a.closest(".conditional");
+            const conditionals = duplicate(this.item.data.data.conditionals);
+            conditionals.splice(Number(li.dataset.conditional), 1);
+            return this.item.update({ "data.conditionals": conditionals });
+        }
+
+        // Add a new conditional modifier
+        if (a.classList.contains("add-conditional-modifier")) {
+            await this._onSubmit(event);
+            const li = a.closest(".conditional");
+            const conditionals = this.item.data.data.conditionals;
+            conditionals[Number(li.dataset.conditional)].modifiers.push(ItemPF.defaultConditionalModifier);
+            // duplicate object to ensure update
+            return this.item.update({ "data.conditionals": duplicate(conditionals) });
+        }
+
+        // Remove a conditional modifier
+        if (a.classList.contains("delete-conditional-modifier")) {
+            await this._onSubmit(event);
+            const li = a.closest(".conditional-modifier");
+            const conditionals = duplicate(this.item.data.data.conditionals);
+            conditionals[Number(li.dataset.conditional)].modifiers.splice(Number(li.dataset.modifier), 1);
+            return this.item.update({ "data.conditionals": conditionals });
         }
     }
 

@@ -1203,3 +1203,22 @@ D35E.combatChangeType = {
 };
 
 CONFIG.Combat.initiative.decimals = 2;
+
+// Static conditional modifier targets
+D35E.conditionalTargets = {
+  attack: {
+    _label: "D35E.AttackRollPlural",
+    allAttack: "D35E.All",
+  },
+  damage: {
+    _label: "D35E.Damage",
+    allDamage: "D35E.All",
+  },
+  effect: {
+    _label: "D35E.Effects",
+  },
+  misc: {
+    _label: "D35E.MiscShort",
+  },
+};
+

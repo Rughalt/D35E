@@ -1,0 +1,72 @@
+{{!-- Conditionals --}}
+<h4 class="conditional-header">
+    {{localize "D35E.Conditionals"}}
+</h4>
+<ol class="conditionals form-group">
+    {{#each data.conditionals as |conditional a|}}
+    <li class="conditional flexcolumn" data-conditional="{{a}}"><div class="conditional flexrow" data-conditional="{{a}}">
+        <input class="conditional-default" type="checkbox" title="{{localize "D35E.Default"}}" name="data.conditionals.{{a}}.default" {{checked this.default}}/>
+        <input class="conditional-name" type="text" name="data.conditionals.{{a}}.name" value="{{lookup this "name"}}"
+        placeholder="{{localize "D35E.Name"}}"/>
+        <a class="delete-conditional conditional-control delete-conditional"><i class="fas fa-trash"></i></a>
+    </div>
+        <ol class="conditionals form-group">
+            {{#each this.modifiers as |modifier m|}}
+            <li class="conditional-modifier flexrow" data-conditional="{{a}}" data-modifier="{{m}}">
+                <input class="conditional-formula" type="text" name="data.conditionals.{{a}}.{{m}}.formula" value="{{lookup this "formula"}}"
+                placeholder="{{localize "D35E.Formula"}}" required/>
+
+                <select class="conditional-target" name="data.conditionals.{{a}}.{{m}}.target" required>
+                    {{#select (lookup this "target") }}
+                    <option value=""></option>
+                    {{#each targets as |target type|}}
+                    <option value="{{type}}">{{target}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+
+                <select class="conditional-sub-target" name="data.conditionals.{{a}}.{{m}}.subTarget">
+                    {{#select (lookup this "subTarget") }}
+                    {{#if (lookup this "target") }}
+                    {{#each subTargets as |target type|}}
+                    <option value="{{type}}">{{target}}</option>
+                    {{/each}}
+                    {{else}}
+                    <option value=""></option>
+                    {{/if}}
+                    {{/select}}
+                </select>
+
+                {{#if modifier.isAttack}}
+                <select class="conditional-type" name="data.conditionals.{{a}}.{{m}}.type">
+                    {{#select (lookup this "type") }}
+                    {{#if (lookup this "target") }}
+                    {{#each conditionalModifierTypes as |modifierType mt|}}
+                    <option value="{{mt}}">{{modifierType}}</option>
+                    {{/each}}
+                    {{else}}
+                    <option value=""></option>
+                    {{/if}}
+                    {{/select}}
+                </select>
+                {{/if}}
+
+                {{#if modifier.isDamage}}
+                <input class="conditional-damage-type" type="text" list="types" name="data.conditionals.{{a}}.{{m}}.type" value="{{lookup this "type"}}" placeholder="{{localize "D35E.DamageType"}}"/>
+                <datalist id="types">
+                    {{#each conditionalModifierTypes as |modifierType mt|}}
+                    <option value="{{modifierType}}">
+                        {{/each}}
+                </datalist>
+                {{/if}}
+                {{#if ../modifiers.length}}
+                <a class="conditional-control delete-conditional-modifier"><i class="fas fa-trash"></i></a>{{/if}}
+            </li>
+            {{/each}}
+            <li class="flexrow"><a class="conditional-control add-conditional-modifier"><i class="fas fa-plus"></i> {{localize "D35E.AddEffect"}}</a></li>
+        </ol>
+    </li>
+    {{/each}}
+    <li class="conditional flexrow"><a class="conditional-control add-conditional"><i class="fas fa-plus"></i> {{localize "D35E.AddConditional"}}</a></li>
+</ol>
+</div>

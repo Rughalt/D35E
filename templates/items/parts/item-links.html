@@ -17,10 +17,16 @@
         <table>
             <tr>
                 <th>{{localize "D35E.Item"}}</th>
+
+                {{#each link.fields as |fv fk|}}
+                <th class="links-item-extra-field">{{fv.label}}</th>
+                {{/each}}
+
                 <th class="links-controls"></th>
             </tr>
             {{#each link.items as |item|}}
             <tr class="links-item" data-link={{item.id}}>
+
                 {{!-- Link name and image --}}
                 <td class="links-item-name">
                     <div>
@@ -28,6 +34,12 @@
                         <span>{{item.name}}</span>
                     </div>
                 </td>
+
+                {{#each link.fields as |fv fk|}}
+                <td class="links-item-extra-field">
+                    <input type="text" data-dtype="{{fv.type}}" value="{{lookup item fk}}" name="data.links.{{link.id}}.{{item._index}}.{{fk}}" />
+                </td>
+                {{/each}}
 
                 {{!-- Link Controls --}}
                 <td class="links-controls">

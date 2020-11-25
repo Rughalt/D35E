@@ -2160,7 +2160,7 @@ export class ActorPF extends Actor {
                     for (let feature of classInfo[2]) {
                         let e = CACHE.AllAbilities.get(feature.uid)
                         const level = parseInt(feature.level)
-                        let uniqueId = e.data.data.uniqueId;
+                        let uniqueId = e?.data?.data?.uniqueId;
                         if (!uniqueId) {
                             ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithNoUID"));
                             continue;
@@ -4372,9 +4372,10 @@ export class ActorPF extends Actor {
         let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr }).roll().total;
 
         // 1 kg = 0.5 lb
-        if (game.settings.get("D35E", "units") === "metric") {
-            heavy = heavy / 2
-        }
+        // if (game.settings.get("D35E", "units") === "metric") {
+        //     heavy = heavy / 2
+        // }
+        // Imperial to metric: All items have their weight stored in imperial for internal calculations
 
         return {
             light: Math.floor(heavy / 3),

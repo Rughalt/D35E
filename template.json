@@ -1396,6 +1396,7 @@
         "divineFocus": 0
       },
       "castTime": "",
+      "conditionals": [],
       "materials": {
         "value": "",
         "consumed": {
@@ -1507,7 +1508,8 @@
       "originalWeaponId": null,
       "originalWeaponName": "",
       "originalWeaponImg": "",
-      "originalWeaponProperties": {}
+      "originalWeaponProperties": {},
+      "conditionals": []
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],

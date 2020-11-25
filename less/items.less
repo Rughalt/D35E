@@ -819,5 +819,105 @@
     }
   }
 
+  .conditionals {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+
+    .change,
+    .context-note {
+      flex: 0 0 100%;
+      padding: 1px;
+      input {
+        flex: 3;
+        border: 1px solid @colorTan;
+        background: rgba(0, 0, 0, 0.05);
+        height: 24px;
+      }
+      input[type="text"]:invalid {
+        border: 2px solid darkred;
+      }
+      input[type="text"]:not(:first-child) {
+        margin-left: 5px;
+      }
+      select {
+        flex: 0 0 80px;
+        width: 80px;
+        background: rgba(0, 0, 0, 0.05);
+
+        &.change-sub-target {
+          flex: 0 0 128px;
+          width: 128px;
+        }
+      }
+      select:invalid {
+        border: 2px solid darkred;
+      }
+      select:not(:first-child) {
+        margin-left: 5px;
+      }
+
+      .change-priority {
+        flex: 0 0 24px;
+      }
+      .change-operator {
+        flex: 0 0 24px;
+      }
+      .conditional-default {
+        flex: 0 0 18px;
+      }
+      .conditional-modifier {
+        display: flex;
+      }
+    }
+  }
+
+  .conditionals {
+    .conditional,
+    .conditional-modifier {
+      padding: 1px;
+
+      select {
+        max-width: max-content;
+        min-width: 80px;
+        flex: 1;
+        border: 1px solid @colorTan;
+        background: rgba(0, 0, 0, 0.05);
+      }
+      select:not(:first-child) {
+        margin-left: 5px;
+      }
+      select:invalid {
+        border: 2px solid darkred;
+      }
+      input[type="text"] {
+        height: 24px;
+        border: 1px solid @colorTan;
+        background: rgba(0, 0, 0, 0.05);
+      }
+      input[type="text"]:invalid {
+        border: 2px solid darkred;
+      }
+      input[type="text"]:not(:first-child) {
+        margin-left: 5px;
+      }
+      input[class*="conditional-name"]:not(:first-child) {
+        margin-left: 0;
+      }
+      .conditional-name,
+      .conditional-formula {
+        min-width: 140px;
+      }
+      .conditional-damage-type {
+        min-width: 90px;
+        max-width: 200px;
+      }
+      .form-group {
+        padding-left: 30px;
+      }
+    }
+  }
+
 
 }

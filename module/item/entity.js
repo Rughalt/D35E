@@ -253,6 +253,8 @@ export class ItemPF extends Item {
                     labels.slot = equipmentSlot == null ? null : CONFIG.D35E.equipmentSlots[equipmentType][equipmentSlot];
                 } else labels.slot = null;
             }
+
+
         }
 
         // Spell Level,  School, and Components
@@ -412,6 +414,12 @@ export class ItemPF extends Item {
             let oldSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(this.data.data.weaponData.size || "");
             let weightChange = Math.pow(2,newSize-oldSize);
             data["data.weight"] = this.data.data.weight * weightChange;
+        }
+
+
+        if (data["data.convertedWeight"]) {
+            const conversion = game.settings.get("D35E", "units") === "metric" ? 2 : 1;
+            data["data.weight"] = data["data.convertedWeight"] * conversion;
         }
 
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
@@ -2891,4 +2899,125 @@ export class ItemPF extends Item {
         await this.update(updateData);
     }
 
+    /*
+    ---- Conditional modifiers support
+     */
+    /**
+     * Generates a list of targets this modifier can have.
+     * @param {ItemPF} item - The item for which the modifier is to be created.
+     * @returns {Object.<string, string>} A list of targets
+     */
+    getConditionalTargets() {
+        let result = {};
+        if (this.hasAttack) result["attack"] = game.i18n.localize(CONFIG.D35E.conditionalTargets.attack._label);
+        if (this.hasDamage) result["damage"] = game.i18n.localize(CONFIG.D35E.conditionalTargets.damage._label);
+        if (this.type === "spell" || this.hasSave)
+            result["effect"] = game.i18n.localize(CONFIG.D35E.conditionalTargets.effect._label);
+        // Only add Misc target if subTargets are available
+        if (Object.keys(this.getConditionalSubTargets("misc")).length > 0) {
+            result["misc"] = game.i18n.localize(CONFIG.D35E.conditionalTargets.misc._label);
+        }
+        return result;
+    }
+
+    /**
+     * Generates lists of conditional subtargets this attack can have.
+     * @param {string} target - The target key, as defined in CONFIG.PF1.conditionTargets.
+     * @returns {Object.<string, string>} A list of conditionals
+     */
+    getConditionalSubTargets(target) {
+        let result = {};
+        // Add static targets
+        if (hasProperty(CONFIG.D35E.conditionalTargets, target)) {
+            for (let [k, v] of Object.entries(CONFIG.D35E.conditionalTargets[target])) {
+                if (!k.startsWith("_")) result[k] = v;
+            }
+        }
+        // Add subtargets depending on attacks
+        if (["attack", "damage"].includes(target)) {
+            // Add specific attacks
+            if (this.hasAttack) {
+                result["attack.0"] = `${game.i18n.localize("D35E.Attack")} 1`;
+            }
+            if (this.hasMultiAttack) {
+                for (let [k, v] of Object.entries(this.data.data.attackParts)) {
+                    result[`attack.${Number(k) + 1}`] = v[1];
+                }
+            }
+        }
+        // Add subtargets affecting effects
+        if (target === "effect") {
+            if (this.data.type === "spell") result["cl"] = game.i18n.localize("D35E.CasterLevel");
+            if (this.hasSave) result["dc"] = game.i18n.localize("D35E.DC");
+        }
+        // Add misc subtargets
+        if (target === "misc") {
+            // Add charges subTarget with specific label
+            if (this.type === "spell" && this.useSpellPoints()) result["charges"] = game.i18n.localize("D35E.SpellPointsCost");
+            else if (this.isCharged) result["charges"] = game.i18n.localize("D35E.ChargeCost");
+        }
+        return result;
+    }
+
+    /* Generates lists of conditional modifier bonus types applicable to a formula.
+     * @param {string} target - The target key as defined in CONFIG.PF1.conditionTargets.
+     * @returns {Object.<string, string>} A list of bonus types.
+     * */
+    getConditionalModifierTypes(target) {
+        let result = {};
+        if (target === "attack" || target === "damage") {
+            // Add bonusModifiers from CONFIG.PF1.bonusModifiers
+            for (let [k, v] of Object.entries(CONFIG.D35E.bonusModifiers)) {
+                result[k] = v;
+            }
+        }
+        if (target === "damage") {
+            for (let [k, v] of Object.entries(CONFIG.D35E.damageTypes)) {
+                result[k] = v;
+            }
+        }
+        return result;
+    }
+
+    /* Generates a list of critical applications for a given formula target.
+     * @param {string} target - The target key as defined in CONFIG.D35E.conditionalTargets.
+     * @returns {Object.<string, string>} A list of critical applications.
+     * */
+    getConditionalCritical(target) {
+        let result = {};
+        // Attack bonuses can only apply as critical confirm bonus
+        if (target === "attack") {
+            result = { ...result, normal: "D35E.Normal"};
+        }
+        // Damage bonuses can be multiplied or not
+        if (target === "damage") {
+            result = { ...result, normal: "D35E.Normal" };
+        }
+        return result;
+    }
+    static get defaultConditional() {
+        return {
+            default: false,
+            name: "",
+            modifiers: [],
+        };
+    }
+
+    static get defaultConditionalModifier() {
+        return {
+            formula: "",
+            target: "",
+            subTarget: "",
+            type: "",
+            critical: "",
+        };
+    }
+
+    useSpellPoints() {
+        if (!this.actor) return false;
+        if (this.data.data.atWill) return false;
+
+        const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`);
+        return spellbook.usePowerPoints;
+    }
 }

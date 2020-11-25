@@ -436,11 +436,12 @@ export class ActorSheetPF extends ActorSheet {
    * @private
    */
   _computeEncumbrance(actorData) {
-    const carriedWeight = actorData.data.attributes.encumbrance.carriedWeight;
+    const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
+    const carriedWeight = actorData.data.attributes.encumbrance.carriedWeight * conversion;
     const load = {
-      light: actorData.data.attributes.encumbrance.levels.light,
-      medium: actorData.data.attributes.encumbrance.levels.medium,
-      heavy: actorData.data.attributes.encumbrance.levels.heavy
+      light: actorData.data.attributes.encumbrance.levels.light * conversion,
+      medium: actorData.data.attributes.encumbrance.levels.medium * conversion,
+      heavy: actorData.data.attributes.encumbrance.levels.heavy * conversion
     };
     const carryLabel = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.CarryLabelKg").format(carriedWeight) : game.i18n.localize("D35E.CarryLabel").format(carriedWeight);
     const enc = {
@@ -1426,11 +1427,12 @@ export class ActorSheetPF extends ActorSheet {
 
     // Organize Inventory
     for ( let i of items ) {
+      const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
       const subType = i.type === "loot" ? i.data.subType || "gear" : i.data.subType;
       i.data.quantity = i.data.quantity || 0;
-      i.data.weight =  i.data.weight || 0;
+      i.data.displayWeight =  i.data.weight * conversion || 0;
       let weightMult = i.data.containerWeightless ? 0 : 1
-      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * 10) / 10;
+      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * conversion * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);

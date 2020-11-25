@@ -2137,9 +2137,6 @@
 .D35E.sheet.item .primary-body .item-properties .form-group label {
   line-height: 24px;
 }
-.D35E.sheet.item .primary-body .item-properties .form-group label.unit {
-  flex: 0 0 0px;
-}
 .D35E.sheet.item .primary-body .item-properties .form-group input {
   text-align: right;
 }
@@ -2762,6 +2759,120 @@
 }
 .D35E.sheet.item .progression-ability-description br {
   margin: 1rem;
+}
+.D35E.sheet.item .conditionals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+.D35E.sheet.item .conditionals .change,
+.D35E.sheet.item .conditionals .context-note {
+  flex: 0 0 100%;
+  padding: 1px;
+}
+.D35E.sheet.item .conditionals .change input,
+.D35E.sheet.item .conditionals .context-note input {
+  flex: 3;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+  height: 24px;
+}
+.D35E.sheet.item .conditionals .change input[type="text"]:invalid,
+.D35E.sheet.item .conditionals .context-note input[type="text"]:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .change input[type="text"]:not(:first-child),
+.D35E.sheet.item .conditionals .context-note input[type="text"]:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .change select,
+.D35E.sheet.item .conditionals .context-note select {
+  flex: 0 0 80px;
+  width: 80px;
+  background: rgba(0, 0, 0, 0.05);
+}
+.D35E.sheet.item .conditionals .change select.change-sub-target,
+.D35E.sheet.item .conditionals .context-note select.change-sub-target {
+  flex: 0 0 128px;
+  width: 128px;
+}
+.D35E.sheet.item .conditionals .change select:invalid,
+.D35E.sheet.item .conditionals .context-note select:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .change select:not(:first-child),
+.D35E.sheet.item .conditionals .context-note select:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .change .change-priority,
+.D35E.sheet.item .conditionals .context-note .change-priority {
+  flex: 0 0 24px;
+}
+.D35E.sheet.item .conditionals .change .change-operator,
+.D35E.sheet.item .conditionals .context-note .change-operator {
+  flex: 0 0 24px;
+}
+.D35E.sheet.item .conditionals .change .conditional-default,
+.D35E.sheet.item .conditionals .context-note .conditional-default {
+  flex: 0 0 18px;
+}
+.D35E.sheet.item .conditionals .change .conditional-modifier,
+.D35E.sheet.item .conditionals .context-note .conditional-modifier {
+  display: flex;
+}
+.D35E.sheet.item .conditionals .conditional,
+.D35E.sheet.item .conditionals .conditional-modifier {
+  padding: 1px;
+}
+.D35E.sheet.item .conditionals .conditional select,
+.D35E.sheet.item .conditionals .conditional-modifier select {
+  max-width: max-content;
+  min-width: 80px;
+  flex: 1;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+}
+.D35E.sheet.item .conditionals .conditional select:not(:first-child),
+.D35E.sheet.item .conditionals .conditional-modifier select:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .conditional select:invalid,
+.D35E.sheet.item .conditionals .conditional-modifier select:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .conditional input[type="text"],
+.D35E.sheet.item .conditionals .conditional-modifier input[type="text"] {
+  height: 24px;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+}
+.D35E.sheet.item .conditionals .conditional input[type="text"]:invalid,
+.D35E.sheet.item .conditionals .conditional-modifier input[type="text"]:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .conditional input[type="text"]:not(:first-child),
+.D35E.sheet.item .conditionals .conditional-modifier input[type="text"]:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .conditional input[class*="conditional-name"]:not(:first-child),
+.D35E.sheet.item .conditionals .conditional-modifier input[class*="conditional-name"]:not(:first-child) {
+  margin-left: 0;
+}
+.D35E.sheet.item .conditionals .conditional .conditional-name,
+.D35E.sheet.item .conditionals .conditional-modifier .conditional-name,
+.D35E.sheet.item .conditionals .conditional .conditional-formula,
+.D35E.sheet.item .conditionals .conditional-modifier .conditional-formula {
+  min-width: 140px;
+}
+.D35E.sheet.item .conditionals .conditional .conditional-damage-type,
+.D35E.sheet.item .conditionals .conditional-modifier .conditional-damage-type {
+  min-width: 90px;
+  max-width: 200px;
+}
+.D35E.sheet.item .conditionals .conditional .form-group,
+.D35E.sheet.item .conditionals .conditional-modifier .form-group {
+  padding-left: 30px;
 }
 /* ----------------------------------------- */
 /*  Chat Cards
