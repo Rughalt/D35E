@@ -455,9 +455,9 @@ export class ActorSheetPF extends ActorSheet {
         medium: actorData.data.attributes.encumbrance.level >= 2,
         heavy: actorData.data.attributes.encumbrance.carriedWeight >= actorData.data.attributes.encumbrance.levels.heavy,
       },
-      light: actorData.data.attributes.encumbrance.levels.light,
-      medium: actorData.data.attributes.encumbrance.levels.medium,
-      heavy: actorData.data.attributes.encumbrance.levels.heavy,
+      light: actorData.data.attributes.encumbrance.levels.light * conversion,
+      medium: actorData.data.attributes.encumbrance.levels.medium * conversion,
+      heavy: actorData.data.attributes.encumbrance.levels.heavy * conversion,
       value: actorData.data.attributes.encumbrance.carriedWeight,
       carryLabel: carryLabel,
     };
