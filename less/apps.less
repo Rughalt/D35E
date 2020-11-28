@@ -516,8 +516,9 @@
     .filter-container {
       overflow-x: hidden;
       overflow-y: scroll;
-      max-height: calc(100% - 48px);
+      max-height: calc(100% - 84px);
       margin-bottom: 8px;
+      min-height: calc(100% - 84px);
 
       .filter {
         margin-top: 8px;
@@ -565,6 +566,16 @@
           margin-left: 4px;
         }
       }
+    }
+  }
+}
+
+.dr-setting {
+  .item-list {
+    margin: 0;
+    padding: 0;
+    h4 {
+      margin: 0;
     }
   }
 }

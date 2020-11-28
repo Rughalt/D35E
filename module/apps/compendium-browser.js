@@ -54,6 +54,7 @@ export class CompendiumBrowser extends Application {
       height: window.innerHeight - 60,
       top: 30,
       left: 40,
+      classes: ["compendium-browser-window"]
     });
   }
 
@@ -120,6 +121,7 @@ export class CompendiumBrowser extends Application {
     if (this.type === "spells" && item.type !== "spell") return false;
     if (this.type === "items" && !["weapon", "equipment", "loot", "consumable"].includes(item.type)) return false;
     if (this.type === "feats" && item.type !== "feat") return false;
+    if (this.type === "buffs" && item.type !== "buff") return false;
     if (this.type === "enhancements" && item.type !== "enhancement") return false;
     return true;
   }
@@ -133,6 +135,7 @@ export class CompendiumBrowser extends Application {
         type: item.type,
         img: item.img,
         data: item.data.data,
+        isSpell: item.type === "spell"
       },
     };
 
@@ -601,7 +604,7 @@ export class CompendiumBrowser extends Application {
 
     // Open sheets
     html.find('.entry-name').click(ev => {
-      let li = ev.currentTarget.parentElement;
+      let li = ev.currentTarget.parentElement.parentElement;
       this._onEntry(li.getAttribute("data-collection"), li.getAttribute("data-entry-id"));
     });
 

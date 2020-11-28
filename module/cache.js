@@ -1,10 +1,12 @@
 export const CACHE = {};
 
 CACHE.ClassFeatures = new Map()
-CACHE.AllClassFeatures = new Array()
+CACHE.AllClassFeatures = []
 CACHE.RacialFeatures = new Map()
-CACHE.AllRacialFeatures = new Array()
+CACHE.AllRacialFeatures = []
 CACHE.AllAbilities = new Map()
+CACHE.Materials = new Map()
+CACHE.DamageTypes = new Map()
 
 export const buildCache = async function() {
 
@@ -60,6 +62,36 @@ export const buildCache = async function() {
             }
         }
 
+    for (let packName of ["world.materials","LOTD.materials","D35E.materials"])
+        if (game.packs.has(packName)) {
+            itemPack = game.packs.get(packName);
+            items = [];
+            await itemPack.getIndex().then(index => items = index);
+            for (let entry of items) {
+                await itemPack.getEntity(entry._id).then(e => {
+                        e.pack = packName;
+                        if (e.data.data.uniqueId) {
+                            CACHE.Materials.set(e.data.data.uniqueId, e)
+                        }
+                    }
+                )
+            }
+        }
+    for (let packName of ["world.damage-types","LOTD.damage-types","D35E.damage-types"])
+        if (game.packs.has(packName)) {
+            itemPack = game.packs.get(packName);
+            items = [];
+            await itemPack.getIndex().then(index => items = index);
+            for (let entry of items) {
+                await itemPack.getEntity(entry._id).then(e => {
+                        e.pack = packName;
+                        if (e.data.data.uniqueId) {
+                            CACHE.DamageTypes.set(e.data.data.uniqueId, e)
+                        }
+                    }
+                )
+            }
+        }
 
     ui.notifications.info(`Building Caches for compendiums finished!`);
     console.log("D35E | Building Caches for finished!")

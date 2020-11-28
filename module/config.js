@@ -1222,3 +1222,12 @@ D35E.conditionalTargets = {
   },
 };
 
+D35E.damageTypes = {
+  'energy': 'D35E.Energy',
+  'type': 'D35E.BaseDamage',
+  'alignment': 'D35E.Alignment',
+  'other': 'D35E.Other',
+};
+
+
+

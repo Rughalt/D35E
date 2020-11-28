@@ -208,27 +208,46 @@ export class ChatAttack {
             if (this.item.isHealing) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyCriticalHealing"),
                 value: -totalDamage,
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
             });
             else this.cards.push({
                 label: game.i18n.localize("D35E.ApplyCriticalDamage"),
                 value: totalDamage,
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
             });
         } else {
             if (this.item.isHealing) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyHealing"),
                 value: -totalDamage,
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
             });
             else if (isMultiattack) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyDamage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`,
                 value: totalDamage,
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
             });
             else this.cards.push({
                     label: game.i18n.localize("D35E.ApplyDamage"),
                     value: totalDamage,
+                    data: JSON.stringify(rolls),
+                    alignment: JSON.stringify(this.item.data.data.alignment),
+                    material: JSON.stringify(this.item.data.data.material),
                     action: "applyDamage",
                 });
         }

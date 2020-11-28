@@ -119,7 +119,17 @@
   {{#each data.damage.parts as |part i| }}
   <li class="damage-part flexrow" data-damage-part="{{i}}">
     <input type="text" name="data.damage.parts.{{i}}.0" placeholder="{{#unless isHealing }}{{localize "D35E.DamageFormula"}}{{ else }}{{localize "D35E.HealingFormula"}}{{/unless}}" value="{{lookup this "0"}}"/>
-    <input type="text" name="data.damage.parts.{{i}}.1" placeholder="{{localize "D35E.DamageTypes"}}" value="{{lookup this "1"}}"/>
+    <select name="data.damage.parts.{{i}}.2">
+      {{#select (lookup this "2")}}
+      <option value="">{{localize "D35E.Custom"}}</option>
+      {{#each ../damageTypes as |damage type|}}
+      <option value="{{damage.data.data.uniqueId}}">{{damage.data.name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{#unless (lookup this "2")}}
+    <input type="text" name="data.damage.parts.{{i}}.1" value="{{lookup this "1"}}" placeholder="{{localize "D35E.DamageTypes"}}"/>
+    {{/unless}}
     <a class="damage-control delete-damage"><i class="fas fa-minus"></i></a>
   </li>
   {{/each}}

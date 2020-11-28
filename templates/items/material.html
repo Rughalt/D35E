@@ -1,0 +1,78 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Item Sheet Header --}}
+    <header class="sheet-header flexrow">
+        <div class="sheet-header-profile">
+            <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+        </div>
+
+        <div class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize " D35E.ItemName"}}"/>
+            </h1>
+
+            <div class="item-subtitle">
+                <h4 class="item-type">{{itemType}}</h4>
+                <span class="item-status">{{itemStatus}}</span>
+            </div>
+
+            <ul class="summary">
+                <li>
+                    {{lookup config.attackTypes data.attackType }}
+                </li>
+            </ul>
+        </div>
+    </header>
+
+
+    <section class="sheet-content flexcol sheet-attack">
+        {{!-- Item Sheet Navigation --}}
+        <nav class="sheet-navigation tabs" data-group="primary">
+            <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+            <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+            <a class="item" data-tab="conditionals">{{localize "D35E.Conditionals"}}</a>
+            <!--      <a class="item" data-tab="links">{{localize "D35E.Links"}}</a>-->
+        </nav>
+
+        {{!-- Item Sheet Body --}}
+        <section class="primary-body">
+
+            {{!-- Description Tab --}}
+            <div class="tab flexcol active" data-group="primary" data-tab="description">
+                {{editor content=data.description.value target="data.description.value" button=true owner=owner
+                editable=editable}}
+            </div>
+
+            {{!-- Details Tab --}}
+            <div class="tab details" data-group="primary" data-tab="details">
+
+                <h3 class="form-header">{{localize "D35E.MagicEquivalent"}}</h3>
+                <div class="form-group">
+                    <label>{{localize "D35E.MagicEquivalent"}}</label>
+                    <input type="text" name="data.baseWeaponType" value="{{data.baseWeaponType}}" data-dtype="String"/>
+                </div>
+                <span><em>{{localize "D35E.MagicEquivalentDescription"}}</em></span>
+
+
+                <div class="form-group">
+                    <label>{{localize "D35E.MaterialAlchemicalSilverEquivalent"}}</label>
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="data.isAlchemicalSilverEquivalent" {{checked data.isAlchemicalSilverEquivalent}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+
+                <div class="form-group stacked">
+                    {{#if isGM}}
+                    <h3 class="form-header">System Properties</h3>
+                    <div class="form-group">
+                        <label>UID</label>
+                        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+
+        </section>
+    </section>
+</form>

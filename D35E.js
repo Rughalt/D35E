@@ -93,11 +93,10 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack", "race", "enhancement"], makeDefault: true });
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material"], makeDefault: true });
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
-  $('body').toggleClass('d35gm', game.user.isGM);
 });
 
 
@@ -117,7 +116,7 @@ Hooks.once("setup", function() {
     "spellPreparationModes", "weaponTypes", "weaponProperties", "spellComponents", "spellSchools", "spellLevels", "conditionTypes",
     "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "actorTokenSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
     "limitedUsePeriods", "equipmentTypes", "equipmentSlots", "consumableTypes", "attackTypes", "buffTypes", "buffTargets", "contextNoteTargets",
-    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race"
+    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets"
   ];
 
   const doLocalize = function(obj) {
@@ -128,7 +127,11 @@ Hooks.once("setup", function() {
     }, {});
   };
   for ( let o of toLocalize ) {
-    CONFIG.D35E[o] = doLocalize(CONFIG.D35E[o]);
+    try {
+      CONFIG.D35E[o] = doLocalize(CONFIG.D35E[o]);
+    } catch (e) {
+      //ignore
+    }
   }
 });
 
@@ -138,7 +141,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = "0.87.8";
+  const NEEDS_MIGRATION_VERSION = "0.87.7";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
     PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
@@ -172,6 +175,8 @@ Hooks.once("ready", async function() {
     ).default();
     return;
   }
+
+  $('body').toggleClass('d35gm', game.user.isGM);
   // Edit next line to match module.
   const system = game.system;
   const title = system.data.title;

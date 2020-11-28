@@ -5,6 +5,7 @@ import {ActorPF} from "../actor/entity.js";
 import AbilityTemplate from "../pixi/ability-template.js";
 import {ChatAttack} from "../misc/chat-attack.js";
 import {D35E} from "../config.js";
+import {CACHE} from "../cache.js";
 
 /**
  * Override and extend the basic :class:`Item` implementation
@@ -422,6 +423,12 @@ export class ItemPF extends Item {
             data["data.weight"] = data["data.convertedWeight"] * conversion;
         }
 
+        if (data["data.selectedMaterial"]) {
+            data["data.material"] = duplicate(CACHE.Materials.get(data["data.selectedMaterial"]).data);
+        } else {
+            data["data.-=material"] = null;
+        }
+
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
             //Buff or item was activated
             data["data.timeline.elapsed"] = 0
@@ -557,6 +564,10 @@ export class ItemPF extends Item {
         // Update enh from Enhancements
         let _enhancements = duplicate(getProperty(srcData, `data.enhancements.items`) || []);
         this._updateBaseEnhancement(data, _enhancements, this.type, srcData);
+        this._updateAlignmentEnhancement(data, _enhancements, this.type, srcData);
+
+
+
 
         this._updateMaxUses(data, {srcData: srcData});
 
@@ -569,6 +580,35 @@ export class ItemPF extends Item {
             this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
 
         return false;
+    }
+
+    _updateAlignmentEnhancement(data, enhancements, type, srcData) {
+        let doLinkData = true;
+        if (srcData == null) {
+            srcData = this.data;
+            doLinkData = false;
+        }
+
+        let alignment = {
+            "good": false,
+                "evil": false,
+                "lawful": false,
+                "chaotic": false
+        }
+
+        enhancements.forEach(function( obj ) {
+            if (obj.data.weaponData.alignment) {
+                alignment.good = obj.data.weaponData.alignment.good || alignment.good;
+                alignment.evil = obj.data.weaponData.alignment.evil || alignment.evil;
+                alignment.lawful = obj.data.weaponData.alignment.lawful || alignment.lawful;
+                alignment.chaotic = obj.data.weaponData.alignment.chaotic || alignment.chaotic;
+            }
+        });
+        //console.log('Total enh',totalEnchancement, type)
+        if (type === 'weapon' && enhancements.length) {
+            if (doLinkData) linkData(srcData, data, "data.weaponData.alignment", alignment);
+            else data['data.weaponData.alignment'] = alignment
+        }
     }
 
     _updateBaseEnhancement(data, enhancements, type, srcData) {
@@ -1724,7 +1764,16 @@ export class ItemPF extends Item {
 
         // Define Roll parts
         let parts = itemData.damage.parts.map(p => {
-            return {base: p[0], extra: [], damageType: p[1]};
+            if (p[2])
+                p[1] = CACHE.DamageTypes.get(p[2]).data.name
+            else if (p[1]) {
+                for(let damageType of CACHE.DamageTypes.values()) {
+                    if (damageType.data.data.identifiers.some(i => i[0].toLowerCase() === p[1].toLowerCase()))
+                        p[2] = damageType.data.data.uniqueId;
+                }
+            }
+
+            return {base: p[0], extra: [], damageType: p[1], damageTypeUid: p[2]};
         });
         parts[0].base = alterRoll(parts[0].base, 0, rollData.critMult);
 
@@ -1758,7 +1807,15 @@ export class ItemPF extends Item {
         }
         let simpleExtraParts = extraParts.filter(p => !Array.isArray(p));
         parts = parts.concat(extraParts.filter(p => Array.isArray(p)).map(p => {
-            return {base: p[0], extra: [], damageType: p[1]}
+            if (p[2])
+                p[1] = CACHE.DamageTypes.get(p[2]).data.name
+            else if (p[1]) {
+                for(let damageType of CACHE.DamageTypes.values()) {
+                    if (damageType.data.data.identifiers.some(i => i[0].toLowerCase() === p[1].toLowerCase()))
+                        p[2] = damageType.data.data.uniqueId;
+                }
+            }
+            return {base: p[0], extra: [], damageType: p[1], damageTypeUid: p[2]}
 
         }));
         // Create roll
@@ -1770,11 +1827,13 @@ export class ItemPF extends Item {
                 roll = {
                     roll: new Roll([part.base, ...part.extra, ...simpleExtraParts].join("+"), rollData).roll(),
                     damageType: part.damageType,
+                    damageTypeUid: part.damageTypeUid
                 };
             } else {
                 roll = {
                     roll: new Roll([part.base, ...part.extra].join("+"), rollData).roll(),
                     damageType: part.damageType,
+                    damageTypeUid: part.damageTypeUid
                 };
             }
             rolls.push(roll);

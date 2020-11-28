@@ -1,6 +1,7 @@
 import { ActorTraitSelector } from "../../apps/trait-selector.js";
 import { ActorRestDialog } from "../../apps/actor-rest.js";
 import { LevelUpDialog } from "../../apps/level-up-box.js";
+import { DamageReductionSetting } from "../../apps/damage-reduction-setting.js";
 import { LevelUpDataDialog } from "../../apps/level-up-data.js";
 import { ActorSheetFlags } from "../../apps/actor-flags.js";
 import { DicePF } from "../../dice.js";
@@ -10,6 +11,7 @@ import {SpellbookEditor} from "../../apps/spellbook-editor.js";
 import {D35E} from "../../config.js";
 import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
 import {ItemPF} from "../../item/entity.js";
+import {CompendiumDirectoryPF} from "../../sidebar/compendium.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -547,6 +549,10 @@ export class ActorSheetPF extends ActorSheet {
 
     // Trait Selector
     html.find('.trait-selector').click(this._onTraitSelector.bind(this));
+
+
+    // Trait Selector
+    html.find('.drer-selector').click(this._onDREREditor.bind(this));
 
     // Configure Special Flags
     html.find('.configure-flags').click(this._onConfigureFlags.bind(this));
@@ -1478,11 +1484,11 @@ export class ActorSheetPF extends ActorSheet {
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });
     buffs = this._filterItems(buffs, this._filters.buffs);
     const buffSections = {
-      temp: { label: game.i18n.localize("D35E.Temporary"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
-      perm: { label: game.i18n.localize("D35E.Permanent"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
-      item: { label: game.i18n.localize("D35E.Item"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
-      misc: { label: game.i18n.localize("D35E.Misc"), items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
-      all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
+      temp: { label: game.i18n.localize("D35E.Temporary"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
+      perm: { label: game.i18n.localize("D35E.Permanent"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
+      item: { label: game.i18n.localize("D35E.Item"), pack: "browser:buffs", hasPack:true, hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
+      //all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
 
     data.shapechanges = []
@@ -1491,7 +1497,7 @@ export class ActorSheetPF extends ActorSheet {
       if (s === 'shapechange') data.shapechanges.push(b)
       if (!buffSections[s]) continue;
       buffSections[s].items.push(b);
-      buffSections.all.items.push(b);
+      //buffSections.all.items.push(b);
     }
 
 
@@ -1585,6 +1591,13 @@ export class ActorSheetPF extends ActorSheet {
       choices: CONFIG.D35E[a.dataset.options]
     };
     new ActorTraitSelector(this.actor, options).render(true)
+  }
+
+
+
+  _onDREREditor(event) {
+    event.preventDefault();
+    new DamageReductionSetting(this.actor, {}).render(true)
   }
 
 
@@ -1771,7 +1784,10 @@ export class ActorSheetPF extends ActorSheet {
     event.preventDefault();
     let div = $(event.currentTarget),
         pack = div.attr("data-pack");
-    if (pack !== 'actor-race' && pack !== 'actor-first-class') {
+    if (pack.startsWith("browser")) {
+      CompendiumDirectoryPF.browseCompendium(pack.split(":")[1])
+    }
+    else if (pack !== 'actor-race' && pack !== 'actor-first-class') {
       game.packs.get(pack).render(true)
     } else if (pack === 'actor-race') {
       if (this.entity.race !== null) {

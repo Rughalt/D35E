@@ -380,7 +380,12 @@
           },
           "spelldc": {
             "_deprecated": true
-          }
+          },
+          "damageReduction": {
+            "any": 0,
+            "types": []
+          },
+          "energyResistance": []
         },
         "details": {
           "level": {
@@ -993,7 +998,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement"],
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement","damage-type","material"],
     "templates": {
       "changes": {
         "changes": [],
@@ -1045,6 +1050,11 @@
             "updatePrice": false
           },
           "items": []
+        }
+      },
+      "physicalMaterial": {
+        "material": {
+          "data": null
         }
       },
       "itemDescription": {
@@ -1327,7 +1337,7 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light"],
+      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light","physicalMaterial"],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
@@ -1429,7 +1439,7 @@
 
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light"],
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light","physicalMaterial"],
       "equipped": true,
       "masterwork": false,
       "weaponType": "simple",
@@ -1440,12 +1450,19 @@
       "weaponData": {
         "damageRoll": "",
         "damageType": "",
+        "damageTypeId": "",
         "critRange": 20,
         "critMult": 2,
         "range": null,
         "attackFormula": "",
         "damageFormula": "",
-        "size": "med"
+        "size": "med",
+        "alignment": {
+          "good": false,
+          "evil": false,
+          "lawful": false,
+          "chaotic": false
+        }
       },
       "attackNotes": "",
       "bonus": {
@@ -1484,13 +1501,21 @@
       "isFromBuff": false,
       "weaponData": {
         "damageRoll": "",
-        "damageType": ""
+        "damageType": "",
+        "damageTypeId": "",
+        "optionalDamage": false,
+        "alignment": {
+          "good": false,
+          "evil": false,
+          "lawful": false,
+          "chaotic": false
+        }
       },
       "weaponAttackNotes": [],
       "allowedTypes": []
     },
     "attack": {
-      "templates": ["itemDescription", "activatedEffect", "action"],
+      "templates": ["itemDescription", "activatedEffect", "action","physicalMaterial"],
       "associations": {
         "classes": []
       },
@@ -1509,7 +1534,13 @@
       "originalWeaponName": "",
       "originalWeaponImg": "",
       "originalWeaponProperties": {},
-      "conditionals": []
+      "conditionals": [],
+      "alignment": {
+        "good": false,
+        "evil": false,
+        "lawful": false,
+        "chaotic": false
+      }
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],
@@ -1518,6 +1549,28 @@
       "subTypes": [],
       "addedAbilities": [],
       "disabledAbilities": []
+    },
+    "damage-type": {
+      "description": {
+        "value": ""
+      },
+      "uniqueId": "",
+      "slug": "damage",
+      "damageType": null,
+      "isPiercing": false,
+      "isBludgeoning": false,
+      "isSlashing": false,
+      "identifiers": []
+    },
+    "material": {
+      "description": {
+        "value": ""
+      },
+      "uniqueId": "",
+      "slug": "damage",
+      "magicEquivalent": 0,
+      "isAlchemicalSilverEquivalent": false,
+      "identifiers": []
     }
   }
 }

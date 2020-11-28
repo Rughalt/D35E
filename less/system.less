@@ -180,6 +180,43 @@
   }
 }
 
+.toggle input[type=checkbox] {
+
+  display:none;
+}
+
+.toggle input[type=checkbox] + label {
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 2px;
+  text-align: center;
+  flex: 3;
+  padding: 1px 10px;
+  display: flex;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  line-height: 24px;
+  font-weight: normal;
+
+  color: #474747;
+  border: 1px solid #474747;
+  i {
+    margin-right: 2px;
+    line-height: 24px;
+  }
+}
+
+.toggle input[type=checkbox]:checked + label {
+  margin: 2px;
+  color: #782e22;
+  border: 1px solid #782e22;
+  border-radius: 2px;
+  background-color: rgba(0,0,0,0.1);
+  font-weight: bold;
+}
+
 .window-app.dialog {
   label {
     &.block-header {
@@ -217,6 +254,146 @@
 
 .d35ecustom {
 
+  .toggle input[type=checkbox] + label{
+    margin: 2px;
+    color: white;
+    background: none !important;
+    border-image: url(/systems/D35E/icons/ui/toggle-off.png);
+    border-image-slice: 20 20 fill;
+    border-image-width: 170px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-align: center;
+    flex: 3;
+    padding: 1px 10px;
+    display: flex;
+    max-width: 300px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100px;
+    line-height: 24px;
+    font-weight: normal;
+
+  }
+
+  .toggle input[type=checkbox]:checked + label {
+    margin: 2px;
+    color: white;
+    background: none !important;
+    border-image: url(/systems/D35E/icons/ui/toggle-on.png);
+    border-image-slice: 20 20 fill;
+    border-image-width: 170px;
+    cursor: pointer;
+    font-weight: normal;
+    border-radius: 2px;
+  }
+
+  .dr-setting {
+
+    &.window-app {
+      border: 8px solid #55493B;
+      border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+      background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+      border-radius: 0;
+      .window-content {
+        padding: 0 !important;
+        background: none;
+        color: white;
+        input, select {
+          color: white
+        }
+
+        select {
+          background-color: black;
+        }
+
+        label.block-header {
+          &::after {
+            border-top: 1px solid #75514b !important;
+          }
+        }
+
+        ol {
+          border: none;
+          margin: 4px;
+          background-color: rgba(0,0,0,0.1);
+          -webkit-box-shadow: 0px 0px 2px 0px rgba(255,255,255,0.75);
+          -moz-box-shadow: 0px 0px 2px 0px rgba(255,255,255,0.75);
+          box-shadow: 0px 0px 2px 0px rgba(255,255,255,0.75);
+
+          li {
+            padding: 2px 4px;
+            &:first-of-type {
+              background-color: rgba(255,255,255,0.1);
+              border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            //&:nth-child(odd) {
+            //  background-color: rgba(255,255,255,0.1);
+            //}
+          }
+
+        }
+
+        input.readonly {
+          background-color: rgba(255,255,255,0.1);
+          &:hover {
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+          }
+        }
+
+
+      }
+    }
+  }
+
+  .compendium-browser-window {
+
+    &.window-app {
+      border: 8px solid #55493B;
+      border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+      background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+      border-radius: 0;
+      .window-content {
+        padding: 0 !important;
+        background: none;
+        color: white;
+        input, select {
+          color: white
+        }
+
+        select {
+          background-color: black;
+        }
+
+        label.block-header {
+          &::after {
+            border-top: 1px solid #75514b !important;
+          }
+        }
+
+        .filter {
+          border: none;
+          margin-right: 6px;
+          margin-left: 2px;
+
+          background-color: rgba(0,0,0,0.1);
+          -webkit-box-shadow: 0px 0px 2px 0px rgba(255,255,255,0.75);
+          -moz-box-shadow: 0px 0px 2px 0px rgba(255,255,255,0.75);
+          box-shadow: 0px 0px 2px 0px rgba(255,255,255,0.75);
+          h3 {
+            //background-color: rgba(255,255,255,0.05);
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            &:hover {
+              color:white
+            }
+          }
+        }
+      }
+    }
+  }
   #chat-log .chat-message {
     background: url(/systems/D35E/icons/ui/parchment-tile.png) repeat;
     background-size: 288px;
@@ -929,6 +1106,17 @@
       }
     }
 
+    a.open-compendium-pack {
+
+      color: #2C606D!important;
+      &:hover {
+        text-shadow: 0 0 10px #2C606D !important;
+        color: #2C606D !important;
+      }
+    }
+
+
+
     .sheet-header {
       border-bottom: none;
       margin: 0 0 4px;
@@ -1128,6 +1316,17 @@
     filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
   }
 
+  //.material-box {
+  //  height: 100px !important;
+  //  overflow: auto;
+  //  border: none !important;
+  //  background: rgba(255, 255, 255, 0.2);
+  //  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  //  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  //  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  //}
+
+
   .npc {
     &.monster {
       padding: 0;
@@ -1198,6 +1397,41 @@
         }
       }
     }
+  }
+  .compendium-browser {
+    header {
+      border: 8px solid red;
+      /* border-right: none; */
+      border-image: url(/systems/D35E/icons/ui/side-panel.png);
+      padding-right: 0;
+      background-size: 100% 100%;
+      /* border: 8px solid #55493B; */
+      border-image-slice: 20 fill;
+    }
+    .entry-name {
+      a {
+        color: #76bacc!important;
+        &:hover {
+          text-shadow: 0 0 10px #76bacc !important;
+          color: #76bacc !important;
+        }
+      }
+
+    }
+    .directory-container .directory-list
+    {
+      margin: 0;
+      .directory-item {
+      align-items: center;
+      border-bottom: none;
+      background-image: url(/systems/D35E/icons/ui/basic-bar.png);
+      background-size: 100% 100%;
+      img {
+        margin: 4px;
+      }
+    }
+    }
+
   }
 
 

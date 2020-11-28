@@ -122,8 +122,14 @@
         {{#if ../owner}}
         <div class="item-controls">
           {{#if section.canCreate}}
-          <a class="item-control item-create" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-            <i class="fas fa-plus"></i> {{ localize 'D35E.Add' }}
+
+          {{#if section.hasPack}}
+            <a  class="open-compendium-pack" data-pack="{{section.pack}}" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+              <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}
+            </a>
+          {{/if}}
+          <a class="item-control item-create" style="flex: 0; margin-left: 4px;" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+            <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
           </a>
           {{/if}}
         </div>
@@ -272,19 +278,30 @@
           </div>
           {{/if}}
         </li>
-        {{else}}
+        {{/each}}
         {{#if section.canCreate}}
+        {{#unless section.items}}
         <li>
           <div style="text-align: center; padding: 5rem; color: #000000a6;">
 
             {{#if section.hasPack}}
-            <p style="font-size: 1rem">{{ localize 'D35E.ListDragAndDrop' }} <a style="color: #782e22;" class="open-compendium-pack" data-pack="{{section.pack}}">{{ localize section.emptyLabel }}</a></p>
+            <p style="font-size: 1rem">{{ localize 'D35E.ListDragAndDrop' }} <a style="color: #2C606D;" class="open-compendium-pack" data-pack="{{section.pack}}">{{ localize section.emptyLabel }}</a></p>
             {{/if}}
             <p>{{ localize 'D35E.ListDragAndDropOrAdd' }}</p>
           </div>
         </li>
+        {{else}}
+        <li>
+          <div style="text-align: center; color: #000000a6;">
+
+            {{#if section.hasPack}}
+            <p>{{ localize 'D35E.ListDragAndDrop' }} <a style="color: #2C606D;" class="open-compendium-pack" data-pack="{{section.pack}}">{{ localize section.emptyLabel }}</a></p>
+            {{/if}}
+            <p>{{ localize 'D35E.ListDragAndDropOrAdd' }}</p>
+          </div>
+        </li>
+        {{/unless}}
         {{/if}}
-        {{/each}}
       </ol>
     </ol>
   </div>

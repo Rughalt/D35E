@@ -3453,6 +3453,11 @@ export class ActorPF extends Actor {
         attackData["data.originalWeaponName"] = item.name;
         attackData["data.originalWeaponImg"] = item.img;
         attackData["data.originalWeaponProperties"] = item.data.data.properties;
+        attackData["data.material"] = item.data.data.material;
+        attackData["data.alignment.good"] = item.data.data.weaponData.alignment?.good || false;
+        attackData["data.alignment.evil"] = item.data.data.weaponData.alignment?.evil || false;
+        attackData["data.alignment.chaotic"] = item.data.data.weaponData.alignment?.chaotic || false;
+        attackData["data.alignment.lawful"] = item.data.data.weaponData.alignment?.lawful || false;
         attackData["img"] = item.data.img;
 
 
@@ -3490,7 +3495,7 @@ export class ActorPF extends Actor {
             }
             const bonusFormula = getProperty(item.data, "data.weaponData.damageFormula");
             if (bonusFormula != null && bonusFormula.length) part = `${part} + ${bonusFormula}`;
-            attackData["data.damage.parts"] = [[part, item.data.data.weaponData.damageType || ""]];
+            attackData["data.damage.parts"] = [[part, item.data.data.weaponData.damageType || "", item.data.data.weaponData.damageTypeId || ""]];
         }
 
         // Add attack bonus formula
@@ -3503,7 +3508,7 @@ export class ActorPF extends Actor {
         _enhancements.forEach(i => {
             if (i.data.enhancementType !== 'weapon') return;
             if (i.data.weaponData.damageRoll !== '') {
-                attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType])
+                attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
             }
             if (i.data.attackNotes !== '') {
                 attackData["data.attackNotes"] += '\n' + i.data.attackNotes

@@ -515,8 +515,9 @@
 .compendium-browser .header .filter-container {
   overflow-x: hidden;
   overflow-y: scroll;
-  max-height: calc(100% - 48px);
+  max-height: calc(100% - 84px);
   margin-bottom: 8px;
+  min-height: calc(100% - 84px);
 }
 .compendium-browser .header .filter-container .filter {
   margin-top: 8px;
@@ -555,6 +556,13 @@
 }
 .compendium-browser .directory-container .directory-list .directory-item h4 {
   margin-left: 4px;
+}
+.dr-setting .item-list {
+  margin: 0;
+  padding: 0;
+}
+.dr-setting .item-list h4 {
+  margin: 0;
 }
 .D35E.sheet.actor {
   /* ----------------------------------------- */
@@ -3324,27 +3332,32 @@
 .icon.punch-blast {
   background-image: url(icons/actions/punch-blast.svg), none;
 }
-form .form-group.stacked label {
+form .form-group.stacked label,
+.compendium-browser-window .form-group.stacked label {
   flex: 0 0 100%;
 }
-form .form-group.stacked label.checkbox {
+form .form-group.stacked label.checkbox,
+.compendium-browser-window .form-group.stacked label.checkbox {
   flex: auto;
   text-align: left;
   line-height: 20px;
   font-size: 13px;
 }
-form .form-group.stacked label.checkbox input[type="checkbox"] {
+form .form-group.stacked label.checkbox input[type="checkbox"],
+.compendium-browser-window .form-group.stacked label.checkbox input[type="checkbox"] {
   height: unset;
   margin: unset;
 }
-form input[type="checkbox"].stylized {
+form input[type="checkbox"].stylized,
+.compendium-browser-window input[type="checkbox"].stylized {
   position: absolute;
   opacity: 0;
   cursor: pointer;
   height: 0;
   width: 0;
 }
-form .checkmark {
+form .checkmark,
+.compendium-browser-window .checkmark {
   position: absolute;
   top: 3px;
   left: 0;
@@ -3354,25 +3367,31 @@ form .checkmark {
   background-color: #eee;
   border-radius: 2px;
 }
-form input ~ .checkmark {
+form input ~ .checkmark,
+.compendium-browser-window input ~ .checkmark {
   background-color: #ccc;
 }
-form input:checked ~ .checkmark {
+form input:checked ~ .checkmark,
+.compendium-browser-window input:checked ~ .checkmark {
   background-color: #782e22;
 }
-form input:disabled ~ .checkmark {
+form input:disabled ~ .checkmark,
+.compendium-browser-window input:disabled ~ .checkmark {
   filter: grayscale(1);
   cursor: initial;
 }
-form .checkmark:after {
+form .checkmark:after,
+.compendium-browser-window .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
-form input:checked ~ .checkmark:after {
+form input:checked ~ .checkmark:after,
+.compendium-browser-window input:checked ~ .checkmark:after {
   display: block;
 }
-form .checkmark:after {
+form .checkmark:after,
+.compendium-browser-window .checkmark:after {
   left: 4px;
   top: -1px;
   width: 5px;
@@ -3418,6 +3437,12 @@ input[type=range]:disabled {
 }
 .welcome-content img {
   border: none !important;
+}
+.resistance {
+  color: darkgreen;
+}
+.vulnerability {
+  color: darkred;
 }
 #token-hud .col.actions {
   height: calc(100% + 150px);
@@ -4251,6 +4276,38 @@ tr.introjs-showElement > th {
   line-height: 20px;
   font-size: 13px;
 }
+.toggle input[type=checkbox] {
+  display: none;
+}
+.toggle input[type=checkbox] + label {
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 2px;
+  text-align: center;
+  flex: 3;
+  padding: 1px 10px;
+  display: flex;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  line-height: 24px;
+  font-weight: normal;
+  color: #474747;
+  border: 1px solid #474747;
+}
+.toggle input[type=checkbox] + label i {
+  margin-right: 2px;
+  line-height: 24px;
+}
+.toggle input[type=checkbox]:checked + label {
+  margin: 2px;
+  color: #782e22;
+  border: 1px solid #782e22;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
 .window-app.dialog label.block-header {
   position: relative;
   border: none;
@@ -4271,6 +4328,118 @@ tr.introjs-showElement > th {
 }
 #chat-log .chat-message .message-content .property-group:not(.footer) .flexrow .tag {
   white-space: unset;
+}
+.d35ecustom .toggle input[type=checkbox] + label {
+  margin: 2px;
+  color: white;
+  background: none !important;
+  border-image: url(/systems/D35E/icons/ui/toggle-off.png);
+  border-image-slice: 20 20 fill;
+  border-image-width: 170px;
+  cursor: pointer;
+  border-radius: 2px;
+  text-align: center;
+  flex: 3;
+  padding: 1px 10px;
+  display: flex;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  line-height: 24px;
+  font-weight: normal;
+}
+.d35ecustom .toggle input[type=checkbox]:checked + label {
+  margin: 2px;
+  color: white;
+  background: none !important;
+  border-image: url(/systems/D35E/icons/ui/toggle-on.png);
+  border-image-slice: 20 20 fill;
+  border-image-width: 170px;
+  cursor: pointer;
+  font-weight: normal;
+  border-radius: 2px;
+}
+.d35ecustom .dr-setting.window-app {
+  border: 8px solid #55493B;
+  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-radius: 0;
+}
+.d35ecustom .dr-setting.window-app .window-content {
+  padding: 0 !important;
+  background: none;
+  color: white;
+}
+.d35ecustom .dr-setting.window-app .window-content input,
+.d35ecustom .dr-setting.window-app .window-content select {
+  color: white;
+}
+.d35ecustom .dr-setting.window-app .window-content select {
+  background-color: black;
+}
+.d35ecustom .dr-setting.window-app .window-content label.block-header::after {
+  border-top: 1px solid #75514b !important;
+}
+.d35ecustom .dr-setting.window-app .window-content ol {
+  border: none;
+  margin: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+}
+.d35ecustom .dr-setting.window-app .window-content ol li {
+  padding: 2px 4px;
+}
+.d35ecustom .dr-setting.window-app .window-content ol li:first-of-type {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.d35ecustom .dr-setting.window-app .window-content input.readonly {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.d35ecustom .dr-setting.window-app .window-content input.readonly:hover {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.d35ecustom .compendium-browser-window.window-app {
+  border: 8px solid #55493B;
+  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-radius: 0;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content {
+  padding: 0 !important;
+  background: none;
+  color: white;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content input,
+.d35ecustom .compendium-browser-window.window-app .window-content select {
+  color: white;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content select {
+  background-color: black;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content label.block-header::after {
+  border-top: 1px solid #75514b !important;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content .filter {
+  border: none;
+  margin-right: 6px;
+  margin-left: 2px;
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+}
+.d35ecustom .compendium-browser-window.window-app .window-content .filter h3 {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.d35ecustom .compendium-browser-window.window-app .window-content .filter h3:hover {
+  color: white;
 }
 .d35ecustom #chat-log .chat-message {
   background: url(/systems/D35E/icons/ui/parchment-tile.png) repeat;
@@ -4824,6 +4993,13 @@ tr.introjs-showElement > th {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
+.d35ecustom .sheet a.open-compendium-pack {
+  color: #2C606D !important;
+}
+.d35ecustom .sheet a.open-compendium-pack:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
 .d35ecustom .sheet .sheet-header {
   border-bottom: none;
   margin: 0 0 4px;
@@ -5047,6 +5223,34 @@ tr.introjs-showElement > th {
   height: 20px !important;
   width: 20px !important;
   vertical-align: middle;
+}
+.d35ecustom .compendium-browser header {
+  border: 8px solid red;
+  /* border-right: none; */
+  border-image: url(/systems/D35E/icons/ui/side-panel.png);
+  padding-right: 0;
+  background-size: 100% 100%;
+  /* border: 8px solid #55493B; */
+  border-image-slice: 20 fill;
+}
+.d35ecustom .compendium-browser .entry-name a {
+  color: #76bacc !important;
+}
+.d35ecustom .compendium-browser .entry-name a:hover {
+  text-shadow: 0 0 10px #76bacc !important;
+  color: #76bacc !important;
+}
+.d35ecustom .compendium-browser .directory-container .directory-list {
+  margin: 0;
+}
+.d35ecustom .compendium-browser .directory-container .directory-list .directory-item {
+  align-items: center;
+  border-bottom: none;
+  background-image: url(/systems/D35E/icons/ui/basic-bar.png);
+  background-size: 100% 100%;
+}
+.d35ecustom .compendium-browser .directory-container .directory-list .directory-item img {
+  margin: 4px;
 }
 .secret {
   display: none;

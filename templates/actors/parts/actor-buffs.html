@@ -2,24 +2,11 @@
 
 {{!-- Buff Navigation --}}
 <nav class="sheet-navigation tabs subtabs buffs" data-group="buffs">
-    <a class="item" data-tab="conditions">{{ localize 'D35E.ConditionPlural' }}</a>
     <a class="item" data-tab="shapechange">{{ localize 'D35E.Shapechange' }}</a>
-    {{#each sections as |section sid|}}
-    <a class="item" data-tab="{{sid}}">{{section.label}}</a>
-    {{/each}}
+    <a class="item" data-tab="buffs">{{ localize 'D35E.Buffs' }}</a>
 </nav>
 
 <section class="buffs-body">
-    <div class="tab flexrow" data-group="buffs" data-tab="conditions">
-        {{#each data.attributes.conditions as |value con|}}
-        <div class="condition">
-            <label class="checkbox">
-                <input type="checkbox" name="data.attributes.conditions.{{con}}" {{checked value}}/>
-                <span>{{lookup ../config.conditions con}}</span>
-            </label>
-        </div>
-        {{/each}}
-    </div>
 
     <div class="tab flexrow" data-group="buffs" data-tab="shapechange">
         <div class="flexcol" style="height: 100%">
@@ -105,11 +92,23 @@
         </div>
     </div>
 
-    {{#each sections as |section sid|}}
-    <div class="tab inventory-group flexcol" data-group="buffs" data-tab="{{sid}}">
+    <div class="tab inventory-group flexcol" data-group="buffs" data-tab="buffs">
+
+        <div class="flexrow" style="flex: 0"><h2 class="block-header" style="flex: 1">{{ localize 'D35E.ConditionsAndBuffs' }}</h2></div>
+        <div class="flexrow" style="flex: 0">
+            {{#each data.attributes.conditions as |value con|}}
+            <div class="condition">
+                <label class="checkbox">
+                    <input type="checkbox" name="data.attributes.conditions.{{con}}" {{checked value}}/>
+                    <span>{{lookup ../config.conditions con}}</span>
+                </label>
+            </div>
+            {{/each}}
+        </div>
         <ol class="inventory-list sub-scroll scroll-buffs">
+        {{#each sections as |section sid|}}
             <li class="inventory-header flexrow">
-                <h3 class="item-name flexrow"></h3>
+                <h3 class="item-name flexrow">{{section.label}}</h3>
 
 
                 <div class="item-detail item-timeline">
@@ -126,9 +125,15 @@
 
                 {{#if ../owner}}
                 <div class="item-controls">
-                    <a class="item-control item-create" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset
+
+                    {{#if section.hasPack}}
+                    <a  class="open-compendium-pack" data-pack="{{section.pack}}" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+                    <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}
+                    </a>
+                    {{/if}}
+                    <a style="flex: 0; margin-left: 4px;" class="item-control item-create" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset
                     as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-                    <i class="fas fa-plus"></i> {{ localize 'D35E.Add' }}
+                    <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
                     </a>
                 </div>
                 {{/if}}
@@ -163,8 +168,16 @@
                     {{/if}}
                 </li>
                 {{/each}}
+
             </ol>
+        {{/each}}
+            <li>
+                <div style="text-align: center; color: #000000a6;">
+                    <p>{{ localize 'D35E.ListDragAndDrop' }} <a style="color: #2C606D;" class="open-compendium-pack" data-pack="browser:buffs">{{ localize "D35E.ListDragAndDropCompendium" }}</a></p>
+
+                    <p>{{ localize 'D35E.ListDragAndDropOrAdd' }}</p>
+                </div>
+            </li>
         </ol>
     </div>
-    {{/each}}
 </section>

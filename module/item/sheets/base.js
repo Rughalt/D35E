@@ -92,7 +92,8 @@ export class ItemSheetPF extends ItemSheet {
         data.isGM = game.user.isGM;
         data.showIdentifyDescription = data.isGM && data.isPhysical;
         data.showUnidentifiedData = this.item.showUnidentifiedData;
-
+        data.materials = Array.from(CACHE.Materials.values());
+        data.damageTypes = Array.from(CACHE.DamageTypes.values());
 
         // Unidentified data
         if (this.item.showUnidentifiedData) {
@@ -400,7 +401,7 @@ export class ItemSheetPF extends ItemSheet {
                             disabled: (this.item.data.data.disabledAbilities || []).some(obj => parseInt(obj.level || "0") === level && obj.uid === e.data.data.uniqueId)
                         });
                         data.childItemLevels.get(level).push(e);
-                        if (e.data.data.uniqueId.indexOf("*" === -1)) alreadyAddedAbilities.add(e.data.data.uniqueId)
+                        if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
                         if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
                             data.abilitiesDescription.push({
                                 level: level,
@@ -424,7 +425,7 @@ export class ItemSheetPF extends ItemSheet {
                         data.childItemLevels.set(ability.level, [])
                     }
                     data.childItemLevels.get(ability.level).push(e);
-                    if (e.data.data.uniqueId.indexOf("*" === -1)) alreadyAddedAbilities.add(e.data.data.uniqueId)
+                    if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
                     if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
                         data.abilitiesDescription.push({
                             level: ability.level,
@@ -439,7 +440,7 @@ export class ItemSheetPF extends ItemSheet {
 
             data.allAbilities = []
             for (var e of CACHE.AllAbilities.values()) {
-                if (!alreadyAddedAbilities.has(e.data.data.uniqueId))
+                if (!alreadyAddedAbilities.has(e.data.data.uniqueId) || e.data.data.uniqueId.indexOf("*") !== -1)
                     data.allAbilities.push(e);
             }
 
