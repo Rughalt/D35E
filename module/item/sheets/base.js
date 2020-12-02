@@ -1317,7 +1317,7 @@ export class ItemSheetPF extends ItemSheet {
         const value = Number(event.currentTarget.value);
         let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
         _addedAbilities.filter(function (obj) {
-            return obj.uid === uid
+            return (obj.uid === uid && (level === "" || parseInt(obj.level) === parseInt(level)))
         }).forEach(i => {
             i.level = value;
         });

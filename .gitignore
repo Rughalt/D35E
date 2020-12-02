@@ -17,3 +17,5 @@ dnd35e.zip
 *.logoist
 
 add-foundry-release.sh
+
+.DS_Store
