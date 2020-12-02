@@ -7,7 +7,7 @@ export class DamageReductionSetting extends FormApplication {
         super(...args);
 
         this.damageReduction = DamageTypes.getDRForActor(this.object)
-        this.energyResistance = DamageTypes.getERForActor(this.object)
+        this.energyResistance = DamageTypes.getERForActor(this.object, true)
     }
 
     static get defaultOptions() {
@@ -42,6 +42,7 @@ export class DamageReductionSetting extends FormApplication {
 
 
         $('input[name="computed-dr"]').val(DamageTypes.computeDRString(this.damageReduction))
+        $('input[name="computed-er"]').val(DamageTypes.computeERString(this.energyResistance))
     }
 
     async _onEntryChange(event) {
@@ -55,6 +56,7 @@ export class DamageReductionSetting extends FormApplication {
         let value = $(event.target).is(":checked")
         this._updateDRERDataFromForm(key, value)
         $('input[name="computed-dr"]').val(DamageTypes.computeDRString(this.damageReduction))
+        $('input[name="computed-er"]').val(DamageTypes.computeERString(this.energyResistance))
     }
 
     _updateObject(event, formData) {

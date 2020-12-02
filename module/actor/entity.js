@@ -4,6 +4,7 @@ import { createTag, linkData, isMinimumCoreVersion } from "../lib.js";
 import { createCustomChatMessage } from "../chat.js";
 import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
+import {DamageTypes} from "../damage-types.js";
 
 /**
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
@@ -189,7 +190,7 @@ export class ActorPF extends Actor {
         const skillTargets = this._skillTargets;
         return {
             targets: [
-                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl"
+                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl","resistance","dr"
             ], types: [
                 "str", "dex", "con", "int", "wis", "cha",
                 "skills", "strSkills", "dexSkills", "conSkills", "intSkills", "wisSkills", "chaSkills", ...skillTargets,
@@ -516,6 +517,11 @@ export class ActorPF extends Actor {
             if (curData.skills[sklKey] != null && curData.skills[sklKey].subSkills[subSklKey] != null) {
                 return `data.skills.${sklKey}.subSkills.${subSklKey}.changeBonus`;
             }
+        }
+
+        if (changeTarget.match(/^resistance\.([a-zA-Z0-9\-]+)$/)) {
+            const resistanceKey = RegExp.$1;
+            return `data.resistances.${resistanceKey}.changeBonus`;
         }
 
         return null;
@@ -1486,6 +1492,7 @@ export class ActorPF extends Actor {
                 linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.autoSpellLevels`, true);
                 linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.usePowerPoints`, getProperty(srcData1, `data.classes.${spellbookClass}.isPsionSpellcaster`));
                 linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.arcaneSpellFailure`, getProperty(srcData1, `data.classes.${spellbookClass}.isArcane`));
+                linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.hasSpecialSlot`, getProperty(srcData1, `data.classes.${spellbookClass}.hasSpecialSlot`));
 
                 autoSpellLevels = true;
                 spellbookAbilityMod = getProperty(srcData1, `data.abilities.${autoSpellcastingAbilityKey}.mod`)
@@ -1502,7 +1509,6 @@ export class ActorPF extends Actor {
                         linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.max`, base);
                     }
                 } else {
-
                     if (classBase >= 0) {
                         const value = (typeof spellbookAbilityMod === "number") ? (classBase + ActorPF.getSpellSlotIncrease(spellbookAbilityMod, a)) : classBase;
                         linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.max`, value);
@@ -1510,6 +1516,7 @@ export class ActorPF extends Actor {
                         linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.max`, 0);
                     }
                 }
+
             }
         }
         // Add dex mod to AC
@@ -2480,6 +2487,7 @@ export class ActorPF extends Actor {
                 skillsPerLevel: cls.data.skillsPerLevel,
                 isSpellcaster: cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none",
                 isPsionSpellcaster: cls.data.spellcastingType !== null && cls.data.spellcastingType === "psionic",
+                hasSpecialSlot: cls.data.hasSpecialSlot,
                 isSpellcastingSpontaneus: cls.data.spellcastingSpontaneus === true,
                 isArcane: cls.data.spellcastingType !== null && cls.data.spellcastingType === "arcane",
                 spellcastingType: cls.data.spellcastingType,
@@ -2520,7 +2528,41 @@ export class ActorPF extends Actor {
             data.counters[group][name].value = Math.floor(data.totalNonEclLevels / 3.0) + 1;
 
         }
-        actorData.items.forEach(obj => {
+
+        data.combinedResistances = data.energyResistance ? duplicate(data.energyResistance) : [];
+
+        actorData.items.filter(obj => {
+            if (obj.type === "buff") return obj.data.active;
+            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.equipped && !obj.data.melded);
+            return true;
+        }).forEach(obj => {
+            if (obj.data.resistances) {
+                Object.values(obj.data?.resistances || []).forEach(resistance => {
+                    let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
+                    if (!_resistance) {
+                        _resistance = DamageTypes.defaultER;
+                        data.combinedResistances.push(_resistance)
+                    }
+                    _resistance.value = Math.max(_resistance.value, parseInt(resistance[0]))
+                    _resistance.immunity = _resistance.immunity || resistance[2];
+                    _resistance.vulnerable = _resistance.vulnerable || resistance[3];
+                })
+            }
+            if (obj.type === "weapon" || obj.type === "equipment") {
+                if (obj.data.enhancements !== undefined) {
+                    obj.data.enhancements.items.forEach(enhancementItem =>
+                        Object.values(enhancementItem.data?.resistances || []).forEach(resistance => {
+                            let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
+                            if (!_resistance) {
+                                _resistance = DamageTypes.defaultER;
+                                data.combinedResistances.push(_resistance)
+                            }
+                            _resistance.value = Math.max(_resistance.value, parseInt(resistance[0]))
+                            _resistance.immunity = _resistance.immunity || resistance[2];
+                            _resistance.vulnerable = _resistance.vulnerable || resistance[3];
+                        }));
+                }
+            }
             if (obj.data.counterName !== undefined && obj.data.counterName !== null && obj.data.counterName !== "") {
                 if (obj.data.counterName.indexOf(".") !== -1) {
                     let group = obj.data.counterName.split(".")[0]
@@ -2601,7 +2643,6 @@ export class ActorPF extends Actor {
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
-
 
     }
 
@@ -3385,17 +3426,19 @@ export class ActorPF extends Actor {
      * @param {ItemPF} item   The spell being cast by the actor
      * @param {MouseEvent} ev The click event
      */
-    async useSpell(item, ev, { skipDialog = false } = {}, actor = null) {
+    async useSpell(item, ev, { skipDialog = false, replacement = false, replacementItem = null } = {}, actor = null) {
+        let usedItem = replacementItem ? replacementItem : item;
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (item.data.type !== "spell") throw new Error("Wrong Item type");
 
         if (getProperty(item.data, "data.preparation.mode") !== "atwill" && item.getSpellUses() <= 0) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoSpellsLeft"));
 
         // Invoke the Item roll
-        if (item.hasAction) return item.useAttack({ ev: ev, skipDialog: skipDialog }, actor);
+        await item.addSpellUses(-1);
+        if (usedItem.hasAction) return usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
 
-        item.addSpellUses(-1);
-        return item.roll();
+
+        return usedItem.roll();
     }
 
     async createAttackFromWeapon(item) {
@@ -3505,16 +3548,46 @@ export class ActorPF extends Actor {
         }
 
         // Add things from Enhancements
+        let conditionals = []
         _enhancements.forEach(i => {
             if (i.data.enhancementType !== 'weapon') return;
+            let conditional = ItemPF.defaultConditional;
+            conditional.name = i.name;
+            conditional.default = false;
             if (i.data.weaponData.damageRoll !== '') {
-                attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
+                if (i.data.weaponData.optionalDamage) {
+                    let damageModifier = ItemPF.defaultConditionalModifier;
+                    damageModifier.formula = i.data.weaponData.damageRoll;
+                    damageModifier.type = i.data.weaponData.damageTypeId;
+                    damageModifier.target = "damage";
+                    damageModifier.subTarget = "allDamage";
+                    conditional.modifiers.push(damageModifier)
+                } else {
+                    attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
+                }
+            }
+            if (i.data.weaponData.attackRoll !== '') {
+                if (i.data.weaponData.optionalDamage) {
+                    let attackModifier = ItemPF.defaultConditionalModifier;
+                    attackModifier.formula = i.data.weaponData.attackRoll;
+                    attackModifier.target = "attack";
+                    attackModifier.subTarget = "allAttack";
+                    conditional.modifiers.push(attackModifier)
+                } else {
+                    attackData["data.attackBonus"] = attackData["data.attackBonus"] + " + " + i.data.weaponData.attackRoll
+                }
+            }
+            if (conditional.modifiers.length > 0) {
+                conditionals.push(conditional);
             }
             if (i.data.attackNotes !== '') {
                 attackData["data.attackNotes"] += '\n' + i.data.attackNotes
                 attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
             }
         });
+        if (conditionals.length) {
+            attackData["data.conditionals"] = conditionals;
+        }
 
         if (item.data.data.attackNotes !== '') {
             attackData["data.attackNotes"] += '\n' + item.data.data.attackNotes
@@ -4112,10 +4185,13 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(value) {
+    static async applyDamage(damage,material,alignment,enh) {
+
+        let value = 0;
+
         let tokensList;
         if (game.user.targets.size > 0)
-            tokensList = game.user.targets;
+            tokensList = Array.from(game.user.targets);
         else
             tokensList = canvas.tokens.controlled;
         const promises = [];
@@ -4128,6 +4204,28 @@ export class ActorPF extends Actor {
                 hp = a.data.data.attributes.hp,
                 tmp = parseInt(hp.temp) || 0,
                 dt = value > 0 ? Math.min(tmp, value) : 0;
+            let damageData = DamageTypes.calculateDamageToActor(a, damage,material,alignment,enh)
+            value = damageData.damage;
+            // Set chat data
+            let chatData = {
+                speaker: ChatMessage.getSpeaker({actor: a.data}),
+                rollMode: "selfroll",
+                sound: CONFIG.sounds.dice,
+                "flags.D35E.noRollRender": true,
+            };
+            let chatTemplateData = {
+                name: a.name,
+                type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                rollMode: "selfroll",
+            };
+            const templateData = mergeObject(chatTemplateData, {
+                damageData: damageData,
+                img: a.img
+            }, {inplace: false});
+            // Create message
+
+            await createCustomChatMessage("systems/D35E/templates/chat/damage-description.html", templateData, chatData);
+
             if (!a.hasPerm(game.user, "OWNER")) {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
                 continue;
@@ -4147,7 +4245,7 @@ export class ActorPF extends Actor {
     static async _rollSave(type) {
         let tokensList;
         if (game.user.targets.size > 0)
-            tokensList = game.user.targets;
+            tokensList = Array.from(game.user.targets);
         else
             tokensList = canvas.tokens.controlled;
         const promises = [];

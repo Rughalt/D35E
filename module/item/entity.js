@@ -6,6 +6,7 @@ import AbilityTemplate from "../pixi/ability-template.js";
 import {ChatAttack} from "../misc/chat-attack.js";
 import {D35E} from "../config.js";
 import {CACHE} from "../cache.js";
+import {DamageTypes} from "../damage-types.js";
 
 /**
  * Override and extend the basic :class:`Item` implementation
@@ -394,8 +395,6 @@ export class ItemPF extends Item {
         if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
         else if (data["name"]) data["data.identifiedName"] = data["name"];
 
-
-
         // Update description
         if (this.type === "spell") await this._updateSpellDescription(data, srcData);
 
@@ -423,9 +422,9 @@ export class ItemPF extends Item {
             data["data.weight"] = data["data.convertedWeight"] * conversion;
         }
 
-        if (data["data.selectedMaterial"]) {
+        if (data["data.selectedMaterial"] && data["data.selectedMaterial"] !== "none") {
             data["data.material"] = duplicate(CACHE.Materials.get(data["data.selectedMaterial"]).data);
-        } else {
+        } else if (data["data.selectedMaterial"]  && data["data.selectedMaterial"] === "none") {
             data["data.-=material"] = null;
         }
 
@@ -992,13 +991,17 @@ export class ItemPF extends Item {
 
     /* -------------------------------------------- */
 
-    async use({ev = null, skipDialog = false}, tempActor= null, skipChargeCheck=false) {
+    async use({ev = null, skipDialog = false, replacementId = null}, tempActor= null, skipChargeCheck=false) {
         let actor = this.actor;
         if (tempActor !== null) {
             actor = tempActor;
         }
         if (this.type === "spell") {
-            return actor.useSpell(this, ev, {skipDialog: skipDialog},actor);
+            if (replacementId) {
+                return actor.useSpell(this, ev, {skipDialog: skipDialog, replacement: true, replacementItem: actor.items.get(replacementId)}, actor);
+            } else {
+                return actor.useSpell(this, ev, {skipDialog: skipDialog}, actor);
+            }
         } else if (this.hasAction) {
             return this.useAttack({ev: ev, skipDialog: skipDialog},actor,skipChargeCheck);
         }
@@ -1056,7 +1059,8 @@ export class ItemPF extends Item {
                 hasTwoImprovedWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Improved Two-Weapon Fighting").length > 0,
                 hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Greater Two-Weapon Fighting").length > 0,
                 rollMode = null,
-                optionalFeatIds = [];
+                optionalFeatIds = [],
+                enabledConditionals = [];
             // Get form data
             if (form) {
 
@@ -1171,7 +1175,10 @@ export class ItemPF extends Item {
                     if ($(this).prop("checked"))
                         optionalFeatIds.push($(this).attr('data-feat-optional'));
                 })
-                console.log(optionalFeatIds)
+                $(form).find('[data-type="conditional"]').each(function() {
+                    if ($(this).prop("checked"))
+                        enabledConditionals.push($(this).attr('data-conditional-optional'));
+                })
             }
 
             // Prepare the chat message data
@@ -1222,6 +1229,37 @@ export class ItemPF extends Item {
                 })
             }
 
+            console.log('D35E | Enabled conditionals', enabledConditionals)
+            let attackEnhancementMap = new Map();
+            let damageEnhancementMap = new Map();
+            for (let enabledConditional of enabledConditionals) {
+                let conditional = itemData.conditionals.find(c => c.name === enabledConditional);
+                for (let modifier of conditional.modifiers) {
+                    if (modifier.target === "attack") {
+                        if (modifier.subTarget !== "allAttack") {
+                            if (!attackEnhancementMap.has(modifier.subTarget))
+                                attackEnhancementMap.set(modifier.subTarget, [])
+                            attackEnhancementMap.get(modifier.subTarget).push(modifier.formula)
+                        }
+                        else
+                            attackExtraParts.push(modifier.formula)
+                    }
+                    if (modifier.target === "damage") {
+                        if (modifier.subTarget !== "allDamage") {
+
+                            if (!damageEnhancementMap.has(modifier.subTarget))
+                                damageEnhancementMap.set(modifier.subTarget, [])
+                            damageEnhancementMap.get(modifier.subTarget).push({
+                                formula: modifier.formula,
+                                type: modifier.type
+                            })
+                        }
+                        else
+                            damageExtraParts.push([modifier.formula,CACHE.DamageTypes.get(modifier.type)?.data?.name || game.i18n.localize("D35E.UnknownDamageType"),modifier.type]);
+                    }
+                }
+            }
+
             // Getting all combat changes from items
             let allCombatChanges = []
             let attackType = this.type;
@@ -1249,26 +1287,35 @@ export class ItemPF extends Item {
 
             let attacks = [];
             if (this.hasAttack) {
+                let attackId = 0;
                 for (let atk of allAttacks) {
                     // Create attack object
                     let attack = new ChatAttack(this, atk.label, actor);
                     attack.rollData = rollData;
+                    let localAttackExtraParts = duplicate(attackExtraParts);
+                    for (let aepConditional of attackEnhancementMap.get(`attack.${attackId}`) || []) {
+                        localAttackExtraParts.push(aepConditional)
+                    }
+                    let localDamageExtraParts = duplicate(damageExtraParts);
+                    for (let aepConditional of damageEnhancementMap.get(`attack.${attackId}`) || []) {
+                        localDamageExtraParts.push([aepConditional.formula,CACHE.DamageTypes.get(aepConditional.type)?.data?.name || game.i18n.localize("D35E.UnknownDamageType"),aepConditional.type])
+                    }
                     await attack.addAttack({
                         bonus: atk.bonus || 0,
-                        extraParts: attackExtraParts,
+                        extraParts: localAttackExtraParts,
                         primaryAttack: primaryAttack,
                         actor: actor
                     });
                     if (this.hasDamage) {
                         await attack.addDamage({
-                            extraParts: damageExtraParts,
+                            extraParts: localDamageExtraParts,
                             primaryAttack: primaryAttack,
                             critical: false,
                             actor: actor
                         });
                         if (attack.hasCritConfirm) {
                             await attack.addDamage({
-                                extraParts: damageExtraParts,
+                                extraParts: localDamageExtraParts,
                                 primaryAttack: primaryAttack,
                                 critical: true,
                                 actor: actor
@@ -1277,7 +1324,7 @@ export class ItemPF extends Item {
                         if (manyshot) {
                             for (let i = 1; i < manyshotCount; i++){
                                 await attack.addDamage({
-                                    extraParts: damageExtraParts,
+                                    extraParts: localDamageExtraParts,
                                     primaryAttack: primaryAttack,
                                     critical: false,
                                     actor: actor,
@@ -1291,6 +1338,7 @@ export class ItemPF extends Item {
 
                     // Add to list
                     attacks.push(attack);
+                    attackId++;
                 }
             }
             // Add damage only
@@ -1453,10 +1501,11 @@ export class ItemPF extends Item {
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
             weaponFeats: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)),
-            weaponFeatsOptional: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(`${this.type}Optional`,rollData))
+            weaponFeatsOptional: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(`${this.type}Optional`,rollData)),
+            conditionals: this.data.data.conditionals,
         };
         const html = await renderTemplate(template, dialogData);
-
+        console.log(dialogData)
         let roll;
         const buttons = {};
         let wasRolled = false;
@@ -1503,11 +1552,11 @@ export class ItemPF extends Item {
         return wasRolled;
     }
 
-    _getSpellDC() {
+    _getSpellDC(_rollData) {
         const data = duplicate(this.data.data);
         let spellDC = {dc: null, type: null, description: null}
 
-        const rollData = this.actor ? this.actor.getRollData() : {};
+        const rollData = _rollData ? _rollData : this.actor ? this.actor.getRollData() : {};
         rollData.item = data;
 
         // Get the spell specific info
@@ -1523,6 +1572,8 @@ export class ItemPF extends Item {
 
             cl += getProperty(spellbook, "cl.total") || 0;
             cl += data.clOffset || 0;
+
+            cl += rollData.featClBonus || 0;
 
             sl += data.level;
             sl += data.slOffset || 0;
@@ -1596,7 +1647,7 @@ export class ItemPF extends Item {
         if (this.type === "spell") {
             const spellbookIndex = itemData.spellbook;
             const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-            const cl = spellbook.cl.total + (itemData.clOffset || 0);
+            const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0);
             rollData.cl = cl;
         }
         // Determine size bonus
@@ -1677,7 +1728,7 @@ export class ItemPF extends Item {
     /**
      * Only roll the item's effect.
      */
-    rollEffect({critical = false, primaryAttack = true} = {}, tempActor = null) {
+    rollEffect({critical = false, primaryAttack = true} = {}, tempActor = null, _rollData = rollData) {
         const itemData = this.data.data;
         let actor = this.actor;
         if (tempActor !== null) {
@@ -1698,7 +1749,7 @@ export class ItemPF extends Item {
         if (this.type === "spell") {
             const spellbookIndex = itemData.spellbook;
             const spellbook = actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-            const cl = spellbook.cl.total + (itemData.clOffset || 0);
+            const cl = spellbook.cl.total + (itemData.clOffset || 0) + (_rollData?.featClBonus || 0);
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
             rollData.cl = cl;
             rollData.sl = sl;
@@ -1750,7 +1801,7 @@ export class ItemPF extends Item {
         if (this.type === "spell") {
             const spellbookIndex = itemData.spellbook;
             const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-            const cl = spellbook.cl.total + (itemData.clOffset || 0);
+            const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0);
             rollData.cl = cl;
         }
 
@@ -2028,8 +2079,12 @@ export class ItemPF extends Item {
         if (action === "consume") await item.rollConsumable({event});
         // Apply damage
         else if (action === "applyDamage") {
-            const value = button.dataset.value;
-            if (!isNaN(parseInt(value))) ActorPF.applyDamage(parseInt(value));
+            //const value = button.dataset.value;
+            const damage = JSON.parse(button.dataset.json);
+            const material = (button.dataset.material && button.dataset.material !== "") ? JSON.parse(button.dataset.material): {};
+            const alignment = (button.dataset.alignment && button.dataset.alignment !== "") ? JSON.parse(button.dataset.alignment) : {};
+            const enh = parseInt(button.dataset.enh || "0");
+            ActorPF.applyDamage(damage,material,alignment,enh);
         }
         // Roll saving throw
         else if (action === "rollSave") {
@@ -3024,15 +3079,15 @@ export class ItemPF extends Item {
      * */
     getConditionalModifierTypes(target) {
         let result = {};
-        if (target === "attack" || target === "damage") {
+        if (target === "attack") {
             // Add bonusModifiers from CONFIG.PF1.bonusModifiers
             for (let [k, v] of Object.entries(CONFIG.D35E.bonusModifiers)) {
                 result[k] = v;
             }
         }
         if (target === "damage") {
-            for (let [k, v] of Object.entries(CONFIG.D35E.damageTypes)) {
-                result[k] = v;
+            for (let [k, v] of CACHE.DamageTypes.entries()) {
+                result[k] = v.data.name;
             }
         }
         return result;

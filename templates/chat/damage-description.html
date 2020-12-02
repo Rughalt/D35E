@@ -1,0 +1,127 @@
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+<header class="card-header flexrow">
+    <img src="{{img}}" title="{{name}}" width="36" height="36"/>
+    {{#if name}}<h3>{{name}}</h3>{{/if}}
+</header>
+
+<div class="card-content">
+    <div class="chat-attack">
+
+        <div class="dice-roll attack-roll flexcol">
+            <div class="dice-flavor">{{localize "D35E.DamageApplied"}}</div>
+            <div class="flexrow">
+                <div class="flexcol">
+                    <div class="dice-flavor">Rolled</div>
+                    <div class="dice-result">
+                        <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
+                            {{damageData.beforeDamage}}</h4>
+                    </div>
+                </div>
+                {{#if damageData.lower}}
+                <div class="resistance damage-divider">
+                    <i class="fas fa-arrow-circle-down"></i>
+                </div>
+                {{/if}}
+                {{#if damageData.equal}}
+                <div class="damage-divider">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </div>
+                {{/if}}
+                {{#if damageData.higher}}
+                <div class="vulnerability damage-divider">
+                    <i class="fas fa-arrow-circle-up"></i>
+                </div>
+                {{/if}}
+                <div class="flexcol">
+                    <div class="dice-flavor">Applied</div>
+                    <div class="dice-result">
+                        <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
+                            {{damageData.damage}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chat-attack">
+        <div class="dice-roll attack-roll flexcol">
+            <div class="dice-flavor">{{localize "D35E.DRERApplied"}}</div>
+
+            <div class="flexrow">
+
+                <h4 style="flex: 100px; line-height: 26px; margin: 0;">
+                    {{#if damageData.appliedDR.name}}
+                    {{localize "D35E.DR"}} {{damageData.appliedDR.value}}/{{damageData.appliedDR.name}}
+                    {{else}}
+                    {{localize "D35E.NoDR"}}
+                    {{/if}}
+                </h4>
+                <div class="dice-result" style="flex: 0 50px;order: 0;">
+                    <h4 class="dice-total">
+                        {{damageData.baseBeforeDR}}</h4>
+                </div>
+                {{#if damageData.appliedDR.name}}
+                <div class="resistance damage-divider">
+                    <i class="fas fa-arrow-circle-down"></i>
+                </div>
+                {{else}}
+                <div class="damage-divider">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </div>
+                {{/if}}
+                <div class="dice-result" style="flex: 0 50px;">
+                    <h4 class="dice-total">
+                        {{damageData.baseAfterDR}}</h4>
+                </div>
+            </div>
+            {{#each damageData.energyDamage as |damage dam|}}
+            <div class="flexrow">
+                <h4 style="flex: 100px; line-height: 26px; margin: 0;">
+                    {{damage.name}} {{damage.value}}</h4>
+                <div class="dice-result"  style="flex: 0 50px;order: 0;">
+                    <h4 class="dice-total">
+                        {{damage.before}}</h4>
+                </div>
+                {{#if damage.lower}}
+                <div class="resistance damage-divider">
+                    <i class="fas fa-arrow-circle-down"></i>
+                </div>
+                {{/if}}
+                {{#if damage.equal}}
+                <div class="damage-divider">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </div>
+                {{/if}}
+                {{#if damage.higher}}
+                <div class="vulnerability damage-divider">
+                    <i class="fas fa-arrow-circle-up"></i>
+                </div>
+                {{/if}}
+                <div class="dice-result" style="flex: 0 50px;">
+                    <h4 class="dice-total">
+                        {{damage.after}}</h4>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+    </div>
+
+
+</div>
+<footer class="card-footer">
+    {{#if hasProperties}}
+    {{#each properties as |prop|}}
+    <div class="footer flexcol property-group gm-sensitive">
+        <label>{{prop.header}}</label>
+        <div class="flexrow">
+            {{#each prop.value as |v|}}
+            <span class="tag">{{v}}</span>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</footer>
+
+</div>

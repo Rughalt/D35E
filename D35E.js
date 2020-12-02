@@ -231,11 +231,14 @@ Hooks.on("deleteActor", function() {
 
 Hooks.on('createActor', (actor, data, options) => {
   if( actor.data.type === 'character') {
+    let updateData = {}
     if (actor.data.data.details?.levelUpProgression === undefined || actor.data.data.details?.levelUpProgression === null) {
-      let updateData = {}
       updateData["data.details.levelUpProgression"] = true;
-      actor.update(updateData)
     }
+    updateData["token.vision"] = true;
+    updateData["token.actorLink"] = true;
+    if (updateData)
+      actor.update(updateData)
   }
 });
 /* -------------------------------------------- */
@@ -276,6 +279,7 @@ Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
 Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
   const actor = game.actors.tokens[data._id];
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
+
     actor.refresh(options);
 
     // Update items

@@ -127,46 +127,62 @@
       {{!-- Misc --}}
       <div class="spell-misc form-group stacked">
         <label>{{localize "D35E.Misc"}}</label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.sr" {{checked data.sr}}/> {{localize "D35E.SpellResistance"}}
-        </label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.pr" {{checked data.pr}}/> {{localize "D35E.PowerResistance"}}
-        </label>
 
-        <label class="checkbox">
-          <input type="checkbox" name="data.atWill" {{checked data.atWill}}/> {{localize "D35E.SpellPrepAtWill"}}
-        </label>
-
-        <label class="checkbox">
-          <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
-        </label>
-
-        <label class="checkbox">
-          <input type="checkbox" name="data.isPower" {{checked data.isPower}}/> {{localize "D35E.IsPower"}}
-        </label>
-
-        <div class="data-selector">
-          <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
-          <label for="data.tags">{{localize "D35E.Tags"}}</label>
-        </div>
       </div>
+      <div class="flexrow">
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.isSpellSpontaneousReplacement" type="checkbox" name="data.isSpellSpontaneousReplacement" {{checked data.isSpellSpontaneousReplacement}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.isSpellSpontaneousReplacement">{{#if data.isSpellSpontaneousReplacement}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.IsSpontanousReplacemet"}}</label>
+        </div>
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.sr" type="checkbox" name="data.sr" {{checked data.sr}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.sr">{{#if data.sr}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellResistance"}}</label>
+        </div>
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.pr" type="checkbox" name="data.pr" {{checked data.pr}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.pr">{{#if data.pr}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.PowerResistance"}}</label>
+        </div>
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.atWill" type="checkbox" name="data.atWill" {{checked data.atWill}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.atWill">{{#if data.atWill}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellPrepAtWill"}}</label>
+        </div>
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.showInQuickbar" type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.showInQuickbar">{{#if data.showInQuickbar}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.ShowInQuickbar"}}</label>
+        </div>
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.isPower" type="checkbox" name="data.isPower" {{checked data.isPower}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.isPower">{{#if data.isPower}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.IsPower"}}</label>
+        </div>
 
+
+      </div>
+      <div class="data-selector">
+        <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
+        <label for="data.tags">{{localize "D35E.Tags"}}</label>
+      </div>
       {{!-- Spell Components --}}
       <div class="spell-components form-group stacked">
         <label>{{localize "D35E.SpellComponents"}}</label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.components.verbal" {{checked data.components.verbal}}/> {{localize "D35E.SpellComponentVerbal"}}
-        </label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.components.somatic" {{checked data.components.somatic}}/> {{localize "D35E.SpellComponentSomatic"}}
-        </label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.components.material" {{checked data.components.material}}/> {{localize "D35E.SpellComponentMaterial"}}
-        </label>
-        <label class="checkbox">
-          <input type="checkbox" name="data.components.focus" {{checked data.components.focus}}/> {{localize "D35E.SpellComponentFocus"}}
-        </label>
+      </div>
+
+      <div class="flexrow">
+        <div class="toggle" style="width: 125px">
+          <input id="{{randomUuid}}-data.components.verbal" type="checkbox" name="data.components.verbal" {{checked data.components.verbal}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.verbal">{{#if data.components.verbal}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentVerbal"}}</label>
+        </div>
+        <div class="toggle" style="width: 125px">
+          <input id="{{randomUuid}}-data.components.somatic" type="checkbox" name="data.components.somatic" {{checked data.components.somatic}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.somatic">{{#if data.components.somatic}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentSomatic"}}</label>
+        </div>
+        <div class="toggle" style="width: 125px">
+          <input id="{{randomUuid}}-data.components.material" type="checkbox" name="data.components.material" {{checked data.components.material}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.material">{{#if data.components.material}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentMaterial"}}</label>
+        </div>
+        <div class="toggle" style="width: 125px">
+          <input id="{{randomUuid}}-data.components.focus" type="checkbox" name="data.components.focus" {{checked data.components.focus}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.focus">{{#if data.components.focus}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentFocus"}}</label>
+        </div>
       </div>
 
       {{!-- Divine Focus --}}

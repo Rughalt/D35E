@@ -12,6 +12,7 @@ import {D35E} from "../../config.js";
 import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
 import {ItemPF} from "../../item/entity.js";
 import {CompendiumDirectoryPF} from "../../sidebar/compendium.js";
+import {DamageTypes} from "../../damage-types.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -197,6 +198,9 @@ export class ActorSheetPF extends ActorSheet {
     // Prepare skillsets
     data.skillsets = this._prepareSkillsets(data.actor.data.skills);
 
+    data.energyResistance = DamageTypes.computeERString(DamageTypes.getERForActor(this.actor));
+    data.damageReduction = DamageTypes.computeDRString(DamageTypes.getDRForActor(this.actor));
+
     // Skill rank counting
     const skillRanks = { allowed: 0, used: 0, bgAllowed: 0, bgUsed: 0, sentToBG: 0 };
     // Count used skill ranks
@@ -301,7 +305,7 @@ export class ActorSheetPF extends ActorSheet {
    * @param {String} bookKey  The key of the spellbook being prepared
    * @private
    */
-  _prepareSpellbook(data, spells, bookKey) {
+  _prepareSpellbook(data, spells, bookKey, availableSpellSpecialization, bannedSpellSpecialization) {
     const owner = this.actor.owner;
     const book = this.actor.data.data.attributes.spells.spellbooks[bookKey];
 
@@ -321,20 +325,29 @@ export class ActorSheetPF extends ActorSheet {
         spells: [],
         maxPrestigeClSources: (data.sourceDetails !== null && data.sourceDetails.data.attributes.prestigeCl !== undefined && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType] !== undefined
             && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max != null) ? data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max : [],
-        uses: book.spells === undefined ? 0 : book.spells["spell"+a].value || 0,
-        baseSlots: book.spells === undefined ? 0 : book.spells["spell"+a].base,
-        slots: book.spells === undefined ? 0 : book.spells["spell"+a].max || 0,
+        uses: book.spells === undefined ? 0 : book?.spells["spell"+a]?.value || 0,
+        baseSlots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.base || 0,
+        slots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
       };
     }
     spells.forEach(spell => {
       const lvl = spell.data.level || 0;
+      if (bannedSpellSpecialization.has(spell.data.school))
+        spell.isBanned = true;
+      if (availableSpellSpecialization.has(spell.data.school))
+        spell.isSpecialized = true;
+      if (spell.data.isSpellSpontaneousReplacement) {
+        spellbook[lvl].hasSpontaneousSpellReplacement = true;
+        spellbook[lvl].spellReplacementId = spell.id;
+        spellbook[lvl].spellReplacementName = spell.name;
+      }
       spellbook[lvl].spells.push(spell);
     });
 
 
     for (let a = 0; a < 10; a++) {
-      spellbook[a].slotsLeft = spellbook[a].spells.map(item => item.data.preparation.maxAmount || 0).reduce((prev, next) => prev + next, 0) < spellbook[a].slots
+      spellbook[a].slotsLeft = spellbook[a].spells.map(item => (item.data.specialPrepared ? 0 : item.data.preparation.maxAmount) || 0).reduce((prev, next) => prev + next, 0) < spellbook[a].slots
     }
 
 
@@ -586,6 +599,7 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find('.spell-add-uses').click(ev => this._onSpellAddUses(ev));
     html.find('.spell-remove-uses').click(this._onSpellRemoveUses.bind(this));
+    html.find('.spell-prepare-special').click(this._onSpellPrepareSpecialUses.bind(this));
     html.find('.spell-add-metamagic').click(this._onSpellAddMetamagic.bind(this));
 
 
@@ -1117,11 +1131,15 @@ export class ActorSheetPF extends ActorSheet {
     event.preventDefault();
     const a = event.currentTarget;
     const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const replacementId = $(event.currentTarget).parents(".item").attr("data-replacement-id");
     const item = this.actor.getOwnedItem(itemId);
 
     // Quick Attack
     if (a.classList.contains("item-attack")) {
       await item.use({ev: event, skipDialog: event.shiftKey});
+    }
+    if (a.classList.contains("item-attack-convert")) {
+      await item.use({ev: event, skipDialog: event.shiftKey, replacementId: replacementId});
     }
   }
 
@@ -1274,6 +1292,27 @@ export class ActorSheetPF extends ActorSheet {
     item.update({ "data.preparation.maxAmount": newQuantity });
   }
 
+  async _onSpellPrepareSpecialUses(event) {
+    event.preventDefault();
+    // Remove old special prepared spell
+    const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
+    const k = `data.attributes.spells.spellbooks.${spellbookKey}.specialId`;
+    let previousItemId = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${spellbookKey}.specialId`);
+    if (previousItemId)
+      await this.actor.deleteOwnedItem(previousItemId);
+
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = duplicate(this.actor.getOwnedItem(itemId).data);
+    delete item._id
+    item.data.specialPrepared = true;
+    let x = await this.actor.createEmbeddedEntity("OwnedItem", item)
+
+    // Update saved special prepared special id
+    let updateData = {}
+    updateData[k] = x._id;
+    await this.actor.update(updateData);
+  }
+
   _onSpellAddMetamagic(event) {
 
   }
@@ -1415,6 +1454,21 @@ export class ActorSheetPF extends ActorSheet {
     spells = this._filterItems(spells, this._filters.spellbook);
     feats = this._filterItems(feats, this._filters.features);
 
+    let availableSpellSpecialization = new Set()
+    let bannedSpellSpecialization = new Set()
+
+    feats.forEach(feat => {
+      (feat.data.spellSpecializationName || "").split(",").forEach(name => {
+        if (name === "") return;
+        availableSpellSpecialization.add(name)
+      });
+
+      (feat.data.spellSpecializationForbiddenNames || "").split(",").forEach(name => {
+        if (name === "") return;
+        bannedSpellSpecialization.add(name)
+      });
+    })
+
     // Organize Spellbook
     let spellbookData = {};
     const spellbooks = data.actor.data.attributes.spells.spellbooks;
@@ -1422,7 +1476,7 @@ export class ActorSheetPF extends ActorSheet {
     for (let [a, spellbook] of Object.entries(spellbooks)) {
       const spellbookSpells = spells.filter(obj => { return obj.data.spellbook === a; });
       spellbookData[a] = {
-        data: this._prepareSpellbook(data, spellbookSpells, a),
+        data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
         orig: spellbook,
         concentration: this.actor.data.data.skills["coc"].mod,
@@ -1453,6 +1507,7 @@ export class ActorSheetPF extends ActorSheet {
       trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
       racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
       misc: { label: game.i18n.localize("D35E.Misc"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
+      spellSpecialization: { label: game.i18n.localize("D35E.FeatTypeSpellSpecialization"), hasPack: true, pack: "spell-specialization", emptyLabel: "D35E.ListDragAndDropCompendium", canCreate: true, hasActions: false, dataset: { type: "feat", "feat-type": "spellSpecialization" } , items: [] },
       all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" }, isAll: true },
     };
 

@@ -3,6 +3,7 @@ import {EntrySelector} from "../../apps/entry-selector.js";
 import {ItemPF} from "../entity.js";
 import {CACHE} from "../../cache.js";
 import {isMinimumCoreVersion} from "../../lib.js";
+import {DamageTypes} from "../../damage-types.js";
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -94,6 +95,7 @@ export class ItemSheetPF extends ItemSheet {
         data.showUnidentifiedData = this.item.showUnidentifiedData;
         data.materials = Array.from(CACHE.Materials.values());
         data.damageTypes = Array.from(CACHE.DamageTypes.values());
+        data.energyDamageTypes = DamageTypes.getERDamageTypes();
 
         // Unidentified data
         if (this.item.showUnidentifiedData) {
@@ -121,6 +123,8 @@ export class ItemSheetPF extends ItemSheet {
         // Prepare feat specific stuff
         if (data.item.type === "feat") {
             data.isClassFeature = true; //Any feat can be a class feature
+            if (data.item.data.featType === 'spellSpecialization')
+                data.isSpellSpecialization = true;
         }
 
         data.is07Xup = isMinimumCoreVersion("0.7.2");
@@ -807,6 +811,14 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        let resistances = Object.entries(formData).filter(e => e[0].startsWith("data.resistances"));
+        formData["data.resistances"] = changes.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         // Handle notes array
         let note = Object.entries(formData).filter(e => e[0].startsWith("data.contextNotes"));
         formData["data.contextNotes"] = note.reduce((arr, entry) => {
@@ -869,6 +881,7 @@ export class ItemSheetPF extends ItemSheet {
             const tabGroups = {
                 "primary": {
                     "description": {},
+                    "configuration": {},
                 },
             };
             createTabs.call(this, html, tabGroups);
@@ -921,6 +934,7 @@ export class ItemSheetPF extends ItemSheet {
         // Modify buff changes
         html.find(".change-control").click(this._onChangeControl.bind(this));
         html.find(".combat-change-control").click(this._onCombatChangeControl.bind(this));
+        html.find(".resistance-control").click(this._onResistanceControl.bind(this));
 
 
         // Modify note changes
@@ -958,6 +972,7 @@ export class ItemSheetPF extends ItemSheet {
         });
 
 
+        html.find('.spell').on("drop", this._onDropSpell.bind(this));
         html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
 
         html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
@@ -1207,6 +1222,28 @@ export class ItemSheetPF extends ItemSheet {
         }
     }
 
+    async _onResistanceControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = this.item.data.data.resistances || [];
+            // Combat Changes are
+            return this.item.update({"data.resistances": changes.concat([["", "", false, false]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.resistances);
+            changes.splice(Number(li.dataset.change), 1);
+            return this.item.update({"data.resistances": changes});
+        }
+    }
+
     async _onNoteControl(event) {
         event.preventDefault();
         const a = event.currentTarget;
@@ -1390,6 +1427,41 @@ export class ItemSheetPF extends ItemSheet {
             pack: pack.collection,
             id: li.getAttribute('data-item-id')
         }));
+    }
+
+    async _onDropSpell(event) {
+        event.preventDefault();
+        let spellLevel = $(event.delegateTarget).attr('data-spell')
+        let data;
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+
+        let dataType = "";
+
+        if (data.type === "Item") {
+            let itemData = {};
+            if (data.pack) {
+                let updateData = {}
+                dataType = "compendium";
+                const pack = game.packs.find(p => p.collection === data.pack);
+                const packItem = await pack.getEntity(data.id);
+                if (packItem != null) 
+                {
+                    itemData = packItem.data;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.id`] = data.id;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.pack`] = data.pack;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.name`] = packItem.name;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.img`] = packItem.img;
+                    this.item.update(updateData)
+                }
+            }
+        }
+
+
     }
 
     async _onDrop(event) {

@@ -1415,7 +1415,7 @@
     a.item-control {
       height: 100%;
 
-      &.spell-add-uses, &.spell-remove-uses, &.spell-add-metamagic {
+      &.spell-add-uses, &.spell-remove-uses, &.spell-add-metamagic, &.spell-prepare-special {
         flex: 0 16px;
         font-size: 10px;
       }
@@ -1469,6 +1469,20 @@
       line-height: 16px;
       padding: 0.25em 0.5em;
       border-top: 1px solid @colorFaint;
+    }
+
+    .item-banned {
+      color: darkred;
+      h4 {
+        color: darkred;
+      }
+    }
+
+    .item-specialized {
+      color: #2b6703;
+      h4 {
+        color: #2b6703;
+      }
     }
   }
 
@@ -1591,6 +1605,27 @@
     padding-left: 0.5rem;
     padding-top: 4px;
     border-top: 2px groove #eeede0;
+  }
+
+  .readonly {
+    border: none !important;
+    background: rgba(0,0,0,0.1);
+    &:hover {
+      box-shadow: none !important;
+      border: none !important;
+    }
+  }
+
+  a.item-attack-convert {
+      display: block !important;
+      line-height: 19px;
+      background: black;
+      color: white;
+      border-radius: 2px;
+      margin-left: 4px;
+      width: 16px;
+      font-size: 12px;
+      text-align: center;
   }
 }
 

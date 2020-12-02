@@ -97,6 +97,12 @@
           {{/unless}}
         </div>
       </div>
+      <div class="form-group">
+        <label>{{localize "D35E.BaseWeaponAttackBonus"}}</label>
+        <div class="form-fields">
+          <input type="text" name="data.weaponData.attackRoll" value="{{data.weaponData.attackRoll}}" placeholder="{{localize "D35E.AttackRoll"}}"/>
+        </div>
+      </div>
 
       <div class="form-group">
         <label>{{localize "D35E.EnhancementOptionalDamage"}}</label>
@@ -267,6 +273,41 @@
             <a class="change-control delete-change"><i class="fas fa-minus"></i></a>
           </li>
           {{/each}}
+        </ol>
+      </div>
+      <div>
+        {{!-- Changes --}}
+        <h4 class="change-header">
+          {{localize "D35E.Resistances"}}
+          <a class="resistance-control add-change"><i class="fas fa-plus"></i></a>
+        </h4>
+        <ol class="changes form-group">
+          {{#each data.resistances as |change a|}}
+          <li class="change flexrow" data-change="{{a}}">
+            <input type="text" name="data.resistances.{{a}}.0" value="{{lookup this "0"}}"
+            placeholder="{{localize "D35E.Formula"}}" />
+            <select name="data.resistances.{{a}}.1">
+              {{#select (lookup this "1") }}
+              <option value="">{{localize "D35E.None"}}</option>
+              {{#each ../energyDamageTypes as |damage type|}}
+              <option value="{{damage.uid}}">{{damage.name}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+            <label class="checkbox">
+              <input type="checkbox" name="data.resistances.{{a}}.2" {{checked (lookup this "2")}}/> {{ localize "D35E.Immunity" }}
+            </label>
+            <label class="checkbox">
+              <input type="checkbox" name="data.resistances.{{a}}.3" {{checked (lookup this "3")}}/> {{ localize "D35E.Vulnerability" }}
+            </label>
+            <a class="resistance-control delete-change"><i class="fas fa-minus"></i></a>
+          </li>
+          {{/each}}
+          {{#unless data.resistances}}
+          <li class="change flexrow">
+            <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.Resistances"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
+          </li>
+          {{/unless}}
         </ol>
       </div>
 

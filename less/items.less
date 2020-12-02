@@ -919,5 +919,34 @@
     }
   }
 
+  .spell {
+    img {
+      flex: 0 24px;
+      height: 24px;
+    }
+    label {
+      margin-left: 4px;
+    }
+    input {
+      flex: 0 80px;
+    }
+    padding: 4px;
+    border: @borderGroove;
+    border-radius: 2px;
+  }
+
+  .inventory-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    .inventory-header {
+      border: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    }
+  }
 
 }

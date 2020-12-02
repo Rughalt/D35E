@@ -52,12 +52,14 @@
                 {{/if}}
 
                 {{#if modifier.isDamage}}
-                <input class="conditional-damage-type" type="text" list="types" name="data.conditionals.{{a}}.{{m}}.type" value="{{lookup this "type"}}" placeholder="{{localize "D35E.DamageType"}}"/>
-                <datalist id="types">
+                <select name="data.conditionals.{{a}}.{{m}}.type">
+
+                    {{#select (lookup this "type") }}
                     {{#each conditionalModifierTypes as |modifierType mt|}}
-                    <option value="{{modifierType}}">
+                    <option value="{{mt}}">{{modifierType}}</option>
                         {{/each}}
-                </datalist>
+                        {{/select}}
+                </select>
                 {{/if}}
                 {{#if ../modifiers.length}}
                 <a class="conditional-control delete-conditional-modifier"><i class="fas fa-trash"></i></a>{{/if}}

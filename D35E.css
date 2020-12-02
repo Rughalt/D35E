@@ -76,7 +76,7 @@
 .strikethrough-text {
   text-decoration: line-through;
 }
-.hidden {
+.hidden:not(.combatant) {
   display: none !important;
 }
 /* ----------------------------------------- */
@@ -1813,7 +1813,8 @@
 }
 .D35E.sheet.actor .inventory-list a.item-control.spell-add-uses,
 .D35E.sheet.actor .inventory-list a.item-control.spell-remove-uses,
-.D35E.sheet.actor .inventory-list a.item-control.spell-add-metamagic {
+.D35E.sheet.actor .inventory-list a.item-control.spell-add-metamagic,
+.D35E.sheet.actor .inventory-list a.item-control.spell-prepare-special {
   flex: 0 16px;
   font-size: 10px;
 }
@@ -1875,6 +1876,18 @@
   line-height: 16px;
   padding: 0.25em 0.5em;
   border-top: 1px solid #c9c7b8;
+}
+.D35E.sheet.actor .inventory-list .item-banned {
+  color: darkred;
+}
+.D35E.sheet.actor .inventory-list .item-banned h4 {
+  color: darkred;
+}
+.D35E.sheet.actor .inventory-list .item-specialized {
+  color: #2b6703;
+}
+.D35E.sheet.actor .inventory-list .item-specialized h4 {
+  color: #2b6703;
 }
 .D35E.sheet.actor a.configure-spellbook {
   border-radius: 4px;
@@ -1974,6 +1987,25 @@
   padding-left: 0.5rem;
   padding-top: 4px;
   border-top: 2px groove #eeede0;
+}
+.D35E.sheet.actor .readonly {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.1);
+}
+.D35E.sheet.actor .readonly:hover {
+  box-shadow: none !important;
+  border: none !important;
+}
+.D35E.sheet.actor a.item-attack-convert {
+  display: block !important;
+  line-height: 19px;
+  background: black;
+  color: white;
+  border-radius: 2px;
+  margin-left: 4px;
+  width: 16px;
+  font-size: 12px;
+  text-align: center;
 }
 .locked img.sheet-profile {
   max-height: 360px;
@@ -2882,6 +2914,34 @@
 .D35E.sheet.item .conditionals .conditional-modifier .form-group {
   padding-left: 30px;
 }
+.D35E.sheet.item .spell {
+  padding: 4px;
+  border: 2px groove #eeede0;
+  border-radius: 2px;
+}
+.D35E.sheet.item .spell img {
+  flex: 0 24px;
+  height: 24px;
+}
+.D35E.sheet.item .spell label {
+  margin-left: 4px;
+}
+.D35E.sheet.item .spell input {
+  flex: 0 80px;
+}
+.D35E.sheet.item .inventory-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+.D35E.sheet.item .inventory-list .inventory-header {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
 /* ----------------------------------------- */
 /*  Chat Cards
 /* ----------------------------------------- */
@@ -3086,6 +3146,12 @@
   border: none;
   vertical-align: middle;
   margin-bottom: 2px;
+}
+.damage-divider {
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+  flex: 0 30px;
 }
 /* ----------------------------------------- */
 /*  Basic Structure                          */
@@ -4329,6 +4395,21 @@ tr.introjs-showElement > th {
 #chat-log .chat-message .message-content .property-group:not(.footer) .flexrow .tag {
   white-space: unset;
 }
+.d35ecustom .form-group :not(button) i.fas {
+  color: #2C606D !important;
+}
+.d35ecustom .form-group :not(button) i.fas:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item .spell {
+  border-radius: 2px;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+}
 .d35ecustom .toggle input[type=checkbox] + label {
   margin: 2px;
   color: white;
@@ -4403,6 +4484,12 @@ tr.introjs-showElement > th {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+.d35ecustom .dr-setting.window-app .window-content .resistance {
+  color: #3b8f3b;
+}
+.d35ecustom .dr-setting.window-app .window-content .vulnerability {
+  color: #d02e2e;
 }
 .d35ecustom .compendium-browser-window.window-app {
   border: 8px solid #55493B;

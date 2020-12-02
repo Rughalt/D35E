@@ -2,6 +2,13 @@ import {CACHE} from "./cache.js";
 
 export class DamageTypes {
 
+    static get defaultDR() {
+        return {
+            uid: null,
+            value: 0
+        }
+    }
+
     static getDamageTypeForUID(damageTypes, uid) {
         return damageTypes.find(dt => dt.uid === uid);
     }
@@ -79,13 +86,24 @@ export class DamageTypes {
                 }
             }
         })
-        drParts.push(`${DR} ${orValue}/${drOrParts.join(` ${or} `)}`)
+        if (drOrParts.length)
+            drParts.push(`${DR} ${orValue}/${drOrParts.join(` ${or} `)}`)
         return drParts.join('; ')
     }
 
     /**
      * Energy resistance part
      */
+
+    static get defaultER() {
+        return {
+            uid: null,
+            value: 0,
+            vulnerable: false,
+            immunity: false
+        }
+    }
+
     static getERDamageTypes() {
         let energyTypes = [];
         for(let damageType of CACHE.DamageTypes.values()) {
@@ -103,10 +121,11 @@ export class DamageTypes {
         return energyTypes;
     }
 
-    static getERForActor(actor) {
+    static getERForActor(actor, base = false) {
         let damageTypes = duplicate(this.getERDamageTypes());
         let actorData = actor.data.data;
-        (actorData.energyResistance || []).forEach(t => {
+        ((base ? actorData.energyResistance : actorData.combinedResistances) || []).forEach(t => {
+            if (t.uid === null) return ;
             let type = DamageTypes.getDamageTypeForUID(damageTypes,t.uid);
             type.value = t.value;
             type.vulnerable = t.vulnerable;
@@ -122,5 +141,108 @@ export class DamageTypes {
             energyResistance.push(DamageTypes.getDamageTypeForUID(er,t.uid));
         })
         return energyResistance;
+    }
+
+    static computeERString(er) {
+        let erParts = [];
+        er.forEach(e => {
+            if (e?.vulnerable) {
+                erParts.push(`${e.name} ${game.i18n.localize("D35E.Vulnerability")}`)
+            } else if (e?.immunity) {
+                erParts.push(`${e.name} ${game.i18n.localize("D35E.Immunity")}`)
+            } else if (e.value > 0) {
+                erParts.push(`${e.name} ${e.value}`)
+            }
+        });
+        return erParts.join('; ')
+    }
+
+    /**
+     * Damage Calculation
+     */
+    static calculateDamageToActor(actor,damage,material,alignment,enh) {
+        let er = DamageTypes.getERForActor(actor).filter(d => d.value > 0 || d.vulnerable || d.immunity);
+        let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0);
+        let bypassedDr = new Set()
+        if (enh > 0)
+            bypassedDr.add("magic");
+        if (enh > 5)
+            bypassedDr.add("epic");
+        if (alignment?.good)
+            bypassedDr.add("good");
+        if (alignment?.evil)
+            bypassedDr.add("evil");
+        if (alignment?.lawful)
+            bypassedDr.add("lawful");
+        if (alignment?.chaotic)
+            bypassedDr.add("chaotic");
+        if (material?.data?.isAdamantineEquivalent)
+            bypassedDr.add("adamantine");
+        if (material?.data?.isAlchemicalSilverEquivalent)
+            bypassedDr.add("silver");
+        if (material?.data?.isColdIronEquivalent)
+            bypassedDr.add("coldiron");
+        let damageBeforeDr = 0;
+
+        //Checks for slashing/piercing/bludgeonign damage and typeless damage
+        damage.forEach(d => {
+            if (d.damageTypeUid) {
+                let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
+                if (_damage.data.data.damageType === "type") {
+                    if (_damage.data.data.isPiercing)
+                        bypassedDr.add("piercing");
+                    if (_damage.data.data.isSlashing)
+                        bypassedDr.add("slashing");
+                    if (_damage.data.data.isBludgeoning)
+                        bypassedDr.add("bludgeoning");
+                    damageBeforeDr += d.roll.total;
+                }
+            } else {
+                damageBeforeDr += d.roll.total;
+            }
+        })
+        let filteredDr = dr.filter(d => bypassedDr.has(d.uid))
+        let hasOrInFiltered = filteredDr.some(d => d.or);
+        let finalDr = dr.filter(d => !bypassedDr.has(d.uid))
+        if (hasOrInFiltered) {
+            finalDr = finalDr.filter(d => !d.or)
+        }
+        let highestDr = 0;
+        let appliedDr = null
+        finalDr.forEach(d => {if (d.value > highestDr) {
+            highestDr = d.value;
+            appliedDr = d;
+        }});
+        let damageAfterDr = Math.max(damageBeforeDr - highestDr,0);
+        let energyDamageAfterEr = 0
+        let energyDamageBeforeEr = 0
+        let energyDamage = []
+        damage.forEach(d => {
+            if (d.damageTypeUid) {
+                let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
+                if (_damage.data.data.damageType === "energy") {
+                    let erValue = DamageTypes.getDamageTypeForUID(er,d.damageTypeUid)
+                    let damageAfterEr = Math.max(d.roll.total - (erValue?.value || 0),0)
+                    let value = erValue?.value
+                    if (erValue?.immunity) {
+                        damageAfterEr = 0;
+                        value = game.i18n.localize("D35E.Immunity")
+                    }
+                    else if (erValue?.vulnerable) {
+                        damageAfterEr = Math.ceil(d.roll.total * 1.5)
+                        value = game.i18n.localize("D35E.Vulnerability")
+                    } else if (damageAfterEr === d.roll.total) {
+                        value = game.i18n.localize("D35E.NoER")
+                    }
+
+                    energyDamage.push({name:_damage.data.name,uid:_damage.data.data.uniqueId,before:d.roll.total,after:damageAfterEr,value:value || 0,lower:damageAfterEr<d.roll.total,higher:damageAfterEr>d.roll.total,equal:d.roll.total===damageAfterEr});
+                    energyDamageAfterEr += damageAfterEr;
+                    energyDamageBeforeEr += d.roll.total;
+                }
+            }
+        })
+        let beforeDamage = damageBeforeDr + energyDamageBeforeEr;
+        let afterDamage = energyDamageAfterEr + damageAfterDr;
+        return {beforeDamage: beforeDamage, damage: afterDamage, baseBeforeDR: damageBeforeDr, baseAfterDR: damageAfterDr, lower:afterDamage<beforeDamage, higher:afterDamage>beforeDamage,equal:afterDamage===beforeDamage, appliedDR: appliedDr, energyDamage: energyDamage};
     }
 }

@@ -208,16 +208,48 @@
 
     <ol class="item-list">
       {{#each section.spells as |item i|}}
-      <li class="item flexrow" data-item-id="{{item._id}}">
-        <div class="item-name flexrow rollable">
+      <li class="item flexrow" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
+        <div class="item-name flexrow rollable {{#if item.isSpecialized}}item-specialized{{/if}}{{#if item.isBanned}}item-banned{{/if}}">
           <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-          <h4>{{item.name}}</h4>
+          <h4>{{item.name}}
+            {{#if item.data.specialPrepared}}
+            <i class="fas fa-hand-sparkles tooltip">
+              <span class="tooltipcontent">{{localize "D35E.SpecialSlotPrepared"}}</span>
+            </i>
+            {{/if}}
+            {{#if item.data.isSpellSpontaneousReplacement}}
+            <i class="fas fa-heart tooltip">
+              <span class="tooltipcontent">{{localize "D35E.SpellReplacement"}}</span>
+            </i>
+            {{/if}}
+
+            {{#if item.isSpecialized}}
+            <i class="fas fa-sun tooltip">
+              <span class="tooltipcontent">{{localize "D35E.SpellSpecialized"}}</span>
+            </i>
+            {{/if}}
+
+            {{#if item.isBanned}}
+            <i class="fas fa-ban tooltip">
+              <span class="tooltipcontent">{{localize "D35E.SpellBanned"}}</span>
+            </i>
+            {{/if}}
+          </h4>
         </div>
 
         <div class="item-detail item-actions">
           <div class="item-attack">
             <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
           </div>
+
+          {{#if section.hasSpontaneousSpellReplacement}}
+          <div class="item-attack tooltip">
+            <span class="tooltipcontent">{{localize "D35E.CastAsReplacement"}}
+              <br>
+              {{localize "D35E.CastAsReplacementDesc"}} {{section.spellReplacementName}}</span>
+            <a class="item-control item-attack-convert"><i class="fas fa-heart"></i></a>
+          </div>
+          {{/if}}
         </div>
 
         <div class="spell-uses flexrow">
@@ -232,8 +264,15 @@
           <input type="text" value="{{item.data.preparation.maxAmount}}" data-type="max" data-dtype="Number"/>
 
           <a class="item-control spell-add-uses" title="{{ localize 'D35E.PrepareSpell' }}">
-            {{#if section.slotsLeft}}
-          <i class="fas fa-plus"></i>
+
+            {{#if item.data.specialPrepared}}
+              {{#unless item.data.preparation.maxAmount}}
+                <i class="fas fa-plus"></i>
+              {{/unless}}
+            {{else}}
+              {{#if section.slotsLeft}}
+              <i class="fas fa-plus"></i>
+              {{/if}}
             {{/if}}
           </a>
 
@@ -241,10 +280,29 @@
           <i class="fas fa-minus"></i>
           </a>
 
+
+          {{#if ../../spellbook.orig.hasSpecialSlot}}
+            {{#unless item.data.specialPrepared}}
+
+              {{#if item.isSpecialized}}
+              <a class="item-control spell-prepare-special" title="{{ localize 'D35E.PrepareAsSpecialSpell' }}">
+                <i class="fas fa-hand-sparkles"></i>
+              </a>
+              {{else}}
+              <div style="flex: 0 16px;"></div>
+              {{/if}}
+            {{else}}
+              <div style="flex: 0 16px;"></div>
+            {{/unless}}
+          {{else}}
+            <div style="flex: 0 16px;"></div>
+          {{/if}}
           {{#if 0}}
           <a class="item-control spell-add-metamagic" title="{{ localize 'D35E.PrepareMetamagicSpell' }}">
           <i class="fas fa-arrow-circle-up"></i>
           </a>
+          {{else}}
+          <div style="flex: 0 16px;"></div>
           {{/if}}
           {{/unless}}
 

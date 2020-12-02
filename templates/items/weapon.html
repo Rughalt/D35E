@@ -90,7 +90,7 @@
         <label>{{localize "D35E.Material"}}</label>
         <select name="data.selectedMaterial">
           {{#select data.material.data.uniqueId}}
-          <option value="">{{localize "D35E.NoMaterial"}}</option>
+          <option value="none">{{localize "D35E.NoMaterial"}}</option>
           {{#each materials as |material type|}}
             <option value="{{material.data.data.uniqueId}}">{{material.data.name}}</option>
           {{/each}}

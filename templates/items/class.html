@@ -51,9 +51,8 @@
     <section class="sheet-content flexcol">
     <nav class="sheet-navigation tabs" data-group="primary">
         <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
-        <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
-        <a class="item" data-tab="children">{{ localize "D35E.Children" }}</a>
-        <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
+        <a class="item active" data-tab="configuration" style="flex: 0 150px;">{{ localize "D35E.Configuration" }}</a>
+
     </nav>
 
     {{!-- Item Sheet Body --}}
@@ -298,278 +297,298 @@
         </div>
         {{/if}}
 
-        {{!-- Details Tab --}}
-        <div class="tab details" data-group="primary" data-tab="details">
 
-            {{!-- Class Type --}}
-            <div class="form-group">
-                <label>{{localize "D35E.ClassType"}}</label>
-                <select name="data.classType">
-                    {{#select data.classType}}
-                    {{#each config.classTypes as |name type|}}
-                    <option value="{{type}}">{{name}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
+        <div class="tab flexcol active" data-group="primary" data-tab="configuration">
+            <nav class="sheet-navigation tabs subtabs configuration" data-group="configuration">
 
-            {{!-- Racial Type --}}
-            {{#if isRacialHD}}
-            <div class="form-group">
-                <label>{{localize "D35E.CreatureType"}}</label>
-                <select name="data.creatureType">
-                    {{#select data.creatureType}}
-                    {{#each config.creatureTypes as |name type|}}
-                    <option value="{{type}}">{{name}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
-            {{/if}}
+                <a class="item active" data-tab="details">{{ localize "D35E.Details" }}</a>
+                <a class="item" data-tab="children">{{ localize "D35E.Children" }}</a>
+                <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
+            </nav>
 
-            {{!-- HD --}}
-            <div class="form-group">
-                <label>{{localize "D35E.HitDie"}}</label>
-                <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number"/>
-            </div>
+            <div class="flexrow configuration-container" style="overflow: hidden; height: 100%">
+                <section class="configuration-body" style="display: block; height: 100%">
+                    {{!-- Details Tab --}}
+                    <div class="tab configuration-group details" data-group="configuration" data-tab="details">
 
+                        {{!-- Class Type --}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.ClassType"}}</label>
+                            <select name="data.classType">
+                                {{#select data.classType}}
+                                {{#each config.classTypes as |name type|}}
+                                <option value="{{type}}">{{name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
 
+                        {{!-- Racial Type --}}
+                        {{#if isRacialHD}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.CreatureType"}}</label>
+                            <select name="data.creatureType">
+                                {{#select data.creatureType}}
+                                {{#each config.creatureTypes as |name type|}}
+                                <option value="{{type}}">{{name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+                        {{/if}}
 
-            {{!-- BAB --}}
-            <div class="form-group">
-                <label>{{localize "D35E.BABAbbr"}}</label>
-                <select name="data.bab">
-                    {{#select data.bab}}
-                    <option value="">{{localize "D35E.None"}}</option>
-                    {{#each config.classBAB as |name value|}}
-                    <option value="{{value}}">{{name}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
-
-            {{!-- Skills/Level --}}
-            <div class="form-group">
-                <label>{{localize "D35E.SkillsPerLevel"}}</label>
-                <input type="text" name="data.skillsPerLevel" value="{{data.skillsPerLevel}}" data-dtype="Number"/>
-            </div>
+                        {{!-- HD --}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.HitDie"}}</label>
+                            <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number"/>
+                        </div>
 
 
-            <div class="form-group">
-                <label>{{localize "D35E.MaxLevel"}}</label>
-                <input type="text" name="data.maxLevel" value="{{data.maxLevel}}" data-dtype="Number"/>
-            </div>
 
-            <div class="form-group">
-            <label class="checkbox skill-cs">
-                <label>{{localize "D35E.AutomaticFeatures"}}</label>
-                <input type="checkbox" name="data.automaticFeatures" {{checked data.automaticFeatures}}/>
-            </label>
-            </div>
-            <em>{{localize "D35E.MaxLevelAutomationInfo"}}</em>
+                        {{!-- BAB --}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.BABAbbr"}}</label>
+                            <select name="data.bab">
+                                {{#select data.bab}}
+                                <option value="">{{localize "D35E.None"}}</option>
+                                {{#each config.classBAB as |name value|}}
+                                <option value="{{value}}">{{name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
 
-            <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>
-
-            {{!-- Saving Throws --}}
-            {{#each data.savingThrows as |savingThrow id|}}
-            <div class="form-group">
-                <label>{{savingThrow.label}}</label>
-                <select name="data.savingThrows.{{id}}.value">
-                    {{#select savingThrow.value}}
-                    <option value="">{{localize "D35E.None"}}</option>
-                    {{#each ../config.classSavingThrows as |name value|}}
-                    <option value="{{value}}">{{name}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
-            {{/each}}
+                        {{!-- Skills/Level --}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.SkillsPerLevel"}}</label>
+                            <input type="text" name="data.skillsPerLevel" value="{{data.skillsPerLevel}}" data-dtype="Number"/>
+                        </div>
 
 
-            <h4 class="form-header">{{localize "D35E.AdditionalClassFeatures"}}</h4>
-            <div class="form-group">
-                <label>{{localize "D35E.TurnUndeadFormula"}}</label>
-                <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}"
-                       data-dtype="String"/>
-            </div>
+                        <div class="form-group">
+                            <label>{{localize "D35E.MaxLevel"}}</label>
+                            <input type="text" name="data.maxLevel" value="{{data.maxLevel}}" data-dtype="Number"/>
+                        </div>
 
-            <div class="form-group">
-                <label>{{localize "D35E.SneakAttackGroup"}}</label>
-                <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String"/>
-            </div>
-
-            <div class="form-group">
-                <label>{{localize "D35E.SneakAttackFormula"}}</label>
-                <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}"
-                       data-dtype="String"/>
-            </div>
-            <div class="form-group">
-                <label>{{localize "D35E.MinionGroup"}}</label>
-                <input type="text" name="data.minionGroup" value="{{data.minionGroup}}" data-dtype="String"/>
-            </div>
-
-            <div class="form-group">
-                <label>{{localize "D35E.MinionLevelFormula"}}</label>
-                <input type="text" name="data.minionLevelFormula" value="{{data.minionLevelFormula}}"
-                       data-dtype="String"/>
-            </div>
-            {{#if false}}
-            <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
-
-            {{!-- Favoured Class Bonuses --}}
-            {{#each data.fc as |fc id|}}
-            <div class="form-group">
-                <label>{{fc.label}}</label>
-                <input type="text" name="data.fc.{{id}}.value" value="{{fc.value}}" data-dtype="Number"/>
-            </div>
-            {{/each}}
-            {{/if}}
-
-
-            <h4 class="form-header">{{localize "D35E.ClassAbilities"}}</h4>
-            <div class="data-selector">
-                <div class="form-group">
-                    <label>{{localize "D35E.NonActiveClassAbilities"}}</label><a class="entry-selector"
-                                                                                 for="data.nonActiveClassAbilities"
-                                                                                 data-fields="{{localize " D35E.Level"}};Ability;Description"
-                    data-dtypes="Number;String;String"><i class="fas fa-edit"></i></a>
-                </div>
-            </div>
-            <h4 class="form-header">{{localize "D35E.ClassSkills"}}</h4>
-
-            <div class="form-group">
-                <ol class="item-list">
-                    {{#each skills as |skill key|}}
-                    <li class="item flexrow" data-skill="{{key}}">
+                        <div class="form-group">
                         <label class="checkbox skill-cs">
-                            <input type="checkbox" name="data.classSkills.{{key}}" {{checked skill.classSkill}}/>
+                            <label>{{localize "D35E.AutomaticFeatures"}}</label>
+                            <input type="checkbox" name="data.automaticFeatures" {{checked data.automaticFeatures}}/>
                         </label>
-                        <h4>{{skill.name}}</h4>
-                    </li>
-                    {{/each}}
-                </ol>
+                        </div>
+                        <em>{{localize "D35E.MaxLevelAutomationInfo"}}</em>
+
+                        <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>
+
+                        {{!-- Saving Throws --}}
+                        {{#each data.savingThrows as |savingThrow id|}}
+                        <div class="form-group">
+                            <label>{{savingThrow.label}}</label>
+                            <select name="data.savingThrows.{{id}}.value">
+                                {{#select savingThrow.value}}
+                                <option value="">{{localize "D35E.None"}}</option>
+                                {{#each ../config.classSavingThrows as |name value|}}
+                                <option value="{{value}}">{{name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+                        {{/each}}
+
+
+                        <h4 class="form-header">{{localize "D35E.AdditionalClassFeatures"}}</h4>
+                        <div class="form-group">
+                            <label>{{localize "D35E.TurnUndeadFormula"}}</label>
+                            <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}"
+                                   data-dtype="String"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.SneakAttackGroup"}}</label>
+                            <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.SneakAttackFormula"}}</label>
+                            <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}"
+                                   data-dtype="String"/>
+                        </div>
+                        <div class="form-group">
+                            <label>{{localize "D35E.MinionGroup"}}</label>
+                            <input type="text" name="data.minionGroup" value="{{data.minionGroup}}" data-dtype="String"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.MinionLevelFormula"}}</label>
+                            <input type="text" name="data.minionLevelFormula" value="{{data.minionLevelFormula}}"
+                                   data-dtype="String"/>
+                        </div>
+                        {{#if false}}
+                        <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
+
+                        {{!-- Favoured Class Bonuses --}}
+                        {{#each data.fc as |fc id|}}
+                        <div class="form-group">
+                            <label>{{fc.label}}</label>
+                            <input type="text" name="data.fc.{{id}}.value" value="{{fc.value}}" data-dtype="Number"/>
+                        </div>
+                        {{/each}}
+                        {{/if}}
+
+
+                        <h4 class="form-header">{{localize "D35E.ClassAbilities"}}</h4>
+                        <div class="data-selector">
+                            <div class="form-group">
+                                <label>{{localize "D35E.NonActiveClassAbilities"}}</label><a class="entry-selector"
+                                                                                             for="data.nonActiveClassAbilities"
+                                                                                             data-fields="{{localize " D35E.Level"}};Ability;Description"
+                                data-dtypes="Number;String;String"><i class="fas fa-edit"></i></a>
+                            </div>
+                        </div>
+                        <h4 class="form-header">{{localize "D35E.ClassSkills"}}</h4>
+
+                        <div class="form-group">
+                            <ol class="item-list">
+                                {{#each skills as |skill key|}}
+                                <li class="item flexrow" data-skill="{{key}}">
+                                    <label class="checkbox skill-cs">
+                                        <input type="checkbox" name="data.classSkills.{{key}}" {{checked skill.classSkill}}/>
+                                    </label>
+                                    <h4>{{skill.name}}</h4>
+                                </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        <h4 class="form-header">{{localize "D35E.Spellcasting"}}</h4>
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.SpellcastingType"}}</label>
+                            <select name="data.spellcastingType">
+                                {{#select data.spellcastingType}}
+                                {{#each config.spellcastingType as |name type|}}
+                                <option value="{{type}}">{{localize name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+
+
+                        {{#if isSpellcaster}}
+                        <div class="form-group spellcasting-ability flexrow">
+                            <label><span>{{localize "D35E.SpellcastingAbility"}}</span></label>
+                            <select name="data.spellcastingAbility" data-dtype="String">
+                                {{#select data.spellcastingAbility}}
+                                <option value="">{{localize "D35E.None"}}</option>
+                                {{#each config.abilities as |abl a|}}
+                                <option value="{{a}}">{{abl}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+
+                        <div class="data-selector">
+                            <div class="form-group">
+                                <label>{{localize "D35E.SpellsPerLevel"}}</label><a class="entry-selector" for="data.spellsPerLevel"
+                                                                                    data-progression="true"
+                                                                                    data-fields="{{localize " D35E.Level"}};0;1;2;3;4;5;6;7;8;9"
+                                data-dtypes="Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;"><i
+                                    class="fas fa-edit"></i></a>
+                            </div>
+                        </div>
+
+
+                        <div class="data-selector">
+                            <div class="form-group">
+                                <label>{{localize "D35E.SpellsKnownPerLevel"}}</label><a class="entry-selector" for="data.spellsKnownPerLevel"
+                                                                                    data-progression="true"
+                                                                                    data-fields="{{localize " D35E.Level"}};0;1;2;3;4;5;6;7;8;9"
+                                data-dtypes="Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;"><i
+                                    class="fas fa-edit"></i></a>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.SpellcastingSpellname"}}</label>
+                            <input type="text" name="data.spellcastingSpellname" value="{{data.spellcastingSpellname}}" data-dtype="String"/>
+                        </div>
+                        <div class="form-group">
+                            <label>{{localize "D35E.SpellcastingSpellnamePl"}}</label>
+                            <input type="text" name="data.spellcastingSpellnamePl" value="{{data.spellcastingSpellnamePl}}" data-dtype="String"/>
+                        </div>
+
+                        <div class="form-group stacked">
+                            <label class="checkbox">
+                                <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
+                                       data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+                            </label>
+                        </div>
+                        <div class="form-group stacked">
+                            <label class="checkbox">
+                                <input type="checkbox" name="data.hasSpecialSlot" {{checked
+                                       data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
+                            </label>
+                        </div>
+                        <label>{{localize "D35E.SpellcastingDescription"}}</label>
+                        {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
+                        editable=editable}}
+
+
+                        {{#if isPsionSpellcaster}}
+                        <h4 class="form-header">{{localize "D35E.PowerPointsTable"}}</h4>
+
+                        <div class="form-group spellcasting-ability">
+                            <label>{{localize "D35E.PowerPointsBaseAbility"}}</label>
+                            <select name="data.powerPointBonusBaseAbility" data-dtype="String">
+                                {{#select powerPointBonusBaseAbility}}
+                                <option value="">{{localize "D35E.None"}}</option>
+                                {{#each abilities as |abl a|}}
+                                <option value="{{a}}">{{localize abl.label}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <ol class="item-list">
+
+                                <li class="inventory-header flexrow">
+                                    <h3 class="item-name flexrow">Level</h3>
+                                    <div class="item-detail item-type">
+                                        <span>Power Points</span></div>
+                                    <div class="item-detail item-type">
+                                        <span>Powers Known</span></div>
+                                    <div class="item-detail item-type">
+                                        <span>Max Power Level</span></div>
+                                </li>
+                                {{#each powerPointLevels as |powerpoint key|}}
+                                <li class="item flexrow">
+                                    <label>{{key}}</label>
+                                    <input class="item-detail item-type" type="text" name="data.powerPointTable.{{key}}"
+                                           value="{{powerpoint.value}}" data-dtype="Number"/>
+                                    <input class="item-detail item-type" type="text" name="data.powersKnown.{{key}}"
+                                           value="{{powerpoint.known}}" data-dtype="Number"/>
+                                    <input class="item-detail item-type" type="text" name="data.powersMaxLevel.{{key}}"
+                                           value="{{powerpoint.maxLevel}}" data-dtype="Number"/>
+                                </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+
+
+                    <div class="tab configuration-group flexcol" style="padding: 0" data-group="configuration" data-tab="children">
+                        {{> "systems/D35E/templates/items/parts/item-children.html"}}
+                    </div>
+
+                    <div class="tab configuration-group flexcol" data-group="configuration" data-tab="changes">
+                        {{> "systems/D35E/templates/items/parts/item-changes.html"}}
+
+                        {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+                    </div>
+                </section>
             </div>
-            <h4 class="form-header">{{localize "D35E.Spellcasting"}}</h4>
-
-            <div class="form-group">
-                <label>{{localize "D35E.SpellcastingType"}}</label>
-                <select name="data.spellcastingType">
-                    {{#select data.spellcastingType}}
-                    {{#each config.spellcastingType as |name type|}}
-                    <option value="{{type}}">{{localize name}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
-
-
-            {{#if isSpellcaster}}
-            <div class="form-group spellcasting-ability flexrow">
-                <label><span>{{localize "D35E.SpellcastingAbility"}}</span></label>
-                <select name="data.spellcastingAbility" data-dtype="String">
-                    {{#select data.spellcastingAbility}}
-                    <option value="">{{localize "D35E.None"}}</option>
-                    {{#each config.abilities as |abl a|}}
-                    <option value="{{a}}">{{abl}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
-
-            <div class="data-selector">
-                <div class="form-group">
-                    <label>{{localize "D35E.SpellsPerLevel"}}</label><a class="entry-selector" for="data.spellsPerLevel"
-                                                                        data-progression="true"
-                                                                        data-fields="{{localize " D35E.Level"}};0;1;2;3;4;5;6;7;8;9"
-                    data-dtypes="Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;"><i
-                        class="fas fa-edit"></i></a>
-                </div>
-            </div>
-
-
-            <div class="data-selector">
-                <div class="form-group">
-                    <label>{{localize "D35E.SpellsKnownPerLevel"}}</label><a class="entry-selector" for="data.spellsKnownPerLevel"
-                                                                        data-progression="true"
-                                                                        data-fields="{{localize " D35E.Level"}};0;1;2;3;4;5;6;7;8;9"
-                    data-dtypes="Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;Number;"><i
-                        class="fas fa-edit"></i></a>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label>{{localize "D35E.SpellcastingSpellname"}}</label>
-                <input type="text" name="data.spellcastingSpellname" value="{{data.spellcastingSpellname}}" data-dtype="String"/>
-            </div>
-            <div class="form-group">
-                <label>{{localize "D35E.SpellcastingSpellnamePl"}}</label>
-                <input type="text" name="data.spellcastingSpellnamePl" value="{{data.spellcastingSpellnamePl}}" data-dtype="String"/>
-            </div>
-
-            <div class="form-group stacked">
-                <label class="checkbox">
-                    <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
-                           data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
-                </label>
-            </div>
-            <label>{{localize "D35E.SpellcastingDescription"}}</label>
-            {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
-            editable=editable}}
-
-
-            {{#if isPsionSpellcaster}}
-            <h4 class="form-header">{{localize "D35E.PowerPointsTable"}}</h4>
-
-            <div class="form-group spellcasting-ability">
-                <label>{{localize "D35E.PowerPointsBaseAbility"}}</label>
-                <select name="data.powerPointBonusBaseAbility" data-dtype="String">
-                    {{#select powerPointBonusBaseAbility}}
-                    <option value="">{{localize "D35E.None"}}</option>
-                    {{#each abilities as |abl a|}}
-                    <option value="{{a}}">{{localize abl.label}}</option>
-                    {{/each}}
-                    {{/select}}
-                </select>
-            </div>
-            <div class="form-group">
-                <ol class="item-list">
-
-                    <li class="inventory-header flexrow">
-                        <h3 class="item-name flexrow">Level</h3>
-                        <div class="item-detail item-type">
-                            <span>Power Points</span></div>
-                        <div class="item-detail item-type">
-                            <span>Powers Known</span></div>
-                        <div class="item-detail item-type">
-                            <span>Max Power Level</span></div>
-                    </li>
-                    {{#each powerPointLevels as |powerpoint key|}}
-                    <li class="item flexrow">
-                        <label>{{key}}</label>
-                        <input class="item-detail item-type" type="text" name="data.powerPointTable.{{key}}"
-                               value="{{powerpoint.value}}" data-dtype="Number"/>
-                        <input class="item-detail item-type" type="text" name="data.powersKnown.{{key}}"
-                               value="{{powerpoint.known}}" data-dtype="Number"/>
-                        <input class="item-detail item-type" type="text" name="data.powersMaxLevel.{{key}}"
-                               value="{{powerpoint.maxLevel}}" data-dtype="Number"/>
-                    </li>
-                    {{/each}}
-                </ol>
-            </div>
-            {{/if}}
-            {{/if}}
-        </div>
-
-
-        <div class="tab flexcol" data-group="primary" data-tab="children">
-            {{> "systems/D35E/templates/items/parts/item-children.html"}}
-        </div>
-
-        <div class="tab flexcol" data-group="primary" data-tab="changes">
-            {{> "systems/D35E/templates/items/parts/item-changes.html"}}
-
-            {{> "systems/D35E/templates/items/parts/item-notes.html"}}
         </div>
     </section>
     </section>

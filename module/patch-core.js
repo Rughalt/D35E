@@ -123,12 +123,12 @@ export async function PatchCore() {
   }
 
 
-  const ActorTokenHelpers_createEmbeddedEntity = ActorTokenHelpers.prototype.createEmbeddedEntity;
-  ActorTokenHelpers.prototype.createEmbeddedEntity = async function(...args) {
-    await ActorTokenHelpers_createEmbeddedEntity.call(this, ...args);
-
-    return ActorPF.prototype.update.call(this, {});
-  };
+  // const ActorTokenHelpers_createEmbeddedEntity = ActorTokenHelpers.prototype.createEmbeddedEntity;
+  // ActorTokenHelpers.prototype.createEmbeddedEntity = async function(...args) {
+  //   await ActorTokenHelpers_createEmbeddedEntity.call(this, ...args);
+  //
+  //   return ActorPF.prototype.update.call(this, {});
+  // };
 
   const Token_animateMovement = Token.prototype.animateMovement;
   Token.prototype.animateMovement = async function(...args) {

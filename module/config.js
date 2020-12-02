@@ -69,6 +69,7 @@ D35E.classTypes = {
   "prestige": "D35E.ClassTypePrestige",
   "racial": "D35E.ClassTypeRacial",
   "minion": "D35E.Minion",
+  "template": "D35E.ClassTypeTemplate",
 };
 
 D35E.classBAB = {
@@ -539,8 +540,8 @@ D35E.featTypes = {
   "feat": "D35E.FeatTypeFeat",
   "classFeat": "D35E.FeatTypeClassFeat",
   "trait": "D35E.FeatTypeTraits",
-  "template": "D35E.FeatTypeTemplate",
   "racial": "D35E.FeatTypeRacial",
+  "spellSpecialization": "D35E.FeatTypeSpellSpecialization",
   "misc": "D35E.Misc",
 };
 
@@ -1032,7 +1033,7 @@ D35E.buffTargets = {
     "arcaneCl": "D35E.Arcane",
     "psionicCl": "D35E.Psionic",
     "divineCl": "D35E.Divine"
-  },
+  }
 };
 
 D35E.contextNoteTargets = {

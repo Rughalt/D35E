@@ -178,14 +178,20 @@ export class ChatAttack {
         let shortTooltips = []
         let critShortTooltips = []
         for (let roll of rolls) {
-            let tooltip = $(await roll.roll.getTooltip()).prepend(`<div class="dice-formula">${roll.roll.formula}</div>`)[0].outerHTML;
+            let tooltip = $(await roll.roll.getTooltip());
+
+            let totalText = roll.roll.total.toString();
+            if (roll.damageType.length) totalText += ` (${roll.damageType})`;
+            tooltip = tooltip.prepend(`
+                <header class="part-header flexrow" style="border-bottom: none; margin-top: 4px">
+                    <span class="part-formula"></span>
+                    <span class="part-total">${totalText}</span>
+                </header>
+                <div class="dice-formula">${roll.roll.formula}</div>
+                `)[0].outerHTML;
             // Alter tooltip
             let tooltipHtml = $(tooltip);
             totalDamage += roll.roll.total;
-            let totalText = roll.roll.total.toString();
-
-            if (roll.damageType.length) totalText += ` (${roll.damageType})`;
-            tooltipHtml.find(".part-total").text(totalText);
             tooltip = tooltipHtml[0].outerHTML;
             if (!critical)
                 shortTooltips.push(this.getShortToolTip(totalText))
@@ -198,8 +204,8 @@ export class ChatAttack {
         if (isMultiattack) flavor = game.i18n.localize("D35E.Damage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`;
         else if (!critical) flavor = this.item.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
         else flavor = this.item.isHealing ? game.i18n.localize("D35E.HealingCritical") : game.i18n.localize("D35E.DamageCritical");
-        const damageTypes = this.item.data.data.damage.parts.reduce((cur, o) => {
-            if (o[1] !== "" && cur.indexOf(o[1]) === -1) cur.push(o[1]);
+        const damageTypes = rolls.reduce((cur, o) => {
+            if (o.damageType !== "" && cur.indexOf(o.damageType) === -1) cur.push(o.damageType);
             return cur;
         }, []);
 
@@ -248,6 +254,7 @@ export class ChatAttack {
                     data: JSON.stringify(rolls),
                     alignment: JSON.stringify(this.item.data.data.alignment),
                     material: JSON.stringify(this.item.data.data.material),
+                    enh: this.item.data.data.enh,
                     action: "applyDamage",
                 });
         }
@@ -269,7 +276,7 @@ export class ChatAttack {
 
     async addEffect({primaryAttack = true, actor = null} = {}) {
         if (!this.item) return;
-        this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor);
+        this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor, this.rollData);
         this.addSpecial(actor);
     }
 
