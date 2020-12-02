@@ -812,7 +812,7 @@ export class ItemSheetPF extends ItemSheet {
         }, []);
 
         let resistances = Object.entries(formData).filter(e => e[0].startsWith("data.resistances"));
-        formData["data.resistances"] = changes.reduce((arr, entry) => {
+        formData["data.resistances"] = resistances.reduce((arr, entry) => {
             let [i, j] = entry[0].split(".").slice(2);
             if (!arr[i]) arr[i] = [];
             arr[i][j] = entry[1];

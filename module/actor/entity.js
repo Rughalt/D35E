@@ -2537,7 +2537,7 @@ export class ActorPF extends Actor {
             return true;
         }).forEach(obj => {
             if (obj.data.resistances) {
-                Object.values(obj.data?.resistances || []).forEach(resistance => {
+                (obj.data?.resistances || []).forEach(resistance => {
                     let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
                     if (!_resistance) {
                         _resistance = DamageTypes.defaultER;
@@ -2551,7 +2551,7 @@ export class ActorPF extends Actor {
             if (obj.type === "weapon" || obj.type === "equipment") {
                 if (obj.data.enhancements !== undefined) {
                     obj.data.enhancements.items.forEach(enhancementItem =>
-                        Object.values(enhancementItem.data?.resistances || []).forEach(resistance => {
+                        (enhancementItem.data?.resistances || []).forEach(resistance => {
                             let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
                             if (!_resistance) {
                                 _resistance = DamageTypes.defaultER;
