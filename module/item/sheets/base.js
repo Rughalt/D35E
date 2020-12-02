@@ -964,6 +964,8 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".item .change-class-ability-level").off("change").change(this._onAbilityLevelChange.bind(this));
 
 
+        html.find('.view-details-material').click(event => this._onMaterialItemSummary(event));
+
         let handler = ev => this._onDragStart(ev);
         html.find('li.item').each((i, li) => {
             if (li.classList.contains("inventory-header")) return;
@@ -1387,6 +1389,16 @@ export class ItemSheetPF extends ItemSheet {
         event.preventDefault();
         let li = $(event.currentTarget).parents(".item-box"),
             item = CACHE.AllAbilities.get(li.attr("data-item-uid")),
+            pack = this.childItemMap.get(li.attr("data-pack"));
+
+
+        item.sheet.render(true);
+    }
+
+    _onMaterialItemSummary(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            item = CACHE.Materials.get(this.item.data.data.material.data.uniqueId),
             pack = this.childItemMap.get(li.attr("data-pack"));
 
 
