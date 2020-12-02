@@ -201,6 +201,7 @@ export class DamageTypes {
                 damageBeforeDr += d.roll.total;
             }
         })
+        damageBeforeDr = Math.max(1,damageBeforeDr) // This makes base damage minimum 1
         let filteredDr = dr.filter(d => bypassedDr.has(d.uid))
         let hasOrInFiltered = filteredDr.some(d => d.or);
         let finalDr = dr.filter(d => !bypassedDr.has(d.uid))
