@@ -833,7 +833,8 @@
 
     li.skill, li.sub-skill {
       height: 28px;
-      padding: 3px 0;
+      line-height: 28px;
+      //padding: 3px 0;
 
       background-color: rgba(155, 155, 155, 0.3);
       &:nth-child(2n+1) {
@@ -844,8 +845,9 @@
         display: flex;
         flex: 180px;
         margin: 0;
-        font-size: 11px;
+        font-size: 13px;
         align-items: center;
+        margin-left: 4px;
 
         .image-d20 {
           display: inline-block;
@@ -858,6 +860,7 @@
         h4 {
           display: inline-block;
           margin: 0 0 0.25rem;
+          font-size: 13px;
       
         }
         input[type="text"] {
@@ -874,7 +877,8 @@
         .skill-control {
           display: flex;
           align-items: center;
-
+          line-height: 28px;
+          margin-bottom: 4px;
           .fas {
             display: inline-block;
             text-align: center;
@@ -884,11 +888,16 @@
       }
 
       .checkbox {
-        flex: 1 0 48px;
+        flex: 0 48px;
+      }
+
+      .toggle {
+        flex: 0;
+        margin-bottom: 4px;
       }
 
       .skill-ability {
-        flex: 1 0 48px;
+        flex: 0 48px;
         margin: 0 2px;
       }
 
@@ -901,7 +910,28 @@
       }
 
       .skill-rank {
-        flex: 1 0 48px;
+        flex: 0 48px;
+        margin-bottom: 4px;
+      }
+
+      .skill-mod-total {
+        flex: 0 60px;
+        margin-right: 12px;
+        border: 1px black dashed;
+        margin-bottom: 4px;
+        text-align: right;
+        border-radius: 3px;
+        height: 24px;
+        .image-d20 {
+
+          margin-top: 1px;
+        }
+        //background: rgba(0,0,0,0.1);
+        input {
+          border: none !important;
+          margin-bottom: 4px;
+          font-weight: 800;
+        }
       }
 
       .skill-passive {
@@ -911,7 +941,14 @@
       }
 
       .skill-controls {
-        flex: 0 0 24px;
+        flex: 0 24px;
+        line-height: 28px;
+        text-align: center;
+      }
+
+      .skill-untrained {
+        text-decoration: line-through;
+        color: #4b4a44;
       }
     }
 
@@ -919,6 +956,8 @@
       padding-left: 8px;
     }
   }
+
+
 
   /* ----------------------------------------- */
   /*  Statuses                                 */

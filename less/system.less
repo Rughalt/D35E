@@ -208,6 +208,18 @@
   }
 }
 
+.toggle.small input[type=checkbox] + label {
+  height: 24px;
+  line-height: 20px;
+  font-weight: normal;
+  i {
+    display: none;
+    margin-right: 2px;
+    line-height: 20px;
+  }
+}
+
+
 .toggle input[type=checkbox]:checked + label {
   margin: 2px;
   color: #782e22;
@@ -215,6 +227,12 @@
   border-radius: 2px;
   background-color: rgba(0,0,0,0.1);
   font-weight: bold;
+}
+
+
+.toggle.small input[type=checkbox]:disabled + label {
+  filter: grayscale(1) !important;
+  cursor: not-allowed !important;
 }
 
 .window-app.dialog {
@@ -253,8 +271,23 @@
 }
 
 .d35ecustom {
-  .form-group {
-    :not(button) {
+  .D35E.sheet.item, .D35E.sheet.actor {
+    .form-group {
+      :not(button) {
+        i.fas {
+          color: #2C606D !important;
+
+          &:hover {
+            text-shadow: 0 0 10px #2C606D !important;
+            color: #2C606D !important;
+          }
+        }
+      }
+    }
+  }
+
+  .D35E.sheet.item, .D35E.sheet.actor {
+    a {
       i.fas {
         color: #2C606D !important;
 
@@ -265,6 +298,7 @@
       }
     }
   }
+
   .D35E.sheet.item {
     .spell {
       border-radius: 2px;
@@ -293,7 +327,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100px;
-    line-height: 24px;
     font-weight: normal;
 
   }
@@ -1067,6 +1100,20 @@
       }
     }
 
+    .skill-mod-total {
+      flex: 0 60px;
+      margin-right: 12px;
+      border: 1px #2C606D dashed !important;
+      margin-bottom: 4px;
+      text-align: right;
+      border-radius: 3px;
+      height: 24px;
+      &:hover {
+        border: 1px solid #2C606D !important;
+        box-shadow: 0 0 8px #4d8d9d;
+      }
+    }
+
     ul {
       &.attributes {
         li {
@@ -1087,6 +1134,15 @@
       -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
       -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
       box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    }
+
+    .skills-list {
+        border-radius: 2px;
+        border: none !important;
+        background: rgba(255,255,255,0.2);
+        -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     }
 
 

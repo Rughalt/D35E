@@ -1289,7 +1289,7 @@
 .D35E.sheet.actor ul.skills-list li.skill,
 .D35E.sheet.actor ul.skills-list li.sub-skill {
   height: 28px;
-  padding: 3px 0;
+  line-height: 28px;
   background-color: rgba(155, 155, 155, 0.3);
 }
 .D35E.sheet.actor ul.skills-list li.skill:nth-child(2n+1),
@@ -1301,8 +1301,9 @@
   display: flex;
   flex: 180px;
   margin: 0;
-  font-size: 11px;
+  font-size: 13px;
   align-items: center;
+  margin-left: 4px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name .image-d20,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .image-d20 {
@@ -1316,6 +1317,7 @@
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name h4 {
   display: inline-block;
   margin: 0 0 0.25rem;
+  font-size: 13px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
@@ -1332,6 +1334,8 @@
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control {
   display: flex;
   align-items: center;
+  line-height: 28px;
+  margin-bottom: 4px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name .skill-control .fas,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control .fas {
@@ -1341,11 +1345,16 @@
 }
 .D35E.sheet.actor ul.skills-list li.skill .checkbox,
 .D35E.sheet.actor ul.skills-list li.sub-skill .checkbox {
-  flex: 1 0 48px;
+  flex: 0 48px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .toggle,
+.D35E.sheet.actor ul.skills-list li.sub-skill .toggle {
+  flex: 0;
+  margin-bottom: 4px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-ability,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-ability {
-  flex: 1 0 48px;
+  flex: 0 48px;
   margin: 0 2px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-mod,
@@ -1358,7 +1367,28 @@
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-rank,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-rank {
-  flex: 1 0 48px;
+  flex: 0 48px;
+  margin-bottom: 4px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod-total,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod-total {
+  flex: 0 60px;
+  margin-right: 12px;
+  border: 1px black dashed;
+  margin-bottom: 4px;
+  text-align: right;
+  border-radius: 3px;
+  height: 24px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod-total .image-d20,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod-total .image-d20 {
+  margin-top: 1px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod-total input,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod-total input {
+  border: none !important;
+  margin-bottom: 4px;
+  font-weight: 800;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-passive,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-passive {
@@ -1368,7 +1398,14 @@
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-controls,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-controls {
-  flex: 0 0 24px;
+  flex: 0 24px;
+  line-height: 28px;
+  text-align: center;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-untrained,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-untrained {
+  text-decoration: line-through;
+  color: #4b4a44;
 }
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
   padding-left: 8px;
@@ -4366,6 +4403,16 @@ tr.introjs-showElement > th {
   margin-right: 2px;
   line-height: 24px;
 }
+.toggle.small input[type=checkbox] + label {
+  height: 24px;
+  line-height: 20px;
+  font-weight: normal;
+}
+.toggle.small input[type=checkbox] + label i {
+  display: none;
+  margin-right: 2px;
+  line-height: 20px;
+}
 .toggle input[type=checkbox]:checked + label {
   margin: 2px;
   color: #782e22;
@@ -4373,6 +4420,10 @@ tr.introjs-showElement > th {
   border-radius: 2px;
   background-color: rgba(0, 0, 0, 0.1);
   font-weight: bold;
+}
+.toggle.small input[type=checkbox]:disabled + label {
+  filter: grayscale(1) !important;
+  cursor: not-allowed !important;
 }
 .window-app.dialog label.block-header {
   position: relative;
@@ -4395,10 +4446,21 @@ tr.introjs-showElement > th {
 #chat-log .chat-message .message-content .property-group:not(.footer) .flexrow .tag {
   white-space: unset;
 }
-.d35ecustom .form-group :not(button) i.fas {
+.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas,
+.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas {
   color: #2C606D !important;
 }
-.d35ecustom .form-group :not(button) i.fas:hover {
+.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas:hover,
+.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item a i.fas,
+.d35ecustom .D35E.sheet.actor a i.fas {
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item a i.fas:hover,
+.d35ecustom .D35E.sheet.actor a i.fas:hover {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
@@ -4427,7 +4489,6 @@ tr.introjs-showElement > th {
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100px;
-  line-height: 24px;
   font-weight: normal;
 }
 .d35ecustom .toggle input[type=checkbox]:checked + label {
@@ -5027,6 +5088,19 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet.actor .spellbook-spelllist {
   padding: 4px;
 }
+.d35ecustom .sheet .skill-mod-total {
+  flex: 0 60px;
+  margin-right: 12px;
+  border: 1px #2C606D dashed !important;
+  margin-bottom: 4px;
+  text-align: right;
+  border-radius: 3px;
+  height: 24px;
+}
+.d35ecustom .sheet .skill-mod-total:hover {
+  border: 1px solid #2C606D !important;
+  box-shadow: 0 0 8px #4d8d9d;
+}
 .d35ecustom .sheet ul.attributes li.attribute {
   border: none !important;
   background: rgba(255, 255, 255, 0.2);
@@ -5038,6 +5112,14 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet .details-attack-simple,
 .d35ecustom .sheet .details-skills-list,
 .d35ecustom .sheet .ability-scores .ability {
+  border: none !important;
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+}
+.d35ecustom .sheet .skills-list {
+  border-radius: 2px;
   border: none !important;
   background: rgba(255, 255, 255, 0.2);
   -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);

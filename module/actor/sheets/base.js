@@ -5,7 +5,7 @@ import { DamageReductionSetting } from "../../apps/damage-reduction-setting.js";
 import { LevelUpDataDialog } from "../../apps/level-up-data.js";
 import { ActorSheetFlags } from "../../apps/actor-flags.js";
 import { DicePF } from "../../dice.js";
-import { createTag, createTabs, isMinimumCoreVersion } from "../../lib.js";
+import {createTag, createTabs, isMinimumCoreVersion, uuidv4} from "../../lib.js";
 import { NoteEditor } from "../../apps/note-editor.js";
 import {SpellbookEditor} from "../../apps/spellbook-editor.js";
 import {D35E} from "../../config.js";
@@ -191,6 +191,8 @@ export class ActorSheetPF extends ActorSheet {
     data.items.filter(i => i.type == "class").forEach(c => classNamesAndLevels.push(c.name + " " + c.data.levels))
 
     data.classList = classNamesAndLevels.join(", ")
+
+    data.randomUuid = uuidv4();
 
     // Compute encumbrance
     data.encumbrance = this._computeEncumbrance(data);
@@ -557,8 +559,8 @@ export class ActorSheetPF extends ActorSheet {
 
 
     // Roll Skill Checks
-    html.find(".skill > .skill-name > .rollable").click(this._onRollSkillCheck.bind(this));
-    html.find(".sub-skill > .skill-name > .rollable").click(this._onRollSubSkillCheck.bind(this));
+    html.find(".skill .skill-roll").click(this._onRollSkillCheck.bind(this));
+    html.find(".sub-skill .skill-roll").click(this._onRollSubSkillCheck.bind(this));
 
     // Trait Selector
     html.find('.trait-selector').click(this._onTraitSelector.bind(this));
@@ -1601,14 +1603,16 @@ export class ActorSheetPF extends ActorSheet {
    */
   _onRollSkillCheck(event) {
     event.preventDefault();
-    const skill = event.currentTarget.parentElement.parentElement.dataset.skill;
+    const li = event.currentTarget.closest("li.skill");
+    const skill = li.dataset.skill;
     this.actor.rollSkill(skill, {event: event});
   }
 
   _onRollSubSkillCheck(event) {
     event.preventDefault();
-    const mainSkill = event.currentTarget.parentElement.parentElement.dataset.mainSkill;
-    const skill = event.currentTarget.parentElement.parentElement.dataset.skill;
+    const li = event.currentTarget.closest("li.sub-skill");
+    const skill = li.dataset.skill;
+    const mainSkill = li.dataset.mainSkill;
     this.actor.rollSkill(`${mainSkill}.subSkills.${skill}`, {event: event});
   }
 

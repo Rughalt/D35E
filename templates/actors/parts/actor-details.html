@@ -263,7 +263,7 @@
     <div class="item-detail item-actions">
       <span>{{ localize 'D35E.Total' }}</span></div>
   </div>
-  <ul class="noborder skills-list sub-scroll scroll-skillset" data-background="{{isBackgroundSkills}}">
+  <ul class="noborder skills-list sub-scroll scroll-skillset" style="box-shadow: none" data-background="{{isBackgroundSkills}}">
     {{#each skillsets.known.skills as |skill s|}}
       {{#if skill.arbitrary}}
         {{#each skill.subSkills as |subSkill b|}}
@@ -285,8 +285,8 @@
                 {{#if skill.cs}}*{{/if}}
               </h4>
             </div>
-            <h4>{{subSkill.rank}}</h4>
-            <h4>{{numberFormat subSkill.mod decimals=0}}</h4>
+            <h4 style="text-align: center">{{subSkill.rank}}</h4>
+            <h4 style="text-align: center; font-weight: 800">{{numberFormat subSkill.mod decimals=0 sign=true}}</h4>
           </li>
         {{/each}}
       {{else}}
@@ -316,8 +316,8 @@
             {{/if}}
           </div>
 
-          <h4>{{skill.rank}}</h4>
-          <h4>{{numberFormat skill.mod decimals=0}}</h4>
+          <h4 style="text-align: center">{{skill.rank}}</h4>
+          <h4 style="text-align: center; font-weight: 800">{{numberFormat skill.mod decimals=0 sign=true}}</h4>
         </li>
       {{/if}}
     {{/each}}

@@ -2397,7 +2397,7 @@ export class ActorPF extends Actor {
         for (let [sklKey, skl] of Object.entries(data1.skills)) {
             if (skl == null) continue;
 
-            let acpPenalty = (skl.acp ? data1.attributes.acp.total : 0);
+            let acpPenalty = (skl.acp ? Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]) : 0);
             let ablMod = 0;
             if (skl.ability !== "")
                 ablMod = data1.abilities[skl.ability].mod;
@@ -3000,11 +3000,13 @@ export class ActorPF extends Actor {
             for (let [s, skl] of Object.entries(expandedData.data.skills)) {
                 let curSkl = this.data.data.skills[s];
                 if (skl == null) continue;
-                if (typeof skl.rank !== "number") skl.rank = 0;
+                if (skl.rank)
+                    if (typeof skl.rank !== "number") skl.rank = 0;
                 if (skl.subSkills != null) {
                     for (let skl2 of Object.values(skl.subSkills)) {
                         if (skl2 == null) continue;
-                        if (typeof skl2.rank !== "number") skl2.rank = 0;
+                        if (skl2.rank)
+                            if (typeof skl2.rank !== "number") skl2.rank = 0;
                     }
                 }
 
