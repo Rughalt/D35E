@@ -347,7 +347,6 @@ export class ActorSheetPF extends ActorSheet {
         hasNonDomainSpells: false
       };
     }
-    console.log(spellbook)
     spells.forEach(spell => {
       const lvl = spell.data.level || 0;
       if (bannedSpellSpecialization.has(spell.data.school))
@@ -942,11 +941,7 @@ export class ActorSheetPF extends ActorSheet {
 
   async _setItemActive(event) {
     event.preventDefault();
-    if (this.actor.isToken) {
-      $(`#actor-${this.actor._id}-${this.actor.token.id}`).addClass('isWorking');
-    } else {
-      $(`#actor-${this.actor._id}`).addClass('isWorking');
-    }
+    this.showWorkingOverlay();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
 
@@ -958,12 +953,24 @@ export class ActorSheetPF extends ActorSheet {
       await item.update(updateData);
     }
 
+    this.hideWorkingOverlay();
+
+  }
+
+  hideWorkingOverlay() {
     if (this.actor.isToken) {
       $(`#actor-${this.actor._id}-${this.actor.token.id}`).removeClass('isWorking');
     } else {
       $(`#actor-${this.actor._id}`).removeClass('isWorking');
     }
+  }
 
+  showWorkingOverlay() {
+    if (this.actor.isToken) {
+      $(`#actor-${this.actor._id}-${this.actor.token.id}`).addClass('isWorking');
+    } else {
+      $(`#actor-${this.actor._id}`).addClass('isWorking');
+    }
   }
 
   /* -------------------------------------------- */
@@ -1337,12 +1344,14 @@ export class ActorSheetPF extends ActorSheet {
     await this.actor.update(updateData);
   }
 
-  _addAllKnownSpells(event) {
+  async _addAllKnownSpells(event) {
     event.preventDefault();
     // Remove old special prepared spell
     const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
     const level = $(event.currentTarget).parents(".spellbook-list").attr("data-level");
-    this.actor.addSpellsToSpellbookForClass(spellbookKey, level);
+    this.showWorkingOverlay();
+    await this.actor.addSpellsToSpellbookForClass(spellbookKey, level);
+    this.hideWorkingOverlay();
   }
 
   _onSpellAddMetamagic(event) {
