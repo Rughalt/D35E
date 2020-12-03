@@ -3034,7 +3034,8 @@ export class ActorPF extends Actor {
                 }
             }
             data = flattenObject(expandedData);
-        }
+        } else if (expandedData.data !== null)
+            data = flattenObject(expandedData);
         data.img = img;
         for (let abl of Object.keys(this.data.data.abilities)) {
             if (data[`data.abilities.${abl}.tempvalue`] === undefined || data[`data.abilities.${abl}.tempvalue`] === null)
