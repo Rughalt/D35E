@@ -2997,6 +2997,7 @@ export class ActorPF extends Actor {
         }
         this._updateMinions(options);
         //return false;
+        return this;
     }
 
     async prepareUpdateData(data) {
