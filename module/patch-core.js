@@ -61,26 +61,6 @@ export async function PatchCore() {
     };
   }
 
-  const ActorTokenHelpers_update = ActorTokenHelpers.prototype.update;
-  ActorTokenHelpers.prototype.update = async function(data, options={}) {
-    // Pre update
-    if (isMinimumCoreVersion("0.7.4")) {
-      await this.prepareUpdateData(data);
-    }
-
-
-    // Update changes
-    let diff = data;
-    if (options.updateChanges !== false) {
-      const updateObj = await this._updateChanges({data: data});
-      if (updateObj.diff.items) delete updateObj.diff.items;
-      diff = mergeObject(diff, updateObj.diff);
-    }
-    if (Object.keys(diff).length) {
-      await ActorTokenHelpers_update.call(this, diff, options);
-    }
-    //await this.toggleConditionStatusIcons();
-  };
 
   if (isMinimumCoreVersion("0.7.6") && !isMinimumCoreVersion("0.7.7")) {
     const Roll__splitDiceTerms = Roll.prototype._splitDiceTerms;
@@ -122,6 +102,28 @@ export async function PatchCore() {
     };
   }
 
+  const ActorTokenHelpers_update = ActorTokenHelpers.prototype.update;
+  ActorTokenHelpers.prototype.update = async function(data, options={}) {
+    // Pre update
+    if (isMinimumCoreVersion("0.7.4")) {
+      await this.prepareUpdateData(data);
+    }
+
+
+    // Update changes
+    let diff = data;
+    if (options.updateChanges !== false) {
+      const updateObj = await this._updateChanges({data: data});
+      if (updateObj.diff.items) delete updateObj.diff.items;
+      diff = mergeObject(diff, updateObj.diff);
+    }
+    if (Object.keys(diff).length) {
+      await ActorTokenHelpers_update.call(this, diff, options);
+    }
+    //await this.toggleConditionStatusIcons();
+  };
+
+
 
   // const ActorTokenHelpers_createEmbeddedEntity = ActorTokenHelpers.prototype.createEmbeddedEntity;
   // ActorTokenHelpers.prototype.createEmbeddedEntity = async function(...args) {
@@ -139,13 +141,13 @@ export async function PatchCore() {
   };
 
   // Patch ActorTokenHelpers.updateEmbeddedEntity
-  const ActorTokenHelpers_updateEmbeddedEntity = ActorTokenHelpers.prototype.updateEmbeddedEntity;
-  ActorTokenHelpers.prototype.updateEmbeddedEntity = async function(embeddedName, data, options={}) {
-    await ActorTokenHelpers_updateEmbeddedEntity.call(this, embeddedName, data, options);
-
-    if (options.stopUpdates) return;
-    return ActorPF.prototype.update.call(this, options);
-  };
+  // const ActorTokenHelpers_updateEmbeddedEntity = ActorTokenHelpers.prototype.updateEmbeddedEntity;
+  // ActorTokenHelpers.prototype.updateEmbeddedEntity = async function(embeddedName, data, options={}) {
+  //   await ActorTokenHelpers_updateEmbeddedEntity.call(this, embeddedName, data, options);
+  //
+  //   if (options.stopUpdates) return;
+  //   return ActorPF.prototype.update.call(this, options);
+  // };
   // Patch ActorTokenHelpers.deleteEmbeddedEntity
   const ActorTokenHelpers_deleteEmbeddedEntity = ActorTokenHelpers.prototype.deleteEmbeddedEntity;
   ActorTokenHelpers.prototype.deleteEmbeddedEntity = async function(embeddedName, id, options={}) {

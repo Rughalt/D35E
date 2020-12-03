@@ -2494,6 +2494,7 @@ export class ActorPF extends Actor {
                 isArcane: cls.data.spellcastingType !== null && cls.data.spellcastingType === "arcane",
                 spellcastingType: cls.data.spellcastingType,
                 spellcastingAbility: cls.data.spellcastingAbility,
+                allSpellsKnown: cls.data.allSpellsKnown,
 
                 savingThrows: {
                     fort: 0,
@@ -2615,6 +2616,7 @@ export class ActorPF extends Actor {
         for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
             // Set CL
             spellbook.maxPrestigeCl = 0
+            spellbook.allSpellsKnown = false
             try {
                 let roll = new Roll(spellbook.cl.formula, data).roll();
                 spellbook.cl.total = roll.total || 0;
@@ -2633,6 +2635,8 @@ export class ActorPF extends Actor {
                         spellbook.availablePrestigeCl = data.attributes.prestigeCl[spellcastingType].max - spellcastingBonusTotalUsed[spellcastingType];
                     }
                 }
+
+                spellbook.allSpellsKnown = data.classes[spellbook.class]?.allSpellsKnown
             }
             spellbook.hasPrestigeCl = spellbook.maxPrestigeCl > 0
             spellbook.canAddPrestigeCl = spellbook.availablePrestigeCl > 0
@@ -3444,6 +3448,58 @@ export class ActorPF extends Actor {
 
 
         return usedItem.roll();
+    }
+
+    async addSpellsToSpellbook(item) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        if (item.data.type !== "feat") throw new Error("Wrong Item type");
+        let spellsToAdd = []
+        for (let spell of Object.values(item.data.data.spellSpecialization.spells)) {
+            let itemData = null;
+            const pack = game.packs.find(p => p.collection === spell.pack);
+            const packItem = await pack.getEntity(spell.id);
+            if (packItem != null) itemData = packItem.data;
+            if (itemData) {
+                if (itemData._id) delete itemData._id;
+                itemData.data.level = spell.level
+                spellsToAdd.push(itemData)
+            }
+        }
+        await this.createEmbeddedEntity("OwnedItem", spellsToAdd, {nameUnique: true, domainSpells: true})
+    }
+
+    async addSpellsToSpellbookForClass(_spellbookKey, level) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        let spellsToAdd = []
+        for (let p of game.packs.values()) {
+            if (p.private && !game.user.isGM) continue;
+            if (p.entity !== "Item") continue;
+
+            const items = await p.getContent();
+            for (let obj of items) {
+                if (obj.type !== 'spell') continue;
+                let foundLevel = false;
+                let spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey];
+                let spellbookClass = spellbook.class
+                if (obj.data.data.learnedAt !== undefined) {
+                    obj.data.data.learnedAt.class.forEach(learnedAtObj => {
+                        if (learnedAtObj[0].toLowerCase() === spellbookClass) {
+                            obj.data.data.level = learnedAtObj[1]
+                            foundLevel = true;
+                        }
+                    })
+                }
+                if (parseInt(level) !== obj.data.data.level) continue;
+                if (!foundLevel) continue;
+
+                if (obj.data._id) delete obj.data._id;
+                obj.data.data.spellbook = _spellbookKey
+                spellsToAdd.push(obj.data)
+            }
+        }
+        await this.createEmbeddedEntity("OwnedItem", spellsToAdd, {stopUpdates: true, nameUnique: true, domainSpells: true})
     }
 
     async createAttackFromWeapon(item) {
@@ -4406,19 +4462,14 @@ export class ActorPF extends Actor {
                 obj.data.equipped = false;
             }
             if (["spell"].includes(obj.type)) {
-                let spellbook = this.data.data.attributes.spells.spellbooks[obj.data.spellbook]
-                let foundLevel = false;
-                if (obj.data.spellbook === null) {
+                if (options.domainSpells) {
+                    let spellbook = undefined
                     // We try to set spellbook to correct one
                     for (let _spellbookKey of Object.keys(this.data.data.attributes.spells.spellbooks)) {
                         let _spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey]
-                        let spellbookClass = _spellbook.class
-                        if (obj.data.learnedAt !== undefined) {
-                            for (const learnedAtObj of obj.data.learnedAt.class) {
-                                if (learnedAtObj[0].toLowerCase() === spellbookClass) {
-                                    spellbook = _spellbook
-                                }
-                            }
+                        if (_spellbook.hasSpecialSlot && _spellbook.spellcastingType === "divine"){
+                            spellbook = _spellbook
+                            obj.data.spellbook = _spellbookKey
                         }
                     }
                     if (spellbook === undefined) {
@@ -4426,18 +4477,42 @@ export class ActorPF extends Actor {
                         spellbook = this.data.data.attributes.spells.spellbooks["primary"]
                         ui.notifications.warn(`No Spellbook found for spell. Adding to Primary spellbook.`)
                     }
-                }
-                let spellbookClass = spellbook.class
-                if (obj.data.learnedAt !== undefined) {
-                    obj.data.learnedAt.class.forEach(learnedAtObj => {
-                        if (learnedAtObj[0].toLowerCase() === spellbookClass) {
-                            obj.data.level = learnedAtObj[1]
-                            foundLevel = true;
+                } else {
+                    let spellbook = this.data.data.attributes.spells.spellbooks[obj.data.spellbook]
+                    let foundLevel = false;
+                    if (obj.data.spellbook === null) {
+                        // We try to set spellbook to correct one
+                        for (let _spellbookKey of Object.keys(this.data.data.attributes.spells.spellbooks)) {
+                            let _spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey]
+                            let spellbookClass = _spellbook.class
+                            if (obj.data.learnedAt !== undefined) {
+                                for (const learnedAtObj of obj.data.learnedAt.class) {
+                                    if (learnedAtObj[0].toLowerCase() === spellbookClass) {
+                                        spellbook = _spellbook
+                                        obj.data.spellbook = _spellbookKey
+                                    }
+                                }
+                            }
                         }
-                    })
+                        if (spellbook === undefined) {
+                            obj.data.spellbook = "primary"
+                            spellbook = this.data.data.attributes.spells.spellbooks["primary"]
+                            ui.notifications.warn(`No Spellbook found for spell. Adding to Primary spellbook.`)
+                        } else {
+                        }
+                    }
+                    let spellbookClass = spellbook.class
+                    if (obj.data.learnedAt !== undefined) {
+                        obj.data.learnedAt.class.forEach(learnedAtObj => {
+                            if (learnedAtObj[0].toLowerCase() === spellbookClass) {
+                                obj.data.level = learnedAtObj[1]
+                                foundLevel = true;
+                            }
+                        })
+                    }
+                    if (!foundLevel)
+                        ui.notifications.warn(`Spell added despite not being in a spell list for class.`)
                 }
-                if (!foundLevel)
-                    ui.notifications.warn(`Spell added despite not being in a spell list for class.`)
 
             }
         }

@@ -343,15 +343,20 @@ export class ActorSheetPF extends ActorSheet {
         baseSlots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.base || 0,
         slots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
-        specialSlotPrepared: false
+        specialSlotPrepared: false,
+        hasNonDomainSpells: false
       };
     }
+    console.log(spellbook)
     spells.forEach(spell => {
       const lvl = spell.data.level || 0;
       if (bannedSpellSpecialization.has(spell.data.school))
         spell.isBanned = true;
-      if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(spell.name))
+      if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(spell.name)) {
         spell.isSpecialized = true;
+      } else {
+        spellbook[lvl].hasNonDomainSpells = true;
+      }
       if (spell.data.isSpellSpontaneousReplacement) {
         spellbook[lvl].hasSpontaneousSpellReplacement = true;
         spellbook[lvl].spellReplacementId = spell.id;
@@ -687,6 +692,8 @@ export class ActorSheetPF extends ActorSheet {
 
     // Open Compendium packs
     html.find(".open-compendium-pack").click(ev => this._openCompendiumPack(ev));
+
+    html.find(".add-all-known-spells").click(ev => this._addAllKnownSpells(ev))
 
 
     html.find(".warning").click(ev => this._openClassTab());
@@ -1330,6 +1337,14 @@ export class ActorSheetPF extends ActorSheet {
     await this.actor.update(updateData);
   }
 
+  _addAllKnownSpells(event) {
+    event.preventDefault();
+    // Remove old special prepared spell
+    const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
+    const level = $(event.currentTarget).parents(".spellbook-list").attr("data-level");
+    this.actor.addSpellsToSpellbookForClass(spellbookKey, level);
+  }
+
   _onSpellAddMetamagic(event) {
 
   }
@@ -1502,6 +1517,7 @@ export class ActorSheetPF extends ActorSheet {
       spellbookData[a] = {
         data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
+
         orig: spellbook,
         concentration: this.actor.data.data.skills["coc"].mod,
         spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"

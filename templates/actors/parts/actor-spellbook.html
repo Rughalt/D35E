@@ -206,9 +206,9 @@
       </div>
     </li>
 
-    <ol class="item-list">
+    <ol class="item-list spellbook-list" data-level="{{section.level}}">
       {{#each section.spells as |item i|}}
-      <li class="item flexrow" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
+      <li class="item flexrow" data-level="{{section.level}}" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
         <div class="item-name flexrow rollable {{#if item.isSpecialized}}item-specialized{{/if}}{{#if item.isBanned}}item-banned{{/if}}">
           <div class="item-image" style="background-image: url('{{item.img}}')"></div>
           <h4>{{item.name}}
@@ -323,7 +323,16 @@
         {{/if}}
       </li>
       {{/each}}
-
+      {{#unless section.hasNonDomainSpells}}
+      {{#if ../spellbook.orig.allSpellsKnown}}
+      <li class="item flexrow">
+        <div class="item-name flexrow rollable add-all-known-spells" style="opacity: 0.8; text-align: center">
+          <span>{{localize "D35E.AddAllKnownSpells"}}
+          </span>
+        </div>
+      </li>
+      {{/if}}
+      {{/unless}}
       {{#if ../spellbook.orig.hasSpecialSlot}}
         {{#unless section.specialSlotPrepared}}
           {{#if section.level}}

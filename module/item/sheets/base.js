@@ -257,7 +257,7 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         // Prepare spell specific stuff
-        if (data.item.type === "spell") {
+        if (data.item.typeknowsAllSpells === "spell") {
             let spellbook = null;
             if (this.actor != null) {
                 spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.item.data.data.spellbook}`);
@@ -945,6 +945,10 @@ export class ItemSheetPF extends ItemSheet {
             html.find("button[name='create-attack']").click(this._createAttack.bind(this));
         }
 
+        if (["feat"].includes(this.item.data.type)) {
+            html.find("button[name='add-domain-spells']").click(this._addSpellsToSpellbook.bind(this));
+        }
+
 
         // Modify conditionals
         html.find(".conditional-control").click(this._onConditionalControl.bind(this));
@@ -1277,6 +1281,12 @@ export class ItemSheetPF extends ItemSheet {
         await this._onSubmit(event);
 
         await this.item.actor.createAttackFromWeapon(this.item);
+    }
+
+    async _addSpellsToSpellbook(event) {
+        if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
+        await this.item.actor.addSpellsToSpellbook(this.item);
+
     }
 
     _onEntrySelector(event) {

@@ -1189,6 +1189,8 @@
   "D35E.NonClassSkill": "Non-class skill",
   "D35E.SpellbookDescUse": "Use",
   "D35E.SpellbookDescToPrepareSpell": "icon to prepare spell in special Domain/School slot",
+  "D35E.AddAllKnownSpells": "Add all known class spells for this level",
+  "D35E.KnowsAllSpells": "Class knows all spells",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

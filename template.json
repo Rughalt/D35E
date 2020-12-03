@@ -1283,6 +1283,7 @@
       "hp": 8,
       "bab": "low",
       "skillsPerLevel": 0,
+      "allSpellsKnown": false,
       "creatureType": "humanoid",
       "savingThrows": {
         "fort": { "value": "low" },
@@ -1515,6 +1516,7 @@
       },
       "showInQuickbar": false,
       "specialPrepared": false,
+      "isDomainSpell": false,
       "specialId": null
 
     },
