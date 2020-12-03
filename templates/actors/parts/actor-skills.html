@@ -32,7 +32,7 @@
       <div class="rollable image-d20"></div>
       <input type="text" class="rollable"  value="{{numberFormat subSkill.mod decimals=0 sign=true}}" disabled data-dtype="Number"/>
     </div>
-    <input type="text" class="skill-rank" name="data.skills.{{s}}.subSkills.{{b}}.rank" value="{{#if subSkill.rank}}{{subSkill.rank}}{{/if}}" placeholder="{{ localize 'D35E.Rank' }}" data-dtype="Number"/>
+    <input {{#if ../data.details.levelUpProgression}}readonly{{/if}} type="text" class="skill-rank" name="data.skills.{{s}}.subSkills.{{b}}.rank" value="{{#if subSkill.rank}}{{subSkill.rank}}{{/if}}" placeholder="{{ localize 'D35E.Rank' }}" data-dtype="Number"/>
     <div class="toggle small" style="width: 40px">
       <input id="{{randomUuid}}-{{s}}-{{b}}-class" type="checkbox" {{checked subSkill.cs}} disabled/>
       <label style="width: 40px" for="{{randomUuid}}-{{s}}-{{b}}-class">{{#if subSkill.cs}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize 'D35E.CS'}}</label>
@@ -87,7 +87,7 @@
       <div class="rollable image-d20"></div>
       <input type="text" class="rollable"  value="{{numberFormat skill.mod decimals=0 sign=true}}" disabled data-dtype="Number"/>
     </div>
-    <input type="text" class="skill-rank" name="data.skills.{{s}}.rank" value="{{#if skill.rank}}{{skill.rank}}{{/if}}" placeholder="{{ localize 'D35E.Rank' }}" data-dtype="Number"/>
+    <input {{#if ../data.details.levelUpProgression}}readonly{{/if}} type="text" class="skill-rank" name="data.skills.{{s}}.rank" value="{{#if skill.rank}}{{skill.rank}}{{/if}}" placeholder="{{ localize 'D35E.Rank' }}" data-dtype="Number"/>
     <div class="toggle small" style="width: 40px">
         <input id="{{randomUuid}}-{{s}}-class" type="checkbox" {{checked skill.cs}} disabled/>
         <label style="width: 40px" for="{{randomUuid}}-{{s}}-class">{{#if skill.cs}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize 'D35E.CS'}}</label>

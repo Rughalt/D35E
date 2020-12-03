@@ -5101,6 +5101,14 @@ tr.introjs-showElement > th {
   border: 1px solid #2C606D !important;
   box-shadow: 0 0 8px #4d8d9d;
 }
+.d35ecustom .sheet input.skill-rank:read-only {
+  border: none !important;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.d35ecustom .sheet input.skill-rank:read-only:hover {
+  border: none !important;
+  box-shadow: none;
+}
 .d35ecustom .sheet ul.attributes li.attribute {
   border: none !important;
   background: rgba(255, 255, 255, 0.2);

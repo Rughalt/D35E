@@ -1185,6 +1185,11 @@
   "D35E.BaseWeaponAttackBonus": "Base Weapon Attack Bonus",
   "D35E.AttackRoll": "Base Weapon Attack Bonus",
   "D35E.WeaponDamageAlignment": "Weapon Damage Alignment",
+  "D35E.HalfRanks": "Half Ranks counted",
+  "D35E.NonClassSkill": "Non-class skill",
+  "D35E.SpellbookDescUse": "Use",
+  "D35E.SpellbookDescToPrepareSpell": "icon to prepare spell in special Domain/School slot",
+
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

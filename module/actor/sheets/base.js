@@ -142,12 +142,24 @@ export class ActorSheetPF extends ActorSheet {
       skl.label = CONFIG.D35E.skills[s];
       skl.arbitrary = CONFIG.D35E.arbitrarySkills.includes(s);
       skl.sourceDetails = (data.sourceDetails != null && data.sourceDetails.data.skills[s] != null) ? data.sourceDetails.data.skills[s].changeBonus : [];
+      if (data.actor.data.attributes.acp.total && skl.acp)
+        skl.sourceDetails.push({ name: game.i18n.localize("D35E.ACP"), value: `-${data.actor.data.attributes.acp.total}` })
+      if (skl.ability)
+        skl.sourceDetails.push({ name: game.i18n.localize("D35E.Ability"), value: getProperty(data.actor,`data.abilities.${skl.ability}.mod`) })
+      if (!skl.cls && skl.rank)
+        skl.sourceDetails.push({ name: game.i18n.localize("D35E.NonClassSkill"), value: game.i18n.localize("D35E.HalfRanks") })
       if (skl.subSkills != null) {
         for (let [s2, skl2] of Object.entries(skl.subSkills)) {
           if (data.sourceDetails == null) continue;
           if (data.sourceDetails.data.skills[s] == null) continue;
           if (data.sourceDetails.data.skills[s].subSkills == null) continue;
           skl2.sourceDetails = data.sourceDetails.data.skills[s].subSkills[s2] != null ? data.sourceDetails.data.skills[s].subSkills[s2].changeBonus : [];
+          if (data.actor.data.attributes.acp.total && skl2.acp)
+            skl2.sourceDetails.push({ name: game.i18n.localize("D35E.ACP"), value: `-${data.actor.data.attributes.acp.total}` })
+          if (skl2.ability)
+            skl2.sourceDetails.push({ name: game.i18n.localize("D35E.Ability"), value: getProperty(data.actor,`data.abilities.${skl2.ability}.mod`) })
+          if (!skl2.cls && skl2.rank)
+            skl.sourceDetails.push({ name: game.i18n.localize("D35E.NonClassSkill"), value: game.i18n.localize("D35E.HalfRanks") })
         }
       }
     }
@@ -307,7 +319,7 @@ export class ActorSheetPF extends ActorSheet {
    * @param {String} bookKey  The key of the spellbook being prepared
    * @private
    */
-  _prepareSpellbook(data, spells, bookKey, availableSpellSpecialization, bannedSpellSpecialization) {
+  _prepareSpellbook(data, spells, bookKey, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames) {
     const owner = this.actor.owner;
     const book = this.actor.data.data.attributes.spells.spellbooks[bookKey];
 
@@ -331,19 +343,22 @@ export class ActorSheetPF extends ActorSheet {
         baseSlots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.base || 0,
         slots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
+        specialSlotPrepared: false
       };
     }
     spells.forEach(spell => {
       const lvl = spell.data.level || 0;
       if (bannedSpellSpecialization.has(spell.data.school))
         spell.isBanned = true;
-      if (availableSpellSpecialization.has(spell.data.school))
+      if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(spell.name))
         spell.isSpecialized = true;
       if (spell.data.isSpellSpontaneousReplacement) {
         spellbook[lvl].hasSpontaneousSpellReplacement = true;
         spellbook[lvl].spellReplacementId = spell.id;
         spellbook[lvl].spellReplacementName = spell.name;
       }
+      if (spell.data.specialPrepared)
+        spellbook[lvl].specialSlotPrepared = true
       spellbook[lvl].spells.push(spell);
     });
 
@@ -1457,6 +1472,7 @@ export class ActorSheetPF extends ActorSheet {
     feats = this._filterItems(feats, this._filters.features);
 
     let availableSpellSpecialization = new Set()
+    let domainSpellNames = new Set()
     let bannedSpellSpecialization = new Set()
 
     feats.forEach(feat => {
@@ -1469,6 +1485,12 @@ export class ActorSheetPF extends ActorSheet {
         if (name === "") return;
         bannedSpellSpecialization.add(name)
       });
+      if (feat.data?.spellSpecialization?.isDomain) {
+
+        Object.values(feat.data?.spellSpecialization?.spells).forEach(s => {
+          domainSpellNames.add(s.name);
+        })
+      }
     })
 
     // Organize Spellbook
@@ -1478,7 +1500,7 @@ export class ActorSheetPF extends ActorSheet {
     for (let [a, spellbook] of Object.entries(spellbooks)) {
       const spellbookSpells = spells.filter(obj => { return obj.data.spellbook === a; });
       spellbookData[a] = {
-        data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization),
+        data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
         orig: spellbook,
         concentration: this.actor.data.data.skills["coc"].mod,

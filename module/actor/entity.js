@@ -596,7 +596,7 @@ export class ActorPF extends Actor {
 
         // Add Constitution to HP
         changes.push({
-            raw: ["@abilities.con.origMod * @attributes.hd.total", "misc", "mhp", "untyped", 0],
+            raw: ["@abilities.con.origMod * @attributes.hd.racialClass", "misc", "mhp", "untyped", 0],
             source: { name: "Constitution" }
         });
         changes.push({
@@ -1777,6 +1777,7 @@ export class ActorPF extends Actor {
         }
         console.log(`D35E | Setting attributes hd total | ${data1.details.level.value}`)
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
+        linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
 
         // Reset abilities
         for (let [a, abl] of Object.entries(data1.abilities)) {
@@ -2128,6 +2129,7 @@ export class ActorPF extends Actor {
         }
         {
             let level = classes.reduce((cur, o) => {
+                if (o.data.classType === "minion" || o.data.classType === "template") return cur;
                 return cur + o.data.levels;
             }, 0);
 
@@ -3223,9 +3225,10 @@ export class ActorPF extends Actor {
         }
 
         let level = classes.reduce((cur, o) => {
+            if (o.data.data.classType === "minion" || o.data.data.classType === "template") return cur;
             return cur + o.data.data.levels;
         }, 0);
-        let racialHD = classes.filter(o => o.type === "class" && getProperty(o.data, "classType") === "racial").reduce((cur, o) => {
+        let racialHD = classes.filter(o => o.type === "class" && getProperty(o.data, "data.classType") === "racial").reduce((cur, o) => {
             return cur + o.data.data.levels;
         }, 0);
         level += raceLA;
@@ -3235,11 +3238,11 @@ export class ActorPF extends Actor {
 
         // The following is not for NPCs
         if (this.data.type !== "character") return;
-        console.log('D35E | ActorPF | _updateExp | Race LA, racial HD', raceLA, racialHD)
         if (data["data.details.levelUpProgression"] || this.data.data.details.levelUpProgression) {
             dataLevel = (data["data.details.level.available"] || this.data.data.details.level.available) + raceLA + racialHD
             console.log('D35E | ActorPF | _updateExp | Update exp data from class level count', dataLevel)
         }
+        console.log('D35E | ActorPF | _updateExp | Race LA, racial HD, level', raceLA, racialHD,dataLevel)
         // Translate update exp value to number
         let newExp = data["data.details.xp.value"],
             resetExp = false;

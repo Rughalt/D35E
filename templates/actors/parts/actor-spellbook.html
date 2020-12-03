@@ -284,10 +284,14 @@
           {{#if ../../spellbook.orig.hasSpecialSlot}}
             {{#unless item.data.specialPrepared}}
 
-              {{#if item.isSpecialized}}
-              <a class="item-control spell-prepare-special" title="{{ localize 'D35E.PrepareAsSpecialSpell' }}">
-                <i class="fas fa-hand-sparkles"></i>
-              </a>
+              {{#if section.slots}}
+                {{#if item.isSpecialized}}
+                <a class="item-control spell-prepare-special" title="{{ localize 'D35E.PrepareAsSpecialSpell' }}">
+                  <i class="fas fa-hand-sparkles"></i>
+                </a>
+                {{else}}
+                <div style="flex: 0 16px;"></div>
+                {{/if}}
               {{else}}
               <div style="flex: 0 16px;"></div>
               {{/if}}
@@ -319,6 +323,24 @@
         {{/if}}
       </li>
       {{/each}}
+
+      {{#if ../spellbook.orig.hasSpecialSlot}}
+        {{#unless section.specialSlotPrepared}}
+          {{#if section.level}}
+            {{#if section.slots}}
+              <li class="item flexrow" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
+                <div class="item-name flexrow" style="opacity: 0.8; text-align: center">
+                  <em>{{localize "D35E.SpellbookDescUse"}}
+                    <i class="fas fa-hand-sparkles">
+                    </i>
+                    {{localize "D35E.SpellbookDescToPrepareSpell"}}
+                  </em>
+                </div>
+              </li>
+            {{/if}}
+          {{/if}}
+        {{/unless}}
+      {{/if}}
     </ol>
 {{/each}}
 </ol>
