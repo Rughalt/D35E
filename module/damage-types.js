@@ -185,6 +185,7 @@ export class DamageTypes {
         let damageBeforeDr = 0;
 
         //Checks for slashing/piercing/bludgeonign damage and typeless damage
+        let hasAnyTypeDamage = false;
         damage.forEach(d => {
             if (d.damageTypeUid) {
                 let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
@@ -196,12 +197,14 @@ export class DamageTypes {
                     if (_damage.data.data.isBludgeoning)
                         bypassedDr.add("bludgeoning");
                     damageBeforeDr += d.roll.total;
+                    hasAnyTypeDamage = true;
                 }
             } else {
                 damageBeforeDr += d.roll.total;
             }
         })
-        damageBeforeDr = Math.max(1,damageBeforeDr) // This makes base damage minimum 1
+        if (hasAnyTypeDamage)
+            damageBeforeDr = Math.max(1,damageBeforeDr) // This makes base damage minimum 1
         let filteredDr = dr.filter(d => bypassedDr.has(d.uid))
         let hasOrInFiltered = filteredDr.some(d => d.or);
         let finalDr = dr.filter(d => !bypassedDr.has(d.uid))
@@ -224,6 +227,12 @@ export class DamageTypes {
                 if (_damage.data.data.damageType === "energy") {
                     let erValue = DamageTypes.getDamageTypeForUID(er,d.damageTypeUid)
                     let damageAfterEr = Math.max(d.roll.total - (erValue?.value || 0),0)
+
+                    if (actor.data.data.details?.type === "undead" && d.damageTypeUid === "energy-negative")
+                        damageAfterEr =- damageAfterEr;
+                    if (actor.data.data.details?.type !== "undead" && d.damageTypeUid === "energy-positive")
+                        damageAfterEr =- damageAfterEr;
+
                     let value = erValue?.value
                     if (erValue?.immunity) {
                         damageAfterEr = 0;
@@ -235,6 +244,7 @@ export class DamageTypes {
                     } else if (damageAfterEr === d.roll.total) {
                         value = game.i18n.localize("D35E.NoER")
                     }
+
 
                     energyDamage.push({name:_damage.data.name,uid:_damage.data.data.uniqueId,before:d.roll.total,after:damageAfterEr,value:value || 0,lower:damageAfterEr<d.roll.total,higher:damageAfterEr>d.roll.total,equal:d.roll.total===damageAfterEr});
                     energyDamageAfterEr += damageAfterEr;

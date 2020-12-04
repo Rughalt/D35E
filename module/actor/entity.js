@@ -4248,7 +4248,7 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(damage,material,alignment,enh) {
+    static async applyDamage(damage,material,alignment,enh, simpleDamage = false) {
 
         let value = 0;
 
@@ -4267,27 +4267,33 @@ export class ActorPF extends Actor {
                 hp = a.data.data.attributes.hp,
                 tmp = parseInt(hp.temp) || 0,
                 dt = value > 0 ? Math.min(tmp, value) : 0;
-            let damageData = DamageTypes.calculateDamageToActor(a, damage,material,alignment,enh)
-            value = damageData.damage;
-            // Set chat data
-            let chatData = {
-                speaker: ChatMessage.getSpeaker({actor: a.data}),
-                rollMode: "selfroll",
-                sound: CONFIG.sounds.dice,
-                "flags.D35E.noRollRender": true,
-            };
-            let chatTemplateData = {
-                name: a.name,
-                type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-                rollMode: "selfroll",
-            };
-            const templateData = mergeObject(chatTemplateData, {
-                damageData: damageData,
-                img: a.img
-            }, {inplace: false});
-            // Create message
+            if (simpleDamage) {
+                value = damage;
+            } else {
+                let damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh)
+                value = damageData.damage;
 
-            await createCustomChatMessage("systems/D35E/templates/chat/damage-description.html", templateData, chatData);
+                // Set chat data
+                let chatData = {
+                    speaker: ChatMessage.getSpeaker({actor: a.data}),
+                    rollMode: "blindroll",
+                    sound: CONFIG.sounds.dice,
+                    "flags.D35E.noRollRender": true,
+                };
+                let chatTemplateData = {
+                    name: a.name,
+                    type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                    rollMode: "blindroll",
+                };
+                const templateData = mergeObject(chatTemplateData, {
+                    damageData: damageData,
+                    img: a.img
+                }, {inplace: false});
+                // Create message
+
+                await createCustomChatMessage("systems/D35E/templates/chat/damage-description.html", templateData, chatData);
+            }
+
 
             if (!a.hasPerm(game.user, "OWNER")) {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
