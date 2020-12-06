@@ -9,7 +9,11 @@
     <div class="chat-attack">
 
         <div class="dice-roll attack-roll flexcol">
+            {{#if damageData.isHealing}}
+            <div class="dice-flavor">{{localize "D35E.HealingApplied"}}</div>
+            {{else}}
             <div class="dice-flavor">{{localize "D35E.DamageApplied"}}</div>
+            {{/if}}
             <div class="flexrow">
                 <div class="flexcol">
                     <div class="dice-flavor">Rolled</div>
@@ -37,7 +41,10 @@
                     <div class="dice-flavor">Applied</div>
                     <div class="dice-result">
                         <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
-                            {{damageData.damage}}</h4>
+                            {{#if damageData.isHealing}}
+                            <i class="fas fa-heart" style="font-size: 16px;"></i>
+                            {{/if}}
+                            {{numberFormat damageData.displayDamage decimals=0 sign=false}}</h4>
                     </div>
                 </div>
             </div>

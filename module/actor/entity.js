@@ -2135,6 +2135,8 @@ export class ActorPF extends Actor {
 
             console.log(`D35E | Setting attributes hd total | ${level}`)
             linkData(data, updateData, "data.attributes.hd.total", level);
+
+            linkData(data, updateData, "data.attributes.hd.racialClass",level);
             level += raceLA;
             let existingAbilities = new Set()
             let classNames = new Set()

@@ -254,6 +254,6 @@ export class DamageTypes {
         })
         let beforeDamage = damageBeforeDr + energyDamageBeforeEr;
         let afterDamage = energyDamageAfterEr + damageAfterDr;
-        return {beforeDamage: beforeDamage, damage: afterDamage, baseBeforeDR: damageBeforeDr, baseAfterDR: damageAfterDr, lower:afterDamage<beforeDamage, higher:afterDamage>beforeDamage,equal:afterDamage===beforeDamage, appliedDR: appliedDr, energyDamage: energyDamage};
+        return {beforeDamage: beforeDamage, damage: afterDamage, displayDamage: Math.abs(afterDamage), isHealing: afterDamage < 0, baseBeforeDR: damageBeforeDr, baseAfterDR: damageAfterDr, lower:afterDamage<beforeDamage, higher:afterDamage>beforeDamage,equal:afterDamage===beforeDamage, appliedDR: appliedDr, energyDamage: energyDamage};
     }
 }

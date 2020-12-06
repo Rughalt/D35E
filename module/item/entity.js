@@ -1091,6 +1091,7 @@ export class ItemPF extends Item {
                     if (useAmmoAttack !== '') {
                         attackExtraParts.push(useAmmoAttack);
                     }
+                    console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
                 }
 
 

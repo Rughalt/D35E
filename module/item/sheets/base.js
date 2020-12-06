@@ -257,7 +257,7 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         // Prepare spell specific stuff
-        if (data.item.typeknowsAllSpells === "spell") {
+        if (data.item.type === "spell") {
             let spellbook = null;
             if (this.actor != null) {
                 spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.item.data.data.spellbook}`);

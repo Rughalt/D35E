@@ -38,7 +38,7 @@
             {{#if data.spellSpecialization.isDomain}}
             <h3 class="form-header">{{localize "D35E.SpellSpecializationGrantedPowers"}}</h3>
             {{/if}}
-            <div style="height: 80px">
+            <div style="{{#if data.spellSpecialization.isDomain}}height: 80px{{else}}height:400px{{/if}}">
               {{editor content=data.description.value target="data.description.value" button=true owner=owner
               editable=editable}}
             </div>
