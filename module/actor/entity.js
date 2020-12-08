@@ -200,7 +200,7 @@ export class ActorPF extends Actor {
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will", "turnUndead", "spellResistance", "powerPoints", "sneakAttack",
-                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl"
+                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr"
             ], modifiers: [
                 "untyped", "base", "enh", "dodge", "inherent", "deflection",
                 "morale", "luck", "sacred", "insight", "resist", "profane",
@@ -504,6 +504,8 @@ export class ActorPF extends Actor {
                 return "data.attributes.prestigeCl.psionic.max";
             case "divineCl":
                 return "data.attributes.prestigeCl.divine.max";
+            case "cr":
+                return "data.details.totalCr";
         }
 
         if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -1772,12 +1774,18 @@ export class ActorPF extends Actor {
                 if (raceObject != null) {
                     raceLA = raceObject.data.data.la
                 }
+                this.items.filter(o => o.type === "class").forEach(c => {
+                    raceLA += c.data.data?.la || 0
+                })
             } catch (e) {
             }
         }
         console.log(`D35E | Setting attributes hd total | ${data1.details.level.value}`)
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
-        linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
+        //linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
+
+
+        linkData(data, updateData, "data.details.totalCr", Math.floor(data1.details.cr || 0));
 
         // Reset abilities
         for (let [a, abl] of Object.entries(data1.abilities)) {
@@ -2136,7 +2144,22 @@ export class ActorPF extends Actor {
             console.log(`D35E | Setting attributes hd total | ${level}`)
             linkData(data, updateData, "data.attributes.hd.total", level);
 
-            linkData(data, updateData, "data.attributes.hd.racialClass",level);
+            linkData(data, updateData, "data.attributes.hd.racialClass", level);
+
+            let templateClassesToUpdate = []
+            for (const templateClass of classes.filter(o => getProperty(o.data, "classType") === "template")) {
+                if (!!templateClass) {
+                    if (templateClass.data.levels === level) return
+                    let updateObject = {}
+                    updateObject["_id"] = templateClass.id || templateClass._id;
+                    updateObject["data.levels"] = level;
+                    templateClassesToUpdate.push(updateObject)
+                }
+            }
+            if (templateClassesToUpdate.length && !this.token) {
+                await this.updateOwnedItem(templateClassesToUpdate, {stopUpdates: true})
+            }
+
             level += raceLA;
             let existingAbilities = new Set()
             let classNames = new Set()
@@ -2220,6 +2243,10 @@ export class ActorPF extends Actor {
                                 eItem.data.uniqueId = uniqueId;
                                 eItem.data.source = `${raceObject.data.name}`
                                 eItem.data.userNonRemovable = true;
+                                if (e.type === "spell") {
+                                    eItem.data.spellbook = "spelllike"
+                                    eItem.data.level = 0;
+                                }
                                 (eItem.data.changes || []).forEach(change => {
                                     if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
                                     changes.push({
@@ -2258,6 +2285,10 @@ export class ActorPF extends Actor {
                                 eItem.data.uniqueId = uniqueId;
                                 eItem.data.source = `${raceObject.data.name}`
                                 eItem.data.userNonRemovable = true;
+                                if (e.type === "spell") {
+                                    eItem.data.spellbook = "spelllike"
+                                    eItem.data.level = 0;
+                                }
                                 (eItem.data.changes || []).forEach(change => {
                                     if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
                                     changes.push({
@@ -2293,7 +2324,7 @@ export class ActorPF extends Actor {
             if (idsToRemove.length)
                 await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
             if (itemsToAdd.length)
-                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
+                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true, ignoreSpellbookAndLevel: true});
 
         }
 
@@ -2309,6 +2340,10 @@ export class ActorPF extends Actor {
                     eItem.data.uniqueId = uniqueId;
                     eItem.data.source = `${classInfo[0]} ${level}`
                     eItem.data.userNonRemovable = true;
+                    if (e.type === "spell") {
+                        eItem.data.spellbook = "spelllike"
+                        eItem.data.level = 0;
+                    }
                     (eItem.data.changes || []).forEach(change => {
                         if (!this.isChangeAllowed(eItem, change, fullConditions)) return;
                         changes.push({
@@ -2535,6 +2570,7 @@ export class ActorPF extends Actor {
         }
 
         data.combinedResistances = data.energyResistance ? duplicate(data.energyResistance) : [];
+        data.combinedDR = data.damageReduction ? duplicate(data.damageReduction) : [];
 
         actorData.items.filter(obj => {
             if (obj.type === "buff") return obj.data.active;
@@ -2543,29 +2579,72 @@ export class ActorPF extends Actor {
         }).forEach(obj => {
             if (obj.data.resistances) {
                 (obj.data?.resistances || []).forEach(resistance => {
+                    if (!resistance[1] || !resistance[0]) return;
                     let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
                     if (!_resistance) {
                         _resistance = DamageTypes.defaultER;
+                        _resistance.uid = resistance[1]
                         data.combinedResistances.push(_resistance)
                     }
-                    _resistance.value = Math.max(_resistance.value, parseInt(resistance[0]))
+                    _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", obj.data).roll().total)
                     _resistance.immunity = _resistance.immunity || resistance[2];
                     _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                 })
             }
+            if (obj.data.damageReduction) {
+                (obj.data?.damageReduction || []).forEach(dr => {
+                    if (!dr[1] || !dr[0]) return;
+                    if (dr[1] !== 'any') {
+                        if (!data.combinedDR.types) {
+                            data.combinedDR.types = []
+                        }
+                        let _dr = data.combinedDR.types.find(res => res.uid === dr[1])
+                        if (!_dr) {
+                            _dr = DamageTypes.defaultDR;
+                            _dr.uid = dr[1];
+                            data.combinedDR.types.push(_dr)
+                        }
+                        _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", obj.data).roll().total)
+                    } else {
+                        data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll(dr[0] || "0", obj.data).roll().total)
+                    }
+                })
+            }
             if (obj.type === "weapon" || obj.type === "equipment") {
                 if (obj.data.enhancements !== undefined) {
-                    obj.data.enhancements.items.forEach(enhancementItem =>
+                    obj.data.enhancements.items.forEach(enhancementItem => {
                         (enhancementItem.data?.resistances || []).forEach(resistance => {
+                            if (!resistance[1] || !resistance[0]) return;
                             let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
                             if (!_resistance) {
                                 _resistance = DamageTypes.defaultER;
+                                _resistance.uid = resistance[1]
                                 data.combinedResistances.push(_resistance)
                             }
-                            _resistance.value = Math.max(_resistance.value, parseInt(resistance[0]))
+                            _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", enhancementItem.data).roll().total)
                             _resistance.immunity = _resistance.immunity || resistance[2];
                             _resistance.vulnerable = _resistance.vulnerable || resistance[3];
-                        }));
+                        })
+                        if (enhancementItem.data.damageReduction) {
+                            (enhancementItem.data?.damageReduction || []).forEach(dr => {
+                                if (!dr[1] || !dr[0]) return;
+                                if (dr[1] !== 'any') {
+                                    if (!data.combinedDR.types) {
+                                        data.combinedDR.types = []
+                                    }
+                                    let _dr = data.combinedDR.types.find(res => res.uid === dr[1])
+                                    if (!_dr) {
+                                        _dr = DamageTypes.defaultDR;
+                                        _dr.uid = dr[1];
+                                        data.combinedDR.types.push(_dr)
+                                    }
+                                    _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", obj.data).roll().total)
+                                } else {
+                                    data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll(dr[0] || "0", obj.data).roll().total)
+                                }
+                            })
+                        }
+                    });
                 }
             }
             if (obj.data.counterName !== undefined && obj.data.counterName !== null && obj.data.counterName !== "") {
@@ -2851,10 +2930,10 @@ export class ActorPF extends Actor {
      * Prepare NPC type specific data
      */
     _prepareNPCData(data) {
-        if (!hasProperty(data, "data.details.cr.total")) return;
+        if (!hasProperty(data, "data.details.cr")) return;
 
         // Kill Experience
-        data.details.xp.value = this.getCRExp(data.details.cr);
+        data.details.xp.value = this.getCRExp(data.details.totalCr);
     }
 
     /**
@@ -2976,6 +3055,10 @@ export class ActorPF extends Actor {
             await super.update(data, options);
             return
         }
+        // if (options['stopUpdates'] !== undefined && options['stopUpdates'] === true) {
+        //     console.log('D35E | Got stop updates, exiting')
+        //     return
+        // }
         data = await this.prepareUpdateData(data);
 
         // Update changes
@@ -3228,6 +3311,9 @@ export class ActorPF extends Actor {
                 if (raceObject != null) {
                     raceLA = raceObject.data.data.la
                 }
+                this.items.filter(o => o.type === "class").forEach(c => {
+                    raceLA += c.data.data?.la || 0
+                })
             } catch (e) {
             }
         }
@@ -3503,7 +3589,7 @@ export class ActorPF extends Actor {
                 spellsToAdd.push(obj.data)
             }
         }
-        await this.createEmbeddedEntity("OwnedItem", spellsToAdd, {stopUpdates: true, nameUnique: true, domainSpells: true})
+        await this.createEmbeddedEntity("OwnedItem", spellsToAdd, {stopUpdates: true, nameUnique: true, ignoreSpellbookAndLevel: true})
     }
 
     async createAttackFromWeapon(item) {
@@ -4472,7 +4558,10 @@ export class ActorPF extends Actor {
                 obj.data.equipped = false;
             }
             if (["spell"].includes(obj.type)) {
-                if (options.domainSpells) {
+                if (options.ignoreSpellbookAndLevel) {
+
+                }
+                else if (options.domainSpells) {
                     let spellbook = undefined
                     // We try to set spellbook to correct one
                     for (let _spellbookKey of Object.keys(this.data.data.attributes.spells.spellbooks)) {

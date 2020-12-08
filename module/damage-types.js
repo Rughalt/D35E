@@ -36,11 +36,13 @@ export class DamageTypes {
         return damageTypes;
     }
 
-    static getDRForActor(actor) {
+    static getDRForActor(actor, base = false) {
         let damageTypes = duplicate(this.getDRDamageTypes());
         let actorData = actor.data.data;
-        DamageTypes.getDamageTypeForUID(damageTypes,'any').value = actorData.damageReduction?.any || 0;
-        (actorData.damageReduction?.types || []).forEach(t => {
+        let actorDR = base ? actorData.damageReduction : actorData.combinedDR
+        DamageTypes.getDamageTypeForUID(damageTypes,'any').value = actorDR?.any || 0;
+        (actorDR?.types || []).forEach(t => {
+            if (t.uid === null) return ;
             let type = DamageTypes.getDamageTypeForUID(damageTypes,t.uid);
             type.value = t.value;
             type.or = t.or;

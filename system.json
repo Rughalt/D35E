@@ -77,6 +77,12 @@
       "system": "D35E",
       "path": "./packs/spell-school-domain.db",
       "entity": "Item"
+    },{
+      "name": "templates",
+      "label": "Templates",
+      "system": "D35E",
+      "path": "./packs/templates.db",
+      "entity": "Item"
     },
     {
       "name": "powers",

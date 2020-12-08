@@ -288,11 +288,9 @@
         {{else}}
 
             <div class="tab flexcol active" data-group="primary" data-tab="description">
-        <section class="description-body" style="padding: 0 10px">
-            <div class="flexcol">
+        <section class="description-body flexcol" style="height: 385px">
                 {{editor content=data.description.value target="data.description.value" button=true owner=owner
                 editable=editable}}
-            </div>
         </section>
         </div>
         {{/if}}
@@ -337,6 +335,13 @@
                         </div>
                         {{/if}}
 
+
+                        {{#if isTemplate}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.LA"}}</label>
+                            <input type="text" name="data.la" value="{{data.la}}" data-dtype="Number" />
+                        </div>
+                        {{/if}}
                         {{!-- HD --}}
                         <div class="form-group">
                             <label>{{localize "D35E.HitDie"}}</label>

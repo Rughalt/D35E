@@ -1134,6 +1134,7 @@
   "D35E.AlignmentLawful": "Lawful",
   "D35E.AlignmentEvil": "Evil",
   "D35E.AlignmentChaotic": "Chaotic",
+  "D35E.Resistances": "Resistances",
   "D35E.DamageApplied": "Damage Applied",
   "D35E.HealingApplied": "Healing Applied",
   "D35E.DRERApplied": "Detailed Breakdown",
@@ -1192,6 +1193,8 @@
   "D35E.SpellbookDescToPrepareSpell": "icon to prepare spell in special Domain/School slot",
   "D35E.AddAllKnownSpells": "Add all known class spells for this level",
   "D35E.KnowsAllSpells": "Class knows all spells",
+  "D35E.ClassTypeTemplate": "Template",
+  "D35E.BaseCR": "Base CR",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

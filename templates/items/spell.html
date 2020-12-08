@@ -293,6 +293,13 @@
       <h3 class="form-header">{{localize "D35E.Description"}}</h3>
 
       {{editor content=data.shortDescription target="data.shortDescription" button=true owner=owner editable=editable}}
+      {{#if isGM}}
+      <h3 class="form-header">System Properties</h3>
+      <div class="form-group">
+        <label>UID</label>
+        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+      </div>
+      {{/if}}
     </div>
   </section>
   </section>

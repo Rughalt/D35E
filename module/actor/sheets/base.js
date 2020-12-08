@@ -1471,7 +1471,7 @@ export class ActorSheetPF extends ActorSheet {
       else if ( item.type === "class" ) arr[3].push(item);
       else if (item.type === "attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
-        console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
+        //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
         if (item.data.containerId !== "none") {
           if (!containerItems.has(item.data.containerId)) {
             containerItems.set(item.data.containerId,[])
@@ -1480,6 +1480,7 @@ export class ActorSheetPF extends ActorSheet {
         } else {
           arr[0].push(item)
         }
+        inventory.all.items.push(item);
       }
 
       return arr;
@@ -1545,7 +1546,7 @@ export class ActorSheetPF extends ActorSheet {
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
-      inventory.all.items.push(i);
+
     }
 
     // Organize Features

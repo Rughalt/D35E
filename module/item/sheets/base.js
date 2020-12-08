@@ -95,6 +95,7 @@ export class ItemSheetPF extends ItemSheet {
         data.showUnidentifiedData = this.item.showUnidentifiedData;
         data.materials = Array.from(CACHE.Materials.values());
         data.damageTypes = Array.from(CACHE.DamageTypes.values());
+        data.baseDamageTypes = DamageTypes.getBaseDRDamageTypes()
         data.energyDamageTypes = DamageTypes.getERDamageTypes();
 
         // Unidentified data
@@ -370,6 +371,7 @@ export class ItemSheetPF extends ItemSheet {
             data.hasMaxLevel = data.data.maxLevel !== undefined && data.data.maxLevel !== null && data.data.maxLevel !== "" && data.data.maxLevel !== 0;
             data.isBaseClass = data.data.classType === "base";
             data.isRacialHD = data.data.classType === "racial";
+            data.isTemplate = data.data.classType === "template";
             data.isPsionSpellcaster = data.data.spellcastingType === "psionic";
             data.isSpellcaster = data.data.spellcastingType !== undefined && data.data.spellcastingType !== null && data.data.spellcastingType !== "none";
             data.isNonPsionSpellcaster = data.isSpellcaster && !data.isPsionSpellcaster
@@ -819,6 +821,14 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        let damageReduction = Object.entries(formData).filter(e => e[0].startsWith("data.damageReduction"));
+        formData["data.damageReduction"] = damageReduction.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         // Handle notes array
         let note = Object.entries(formData).filter(e => e[0].startsWith("data.contextNotes"));
         formData["data.contextNotes"] = note.reduce((arr, entry) => {
@@ -935,6 +945,7 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".change-control").click(this._onChangeControl.bind(this));
         html.find(".combat-change-control").click(this._onCombatChangeControl.bind(this));
         html.find(".resistance-control").click(this._onResistanceControl.bind(this));
+        html.find(".dr-control").click(this._onDRControl.bind(this));
 
 
         // Modify note changes
@@ -1247,6 +1258,28 @@ export class ItemSheetPF extends ItemSheet {
             const changes = duplicate(this.item.data.data.resistances);
             changes.splice(Number(li.dataset.change), 1);
             return this.item.update({"data.resistances": changes});
+        }
+    }
+
+    async _onDRControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = this.item.data.data.damageReduction || [];
+            // Combat Changes are
+            return this.item.update({"data.damageReduction": changes.concat([["", ""]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.damageReduction);
+            changes.splice(Number(li.dataset.change), 1);
+            return this.item.update({"data.damageReduction": changes});
         }
     }
 

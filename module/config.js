@@ -106,6 +106,10 @@ D35E.classSavingThrowFormulas = {
     "low": "floor(@level / 3)",
     "high": "2 + floor(@level / 2)",
   },
+  "template": {
+    "low": "0",
+    "high": "0",
+  },
 };
 
 D35E.favouredClassBonuses = {
@@ -1027,6 +1031,7 @@ D35E.buffTargets = {
     "sneakAttack": "D35E.SneakAttackBonusDice",
     "turnUndead": "D35E.TurnUndeadUses",
     "spellResistance": "D35E.SpellResistance",
+    "cr": "D35E.CR",
   },
   "prestigeCl": {
     "_label": "D35E.PrestigeCl",
