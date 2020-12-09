@@ -1,3 +1,6 @@
+### SRD
+### Features
+- Damage Types implementation with Resistances and Damage Reduction
 ### Bug Fixes
 - 0 Level spell no longer do not consume any uses
 - More fixes for time tracking in buffs

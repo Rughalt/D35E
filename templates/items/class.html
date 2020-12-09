@@ -17,6 +17,21 @@
             </ul>
         </div>
         <ul class="attributes flexrow">
+
+            {{#if isTemplate}}
+            <li></li>
+            <li class="attribute high tooltip" data-attribute="levels">
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
+                <h4 class="attribute-name box-title">{{localize "D35E.BaseHD"}}</h4>
+                <div class="attribute-value">
+                    <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize " D35E.Level"}}"
+                    data-dtype="Number"/>
+                </div>
+                <footer class="attribute-footer">
+
+                </footer>
+            </li>
+            {{else}}
             <li class="attribute high tooltip" data-attribute="levels">
                 <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
                 <h4 class="attribute-name box-title">{{localize "D35E.Level"}}</h4>
@@ -44,6 +59,7 @@
 
                 </footer>
             </li>
+            {{/if}}
         </ul>
     </header>
 

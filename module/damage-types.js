@@ -21,7 +21,7 @@ export class DamageTypes {
             {uid: 'chaotic', name: game.i18n.localize("D35E.AlignmentChaotic"), value: 0, or: false},
             {uid: 'lawful', name: game.i18n.localize("D35E.AlignmentLawful"), value: 0, or: false},
             {uid: 'slashing', name: game.i18n.localize("D35E.DRSlashing"), value: 0, or: false},
-            {uid: 'bludgeoning', name: game.i18n.localize("D35E.DRMagic"), value: 0, or: false},
+            {uid: 'bludgeoning', name: game.i18n.localize("D35E.DRBludgeoning"), value: 0, or: false},
             {uid: 'piercing', name: game.i18n.localize("D35E.DRPiercing"), value: 0, or: false},
             {uid: 'epic', name: game.i18n.localize("D35E.DREpic"), value: 0, or: false},
             {uid: 'magic', name: game.i18n.localize("D35E.DRMagic"), value: 0, or: false},

@@ -1117,10 +1117,15 @@
     input.skill-rank {
       &:read-only {
         border: none !important;
-        background-color: rgba(0,0,0,0.1);
+        background: rgba(0,0,0,0.1);
+        cursor: not-allowed;
         &:hover {
+          box-shadow: none !important;
           border: none !important;
-          box-shadow: none;
+        }
+        &:focus {
+          box-shadow: none !important;
+          border: none !important;
         }
       }
     }

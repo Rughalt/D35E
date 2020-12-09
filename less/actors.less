@@ -1648,7 +1648,12 @@
   .readonly {
     border: none !important;
     background: rgba(0,0,0,0.1);
+    cursor: not-allowed;
     &:hover {
+      box-shadow: none !important;
+      border: none !important;
+    }
+    &:focus {
       box-shadow: none !important;
       border: none !important;
     }

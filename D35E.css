@@ -2027,8 +2027,13 @@
 .D35E.sheet.actor .readonly {
   border: none !important;
   background: rgba(0, 0, 0, 0.1);
+  cursor: not-allowed;
 }
 .D35E.sheet.actor .readonly:hover {
+  box-shadow: none !important;
+  border: none !important;
+}
+.D35E.sheet.actor .readonly:focus {
   box-shadow: none !important;
   border: none !important;
 }
@@ -5102,11 +5107,16 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet input.skill-rank:read-only {
   border: none !important;
-  background-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.1);
+  cursor: not-allowed;
 }
 .d35ecustom .sheet input.skill-rank:read-only:hover {
+  box-shadow: none !important;
   border: none !important;
-  box-shadow: none;
+}
+.d35ecustom .sheet input.skill-rank:read-only:focus {
+  box-shadow: none !important;
+  border: none !important;
 }
 .d35ecustom .sheet ul.attributes li.attribute {
   border: none !important;
