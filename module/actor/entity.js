@@ -1013,6 +1013,23 @@ export class ActorPF extends Actor {
             }
         }
 
+        for (let flagKey of Object.keys(flags)) {
+            if (!flags[flagKey]) continue;
+
+            switch (flagKey) {
+                case "noCon":
+                    changes.push({
+                        raw: ["(-(@abilities.con.origMod)) * @attributes.hd.total", "misc", "mhp", "untyped", 0],
+                        source: { name: "0 Con" }
+                    });
+                    changes.push({
+                        raw: ["5", "savingThrows", "fort", "untyped", 0],
+                        source: { name: "0 Con" }
+                    });
+                    break;
+            }
+        }
+
         // Handle fatigue and exhaustion so that they don't stack
         if (data.data.attributes.conditions.exhausted) {
             changes.push({
@@ -1320,6 +1337,22 @@ export class ActorPF extends Actor {
                             ];
                             value = "Lose Dex to AC";
                             break;
+                        case "noInt":
+                            sourceInfo["data.abilities.int.total"] = sourceInfo["data.abilities.int.total"] || {
+                                positive: [],
+                                negative: []
+                            };
+                            targets = [sourceInfo["data.abilities.int.total"].negative];
+                            value = "0 Int";
+                            break;
+                        case "noCon":
+                            sourceInfo["data.abilities.con.total"] = sourceInfo["data.abilities.con.total"] || {
+                                positive: [],
+                                negative: []
+                            };
+                            targets = [sourceInfo["data.abilities.con.total"].negative];
+                            value = "0 Con";
+                            break;
                         case "noDex":
                             sourceInfo["data.abilities.dex.total"] = sourceInfo["data.abilities.dex.total"] || {
                                 positive: [],
@@ -1434,6 +1467,14 @@ export class ActorPF extends Actor {
                 case "noStr":
                     linkData(srcData1, updateData, "data.abilities.str.total", 0);
                     linkData(srcData1, updateData, "data.abilities.str.mod", -5);
+                    break;
+                case "noCon":
+                    linkData(srcData1, updateData, "data.abilities.con.total", 0);
+                    linkData(srcData1, updateData, "data.abilities.con.mod", -5);
+                    break;
+                case "NoInt":
+                    linkData(srcData1, updateData, "data.abilities.int.total", 0);
+                    linkData(srcData1, updateData, "data.abilities.int.mod", -5);
                     break;
                 case "oneInt":
                     linkData(srcData1, updateData, "data.abilities.int.total", 1);
@@ -1758,12 +1799,9 @@ export class ActorPF extends Actor {
         });
 
         const racialHD = classes.filter(o => getProperty(o.data, "classType") === "racial");
+        const templateHD = classes.filter(o => getProperty(o.data, "classType") === "template");
         const useFractionalBaseBonuses = game.settings.get("D35E", "useFractionalBaseBonuses") === true;
 
-        // Set creature type
-        if (racialHD.length === 1) {
-            linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data, "creatureType") || "humanoid");
-        }
 
 
         // Reset HD, taking into account race LA
@@ -1773,6 +1811,8 @@ export class ActorPF extends Actor {
                 let raceObject = this.items.filter(o => o.type === "race")[0];
                 if (raceObject != null) {
                     raceLA = raceObject.data.data.la
+                    linkData(data, updateData, "data.attributes.creatureType", getProperty(raceObject.data.data, "creatureType") || "humanoid");
+
                 }
                 this.items.filter(o => o.type === "class").forEach(c => {
                     raceLA += c.data.data?.la || 0
@@ -1780,6 +1820,16 @@ export class ActorPF extends Actor {
             } catch (e) {
             }
         }
+
+        // Set creature type
+        if (racialHD.length > 0) {
+            linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data, "creatureType") || "humanoid");
+        }
+        // Set creature type
+        if (templateHD.length > 0) {
+            linkData(data, updateData, "data.attributes.creatureType", getProperty(templateHD[0].data, "creatureType") || "humanoid");
+        }
+
         console.log(`D35E | Setting attributes hd total | ${data1.details.level.value}`)
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
         //linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
@@ -1792,6 +1842,8 @@ export class ActorPF extends Actor {
             linkData(data, updateData, `data.abilities.${a}.penalty`, 0);
             if (a === "str" && flags.noStr === true) continue;
             if (a === "dex" && flags.noDex === true) continue;
+            if (a === "con" && flags.noCon === true) continue;
+            if (a === "int" && flags.noInt === true) continue;
             if (a === "int" && flags.oneInt === true) continue;
             if (a === "wis" && flags.oneWis === true) continue;
             if (a === "cha" && flags.oneCha === true) continue;
@@ -2375,6 +2427,8 @@ export class ActorPF extends Actor {
             prevMods[a] = forceModUpdate ? 0 : updateData[`data.abilities.${a}.mod`];
             if ((a === "str" && flags.noStr) ||
                 (a === "dex" && flags.noDex) ||
+                (a === "con" && flags.noCon) ||
+                (a === "int" && flags.noInt) ||
                 (a === "int" && flags.oneInt) ||
                 (a === "wis" && flags.oneWis) ||
                 (a === "cha" && flags.oneCha)) {

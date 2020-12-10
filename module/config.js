@@ -229,6 +229,7 @@ D35E.measureTemplateTypes = {
   "cone": "D35E.MeasureTemplateCone",
   "circle": "D35E.MeasureTemplateCircle",
   "ray": "D35E.MeasureTemplateRay",
+  "cube": "D35E.MeasureTemplateCube",
 };
 
 /* -------------------------------------------- */
