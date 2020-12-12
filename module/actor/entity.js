@@ -3587,10 +3587,14 @@ export class ActorPF extends Actor {
         if (getProperty(item.data, "data.preparation.mode") !== "atwill" && item.getSpellUses() <= 0) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoSpellsLeft"));
 
         // Invoke the Item roll
+        if (usedItem.hasAction)
+        {
+            await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
+            await item.addSpellUses(-1);
+            return ;
+        }
+
         await item.addSpellUses(-1);
-        if (usedItem.hasAction) return usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
-
-
         return usedItem.roll();
     }
 

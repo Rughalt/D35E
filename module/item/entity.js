@@ -1380,8 +1380,8 @@ export class ItemPF extends Item {
                 if (template) {
                     if (getProperty(this, "actor.sheet.rendered")) actor.sheet.minimize();
                     const success = await template.drawPreview(ev);
+                    if (getProperty(this, "actor.sheet.rendered")) actor.sheet.maximize();
                     if (!success) {
-                        if (getProperty(this, "actor.sheet.rendered")) actor.sheet.maximize();
                         return;
                     }
                 }

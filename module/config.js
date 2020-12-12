@@ -684,6 +684,7 @@ D35E.areaTargetTypes = {
   cylinder: "circle",
   circle: "circle",
   line: "ray",
+  ray: "ray",
   radius: "circle",
   sphere: "circle",
   square: "rect",
