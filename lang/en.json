@@ -1205,6 +1205,9 @@
   "D35E.AddConditional": "Add Conditional Modifier",
   "D35E.Licenses": "Licenses",
 
+  "D35E.Energy": "Energy",
+  "D35E.BaseDamage": "Base Damage",
+
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

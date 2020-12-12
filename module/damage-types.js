@@ -230,9 +230,11 @@ export class DamageTypes {
                     let erValue = DamageTypes.getDamageTypeForUID(er,d.damageTypeUid)
                     let damageAfterEr = Math.max(d.roll.total - (erValue?.value || 0),0)
 
-                    if (actor.data.data.details?.type === "undead" && d.damageTypeUid === "energy-negative")
+                    if (d.damageTypeUid === 'damage-healing')
                         damageAfterEr =- damageAfterEr;
-                    if (actor.data.data.details?.type !== "undead" && d.damageTypeUid === "energy-positive")
+                    else if (actor.data.data.details?.type === "undead" && d.damageTypeUid === "energy-negative")
+                        damageAfterEr =- damageAfterEr;
+                    else if (actor.data.data.details?.type !== "undead" && d.damageTypeUid === "energy-positive")
                         damageAfterEr =- damageAfterEr;
 
                     let value = erValue?.value
