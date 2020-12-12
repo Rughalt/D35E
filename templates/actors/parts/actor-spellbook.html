@@ -166,7 +166,7 @@
 
 <ol class="inventory-list sub-scroll scroll-spellbooks">
 {{#each spellbook.data as |section sid|}}
-    <li class="flexrow inventory-header spellbook-header">
+    <li class="flexrow inventory-header spellbook-header scrolling-header">
       <div class="item-name flexrow">
         <h3>{{section.label}}</h3>
       </div>
@@ -199,14 +199,17 @@
 
       <div class="item-controls">
         {{#if section.canCreate}}
-        <a class="item-control item-create" title="{{ localize 'D35E.CreateSpell' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-          <i class="fas fa-plus"></i> {{ localize 'D35E.Add' }}
+        <a  class="open-compendium-pack" data-pack="browser:spells" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+          <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}
+        </a>
+        <a class="item-control item-create" style="flex: 0; margin-left: 4px;" title="{{ localize 'D35E.CreateSpell' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+          <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
         </a>
         {{/if}}
       </div>
     </li>
 
-    <ol class="item-list spellbook-list" data-level="{{section.level}}">
+    <ol class="item-list spellbook-list" data-level="{{section.level}}" style="position: relative">
       {{#each section.spells as |item i|}}
       <li class="item flexrow" data-level="{{section.level}}" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
         <div class="item-name flexrow rollable {{#if item.isSpecialized}}item-specialized{{/if}}{{#if item.isBanned}}item-banned{{/if}}">
@@ -234,7 +237,10 @@
               <span class="tooltipcontent">{{localize "D35E.SpellBanned"}}</span>
             </i>
             {{/if}}
-            <em>{{item.data.snip}}</em>
+
+            {{#unless @root.hideShortDescriptions}}
+            <em style="color: black; opacity: 0.7" class="non-rollable">{{item.data.snip}}</em>
+            {{/unless}}
           </h4>
         </div>
 

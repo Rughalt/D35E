@@ -1199,6 +1199,11 @@
   "D35E.MeasureTemplateCube": "Cube",
   "D35E.ChangeFlagNoCon": "0 Con",
   "D35E.ChangeFlagNoInt": "0 Int",
+  "D35E.AddSpellsToSpellbook": "Add Domain Spells to Spell Book",
+  "D35E.Confirm": "Confirm",
+  "D35E.AddEffect": "Add Effect",
+  "D35E.AddConditional": "Add Conditional Modifier",
+  "D35E.Licenses": "Licenses",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
@@ -1208,5 +1213,7 @@
   "SETTINGS.D35EAutosizeWeaponsN": "Autosize weapons",
   "SETTINGS.D35EAutosizeWeaponsL": "Attack created from weapon will use @size instead of weapon size",
   "SETTINGS.D35EClassFeaturesInTabsN": "Display Class Features in tabs",
-  "SETTINGS.D35EClassFeaturesInTabsL": "If selected, all Class Features will also be displayed in sub-tabs in Features Character sheet section"
+  "SETTINGS.D35EClassFeaturesInTabsL": "If selected, all Class Features will also be displayed in sub-tabs in Features Character sheet section",
+  "SETTINGS.D35EHideSpellDescriptionsN": "Hide short Spell Descriptions",
+  "SETTINGS.D35EHideSpellDescriptionsH": "Hides short description from spell list in the character sheet"
 }

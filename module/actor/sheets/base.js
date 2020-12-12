@@ -77,6 +77,7 @@ export class ActorSheetPF extends ActorSheet {
       hasRace: false,
       config: CONFIG.D35E,
       useBGSkills: this.entity.data.type === "character" && game.settings.get("D35E", "allowBackgroundSkills"),
+      hideShortDescriptions: game.settings.get("D35E", "hideSpells"),
       spellFailure: this.entity.spellFailure,
       isGM: game.user.isGM,
       race: this.entity.race != null ? duplicate(this.entity.race.data) : null,
@@ -1557,7 +1558,7 @@ export class ActorSheetPF extends ActorSheet {
       trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
       racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
       misc: { label: game.i18n.localize("D35E.Misc"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
-      spellSpecialization: { label: game.i18n.localize("D35E.FeatTypeSpellSpecialization"), hasPack: true, pack: "spell-specialization", emptyLabel: "D35E.ListDragAndDropCompendium", canCreate: true, hasActions: false, dataset: { type: "feat", "feat-type": "spellSpecialization" } , items: [] },
+      spellSpecialization: { label: game.i18n.localize("D35E.FeatTypeSpellSpecialization"), hasPack: true, pack: "D35E.spell-schools-domains", emptyLabel: "D35E.ListDragAndDropCompendium", canCreate: true, hasActions: false, dataset: { type: "feat", "feat-type": "spellSpecialization" } , items: [] },
       all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" }, isAll: true },
     };
 
@@ -1591,8 +1592,8 @@ export class ActorSheetPF extends ActorSheet {
     const buffSections = {
       temp: { label: game.i18n.localize("D35E.Temporary"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
       perm: { label: game.i18n.localize("D35E.Permanent"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
-      item: { label: game.i18n.localize("D35E.Item"), pack: "browser:buffs", hasPack:true, hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
-      misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
+      item: { label: game.i18n.localize("D35E.Item"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
       //all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
 

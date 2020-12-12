@@ -3749,7 +3749,7 @@ export class ActorPF extends Actor {
         // Add attack bonus formula
         {
             const bonusFormula = getProperty(item.data, "data.weaponData.attackFormula");
-            if (bonusFormula != null && bonusFormula.length) attackData["data.attackBonus"] = bonusFormula;
+            if (bonusFormula !== undefined && bonusFormula !== null && bonusFormula.length) attackData["data.attackBonus"] = bonusFormula;
         }
 
         // Add things from Enhancements
@@ -3768,7 +3768,8 @@ export class ActorPF extends Actor {
                     damageModifier.subTarget = "allDamage";
                     conditional.modifiers.push(damageModifier)
                 } else {
-                    attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
+                    if (i.data.weaponData.damageRoll !== undefined && i.data.weaponData.damageRoll !== null)
+                        attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
                 }
             }
             if (i.data.weaponData.attackRoll !== '') {
@@ -3779,7 +3780,8 @@ export class ActorPF extends Actor {
                     attackModifier.subTarget = "allAttack";
                     conditional.modifiers.push(attackModifier)
                 } else {
-                    attackData["data.attackBonus"] = attackData["data.attackBonus"] + " + " + i.data.weaponData.attackRoll
+                    if (i.data.weaponData.attackRoll !== undefined && i.data.weaponData.attackRoll !== null)
+                        attackData["data.attackBonus"] = attackData["data.attackBonus"] + " + " + i.data.weaponData.attackRoll
                 }
             }
             if (conditional.modifiers.length > 0) {

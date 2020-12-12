@@ -287,7 +287,7 @@
   }
 
   .D35E.sheet.item, .D35E.sheet.actor {
-    a {
+    a:not(.header-button) {
       i.fas {
         color: #2C606D !important;
 
@@ -579,7 +579,7 @@
   }
 
 
-  button{
+  button:not(.tah-title-button){
 
     background: url(/systems/D35E/icons/ui/long-button.png);
     background-size: 100% 100%;
@@ -669,6 +669,7 @@
       }
     }
   }
+
 
   #players {
     border-radius: 0;
@@ -1418,6 +1419,19 @@
     filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
   }
 
+  .non-rollable {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    &:hover {
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+  }
+
+  .scrolling-header {
+    background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+  }
+
   //.material-box {
   //  height: 100px !important;
   //  overflow: auto;
@@ -1538,6 +1552,21 @@
 
   }
 
+  #token-action-hud {
+    button {
+      border-radius: 0;
+      background: url(/systems/D35E/icons/ui/name-frame.png);
+      background-size: 100% 100%;
+      border: 1px solid rgba(0, 0, 0, 0);
+      padding: 0 5px;
+
+      &:hover {
+        border: 1px solid red;
+        border-bottom: 1px solid #ff6400;
+        box-shadow: 0 0 10px #ff6400;
+      }
+    }
+  }
 
 }
 
@@ -1608,6 +1637,8 @@
 
 
   }
+
+
 
 }
 

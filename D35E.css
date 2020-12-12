@@ -3551,6 +3551,23 @@ input[type=range]:disabled {
 .vulnerability {
   color: darkred;
 }
+.welcome-screen.window-app {
+  border: 8px solid #55493B;
+  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-radius: 0;
+}
+.welcome-screen .window-content {
+  overflow: hidden;
+}
+.scrolling-header {
+  position: -webkit-sticky;
+  /* Safari */
+  position: sticky;
+  top: 0;
+  background: url(../ui/denim075.png) repeat;
+  z-index: 10;
+}
 #token-hud .col.actions {
   height: calc(100% + 150px);
   width: 100%;
@@ -4459,12 +4476,12 @@ tr.introjs-showElement > th {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
-.d35ecustom .D35E.sheet.item a i.fas,
-.d35ecustom .D35E.sheet.actor a i.fas {
+.d35ecustom .D35E.sheet.item a:not(.header-button) i.fas,
+.d35ecustom .D35E.sheet.actor a:not(.header-button) i.fas {
   color: #2C606D !important;
 }
-.d35ecustom .D35E.sheet.item a i.fas:hover,
-.d35ecustom .D35E.sheet.actor a i.fas:hover {
+.d35ecustom .D35E.sheet.item a:not(.header-button) i.fas:hover,
+.d35ecustom .D35E.sheet.actor a:not(.header-button) i.fas:hover {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
@@ -4686,13 +4703,13 @@ tr.introjs-showElement > th {
   left: 2px;
   top: 0;
 }
-.d35ecustom button {
+.d35ecustom button:not(.tah-title-button) {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
   border: none;
   color: white;
 }
-.d35ecustom button:disabled {
+.d35ecustom button:not(.tah-title-button):disabled {
   filter: grayscale(1);
 }
 .d35ecustom .D35E button:not(.tox-tbtn) {
@@ -5347,6 +5364,17 @@ tr.introjs-showElement > th {
 .d35ecustom img.rollable {
   filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
 }
+.d35ecustom .non-rollable {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.d35ecustom .non-rollable:hover {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.d35ecustom .scrolling-header {
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+}
 .d35ecustom .npc.monster {
   padding: 0;
   border-radius: 2px;
@@ -5437,6 +5465,18 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .compendium-browser .directory-container .directory-list .directory-item img {
   margin: 4px;
+}
+.d35ecustom #token-action-hud button {
+  border-radius: 0;
+  background: url(/systems/D35E/icons/ui/name-frame.png);
+  background-size: 100% 100%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  padding: 0 5px;
+}
+.d35ecustom #token-action-hud button:hover {
+  border: 1px solid red;
+  border-bottom: 1px solid #ff6400;
+  box-shadow: 0 0 10px #ff6400;
 }
 .secret {
   display: none;

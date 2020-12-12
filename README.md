@@ -63,3 +63,9 @@ Icons provided in source distribution (on this github repository) by
 
 Rest of icons - provided in binary distribution - are used with persmission of the authors and licensed to use only in this application. Any other use is prohibited.
 
+Some artwork © Trevor Armstrong / Grimpress, used with permission. All rights reserved.
+
+Some artwork © Daniel Comerci, used with permission. All rights reserved.
+
+Some artwork © 2015 Dean Spencer, used with permission. All rights reserved.
+

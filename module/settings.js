@@ -259,4 +259,13 @@ export const registerSystemSettings = function() {
     config: true,
     scope: 'client',
   });
+
+  game.settings.register("D35E", 'hideSpells', {
+    name: `SETTINGS.D35EHideSpellDescriptionsN`,
+    hint: 'SETTINGS.D35EHideSpellDescriptionsH',
+    default: false,
+    type: Boolean,
+    config: true,
+    scope: 'client',
+  });
 };

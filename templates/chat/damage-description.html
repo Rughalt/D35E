@@ -53,7 +53,7 @@
     <div class="chat-attack">
         <div class="dice-roll attack-roll flexcol">
             <div class="dice-flavor">{{localize "D35E.DRERApplied"}}</div>
-
+            {{#if damageData.baseBeforeDR}}
             <div class="flexrow">
 
                 <h4 style="flex:100px;line-height:26px;margin:0;border: unset;text-align: unset;background: unset;box-shadow: unset;font-size: unset;font-weight: unset;" class="dice-total">
@@ -81,9 +81,12 @@
                         {{damageData.baseAfterDR}}</h4>
                 </div>
             </div>
+            {{/if}}
             {{#each damageData.energyDamage as |damage dam|}}
             <div class="flexrow">
-                <h4 style="flex:100px;line-height:26px;margin:0;border: unset;text-align: unset;background: unset;box-shadow: unset;font-size: unset;font-weight: unset;" class="dice-total">
+                <h4 style="flex:100px;line-height:26px;margin:0;border: unset;text-align: unset;background: unset;box-shadow: unset;font-size: unset;font-weight: unset;text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;" class="dice-total">
                     {{damage.name}} {{damage.value}}</h4>
                 <div class="dice-result"  style="flex: 0 50px;order: 0;">
                     <h4 class="dice-total">
