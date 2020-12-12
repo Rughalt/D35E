@@ -987,6 +987,7 @@
         "type": "",
         "environment": "",
         "cr": 1,
+        "totalCr": 1,
         "xp": {
           "value": 10
         },
@@ -1171,6 +1172,9 @@
       "levels": 1,
       "maxLevel": 20,
       "prestigeLevels": 0,
+      "la": 0,
+      "hdReplace": "",
+      "hdReplaceRacialOnly": false,
       "addedAbilities": [],
       "disabledAbilities": [],
       "turnUndeadLevelFormula": "0",
@@ -1283,6 +1287,7 @@
       "hp": 8,
       "bab": "low",
       "skillsPerLevel": 0,
+      "allSpellsKnown": false,
       "creatureType": "humanoid",
       "savingThrows": {
         "fort": { "value": "low" },
@@ -1506,6 +1511,7 @@
       "sr": true,
       "pr": true,
       "shortDescription": "",
+      "snip": "",
       "spellDuration": "",
       "spellEffect": "",
       "spellArea": "",
@@ -1515,6 +1521,7 @@
       },
       "showInQuickbar": false,
       "specialPrepared": false,
+      "isDomainSpell": false,
       "specialId": null
 
     },

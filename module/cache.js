@@ -62,6 +62,31 @@ export const buildCache = async function() {
             }
         }
 
+    for (let packName of ["world.spelllike-abilities","LOTD.spelllike","D35E.spelllike"])
+        if (game.packs.has(packName)) {
+            itemPack = game.packs.get(packName);
+            items = [];
+            await itemPack.getIndex().then(index => items = index);
+            for (let entry of items) {
+                await itemPack.getEntity(entry._id).then(e => {
+                        e.pack = packName;
+                        if (e.data.data.tags !== undefined) {
+                            e.data.data.tags.forEach(cl => {
+                                if (!CACHE.RacialFeatures.has(cl[0]))
+                                    CACHE.RacialFeatures.set(cl[0], [])
+                                CACHE.RacialFeatures.get(cl[0]).push(e)
+                            })
+                        }
+                        if (e.data.data.uniqueId) {
+                            CACHE.AllAbilities.set(e.data.data.uniqueId, e)
+                            CACHE.AllRacialFeatures.push(e);
+                        }
+                    }
+                )
+            }
+        }
+
+
     for (let packName of ["world.materials","LOTD.materials","D35E.materials"])
         if (game.packs.has(packName)) {
             itemPack = game.packs.get(packName);

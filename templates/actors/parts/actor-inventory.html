@@ -168,7 +168,8 @@
               <li class="item flexrow" data-item-id="{{iitem._id}}">
                 <div class="item-name flexrow rollable">
                   <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
-                  <h4>{{iitem.name}}</h4>
+                  <h4>
+                    {{~#if iitem.isStack}}({{iitem.data.quantity}}) {{/if}}{{iitem.name}}</h4>
                 </div>
 
                 {{#if ../../../owner}}

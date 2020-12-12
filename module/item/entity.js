@@ -1091,6 +1091,7 @@ export class ItemPF extends Item {
                     if (useAmmoAttack !== '') {
                         attackExtraParts.push(useAmmoAttack);
                     }
+                    console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
                 }
 
 
@@ -2085,6 +2086,9 @@ export class ItemPF extends Item {
             const alignment = (button.dataset.alignment && button.dataset.alignment !== "") ? JSON.parse(button.dataset.alignment) : {};
             const enh = parseInt(button.dataset.enh || "0");
             ActorPF.applyDamage(damage,material,alignment,enh);
+        } else if (action === "applyHealing") {
+            const value = button.dataset.value;
+            ActorPF.applyDamage(value,null,null,null,true);
         }
         // Roll saving throw
         else if (action === "rollSave") {

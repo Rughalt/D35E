@@ -9,7 +9,11 @@
     <div class="chat-attack">
 
         <div class="dice-roll attack-roll flexcol">
+            {{#if damageData.isHealing}}
+            <div class="dice-flavor">{{localize "D35E.HealingApplied"}}</div>
+            {{else}}
             <div class="dice-flavor">{{localize "D35E.DamageApplied"}}</div>
+            {{/if}}
             <div class="flexrow">
                 <div class="flexcol">
                     <div class="dice-flavor">Rolled</div>
@@ -37,7 +41,10 @@
                     <div class="dice-flavor">Applied</div>
                     <div class="dice-result">
                         <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
-                            {{damageData.damage}}</h4>
+                            {{#if damageData.isHealing}}
+                            <i class="fas fa-heart" style="font-size: 16px;"></i>
+                            {{/if}}
+                            {{numberFormat damageData.displayDamage decimals=0 sign=false}}</h4>
                     </div>
                 </div>
             </div>
@@ -46,10 +53,10 @@
     <div class="chat-attack">
         <div class="dice-roll attack-roll flexcol">
             <div class="dice-flavor">{{localize "D35E.DRERApplied"}}</div>
-
+            {{#if damageData.baseBeforeDR}}
             <div class="flexrow">
 
-                <h4 style="flex: 100px; line-height: 26px; margin: 0;">
+                <h4 style="flex:100px;line-height:26px;margin:0;border: unset;text-align: unset;background: unset;box-shadow: unset;font-size: unset;font-weight: unset;" class="dice-total">
                     {{#if damageData.appliedDR.name}}
                     {{localize "D35E.DR"}} {{damageData.appliedDR.value}}/{{damageData.appliedDR.name}}
                     {{else}}
@@ -74,9 +81,12 @@
                         {{damageData.baseAfterDR}}</h4>
                 </div>
             </div>
+            {{/if}}
             {{#each damageData.energyDamage as |damage dam|}}
             <div class="flexrow">
-                <h4 style="flex: 100px; line-height: 26px; margin: 0;">
+                <h4 style="flex:100px;line-height:26px;margin:0;border: unset;text-align: unset;background: unset;box-shadow: unset;font-size: unset;font-weight: unset;text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;" class="dice-total">
                     {{damage.name}} {{damage.value}}</h4>
                 <div class="dice-result"  style="flex: 0 50px;order: 0;">
                     <h4 class="dice-total">

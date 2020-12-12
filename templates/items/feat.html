@@ -17,7 +17,7 @@
       </div>
     </div>
   </header>
-  <section class="sheet-content flexcol">
+  <section class="sheet-content flexcol" style="min-height: 400px">
 
   {{!-- Item Sheet Navigation --}}
   <nav class="sheet-navigation tabs" data-group="primary">
@@ -27,9 +27,6 @@
 
   {{!-- Item Sheet Body --}}
   <section class="primary-body">
-
-    {{!-- Description Tab --}}
-
     {{!-- Description Tab --}}
     {{#if isSpellSpecialization}}
     <div class="tab flexcol active" data-group="primary" data-tab="description">
@@ -38,7 +35,7 @@
             {{#if data.spellSpecialization.isDomain}}
             <h3 class="form-header">{{localize "D35E.SpellSpecializationGrantedPowers"}}</h3>
             {{/if}}
-            <div style="height: 80px">
+            <div style="{{#if data.spellSpecialization.isDomain}}height: 80px{{else}}height:400px{{/if}}">
               {{editor content=data.description.value target="data.description.value" button=true owner=owner
               editable=editable}}
             </div>
@@ -79,14 +76,8 @@
     </div>
     {{else}}
 
-    <div class="tab flexcol active" data-group="primary" data-tab="description">
-      <section class="description-body" style="padding: 0 10px">
-        <div class="flexcol" style="height: 100%">
-          {{editor content=data.description.value target="data.description.value" button=true owner=owner
-          editable=editable}}
-        </div>
-      </section>
-    </div>
+    {{> "systems/D35E/templates/items/parts/item-description.html"}}
+
     {{/if}}
 
     <div class="tab flexcol active" data-group="primary" data-tab="configuration">
@@ -194,6 +185,16 @@
 
               {{!-- Item Measure Template --}}
               {{> "systems/D35E/templates/items/parts/item-template.html"}}
+
+            {{#if isSpellSpecialization}}
+              {{#if isGM}}
+              <h3 class="form-header">System Properties</h3>
+              <div class="form-group">
+                <label>UID</label>
+                <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+              </div>
+              {{/if}}
+            {{/if}}
             </div>
 
 
@@ -207,4 +208,13 @@
     </div>
   </section>
   </section>
+  {{#unless showUnidentifiedData}}
+  {{#if data.spellSpecialization.isDomain}}
+  {{#if owner}}
+  <div class="form-group" >
+    <button type="button" name="add-domain-spells">{{localize "D35E.AddSpellsToSpellbook"}}</button>
+  </div>
+  {{/if}}
+  {{/if}}
+  {{/unless}}
 </form>

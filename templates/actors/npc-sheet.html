@@ -36,8 +36,11 @@
 
       <div class="charlevel">
         <div class="level">
-          <label>{{ localize 'D35E.CR' }}</label>
-          <input name="data.details.cr" type="text" value="{{labels.cr}}" placeholder="1"/>
+          <label>{{ localize 'D35E.CR' }} {{data.details.totalCr}}</label>
+        </div>
+        <div class="level" style="line-height: 14px">
+          <label style="font-size: 14px;">{{ localize 'D35E.BaseCR' }}</label>
+          <input name="data.details.cr" style="font-size: 14px; height: 16px" type="text" value="{{labels.cr}}" placeholder="1"/>
         </div>
         <div class="experience">
           <span>{{data.details.xp.value}} {{ localize 'D35E.XP' }}</span>

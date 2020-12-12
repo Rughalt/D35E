@@ -5,7 +5,7 @@ import { DamageReductionSetting } from "../../apps/damage-reduction-setting.js";
 import { LevelUpDataDialog } from "../../apps/level-up-data.js";
 import { ActorSheetFlags } from "../../apps/actor-flags.js";
 import { DicePF } from "../../dice.js";
-import { createTag, createTabs, isMinimumCoreVersion } from "../../lib.js";
+import {createTag, createTabs, isMinimumCoreVersion, uuidv4} from "../../lib.js";
 import { NoteEditor } from "../../apps/note-editor.js";
 import {SpellbookEditor} from "../../apps/spellbook-editor.js";
 import {D35E} from "../../config.js";
@@ -77,6 +77,7 @@ export class ActorSheetPF extends ActorSheet {
       hasRace: false,
       config: CONFIG.D35E,
       useBGSkills: this.entity.data.type === "character" && game.settings.get("D35E", "allowBackgroundSkills"),
+      hideShortDescriptions: game.settings.get("D35E", "hideSpells"),
       spellFailure: this.entity.spellFailure,
       isGM: game.user.isGM,
       race: this.entity.race != null ? duplicate(this.entity.race.data) : null,
@@ -142,12 +143,24 @@ export class ActorSheetPF extends ActorSheet {
       skl.label = CONFIG.D35E.skills[s];
       skl.arbitrary = CONFIG.D35E.arbitrarySkills.includes(s);
       skl.sourceDetails = (data.sourceDetails != null && data.sourceDetails.data.skills[s] != null) ? data.sourceDetails.data.skills[s].changeBonus : [];
+      if (data.actor.data.attributes.acp.total && skl.acp)
+        skl.sourceDetails.push({ name: game.i18n.localize("D35E.ACP"), value: `-${data.actor.data.attributes.acp.total}` })
+      if (skl.ability)
+        skl.sourceDetails.push({ name: game.i18n.localize("D35E.Ability"), value: getProperty(data.actor,`data.abilities.${skl.ability}.mod`) })
+      if (!skl.cls && skl.rank)
+        skl.sourceDetails.push({ name: game.i18n.localize("D35E.NonClassSkill"), value: game.i18n.localize("D35E.HalfRanks") })
       if (skl.subSkills != null) {
         for (let [s2, skl2] of Object.entries(skl.subSkills)) {
           if (data.sourceDetails == null) continue;
           if (data.sourceDetails.data.skills[s] == null) continue;
           if (data.sourceDetails.data.skills[s].subSkills == null) continue;
           skl2.sourceDetails = data.sourceDetails.data.skills[s].subSkills[s2] != null ? data.sourceDetails.data.skills[s].subSkills[s2].changeBonus : [];
+          if (data.actor.data.attributes.acp.total && skl2.acp)
+            skl2.sourceDetails.push({ name: game.i18n.localize("D35E.ACP"), value: `-${data.actor.data.attributes.acp.total}` })
+          if (skl2.ability)
+            skl2.sourceDetails.push({ name: game.i18n.localize("D35E.Ability"), value: getProperty(data.actor,`data.abilities.${skl2.ability}.mod`) })
+          if (!skl2.cls && skl2.rank)
+            skl.sourceDetails.push({ name: game.i18n.localize("D35E.NonClassSkill"), value: game.i18n.localize("D35E.HalfRanks") })
         }
       }
     }
@@ -191,6 +204,8 @@ export class ActorSheetPF extends ActorSheet {
     data.items.filter(i => i.type == "class").forEach(c => classNamesAndLevels.push(c.name + " " + c.data.levels))
 
     data.classList = classNamesAndLevels.join(", ")
+
+    data.randomUuid = uuidv4();
 
     // Compute encumbrance
     data.encumbrance = this._computeEncumbrance(data);
@@ -305,7 +320,7 @@ export class ActorSheetPF extends ActorSheet {
    * @param {String} bookKey  The key of the spellbook being prepared
    * @private
    */
-  _prepareSpellbook(data, spells, bookKey, availableSpellSpecialization, bannedSpellSpecialization) {
+  _prepareSpellbook(data, spells, bookKey, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames) {
     const owner = this.actor.owner;
     const book = this.actor.data.data.attributes.spells.spellbooks[bookKey];
 
@@ -329,19 +344,26 @@ export class ActorSheetPF extends ActorSheet {
         baseSlots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.base || 0,
         slots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
+        specialSlotPrepared: false,
+        hasNonDomainSpells: false
       };
     }
     spells.forEach(spell => {
       const lvl = spell.data.level || 0;
       if (bannedSpellSpecialization.has(spell.data.school))
         spell.isBanned = true;
-      if (availableSpellSpecialization.has(spell.data.school))
+      if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(spell.name)) {
         spell.isSpecialized = true;
+      } else {
+        spellbook[lvl].hasNonDomainSpells = true;
+      }
       if (spell.data.isSpellSpontaneousReplacement) {
         spellbook[lvl].hasSpontaneousSpellReplacement = true;
         spellbook[lvl].spellReplacementId = spell.id;
         spellbook[lvl].spellReplacementName = spell.name;
       }
+      if (spell.data.specialPrepared)
+        spellbook[lvl].specialSlotPrepared = true
       spellbook[lvl].spells.push(spell);
     });
 
@@ -557,8 +579,8 @@ export class ActorSheetPF extends ActorSheet {
 
 
     // Roll Skill Checks
-    html.find(".skill > .skill-name > .rollable").click(this._onRollSkillCheck.bind(this));
-    html.find(".sub-skill > .skill-name > .rollable").click(this._onRollSubSkillCheck.bind(this));
+    html.find(".skill .skill-roll").click(this._onRollSkillCheck.bind(this));
+    html.find(".sub-skill .skill-roll").click(this._onRollSubSkillCheck.bind(this));
 
     // Trait Selector
     html.find('.trait-selector').click(this._onTraitSelector.bind(this));
@@ -670,6 +692,8 @@ export class ActorSheetPF extends ActorSheet {
 
     // Open Compendium packs
     html.find(".open-compendium-pack").click(ev => this._openCompendiumPack(ev));
+
+    html.find(".add-all-known-spells").click(ev => this._addAllKnownSpells(ev))
 
 
     html.find(".warning").click(ev => this._openClassTab());
@@ -918,11 +942,7 @@ export class ActorSheetPF extends ActorSheet {
 
   async _setItemActive(event) {
     event.preventDefault();
-    if (this.actor.isToken) {
-      $(`#actor-${this.actor._id}-${this.actor.token.id}`).addClass('isWorking');
-    } else {
-      $(`#actor-${this.actor._id}`).addClass('isWorking');
-    }
+    this.showWorkingOverlay();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
 
@@ -934,12 +954,24 @@ export class ActorSheetPF extends ActorSheet {
       await item.update(updateData);
     }
 
+    this.hideWorkingOverlay();
+
+  }
+
+  hideWorkingOverlay() {
     if (this.actor.isToken) {
       $(`#actor-${this.actor._id}-${this.actor.token.id}`).removeClass('isWorking');
     } else {
       $(`#actor-${this.actor._id}`).removeClass('isWorking');
     }
+  }
 
+  showWorkingOverlay() {
+    if (this.actor.isToken) {
+      $(`#actor-${this.actor._id}-${this.actor.token.id}`).addClass('isWorking');
+    } else {
+      $(`#actor-${this.actor._id}`).addClass('isWorking');
+    }
   }
 
   /* -------------------------------------------- */
@@ -1313,6 +1345,16 @@ export class ActorSheetPF extends ActorSheet {
     await this.actor.update(updateData);
   }
 
+  async _addAllKnownSpells(event) {
+    event.preventDefault();
+    // Remove old special prepared spell
+    const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
+    const level = $(event.currentTarget).parents(".spellbook-list").attr("data-level");
+    this.showWorkingOverlay();
+    await this.actor.addSpellsToSpellbookForClass(spellbookKey, level);
+    this.hideWorkingOverlay();
+  }
+
   _onSpellAddMetamagic(event) {
 
   }
@@ -1430,7 +1472,7 @@ export class ActorSheetPF extends ActorSheet {
       else if ( item.type === "class" ) arr[3].push(item);
       else if (item.type === "attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
-        console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
+        //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
         if (item.data.containerId !== "none") {
           if (!containerItems.has(item.data.containerId)) {
             containerItems.set(item.data.containerId,[])
@@ -1439,6 +1481,7 @@ export class ActorSheetPF extends ActorSheet {
         } else {
           arr[0].push(item)
         }
+        inventory.all.items.push(item);
       }
 
       return arr;
@@ -1455,6 +1498,7 @@ export class ActorSheetPF extends ActorSheet {
     feats = this._filterItems(feats, this._filters.features);
 
     let availableSpellSpecialization = new Set()
+    let domainSpellNames = new Set()
     let bannedSpellSpecialization = new Set()
 
     feats.forEach(feat => {
@@ -1467,6 +1511,12 @@ export class ActorSheetPF extends ActorSheet {
         if (name === "") return;
         bannedSpellSpecialization.add(name)
       });
+      if (feat.data?.spellSpecialization?.isDomain) {
+
+        Object.values(feat.data?.spellSpecialization?.spells).forEach(s => {
+          domainSpellNames.add(s.name);
+        })
+      }
     })
 
     // Organize Spellbook
@@ -1476,8 +1526,9 @@ export class ActorSheetPF extends ActorSheet {
     for (let [a, spellbook] of Object.entries(spellbooks)) {
       const spellbookSpells = spells.filter(obj => { return obj.data.spellbook === a; });
       spellbookData[a] = {
-        data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization),
+        data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
+
         orig: spellbook,
         concentration: this.actor.data.data.skills["coc"].mod,
         spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
@@ -1496,7 +1547,7 @@ export class ActorSheetPF extends ActorSheet {
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
-      inventory.all.items.push(i);
+
     }
 
     // Organize Features
@@ -1507,7 +1558,7 @@ export class ActorSheetPF extends ActorSheet {
       trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
       racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
       misc: { label: game.i18n.localize("D35E.Misc"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "misc" } },
-      spellSpecialization: { label: game.i18n.localize("D35E.FeatTypeSpellSpecialization"), hasPack: true, pack: "spell-specialization", emptyLabel: "D35E.ListDragAndDropCompendium", canCreate: true, hasActions: false, dataset: { type: "feat", "feat-type": "spellSpecialization" } , items: [] },
+      spellSpecialization: { label: game.i18n.localize("D35E.FeatTypeSpellSpecialization"), hasPack: true, pack: "D35E.spell-schools-domains", emptyLabel: "D35E.ListDragAndDropCompendium", canCreate: true, hasActions: false, dataset: { type: "feat", "feat-type": "spellSpecialization" } , items: [] },
       all: { label: game.i18n.localize("D35E.All"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: false, hasActions: true, dataset: { type: "feat" }, isAll: true },
     };
 
@@ -1541,8 +1592,8 @@ export class ActorSheetPF extends ActorSheet {
     const buffSections = {
       temp: { label: game.i18n.localize("D35E.Temporary"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
       perm: { label: game.i18n.localize("D35E.Permanent"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
-      item: { label: game.i18n.localize("D35E.Item"), pack: "browser:buffs", hasPack:true, hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
-      misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
+      item: { label: game.i18n.localize("D35E.Item"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
+      misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
       //all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
 
@@ -1601,14 +1652,16 @@ export class ActorSheetPF extends ActorSheet {
    */
   _onRollSkillCheck(event) {
     event.preventDefault();
-    const skill = event.currentTarget.parentElement.parentElement.dataset.skill;
+    const li = event.currentTarget.closest("li.skill");
+    const skill = li.dataset.skill;
     this.actor.rollSkill(skill, {event: event});
   }
 
   _onRollSubSkillCheck(event) {
     event.preventDefault();
-    const mainSkill = event.currentTarget.parentElement.parentElement.dataset.mainSkill;
-    const skill = event.currentTarget.parentElement.parentElement.dataset.skill;
+    const li = event.currentTarget.closest("li.sub-skill");
+    const skill = li.dataset.skill;
+    const mainSkill = li.dataset.mainSkill;
     this.actor.rollSkill(`${mainSkill}.subSkills.${skill}`, {event: event});
   }
 

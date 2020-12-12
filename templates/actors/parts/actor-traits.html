@@ -1,4 +1,16 @@
 <div class="traits">
+
+  {{!-- Racial Type --}}
+  <div class="form-group">
+    <label>{{localize "D35E.CreatureType"}}</label>
+    <select name="data.attributes.creatureType" disabled>
+      {{#select data.attributes.creatureType}}
+      {{#each config.creatureTypes as |name type|}}
+      <option value="{{type}}">{{name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
   <div class="form-group">
     <label>{{ localize 'D35E.Size' }}</label>
     <select class="actor-size" name="data.traits.size">

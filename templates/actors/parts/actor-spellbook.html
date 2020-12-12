@@ -166,7 +166,7 @@
 
 <ol class="inventory-list sub-scroll scroll-spellbooks">
 {{#each spellbook.data as |section sid|}}
-    <li class="flexrow inventory-header spellbook-header">
+    <li class="flexrow inventory-header spellbook-header scrolling-header">
       <div class="item-name flexrow">
         <h3>{{section.label}}</h3>
       </div>
@@ -199,16 +199,19 @@
 
       <div class="item-controls">
         {{#if section.canCreate}}
-        <a class="item-control item-create" title="{{ localize 'D35E.CreateSpell' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-          <i class="fas fa-plus"></i> {{ localize 'D35E.Add' }}
+        <a  class="open-compendium-pack" data-pack="browser:spells" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+          <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}
+        </a>
+        <a class="item-control item-create" style="flex: 0; margin-left: 4px;" title="{{ localize 'D35E.CreateSpell' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
+          <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
         </a>
         {{/if}}
       </div>
     </li>
 
-    <ol class="item-list">
+    <ol class="item-list spellbook-list" data-level="{{section.level}}" style="position: relative">
       {{#each section.spells as |item i|}}
-      <li class="item flexrow" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
+      <li class="item flexrow" data-level="{{section.level}}" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
         <div class="item-name flexrow rollable {{#if item.isSpecialized}}item-specialized{{/if}}{{#if item.isBanned}}item-banned{{/if}}">
           <div class="item-image" style="background-image: url('{{item.img}}')"></div>
           <h4>{{item.name}}
@@ -234,6 +237,10 @@
               <span class="tooltipcontent">{{localize "D35E.SpellBanned"}}</span>
             </i>
             {{/if}}
+
+            {{#unless @root.hideShortDescriptions}}
+            <em style="color: black; opacity: 0.7" class="non-rollable">{{item.data.snip}}</em>
+            {{/unless}}
           </h4>
         </div>
 
@@ -284,10 +291,14 @@
           {{#if ../../spellbook.orig.hasSpecialSlot}}
             {{#unless item.data.specialPrepared}}
 
-              {{#if item.isSpecialized}}
-              <a class="item-control spell-prepare-special" title="{{ localize 'D35E.PrepareAsSpecialSpell' }}">
-                <i class="fas fa-hand-sparkles"></i>
-              </a>
+              {{#if section.slots}}
+                {{#if item.isSpecialized}}
+                <a class="item-control spell-prepare-special" title="{{ localize 'D35E.PrepareAsSpecialSpell' }}">
+                  <i class="fas fa-hand-sparkles"></i>
+                </a>
+                {{else}}
+                <div style="flex: 0 16px;"></div>
+                {{/if}}
               {{else}}
               <div style="flex: 0 16px;"></div>
               {{/if}}
@@ -319,6 +330,33 @@
         {{/if}}
       </li>
       {{/each}}
+      {{#unless section.hasNonDomainSpells}}
+      {{#if ../spellbook.orig.allSpellsKnown}}
+      <li class="item flexrow">
+        <div class="item-name flexrow rollable add-all-known-spells" style="opacity: 0.8; text-align: center">
+          <span>{{localize "D35E.AddAllKnownSpells"}}
+          </span>
+        </div>
+      </li>
+      {{/if}}
+      {{/unless}}
+      {{#if ../spellbook.orig.hasSpecialSlot}}
+        {{#unless section.specialSlotPrepared}}
+          {{#if section.level}}
+            {{#if section.slots}}
+              <li class="item flexrow" data-item-id="{{item._id}}" data-replacement-id="{{section.spellReplacementId}}">
+                <div class="item-name flexrow" style="opacity: 0.8; text-align: center">
+                  <em>{{localize "D35E.SpellbookDescUse"}}
+                    <i class="fas fa-hand-sparkles">
+                    </i>
+                    {{localize "D35E.SpellbookDescToPrepareSpell"}}
+                  </em>
+                </div>
+              </li>
+            {{/if}}
+          {{/if}}
+        {{/unless}}
+      {{/if}}
     </ol>
 {{/each}}
 </ol>

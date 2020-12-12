@@ -17,6 +17,21 @@
             </ul>
         </div>
         <ul class="attributes flexrow">
+
+            {{#if isTemplate}}
+            <li></li>
+            <li class="attribute high tooltip" data-attribute="levels">
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
+                <h4 class="attribute-name box-title">{{localize "D35E.BaseHD"}}</h4>
+                <div class="attribute-value">
+                    <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize " D35E.Level"}}"
+                    data-dtype="Number"/>
+                </div>
+                <footer class="attribute-footer">
+
+                </footer>
+            </li>
+            {{else}}
             <li class="attribute high tooltip" data-attribute="levels">
                 <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
                 <h4 class="attribute-name box-title">{{localize "D35E.Level"}}</h4>
@@ -44,6 +59,7 @@
 
                 </footer>
             </li>
+            {{/if}}
         </ul>
     </header>
 
@@ -288,11 +304,9 @@
         {{else}}
 
             <div class="tab flexcol active" data-group="primary" data-tab="description">
-        <section class="description-body" style="padding: 0 10px">
-            <div class="flexcol">
+        <section class="description-body flexcol" style="height: 385px">
                 {{editor content=data.description.value target="data.description.value" button=true owner=owner
                 editable=editable}}
-            </div>
         </section>
         </div>
         {{/if}}
@@ -337,6 +351,24 @@
                         </div>
                         {{/if}}
 
+
+                        {{#if isTemplate}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.LA"}}</label>
+                            <input type="text" name="data.la" value="{{data.la}}" data-dtype="Number" />
+                        </div>
+                        {{!-- Racial Type --}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.CreatureType"}}</label>
+                            <select name="data.creatureType">
+                                {{#select data.creatureType}}
+                                {{#each config.creatureTypes as |name type|}}
+                                <option value="{{type}}">{{name}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+                        {{/if}}
                         {{!-- HD --}}
                         <div class="form-group">
                             <label>{{localize "D35E.HitDie"}}</label>
@@ -527,6 +559,13 @@
                             <label class="checkbox">
                                 <input type="checkbox" name="data.hasSpecialSlot" {{checked
                                        data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
+                            </label>
+                        </div>
+
+                        <div class="form-group stacked">
+                            <label class="checkbox">
+                                <input type="checkbox" name="data.allSpellsKnown" {{checked
+                                       data.allSpellsKnown}}/> {{localize "D35E.KnowsAllSpells"}}
                             </label>
                         </div>
                         <label>{{localize "D35E.SpellcastingDescription"}}</label>

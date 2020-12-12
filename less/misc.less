@@ -124,3 +124,23 @@ input[type=range]:disabled {
 .vulnerability {
   color: darkred;
 }
+
+.welcome-screen {
+  &.window-app {
+    border: 8px solid #55493B;
+    border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+    background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+    border-radius: 0;
+  }
+  .window-content {
+    overflow: hidden;
+  }
+}
+
+.scrolling-header {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  background: url(../ui/denim075.png) repeat;
+  z-index: 10;
+}
