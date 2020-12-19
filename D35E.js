@@ -109,7 +109,6 @@ Hooks.once("init", async function() {
  * This function runs after game data has been requested and loaded from the servers, so entities exist
  */
 Hooks.once("setup", function() {
-
   // Localize CONFIG objects once up-front
   const toLocalize = [
     "abilities", "abilitiesShort", "alignments", "currencies", "distanceUnits", "itemActionTypes", "senses", "skills", "targetTypes",
@@ -142,6 +141,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
+  $('body').toggleClass('d35gm', game.user.isGM);
   const NEEDS_MIGRATION_VERSION = "0.87.7";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
@@ -177,7 +177,6 @@ Hooks.once("ready", async function() {
     return;
   }
 
-  $('body').toggleClass('d35gm', game.user.isGM);
   // Edit next line to match module.
   const system = game.system;
   const title = system.data.title;

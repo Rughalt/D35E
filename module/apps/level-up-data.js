@@ -65,7 +65,7 @@ export class LevelUpDataDialog extends FormApplication {
             skillset: skillset,
             maxSkillRank: this.actor.data.details.level.available + 3,
             levelUpData: this.levelUpData,
-            bonusSkillPoints: this.actor.data.counters.bonusSkillPoints.value || 0,
+            bonusSkillPoints: this.actor.data?.counters?.bonusSkillPoints?.value || 0,
             config: CONFIG.D35E}
         return data
     }

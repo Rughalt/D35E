@@ -219,7 +219,7 @@ export const registerSystemSettings = function() {
     hint: "SETTINGS.D35EColorblindL",
     scope: "client",
     config: true,
-    default: true,
+    default: false,
     type: Boolean,
     onChange: () => {
       $('body').toggleClass('color-blind', game.settings.get("D35E", "colorblindColors"));
