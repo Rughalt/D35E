@@ -40,6 +40,8 @@ export class ChatAttack {
         this.special = [];
         this.effectNotes = "";
         this.rolls = []
+        this.normalDamage = "";
+        this.natural20 = false;
     }
 
     get critRange() {
@@ -89,6 +91,9 @@ export class ChatAttack {
         data.tooltip = tooltip;
         data.total = roll.total;
         data.isCrit = critType === 1;
+        data.isNatural20 = (d20.total === 20 && !critical);
+        if (!critical)
+            this.natural20 = data.isNatural20
         data.isFumble = critType === 2;
 
 
@@ -211,7 +216,9 @@ export class ChatAttack {
 
         // Add card
         if (critical) {
+            this.cards = []
             if (this.item.isHealing) this.cards.push({
+                normalDamage: this.normalDamage,
                 label: game.i18n.localize("D35E.ApplyCriticalHealing"),
                 value: -totalDamage,
                 data: JSON.stringify(rolls),
@@ -219,8 +226,10 @@ export class ChatAttack {
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20
             });
             else this.cards.push({
+                normalDamage: this.normalDamage,
                 label: game.i18n.localize("D35E.ApplyCriticalDamage"),
                 value: totalDamage,
                 data: JSON.stringify(rolls),
@@ -228,8 +237,10 @@ export class ChatAttack {
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20
             });
         } else {
+            this.normalDamage = JSON.stringify(rolls)
             if (this.item.isHealing) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyHealing"),
                 value: -totalDamage,
@@ -247,6 +258,7 @@ export class ChatAttack {
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20
             });
             else this.cards.push({
                     label: game.i18n.localize("D35E.ApplyDamage"),
@@ -256,6 +268,7 @@ export class ChatAttack {
                     material: JSON.stringify(this.item.data.data.material),
                     enh: this.item.data.data.enh,
                     action: "applyDamage",
+                    natural20: this.natural20
                 });
         }
 

@@ -271,6 +271,15 @@
 }
 
 .d35ecustom {
+  .dice-roll .dice-total.failure {
+    color: #b70000;
+  }
+  .dice-roll .dice-total.success {
+    color: #005a00;
+  }
+
+
+
   .D35E.sheet.item, .D35E.sheet.actor {
     .form-group {
       :not(button) {
@@ -300,7 +309,7 @@
   }
 
   .D35E.sheet.item {
-    .spell {
+    .spell, .full-attack {
       border-radius: 2px;
       border: none !important;
       background: rgba(255,255,255,0.2);
@@ -411,6 +420,10 @@
     }
   }
 
+  .chat-card .card-header {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+  }
   .compendium-browser-window {
 
     &.window-app {
@@ -1651,4 +1664,22 @@
 
 a.inline-roll {
   display: inline-block;
+}
+
+.color-blind {
+  .resistance, .success {
+    color: #4E854E !important;
+  }
+
+  .vulnerability, .failure {
+    color: #8F2E55 !important;
+  }
+
+  .lethal {
+    color: #d04702 !important;
+  }
+
+  .nonlethal {
+    color: #007BAA !important;
+  }
 }

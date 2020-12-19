@@ -1328,8 +1328,9 @@ export class ActorSheetPF extends ActorSheet {
     event.preventDefault();
     // Remove old special prepared spell
     const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
-    const k = `data.attributes.spells.spellbooks.${spellbookKey}.specialId`;
-    let previousItemId = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${spellbookKey}.specialId`);
+    const level = $(event.currentTarget).parents(".spellbook-list").attr("data-level");
+    const k = `data.attributes.spells.spellbooks.${spellbookKey}.specialSlots.level${level}`;
+    let previousItemId = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${spellbookKey}.specialSlots.level${level}`);
     if (previousItemId)
       await this.actor.deleteOwnedItem(previousItemId);
 
@@ -1337,7 +1338,7 @@ export class ActorSheetPF extends ActorSheet {
     const item = duplicate(this.actor.getOwnedItem(itemId).data);
     delete item._id
     item.data.specialPrepared = true;
-    let x = await this.actor.createEmbeddedEntity("OwnedItem", item)
+    let x = await this.actor.createEmbeddedEntity("OwnedItem", item, {ignoreSpellbookAndLevel: true})
 
     // Update saved special prepared special id
     let updateData = {}
@@ -1462,6 +1463,7 @@ export class ActorSheetPF extends ActorSheet {
       item.isStack = item.data.quantity ? item.data.quantity > 1 : false;
       item.hasUses = item.data.uses && (item.data.uses.max > 0);
       item.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(item, "data.uses.per"));
+      item.isFullAttack = item.type === "full-attack";
 
       const itemQuantity = getProperty(item, "data.quantity") != null ? getProperty(item, "data.quantity") : 1;
       const itemCharges = getProperty(item, "data.uses.value") != null ? getProperty(item, "data.uses.value") : 1;
@@ -1471,6 +1473,7 @@ export class ActorSheetPF extends ActorSheet {
       else if ( item.type === "feat" ) arr[2].push(item);
       else if ( item.type === "class" ) arr[3].push(item);
       else if (item.type === "attack") arr[4].push(item);
+      else if (item.type === "full-attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
         //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
         if (item.data.containerId !== "none") {
@@ -1573,7 +1576,7 @@ export class ActorSheetPF extends ActorSheet {
         if (!classFeaturesMap.has(sourceClassName))
           classFeaturesMap.set(sourceClassName,[])
         classFeaturesMap.get(sourceClassName).push(f);
-        if (!!game.settings.get("D35E", "classFeaturesInTabs")) {
+        if (!!game.settings.get("D35E", "classFeaturesInTabs") || k === "racial") {
           features[k].items.push(f);
         }
       } else {
@@ -1612,13 +1615,14 @@ export class ActorSheetPF extends ActorSheet {
     data.useableAttacks = []
 
     const attackSections = {
+      all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, initial: true, showTypes: true, dataset: { type: "attack" } },
       weapon: { label: game.i18n.localize("D35E.AttackTypeWeaponPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "weapon" } },
       natural: { label: game.i18n.localize("D35E.AttackTypeNaturalPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "natural" } },
       ability: { label: game.i18n.localize("D35E.AttackTypeAbilityPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "ability" } },
       racialAbility: { label: game.i18n.localize("D35E.AttackTypeRacialPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "racialAbility" } },
       misc: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "misc" } },
-      all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, initial: true, showTypes: true, dataset: { type: "attack" } },
-    };
+      full: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "full-attack", "attack-type": "full" } },
+      };
 
     for (let a of attacks) {
       let s = a.data.attackType;
@@ -1627,6 +1631,15 @@ export class ActorSheetPF extends ActorSheet {
       attackSections[s].items.push(a);
       attackSections.all.items.push(a);
     }
+
+    attackSections.full.items.forEach(fullAttackItem => {
+      Object.values(fullAttackItem.data.attacks).forEach(attack => {
+        if (!attack.id) return ;
+        let i = attackSections.all.items.find(i => i.id === attack.id);
+        attack.hasAction = i.hasAction;
+        attack.itemExists = !!attack.item
+      });
+    })
 
     // Assign and return
     data.inventory = Object.values(inventory);

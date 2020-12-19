@@ -19,6 +19,12 @@
                     <div  style="font-weight: 600;flex: 0 40px">
                         {{localize "D35E.DRValue"}}
                     </div>
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="lethal tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERLethalDamage"}}
+                          </span>
+                        <i class="fas fa-tint"></i>
+                    </div>
                 </li>
                 {{#each damageReduction as |dr|}}
                 <li class="item flexrow" data-ability="{{dr.uid}}">
@@ -32,6 +38,10 @@
                         </h4>
                     </div>
                     <input style="flex: 0 40px" type="text" name="dr-value-{{dr.uid}}" class="item-detail value" value="{{dr.value}}">
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="dr-lethal-{{dr.uid}}" {{checked dr.lethal}}/>
+                        <span class="checkmark"></span>
+                    </label>
                 </li>
                 {{/each}}
             </ol>
@@ -59,6 +69,12 @@
                           </span>
                         <i class="fas fa-bolt"></i>
                     </div>
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="lethal tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERLethalDamage"}}
+                          </span>
+                        <i class="fas fa-tint"></i>
+                    </div>
                 </li>
                 {{#each energyResistance as |dr|}}
                 <li class="item flexrow" data-ability="{{dr.uid}}">
@@ -76,6 +92,10 @@
 
                     <label class="checkbox" style="position: relative; flex: 0 20px">
                         <input type="checkbox" class="stylized" name="er-vulnerable-{{dr.uid}}" {{checked dr.vulnerable}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="er-lethal-{{dr.uid}}" {{checked dr.lethal}}/>
                         <span class="checkmark"></span>
                     </label>
                 </li>

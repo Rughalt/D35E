@@ -13,6 +13,65 @@
     {{/if}}
     {{#if hasAttack}}
     {{#if hasDamage}}
+
+    <div class="form-group">
+    <label>{{localize "D35E.WeaponPropNonLethal"}}</label>
+    <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+        <input type="checkbox" class="stylized" name="nonLethal" {{#if nonLethal}}checked{{/if}}/>
+        <span class="checkmark"></span>
+    </label>
+    </div>
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.CombatStatus"}}</label>
+    </div>
+    <div class="flexrow">
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" name="flanking"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.Flanking"}}</label>
+        </div>
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" name="charge"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.Charge"}}</label>
+        </div>
+    </div>
+    <div class="flexrow">
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" name="defensive"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.DefensiveFighting"}}</label>
+        </div>
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" name="highground"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.HighGround"}}</label>
+        </div>
+    </div>
+    <div class="flexrow">
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" name="squeezing"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.Squeezing"}}</label>
+        </div>
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" name="prone"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.Prone"}}</label>
+        </div>
+    </div>
     <div class="form-group stacked">
         <label class="block-header">{{localize "D35E.FeatPlural"}}</label>
     </div>
@@ -84,7 +143,7 @@
         <label>{{conditional.name}}</label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
             <input type="checkbox" class="stylized" data-conditional-optional="{{conditional.name}}"
-                   name="conditional-{{conditional.name}}" data-type="conditional"/>
+                   name="conditional-{{conditional.name}}" data-type="conditional" {{#if conditional.default}}checked{{/if}}/>
             <span class="checkmark"></span>
         </label>
     </div>
@@ -133,8 +192,8 @@
     {{#unless isRangedWeapon}}
     <div class="form-group">
         <label>{{localize "D35E.WeaponFightingMode"}}</label>
-        <select name="twf-attack-mode" onchange="changeTWF(this)">
-            {{#select twoWeaponAttackType}}
+        <select name="twf-attack-mode" onchange="changeTWF(this)" value="{{attackType}}">
+            {{#select attackType}}
             {{#each twoWeaponAttackTypes as |label mode|}}
             <option value="{{mode}}">{{localize label}}</option>
             {{/each}}
@@ -159,6 +218,9 @@
                     $("select[data-type='dmg-mult']").val("1");
                 }
             }
+            $( document ).ready(function() {
+                changeTWF($("select[name='twf-attack-mode']"))
+            });
         </script>
     </div>
     {{/unless}}

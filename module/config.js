@@ -956,6 +956,7 @@ D35E.buffTargets = {
     "aac": "D35E.BuffTarACArmor",
     "sac": "D35E.BuffTarACShield",
     "nac": "D35E.BuffTarACNatural",
+    "tch": "D35E.BuffTarACTouch",
   },
   "attack": {
     "_label": "D35E.AttackRollPlural",
@@ -1034,6 +1035,7 @@ D35E.buffTargets = {
     "turnUndead": "D35E.TurnUndeadUses",
     "spellResistance": "D35E.SpellResistance",
     "cr": "D35E.CR",
+    "fortification": "D35E.Fortification",
   },
   "prestigeCl": {
     "_label": "D35E.PrestigeCl",
@@ -1084,7 +1086,7 @@ D35E.contextNoteTargets = {
     "ac": "D35E.ACNormal",
     "cmb": "CMB",
     "cmd": "CMD",
-    "sr": "D35E.SpellResistance",
+    "sr": "D35E.SpellResistance"
   },
 };
 
@@ -1208,6 +1210,9 @@ D35E.combatChangeType = {
   'attack': 'D35E.Attack',
   'attackOptional': 'D35E.AttackOptional',
   'spell': 'D35E.Spell',
+  'spellOptional': 'D35E.SpellOptional',
+  'defense': 'D35E.Defense',
+  'defenseOptional': 'D35E.DefenseOptional',
 };
 
 CONFIG.Combat.initiative.decimals = 2;

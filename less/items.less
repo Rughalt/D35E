@@ -453,7 +453,7 @@
     }
   }
 
-  .damage-control, .attack-control, .change-control,.combat-change-control, .context-note-control, .special-control {
+  .damage-control, .attack-control, .change-control, .resistance-control, .dr-control,.combat-change-control, .context-note-control, .special-control {
     width: 18px;
     flex: 0 0 18px;
     line-height: 24px;
@@ -519,8 +519,12 @@
 
       // Item Header Name
       .item-name {
-        cursor: pointer;
+        &:not(.non-rollable) {
+          cursor: pointer;
+        }
         white-space: nowrap;
+
+
 
         .item-image {
           flex: 0 0 24px;
@@ -532,11 +536,11 @@
           margin: 0;
         }
 
-        &:hover .item-image {
+        &:hover .item-image:not(.non-rollable) {
           background-image: url("/icons/svg/d20-grey.svg") !important;
         }
 
-        .item-image:hover {
+        .item-image:hover:not(.non-rollable) {
           background-image: url("/icons/svg/d20-black.svg") !important;
         }
       }
@@ -919,7 +923,7 @@
     }
   }
 
-  .spell {
+  .spell, .full-attack {
     img {
       flex: 0 24px;
       height: 24px;

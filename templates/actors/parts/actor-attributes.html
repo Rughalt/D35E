@@ -128,54 +128,72 @@
   </li>
 </ul>
 
-<h2 class="block-header" style="flex: 1">{{ localize 'D35E.SpecialQualities' }}</h2>
-<ul class="attributes misc-base flexrow">
-  <li class="attribute sr high tooltip" data-attribute="sr">
-    <h4 class="attribute-name box-title">{{ localize 'D35E.BuffTarACNatural' }}</h4>
-    <div class="attribute-value">
-      <input name="data.attributes.naturalAC" type="text" placeholder="0"
-             value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
-    </div>
-  </li>
-
-  <li class="attribute sr high tooltip" data-attribute="sr">
-    <div class="tooltipcontent">
-      @attributes.sr.total : {{data.attributes.sr.total}}
-    </div>
-    <h4 class="attribute-name box-title">{{ localize 'D35E.SpellResistance' }}</h4>
-    <div class="attribute-value">
-      <span>{{data.attributes.sr.total}}</span>
-    </div>
-    <footer class="attribute-footer">
-      <div class="data-selector" style="float: right; width: 60px; line-height: 24px;">
-        <a class="note-editor" for="data.attributes.srNotes"><i class="fas fa-edit"></i></a>
-        <label>{{ localize 'D35E.Notes' }}</label>
-      </div>
-      <input style="width: calc(100% - 60px);" name="data.attributes.sr.formula" type="text" placeholder="{{ localize 'D35E.Formula' }}"
-             value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
-    </footer>
-  </li>
-
-  <li class="attribute sr high tooltip" data-attribute="sr">
-    <h4 class="attribute-name box-title">{{ localize 'D35E.FastHealing' }}</h4>
-    <div class="attribute-value">
-      <input name="data.traits.fastHealing" type="text" placeholder="0"
-             value="{{#if data.traits.fastHealing}}{{data.traits.fastHealing}}{{/if}}"/>
-    </div>
-  </li>
-
-  <li class="attribute sr high tooltip" data-attribute="sr">
-    <h4 class="attribute-name box-title">{{ localize 'D35E.Regeneration' }}</h4>
-    <div class="attribute-value">
-      <input name="data.traits.regen" type="text" placeholder="0"
-             value="{{#if data.traits.regen}}{{data.traits.regen}}{{/if}}"/>
-    </div>
-  </li>
-</ul>
 {{!-- Misc --}}
 <div class="flexrow">
   <div class="flexcol attributes-root">
 
+    <h2 class="block-header"  style="flex: 0">{{ localize 'D35E.SpecialQualities' }}</h2>
+    <ul class="attributes misc-base flexrow">
+      <li class="attribute sr high tooltip" data-attribute="sr">
+        <div class="tooltipcontent">
+          @attributes.sr.total : {{data.attributes.sr.total}}
+        </div>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.SpellResistance' }}</h4>
+        <div class="attribute-value">
+          <span>{{data.attributes.sr.total}}</span>
+        </div>
+        <footer class="attribute-footer">
+          <div class="data-selector" style="float: right; width: 60px; line-height: 24px;">
+            <a class="note-editor" for="data.attributes.srNotes"><i class="fas fa-edit"></i></a>
+            <label>{{ localize 'D35E.Notes' }}</label>
+          </div>
+          <input style="width: calc(100% - 60px);" name="data.attributes.sr.formula" type="text" placeholder="{{ localize 'D35E.Formula' }}"
+                 value="{{#if data.attributes.sr.formula}}{{data.attributes.sr.formula}}{{/if}}"/>
+        </footer>
+      </li>
+    </ul>
+
+    <ul class="attributes misc-base flexrow">
+      <li class="attribute sr high tooltip" data-attribute="sr">
+        <h4 class="attribute-name box-title">{{ localize 'D35E.FastHealing' }}</h4>
+        <div class="attribute-value">
+          <input name="data.traits.fastHealing" type="text" placeholder="0"
+                 value="{{#if data.traits.fastHealing}}{{data.traits.fastHealing}}{{/if}}" data-dtype="Number"/>
+        </div>
+      </li>
+
+      <li class="attribute sr high tooltip" data-attribute="sr">
+        <h4 class="attribute-name box-title">{{ localize 'D35E.Regeneration' }}</h4>
+        <div class="attribute-value">
+          <input name="data.traits.regen" type="text" placeholder="0"
+                 value="{{#if data.traits.regen}}{{data.traits.regen}}{{/if}}" data-dtype="Number"/>
+        </div>
+      </li>
+    </ul>
+    <ul class="attributes misc-base flexrow">
+      <li class="attribute sr high tooltip" data-attribute="sr">
+        <h4 class="attribute-name box-title">{{ localize 'D35E.BuffTarACNatural' }}</h4>
+        <div class="attribute-value">
+          <input name="data.attributes.naturalAC" type="text" placeholder="0"
+                 value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}" data-dtype="Number"/>
+        </div>
+      </li>
+      <li class="attribute sr high tooltip" data-attribute="sr">
+        <div class="tooltipcontent">
+          @attributes.fortification.total : {{data.attributes.fortification.total}}
+        </div>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.Fortification' }}</h4>
+        <div class="attribute-value">
+          <span>{{data.attributes.fortification.total}}</span>
+        </div>
+        <footer class="attribute-footer">
+          <input name="data.attributes.fortification.value" type="text" placeholder="{{ localize 'D35E.Value' }}"
+                 value="{{#if data.attributes.fortification.value}}{{data.attributes.fortification.value}}{{/if}}" data-dtype="Number"/>
+        </footer>
+      </li>
+    </ul>
+
+    <h2 class="block-header" style="flex: 0">{{ localize 'D35E.AdditionalData' }}</h2>
     <ul class="attributes misc-base flexrow" style="flex: 0">
       <li class="attribute initiative" data-attribute="init">
         <h4 class="attribute-name box-title rollable">{{ localize 'D35E.Initiative' }}</h4>
@@ -230,6 +248,7 @@
   </div>
 
   <section class="center-pane">
+    <h2 class="block-header" style="flex: 1">{{ localize 'D35E.Traits' }}</h2>
       {{!-- Traits --}}
       {{> "systems/D35E/templates/actors/parts/actor-traits.html"}}
   </section>

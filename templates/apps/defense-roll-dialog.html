@@ -1,0 +1,48 @@
+<form>
+    <div class="form-group">
+        <label>{{localize "D35E.ACBonus"}}</label>
+        <input type="text" name="ac-bonus" value="" placeholder="e.g. +1d4"/>
+    </div>
+
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.ACDialogModifiers"}}</label>
+    </div>
+    <div class="form-group">
+        <div class="flexcol">
+            {{#each defenseFeats as |feat|}}
+            <span>{{feat.data.name}}</span>
+            {{/each}}
+        </div>
+    </div>
+    {{#each defenseFeatsOptional as |feat|}}
+    <div class="form-group">
+        <label>{{feat.data.name}}</label>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized" data-feat-optional="{{feat.id}}" name="optional-{{feat.id}}"
+                   data-type="optional"/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    {{/each}}
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.ACDialogOptions"}}</label>
+    </div>
+
+    <div class="form-group">
+        <label>{{localize "D35E.ACDialogHalfDamage"}}</label>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized" name="applyHalf"
+                   data-type="optional"/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.ACDialogNoCritical"}}</label>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized" name="noCritical"
+                   data-type="optional"/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+
+</form>

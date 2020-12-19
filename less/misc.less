@@ -118,11 +118,19 @@ input[type=range]:disabled {
 }
 
 .resistance {
-  color: darkgreen;
+  color: #006400;
 }
 
 .vulnerability {
-  color: darkred;
+  color: #8b0000;
+}
+
+.lethal {
+  color: #d04702;
+}
+
+.nonlethal {
+  color: #007b49;
 }
 
 .welcome-screen {
@@ -143,4 +151,58 @@ input[type=range]:disabled {
   top: 0;
   background: url(../ui/denim075.png) repeat;
   z-index: 10;
+}
+
+.rolled-attack {
+  background: url(/systems/D35E/icons/damage-type/badges/gladius.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 44px!important;
+}
+
+.rolled-defense {
+  background: url(/systems/D35E/icons/damage-type/badges/shield.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 44px!important;
+}
+
+.rolled-fortify-value {
+  background: url(/systems/D35E/icons/damage-type/badges/chest-armor.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 34px!important;
+}
+
+.rolled-roll {
+  background: url(/systems/D35E/icons/damage-type/badges/rolling-dices.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 34px!important;
+}
+
+span.bold {
+  font-weight: 900;
+}
+
+.game:not(.d35gm) {
+  .gm-sensitive {
+    display: none;
+  }
 }

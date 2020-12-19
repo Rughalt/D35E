@@ -1,0 +1,131 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+  {{!-- Item Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <div class="sheet-header-profile">
+      <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    </div>
+
+    <div class="header-details flexrow">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
+      </h1>
+
+      <div class="item-subtitle">
+        <h4 class="item-type">{{localize "D35E.FullAttack"}}</h4>
+      </div>
+    </div>
+  </header>
+  <section class="sheet-content flexcol" style="min-height: 400px">
+
+  {{!-- Item Sheet Navigation --}}
+  <nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item active" data-tab="configuration" style="flex: 0 150px;">{{ localize "D35E.Configuration" }}</a>
+  </nav>
+
+  {{!-- Item Sheet Body --}}
+  <section class="primary-body">
+    {{!-- Description Tab --}}
+    <div class="tab flexcol active" data-group="primary" data-tab="description">
+        <section class="description-body" style="display: block; height: 100%">
+          <div class="flexcol">
+            <h3 class="form-header">{{localize "D35E.FullAttackDescription"}}</h3>
+            <div style="height:178px">
+              {{editor content=data.description.value target="data.description.value" button=true owner=owner
+              editable=editable}}
+            </div>
+              <h3 class="form-header">{{localize "D35E.FullAttackAttacks"}}</h3>
+              <div class="inventory-group flexcol" style="padding-bottom: 8px">
+                <ol class="inventory-list sub-scroll scroll-inventory">
+                  <li class="inventory-header flexrow">
+                    <h3 class="item-name flexrow"></h3>
+                    <div style="flex: 0 120px; text-align: center; opacity: 0.7">
+                      {{localize "D35E.FullAttackAttackCount"}}
+                    </div>
+                  </li>
+                  <ol class="item-list" data-pack="D35E.class-abilities">
+                    {{#each data.attacks as |item level|}}
+                    <li class="item item-box  flexrow" data-item-id="{{item.id}}" data-pack="{{item.pack}}"
+                        data-item-level="{{item.level}}">
+                      <div class="item-name child-item flexrow non-rollable">
+                        <div class="item-image non-rollable" style="background-image: url('{{item.img}}')"></div>
+                        <h4>
+                          {{item.name~}}
+                          {{#if item.primary}}
+                          <em style="color: black; opacity: 0.7">{{localize "D35E.PrimaryAttack"}}</em>
+                          {{/if}}
+                        </h4>
+                      </div>
+                      <div style="flex: 0 120px; text-align: center; opacity: 0.7">
+                        <em>{{item.count}}</em>
+                      </div>
+
+                    </li>
+                    {{/each}}
+
+                  </ol>
+                </ol>
+              </div>
+          </div>
+        </section>
+    </div>
+
+    <div class="tab flexcol active" data-group="primary" data-tab="configuration">
+      <nav class="sheet-navigation tabs subtabs configuration" data-group="configuration">
+        <a class="item active" data-tab="details">{{ localize "D35E.Details" }}</a>
+        <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
+      </nav>
+
+      <div class="flexrow configuration-container" style="overflow: hidden; height: 100%">
+        <section class="configuration-body" style="display: block; height: 100%">
+          {{!-- Details Tab --}}
+          <div class="tab configuration-group details" data-group="configuration" data-tab="details">
+
+              <h3 class="form-header">{{localize "D35E.Details"}}</h3>
+
+              <div class="form-group stacked">
+                <label class="checkbox">
+                  <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
+                </label>
+              </div>
+
+              <h3 class="form-header">{{localize "D35E.FullAttackAttacks"}}</h3>
+              <section>
+                {{#each data.attacks as |attack level|}}
+                <div class="full-attack flexcol" data-attack="{{level}}">
+                  <h4>{{localize "D35E.Attack"}} {{attack._id}}</h4>
+                  <div class="form-group">
+                    <img src="{{attack.img}}">
+                    <label>{{attack.name}}</label>
+
+
+                    <div class="form-group flexrow" style="    flex: 0 180px;">
+                      <label>{{localize "D35E.FullAttackAttackCount"}}</label>
+                      <input type="text" name="data.attacks.{{level}}.count" value="{{attack.count}}" data-dtype="Number"/>
+                      <input type="hidden" name="data.attacks.{{level}}.id" value="{{attack.id}}" data-dtype="String"/>
+                    </div>
+                  </div>
+                  {{#if attack.isWeapon}}
+                  <div class="form-group">
+                    <label style="margin-left: 0">{{localize "D35E.WeaponFightingMode"}}</label>
+                    <select name="data.attacks.{{level}}.attackMode" value="{{attack.attackMode}}">
+                      {{#select attack.attackMode}}
+                        {{#each ../config.twoWeaponAttackType as |label mode|}}
+                          <option value="{{mode}}">{{localize label}}</option>
+                        {{/each}}
+                      {{/select}}
+                    </select>
+                  </div>
+                  {{/if}}
+                  <em style="align-self: flex-end;">{{localize "D35E.FullAttackDropDescription"}}</em>
+                </div>
+                {{/each}}
+              </section>
+            </div>
+        </section>
+      </div>
+    </div>
+  </section>
+  </section>
+</form>

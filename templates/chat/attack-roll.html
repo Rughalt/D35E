@@ -1,133 +1,150 @@
-<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
 <header class="card-header flexrow">
-  <img src="{{item.img}}" title="{{item.name}}" width="36" height="36"/>
-  {{#if name}}<h3>{{name}}</h3>{{/if}}
+    <img src="{{item.img}}" title="{{item.name}}" width="36" height="36"/>
+    {{#if name}}<h3>{{name}}</h3>{{/if}}
 </header>
 
 <div class="card-content">
-  {{#each attacks as |atk|}}
-  <div class="chat-attack">
-    {{#if atk.hasAttack}}
-    <div class="dice-roll attack-roll">
-      {{#if atk.attack.flavor}}
-      <div class="dice-flavor">{{atk.attack.flavor}} {{#if ../item.data.ability.vsTouchAc}}(vs Touch AC){{/if}}</div>
-      {{/if}}
-      <div class="dice-result">
-        <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">{{atk.attack.total}}</h4>
-        {{{atk.attack.tooltip}}}
-      </div>
-    </div>
-    {{#if atk.hasCritConfirm}}
-    <div class="dice-roll crit-confirm-roll">
-      {{#if atk.critConfirm.flavor}}
-      <div class="dice-flavor">{{atk.critConfirm.flavor}} {{#if ../item.data.ability.vsTouchAc}}(vs Touch AC){{/if}}</div>
-      {{/if}}
-      <div class="dice-result">
-        <h4 class="dice-total{{#if atk.critConfirm.isCrit}} success{{/if}}{{#if atk.cfirConfirm.isFumble}} failure{{/if}}">{{atk.critConfirm.total}}</h4>
-        {{{atk.critConfirm.tooltip}}}
-      </div>
-    </div>
-    {{/if}}
+    {{#each attacks as |atk|}}
+    <div class="chat-attack">
+        {{#if atk.hasAttack}}
+            <div class="dice-roll attack-roll">
+                {{#if atk.attack.flavor}}
+                    <div class="dice-flavor">{{atk.attack.flavor}} {{#if ../item.data.ability.vsTouchAc}}(vs Touch AC){{/if}}
+                        {{#if ../nonLethal}}({{localize "D35E.WeaponPropNonLethal"}}){{/if}}
+                    </div>
+                {{/if}}
+                <div class="dice-result">
+                    <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
+                        {{atk.attack.total}}</h4>
+                    {{{atk.attack.tooltip}}}
+                </div>
+            </div>
+            {{#if atk.hasCritConfirm}}
+                <div class="dice-roll crit-confirm-roll">
+                    {{#if atk.critConfirm.flavor}}
+                    <div class="dice-flavor">{{atk.critConfirm.flavor}} {{#if ../item.data.ability.vsTouchAc}}(vs Touch
+                        AC){{/if}}
+                    </div>
+                    {{/if}}
+                    <div class="dice-result">
+                        <h4 class="dice-total{{#if atk.critConfirm.isCrit}} success{{/if}}{{#if atk.cfirConfirm.isFumble}} failure{{/if}}">
+                            {{atk.critConfirm.total}}</h4>
+                        {{{atk.critConfirm.tooltip}}}
+                    </div>
+                </div>
+            {{/if}}
+        {{/if}}
 
+        {{#if atk.hasDamage}}
+            <div class="dice-roll damage-roll">
+                {{#if atk.damage.flavor}}
+                <div class="dice-flavor">{{atk.damage.flavor}}</div>
+                {{/if}}
+                <div class="dice-result">
+                    <h4 class="dice-total">
+                        {{atk.damage.total}}
+                        {{{atk.damage.shortTooltip}}}
+                    </h4>
+                    {{{atk.damage.tooltip}}}
+                </div>
+            </div>
+            {{#if atk.hasCritConfirm}}
+                <div class="dice-roll crit-damage-roll">
+                    {{#if atk.critDamage.flavor}}
+                    <div class="dice-flavor">{{atk.critDamage.flavor}}</div>
+                    {{/if}}
+                    <div class="dice-result">
+                        <h4 class="dice-total">
+                            {{atk.critDamage.total}}
+                            {{{atk.critDamage.critShortTooltip}}}
+                        </h4>
+                        {{{atk.critDamage.tooltip}}}
+                    </div>
+                </div>
+            {{/if}}
+            {{#if atk.hasSubdamage}}
+                {{#each atk.subDamage as |dmg|}}
+                    <div class="dice-roll damage-roll">
+                        {{#if dmg.flavor}}
+                        <div class="dice-flavor">{{dmg.flavor}}</div>
+                        {{/if}}
+                        <div class="dice-result">
+                            <h4 class="dice-total">{{dmg.total}}</h4>
+                            {{{dmg.tooltip}}}
+                        </div>
+                    </div>
+                {{/each}}
+            {{/if}}
 
-    {{/if}}
+        {{/if}}
+        {{#if ../dc.description}}
+        <div class="dice-roll attack-roll">
+            <div class="dice-flavor">Saving throw</div>
+            <div class="dice-result">
+                <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
+                    {{localize "D35E.DC"}} {{../dc.dc}} {{../dc.description}}</h4>
+            </div>
+        </div>
+        {{/if}}
 
-    {{#if atk.hasDamage}}
-    <div class="dice-roll damage-roll">
-      {{#if atk.damage.flavor}}
-      <div class="dice-flavor">{{atk.damage.flavor}}</div>
-      {{/if}}
-      <div class="dice-result">
-        <h4 class="dice-total">
-        {{atk.damage.total}}
-        {{{atk.damage.shortTooltip}}}
-        </h4>
-        {{{atk.damage.tooltip}}}
-      </div>
-    </div>
-    {{#if atk.hasCritConfirm}}
-    <div class="dice-roll crit-damage-roll">
-      {{#if atk.critDamage.flavor}}
-      <div class="dice-flavor">{{atk.critDamage.flavor}}</div>
-      {{/if}}
-      <div class="dice-result">
-        <h4 class="dice-total">
-        {{atk.critDamage.total}}
-        {{{atk.critDamage.critShortTooltip}}}
-        </h4>
-        {{{atk.critDamage.tooltip}}}
-      </div>
-    </div>
-    {{/if}}
-    {{#if atk.hasSubdamage}}
+        {{#if atk.cards.length}}
+        <div class="flexcol card-buttons gm-sensitive">
+            {{#each atk.cards as |card|}}
+            <button data-action="{{card.action}}" data-natural="{{card.natural20}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
+                    data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}">
+                {{card.label}}
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
 
-    {{#each atk.subDamage as |dmg|}}
-    <div class="dice-roll damage-roll">
-      {{#if dmg.flavor}}
-      <div class="dice-flavor">{{dmg.flavor}}</div>
-      {{/if}}
-      <div class="dice-result">
-        <h4 class="dice-total">{{dmg.total}}</h4>
-        {{{dmg.tooltip}}}
-      </div>
+        {{#if ../dc.description}}
+        <div class="flexcol card-buttons">
+            <button class="everyone" data-action="rollSave" data-value="{{../dc.type}}">{{localize
+                "D35E.RollSavingThrow"}}
+            </button>
+        </div>
+        {{/if}}
+
+        {{#if atk.special.length}}
+        <strong>Special actions</strong><br>
+        <div class="flexcol card-buttons">
+            {{#each atk.special as |card|}}
+            <button class="{{#if card.isTargeted}}gm-sensitive{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
+                card.hasImg}}<img src="{{card.img}}">{{/if}}{{#if card.isTargeted}}<img class="target"
+                                                                                        src="/systems/D35E/icons/actions/reticule.svg">{{/if}}{{#unless
+                card.isTargeted}}<img class="target" src="/systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
+        <div class="flexcol property-group gm-sensitive">
+            {{{atk.effectNotes}}}
+        </div>
     </div>
     {{/each}}
-    {{/if}}
-    {{#if ../dc.description}}
-    <div class="dice-roll attack-roll">
-      <div class="dice-flavor">Saving throw</div>
-      <div class="dice-result">
-        <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">{{localize "D35E.DC"}} {{../dc.dc}} {{../dc.description}}</h4>
-      </div>
-    </div>
-    {{/if}}
-    {{/if}}
 
-    {{#if atk.cards.length}}
-    <div class="flexcol card-buttons">
-      {{#each atk.cards as |card|}}
-      <button data-action="{{card.action}}" data-json="{{card.data}}" data-enh="{{card.enh}}" data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}">{{card.label}}</button>
-      {{/each}}
-
-      {{#if ../dc.description}}
-      <button class="everyone" data-action="rollSave" data-value="{{../dc.type}}">{{localize "D35E.RollSavingThrow"}}</button>
-      {{/if}}
-    </div>
+    {{#if hasExtraText}}
+    <div class="extra-text gm-sensitive">{{{extraText}}}</div>
     {{/if}}
-
-    {{#if atk.special.length}}
-    <strong>Special actions</strong><br>
-    <div class="flexcol card-buttons">
-      {{#each atk.special as |card|}}
-      <button data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if card.hasImg}}<img src="{{card.img}}">{{/if}}{{#if card.isTargeted}}<img class="target" src="/systems/D35E/icons/actions/reticule.svg">{{/if}}{{#unless card.isTargeted}}<img class="target" src="/systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}</button>
-      {{/each}}
-    </div>
-    {{/if}}
-    <div class="flexcol property-group gm-sensitive">
-      {{{atk.effectNotes}}}
-      </div>
-    </div>
-  {{/each}}
-
-  {{#if hasExtraText}}
-  <div class="extra-text gm-sensitive">{{{extraText}}}</div>
-  {{/if}}
 
 
 </div>
 <footer class="card-footer">
-  {{#if hasProperties}}
-  {{#each properties as |prop|}}
-  <div class="footer flexcol property-group gm-sensitive">
-    <label>{{prop.header}}</label>
-    <div class="flexrow">
-      {{#each prop.value as |v|}}
-      <span class="tag">{{v}}</span>
-      {{/each}}
+    {{#if hasProperties}}
+    {{#each properties as |prop|}}
+    <div class="footer flexcol property-group gm-sensitive">
+        <label>{{prop.header}}</label>
+        <div class="flexrow">
+            {{#each prop.value as |v|}}
+            <span class="tag">{{v}}</span>
+            {{/each}}
+        </div>
     </div>
-  </div>
-  {{/each}}
-  {{/if}}
+    {{/each}}
+    {{/if}}
 </footer>
 
 </div>

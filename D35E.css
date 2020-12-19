@@ -2506,6 +2506,8 @@
 .D35E.sheet.item .damage-control,
 .D35E.sheet.item .attack-control,
 .D35E.sheet.item .change-control,
+.D35E.sheet.item .resistance-control,
+.D35E.sheet.item .dr-control,
 .D35E.sheet.item .combat-change-control,
 .D35E.sheet.item .context-note-control,
 .D35E.sheet.item .special-control {
@@ -2555,8 +2557,10 @@
   background-color: rgba(210, 210, 210, 0.3);
 }
 .D35E.sheet.item .inventory-list .item .item-name {
-  cursor: pointer;
   white-space: nowrap;
+}
+.D35E.sheet.item .inventory-list .item .item-name:not(.non-rollable) {
+  cursor: pointer;
 }
 .D35E.sheet.item .inventory-list .item .item-name .item-image {
   flex: 0 0 24px;
@@ -2566,10 +2570,10 @@
 .D35E.sheet.item .inventory-list .item .item-name h4 {
   margin: 0;
 }
-.D35E.sheet.item .inventory-list .item .item-name:hover .item-image {
+.D35E.sheet.item .inventory-list .item .item-name:hover .item-image:not(.non-rollable) {
   background-image: url("/icons/svg/d20-grey.svg") !important;
 }
-.D35E.sheet.item .inventory-list .item .item-name .item-image:hover {
+.D35E.sheet.item .inventory-list .item .item-name .item-image:hover:not(.non-rollable) {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.item .inventory-list .item input[type="checkbox"] {
@@ -2955,19 +2959,23 @@
 .D35E.sheet.item .conditionals .conditional-modifier .form-group {
   padding-left: 30px;
 }
-.D35E.sheet.item .spell {
+.D35E.sheet.item .spell,
+.D35E.sheet.item .full-attack {
   padding: 4px;
   border: 2px groove #eeede0;
   border-radius: 2px;
 }
-.D35E.sheet.item .spell img {
+.D35E.sheet.item .spell img,
+.D35E.sheet.item .full-attack img {
   flex: 0 24px;
   height: 24px;
 }
-.D35E.sheet.item .spell label {
+.D35E.sheet.item .spell label,
+.D35E.sheet.item .full-attack label {
   margin-left: 4px;
 }
-.D35E.sheet.item .spell input {
+.D35E.sheet.item .spell input,
+.D35E.sheet.item .full-attack input {
   flex: 0 80px;
 }
 .D35E.sheet.item .inventory-list {
@@ -3546,10 +3554,16 @@ input[type=range]:disabled {
   border: none !important;
 }
 .resistance {
-  color: darkgreen;
+  color: #006400;
 }
 .vulnerability {
-  color: darkred;
+  color: #8b0000;
+}
+.lethal {
+  color: #d04702;
+}
+.nonlethal {
+  color: #007b49;
 }
 .welcome-screen.window-app {
   border: 8px solid #55493B;
@@ -3567,6 +3581,52 @@ input[type=range]:disabled {
   top: 0;
   background: url(../ui/denim075.png) repeat;
   z-index: 10;
+}
+.rolled-attack {
+  background: url(/systems/D35E/icons/damage-type/badges/gladius.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 44px!important;
+}
+.rolled-defense {
+  background: url(/systems/D35E/icons/damage-type/badges/shield.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 44px!important;
+}
+.rolled-fortify-value {
+  background: url(/systems/D35E/icons/damage-type/badges/chest-armor.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 34px!important;
+}
+.rolled-roll {
+  background: url(/systems/D35E/icons/damage-type/badges/rolling-dices.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 34px!important;
+}
+span.bold {
+  font-weight: 900;
+}
+.game:not(.d35gm) .gm-sensitive {
+  display: none;
 }
 #token-hud .col.actions {
   height: calc(100% + 150px);
@@ -4467,6 +4527,12 @@ tr.introjs-showElement > th {
 #chat-log .chat-message .message-content .property-group:not(.footer) .flexrow .tag {
   white-space: unset;
 }
+.d35ecustom .dice-roll .dice-total.failure {
+  color: #b70000;
+}
+.d35ecustom .dice-roll .dice-total.success {
+  color: #005a00;
+}
 .d35ecustom .D35E.sheet.item .form-group :not(button) i.fas,
 .d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas {
   color: #2C606D !important;
@@ -4485,7 +4551,8 @@ tr.introjs-showElement > th {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
-.d35ecustom .D35E.sheet.item .spell {
+.d35ecustom .D35E.sheet.item .spell,
+.d35ecustom .D35E.sheet.item .full-attack {
   border-radius: 2px;
   border: none !important;
   background: rgba(255, 255, 255, 0.2);
@@ -4572,6 +4639,10 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .dr-setting.window-app .window-content .vulnerability {
   color: #d02e2e;
+}
+.d35ecustom .chat-card .card-header {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
 }
 .d35ecustom .compendium-browser-window.window-app {
   border: 8px solid #55493B;
@@ -5544,4 +5615,18 @@ tr.introjs-showElement > th {
 }
 a.inline-roll {
   display: inline-block;
+}
+.color-blind .resistance,
+.color-blind .success {
+  color: #4E854E !important;
+}
+.color-blind .vulnerability,
+.color-blind .failure {
+  color: #8F2E55 !important;
+}
+.color-blind .lethal {
+  color: #d04702 !important;
+}
+.color-blind .nonlethal {
+  color: #007BAA !important;
 }

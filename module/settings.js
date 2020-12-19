@@ -214,6 +214,18 @@ export const registerSystemSettings = function() {
     },
   });
 
+  game.settings.register("D35E", "colorblindColors", {
+    name: "SETTINGS.D35EColorblindN",
+    hint: "SETTINGS.D35EColorblindL",
+    scope: "client",
+    config: true,
+    default: true,
+    type: Boolean,
+    onChange: () => {
+      $('body').toggleClass('color-blind', game.settings.get("D35E", "colorblindColors"));
+    },
+  });
+
   /**
    * Option to change measure style
    */

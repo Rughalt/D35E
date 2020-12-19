@@ -123,59 +123,59 @@
   </div>
 </ul>
 
-<ul class="attributes misc-base flexrow" style="flex: 0 0 40px">
+<!--<ul class="attributes misc-base flexrow" style="flex: 0 0 40px">-->
 
-  {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
-  <li class="attribute turnUndeadHdTotal high" data-attribute="turnUndeadHdTotal">
-    <h4 class="attribute-name box-title rollable">{{ localize 'D35E.TurnUndead' }}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.turnUndeadHdTotal}}</span>
-      <span class="tooltipcontent">
-                @attributes.turnUndeadHdTotal: {{data.attributes.turnUndeadHdTotal}}
-                {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}
-                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                  {{#each sourceDetails.data.attributes.turnUndeadHdTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                {{/if}}
-              </span>
-    </div>
+<!--  {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}-->
+<!--  <li class="attribute turnUndeadHdTotal high" data-attribute="turnUndeadHdTotal">-->
+<!--    <h4 class="attribute-name box-title rollable">{{ localize 'D35E.TurnUndead' }}</h4>-->
+<!--    <div class="attribute-value tooltip">-->
+<!--      <span>{{data.attributes.turnUndeadHdTotal}}</span>-->
+<!--      <span class="tooltipcontent">-->
+<!--                @attributes.turnUndeadHdTotal: {{data.attributes.turnUndeadHdTotal}}-->
+<!--                {{#if sourceDetails.data.attributes.turnUndeadHdTotal.length}}-->
+<!--                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>-->
+<!--                  {{#each sourceDetails.data.attributes.turnUndeadHdTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}-->
+<!--                {{/if}}-->
+<!--              </span>-->
+<!--    </div>-->
 
-    <footer class="attribute-footer flexrow">
-      <span>&nbsp;</span>
-      <input type="text" name="data.attributes.turnUndeadUses"
-             value="{{data.attributes.turnUndeadUses}}" placeholder="0" />
-      <span>/</span>
-      <div class="tooltip">
-        <input type="text" name="data.attributes.turnUndeadUsesTotal"
-               value="{{data.attributes.turnUndeadUsesTotal}}" placeholder="0" disabled/>
-        <span class="tooltipcontent">
-                @attributes.turnUndeadUsesTotal: {{data.attributes.turnUndeadUsesTotal}}
-                {{#if sourceDetails.data.attributes.turnUndeadUsesTotal.length}}
-                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                  {{#each sourceDetails.data.attributes.turnUndeadUsesTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                {{/if}}
-              </span>
-      </div>
-      <span>&nbsp;</span>
-    </footer>
-  </li>
-  {{/if}}
-  {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}
-  <li class="attribute sneakAttackDiceTotal high" data-attribute="sneakAttackDiceTotal">
-    <h4 class="attribute-name box-title">{{ localize 'D35E.SneakAttackDiceTotal' }}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.sneakAttackDiceTotal}}d6</span>
-      <span class="tooltipcontent">
-                @attributes.sneakAttackDiceTotal: {{data.attributes.sneakAttackDiceTotal}}
-                {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}
-                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                  {{#each sourceDetails.data.attributes.sneakAttackDiceTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                {{/if}}
-              </span>
-    </div>
-  </li>
-  {{/if}}
+<!--    <footer class="attribute-footer flexrow">-->
+<!--      <span>&nbsp;</span>-->
+<!--      <input type="text" name="data.attributes.turnUndeadUses"-->
+<!--             value="{{data.attributes.turnUndeadUses}}" placeholder="0" />-->
+<!--      <span>/</span>-->
+<!--      <div class="tooltip">-->
+<!--        <input type="text" name="data.attributes.turnUndeadUsesTotal"-->
+<!--               value="{{data.attributes.turnUndeadUsesTotal}}" placeholder="0" disabled/>-->
+<!--        <span class="tooltipcontent">-->
+<!--                @attributes.turnUndeadUsesTotal: {{data.attributes.turnUndeadUsesTotal}}-->
+<!--                {{#if sourceDetails.data.attributes.turnUndeadUsesTotal.length}}-->
+<!--                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>-->
+<!--                  {{#each sourceDetails.data.attributes.turnUndeadUsesTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}-->
+<!--                {{/if}}-->
+<!--              </span>-->
+<!--      </div>-->
+<!--      <span>&nbsp;</span>-->
+<!--    </footer>-->
+<!--  </li>-->
+<!--  {{/if}}-->
+<!--  {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}-->
+<!--  <li class="attribute sneakAttackDiceTotal high" data-attribute="sneakAttackDiceTotal">-->
+<!--    <h4 class="attribute-name box-title">{{ localize 'D35E.SneakAttackDiceTotal' }}</h4>-->
+<!--    <div class="attribute-value tooltip">-->
+<!--      <span>{{data.attributes.sneakAttackDiceTotal}}d6</span>-->
+<!--      <span class="tooltipcontent">-->
+<!--                @attributes.sneakAttackDiceTotal: {{data.attributes.sneakAttackDiceTotal}}-->
+<!--                {{#if sourceDetails.data.attributes.sneakAttackDiceTotal.length}}-->
+<!--                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>-->
+<!--                  {{#each sourceDetails.data.attributes.sneakAttackDiceTotal as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}-->
+<!--                {{/if}}-->
+<!--              </span>-->
+<!--    </div>-->
+<!--  </li>-->
+<!--  {{/if}}-->
 
-</ul>
+<!--</ul>-->
 {{!-- Attack Navigation --}}
 <nav class="sheet-navigation tabs subtabs attacks" data-group="attacks">
   {{#each sections as |section sid|}}
@@ -230,6 +230,9 @@
               <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
               {{/unless}}
               {{/if}}
+              {{#if item.isFullAttack}}
+              <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+              {{/if}}
             </div>
           </div>
           
@@ -251,7 +254,43 @@
             <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i class="fas fa-trash"></i></a>
           </div>
           {{/if}}
+
         </li>
+
+        {{#if item.isFullAttack}}
+        <ol class="item-list item-list-class-{{iid}}" style="border-top: none; border-bottom: 1px solid #c9c7b8; padding-left: 11px; margin-left: 12px; border-left: 3px dotted #c9c7b8;">
+          {{#each item.data.attacks as |iitem level|}}
+          {{#if iitem.id}}
+          <li class="item item-box  flexrow" data-item-id="{{iitem.id}}" data-pack="{{iitem.pack}}"
+              data-item-level="{{iitem.level}}">
+            <div class="item-name rollable child-item flexrow">
+              <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
+              <h4>
+                {{iitem.name~}}
+                {{#if iitem.primary}}
+                <em style="color: black; opacity: 0.7">{{localize "D35E.PrimaryAttack"}}</em>
+                {{/if}}
+              </h4>
+            </div>
+            <div class="item-detail item-actions">
+              <div class="item-attack">
+<!--                {{#if iitem.hasAction}}-->
+<!--                  <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>-->
+<!--                {{/if}}-->
+              </div>
+            </div>
+            <div class="item-detail item-uses flexrow">
+              <em>{{iitem.count}}</em>
+            </div>
+
+            <div class="item-controls"></div>
+
+          </li>
+          {{/if}}
+          {{/each}}
+
+        </ol>
+        {{/if}}
         {{/each}}
       </ol>
     </ol>

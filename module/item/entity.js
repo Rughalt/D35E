@@ -871,6 +871,9 @@ export class ItemPF extends Item {
                     props.push(`DC ${saveDC}`);
                     props.push(saveType);
                 }
+
+
+                console.log('D35E | Calculated spell DC for props', saveDC)
             }
         }
 
@@ -1002,6 +1005,22 @@ export class ItemPF extends Item {
             } else {
                 return actor.useSpell(this, ev, {skipDialog: skipDialog}, actor);
             }
+        } else if (this.type === "full-attack") {
+            await this.roll();
+            for (let attack of Object.values(this.data.data.attacks)) {
+                if (!attack.id) continue;
+                let attackItem = actor.items.find(i => i._id === attack.id);
+                for (let i = 0; i < attack.count; i++) {
+                    let result = await attackItem.useAttack({
+                        ev: ev,
+                        skipDialog: skipDialog,
+                        attackType: attack.attackMode
+                    }, actor, skipChargeCheck)
+                    if (!result)
+                        return ;
+                }
+            }
+            return;
         } else if (this.hasAction) {
             return this.useAttack({ev: ev, skipDialog: skipDialog},actor,skipChargeCheck);
         }
@@ -1016,7 +1035,7 @@ export class ItemPF extends Item {
         return this.roll();
     }
 
-    async useAttack({ev = null, skipDialog = false} = {}, tempActor= null, skipChargeCheck = false) {
+    async useAttack({ev = null, skipDialog = false, attackType = "primary"} = {}, tempActor= null, skipChargeCheck = false) {
         if (ev && ev.originalEvent) ev = ev.originalEvent;
         let actor = this.actor;
         if (tempActor !== null) {
@@ -1051,6 +1070,7 @@ export class ItemPF extends Item {
                 useAmmoNote = "",
                 rapidShot = false,
                 manyshot = false,
+                nonLethal = false,
                 manyshotCount = 0,
                 greaterManyshot = false,
                 greaterManyshotCount = 0,
@@ -1111,6 +1131,39 @@ export class ItemPF extends Item {
                     attackExtraParts.push("@manyshotPenalty");
                 }
 
+                if (form.find('[name="nonLethal"]').prop("checked")) {
+                    nonLethal = true
+                }
+                const itemNonLethal = getProperty(this.data, "data.nonLethal") || false;
+                if (nonLethal !== itemNonLethal) {
+                    rollData.nonLethalPenalty = -4;
+                    attackExtraParts.push("@nonLethalPenalty");
+                }
+
+                if (form.find('[name="prone"]').prop("checked")) {
+                    rollData.pronePenalty = -4;
+                    attackExtraParts.push("@pronePenalty");
+                }
+                if (form.find('[name="squeezing"]').prop("checked")) {
+                    rollData.squeezingPenalty = -4;
+                    attackExtraParts.push("@squeezingPenalty");
+                }
+                if (form.find('[name="highground"]').prop("checked")) {
+                    rollData.highground = 1;
+                    attackExtraParts.push("@highground");
+                }
+                if (form.find('[name="defensive"]').prop("checked")) {
+                    rollData.defensive = -4;
+                    attackExtraParts.push("@defensive");
+                }
+                if (form.find('[name="charge"]').prop("checked")) {
+                    rollData.charge = 1;
+                    attackExtraParts.push("@charge");
+                }
+                if (form.find('[name="flanking"]').prop("checked")) {
+                    rollData.flanking = 1;
+                    attackExtraParts.push("@flanking");
+                }
 
                 if (form.find('[name="greater-manyshot"]').prop("checked")) {
                     greaterManyshotCount = parseInt(form.find('[name="greater-manyshot-count"]').val())
@@ -1283,7 +1336,10 @@ export class ItemPF extends Item {
 
 
             if (rollData.featDamageBonus) {
-                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@featDamageBonus",'Feats']);
+                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*@featDamageBonus",'Feats']);
+            }
+            if (rollData.featDamagePrecision) {
+                if (rollData.featDamagePrecision !== 0) damageExtraParts.push(["@featDamagePrecision",'Precision']);
             }
 
             let attacks = [];
@@ -1461,7 +1517,8 @@ export class ItemPF extends Item {
                     item: this.data,
                     actor: actor.data,
                     hasBoxInfo: hasBoxInfo,
-                    dc: dc
+                    dc: dc,
+                    nonLethal: nonLethal
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
@@ -1483,8 +1540,10 @@ export class ItemPF extends Item {
             rollMode: game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
             twoWeaponAttackTypes: D35E.twoWeaponAttackType,
+            attackType: attackType ? attackType : "primary",
             hasAttack: this.hasAttack,
             hasDamage: this.hasDamage,
+            nonLethal: getProperty(this.data, "data.nonLethal") || false,
             allowMultipleUses: this.data.data.uses.allowMultipleUses,
             multipleUsesMax: Math.floor(this.charges/this.chargeCost),
             hasDamageAbility: getProperty(this.data, "data.ability.damage") !== "",
@@ -1557,8 +1616,23 @@ export class ItemPF extends Item {
         const data = duplicate(this.data.data);
         let spellDC = {dc: null, type: null, description: null}
 
-        const rollData = _rollData ? _rollData : this.actor ? this.actor.getRollData() : {};
+        const rollData = this.actor ? this.actor.getRollData() : {};
         rollData.item = data;
+
+        if (this.actor) {
+            let allCombatChanges = []
+            let attackType = this.type;
+            this.actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType, rollData)).forEach(i => {
+                allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+            })
+            allCombatChanges.forEach(change => {
+                if (change[3].indexOf('$') !== -1) {
+                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
+                } else {
+                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
+                }
+            })
+        }
 
         // Get the spell specific info
         let spellbookIndex, spellAbility, ablMod = 0;
@@ -2082,14 +2156,20 @@ export class ItemPF extends Item {
         else if (action === "applyDamage") {
             //const value = button.dataset.value;
             const damage = JSON.parse(button.dataset.json);
+            const normalDamage = JSON.parse(button.dataset.normaljson || "{}");
             const material = (button.dataset.material && button.dataset.material !== "") ? JSON.parse(button.dataset.material): {};
             const alignment = (button.dataset.alignment && button.dataset.alignment !== "") ? JSON.parse(button.dataset.alignment) : {};
             const enh = parseInt(button.dataset.enh || "0");
-            ActorPF.applyDamage(damage,material,alignment,enh);
+            const roll = parseInt(button.dataset.roll || "0");
+            const critroll = parseInt(button.dataset.critroll || "0");
+            const nonLethal = button.dataset.nonlethal === "true";
+            const natural20 = button.dataset.natural === "true";
+            ActorPF.applyDamage(event,roll,critroll,natural20,damage,normalDamage,material,alignment,enh,nonLethal);
         } else if (action === "applyHealing") {
             const value = button.dataset.value;
-            ActorPF.applyDamage(value,null,null,null,true);
+            ActorPF.applyDamage(event,roll,null,null,value,null,null,null,null,false,true);
         }
+
         // Roll saving throw
         else if (action === "rollSave") {
             const type = button.dataset.value;

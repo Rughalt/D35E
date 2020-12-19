@@ -1012,7 +1012,7 @@
   "D35E.LUDSkillsDesc": "Skills in <strong>bold</strong> are Class Skills for selected class, and skills marked with ■ require training.",
   "D35E.LUDRollHp": "Roll HP",
   "D35E.LUDLevelDetails": "Level details for level",
-  "D35E.LUDSkillPointsAtLevel": "<p>Skill points at level <strong id=\"skill-per-level\">0</strong> (<strong id=\"skill-per-level-base\">0</strong> + <strong id=\"skill-per-level-int\">0</strong> from Intelligence modifier<span id=\"flb\"></span>). Currently used <strong id=\"skill-used\">0</strong>.</p>",
+  "D35E.LUDSkillPointsAtLevel": "<p>Skill points at level <strong id=\"skill-per-level\">0</strong> (<strong id=\"skill-per-level-base\">0</strong> + <strong id=\"skill-per-level-int\">0</strong> from Intelligence modifier + <strong id=\"skill-per-level-bonus\">0</strong> bonus<span id=\"flb\"></span>). Currently used <strong id=\"skill-used\">0</strong>.</p>",
   "D35E.LUDSkillRank": "Max skill rank is currently",
   "D35E.LUDClassHD": "Class Hit Die is",
   "D35E._Level": "level",
@@ -1207,6 +1207,38 @@
 
   "D35E.Energy": "Energy",
   "D35E.BaseDamage": "Base Damage",
+  "D35E.ERLethalDamage": "Lethal Damage in case of creatures with Regeneration",
+  "D35E.LethalDamageFrom": "Lethal Damage from",
+
+
+  "D35E.FullAttackDropDescription": "Drop Attack from actor here to set it.",
+  "D35E.FullAttackAttacks": "Attacks in Full Attack",
+  "D35E.FullAttackDescription": "Full Attack Description",
+  "D35E.FullAttackAttackCount": "Attack Count",
+
+  "D35E.ACRollDefense": "Roll Defense",
+  "D35E.ACBonus": "Situational AC Bonus",
+  "D35E.ACDialogModifiers": "Armor Class Modifiers",
+  "D35E.ACVsNormal": "vs. Normal",
+  "D35E.ACvsTouch": "vs. Normal",
+  "D35E.vsTouch": "vs. Touch AC",
+  "D35E.ACvsFlat": "vs. Flat-footed",
+  "D35E.ACvsNoCheck": "No Check",
+  "D35E.Hit": "Hit!",
+  "D35E.Miss": "Miss!",
+  "D35E.Crit": "Critical Hit!",
+  "D35E.Fortification": "Fortification",
+  "D35E.BuffTarACTouch": "Touch",
+  "D35E.Defense": "Defense",
+  "D35E.DefenseOptional": "Defense (Optional)",
+  "D35E.DefensiveFighting": "Defensive Fighting",
+  "D35E.Flanking": "Flanking",
+  "D35E.Prone": "Prone",
+  "D35E.Charge": "Charge",
+  "D35E.HighGround": "High Ground",
+  "D35E.CombatStatus": "Combat Status",
+  "D35E.Squeezing": "Squeezing",
+  "D35E.SpellOptional": "Spell (Optional)",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
@@ -1218,5 +1250,7 @@
   "SETTINGS.D35EClassFeaturesInTabsN": "Display Class Features in tabs",
   "SETTINGS.D35EClassFeaturesInTabsL": "If selected, all Class Features will also be displayed in sub-tabs in Features Character sheet section",
   "SETTINGS.D35EHideSpellDescriptionsN": "Hide short Spell Descriptions",
-  "SETTINGS.D35EHideSpellDescriptionsH": "Hides short description from spell list in the character sheet"
+  "SETTINGS.D35EHideSpellDescriptionsH": "Hides short description from spell list in the character sheet",
+  "SETTINGS.D35EColorblindN": "Use Colorblind Accessible Colors",
+  "SETTINGS.D35EColorblindL": "Changes some colors to use Accessible Palette"
 }

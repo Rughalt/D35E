@@ -49,7 +49,7 @@
       <select class="skill-ability" name="data.skills.{{s}}.subSkills.{{b}}.ability" data-dtype="String">
         {{#select subSkill.ability}}
         <option value="">{{ localize 'D35E.None-FrF' }}</option>
-        {{#each ../config.abilitiesShort as |ability a|}}
+        {{#each ../../config.abilitiesShort as |ability a|}}
         <option value="{{a}}">{{ability}}</option>
         {{/each}}
         {{/select}}

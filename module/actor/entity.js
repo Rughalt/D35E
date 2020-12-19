@@ -5,6 +5,7 @@ import { createCustomChatMessage } from "../chat.js";
 import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
 import {DamageTypes} from "../damage-types.js";
+import {D35E} from "../config.js";
 
 /**
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
@@ -196,11 +197,11 @@ export class ActorPF extends Actor {
                 "skills", "strSkills", "dexSkills", "conSkills", "intSkills", "wisSkills", "chaSkills", ...skillTargets,
                 "allChecks", "strChecks", "dexChecks", "conChecks", "intChecks", "wisChecks", "chaChecks",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
-                "ac", "aac", "sac", "nac",
+                "ac", "aac", "sac", "nac","tch",
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will", "turnUndead", "spellResistance", "powerPoints", "sneakAttack",
-                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr"
+                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification"
             ], modifiers: [
                 "untyped", "base", "enh", "dodge", "inherent", "deflection",
                 "morale", "luck", "sacred", "insight", "resist", "profane",
@@ -341,6 +342,8 @@ export class ActorPF extends Actor {
             case "sac":
             case "nac":
                 return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
+            case "tch":
+                return ["data.attributes.ac.touch.total"];
             case "attack":
                 return "data.attributes.attack.general";
             case "mattack":
@@ -506,6 +509,8 @@ export class ActorPF extends Actor {
                 return "data.attributes.prestigeCl.divine.max";
             case "cr":
                 return "data.details.totalCr";
+            case "fortification":
+                return "data.attributes.fortification.total";
         }
 
         if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -767,8 +772,8 @@ export class ActorPF extends Actor {
             for (let i of this.items.values()) {
                 if (!i.data.data.hasOwnProperty("light")) continue;
                 if (i.data.data.equipped && !i.data.data.melded && i.data.data.light.emitLight) {
-                    dimLight = Math.floor(4 * i.data.data.light.radius / 5.0);
-                    brightLight = Math.floor(2 * i.data.data.light.radius / 5.0);
+                    dimLight = Math.floor(2 * i.data.data.light.radius);
+                    brightLight = Math.floor(i.data.data.light.radius);
                     color = i.data.data.light.color;
                     type = i.data.data.light.type;
                     alpha = i.data.data.light.alpha;
@@ -1282,7 +1287,7 @@ export class ActorPF extends Actor {
                     item.data.enhancements.items.forEach(enhancementItem =>
                         enhancementItem.data.changes.forEach(change => {
                             if (!this.isChangeAllowed(item, change, fullConditions)) return;
-                            change[0] = change[0].replace('@enhancement', enhancementItem.data.enh)
+                            change[0] = change[0].replace(/@enhancement/gi, enhancementItem.data.enh)
                             allChanges.push({
                                 raw: change,
                                 source: {
@@ -1810,7 +1815,7 @@ export class ActorPF extends Actor {
             try {
                 let raceObject = this.items.filter(o => o.type === "race")[0];
                 if (raceObject != null) {
-                    raceLA = raceObject.data.data.la
+                    raceLA = raceObject.data.data.la || 0
                     linkData(data, updateData, "data.attributes.creatureType", getProperty(raceObject.data.data, "creatureType") || "humanoid");
 
                 }
@@ -1836,6 +1841,8 @@ export class ActorPF extends Actor {
 
 
         linkData(data, updateData, "data.details.totalCr", Math.floor(data1.details.cr || 0));
+
+
 
         // Reset abilities
         for (let [a, abl] of Object.entries(data1.abilities)) {
@@ -1990,6 +1997,8 @@ export class ActorPF extends Actor {
         // Reset ACP and Max Dex bonus
         linkData(data, updateData, "data.attributes.acp.gear", 0);
         linkData(data, updateData, "data.attributes.maxDexBonus", null);
+
+        linkData(data, updateData, "data.attributes.fortification.total", (data1.attributes.fortification?.value || 0));
         items.filter(obj => {
             return obj.type === "equipment" && obj.data.equipped && !obj.data.melded;
         }).forEach(obj => {
@@ -2702,22 +2711,26 @@ export class ActorPF extends Actor {
                 }
             }
             if (obj.data.counterName !== undefined && obj.data.counterName !== null && obj.data.counterName !== "") {
-                if (obj.data.counterName.indexOf(".") !== -1) {
-                    let group = obj.data.counterName.split(".")[0]
-                    let name = obj.data.counterName.split(".")[1]
-                    if (data.counters[group] === undefined) {
-                        data.counters[group] = {}
+                obj.data.counterName.split(";").forEach(counterName => {
+                    counterName = counterName.trim()
+                    if (counterName.indexOf(".") !== -1) {
+                        let group = counterName.split(".")[0]
+                        let name = counterName.split(".")[1]
+                        if (data.counters[group] === undefined) {
+                            data.counters[group] = {}
+                        }
+                        if (data.counters[group][name] === undefined) {
+                            data.counters[group][name] = { value: 0, counted: 0 }
+                        }
+                        data.counters[group][name].value++;
+                    } else {
+                        if (data.counters[counterName] === undefined) {
+                            data.counters[counterName] = { value: 0, counted: 0 }
+                        }
+                        data.counters[counterName].value++;
                     }
-                    if (data.counters[group][name] === undefined) {
-                        data.counters[group][name] = { value: 0, counted: 0 }
-                    }
-                    data.counters[group][name].value++;
-                } else {
-                    if (data.counters[obj.data.counterName] === undefined) {
-                        data.counters[obj.data.counterName] = { value: 0, counted: 0 }
-                    }
-                    data.counters[obj.data.counterName].value++;
-                }
+                })
+
             }
         })
         actorData.items.filter(obj => {
@@ -3363,7 +3376,7 @@ export class ActorPF extends Actor {
             try {
                 let raceObject = this.items.filter(o => o.type === "race")[0];
                 if (raceObject != null) {
-                    raceLA = raceObject.data.data.la
+                    raceLA = raceObject.data.data.la || 0
                 }
                 this.items.filter(o => o.type === "class").forEach(c => {
                     raceLA += c.data.data?.la || 0
@@ -3711,6 +3724,8 @@ export class ActorPF extends Actor {
         attackData["data.alignment.chaotic"] = item.data.data.weaponData.alignment?.chaotic || false;
         attackData["data.alignment.lawful"] = item.data.data.weaponData.alignment?.lawful || false;
         attackData["img"] = item.data.img;
+
+        attackData["data.nonLethal"] = item.data.data.properties.nnl;
 
 
         // Add additional attacks
@@ -4156,7 +4171,7 @@ export class ActorPF extends Actor {
     }
 
 
-    async rollTurnUndead() {
+    async rollTurnUndead(name = "Undead") {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         const rollData = duplicate(this.data.data);
         let turnUndeadHdTotal = this.data.data.attributes.turnUndeadHdTotal
@@ -4164,9 +4179,9 @@ export class ActorPF extends Actor {
         if (turnUndeadHdTotal < 1) {
             return ui.notifications.warn(game.i18n.localize("D35E.CannotTurnUndead").format(this.name));
         }
-        if (turnUndeadUses < 1) {
-            return ui.notifications.warn(game.i18n.localize("D35E.CannotTurnUndead").format(this.name));
-        }
+        // if (turnUndeadUses < 1) {
+        //     return ui.notifications.warn(game.i18n.localize("D35E.CannotTurnUndead").format(this.name));
+        // }
         let rolls = []
         let knowledgeMod = this.data.data.skills.kre.rank > 5 ? 2 : 0
         let chaMod = this.data.data.abilities.cha.mod
@@ -4220,6 +4235,7 @@ export class ActorPF extends Actor {
         let damageHD = new Roll("2d6 + @chaMod + @level", { level: turnUndeadHdTotal, chaMod: chaMod }).roll()
         rolls.push(damageHD)
         data.damageHD = damageHD
+        data.undeadName = name;
         {
             let tooltip = $(await damageHD.getTooltip()).prepend(`<div class="dice-formula">${damageHD.formula}</div>`)[0].outerHTML;
             // Alter tooltip
@@ -4389,6 +4405,113 @@ export class ActorPF extends Actor {
 
     /* -------------------------------------------- */
 
+    async rollDefenseDialog({ev = null, skipDialog = false} = {}) {
+        const _roll = async function (acType, form) {
+            let ac = getProperty(this.data,`data.attributes.ac.${acType}.total`) || 0,
+                optionalFeatIds = [],
+                applyHalf = false,
+                noCritical = false;
+            // Get form data
+            if (form) {
+                $(form).find('[data-type="optional"]').each(function () {
+                    if ($(this).prop("checked"))
+                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                })
+
+                if (form.find('[name="applyHalf"]').prop("checked")) {
+                    applyHalf = true;
+                }
+
+                if (form.find('[name="noCritical"]').prop("checked")) {
+                    noCritical = true;
+                }
+            }
+
+            let allCombatChanges = []
+            let attackType = 'defense';
+            this.items.filter(o => o.type === "feat").forEach(i => {
+                if (i.hasCombatChange(attackType,rollData)) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                }
+            })
+            for (const change of allCombatChanges) {
+                console.log('D35E | Change', change[4])
+                if (change[3].indexOf('$') !== -1) {
+                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
+                } else {
+                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
+                }
+
+            }
+            ac += rollData.featAC || 0;
+
+            console.log('D35E | Final roll AC', ac)
+            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck'};
+        }
+        let rollData = this.getRollData();
+        // Render modal dialog
+        let template = "systems/D35E/templates/apps/defense-roll-dialog.html";
+        let dialogData = {
+            data: rollData,
+            item: this.data.data,
+            rollMode: game.settings.get("core", "rollMode"),
+            rollModes: CONFIG.Dice.rollModes,
+            defenseFeats: this.items.filter(o => o.type === "feat" && o.hasCombatChange('defense',rollData)),
+            defenseFeatsOptional: this.items.filter(o => o.type === "feat" && o.hasCombatChange(`defenseOptional`,rollData)),
+            conditionals: this.data.data.conditionals,
+        };
+        const html = await renderTemplate(template, dialogData);
+        let roll;
+        const buttons = {};
+        let wasRolled = false;
+        buttons.vsNormal = {
+            label: game.i18n.localize("D35E.ACVsNormal"),
+            callback: html => {
+                wasRolled = true;
+                roll = _roll.call(this, 'normal', html)
+            }
+        };
+        buttons.vsTouch = {
+            label: game.i18n.localize("D35E.ACvsTouch"),
+            callback: html => {
+                wasRolled = true;
+                roll = _roll.call(this, 'touch', html)
+            }
+        };
+        buttons.vsFlat = {
+            label: game.i18n.localize("D35E.ACvsFlat"),
+            callback: html => {
+                wasRolled = true;
+                roll = _roll.call(this, 'flatFooted', html)
+            }
+        };
+
+        buttons.vsNo = {
+            label: game.i18n.localize("D35E.ACvsNoCheck"),
+            callback: html => {
+                wasRolled = true;
+                roll = _roll.call(this, 'noCheck', html)
+            }
+        };
+        let finalAc = await new Promise(resolve => {
+            new Dialog({
+                title: `${game.i18n.localize("D35E.ACRollDefense")}`,
+                content: html,
+                buttons: buttons,
+                classes: ['custom-dialog'],
+                default: buttons.multi != null ? "multi" : "normal",
+                close: html => {
+                    return resolve(roll);
+                }
+            }).render(true);
+        });
+
+        console.log('D35E | Final dialog AC', finalAc)
+        return finalAc || {ac: -1, applyHalf: false, noCritical: false};
+    }
+
     /**
      * Apply rolled dice damage to the token or tokens which are currently controlled.
      * This allows for damage to be scaled by a multiplier to account for healing, critical hits, or resistance
@@ -4396,7 +4519,7 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(damage,material,alignment,enh, simpleDamage = false) {
+    static async applyDamage(ev,roll,critroll,natural20,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false) {
 
         let value = 0;
 
@@ -4413,13 +4536,60 @@ export class ActorPF extends Actor {
         for (let t of tokensList) {
             let a = t.actor,
                 hp = a.data.data.attributes.hp,
+                nonLethal = a.data.data.attributes.hp.nonlethal || 0,
                 tmp = parseInt(hp.temp) || 0,
+                hit = false,
+                crit = false,
                 dt = value > 0 ? Math.min(tmp, value) : 0;
             if (simpleDamage) {
+                hit = true,
                 value = damage;
             } else {
-                let damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh)
+                let finalAc = {}
+                console.log(ev)
+                if (ev.originalEvent instanceof MouseEvent && (ev.originalEvent.shiftKey)) {
+                    finalAc.noCheck = true
+                    finalAc.ac = 0;
+                    finalAc.noCritical = false;
+                    finalAc.applyHalf = false;
+                } else {
+                    if (roll > 0) {
+                        finalAc = await a.rollDefenseDialog({});
+                        if (finalAc.ac === -1) continue;
+                    }
+                }
+                hit = roll >= finalAc.ac || roll === 0 || natural20 || finalAc.noCheck // This is for spells and natural 20
+                crit = (critroll >= finalAc.ac || (critroll && finalAc.noCheck)) && !finalAc.noCritical
+                let damageData = null
+
+                // Fortitifcation / crit resistance
+                let fortifyRolled = false;
+                let fortifySuccessfull = false;
+                let fortifyValue = 0;
+                let fortifyRoll = 0;
+                if (critroll && a.data.data.attributes.fortification?.total) {
+                    fortifyRolled = true
+                    fortifyValue = a.data.data.attributes.fortification?.total;
+                    fortifyRoll = new Roll("1d100").roll().total;
+                    if (fortifyRoll <= fortifyValue) {
+                        fortifySuccessfull = true;
+                        crit = false;
+                    }
+                }
+                if (crit) {
+                    damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage)
+                } else {
+                    if (natural20 || (critroll && hit)) //Natural 20 or we had a crit roll, no crit but base attack hit
+                        damageData = DamageTypes.calculateDamageToActor(a, normalDamage, material, alignment, enh, nonLethalDamage)
+                    else
+                        damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage)
+                }
                 value = damageData.damage;
+                if (finalAc.applyHalf)
+                    value = Math.floor(value/2);
+                nonLethal += damageData.nonLethalDamage;
+                if (finalAc.applyHalf)
+                    nonLethal = Math.floor(nonLethal/2);
 
                 // Set chat data
                 let chatData = {
@@ -4435,7 +4605,16 @@ export class ActorPF extends Actor {
                 };
                 const templateData = mergeObject(chatTemplateData, {
                     damageData: damageData,
-                    img: a.img
+                    img: a.img,
+                    roll: roll,
+                    ac: finalAc,
+                    hit: hit,
+                    crit: crit,
+                    isSpell: roll === 0,
+                    fortifyRolled: fortifyRolled,
+                    fortifyValue: Math.min(fortifyValue,100),
+                    fortifyRoll: fortifyRoll,
+                    fortifySuccessfull: fortifySuccessfull
                 }, {inplace: false});
                 // Create message
 
@@ -4447,10 +4626,12 @@ export class ActorPF extends Actor {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
                 continue;
             }
-            promises.push(t.actor.update({
-                "data.attributes.hp.temp": tmp - dt,
-                "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
-            }));
+            if (hit)
+                promises.push(t.actor.update({
+                    "data.attributes.hp.nonlethal": nonLethal,
+                    "data.attributes.hp.temp": tmp - dt,
+                    "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
+                }));
         }
         return Promise.all(promises);
     }
@@ -4835,6 +5016,9 @@ export class ActorPF extends Actor {
             return;
         //console.log(action.parameters)
         switch (action.action) {
+            case "TurnUndead":
+                await this.rollTurnUndead(cleanParam(action.parameters[0]))
+                break;
             case "Create":
             case "Give":
                 if (action.parameters.length === 1) {

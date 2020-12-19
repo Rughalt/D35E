@@ -16,18 +16,18 @@ export class DamageTypes {
     static getBaseDRDamageTypes() {
         let damageTypes = [
             {uid: 'any', name: game.i18n.localize("D35E.DRNonPenetrable"), value: 0},
-            {uid: 'good', name: game.i18n.localize("D35E.AlignmentGood"), value: 0, or: false},
-            {uid: 'evil', name: game.i18n.localize("D35E.AlignmentEvil"), value: 0, or: false},
-            {uid: 'chaotic', name: game.i18n.localize("D35E.AlignmentChaotic"), value: 0, or: false},
-            {uid: 'lawful', name: game.i18n.localize("D35E.AlignmentLawful"), value: 0, or: false},
-            {uid: 'slashing', name: game.i18n.localize("D35E.DRSlashing"), value: 0, or: false},
-            {uid: 'bludgeoning', name: game.i18n.localize("D35E.DRBludgeoning"), value: 0, or: false},
-            {uid: 'piercing', name: game.i18n.localize("D35E.DRPiercing"), value: 0, or: false},
-            {uid: 'epic', name: game.i18n.localize("D35E.DREpic"), value: 0, or: false},
-            {uid: 'magic', name: game.i18n.localize("D35E.DRMagic"), value: 0, or: false},
-            {uid: 'silver', name: game.i18n.localize("D35E.DRSilver"), value: 0, or: false},
-            {uid: 'adamantine', name: game.i18n.localize("D35E.DRAdamantine"), value: 0, or: false},
-            {uid: 'coldiron', name: game.i18n.localize("D35E.DRColdIron"), value: 0, or: false}]
+            {uid: 'good', name: game.i18n.localize("D35E.AlignmentGood"), value: 0, or: false, lethal: false},
+            {uid: 'evil', name: game.i18n.localize("D35E.AlignmentEvil"), value: 0, or: false, lethal: false},
+            {uid: 'chaotic', name: game.i18n.localize("D35E.AlignmentChaotic"), value: 0, or: false, lethal: false},
+            {uid: 'lawful', name: game.i18n.localize("D35E.AlignmentLawful"), value: 0, or: false, lethal: false},
+            {uid: 'slashing', name: game.i18n.localize("D35E.DRSlashing"), value: 0, or: false, lethal: false},
+            {uid: 'bludgeoning', name: game.i18n.localize("D35E.DRBludgeoning"), value: 0, or: false, lethal: false},
+            {uid: 'piercing', name: game.i18n.localize("D35E.DRPiercing"), value: 0, or: false, lethal: false},
+            {uid: 'epic', name: game.i18n.localize("D35E.DREpic"), value: 0, or: false, lethal: false},
+            {uid: 'magic', name: game.i18n.localize("D35E.DRMagic"), value: 0, or: false, lethal: false},
+            {uid: 'silver', name: game.i18n.localize("D35E.DRSilver"), value: 0, or: false, lethal: false},
+            {uid: 'adamantine', name: game.i18n.localize("D35E.DRAdamantine"), value: 0, or: false, lethal: false},
+            {uid: 'coldiron', name: game.i18n.localize("D35E.DRColdIron"), value: 0, or: false, lethal: false}]
         return damageTypes;
     }
 
@@ -46,6 +46,7 @@ export class DamageTypes {
             let type = DamageTypes.getDamageTypeForUID(damageTypes,t.uid);
             type.value = t.value;
             type.or = t.or;
+            type.lethal = t.lethal;
         })
         return damageTypes;
     }
@@ -70,6 +71,7 @@ export class DamageTypes {
         let or = game.i18n.localize("D35E.or")
         let and = game.i18n.localize("D35E.and")
         let DR = game.i18n.localize("D35E.DR")
+        let lethal = game.i18n.localize("D35E.LethalDamageFrom")
         let drParts = [];
         let drOrParts = [];
         let orValue = 0;
@@ -87,6 +89,9 @@ export class DamageTypes {
                     drParts.push(`${DR} ${drType.value}/${drType.name}`)
                 }
             }
+            if (drType.lethal) {
+                drParts.push(`${lethal} ${drType.name}`)
+            }
         })
         if (drOrParts.length)
             drParts.push(`${DR} ${orValue}/${drOrParts.join(` ${or} `)}`)
@@ -102,7 +107,8 @@ export class DamageTypes {
             uid: null,
             value: 0,
             vulnerable: false,
-            immunity: false
+            immunity: false,
+            lethal: false
         }
     }
 
@@ -115,7 +121,8 @@ export class DamageTypes {
                         name: damageType.data.name,
                         value: 0,
                         vulnerable: false,
-                        immunity: false
+                        immunity: false,
+                        lethal: false
                     }
                     energyTypes.push(energyType)
             }
@@ -132,6 +139,7 @@ export class DamageTypes {
             type.value = t.value;
             type.vulnerable = t.vulnerable;
             type.immunity = t.immunity;
+            type.lethal = t.lethal;
         })
         return damageTypes;
     }
@@ -152,6 +160,8 @@ export class DamageTypes {
                 erParts.push(`${e.name} ${game.i18n.localize("D35E.Vulnerability")}`)
             } else if (e?.immunity) {
                 erParts.push(`${e.name} ${game.i18n.localize("D35E.Immunity")}`)
+            } else if (e?.lethal) {
+                erParts.push(`${game.i18n.localize("D35E.LethalDamageFrom")} ${e.name}`)
             } else if (e.value > 0) {
                 erParts.push(`${e.name} ${e.value}`)
             }
@@ -162,9 +172,11 @@ export class DamageTypes {
     /**
      * Damage Calculation
      */
-    static calculateDamageToActor(actor,damage,material,alignment,enh) {
-        let er = DamageTypes.getERForActor(actor).filter(d => d.value > 0 || d.vulnerable || d.immunity);
-        let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0);
+    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal) {
+        let er = DamageTypes.getERForActor(actor).filter(d => d.value > 0 || d.vulnerable || d.immunity || d.lethal);
+        let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0 || d.lethal);
+        let hasRegeneration = !!actor.data.data.traits.regen;
+        let nonLethalDamage = 0;
         let bypassedDr = new Set()
         if (enh > 0)
             bypassedDr.add("magic");
@@ -188,6 +200,7 @@ export class DamageTypes {
 
         //Checks for slashing/piercing/bludgeonign damage and typeless damage
         let hasAnyTypeDamage = false;
+        let baseIsNonLethal = nonLethal || false;
         damage.forEach(d => {
             if (d.damageTypeUid) {
                 let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
@@ -200,6 +213,9 @@ export class DamageTypes {
                         bypassedDr.add("bludgeoning");
                     damageBeforeDr += d.roll.total;
                     hasAnyTypeDamage = true;
+                    if (d.damageTypeUid === "damage-nonlethal"){
+                        baseIsNonLethal = true;
+                    }
                 }
             } else {
                 damageBeforeDr += d.roll.total;
@@ -208,6 +224,10 @@ export class DamageTypes {
         if (hasAnyTypeDamage)
             damageBeforeDr = Math.max(1,damageBeforeDr) // This makes base damage minimum 1
         let filteredDr = dr.filter(d => bypassedDr.has(d.uid))
+        let lethalDr = dr.filter(d => d.lethal)
+        let hasLethalDr = dr.some(d => bypassedDr.has(d.uid))
+        if (hasRegeneration && !hasLethalDr)
+            baseIsNonLethal = true;
         let hasOrInFiltered = filteredDr.some(d => d.or);
         let finalDr = dr.filter(d => !bypassedDr.has(d.uid))
         if (hasOrInFiltered) {
@@ -220,6 +240,10 @@ export class DamageTypes {
             appliedDr = d;
         }});
         let damageAfterDr = Math.max(damageBeforeDr - highestDr,0);
+        if (baseIsNonLethal) {
+            nonLethalDamage += damageAfterDr;
+            damageAfterDr = 0;
+        }
         let energyDamageAfterEr = 0
         let energyDamageBeforeEr = 0
         let energyDamage = []
@@ -242,6 +266,13 @@ export class DamageTypes {
                         damageAfterEr = 0;
                         value = game.i18n.localize("D35E.Immunity")
                     }
+                    else if (hasRegeneration && !erValue?.lethal) {
+                        if (damageAfterEr > 0) {
+                            nonLethalDamage += damageAfterEr;
+                            damageAfterEr = 0;
+                            value = game.i18n.localize("D35E.WeaponPropNonLethal")
+                        }
+                    }
                     else if (erValue?.vulnerable) {
                         damageAfterEr = Math.ceil(d.roll.total * 1.5)
                         value = game.i18n.localize("D35E.Vulnerability")
@@ -249,8 +280,7 @@ export class DamageTypes {
                         value = game.i18n.localize("D35E.NoER")
                     }
 
-
-                    energyDamage.push({name:_damage.data.name,uid:_damage.data.data.uniqueId,before:d.roll.total,after:damageAfterEr,value:value || 0,lower:damageAfterEr<d.roll.total,higher:damageAfterEr>d.roll.total,equal:d.roll.total===damageAfterEr});
+                    energyDamage.push({nonLethal: hasRegeneration && !erValue?.lethal,name:_damage.data.name,uid:_damage.data.data.uniqueId,before:d.roll.total,after:damageAfterEr,value:value || 0,lower:damageAfterEr<d.roll.total,higher:damageAfterEr>d.roll.total,equal:d.roll.total===damageAfterEr});
                     energyDamageAfterEr += damageAfterEr;
                     energyDamageBeforeEr += d.roll.total;
                 }
@@ -258,6 +288,21 @@ export class DamageTypes {
         })
         let beforeDamage = damageBeforeDr + energyDamageBeforeEr;
         let afterDamage = energyDamageAfterEr + damageAfterDr;
-        return {beforeDamage: beforeDamage, damage: afterDamage, displayDamage: Math.abs(afterDamage), isHealing: afterDamage < 0, baseBeforeDR: damageBeforeDr, baseAfterDR: damageAfterDr, lower:afterDamage<beforeDamage, higher:afterDamage>beforeDamage,equal:afterDamage===beforeDamage, appliedDR: appliedDr, energyDamage: energyDamage};
+        return {
+            beforeDamage: beforeDamage,
+            damage: afterDamage,
+            baseIsNonLethal: baseIsNonLethal,
+            nonLethalDamage: nonLethalDamage,
+            displayDamage: Math.abs(afterDamage),
+            isHealing: afterDamage < 0,
+            baseBeforeDR: damageBeforeDr,
+            baseAfterDR: damageAfterDr,
+            energyDamageBeforeEr: energyDamageBeforeEr,
+            energyDamageAfterEr: energyDamageAfterEr,
+            lower:afterDamage<beforeDamage,
+            higher:afterDamage>beforeDamage,
+            equal:afterDamage===beforeDamage,
+            appliedDR: appliedDr,
+            energyDamage: energyDamage};
     }
 }

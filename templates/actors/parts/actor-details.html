@@ -227,6 +227,9 @@
                   {{#if item.hasAction}}
                     <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
                   {{/if}}
+                  {{#if item.isFullAttack}}
+                  <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+                  {{/if}}
                 </div>
               </div>
 
@@ -279,7 +282,7 @@
                   {{/each}}
                 {{/if}}
               </span>
-              <div class="rollable image-d20"></div>
+              <div class="rollable image-d20 sub-skill skill-roll"></div>
               <h4 style>{{skill.label}} ({{subSkill.name}})
                 {{#if skill.rt}}■{{/if}}
                 {{#if skill.cs}}*{{/if}}
@@ -302,7 +305,7 @@
                 {{/each}}
               {{/if}}
             </span>
-            <div class="rollable image-d20"></div>
+            <div class="rollable image-d20 skill skill-roll"></div>
             {{#if skill.custom}}
               <h4>{{skill.name}}
                 {{#if skill.rt}}■{{/if}}

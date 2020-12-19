@@ -1,7 +1,11 @@
-<div class="D35E chat-card defense-card" data-actor-id="{{actor._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
-  <h2>Turn Undead</h2>
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+<header class="card-header flexrow">
+  {{#if name}}<h3>Turn {{undeadName}}</h3>{{/if}}
+</header>
 
-  <div class="chat-attack">
+
+<div class="chat-attack">
     <div class="dice-roll max-hd flexcol">
       <div class="dice-flavor">Maximum HD</div>
       <div class="dice-result">

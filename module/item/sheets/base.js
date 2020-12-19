@@ -990,6 +990,7 @@ export class ItemSheetPF extends ItemSheet {
 
 
         html.find('.spell').on("drop", this._onDropSpell.bind(this));
+        html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
         html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
 
         html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
@@ -1482,6 +1483,33 @@ export class ItemSheetPF extends ItemSheet {
             pack: pack.collection,
             id: li.getAttribute('data-item-id')
         }));
+    }
+
+    async _onDropFullAttack(event) {
+        event.preventDefault();
+        let attackId = $(event.delegateTarget).attr('data-attack')
+        let data;
+
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+
+        if (!data.actorId) {
+            return ui.notifications.warn(game.i18n.localize("D35E.FullAttackNeedDropFromActor"));
+        }
+        if (data.type === "Item" && data?.data?.type === "attack") {
+            let updateData = {}
+            updateData[`data.attacks.${attackId}.id`] = data.data._id;
+            updateData[`data.attacks.${attackId}.name`] = data.data.name;
+            updateData[`data.attacks.${attackId}.img`] = data.data.img;
+            updateData[`data.attacks.${attackId}.count`] = 1;
+            updateData[`data.attacks.${attackId}.primary`] = data.data.data.attackType === "natural" && data.data.data.primaryAttack;
+            updateData[`data.attacks.${attackId}.isWeapon`] = data.data.data.attackType === "weapon";
+            this.item.update(updateData)
+        }
     }
 
     async _onDropSpell(event) {

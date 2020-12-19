@@ -79,6 +79,9 @@ export class DamageReductionSetting extends FormApplication {
         } else if (key.startsWith("dr-value-")) {
             let dr = key.replace("dr-value-", "")
             DamageTypes.getDamageTypeForUID(this.damageReduction, dr).value = parseInt(data);
+        } else if (key.startsWith("dr-lethal-")) {
+            let dr = key.replace("dr-lethal-", "")
+            DamageTypes.getDamageTypeForUID(this.damageReduction, dr).lethal = data;
         } else if (key.startsWith("er-value-")) {
             let dr = key.replace("er-value-", "")
             DamageTypes.getDamageTypeForUID(this.energyResistance, dr).value = parseInt(data);
@@ -88,6 +91,9 @@ export class DamageReductionSetting extends FormApplication {
         } else if (key.startsWith("er-vulnerable-")) {
             let dr = key.replace("er-vulnerable-", "")
             DamageTypes.getDamageTypeForUID(this.energyResistance, dr).vulnerable = data;
+        } else if (key.startsWith("er-lethal-")) {
+            let dr = key.replace("er-lethal-", "")
+            DamageTypes.getDamageTypeForUID(this.energyResistance, dr).lethal = data;
         }
     }
 }

@@ -110,6 +110,10 @@
             }
           },
           "naturalAC": 0,
+          "fortification": {
+            "value": 0,
+            "total": 0
+          },
           "ac": {
             "normal": {
               "value": 0,
@@ -184,8 +188,8 @@
             "min": -100,
             "base": 0,
             "max": 0,
-            "temp": null,
-            "nonlethal": null
+            "temp": 0,
+            "nonlethal": 0
           },
           "turnUndeadHdTotal": 0,
           "turnUndeadUsesBonusFormula": "",
@@ -297,7 +301,18 @@
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
-                "hasSpecialSlot": false
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               },
               "secondary": {
                 "name": "Secondary",
@@ -323,7 +338,18 @@
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
-                "hasSpecialSlot": false
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               },
               "tertiary": {
                 "name": "Tertiary",
@@ -349,7 +375,18 @@
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
-                "hasSpecialSlot": false
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               },
               "spelllike": {
                 "name": "Spell-likes",
@@ -375,7 +412,18 @@
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
-                "hasSpecialSlot": false
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               }
             }
           },
@@ -1003,7 +1051,7 @@
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement","damage-type","material"],
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"],
     "templates": {
       "changes": {
         "changes": [],
@@ -1617,6 +1665,7 @@
       "showInQuickbar": true,
       "melded": false,
       "baseWeaponType": "",
+      "nonLethal": false,
       "originalWeaponCreated": false,
       "originalWeaponId": null,
       "originalWeaponName": "",
@@ -1629,6 +1678,62 @@
         "lawful": false,
         "chaotic": false
       }
+    },
+    "full-attack": {
+      "templates": ["itemDescription"],
+      "attacks" : {
+        "attack1": {
+          "_id": 1,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack2": {
+          "_id": 2,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack3": {
+          "_id": 3,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack4": {
+          "_id": 4,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack5": {
+          "_id": 5,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        }
+      },
+      "attackType": "full"
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],
