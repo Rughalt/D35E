@@ -4564,7 +4564,7 @@ export class ActorPF extends Actor {
                 crit = false,
                 dt = value > 0 ? Math.min(tmp, value) : 0;
             if (simpleDamage) {
-                hit = true,
+                hit = true
                 value = damage;
             } else {
                 let finalAc = {}
@@ -4576,12 +4576,12 @@ export class ActorPF extends Actor {
                     finalAc.noCritical = false;
                     finalAc.applyHalf = false;
                 } else {
-                    if (roll > 0) {
+                    if (roll > -1337) { // Spell roll value
                         finalAc = await a.rollDefenseDialog({});
                         if (finalAc.ac === -1) continue;
                     }
                 }
-                hit = roll >= finalAc.ac || roll === 0 || natural20 || finalAc.noCheck // This is for spells and natural 20
+                hit = roll >= finalAc.ac || roll === -1337 || natural20 || finalAc.noCheck // This is for spells and natural 20
                 crit = (critroll >= finalAc.ac || (critroll && finalAc.noCheck) || natural20Crit)
                     && !finalAc.noCritical
                     && !fumble20Crit
@@ -4635,7 +4635,7 @@ export class ActorPF extends Actor {
                     ac: finalAc,
                     hit: hit,
                     crit: crit,
-                    isSpell: roll === 0,
+                    isSpell: roll === -1337,
                     fortifyRolled: fortifyRolled,
                     fortifyValue: Math.min(fortifyValue,100),
                     fortifyRoll: fortifyRoll,

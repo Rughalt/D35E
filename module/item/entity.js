@@ -2160,7 +2160,8 @@ export class ItemPF extends Item {
             const material = (button.dataset.material && button.dataset.material !== "") ? JSON.parse(button.dataset.material): {};
             const alignment = (button.dataset.alignment && button.dataset.alignment !== "") ? JSON.parse(button.dataset.alignment) : {};
             const enh = parseInt(button.dataset.enh || "0");
-            const roll = parseInt(button.dataset.roll || "0");
+            const roll = parseInt(button.dataset.roll || "-1337");
+            const isSpell = button.dataset.spell === "true";
             const critroll = parseInt(button.dataset.critroll || "0");
             const nonLethal = button.dataset.nonlethal === "true";
             const natural20 = button.dataset.natural === "true";

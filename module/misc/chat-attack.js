@@ -6,7 +6,7 @@ export class ChatAttack {
         this.attack = {
             flavor: "",
             tooltip: "",
-            total: 0,
+            total: -1337,
             isCrit: false,
             isFumble: false,
         };
@@ -104,9 +104,6 @@ export class ChatAttack {
             this.natural20Crit = data.isNatural20
             this.fumbleCrit = data.isFumble
         }
-
-
-
         // Add crit confirm
         if (!critical && d20.total >= this.critRange) {
             this.hasCritConfirm = true;
@@ -239,7 +236,7 @@ export class ChatAttack {
                 natural20: this.natural20,
                 fumble: this.fumble,
                 natural20Crit: this.natural20Crit,
-                fumbleCrit: this.fumbleCrit
+                fumbleCrit: this.fumbleCrit,
             });
             else this.cards.push({
                 normalDamage: this.normalDamage,
