@@ -207,7 +207,39 @@
         </div>
     </div>
     <div class="tab" data-tab="changelog" style="overflow-y: scroll; height: 570px;">
+        <h2>v0.87.10</h2>
         <h1>Changelog</h1>
+        <h3 id="features">Features</h3>
+        <ul>
+            <li>Automated AC checking when applying damage<ul>
+                <li>Added support for Optional AC modifiers, added Optional AC modifiers to feats in compendium</li>
+            </ul>
+            </li>
+            <li>Fortification - keeping information about fortification critical hit immunity<ul>
+                <li>Automatically resolved on Apply Dialog critical hit check</li>
+                <li>Possibility to add via changes</li>
+                <li>Implemented in all Racial HD and Templates in Compendium, added to Fortification enhancement</li>
+            </ul>
+            </li>
+        </ul>
+        <h3 id="changes">Changes</h3>
+        <ul>
+            <li>Added new Sneak Attack class feature that uses Combat Changes mechanism. It will replace old one on chars on update.</li>
+            <li>Added new Turn/Rebuke undead feature (to allow non-standard Turn/Rebuke creatures in future). It will be added to chars on update.</li>
+        </ul>
+        <h3 id="bug-fixes">Bug Fixes</h3>
+        <ul>
+            <li>Fixed rolling skills from summary tab on Character sheet</li>
+            <li>Fixed some icons having &quot;.PNG&quot; file extension instead of &quot;.png&quot;</li>
+            <li>Fixed classes/races with EL set to empty breaking Exp calculation</li>
+            <li>Fixed domain spell slot assignments</li>
+            <li>Fixed class skills/non-class when using level progression</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/162">#162</a> - Token light radius fixes</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/168">#168</a> - Added Change target for Touch AC</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/166">#166</a> - +1 Armor Enhancement correctly adds +1 by default</li>
+            <li>Other minor fixes</li>
+        </ul>
+
         <h2>v0.87.8</h2>
         <h3>SRD</h3>
         <ul>
