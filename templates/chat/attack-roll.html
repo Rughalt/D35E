@@ -92,7 +92,7 @@
         {{#if atk.cards.length}}
         <div class="flexcol card-buttons gm-sensitive">
             {{#each atk.cards as |card|}}
-            <button data-action="{{card.action}}" data-natural="{{card.natural20}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
+            <button data-action="{{card.action}}" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
                     data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}">
                 {{card.label}}
             </button>

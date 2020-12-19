@@ -1621,7 +1621,7 @@ export class ActorSheetPF extends ActorSheet {
       ability: { label: game.i18n.localize("D35E.AttackTypeAbilityPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "ability" } },
       racialAbility: { label: game.i18n.localize("D35E.AttackTypeRacialPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "racialAbility" } },
       misc: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "misc" } },
-      full: { label: game.i18n.localize("D35E.Misc"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "full-attack", "attack-type": "full" } },
+      full: { label: game.i18n.localize("D35E.FullAttack"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "full-attack", "attack-type": "full" } },
       };
 
     for (let a of attacks) {

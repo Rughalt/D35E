@@ -4413,6 +4413,10 @@ export class ActorPF extends Actor {
                 noCritical = false;
             // Get form data
             if (form) {
+
+                rollData.acBonus = form.find('[name="ac-bonus"]').val();
+                if (rollData.acBonus) ac += new Roll(rollData.acBonus).roll().total;
+
                 $(form).find('[data-type="optional"]').each(function () {
                     if ($(this).prop("checked"))
                         optionalFeatIds.push($(this).attr('data-feat-optional'));
@@ -4424,6 +4428,24 @@ export class ActorPF extends Actor {
 
                 if (form.find('[name="noCritical"]').prop("checked")) {
                     noCritical = true;
+                }
+                if (form.find('[name="prone"]').prop("checked")) {
+                    ac += new Roll("-4").roll().total;
+                }
+                if (form.find('[name="squeezing"]').prop("checked")) {
+                    ac += new Roll("-4").roll().total;
+                }
+                if (form.find('[name="defense"]').prop("checked")) {
+                    ac += new Roll("+2").roll().total;
+                }
+                if (form.find('[name="totaldefense"]').prop("checked")) {
+                    ac += new Roll("+4").roll().total;
+                }
+                if (form.find('[name="covered"]').prop("covered")) {
+                    ac += new Roll("+4").roll().total;
+                }
+                if (form.find('[name="charged"]').prop("charged")) {
+                    ac += new Roll("-2").roll().total;
                 }
             }
 
@@ -4500,7 +4522,7 @@ export class ActorPF extends Actor {
                 title: `${game.i18n.localize("D35E.ACRollDefense")}`,
                 content: html,
                 buttons: buttons,
-                classes: ['custom-dialog'],
+                classes: ['custom-dialog','wide'],
                 default: buttons.multi != null ? "multi" : "normal",
                 close: html => {
                     return resolve(roll);
@@ -4519,7 +4541,7 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(ev,roll,critroll,natural20,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false) {
+    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false) {
 
         let value = 0;
 
@@ -4546,7 +4568,8 @@ export class ActorPF extends Actor {
                 value = damage;
             } else {
                 let finalAc = {}
-                console.log(ev)
+                if (fubmle)
+                    return;
                 if (ev.originalEvent instanceof MouseEvent && (ev.originalEvent.shiftKey)) {
                     finalAc.noCheck = true
                     finalAc.ac = 0;
@@ -4559,7 +4582,9 @@ export class ActorPF extends Actor {
                     }
                 }
                 hit = roll >= finalAc.ac || roll === 0 || natural20 || finalAc.noCheck // This is for spells and natural 20
-                crit = (critroll >= finalAc.ac || (critroll && finalAc.noCheck)) && !finalAc.noCritical
+                crit = (critroll >= finalAc.ac || (critroll && finalAc.noCheck) || natural20Crit)
+                    && !finalAc.noCritical
+                    && !fumble20Crit
                 let damageData = null
 
                 // Fortitifcation / crit resistance
@@ -4567,7 +4592,7 @@ export class ActorPF extends Actor {
                 let fortifySuccessfull = false;
                 let fortifyValue = 0;
                 let fortifyRoll = 0;
-                if (critroll && a.data.data.attributes.fortification?.total) {
+                if (critroll && hit && a.data.data.attributes.fortification?.total) {
                     fortifyRolled = true
                     fortifyValue = a.data.data.attributes.fortification?.total;
                     fortifyRoll = new Roll("1d100").roll().total;

@@ -18,5 +18,5 @@
 - Fixed class skills/non-class when using level progression
 - [#162](https://github.com/Rughalt/D35E/issues/162) - Token light radius fixes
 - [#168](https://github.com/Rughalt/D35E/issues/168) - Added Change target for Touch AC
-- [#166](https://github.com/Rughalt/D35E/issues/166) - +1 Armor Enhancement correctly adds +1 bu default
+- [#166](https://github.com/Rughalt/D35E/issues/166) - +1 Armor Enhancement correctly adds +1 by default
 - Other minor fixes

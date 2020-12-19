@@ -42,6 +42,9 @@ export class ChatAttack {
         this.rolls = []
         this.normalDamage = "";
         this.natural20 = false;
+        this.natural20Crit = false;
+        this.fumble = false;
+        this.fumbleCrit = false;
     }
 
     get critRange() {
@@ -92,9 +95,16 @@ export class ChatAttack {
         data.total = roll.total;
         data.isCrit = critType === 1;
         data.isNatural20 = (d20.total === 20 && !critical);
-        if (!critical)
-            this.natural20 = data.isNatural20
         data.isFumble = critType === 2;
+        if (!critical) {
+            this.natural20 = data.isNatural20
+            this.fumble = data.isFumble
+        }
+        else {
+            this.natural20Crit = data.isNatural20
+            this.fumbleCrit = data.isFumble
+        }
+
 
 
         // Add crit confirm
@@ -226,18 +236,24 @@ export class ChatAttack {
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
-                natural20: this.natural20
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
             else this.cards.push({
                 normalDamage: this.normalDamage,
                 label: game.i18n.localize("D35E.ApplyCriticalDamage"),
-                value: totalDamage,
+                value: Math.max(totalDamage,1),
                 data: JSON.stringify(rolls),
                 alignment: JSON.stringify(this.item.data.data.alignment),
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
-                natural20: this.natural20
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
         } else {
             this.normalDamage = JSON.stringify(rolls)
@@ -249,26 +265,36 @@ export class ChatAttack {
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
             else if (isMultiattack) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyDamage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`,
-                value: totalDamage,
+                value: Math.max(totalDamage,1),
                 data: JSON.stringify(rolls),
                 alignment: JSON.stringify(this.item.data.data.alignment),
                 material: JSON.stringify(this.item.data.data.material),
                 enh: this.item.data.data.enh,
                 action: "applyDamage",
-                natural20: this.natural20
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
             else this.cards.push({
                     label: game.i18n.localize("D35E.ApplyDamage"),
-                    value: totalDamage,
+                    value: Math.max(totalDamage,1),
                     data: JSON.stringify(rolls),
                     alignment: JSON.stringify(this.item.data.data.alignment),
                     material: JSON.stringify(this.item.data.data.material),
                     enh: this.item.data.data.enh,
                     action: "applyDamage",
-                    natural20: this.natural20
+                    natural20: this.natural20,
+                    fumble: this.fumble,
+                    natural20Crit: this.natural20Crit,
+                    fumbleCrit: this.fumbleCrit
                 });
         }
 

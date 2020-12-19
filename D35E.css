@@ -3628,6 +3628,9 @@ span.bold {
 .game:not(.d35gm) .gm-sensitive {
   display: none;
 }
+.custom-dialog.wide {
+  width: 600px !important;
+}
 #token-hud .col.actions {
   height: calc(100% + 150px);
   width: 100%;

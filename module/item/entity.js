@@ -1016,7 +1016,7 @@ export class ItemPF extends Item {
                         skipDialog: skipDialog,
                         attackType: attack.attackMode
                     }, actor, skipChargeCheck)
-                    if (!result)
+                    if (!result && !ev.originalEvent?.shiftKey)
                         return ;
                 }
             }
@@ -2164,10 +2164,13 @@ export class ItemPF extends Item {
             const critroll = parseInt(button.dataset.critroll || "0");
             const nonLethal = button.dataset.nonlethal === "true";
             const natural20 = button.dataset.natural === "true";
-            ActorPF.applyDamage(event,roll,critroll,natural20,damage,normalDamage,material,alignment,enh,nonLethal);
+            const natural20Crit = button.dataset.naturalcrit === "true";
+            const fumble = button.dataset.fumble === "true";
+            const fumbleCrit = button.dataset.fumblecrit === "true";
+            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal);
         } else if (action === "applyHealing") {
             const value = button.dataset.value;
-            ActorPF.applyDamage(event,roll,null,null,value,null,null,null,null,false,true);
+            ActorPF.applyDamage(event,roll,null,null,null,null,null,value,null,null,null,null,false,true);
         }
 
         // Roll saving throw

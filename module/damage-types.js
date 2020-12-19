@@ -219,6 +219,7 @@ export class DamageTypes {
                 }
             } else {
                 damageBeforeDr += d.roll.total;
+                hasAnyTypeDamage = true;
             }
         })
         if (hasAnyTypeDamage)
