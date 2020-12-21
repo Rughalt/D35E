@@ -25,7 +25,8 @@ export class ActorSheetPF extends ActorSheet {
     super(...args);
 
     this.options.submitOnClose = false;
-
+    this.randomUuid = uuidv4();
+    this.alreadyOpening = false;
     /**
      * The scroll position on the active tab
      * @type {number}
@@ -49,7 +50,6 @@ export class ActorSheetPF extends ActorSheet {
      * @type {Object[]}
      */
     this._itemUpdates = [];
-
 
   }
 
@@ -147,7 +147,7 @@ export class ActorSheetPF extends ActorSheet {
         skl.sourceDetails.push({ name: game.i18n.localize("D35E.ACP"), value: `-${data.actor.data.attributes.acp.total}` })
       if (skl.ability)
         skl.sourceDetails.push({ name: game.i18n.localize("D35E.Ability"), value: getProperty(data.actor,`data.abilities.${skl.ability}.mod`) })
-      if (!skl.cls && skl.rank)
+      if (!data.actor.data.details.levelUpProgression && !skl.cls && skl.rank) // We do not display this as this is already calculated
         skl.sourceDetails.push({ name: game.i18n.localize("D35E.NonClassSkill"), value: game.i18n.localize("D35E.HalfRanks") })
       if (skl.subSkills != null) {
         for (let [s2, skl2] of Object.entries(skl.subSkills)) {
@@ -204,8 +204,7 @@ export class ActorSheetPF extends ActorSheet {
     data.items.filter(i => i.type == "class").forEach(c => classNamesAndLevels.push(c.name + " " + c.data.levels))
 
     data.classList = classNamesAndLevels.join(", ")
-
-    data.randomUuid = uuidv4();
+    data.randomUuid = this.randomUuid;
 
     // Compute encumbrance
     data.encumbrance = this._computeEncumbrance(data);
@@ -510,7 +509,7 @@ export class ActorSheetPF extends ActorSheet {
    * Activate event listeners using the prepared sheet HTML
    * @param html {HTML}   The prepared HTML object ready to be rendered into the DOM
    */
-  activateListeners(html) {
+  async activateListeners(html) {
     super.activateListeners(html);
 
     this.createTabs(html);
@@ -705,7 +704,29 @@ export class ActorSheetPF extends ActorSheet {
 
     // Progression
     html.find("input[type='checkbox'].level-up-progression").click(ev => this._onChangeUseProgression(ev));
+
+    html.find(".item-search-input").off("keyup").keyup(this._filterData.bind(this))
+    html.find(".item-add-close-box").click(ev => { this._closeInlineData(ev); });
+
+
+    {
+
+      console.log("D35E | Item Browser | Loading pack inline browser on load")
+      let entityType = localStorage.getItem(`D35E-last-ent-type-${this.id}`)
+      let type = localStorage.getItem(`D35E-last-type-${this.id}`)
+      let subType = localStorage.getItem(`D35E-last-subtype-${this.id}`)
+      let filter = localStorage.getItem(`D35E-filter-${this.id}`)
+      let label = localStorage.getItem(`D35E-label-${this.id}`)
+      let previousData = JSON.parse(localStorage.getItem(`D35E-data-${this.id}`))
+      let opened = localStorage.getItem(`D35E-opened-${this.id}`) === "true"
+      if (opened) {
+        await this.loadData(entityType, type, subType, filter, previousData, label);
+      }
+    }
+
   }
+
+
 
   createTabs(html) {
     const tabGroups = {
@@ -1444,14 +1465,14 @@ export class ActorSheetPF extends ActorSheet {
 
     // Categorize items as inventory, spellbook, features, and classes
     const inventory = {
-      weapon: { label: game.i18n.localize("D35E.InventoryWeapons"), canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "weapon" } },
-      equipment: { label: game.i18n.localize("D35E.InventoryArmorEquipment"), canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "equipment" }, hasSlots: true },
-      consumable: { label: game.i18n.localize("D35E.InventoryConsumables"), canCreate: true, hasActions: true, items: [], canEquip: false, dataset: { type: "consumable" } },
-      gear: { label: CONFIG.D35E.lootTypes["gear"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
-      ammo: { label: CONFIG.D35E.lootTypes["ammo"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
-      misc: { label: CONFIG.D35E.lootTypes["misc"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
+      weapon: { label: game.i18n.localize("D35E.InventoryWeapons"), hasPack: true, pack: `inline:items:weapon:-:${game.i18n.localize("D35E.InventoryWeapons")}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "weapon" } },
+      equipment: { label: game.i18n.localize("D35E.InventoryArmorEquipment"), hasPack: true, pack: `inline:items:equipment:-:${game.i18n.localize("D35E.InventoryArmorEquipment")}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: true, dataset: { type: "equipment" }, hasSlots: true },
+      consumable: { label: game.i18n.localize("D35E.InventoryConsumables"), hasPack: true, pack: `inline:items:consumable:-:${game.i18n.localize("D35E.InventoryConsumables")}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: true, items: [], canEquip: false, dataset: { type: "consumable" } },
+      gear: { label: CONFIG.D35E.lootTypes["gear"], hasPack: true, pack: `inline:items:loot:gear:${CONFIG.D35E.lootTypes["gear"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
+      ammo: { label: CONFIG.D35E.lootTypes["ammo"], hasPack: true, pack: `inline:items:loot:ammo:${CONFIG.D35E.lootTypes["ammo"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
+      misc: { label: CONFIG.D35E.lootTypes["misc"], hasPack: true, pack: `inline:items:loot:misc:${CONFIG.D35E.lootTypes["misc"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
       container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" }, isContainer: true },
-      tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
+      tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], hasPack: true, pack: `inline:items:loot:tradeGoods:-:${CONFIG.D35E.lootTypes["tradeGoods"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
       all: { label: game.i18n.localize("D35E.All"), canCreate: false, hasActions: true, items: [], canEquip: true, dataset: {} },
     };
 
@@ -1556,7 +1577,7 @@ export class ActorSheetPF extends ActorSheet {
     // Organize Features
     const features = {
       classes: { label: game.i18n.localize("D35E.ClassPlural"), hasPack: true, pack: "D35E.classes", emptyLabel: "D35E.ListDragAndDropClass", items: [], canCreate: true, hasActions: false, dataset: { type: "class" }, isClass: true},
-      feat: { label: game.i18n.localize("D35E.FeatPlural"), hasPack: true, pack: "D35E.feats", emptyLabel: "D35E.ListDragAndDropFeat", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" }, isFeat: true },
+      feat: { label: game.i18n.localize("D35E.FeatPlural"), hasPack: true, pack: `inline:feats:feat:feat:${game.i18n.localize("D35E.FeatPlural")}`, emptyLabel: "D35E.ListDragAndDropFeat", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "feat" }, isFeat: true },
       classFeat: { label: game.i18n.localize("D35E.ClassFeaturePlural"), hasPack: true, pack: 'actor-first-class', emptyLabel: "D35E.ListDragAndDropClassFeature", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "classFeat" }, isClassFeat: true },
       trait: { label: game.i18n.localize("D35E.TraitPlural"), hasPack: false, pack: "", emptyLabel: "D35E.ListDragAndDropNone", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "trait" } },
       racial: { label: game.i18n.localize("D35E.RacialTraitPlural"), hasPack: true, pack: "actor-race", emptyLabel: "D35E.ListDragAndDropRacialTrait", items: [], canCreate: true, hasActions: true, dataset: { type: "feat", "feat-type": "racial" } },
@@ -1901,12 +1922,15 @@ export class ActorSheetPF extends ActorSheet {
   }
 
 
-  _openCompendiumPack(event) {
+  async _openCompendiumPack(event) {
     event.preventDefault();
     let div = $(event.currentTarget),
         pack = div.attr("data-pack");
     if (pack.startsWith("browser")) {
       CompendiumDirectoryPF.browseCompendium(pack.split(":")[1])
+    }
+    else if (pack.startsWith("inline")) {
+      await this.loadData(pack.split(":")[1], pack.split(":")[2], pack.split(":")[3], "", undefined, pack.split(":")[4])
     }
     else if (pack !== 'actor-race' && pack !== 'actor-first-class') {
       game.packs.get(pack).render(true)
@@ -1954,4 +1978,104 @@ export class ActorSheetPF extends ActorSheet {
     };
     new LevelUpDataDialog(this.actor, options).render(true);
   }
+
+  async loadData(entityType, type, subtype, filter, previousData, label) {
+    if($(`.item-add-${this.randomUuid}-overlay`).css('display') !== 'none')
+    {
+      console.log("D35E | Item Browser | Skipping, its already visible", this.randomUuid)
+      return;
+    }
+
+    $(`#items-add-${this.randomUuid}-label`).text(`${game.i18n.localize("D35E.Add")} ${label}`)
+    console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
+    function _filterItems(item, entityType, type, subtype) {
+      if (entityType === "spells" && item.type !== type) return false;
+      if (entityType === "items" && item.type === type && (item.data.data.subType === subtype || subtype === "-")) return true;
+      if (entityType === "feats" && item.type === type && item.data.data.featType === subtype && !item.data.data.uniqueId) return true;
+      if (entityType === "buffs" && item.type !== type) return false;
+      if (entityType === "enhancements" && item.type !== "enhancement") return false;
+      return false;
+    }
+    $(`.item-add-${this.randomUuid}-overlay`).show();
+    $(`.items-add-${this.randomUuid}-working-item`).show();
+    $(`.items-add-${this.randomUuid}-list`).hide();
+    localStorage.setItem(`D35E-last-ent-type-${this.id}`,entityType)
+    localStorage.setItem(`D35E-last-type-${this.id}`,type)
+    localStorage.setItem(`D35E-last-subtype-${this.id}`,subtype)
+    localStorage.setItem(`D35E-opened-${this.id}`,true)
+    localStorage.setItem(`D35E-label-${this.id}`,label)
+    $(`#${this.randomUuid}-itemList`).empty()
+    let addedItems = []
+    if (!previousData) {
+      for (let p of game.packs.values()) {
+        if (p.private && !game.user.isGM) continue;
+        if (p.entity !== "Item") continue
+
+        const items = await p.getContent();
+        for (let i of items) {
+          if (!_filterItems(i, entityType, type, subtype)) continue;
+          let li = $(`<li class="item-list-item item" data-item-id="${i.id}">
+                               <div class="item-name non-rollable flexrow">
+                               <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
+                                <span>${i.name}</span>
+                                <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
+                        </li>`);
+          li.find(".add-from-compendium").mouseup(ev => this._addItemFromBrowser(p.collection, i.id));
+          if (!$(`#${this.randomUuid}-itemList li[data-item-id='${i.id}']`).length) {
+            $(`#${this.randomUuid}-itemList`).append(li);
+            addedItems.push({id: i.id, name: i.name, pack: p.collection, img: i.img})
+          }
+        }
+
+        localStorage.setItem(`D35E-data-${this.id}`, JSON.stringify(addedItems))
+      }
+    } else {
+      for (let i of previousData) {
+        let li = $(`<li class="item-list-item item" data-item-id="${i.id}">
+                               <div class="item-name non-rollable flexrow">
+                               <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
+                                <span>${i.name}</span>
+                                <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
+                        </li>`);
+        li.find(".add-from-compendium").mouseup(ev => this._addItemFromBrowser(i.pack, i.id));
+        if (!$(`#${this.randomUuid}-itemList li[data-item-id='${i.id}']`).length) {
+          $(`#${this.randomUuid}-itemList`).append(li);
+        }
+      }
+    }
+    $(`.items-add-${this.randomUuid}-working-item`).hide();
+    $(`.items-add-${this.randomUuid}-list`).show();
+    if (filter) {
+      $(`#${this.randomUuid}-itemList-filter`).val(filter);
+      $(`#${this.randomUuid}-itemList li`).filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(filter) > -1)
+      });
+    }
+  }
+
+  _closeInlineData(ev) {
+    ev.preventDefault();
+    localStorage.setItem(`D35E-opened-${this.id}`,false);
+    $(`.item-add-${this.randomUuid}-overlay`).hide();
+  }
+
+  async _addItemFromBrowser(packId, itemId) {
+
+    let dataType = "compendium";
+    let itemData = {};
+    // Case 1 - Import from a Compendium pack
+    const pack = game.packs.find(p => p.collection === packId);
+    const packItem = await pack.getEntity(itemId);
+    if (packItem != null) itemData = packItem.data;
+
+    return this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+  }
+
+  _filterData() {
+    var value = $(`#${this.randomUuid}-itemList-filter`).val().toLowerCase();
+    $(`#${this.randomUuid}-itemList li`).filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  }
+
 }

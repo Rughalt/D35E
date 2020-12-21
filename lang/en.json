@@ -1030,7 +1030,7 @@
   "D35E.Spell": "Spell",
   "D35E.AttackOptional": "Attack (optional)",
   "D35E.CombatChanges": "Combat Changes",
-  "D35E.ItemType": "Item Type",
+  "D35E.SubActionType": "Specific Action",
   "D35E.Condition": "Condition",
   "D35E.ModifiedField": "Modified Field",
   "D35E.ModificationFormula": "Modification Formula",

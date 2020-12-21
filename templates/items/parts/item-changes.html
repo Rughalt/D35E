@@ -115,7 +115,7 @@
     {{#each data.combatChanges as |change a|}}
     <li class="change flexcol" data-change="{{a}}" style="border-left: 2px solid rgba(0,0,0,0.2); padding-left: 0.5rem; margin-bottom: 0.5rem;">
       <div class="form-group" style="width: 100%; margin: 0">
-        <label>{{localize "D35E.ItemType"}}</label>
+        <label>{{localize "D35E.ActionType"}}</label>
         <select name="data.combatChanges.{{a}}.0" style="flex: 0 0 240px">
         {{#select (lookup this "0") }}
         {{#each ../config.combatChangeType as |name type|}}
@@ -126,7 +126,7 @@
       </div>
 
       <div class="form-group" style="width: 100%; margin: 0">
-        <label>{{localize "D35E.ActionType"}}</label>
+        <label>{{localize "D35E.SubActionType"}}</label>
         <select name="data.combatChanges.{{a}}.1" style="flex: 0 0 240px">
           {{#select (lookup this "1") }}
           <option value="">{{localize "D35E.All"}}</option>

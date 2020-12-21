@@ -2006,7 +2006,8 @@ export class ActorPF extends Actor {
             if (obj.data.masterwork)
                 itemAcp = Math.max(0, itemAcp - 1)
             linkData(data, updateData, "data.attributes.acp.gear", updateData["data.attributes.acp.gear"] + itemAcp);
-            if (obj.data.armor.dex != null) {
+            let test = getProperty(obj.data,'armor.dex');
+            if (getProperty(obj.data,'armor.dex') !== null && getProperty(obj.data,'armor.dex') !== "") {
                 if (updateData["data.attributes.maxDexBonus"] == null) linkData(data, updateData, "data.attributes.maxDexBonus", Math.abs(obj.data.armor.dex));
                 else {
                     linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"], Math.abs(obj.data.armor.dex)));
@@ -2506,19 +2507,26 @@ export class ActorPF extends Actor {
             let specificSkillBonus = skl.changeBonus || 0;
 
             // Parse main skills
-            let sklValue = (Math.floor((skl.cs && skl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty));
+            let cs = skl.cs;
+            if (data1.details.levelUpData && data1.details.levelUpProgression)
+                cs = true;
+            let sklValue = (Math.floor((cs && skl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty));
             linkData(data, updateData, `data.skills.${sklKey}.mod`, sklValue);
             // Parse sub-skills
             for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
                 if (subSkl == null) continue;
                 if (getProperty(data1, `skills.${sklKey}.subSkills.${subSklKey}`) == null) continue;
 
+                let scs = subSkl.cs;
+                if (data1.details.levelUpData && data1.details.levelUpProgression)
+                    scs = true;
+
                 acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
                 ablMod = 0
                 if (subSkl.ability !== "")
                     ablMod = data1.abilities[subSkl.ability].mod;
                 specificSkillBonus = subSkl.changeBonus || 0;
-                sklValue = subSkl.rank + (subSkl.cs && subSkl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
+                sklValue = subSkl.rank + (scs && subSkl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
                 linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);
             }
         }
@@ -3460,9 +3468,8 @@ export class ActorPF extends Actor {
                     classHP.set(_class._id, 0)
                 classHP.set(_class._id, classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
-                    if (lud.skills[s].rank) {
-                        updateData[`data.skills.${s}.rank`] = Math.floor(lud.skills[s].rank * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
-                    }
+                    updateData[`data.skills.${s}.rank`] = Math.floor((lud.skills[s].rank || 0)  * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
+
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
                             updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
@@ -4912,7 +4919,7 @@ export class ActorPF extends Actor {
 
     getCarryCapacity(srcData) {
         // Determine carrying capacity
-        const carryStr = srcData.data.abilities.str.total + srcData.data.abilities.str.carryBonus;
+        const carryStr = (srcData.data.abilities.str.total - srcData.data.abilities.str.damage) + srcData.data.abilities.str.carryBonus;
         let carryMultiplier = srcData.data.abilities.str.carryMultiplier;
         const size = srcData.data.traits.size;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];

@@ -76,7 +76,7 @@
 .strikethrough-text {
   text-decoration: line-through;
 }
-.hidden:not(.combatant) {
+.visionperm-hidden:not(.combatant) {
   display: none !important;
 }
 /* ----------------------------------------- */
@@ -1682,10 +1682,13 @@
 }
 .D35E.sheet.actor .inventory-list .item .item-name,
 .D35E.sheet.actor .inventory-list .item .item-name-ne {
-  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.D35E.sheet.actor .inventory-list .item .item-name:not(.non-rollable),
+.D35E.sheet.actor .inventory-list .item .item-name-ne:not(.non-rollable) {
+  cursor: pointer;
 }
 .D35E.sheet.actor .inventory-list .item .item-name.melded,
 .D35E.sheet.actor .inventory-list .item .item-name-ne.melded {
@@ -1712,12 +1715,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.D35E.sheet.actor .inventory-list .item .item-name:hover .item-image,
-.D35E.sheet.actor .inventory-list .item .item-name-ne:hover .item-image {
+.D35E.sheet.actor .inventory-list .item .item-name:hover .item-image:not(.non-rollable),
+.D35E.sheet.actor .inventory-list .item .item-name-ne:hover .item-image:not(.non-rollable) {
   background-image: url("/icons/svg/d20-grey.svg") !important;
 }
-.D35E.sheet.actor .inventory-list .item .item-name .item-image:hover,
-.D35E.sheet.actor .inventory-list .item .item-name-ne .item-image:hover {
+.D35E.sheet.actor .inventory-list .item .item-name .item-image:hover:not(.non-rollable),
+.D35E.sheet.actor .inventory-list .item .item-name-ne .item-image:hover:not(.non-rollable) {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor .inventory-list .item .class-level-box {
@@ -2047,6 +2050,53 @@
   width: 16px;
   font-size: 12px;
   text-align: center;
+}
+.D35E.sheet.actor .item-add-overlay {
+  flex: none;
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 30px);
+  left: 0;
+  top: 30px;
+  z-index: 1;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  overflow: visible;
+  height: 100%;
+  width: 400px;
+  position: absolute;
+  right: 0;
+  background: url("ui/parchment.jpg") repeat;
+  padding: 8px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-add-label {
+  flex: 0;
+  margin-left: 2px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-search-input {
+  padding: 10px 10px 10px 35px;
+  width: 100%;
+  box-sizing: border-box;
+  background: 10px transparent url(https://www.dndbeyond.com/Content/Skins/Waterdeep/images/icons/search-grey.svg) no-repeat;
+  background-size: 15px;
+  flex: 0;
+  height: 30px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-add-close-box {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background: url("ui/parchment.jpg") repeat;
+  text-align: center;
+  line-height: 30px;
+  font-size: 18px;
+  left: -30px;
+  cursor: pointer;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
 }
 .locked img.sheet-profile {
   max-height: 360px;
@@ -5448,6 +5498,24 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .scrolling-header {
   background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+}
+.d35ecustom .item-add-overlay .item-add-list {
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+}
+.d35ecustom .item-add-overlay .item-add-list .item-search-input {
+  padding: 10px 10px 10px 35px;
+  width: 100%;
+  box-sizing: border-box;
+  background: 10px rgba(0, 0, 0, 0) url(https://www.dndbeyond.com/Content/Skins/Waterdeep/images/icons/search-grey.svg) no-repeat;
+  background-size: 15px;
+  flex: 0;
+  height: 30px;
+  border: 1px solid transparent;
+  margin: 4px 0;
+}
+.d35ecustom .item-add-overlay .item-add-list .item-add-close-box {
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+  color: #2C606D;
 }
 .d35ecustom .npc.monster {
   padding: 0;
