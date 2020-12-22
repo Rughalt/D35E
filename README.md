@@ -18,7 +18,7 @@ the Data/systems/D35E folder. You may do this by cloning the repository or
 downloading a zip archive from the [here](https://www.dragonshorn.info/dnd35e/dnd35e.zip).
 
 ## Documentation
-You can find documentation on [wiki](https://docs.legaciesofthedragon.cp,/). Be advised that this is heavy work in progress.
+You can find documentation on [wiki](https://docs.legaciesofthedragon.com). Be advised that this is heavy work in progress.
 
 ## Progress
 You can track SRD implementation progress [here](https://github.com/Rughalt/D35E/projects/1)
