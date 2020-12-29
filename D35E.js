@@ -119,7 +119,7 @@ Hooks.once("setup", function() {
     "spellPreparationModes", "weaponTypes", "weaponProperties", "spellComponents", "spellSchools", "spellLevels", "conditionTypes",
     "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "actorTokenSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
     "limitedUsePeriods", "equipmentTypes", "equipmentSlots", "consumableTypes", "attackTypes", "buffTypes", "buffTargets", "contextNoteTargets",
-    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets"
+    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets","savingThrowTypes"
   ];
 
   const doLocalize = function(obj) {
@@ -477,7 +477,7 @@ function rollDefenses({actorName=null, actorId=null}={}) {
   if (!actor) actor = game.actors.get(speaker.actor);
   if (!actor) return ui.notifications.warn("No applicable actor found");
 
-  return actor.rollDefenses();
+  return actor.displayDefenses();
 };
 
 function rollTurnUndead({actorName=null, actorId=null}={}) {

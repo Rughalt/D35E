@@ -32,7 +32,7 @@ export class ActorPF extends Actor {
         // Roll saving throw
         if (action === "save") {
             const saveId = button.dataset.save;
-            if (actor) actor.rollSavingThrow(saveId, { event: event });
+            if (actor) actor.rollSavingThrow(saveId,null,null, { event: event });
         }
     }
 
@@ -4086,12 +4086,106 @@ export class ActorPF extends Actor {
         roll.toMessage(messageData, { rollMode });
     }
 
-    rollSavingThrow(savingThrowId, options = {}) {
+    /**
+     * Make a saving throw, with optional versus check
+     * @param _savingThrow Saving throw data
+     * @param ability Saving throw ability
+     * @param target target saving throw dc
+     * @param options options
+     * @returns {Promise<unknown>|void}
+     */
+    async rollSavingThrow(_savingThrow,ability, target, options = {}) {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
+
+        const _roll = async function (saveType, ability, baseAbility, target, form) {
+            let savingThrowBonus = getProperty(this.data,`data.attributes.savingThrows.${saveType}.total`) || 0,
+                optionalFeatIds = [],
+                rollMode = null;
+            savingThrowBonus -= getProperty(this.data,`data.abilities.${baseAbility}.mod`) || 0
+            savingThrowBonus += getProperty(this.data,`data.abilities.${ability}.mod`) || 0
+            let savingThrowManualBonus = 0;
+           // Get data from roll form
+            if (form) {
+                rollData.savingThrowBonus = form.find('[name="st-bonus"]').val();
+                if (rollData.savingThrowBonus) savingThrowManualBonus += new Roll(rollData.savingThrowBonus).roll().total;
+                rollMode = form.find('[name="rollMode"]').val();
+
+                $(form).find('[data-type="optional"]').each(function () {
+                    if ($(this).prop("checked"))
+                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                })
+            }
+
+            // Parse combat changes
+            let allCombatChanges = []
+            let attackType = 'savingThrow';
+            this.items.filter(o => o.type === "feat").forEach(i => {
+                if (i.hasCombatChange(attackType,rollData)) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                }
+            })
+            for (const change of allCombatChanges) {
+                console.log('D35E | Change', change[4])
+                if (change[3].indexOf('$') !== -1) {
+                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
+                } else {
+                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
+                }
+
+            }
+            rollData.featSavingThrow = rollData.featSavingThrow || 0;
+            rollData.savingThrowBonus = savingThrowBonus;
+            rollData.savingThrowManualBonus = savingThrowManualBonus
+
+            let roll = new Roll("1d20 + @savingThrowBonus + @savingThrowManualBonus + @featSavingThrow", rollData).roll();
+            // Set chat data
+            let chatData = {
+                speaker: ChatMessage.getSpeaker({actor: this.data}),
+                rollMode: rollMode || "blindroll",
+                sound: CONFIG.sounds.dice,
+                "flags.D35E.noRollRender": true,
+            };
+            let chatTemplateData = {
+                name: this.name,
+                type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                rollMode: rollMode || "blindroll",
+            };
+            const templateData = mergeObject(chatTemplateData, {
+                img: this.img,
+                roll: roll,
+                total: roll.total,
+                result: roll.result,
+                target: target,
+                tooltip: $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML,
+                success: target && roll.total >= target,
+            }, {inplace: false});
+            // Create message
+
+            await createCustomChatMessage("systems/D35E/templates/chat/saving-throw.html", templateData, chatData);
+        }
+
+        let savingThrowId = "";
+        let savingThrowAbility = ability;
+        let savingThrowBaseAbility = savingThrowAbility;
+        if (_savingThrow === "willnegates" || _savingThrow === "willhalf") {
+            savingThrowId = "will";
+            savingThrowBaseAbility = "wis"
+            if (!savingThrowAbility) savingThrowAbility = "wis"
+        } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf") {
+            savingThrowId = "ref";
+            savingThrowBaseAbility = "dex"
+            if (!savingThrowAbility) savingThrowAbility = "dex"
+        } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf") {
+            savingThrowId = "fort";
+            savingThrowBaseAbility = "con"
+            if (!savingThrowAbility) savingThrowAbility = "con"
+        }
         // Add contextual notes
         let notes = [];
-        const rollData = duplicate(this.data.data);
+        const rollData = duplicate(this.getRollData());
         const noteObjects = this.getContextNotes(`savingThrow.${savingThrowId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
@@ -4110,24 +4204,48 @@ export class ActorPF extends Actor {
                 } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o, rollData), { rollData: rollData })));
             }
         }
-
-        // Roll saving throw
         let props = this.getDefenseHeaders();
         if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
         const label = CONFIG.D35E.savingThrows[savingThrowId];
         const savingThrow = this.data.data.attributes.savingThrows[savingThrowId];
-        return DicePF.d20Roll({
-            event: options.event,
-            parts: ["@mod - @drain"],
-            situational: true,
-            data: { mod: savingThrow.total, drain: this.data.data.attributes.energyDrain || 0 },
-            title: game.i18n.localize("D35E.SavingThrowRoll").format(label),
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            takeTwenty: false,
-            chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
-            chatTemplateData: { hasProperties: props.length > 0, properties: props }
+        rollData.savingThrow = savingThrowId;
+
+
+        let template = "systems/D35E/templates/apps/saving-throw-roll-dialog.html";
+        let dialogData = {
+            data: rollData,
+            savingThrow: savingThrow,
+            rollMode: game.settings.get("core", "rollMode"),
+            rollModes: CONFIG.Dice.rollModes,
+            stFeats: this.items.filter(o => o.type === "feat" && o.hasCombatChange('savingThrow',rollData)),
+            stFeatsOptional: this.items.filter(o => o.type === "feat" && o.hasCombatChange(`savingThrowOptional`,rollData)),
+            label: label,
+        };
+        const html = await renderTemplate(template, dialogData);
+        let roll;
+        const buttons = {};
+        let wasRolled = false;
+        buttons.normal = {
+            label: game.i18n.localize("D35E.Roll"),
+            callback: html => {
+                wasRolled = true;
+                roll = _roll.call(this,savingThrowId,savingThrowAbility,savingThrowBaseAbility,target, html)
+            }
+        };
+        await new Promise(resolve => {
+            new Dialog({
+                title: `${game.i18n.localize("D35E.STRollSavingThrow")}`,
+                content: html,
+                buttons: buttons,
+                classes: ['custom-dialog','wide'],
+                default: "normal",
+                close: html => {
+                    return resolve(roll);
+                }
+            }).render(true);
         });
     };
+
 
     /* -------------------------------------------- */
 
@@ -4269,9 +4387,9 @@ export class ActorPF extends Actor {
 
 
     /**
-     * Show defenses in chat
+     * Display defenses in chat.
      */
-    rollDefenses() {
+    displayDefenses() {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         const rollData = duplicate(this.data.data);
 
@@ -4412,17 +4530,27 @@ export class ActorPF extends Actor {
 
     /* -------------------------------------------- */
 
+    /**
+     * Make AC test using Combat Changes bonuses
+     * @param ev event
+     * @param skipDialog option to ship dialog and use default roll
+     * @returns {Promise<unknown>}
+     */
     async rollDefenseDialog({ev = null, skipDialog = false} = {}) {
         const _roll = async function (acType, form) {
             let ac = getProperty(this.data,`data.attributes.ac.${acType}.total`) || 0,
                 optionalFeatIds = [],
                 applyHalf = false,
-                noCritical = false;
+                noCritical = false,
+                rollMode = "blindroll";
             // Get form data
             if (form) {
 
                 rollData.acBonus = form.find('[name="ac-bonus"]').val();
                 if (rollData.acBonus) ac += new Roll(rollData.acBonus).roll().total;
+
+
+                rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
                     if ($(this).prop("checked"))
@@ -4477,7 +4605,7 @@ export class ActorPF extends Actor {
             ac += rollData.featAC || 0;
 
             console.log('D35E | Final roll AC', ac)
-            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck'};
+            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode};
         }
         let rollData = this.getRollData();
         // Render modal dialog
@@ -4485,7 +4613,7 @@ export class ActorPF extends Actor {
         let dialogData = {
             data: rollData,
             item: this.data.data,
-            rollMode: game.settings.get("core", "rollMode"),
+            rollMode: "blindroll",
             rollModes: CONFIG.Dice.rollModes,
             defenseFeats: this.items.filter(o => o.type === "feat" && o.hasCombatChange('defense',rollData)),
             defenseFeatsOptional: this.items.filter(o => o.type === "feat" && o.hasCombatChange(`defenseOptional`,rollData)),
@@ -4626,14 +4754,14 @@ export class ActorPF extends Actor {
                 // Set chat data
                 let chatData = {
                     speaker: ChatMessage.getSpeaker({actor: a.data}),
-                    rollMode: "blindroll",
+                    rollMode: finalAc.rollMode || "blindroll",
                     sound: CONFIG.sounds.dice,
                     "flags.D35E.noRollRender": true,
                 };
                 let chatTemplateData = {
                     name: a.name,
                     type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-                    rollMode: "blindroll",
+                    rollMode: finalAc.rollMode || "blindroll",
                 };
                 const templateData = mergeObject(chatTemplateData, {
                     damageData: damageData,
@@ -4668,11 +4796,11 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    async rollSave(type) {
-        this.rollSavingThrow(type,{})
+    async rollSave(type,ability,target) {
+        this.rollSavingThrow(type,ability,target,{})
     }
 
-    static async _rollSave(type) {
+    static async _rollSave(type,ability,target) {
         let tokensList;
         if (game.user.targets.size > 0)
             tokensList = Array.from(game.user.targets);
@@ -4690,7 +4818,7 @@ export class ActorPF extends Actor {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
                 continue;
             }
-            promises.push(t.actor.rollSavingThrow(type,{}));
+            promises.push(t.actor.rollSavingThrow(type,ability,target,{}));
         }
         return Promise.all(promises);
     }

@@ -353,7 +353,7 @@ export class ItemPF extends Item {
         if (data.hasOwnProperty("actionType")) {
             // Save DC
             let save = data.save || {};
-            if (save.description) {
+            if (save.description || save.type) {
                 labels.save = `DC ${save.dc}`;
             }
 
@@ -861,9 +861,9 @@ export class ItemPF extends Item {
             if (data.school === "tel") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.cha.mod`)
 
             // Add save DC
-            if (data.hasOwnProperty("actionType") && getProperty(data, "save.description")) {
+            if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type"))) {
                 let saveDC = new Roll(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
-                let saveType = data.save.description;
+                let saveType = data.save.type ? CONFIG.D35E.savingThrowTypes[data.save.type] : data.save.description;
                 if (this.type === "spell") {
                     saveDC += new Roll(spellbook.baseDCFormula || "", rollData).roll().total;
                 }
@@ -1157,11 +1157,11 @@ export class ItemPF extends Item {
                     attackExtraParts.push("@defensive");
                 }
                 if (form.find('[name="charge"]').prop("checked")) {
-                    rollData.charge = 1;
+                    rollData.charge = 2;
                     attackExtraParts.push("@charge");
                 }
                 if (form.find('[name="flanking"]').prop("checked")) {
-                    rollData.flanking = 1;
+                    rollData.flanking = 2;
                     attackExtraParts.push("@flanking");
                 }
 
@@ -1658,22 +1658,49 @@ export class ItemPF extends Item {
             rollData.ablMod = ablMod;
         }
 
-        if (data.hasOwnProperty("actionType") && getProperty(data, "save.description")) {
+        if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type"))) {
             let saveDC = new Roll(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
-            let saveType = data.save.description;
+            let saveDesc = data.save.description;
             if (this.type === "spell") {
                 saveDC += new Roll(spellbook.baseDCFormula || "", rollData).roll().total;
             }
-            if (saveDC > 0 && saveType) {
+
+            if (saveDC > 0 && data.save.type) {
                 spellDC.dc = saveDC;
-                if (saveType.toLowerCase().indexOf('will') !== -1) {
+                spellDC.type = data.save.type;
+                spellDC.ability = data.save.ability;
+                spellDC.description = `${CONFIG.D35E.savingThrowTypes[data.save.type]}`;
+                if (data.save.ability) spellDC.description += ` (${CONFIG.D35E.abilitiesShort[data.save.ability]})`;
+            }
+            else if (saveDC > 0 && saveDesc) {
+                spellDC.dc = saveDC;
+                if (saveDesc.toLowerCase().indexOf('will') !== -1) {
                     spellDC.type = 'will';
-                } else if (saveType.toLowerCase().indexOf('reflex') !== -1) {
+                } else if (saveDesc.toLowerCase().indexOf('reflex') !== -1) {
                     spellDC.type = 'ref';
-                } else if (saveType.toLowerCase().indexOf('fortitude') !== -1) {
+                } else if (saveDesc.toLowerCase().indexOf('fortitude') !== -1) {
                     spellDC.type = 'fort';
                 }
-                spellDC.description = saveType;
+                if (saveDesc.toLowerCase().indexOf('negates') !== -1) {
+                    spellDC.type += 'Negates';
+                } else if (saveDesc.toLowerCase().indexOf('half') !== -1) {
+                    spellDC.type += 'Half';
+                }
+
+                if (saveDesc.toLowerCase().indexOf('cha') !== -1) {
+                    spellDC.ability += 'cha';
+                } else if (saveDesc.toLowerCase().indexOf('con') !== -1) {
+                    spellDC.ability += 'con';
+                } else if (saveDesc.toLowerCase().indexOf('dex') !== -1) {
+                    spellDC.ability += 'dex';
+                } else if (saveDesc.toLowerCase().indexOf('str') !== -1) {
+                    spellDC.ability += 'str';
+                } else if (saveDesc.toLowerCase().indexOf('int') !== -1) {
+                    spellDC.ability += 'int';
+                } else if (saveDesc.toLowerCase().indexOf('wis') !== -1) {
+                    spellDC.ability += 'wis';
+                }
+                spellDC.description = saveDesc;
             }
         }
         console.log('D35E | Calculated spell DC', spellDC)
@@ -2177,7 +2204,9 @@ export class ItemPF extends Item {
         // Roll saving throw
         else if (action === "rollSave") {
             const type = button.dataset.value;
-            if (type) ActorPF._rollSave(type);
+            const ability = button.dataset.ability;
+            const target = button.dataset.target;
+            if (type) ActorPF._rollSave(type,ability,target);
         } else if (action === "customAction") {
             const value = button.dataset.value;
             const actionValue = value;
@@ -2490,7 +2519,7 @@ export class ItemPF extends Item {
 
         // Set DC and SR
         {
-            const savingThrowDescription = getProperty(srcData, "data.save.description");
+            const savingThrowDescription = data.save.type ? CONFIG.D35E.savingThrowTypes[data.save.type] : data.save.description;
             if (savingThrowDescription) label.savingThrow = savingThrowDescription;
             else label.savingThrow = "none";
 
@@ -2806,6 +2835,8 @@ export class ItemPF extends Item {
 
         // Set saves
         data.data.save.description = origData.data.save.description;
+        data.data.save.type = origData.data.save.type;
+        data.data.save.ability = origData.data.save.ability;
         data.data.save.dc = 10 + slcl[0] + Math.floor(slcl[0] / 2);
 
         // Copy variables

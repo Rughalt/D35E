@@ -140,7 +140,29 @@
   <label>{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}</label>
   <div class="form-fields">
     <input type="text" name="data.save.dc" value="{{data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}"/>
+    <select name="data.save.type">
+      {{#select data.save.type}}
+      <option value="">{{localize "D35E.Custom"}}</option>
+      {{#each config.savingThrowTypes as |saveType type|}}
+      <option value="{{type}}">{{saveType}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{#unless data.save.type}}
     <input type="text" name="data.save.description" value="{{data.save.description}}" placeholder="{{localize "D35E.DCDescriptionExample"}}"/>
+    {{else}}
+    <select name="data.save.ability">
+      {{#select data.save.ability}}
+      <option value="">{{localize "D35E.Default"}}</option>
+      {{#each config.abilities as |ability type|}}
+      <option value="{{type}}">{{ability}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{/unless}}
+
+
+
   </div>
 </div>
 

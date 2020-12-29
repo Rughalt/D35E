@@ -1202,7 +1202,9 @@
         },
         "save": {
           "dc": 0,
-          "description": ""
+          "description": "",
+          "ability": "",
+          "type": ""
         },
         "effectNotes": "",
         "attackNotes": "",

@@ -575,13 +575,13 @@ const _migrateSpellDivineFocus = function(ent, updateData) {
 };
 
 const _migrateItemDC = function(ent, updateData) {
-  const value = getProperty(ent.data.data, "save.type");
-  if (value == null) return;
-  if (value === "") updateData["data.save.description"] = "";
-  else if (value === "fort") updateData["data.save.description"] = "Fortitude partial";
-  else if (value === "ref") updateData["data.save.description"] = "Reflex half";
-  else if (value === "will") updateData["data.save.description"] = "Will negates";
-  updateData["data.save.-=type"] = null;
+  // const value = getProperty(ent.data.data, "save.type");
+  // if (value == null) return;
+  // if (value === "") updateData["data.save.description"] = "";
+  // else if (value === "fort") updateData["data.save.description"] = "Fortitude partial";
+  // else if (value === "ref") updateData["data.save.description"] = "Reflex half";
+  // else if (value === "will") updateData["data.save.description"] = "Will negates";
+  // updateData["data.save.-=type"] = null;
 };
 
 const _migrateClassDynamics = function(ent, updateData) {

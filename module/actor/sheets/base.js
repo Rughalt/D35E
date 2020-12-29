@@ -592,7 +592,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.configure-flags').click(this._onConfigureFlags.bind(this));
 
     // Roll defenses
-    html.find(".defense-rolls .generic-defenses .rollable").click(ev => { this.actor.rollDefenses(); });
+    html.find(".defense-rolls .generic-defenses .rollable").click(ev => { this.actor.displayDefenses(); });
 
 
     html.find(".turnUndeadHdTotal .rollable").click(ev => { this.actor.rollTurnUndead(); });
@@ -1420,7 +1420,7 @@ export class ActorSheetPF extends ActorSheet {
   _onRollSavingThrow(event) {
     event.preventDefault();
     let savingThrow = event.currentTarget.parentElement.dataset.savingthrow;
-    this.actor.rollSavingThrow(savingThrow, {event: event});
+    this.actor.rollSavingThrow(savingThrow,null,null, {event: event});
   }
 
   async _onRaceControl(event) {
