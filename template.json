@@ -1059,12 +1059,16 @@
           "loseDexToAC": false,
           "noStr": false,
           "noDex": false,
+          "noInt": false,
+          "noCon": false,
           "oneInt": false,
           "oneWis": false,
           "oneCha": false,
           "noEncumbrance": false,
           "mediumArmorFullSpeed": false,
-          "heavyArmorFullSpeed": false
+          "heavyArmorFullSpeed": false,
+          "multiAttack": false,
+          "multiweaponAttack": false
         },
         "conditionFlags": {
           "dazzled": false,

@@ -178,11 +178,15 @@
 
     <div class="form-group stacked">
         <label class="block-header">{{localize "D35E.Misc"}}</label>
+    </div>
+
+    <div class="form-group">
         {{#if hasAttack}}{{#if hasDamage}}
         {{#if isNaturalAttack}}
-        <label class="checkbox">
-            <input type="checkbox" {{checked item.primaryAttack}} name="primary-attack"/> {{localize
-            "D35E.PrimaryAttack"}}
+        <label>{{localize "D35E.PrimaryAttack"}}</label>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized" name="primary-attack" {{#if item.primaryAttack}}checked{{/if}}/>
+            <span class="checkmark"></span>
         </label>
         {{/if}}
 
@@ -225,7 +229,7 @@
     </div>
     {{/unless}}
     {{/if}}{{/if}}
-    {{#if hasDamage}}{{#if hasDamageAbility}}
+    {{#if hasDamage}}{{#if hasDamageAbility}}{{#unless isNaturalAttack}}
     <div class="form-group select">
         <label>{{localize "D35E.DamageAbility"}}</label>
         <select name="damage-ability-multiplier" data-type="dmg-mult">
@@ -236,7 +240,7 @@
             <option value="2">x2</option>
             {{/select}}
         </select>
-    </div>
+    </div>{{/unless}}
     {{/if}}{{/if}}
 
     {{#if isRangedWeapon}}

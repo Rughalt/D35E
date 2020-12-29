@@ -1260,6 +1260,8 @@
   "D35E.STBonus": "Situational Bonus",
   "D35E.STDialogModifiers": "Saving Throw Modifiers",
   "D35E.Roll": "Roll",
+  "D35E.ChangeFlagMultiweaponAttack": "Multiweapon Fighting",
+  "D35E.ChangeFlagMultiAttack": "Multiattack",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

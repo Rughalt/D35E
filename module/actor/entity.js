@@ -1477,7 +1477,7 @@ export class ActorPF extends Actor {
                     linkData(srcData1, updateData, "data.abilities.con.total", 0);
                     linkData(srcData1, updateData, "data.abilities.con.mod", -5);
                     break;
-                case "NoInt":
+                case "noInt":
                     linkData(srcData1, updateData, "data.abilities.int.total", 0);
                     linkData(srcData1, updateData, "data.abilities.int.mod", -5);
                     break;
@@ -2452,7 +2452,7 @@ export class ActorPF extends Actor {
                 linkData(data, updateData, `data.abilities.${a}.origTotal`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
             } else {
                 linkData(data, updateData, `data.abilities.${a}.total`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
-                linkData(data, updateData, `data.abilities.${a}.origTotal`, updateData[`data.abilities.${a}.total`] + (changes[`data.abilities.${a}.total`] || 0));
+                linkData(data, updateData, `data.abilities.${a}.origTotal`, updateData[`data.abilities.${a}.total`]);
             }
             if (changes[`data.abilities.${a}.total`]) delete changes[`data.abilities.${a}.total`]; // Remove used mods to prevent doubling
             if (changes[`data.abilities.${a}.replace`]) delete changes[`data.abilities.${a}.replace`]; // Remove used mods to prevent doubling
@@ -2650,7 +2650,7 @@ export class ActorPF extends Actor {
         }).forEach(obj => {
             if (obj.data.resistances) {
                 (obj.data?.resistances || []).forEach(resistance => {
-                    if (!resistance[1] || !resistance[0]) return;
+                    if (!resistance[1]) return;
                     let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
                     if (!_resistance) {
                         _resistance = DamageTypes.defaultER;
@@ -2685,7 +2685,7 @@ export class ActorPF extends Actor {
                 if (obj.data.enhancements !== undefined) {
                     obj.data.enhancements.items.forEach(enhancementItem => {
                         (enhancementItem.data?.resistances || []).forEach(resistance => {
-                            if (!resistance[1] || !resistance[0]) return;
+                            if (!resistance[1]) return;
                             let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
                             if (!_resistance) {
                                 _resistance = DamageTypes.defaultER;
@@ -3672,7 +3672,10 @@ export class ActorPF extends Actor {
 
     async createAttackFromWeapon(item) {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
-
+        if (item.type)  {
+            item = duplicate(item);
+            item.data = duplicate(item);
+        }
         if (item.data.type !== "weapon") throw new Error("Wrong Item type");
 
 
@@ -3837,9 +3840,10 @@ export class ActorPF extends Actor {
         }
 
         if (hasProperty(attackData, "data.templates")) delete attackData["data.templates"];
-        await this.createOwnedItem(expandObject(attackData));
+        let createdAttack = await this.createOwnedItem(expandObject(attackData));
 
         ui.notifications.info(game.i18n.localize("D35E.NotificationCreatedAttack").format(item.data.name));
+        return createdAttack;
     }
 
     /* -------------------------------------------- */
@@ -5321,6 +5325,36 @@ export class ActorPF extends Actor {
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
+            case "Damage":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 1) {
+                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll()
+                    let name = action.name;
+                    let chatTemplateData = {
+                        name: this.name,
+                        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                        rollMode: "public",
+                    };
+                    const templateData = mergeObject(chatTemplateData, {
+                        flavor: name,
+                        total: damage.total,
+                        tooltip: $(await damage.getTooltip()).prepend(`<div class="dice-formula">${damage.formula}</div>`)[0].outerHTML
+                    }, {inplace: false});
+                    // Create message
+                    await createCustomChatMessage("systems/D35E/templates/chat/simple-attack-roll.html", templateData, {}, damage);
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
+            case "SelfDamage":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 1) {
+                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll()
+                    ActorPF.applyDamage(null,roll,null,null,null,null,null,damage,null,null,null,null,false,true);
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
             case "Clear":
                 if (action.parameters.length === 1) {
                     // Clear all items of type
@@ -5630,6 +5664,17 @@ export class ActorPF extends Actor {
                         hasItemUpdates = true;
                         itemUpdate["data.preparation.preparedAmount"] = itemData.preparation.maxAmount;
                     }
+                }
+
+                if (itemData.enhancements && itemData.enhancements && itemData.enhancements.items) {
+                    let enhItems = duplicate(itemData.enhancements.items)
+                    for (let _item of enhItems) {
+                        if (_item.data.uses.per === "day" && _item.data.uses.value !== _item.data.uses.max) {
+                            _item.data.uses.value = _item.data.uses.max;
+                            hasItemUpdates = true;
+                        }
+                    }
+                    itemUpdate[`data.enhancements.items`] = enhItems;
                 }
 
                 items[a] = mergeObject(item, itemUpdate, { enforceTypes: false, inplace: false });

@@ -1076,6 +1076,7 @@ export class ItemPF extends Item {
                 greaterManyshotCount = 0,
                 twoWeaponFightingOffhand = false,
                 hasTwoWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Two-Weapon Fighting").length > 0,
+                multiweaponFighting = actor.items.filter(o => o.type === "feat" && (o.name === "Multiweapon Fighting" || o.data.data.changeFlags.multiweaponAttack)).length > 0,
                 hasTwoImprovedWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Improved Two-Weapon Fighting").length > 0,
                 hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Greater Two-Weapon Fighting").length > 0,
                 rollMode = null,
@@ -1199,11 +1200,15 @@ export class ItemPF extends Item {
                         rollData.twoWeaponPenalty = -4;
                         if (hasTwoWeaponFightingFeat)
                             rollData.twoWeaponPenalty = -2;
+                        if (multiweaponFighting)
+                            rollData.twoWeaponPenalty = -2;
                         attackExtraParts.push("@twoWeaponPenalty");
                     }
                     else if (twoWeaponMode === 'main-offhand-normal') {
                         rollData.twoWeaponPenalty = -6;
                         if (hasTwoWeaponFightingFeat)
+                            rollData.twoWeaponPenalty = -4;
+                        if (multiweaponFighting)
                             rollData.twoWeaponPenalty = -4;
                         attackExtraParts.push("@twoWeaponPenalty");
                     }
@@ -1211,12 +1216,16 @@ export class ItemPF extends Item {
                         rollData.twoWeaponPenalty = -8;
                         if (hasTwoWeaponFightingFeat)
                             rollData.twoWeaponPenalty = -2;
+                        if (multiweaponFighting)
+                            rollData.twoWeaponPenalty = -2;
                         attackExtraParts.push("@twoWeaponPenalty");
                         twoWeaponFightingOffhand = true;
                     }
                     else if (twoWeaponMode === 'offhand-normal') {
                         rollData.twoWeaponPenalty = -10;
                         if (hasTwoWeaponFightingFeat)
+                            rollData.twoWeaponPenalty = -4;
+                        if (multiweaponFighting)
                             rollData.twoWeaponPenalty = -4;
                         attackExtraParts.push("@twoWeaponPenalty");
                         twoWeaponFightingOffhand = true;
@@ -1334,6 +1343,12 @@ export class ItemPF extends Item {
 
             }
 
+            if (rollData.isKeen && !this.data.data.threatRangeExtended) {
+                let baseCrit = this.data.data.ability.critRange || 20;
+                baseCrit = 21 - 2 * (21 - baseCrit)
+                rollData.item.ability.critRange = baseCrit;
+                this.data.data.ability.critRange = baseCrit;
+            }
 
             if (rollData.featDamageBonus) {
                 if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*@featDamageBonus",'Feats']);
@@ -1809,7 +1824,10 @@ export class ItemPF extends Item {
             parts.push("@item.masterworkBonus");
         }
         // Add secondary natural attack penalty
-        if (options.primaryAttack === false) parts.push("-5");
+
+        let hasMultiattack = this.actor.items.filter(o => o.type === "feat" && (o.name === "Multiattack" || o.data.data.changeFlags.multiAttack)).length > 0;
+        if (options.primaryAttack === false && hasMultiattack) parts.push("-2");
+        if (options.primaryAttack === false && !hasMultiattack) parts.push("-5");
         // Add bonus
 
         if (options.bonus) {
@@ -1863,6 +1881,8 @@ export class ItemPF extends Item {
         // Determine ability multiplier
         if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
+        let naturalAttackCount = this.actor.items.filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
+        if (rollData.item.attackType === "natural" && primaryAttack && naturalAttackCount === 1) rollData.ablMult = 1.5;
 
         // Create effect string
         let notes = []
@@ -1913,6 +1933,8 @@ export class ItemPF extends Item {
         // Determine ability multiplier
         if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
+        let naturalAttackCount = this.actor.items.filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
+        if (rollData.item.attackType === "natural" && primaryAttack && naturalAttackCount === 1) rollData.ablMult = 1.5;
 
 
         // Define Roll parts
@@ -2182,7 +2204,7 @@ export class ItemPF extends Item {
         // Apply damage
         else if (action === "applyDamage") {
             //const value = button.dataset.value;
-            const damage = JSON.parse(button.dataset.json);
+            const damage = JSON.parse(button.dataset.json || {});
             const normalDamage = JSON.parse(button.dataset.normaljson || "{}");
             const material = (button.dataset.material && button.dataset.material !== "") ? JSON.parse(button.dataset.material): {};
             const alignment = (button.dataset.alignment && button.dataset.alignment !== "") ? JSON.parse(button.dataset.alignment) : {};
@@ -2195,7 +2217,7 @@ export class ItemPF extends Item {
             const natural20Crit = button.dataset.naturalcrit === "true";
             const fumble = button.dataset.fumble === "true";
             const fumbleCrit = button.dataset.fumblecrit === "true";
-            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal);
+            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage);
         } else if (action === "applyHealing") {
             const value = button.dataset.value;
             ActorPF.applyDamage(event,roll,null,null,null,null,null,value,null,null,null,null,false,true);
@@ -2519,7 +2541,7 @@ export class ItemPF extends Item {
 
         // Set DC and SR
         {
-            const savingThrowDescription = data.save.type ? CONFIG.D35E.savingThrowTypes[data.save.type] : data.save.description;
+            const savingThrowDescription = data?.save?.type ? CONFIG.D35E.savingThrowTypes[data.save.type] : (data?.save?.description || "");
             if (savingThrowDescription) label.savingThrow = savingThrowDescription;
             else label.savingThrow = "none";
 
@@ -3112,6 +3134,8 @@ export class ItemPF extends Item {
             if (this.data.data.enhancements.uses.commonPool) {
                 let updateData = {}
                 updateData[`data.enhancements.uses.value`] = this.data.data.enhancements.uses.value - item.chargeCost;
+                updateData[`data.uses.value`] = this.data.data.enhancements.uses.value - item.chargeCost;
+                updateData[`data.uses.max`] = this.data.data.enhancements.uses.max;
                 await this.update(updateData);
             } else {
                 await this.addEnhancementCharges(item, -1*item.chargeCost)

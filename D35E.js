@@ -20,7 +20,7 @@ import { ItemSheetPF } from "./module/item/sheets/base.js";
 import { CompendiumDirectoryPF } from "./module/sidebar/compendium.js";
 import { PatchCore } from "./module/patch-core.js";
 import { DicePF } from "./module/dice.js";
-import { getItemOwner, sizeDie, getActorFromId, isMinimumCoreVersion } from "./module/lib.js";
+import {getItemOwner, sizeDie, getActorFromId, isMinimumCoreVersion, sizeNaturalDie} from "./module/lib.js";
 import { ChatMessagePF } from "./module/sidebar/chat-message.js";
 import { TokenQuickActions } from "./module/token-quick-actions.js";
 import { TopPortraitBar } from "./module/top-portrait-bar.js";
@@ -63,6 +63,7 @@ Hooks.once("init", async function() {
     CompendiumDirectoryPF,
     rollPreProcess: {
       sizeRoll: sizeDie,
+      sizeNaturalRoll: sizeNaturalDie,
       sizeVal: sizeInt
     },
     migrateWorld: migrations.migrateWorld,

@@ -1552,8 +1552,9 @@ export class ActorSheetPF extends ActorSheet {
       spellbookData[a] = {
         data: this._prepareSpellbook(data, spellbookSpells, a, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames),
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
-
+        isSpellLike: a === "spelllike",
         orig: spellbook,
+        canCreate: this.actor.owner === true,
         concentration: this.actor.data.data.skills["coc"].mod,
         spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
       };
