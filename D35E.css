@@ -567,8 +567,79 @@
 /* ----------------------------------------- */
 /* Encounter Generator
 /* ----------------------------------------- */
-input[type="number"].Smol {
-  width: calc(90px - 2px);
+.auto-height-dialog {
+  height: auto !important;
+}
+.encounter-roller {
+  width: 400px;
+}
+.encounter-roller .window-content {
+  overflow: hidden;
+}
+.encounter-roller .window-content img {
+  border: none !important;
+}
+.encounter-roller .window-content .head {
+  line-height: 16px;
+  height: 16px;
+  font-size: 14px;
+  font-family: nodesto;
+  text-align: left;
+  background-color: darkgray;
+}
+.encounter-roller .entity-link,
+.encounter-roller a.inline-roll {
+  all: inherit;
+  height: 64px;
+}
+.encounter-roller .flex-container {
+  display: flex;
+}
+.encounter-roller .flex-container > div {
+  width: 144px;
+  margin: 2px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+}
+.encounter-roller .flex-container > div.double-wide {
+  width: 288px;
+  margin: 4px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+}
+.encounter-roller .flex-container > div.column {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+}
+.encounter-roller .flex-container > div.image {
+  font-family: nodesto;
+  width: 64px;
+  margin: 0px;
+  text-align: left;
+}
+.encounter-roller .flex-container > div.column > div.row {
+  display: flex;
+  height: 64px;
+  width: 100%;
+}
+.encounter-roller .flex-container > div.column > div.row > div.body {
+  font-family: "Signika", sans-serif;
+  font-size: 13px;
+  padding-left: 24px;
+  text-align: right;
+}
+.encounter-roller .flex-container > div.cr {
+  height: 64px;
+  width: 64px;
+  margin: 0px;
+  font-size: 24px;
+  line-height: 64px;
+  font-family: nodesto;
 }
 .D35E.sheet.actor {
   /* ----------------------------------------- */
@@ -4601,6 +4672,27 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .dice-roll .dice-total.success {
   color: #005a00;
+}
+.d35ecustom .encounter-roller .entity-link {
+  border: none;
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  color: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.d35ecustom .encounter-roller .entity-link:hover {
+  text-shadow: none !important;
+}
+.d35ecustom .encounter-roller .entity-link:hover .head {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .encounter-roller .head {
+  background: none;
+  color: #2C606D;
+  font-size: 19px;
 }
 .d35ecustom .D35E.sheet.item .form-group :not(button) i.fas,
 .d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas {

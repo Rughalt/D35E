@@ -3,26 +3,26 @@
           <div class="flex-container" draggable="true">
             <div class="image">
                 <img src="{{img}}" width="48" height="48">
-                x{{count}}
+
             </div>
             <div class="column">
                 <div class="head">
-                    <span>{{name}}</span>
+                    <span>{{name}} x{{count}}</span>
                 </div>
                     <div class="row">
                     <div class="body">
-                        <span>Health:{{HP}}</span>
+                        <span>{{localize "D35E.HPShort"}}:{{HP}}</span>
                     </div>
                     <div class="body">
-                        <span>AC:{{AC}}</span>
+                        <span>{{localize "D35E.ACNormal"}}:{{AC}}</span>
                     </div>
                     <div class="body">
-                        <span>Land Speed:{{SPD}}</span>
+                        <span>{{localize "D35E.SpeedLand"}}:{{SPD}}</span>
                     </div>
                 </div>
             </div>
                 <div class="cr">
-                    CR:{{cr}}
+                    {{localize "D35E.CR"}}:{{cr}}
                 </div>
         </div>
     </a>
