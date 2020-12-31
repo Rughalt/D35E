@@ -399,14 +399,14 @@ export class ItemSheetPF extends ItemSheet {
                         if (!data.childItemLevels.has(level)) {
                             data.childItemLevels.set(level, [])
                         }
-
-                        data.children.abilities.push({
+                        let _e = {
                             item:e,
                             level:level,
                             pack:e.pack,
                             disabled: (this.item.data.data.disabledAbilities || []).some(obj => parseInt(obj.level || "0") === level && obj.uid === e.data.data.uniqueId)
-                        });
-                        data.childItemLevels.get(level).push(e);
+                        }
+                        data.children.abilities.push(_e);
+                        data.childItemLevels.get(level).push(_e);
                         if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
                         if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
                             data.abilitiesDescription.push({

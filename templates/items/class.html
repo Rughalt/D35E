@@ -138,15 +138,17 @@
                                             <div class="progression-abilities">
                                                 <ol class="item-list" data-pack="D35E.class-abilities">
                                                     {{#each item.abilities as |ability iid|}}
+                                                    {{#unless ability.disabled}}
                                                     <li class="item item-box progression-item  flexrow"
                                                         data-item-id="{{ability._id}}">
                                                         <div class="item-name child-item">
-                                                            <img src="{{ability.img}}" class="progression-ability-img">
+                                                            <img src="{{ability.item.img}}" class="progression-ability-img">
                                                             <h4 class="progression-ability-h4 rollable{{#if item.empty}} strikethrough-text{{/if}}">
-                                                                {{ability.name~}}
+                                                                {{ability.item.name~}}
                                                             </h4>
                                                         </div>
                                                     </li>
+                                                    {{/unless}}
                                                     {{/each}}
                                                     {{#if item.hasNonActive}}
                                                     {{#each item.nonActive as |ability iid|}}
