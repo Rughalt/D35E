@@ -5295,6 +5295,7 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet.actor .inventory-list .inventory-header {
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.05);
 }
 .d35ecustom .sheet.actor .inventory-list .item:nth-child(2n+1) {
   background-color: rgba(255, 255, 255, 0.1) !important;
