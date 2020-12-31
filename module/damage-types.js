@@ -172,7 +172,7 @@ export class DamageTypes {
     /**
      * Damage Calculation
      */
-    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal) {
+    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal,noPrecision) {
         let er = DamageTypes.getERForActor(actor).filter(d => d.value > 0 || d.vulnerable || d.immunity || d.lethal);
         let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0 || d.lethal);
         let hasRegeneration = !!actor.data.data.traits.regen;
@@ -205,6 +205,8 @@ export class DamageTypes {
             if (d.damageTypeUid) {
                 let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
                 if (_damage.data.data.damageType === "type") {
+                    if (noPrecision && d.damageTypeUid === "damage-precision")
+                        return; // We drop out if we do not apply precision damage
                     if (_damage.data.data.isPiercing)
                         bypassedDr.add("piercing");
                     if (_damage.data.data.isSlashing)

@@ -790,13 +790,7 @@ export class ItemPF extends Item {
             this.actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType, rollData)).forEach(i => {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
             })
-            allCombatChanges.forEach(change => {
-                if (change[3].indexOf('$') !== -1) {
-                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
-                } else {
-                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
-                }
-            })
+            this._addCombatChangesToRollData(allCombatChanges, rollData);
         }
 
         // Rich text description
@@ -861,12 +855,13 @@ export class ItemPF extends Item {
             if (data.school === "tel") rollData.powerAbl = getProperty(this.actor.data, `data.abilities.cha.mod`)
 
             // Add save DC
-            if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type"))) {
+            if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type")) && getProperty(data, "save.description") !== "None") {
                 let saveDC = new Roll(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
                 let saveType = data.save.type ? CONFIG.D35E.savingThrowTypes[data.save.type] : data.save.description;
                 if (this.type === "spell") {
                     saveDC += new Roll(spellbook.baseDCFormula || "", rollData).roll().total;
                 }
+                saveDC += (rollData.featSpellDCBonus || 0)
                 if (saveDC > 0 && saveType) {
                     props.push(`DC ${saveDC}`);
                     props.push(saveType);
@@ -890,6 +885,18 @@ export class ItemPF extends Item {
         // Filter properties and return
         data.properties = props.filter(p => !!p);
         return data;
+    }
+
+    _addCombatChangesToRollData(allCombatChanges, rollData) {
+        allCombatChanges.forEach(change => {
+            if (change[3].indexOf('$') !== -1) {
+                setProperty(rollData, change[3].substr(1), ItemPF._fillTemplate(change[4], rollData))
+            } else if (change[3].indexOf('&') !== -1) {
+                setProperty(rollData, change[3].substr(1), (getProperty(rollData, change[3]) || "") + ItemPF._fillTemplate(change[4], rollData))
+            } else {
+                setProperty(rollData, change[3], (getProperty(rollData, change[3]) || 0) + (change[4] || 0))
+            }
+        })
     }
 
     /* -------------------------------------------- */
@@ -1333,15 +1340,7 @@ export class ItemPF extends Item {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
                 }
             })
-            for (const change of allCombatChanges) {
-                console.log('D35E | Change', change[4])
-                if (change[3].indexOf('$') !== -1) {
-                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
-                } else {
-                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
-                }
-
-            }
+            this._addCombatChangesToRollData(allCombatChanges, rollData);
 
             if (rollData.isKeen && !this.data.data.threatRangeExtended) {
                 let baseCrit = this.data.data.ability.critRange || 20;
@@ -1354,7 +1353,7 @@ export class ItemPF extends Item {
                 if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*@featDamageBonus",'Feats']);
             }
             if (rollData.featDamagePrecision) {
-                if (rollData.featDamagePrecision !== 0) damageExtraParts.push(["@featDamagePrecision",'Precision']);
+                damageExtraParts.push(["${this.featDamagePrecision}",'Precision']);
             }
 
             let attacks = [];
@@ -1640,13 +1639,8 @@ export class ItemPF extends Item {
             this.actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType, rollData)).forEach(i => {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
             })
-            allCombatChanges.forEach(change => {
-                if (change[3].indexOf('$') !== -1) {
-                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
-                } else {
-                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
-                }
-            })
+
+            this._addCombatChangesToRollData(allCombatChanges, rollData);
         }
 
         // Get the spell specific info
@@ -1673,7 +1667,7 @@ export class ItemPF extends Item {
             rollData.ablMod = ablMod;
         }
 
-        if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type"))) {
+        if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type")) && getProperty(data, "save.description") !== "None") {
             let saveDC = new Roll(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
             let saveDesc = data.save.description;
             if (this.type === "spell") {
@@ -1681,14 +1675,14 @@ export class ItemPF extends Item {
             }
 
             if (saveDC > 0 && data.save.type) {
-                spellDC.dc = saveDC;
+                spellDC.dc = saveDC + (rollData.featSpellDCBonus || 0);
                 spellDC.type = data.save.type;
                 spellDC.ability = data.save.ability;
                 spellDC.description = `${CONFIG.D35E.savingThrowTypes[data.save.type]}`;
                 if (data.save.ability) spellDC.description += ` (${CONFIG.D35E.abilitiesShort[data.save.ability]})`;
             }
             else if (saveDC > 0 && saveDesc) {
-                spellDC.dc = saveDC;
+                spellDC.dc = saveDC + (rollData.featSpellDCBonus || 0);
                 if (saveDesc.toLowerCase().indexOf('will') !== -1) {
                     spellDC.type = 'will';
                 } else if (saveDesc.toLowerCase().indexOf('reflex') !== -1) {

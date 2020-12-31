@@ -564,6 +564,12 @@
 .dr-setting .item-list h4 {
   margin: 0;
 }
+/* ----------------------------------------- */
+/* Encounter Generator
+/* ----------------------------------------- */
+input[type="number"].Smol {
+  width: calc(90px - 2px);
+}
 .D35E.sheet.actor {
   /* ----------------------------------------- */
   /*  Sheet Header                             */
@@ -1752,10 +1758,10 @@
 .D35E.sheet.actor .inventory-list .inventory-header {
   margin: 2px 0;
   padding: 0;
-  background: rgba(0, 0, 0, 0.05);
   border: 2px groove #eeede0;
   font-weight: bold;
   line-height: 24px;
+  background: url(ui/parchment.jpg) repeat;
 }
 .D35E.sheet.actor .inventory-list .inventory-header h3 {
   margin: 0;

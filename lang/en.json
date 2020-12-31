@@ -1262,6 +1262,9 @@
   "D35E.Roll": "Roll",
   "D35E.ChangeFlagMultiweaponAttack": "Multiweapon Fighting",
   "D35E.ChangeFlagMultiAttack": "Multiattack",
+  "D35E.NoPackFound": "No Pack found when trying to add item from compendium: ",
+  "D35E.ACApplyPrecision": "Force apply precision damage",
+  "D35E.GMTools": "Game Master Tools",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

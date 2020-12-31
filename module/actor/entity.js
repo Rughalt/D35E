@@ -4131,15 +4131,7 @@ export class ActorPF extends Actor {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
                 }
             })
-            for (const change of allCombatChanges) {
-                console.log('D35E | Change', change[4])
-                if (change[3].indexOf('$') !== -1) {
-                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
-                } else {
-                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
-                }
-
-            }
+            this._addCombatChangesToRollData(allCombatChanges, rollData);
             rollData.featSavingThrow = rollData.featSavingThrow || 0;
             rollData.savingThrowBonus = savingThrowBonus;
             rollData.savingThrowManualBonus = savingThrowManualBonus
@@ -4250,6 +4242,19 @@ export class ActorPF extends Actor {
         });
     };
 
+
+    _addCombatChangesToRollData(allCombatChanges, rollData) {
+        for (const change of allCombatChanges) {
+            console.log('D35E | Change', change[4])
+            if (change[3].indexOf('$') !== -1) {
+                setProperty(rollData, change[3].substr(1), ItemPF._fillTemplate(change[4], rollData))
+            } else if (change[3].indexOf('&') !== -1) {
+                setProperty(rollData, change[3].substr(1), (getProperty(rollData, change[3]) || "") + ItemPF._fillTemplate(change[4], rollData))
+            } else {
+                setProperty(rollData, change[3], (getProperty(rollData, change[3]) || 0) + (change[4] || 0))
+            }
+        }
+    }
 
     /* -------------------------------------------- */
 
@@ -4546,6 +4551,7 @@ export class ActorPF extends Actor {
                 optionalFeatIds = [],
                 applyHalf = false,
                 noCritical = false,
+                applyPrecision = false,
                 rollMode = "blindroll";
             // Get form data
             if (form) {
@@ -4567,6 +4573,9 @@ export class ActorPF extends Actor {
 
                 if (form.find('[name="noCritical"]').prop("checked")) {
                     noCritical = true;
+                }
+                if (form.find('[name="applyPrecision"]').prop("checked")) {
+                    applyPrecision = true;
                 }
                 if (form.find('[name="prone"]').prop("checked")) {
                     ac += new Roll("-4").roll().total;
@@ -4609,7 +4618,7 @@ export class ActorPF extends Actor {
             ac += rollData.featAC || 0;
 
             console.log('D35E | Final roll AC', ac)
-            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode};
+            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision};
         }
         let rollData = this.getRollData();
         // Render modal dialog
@@ -4725,28 +4734,30 @@ export class ActorPF extends Actor {
                     && !finalAc.noCritical
                     && !fumble20Crit
                 let damageData = null
-
+                let noPrecision = false;
                 // Fortitifcation / crit resistance
                 let fortifyRolled = false;
                 let fortifySuccessfull = false;
                 let fortifyValue = 0;
                 let fortifyRoll = 0;
-                if (critroll && hit && a.data.data.attributes.fortification?.total) {
+                if (hit && a.data.data.attributes.fortification?.total) {
                     fortifyRolled = true
                     fortifyValue = a.data.data.attributes.fortification?.total;
                     fortifyRoll = new Roll("1d100").roll().total;
                     if (fortifyRoll <= fortifyValue) {
                         fortifySuccessfull = true;
                         crit = false;
+                        if (!finalAc.applyPrecision)
+                            noPrecision = true;
                     }
                 }
                 if (crit) {
-                    damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage)
+                    damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision)
                 } else {
                     if (natural20 || (critroll && hit)) //Natural 20 or we had a crit roll, no crit but base attack hit
-                        damageData = DamageTypes.calculateDamageToActor(a, normalDamage, material, alignment, enh, nonLethalDamage)
+                        damageData = DamageTypes.calculateDamageToActor(a, normalDamage, material, alignment, enh, nonLethalDamage,noPrecision)
                     else
-                        damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage)
+                        damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision)
                 }
                 value = damageData.damage;
                 if (finalAc.applyHalf)
@@ -5127,6 +5138,10 @@ export class ActorPF extends Actor {
     async importItemFromCollectionByName(collection, name, unique = false) {
 
         const pack = game.packs.find(p => p.collection === collection);
+        if (!pack) {
+            ui.notifications.error(game.i18n.localize("D35E.NoPackFound") + " " + collection);
+            return;
+        }
         if (pack.metadata.entity !== "Item") return;
         await pack.getIndex();
         const entry = pack.index.find(e => e.name === name)
