@@ -1,0 +1,90 @@
+<form onkeydown="return event.key != 'Enter';">   
+    <style>
+        .entity-link, a.inline-roll{
+            all: inherit;
+            height: 64px;
+        }
+        .flex-container {
+            display: flex;
+          }
+         
+          .flex-container > div {
+            width: 144px;
+            margin: 2px;
+            text-align: center;
+            line-height: 32px;
+            font-size: 14px;
+          }
+          .flex-container > div.double-wide {
+            width: 288px;
+            margin: 4px;
+            text-align: center;
+            line-height: 32px;
+            font-size: 14px;
+          }
+          .flex-container > div.column {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            height: 100%;
+            width: 100%
+          }
+
+          .flex-container > div.image {
+              font-family: nodesto;
+              ;
+              width:64px;
+              margin:0px;
+              text-align:left;
+          }
+          .flex-container > div.column > div.head{
+              line-height:16px; 
+              height:16px;
+              font-size:14px;
+              font-family: nodesto;
+              text-align:left;
+              background-color:darkgray;
+          }
+          .flex-container > div.column > div.row{
+            display: flex;
+            height: 64px;
+            width: 100%
+          }
+          .flex-container > div.column > div.row > div.body{
+            font-family: nodesto;
+            padding-left: 24px;
+            text-align:right;
+          }
+          .flex-container > div.cr {
+              height:64px;
+              width:64px;
+              margin:0px;
+              font-size:24px;
+              line-height:64px;
+              font-family: nodesto;
+          }
+
+        </style>
+        
+    <label>Which table?</label>
+        <div></div>
+            <select id="choicesCompendium" name="choices">
+                {{#each tables}}<option value="{{id}}">{{name}}</option>{{/each}}
+            </select>
+        <div></div>
+
+    <label>Target Encounter Level?</label>
+        <div></div>
+            <input type="number" id="ELTarget" class="Smol"></input>
+        <div></div>
+
+    <em>this will roll up an ecounter from the selected roll table until the reqiured EL is met</em>
+        <div></div>
+    <em> P.S. EL means Encounter Level the combination of CR of each monster in the encounter</em>
+
+    <button class="MonsterButton" type=button onclick="this.hidden=true">Roll'em</button>
+        <div id="ELGoesHere"></div>
+          <fieldset id="putMonstersHere">  
+
+    </fieldset>
+</form> 
