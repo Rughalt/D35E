@@ -208,6 +208,9 @@
   <label>{{ localize 'D35E.Multiplier' }}</label>
   <input type="text" name="data.abilities.str.carryMultiplier" 
          value="{{data.abilities.str.carryMultiplier}}" data-dtype="Number" placeholder="1"/>
+  <label style="flex: 1">{{ localize 'D35E.TotalInventoryValue' }}</label>
+  <input type="text" style="flex: 0 0 80px"
+         value="{{totalInventoryValue}}" data-dtype="Number" disabled placeholder="1"/>
 </div>
 {{#with encumbrance}}
 <span class="carry-label">{{carryLabel}}</span>

@@ -1560,7 +1560,7 @@ export class ActorSheetPF extends ActorSheet {
       };
 
     }
-
+    data.totalInventoryValue = 0;
     // Organize Inventory
     for ( let i of items ) {
       const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
@@ -1570,6 +1570,7 @@ export class ActorSheetPF extends ActorSheet {
       let weightMult = i.data.containerWeightless ? 0 : 1
       i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * conversion * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
+      data.totalInventoryValue += ((i.data.identified || game.user.isGM) ? i.data.price : i.data.unidentified.price) * i.data.quantity
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
 
