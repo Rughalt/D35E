@@ -3255,8 +3255,8 @@ export class ActorPF extends Actor {
                         itemUpdateData["data.carried"] = container.data.data.carried;
                         hasContainerChanged = true
                     }
-                    if (i.data.data.containerWeightless !== container.data.data.containerWeightless) {
-                        itemUpdateData["data.containerWeightless"] = container.data.data.containerWeightless;
+                    if (i.data.data.containerWeightless !== container.data.data.bagOfHoldingLike) {
+                        itemUpdateData["data.containerWeightless"] = container.data.data.bagOfHoldingLike;
                         hasContainerChanged = true
                     }
                 }
