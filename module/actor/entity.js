@@ -3683,7 +3683,7 @@ export class ActorPF extends Actor {
         let isSpeed = false
         let isDistance = false;
         let _enhancements = duplicate(getProperty(item.data, `data.enhancements.items`) || []);
-
+        let identified = getProperty(item.data, `data.identified`)
         // Get attack template
         let attackData = { data: {} };
         for (const template of game.data.system.template.Item.attack.templates) {
@@ -3694,27 +3694,29 @@ export class ActorPF extends Actor {
 
 
         // Add things from Enhancements
-        _enhancements.forEach(i => {
-            if (i.data.properties !== null && i.data.properties.kee) {
-                isKeen = true;
-            }
-            if (i.data.properties !== null && i.data.properties.spd) {
-                isSpeed = true;
-            }
-            if (i.data.properties !== null && i.data.properties.dis) {
-                isDistance = true;
-            }
-        });
+        if (identified) {
+            _enhancements.forEach(i => {
+                if (i.data.properties !== null && i.data.properties.kee) {
+                    isKeen = true;
+                }
+                if (i.data.properties !== null && i.data.properties.spd) {
+                    isSpeed = true;
+                }
+                if (i.data.properties !== null && i.data.properties.dis) {
+                    isDistance = true;
+                }
+            });
+        }
         let baseCrit = item.data.data.weaponData.critRange || 20;
         if (isKeen) {
             baseCrit = 21 - 2 * (21 - baseCrit)
         }
         attackData["type"] = "attack";
-        attackData["name"] = item.data.name;
+        attackData["name"] = identified ? item.data.name : item.data.data.unidentified.name;
         attackData["data.masterwork"] = item.data.data.masterwork;
         attackData["data.attackType"] = "weapon";
-        attackData["data.description.value"] = item.data.data.description.value;
-        attackData["data.enh"] = item.data.data.enh;
+        attackData["data.description.value"] = identified ? item.data.data.description.value : item.data.data.description.unidentified;
+        attackData["data.enh"] = identified ? item.data.data.enh : 0;
         attackData["data.ability.critRange"] = baseCrit;
         attackData["data.ability.critMult"] = item.data.data.weaponData.critMult || 2;
         attackData["data.actionType"] = (item.data.data.weaponSubtype === "ranged" ? "rwak" : "mwak");
@@ -3725,7 +3727,7 @@ export class ActorPF extends Actor {
         attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
         attackData["data.originalWeaponCreated"] = true;
         attackData["data.originalWeaponId"] = item.id;
-        attackData["data.originalWeaponName"] = item.name;
+        attackData["data.originalWeaponName"] = identified ? item.data.name : item.data.data.unidentified.name;
         attackData["data.originalWeaponImg"] = item.img;
         attackData["data.originalWeaponProperties"] = item.data.data.properties;
         attackData["data.material"] = item.data.data.material;
@@ -3783,51 +3785,55 @@ export class ActorPF extends Actor {
 
         // Add things from Enhancements
         let conditionals = []
-        _enhancements.forEach(i => {
-            if (i.data.enhancementType !== 'weapon') return;
-            let conditional = ItemPF.defaultConditional;
-            conditional.name = i.name;
-            conditional.default = false;
-            if (i.data.weaponData.damageRoll !== '') {
-                if (i.data.weaponData.optionalDamage) {
-                    let damageModifier = ItemPF.defaultConditionalModifier;
-                    damageModifier.formula = i.data.weaponData.damageRoll;
-                    damageModifier.type = i.data.weaponData.damageTypeId;
-                    damageModifier.target = "damage";
-                    damageModifier.subTarget = "allDamage";
-                    conditional.modifiers.push(damageModifier)
-                } else {
-                    if (i.data.weaponData.damageRoll !== undefined && i.data.weaponData.damageRoll !== null)
-                        attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
+        if (identified) {
+            _enhancements.forEach(i => {
+                if (i.data.enhancementType !== 'weapon') return;
+                let conditional = ItemPF.defaultConditional;
+                conditional.name = i.name;
+                conditional.default = false;
+                if (i.data.weaponData.damageRoll !== '') {
+                    if (i.data.weaponData.optionalDamage) {
+                        let damageModifier = ItemPF.defaultConditionalModifier;
+                        damageModifier.formula = i.data.weaponData.damageRoll;
+                        damageModifier.type = i.data.weaponData.damageTypeId;
+                        damageModifier.target = "damage";
+                        damageModifier.subTarget = "allDamage";
+                        conditional.modifiers.push(damageModifier)
+                    } else {
+                        if (i.data.weaponData.damageRoll !== undefined && i.data.weaponData.damageRoll !== null)
+                            attackData["data.damage.parts"].push([i.data.weaponData.damageRoll, i.data.weaponData.damageType, i.data.weaponData.damageTypeId || ""])
+                    }
                 }
-            }
-            if (i.data.weaponData.attackRoll !== '') {
-                if (i.data.weaponData.optionalDamage) {
-                    let attackModifier = ItemPF.defaultConditionalModifier;
-                    attackModifier.formula = i.data.weaponData.attackRoll;
-                    attackModifier.target = "attack";
-                    attackModifier.subTarget = "allAttack";
-                    conditional.modifiers.push(attackModifier)
-                } else {
-                    if (i.data.weaponData.attackRoll !== undefined && i.data.weaponData.attackRoll !== null)
-                        attackData["data.attackBonus"] = attackData["data.attackBonus"] + " + " + i.data.weaponData.attackRoll
+                if (i.data.weaponData.attackRoll !== '') {
+                    if (i.data.weaponData.optionalDamage) {
+                        let attackModifier = ItemPF.defaultConditionalModifier;
+                        attackModifier.formula = i.data.weaponData.attackRoll;
+                        attackModifier.target = "attack";
+                        attackModifier.subTarget = "allAttack";
+                        conditional.modifiers.push(attackModifier)
+                    } else {
+                        if (i.data.weaponData.attackRoll !== undefined && i.data.weaponData.attackRoll !== null)
+                            attackData["data.attackBonus"] = attackData["data.attackBonus"] + " + " + i.data.weaponData.attackRoll
+                    }
                 }
+                if (conditional.modifiers.length > 0) {
+                    conditionals.push(conditional);
+                }
+                if (i.data.attackNotes !== '') {
+                    attackData["data.attackNotes"] += '\n' + i.data.attackNotes
+                    attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
+                }
+            });
+            if (conditionals.length) {
+                attackData["data.conditionals"] = conditionals;
             }
-            if (conditional.modifiers.length > 0) {
-                conditionals.push(conditional);
-            }
-            if (i.data.attackNotes !== '') {
-                attackData["data.attackNotes"] += '\n' + i.data.attackNotes
-                attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
-            }
-        });
-        if (conditionals.length) {
-            attackData["data.conditionals"] = conditionals;
         }
 
-        if (item.data.data.attackNotes !== '') {
-            attackData["data.attackNotes"] += '\n' + item.data.data.attackNotes
-            attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
+        if (identified) {
+            if (item.data.data.attackNotes !== '') {
+                attackData["data.attackNotes"] += '\n' + item.data.data.attackNotes
+                attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
+            }
         }
 
         // Add range
