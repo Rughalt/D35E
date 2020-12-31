@@ -31,6 +31,7 @@ import {sizeInt} from "./module/lib.js";
 import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
+import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -506,7 +507,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         name: "d35e-gm-tools-encounter-generator",
         title: "D35E.EncounterGenerator",
         icon: "fas fa-dragon",
-        onClick: () => {
+        onClick: () => {new EncounterGeneratorDialog().render(true)
           //QuestLog.render(true)
           // Place your code here - <app class name>.render()
           // Remember you must import file on the top - look at imports
