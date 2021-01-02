@@ -1659,8 +1659,10 @@ export class ActorSheetPF extends ActorSheet {
       Object.values(fullAttackItem.data.attacks).forEach(attack => {
         if (!attack.id) return ;
         let i = attackSections.all.items.find(i => i.id === attack.id);
-        attack.hasAction = i.hasAction;
-        attack.itemExists = !!attack.item
+        if (i) {
+          attack.hasAction = i.hasAction;
+          attack.itemExists = !!attack.item
+        }
       });
     })
 
@@ -1893,6 +1895,9 @@ export class ActorSheetPF extends ActorSheet {
       return this.actor._createConsumablePowerDialog(itemData);
     }
 
+    if (itemData.type === "spell" && this.currentPrimaryTab === "feats") {
+      return this.actor.createTrait(itemData);
+    }
 
     if (itemData.type === "actor") {
       return this.actor._createConsumablePowerDialog(itemData);

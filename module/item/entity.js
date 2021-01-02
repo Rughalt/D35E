@@ -1686,14 +1686,21 @@ export class ItemPF extends Item {
                 if (saveDesc.toLowerCase().indexOf('will') !== -1) {
                     spellDC.type = 'will';
                 } else if (saveDesc.toLowerCase().indexOf('reflex') !== -1) {
-                    spellDC.type = 'ref';
+                    spellDC.type = 'reflex';
                 } else if (saveDesc.toLowerCase().indexOf('fortitude') !== -1) {
-                    spellDC.type = 'fort';
+                    spellDC.type = 'fortitude';
+                }
+                else if (saveDesc.toLowerCase().indexOf('will') !== -1) {
+                    spellDC.type = 'will';
+                } else if (saveDesc.toLowerCase().indexOf('ref') !== -1) {
+                    spellDC.type = 'reflex';
+                } else if (saveDesc.toLowerCase().indexOf('fort') !== -1) {
+                    spellDC.type = 'fortitude';
                 }
                 if (saveDesc.toLowerCase().indexOf('negates') !== -1) {
-                    spellDC.type += 'Negates';
+                    spellDC.type += 'negates';
                 } else if (saveDesc.toLowerCase().indexOf('half') !== -1) {
-                    spellDC.type += 'Half';
+                    spellDC.type += 'half';
                 }
 
                 if (saveDesc.toLowerCase().indexOf('cha') !== -1) {
@@ -2535,7 +2542,7 @@ export class ItemPF extends Item {
 
         // Set DC and SR
         {
-            const savingThrowDescription = data?.save?.type ? CONFIG.D35E.savingThrowTypes[data.save.type] : (data?.save?.description || "");
+            const savingThrowDescription = data?.data?.save?.type ? CONFIG.D35E.savingThrowTypes[data.data.save.type] : (data?.data?.save?.description || "");
             if (savingThrowDescription) label.savingThrow = savingThrowDescription;
             else label.savingThrow = "none";
 
@@ -3039,6 +3046,8 @@ export class ItemPF extends Item {
 
         // Set saves
         data.data.save.description = origData.data.save.description;
+        data.data.save.type = origData.data.save.type;
+        data.data.save.ability = origData.data.save.ability;
         data.data.save.dc = 10 + slcl[0] + Math.floor(slcl[0] / 2);
 
         // Copy variables
@@ -3104,6 +3113,56 @@ export class ItemPF extends Item {
             clLabel: clLabel,
             config: CONFIG.D35E,
         });
+
+        return data;
+    }
+
+
+    static async toTrait(origData, type) {
+        let data = duplicate(game.system.template.Item.feat);
+        for (let t of data.templates) {
+            mergeObject(data, duplicate(game.system.template.Item.templates[t]));
+        }
+        delete data.templates;
+        data = {
+            type: "feat",
+            name: origData.name,
+            data: data,
+        };
+
+        const slcl = this.getMinimumCasterLevelBySpellData(origData.data);
+
+
+        data.name = `${origData.name}`;
+        data.img = origData.img;
+
+        data.data.featType = "trait";
+
+        data.data.activation.type = "standard";
+
+        data.data.measureTemplate = getProperty(origData, "data.measureTemplate");
+
+        // Set damage formula
+        data.data.actionType = origData.data.actionType;
+        for (let d of getProperty(origData, "data.damage.parts")) {
+            d[0] = d[0].replace(/@sl/g, slcl[0]);
+            d[0] = d[0].replace(/@cl/g, "@attributes.hd.total");
+            data.data.damage.parts.push(d);
+        }
+
+        // Set saves
+        data.data.save.description = origData.data.save.description;
+        data.data.save.dc = origData.data.save.dc;
+        data.data.save.type = origData.data.save.type;
+
+        // Copy variables
+        data.data.attackNotes = origData.data.attackNotes;
+        data.data.effectNotes = origData.data.effectNotes;
+        data.data.attackBonus = origData.data.attackBonus;
+        data.data.critConfirmBonus = origData.data.critConfirmBonus;
+        data.data.specialActions = origData.data.specialActions;
+
+        data.data.description.value = getProperty(origData, "data.description.value");
 
         return data;
     }

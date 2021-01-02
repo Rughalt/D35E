@@ -5,7 +5,9 @@
 - Reimported monsters from SRD
 
 ### Features
-- Saving Throw Combat Modifiers (working like attacks and AC combat modifiers)
+- Saving Throws system rework
+  - Saving Throw Combat Modifiers (working like attacks and AC combat modifiers)
+  - Saving Throw common types (Will/Reflex/Fortitude Negates or Half) with possibility of assigning different Ability modifier to roll
 - Added `featSpellDCBonus` combat change that raises spell DC
 - Attacks created from unidentified weapons now create attacks with base weapon stats
 
@@ -19,3 +21,4 @@
 - [#185](https://github.com/Rughalt/D35E/issues/185) - Disabled abilities disappear from Class Progression table
 - [#194](https://github.com/Rughalt/D35E/issues/194) - Input for sub-skill name now takes all available space
 - [#169](https://github.com/Rughalt/D35E/issues/194) - Wrong special action order in spell fixed
+- [#62](https://github.com/Rughalt/D35E/issues/62) - Swarms have correct token size

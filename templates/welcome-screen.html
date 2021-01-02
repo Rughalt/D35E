@@ -155,16 +155,12 @@
 
             </div>
             <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Templates</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.87-templates.png"
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Monsters</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-monsters.png"
                      style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    Starting with release of 0.87.8, you can create new type of class - Template - and there is a compendium
-                    full of SRD templates ready to use. These items will help you quickly create creature using a template,
-                    so your dream of Half-Fiend Aasimar can fullfilled in just a click.<br><br>
+                    Starting with release of 0.87.12, you find reimported monsters from SRD in the monster compendium! While some of the creatures may still be a little broken, they should be in much better shape than ever before!<br><br>
                 </p>
-                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/classes#templates">Learn
-                    more about Templates</a>
 
             </div>
 <!--            <div class="flexcol" style="max-height: 410px">-->
@@ -207,6 +203,36 @@
         </div>
     </div>
     <div class="tab" data-tab="changelog" style="overflow-y: scroll; height: 570px;">
+        <h2>v0.87.12</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li>Implemented Improved Critical, Epic Weapon Focus, Multiweapon Fighting, Multiattack</li>
+            <li>Implemented automatic ability modifier change for creatures with one natural attack</li>
+            <li>Reimported monsters from SRD</li>
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Saving Throws system rework<ul>
+                <li>Saving Throw Combat Modifiers (working like attacks and AC combat modifiers)</li>
+                <li>Saving Throw common types (Will/Reflex/Fortitude Negates or Half) with possibility of assigning different Ability modifier to roll</li>
+            </ul>
+            </li>
+            <li>Added <code>featSpellDCBonus</code> combat change that raises spell DC</li>
+            <li>Attacks created from unidentified weapons now create attacks with base weapon stats</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li>Magic Items abilities not resetting on rest</li>
+            <li>Item Type and Action Type in Combat Changes have more meaningful names now.</li>
+            <li>Bag of Holding (and similar items) now correctly do not count content weights to Character carrying weight </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/177">#177</a> - Skill points now correctly calculate for cross and non-class skills</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/179">#179</a> - Skill points now correctly reset after reducing them to 0 in level up data.</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/176">#176</a> - Ability damage correctly changes carry weight</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/185">#185</a> - Disabled abilities disappear from Class Progression table</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/194">#194</a> - Input for sub-skill name now takes all available space</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/194">#169</a> - Wrong special action order in spell fixed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/62">#62</a> - Swarms have correct token size</li>
+        </ul>
         <h2>v0.87.10</h2>
         <h1>Changelog</h1>
         <h3 id="features">Features</h3>

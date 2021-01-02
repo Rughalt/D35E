@@ -269,6 +269,7 @@ Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
 
 Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
+  TopPortraitBar.render(actor)
   if (!(actor instanceof Actor)) return;
 
   if (user !== game.userId) {
@@ -281,6 +282,10 @@ Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
   actor.updateItemResources(item);
 });
 Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
   const actor = game.actors.tokens[data._id];
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
@@ -290,9 +295,6 @@ Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
     for (let i of actor.items) {
       actor.updateItemResources(i);
     }
-  }
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
   }
 });
 
@@ -305,6 +307,10 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
   const actor = game.actors.tokens[combatant.tokenId];
   if (actor != null) {
     actor.refresh();
@@ -380,12 +386,12 @@ Hooks.on("deleteOwnedItem", (actor, data, options, user) => {
 });
 
 Hooks.on("updateActor",  (actor, data, options, user) => {
+  TopPortraitBar.render(actor)
   if (!(actor instanceof Actor)) return;
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  TopPortraitBar.render(actor)
 });
 
 /* -------------------------------------------- */

@@ -1266,6 +1266,8 @@
   "D35E.ACApplyPrecision": "Force apply precision damage",
   "D35E.GMTools": "Game Master Tools",
   "D35E.TotalInventoryValue": "Total Inventory Value",
+  "D35E.SavingThrowOptional": "Saving Throw (Optional)",
+  "D35E.BrowseBuffs": "Browse Buffs",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

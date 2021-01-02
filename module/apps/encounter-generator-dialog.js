@@ -24,9 +24,29 @@ export class EncounterGeneratorDialog extends FormApplication {
             game.D35E.CompendiumDirectoryPF.browser.compendiums.bestiary.loadData()
         }
     }
+    async getCompendiumTables(){
+        let compendium;
+        let grabbedTable  = new Array;
+        let grabbedTables = new Array;
+        const compendiums = [...game.packs.entries]
+        async function compendiumTables(name){
+            const pack = game.packs.get("D35E.roll-tables");
+            const index = await pack.getIndex();
+            const idTable = index.find(i => i.name === `${name}`);
+            const table = await pack.getEntity(idTable._id);
+            return table;
+        }
+        compendium = await compendiums[22].getIndex()
+        for(const item of compendium){
+            grabbedTable = await compendiumTables(item.name)
+            grabbedTables.push(grabbedTable)
+        }
+        return grabbedTables;
+    };
 
-    getTables() {//What Roll tables are our options?
-        let tables = game.tables.entries
+    async getTables() {//What Roll tables are our options?
+        const grabbedTables = await this.getCompendiumTables();
+        let tables = game.tables.entries.concat(grabbedTables)
         let tableArray = new Array
         for (let table of tables) {
             //this is the data I want from the roll tables
@@ -70,9 +90,10 @@ export class EncounterGeneratorDialog extends FormApplication {
     };
 
 //Function to get the monsters
-    getMonsters() {
+    async getMonsters() {
         $("#putMonstersHere").empty()
         //declare stuff
+        const grabbedTables = game.tables.entries.concat(await this.getCompendiumTables());
         let EL = 0
         let monsterArray = new Array
         let targetEL = parseInt(document.getElementById('ELTarget').value)
@@ -80,7 +101,7 @@ export class EncounterGeneratorDialog extends FormApplication {
         let limit = 1000
         let j = 0
         let breakOut = false
-        if (game.tables.entities.find(t => t.data._id === val).results.filter(result => result.type != 2) != 0) {
+        if (grabbedTables.find(t => t.data._id === val).results.filter(result => result.type != 2) != 0) {
             return ui.notifications.error("This Rolltable has Non-Creatures on it, Cannot roll!")
         }
         // Loop limit - total number of loops we want to do.
@@ -97,7 +118,7 @@ export class EncounterGeneratorDialog extends FormApplication {
                 let testEL = new Array
                 //Try to add a monster with valid CR 'testLimit' times
                 while (testCount <= testLimit) {
-                    let monsters = game.tables.entities.find(t => t.data._id === val).roll().results
+                    let monsters = grabbedTables.find(t => t.data._id === val).roll().results
                     testELArray = duplicate(monsterArray)
                     monsters.forEach(monster => {
                         let monsterCR = game.D35E.CompendiumDirectoryPF.browser.compendiums.bestiary.items.find(x => x.item._id === monster.resultId)
@@ -130,7 +151,7 @@ export class EncounterGeneratorDialog extends FormApplication {
                 let countArray = countMonsters(monsterArray);
                 var monsterData = {monsters: countArray}
                 //call the EL calculation function defined earlier the monster array having all the CRs
-                if (monsterArray == 0) {
+                if (monsterArray === 0) {
                     return ui.notifications.error("No monsters could be rolled, is Target EL lower than lowest table CR??")
                 }
                 EL = this.funcELCalc(monsterArray)
@@ -172,8 +193,7 @@ export class EncounterGeneratorDialog extends FormApplication {
                             img: i.img,
                             AC: i.AC,
                             HP: i.HP,
-                            SPD: i.SPD,
-                            count: value
+                            SPD: i.SPD
                         })
 
 
@@ -196,9 +216,9 @@ export class EncounterGeneratorDialog extends FormApplication {
         $(".encounter-block").show()
     }
 
-    getData() {//Load the compendium and get those tables to display!
+    async getData() {//Load the compendium and get those tables to display!
         this.loadCompendium()
-        let data = {tables: this.getTables()}
+        let data = {tables: await this.getTables()}
 
         return data
     };

@@ -4176,14 +4176,17 @@ export class ActorPF extends Actor {
             savingThrowId = "will";
             savingThrowBaseAbility = "wis"
             if (!savingThrowAbility) savingThrowAbility = "wis"
+            if (savingThrowAbility === "") savingThrowAbility = "wis"
         } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf") {
             savingThrowId = "ref";
             savingThrowBaseAbility = "dex"
             if (!savingThrowAbility) savingThrowAbility = "dex"
+            if (savingThrowAbility === "") savingThrowAbility = "dex"
         } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf") {
             savingThrowId = "fort";
             savingThrowBaseAbility = "con"
             if (!savingThrowAbility) savingThrowAbility = "con"
+            if (savingThrowAbility === "") savingThrowAbility = "con"
         }
         // Add contextual notes
         let notes = [];
@@ -5521,6 +5524,13 @@ export class ActorPF extends Actor {
         await this.createEmbeddedEntity("OwnedItem", data);
     }
 
+    async createTrait(itemData, type) {
+        let data = await ItemPF.toTrait(itemData, type);
+
+        if (data._id) delete data._id;
+        await this.createEmbeddedEntity("OwnedItem", data);
+    }
+
     async createWildShapeBuff(itemData) {
         let data = await ItemPF.toPolymorphBuff(itemData, "wildshape");
 
@@ -5730,6 +5740,19 @@ export class ActorPF extends Actor {
             for (let i of this.items) {
                 i.addElapsedTime(8 * 60 * 10);
             }
+        }
+    }
+
+    async _setAverageHitDie() {
+        for (const item of this.items.filter(obj => {
+            return obj.type === "class"
+        })) {
+            let hd = item['data']['data']['hd']
+            let hp = 0;
+            let levels = item['data']['data']['levels'];
+            hp = Math.floor(parseInt(levels) * (hd / 2 + 0.5))
+            await this.updateOwnedItem({_id: item._id, "data.hp": hp});
+            await this.refresh()
         }
     }
 }
