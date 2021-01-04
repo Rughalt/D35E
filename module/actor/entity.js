@@ -3099,7 +3099,7 @@ export class ActorPF extends Actor {
 
                     hasContainerChanged = true;
                 } else {
-                    if (i.data.data.name !== container.name) {
+                    if (i.data.data.container !== container.name) {
                         updateData[`data.items/${i._id}.data.container`] = container.name;
                         hasContainerChanged = true
                     }
@@ -3253,7 +3253,7 @@ export class ActorPF extends Actor {
                         itemUpdateData["data.equipped"] = false;
                         hasContainerChanged = true
                     }
-                    if (i.data.data.name !== container.name) {
+                    if (i.data.data.container !== container.name) {
                         itemUpdateData["data.container"] = container.name;
                         hasContainerChanged = true
                     }
