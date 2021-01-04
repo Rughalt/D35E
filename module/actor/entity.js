@@ -2505,6 +2505,8 @@ export class ActorPF extends Actor {
             if (skl == null) continue;
 
             let acpPenalty = (skl.acp ? Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]) : 0);
+            if (sklKey === "swm")
+                acpPenalty = acpPenalty * 2;
             let ablMod = 0;
             if (skl.ability !== "")
                 ablMod = data1.abilities[skl.ability].mod;
