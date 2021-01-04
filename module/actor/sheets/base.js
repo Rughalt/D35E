@@ -269,7 +269,7 @@ export class ActorSheetPF extends ActorSheet {
     }
     data.skillRanks = skillRanks;
     let sizeMod = CONFIG.D35E.sizeMods[this.actor.data.data.traits.size] || 0
-    data.attackBonuses = { melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod + sizeMod, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod + sizeMod}
+    data.attackBonuses = { sizeMod: sizeMod, melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.melee, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.ranged}
 
     // Fetch the game settings relevant to sheet rendering.
     data.healthConfig =  game.settings.get("D35E", "healthConfig");
@@ -616,6 +616,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.item-create').click(ev => this._onItemCreate(ev));
     html.find('.item-edit').click(this._onItemEdit.bind(this));
     html.find('.item-delete').click(this._onItemDelete.bind(this));
+    html.find(".item .container-selector").change(ev => { this._onItemChangeContainer(ev) });
 
 
     html.find('.spell-add-uses').click(ev => this._onSpellAddUses(ev));
@@ -719,8 +720,10 @@ export class ActorSheetPF extends ActorSheet {
       let label = localStorage.getItem(`D35E-label-${this.id}`)
       let previousData = JSON.parse(localStorage.getItem(`D35E-data-${this.id}`))
       let opened = localStorage.getItem(`D35E-opened-${this.id}`) === "true"
+      let scrollPosition = parseInt(localStorage.getItem(`D35E-position-${this.id}`) || "0")
       if (opened) {
         await this.loadData(entityType, type, subType, filter, previousData, label);
+        $(`#${this.randomUuid}-itemList`).scrollTop(scrollPosition);
       }
     }
 
@@ -1209,12 +1212,19 @@ export class ActorSheetPF extends ActorSheet {
   }
 
   async _onFeatChangeGroup(event) {
-    
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
     const newSource = $(event.currentTarget).val();
     item.update({ "data.classSource": newSource });
+  }
+
+  async _onItemChangeContainer(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.getOwnedItem(itemId);
+    const newSource = $(event.currentTarget).val();
+    item.update({ "data.containerId": newSource });
   }
 
   async _quickChangeItemQuantity(event, add=1) {
@@ -1473,10 +1483,11 @@ export class ActorSheetPF extends ActorSheet {
       misc: { label: CONFIG.D35E.lootTypes["misc"], hasPack: true, pack: `inline:items:loot:misc:${CONFIG.D35E.lootTypes["misc"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
       container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" }, isContainer: true },
       tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], hasPack: true, pack: `inline:items:loot:tradeGoods:-:${CONFIG.D35E.lootTypes["tradeGoods"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
-      all: { label: game.i18n.localize("D35E.All"), canCreate: false, hasActions: true, items: [], canEquip: true, dataset: {} },
+
     };
 
     let containerItems = new Map()
+    let containerList = []
 
     // Partition items by category
     let [items, spells, feats, classes, attacks] = data.items.reduce((arr, item) => {
@@ -1505,7 +1516,7 @@ export class ActorSheetPF extends ActorSheet {
         } else {
           arr[0].push(item)
         }
-        inventory.all.items.push(item);
+        //inventory.all.items.push(item);
       }
 
       return arr;
@@ -1573,8 +1584,10 @@ export class ActorSheetPF extends ActorSheet {
       data.totalInventoryValue += ((i.data.identified || game.user.isGM) ? i.data.price : i.data.unidentified.price) * i.data.quantity
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
-
+      if (i?.data?.subType === 'container') containerList.push({id: i.id, name: i.name})
     }
+
+    data.containerList = containerList;
 
     // Organize Features
     const features = {
@@ -1997,7 +2010,7 @@ export class ActorSheetPF extends ActorSheet {
     console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
     function _filterItems(item, entityType, type, subtype) {
       if (entityType === "spells" && item.type !== type) return false;
-      if (entityType === "items" && item.type === type && (item.data.data.subType === subtype || subtype === "-")) return true;
+      if (entityType === "items" && type.split(',').indexOf(item.type) !== -1 && (item.data.data.subType === subtype || subtype === "-")) return true;
       if (entityType === "feats" && item.type === type && item.data.data.featType === subtype && !item.data.data.uniqueId) return true;
       if (entityType === "buffs" && item.type !== type) return false;
       if (entityType === "enhancements" && item.type !== "enhancement") return false;
@@ -2027,7 +2040,11 @@ export class ActorSheetPF extends ActorSheet {
                                 <span>${i.name}</span>
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
                         </li>`);
-          li.find(".add-from-compendium").mouseup(ev => this._addItemFromBrowser(p.collection, i.id));
+          li.find(".add-from-compendium").mouseup(ev => {
+                localStorage.setItem(`D35E-position-${this.id}`, $(`#${this.randomUuid}-itemList`).scrollTop())
+                this._addItemFromBrowser(p.collection, i.id, ev)
+              }
+          );
           if (!$(`#${this.randomUuid}-itemList li[data-item-id='${i.id}']`).length) {
             $(`#${this.randomUuid}-itemList`).append(li);
             addedItems.push({id: i.id, name: i.name, pack: p.collection, img: i.img})
@@ -2044,12 +2061,21 @@ export class ActorSheetPF extends ActorSheet {
                                 <span>${i.name}</span>
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
                         </li>`);
-        li.find(".add-from-compendium").mouseup(ev => this._addItemFromBrowser(i.pack, i.id));
+        li.find(".add-from-compendium").mouseup(ev => {
+          localStorage.setItem(`D35E-position-${this.id}`, $(`#${this.randomUuid}-itemList`).scrollTop())
+          this._addItemFromBrowser(i.pack, i.id, ev)
+        });
         if (!$(`#${this.randomUuid}-itemList li[data-item-id='${i.id}']`).length) {
           $(`#${this.randomUuid}-itemList`).append(li);
         }
       }
     }
+    $(`.items-add-${this.randomUuid}-openCompendium`).unbind( "mouseup" );
+    $(`.items-add-${this.randomUuid}-openCompendium`).mouseup(ev => {
+      localStorage.setItem(`D35E-opened-${this.id}`,false);
+      $(`.item-add-${this.randomUuid}-overlay`).hide();
+      CompendiumDirectoryPF.browseCompendium(entityType)
+    });
     $(`.items-add-${this.randomUuid}-working-item`).hide();
     $(`.items-add-${this.randomUuid}-list`).show();
     if (filter) {
@@ -2066,16 +2092,16 @@ export class ActorSheetPF extends ActorSheet {
     $(`.item-add-${this.randomUuid}-overlay`).hide();
   }
 
-  async _addItemFromBrowser(packId, itemId) {
-
+  async _addItemFromBrowser(packId, itemId, ev) {
+    $(ev.target).prop('disabled',true)
     let dataType = "compendium";
     let itemData = {};
     // Case 1 - Import from a Compendium pack
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
     if (packItem != null) itemData = packItem.data;
-
-    return this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+    await this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+    $(ev.target).prop('disabled',false)
   }
 
   _filterData() {

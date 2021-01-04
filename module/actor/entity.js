@@ -200,7 +200,7 @@ export class ActorPF extends Actor {
                 "ac", "aac", "sac", "nac","tch",
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
-                "allSavingThrows", "fort", "ref", "will", "turnUndead", "spellResistance", "powerPoints", "sneakAttack",
+                "allSavingThrows", "fort", "ref", "will", "turnUndead","turnUndeadDiceTotal", "spellResistance", "powerPoints", "sneakAttack",
                 "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification"
             ], modifiers: [
                 "untyped", "base", "enh", "dodge", "inherent", "deflection",
@@ -493,6 +493,8 @@ export class ActorPF extends Actor {
                 return "data.attributes.powerPointsTotal";
             case "turnUndead":
                 return "data.attributes.turnUndeadUsesTotal";
+            case "turnUndeadDiceTotal":
+                return "data.attributes.turnUndeadHdTotal";
             case "cmd":
                 return ["data.attributes.cmd.total", "data.attributes.cmd.flatFootedTotal"];
             case "init":
@@ -1496,22 +1498,6 @@ export class ActorPF extends Actor {
             }
         }
 
-        // Update encumbrance
-        this._computeEncumbrance(updateData, srcData1);
-        switch (srcData1.data.attributes.encumbrance.level) {
-            case 0:
-                linkData(srcData1, updateData, "data.attributes.acp.encumbrance", 0);
-                break;
-            case 1:
-                linkData(srcData1, updateData, "data.attributes.acp.encumbrance", 3);
-                linkData(srcData1, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 3));
-                break;
-            case 2:
-                linkData(srcData1, updateData, "data.attributes.acp.encumbrance", 6);
-                linkData(srcData1, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 1));
-                break;
-        }
-        linkData(srcData1, updateData, "data.attributes.acp.total", Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]));
         // Reduce final speed under certain circumstances
         let armorItems = srcData1.items.filter(o => o.type === "equipment");
         if ((updateData["data.attributes.encumbrance.level"] >= 1 && !flags.noEncumbrance) ||
@@ -2014,6 +2000,24 @@ export class ActorPF extends Actor {
                 }
             }
         });
+
+
+        // Update encumbrance
+        this._computeEncumbrance(updateData, data);
+        switch (data.data.attributes.encumbrance.level) {
+            case 0:
+                linkData(data, updateData, "data.attributes.acp.encumbrance", 0);
+                break;
+            case 1:
+                linkData(data, updateData, "data.attributes.acp.encumbrance", 3);
+                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 3));
+                break;
+            case 2:
+                linkData(data, updateData, "data.attributes.acp.encumbrance", 6);
+                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 1));
+                break;
+        }
+        linkData(data, updateData, "data.attributes.acp.total", Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]));
 
         // Reset specific skill bonuses
         for (let sklKey of this._getChangeFlat("skills", "", this.data.data)) {
@@ -3938,8 +3942,8 @@ export class ActorPF extends Actor {
 
         return DicePF.d20Roll({
             event: options.event,
-            parts: ["@mod - @drain + @ablMod + @sizeMod"],
-            data: { mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
+            parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
             title: game.i18n.localize("D35E.Melee"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -3951,8 +3955,8 @@ export class ActorPF extends Actor {
 
         return DicePF.d20Roll({
             event: options.event,
-            parts: ["@mod - @drain + @ablMod + @sizeMod"],
-            data: { mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
+            parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
             title: game.i18n.localize("D35E.Ranged"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -4775,6 +4779,8 @@ export class ActorPF extends Actor {
                 if (finalAc.applyHalf)
                     nonLethal = Math.floor(nonLethal/2);
 
+                damageData.nonLethalDamage = nonLethal
+                damageData.displayDamage = value
                 // Set chat data
                 let chatData = {
                     speaker: ChatMessage.getSpeaker({actor: a.data}),
@@ -4795,6 +4801,7 @@ export class ActorPF extends Actor {
                     hit: hit,
                     crit: crit,
                     isSpell: roll === -1337,
+                    applyHalf: finalAc.applyHalf,
                     fortifyRolled: fortifyRolled,
                     fortifyValue: Math.min(fortifyValue,100),
                     fortifyRoll: fortifyRoll,
@@ -5646,10 +5653,19 @@ export class ActorPF extends Actor {
         }
     }
 
-    rest(restoreHealth, restoreDailyUses, longTermCare) {
+    async rest(restoreHealth, restoreDailyUses, longTermCare) {
         const actorData = this.data.data;
 
         const updateData = {};
+
+
+        if (this.items !== undefined && this.items.size > 0) {
+            // Update items
+            for (let i of this.items) {
+                await i.addElapsedTime(8 * 60 * 10);
+            }
+        }
+
         // Restore health and ability damage
         if (restoreHealth) {
             const hd = actorData.attributes.hd.total;
@@ -5735,12 +5751,6 @@ export class ActorPF extends Actor {
         }
 
         this.update(updateData);
-        if (this.items !== undefined && this.items.size > 0) {
-            // Update items
-            for (let i of this.items) {
-                i.addElapsedTime(8 * 60 * 10);
-            }
-        }
     }
 
     async _setAverageHitDie() {

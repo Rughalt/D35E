@@ -1,4 +1,4 @@
-<form>
+<form class="attack-form">
     {{#if hasAttack}}
     <div class="form-group">
         <label>{{localize "D35E.AttackRollBonus"}}</label>
@@ -349,4 +349,13 @@
             {{/select}}
         </select>
     </div>
+    <script>
+        $('.attack-form').closest("section").find("button[data-button='multi']").bind( "click", function() {
+            $( this ).prop('disabled', true);
+
+        });
+        $('.attack-form').closest("section").find("button[data-button='normal']").bind( "click", function() {
+            $( this ).prop('disabled', true);
+        });
+    </script>
 </form>

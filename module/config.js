@@ -1033,6 +1033,7 @@ D35E.buffTargets = {
     "vigor": "D35E.Vigor",
     "sneakAttack": "D35E.SneakAttackBonusDice",
     "turnUndead": "D35E.TurnUndeadUses",
+    "turnUndeadDiceTotal": "D35E.TurnUndeadDiceTotal",
     "spellResistance": "D35E.SpellResistance",
     "cr": "D35E.CR",
     "fortification": "D35E.Fortification",

@@ -962,6 +962,11 @@
       background: linear-gradient(to right, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.0)100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.0) 10%, rgba(255, 255, 255, 0.0) 90%, rgba(255, 255, 255, 0.3)100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
       text-shadow: none !important;
     }
+    &:disabled {
+      filter: grayscale(1);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
   }
 
   .rollable.image-d20 {
@@ -1248,7 +1253,7 @@
       }
     }
 
-    a.open-compendium-pack {
+    a.open-compendium-pack:not(.open-add-items) {
 
       color: #2C606D!important;
       &:hover {

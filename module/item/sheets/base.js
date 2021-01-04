@@ -422,15 +422,16 @@ export class ItemSheetPF extends ItemSheet {
 
                 for (let ability of this.item.data.data.addedAbilities || []) {
                     let e = CACHE.AllAbilities.get(ability.uid);
-                    data.children.addedAbilities.push({
+                    let _e = {
                         item:e,
                         level:ability.level,
                         pack:e.pack,
-                    });
+                    }
+                        data.children.addedAbilities.push(_e);
                     if (!data.childItemLevels.has(ability.level)) {
                         data.childItemLevels.set(ability.level, [])
                     }
-                    data.childItemLevels.get(ability.level).push(e);
+                    data.childItemLevels.get(ability.level).push(_e);
                     if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
                     if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
                         data.abilitiesDescription.push({

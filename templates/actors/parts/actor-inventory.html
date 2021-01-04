@@ -1,3 +1,6 @@
+<div class="flexrow" style="flex: 0">
+  <h2 class="block-header" style="flex: 1">{{ localize 'D35E.Wealth'}}</h2>
+</div>
 <div class="inventory-filters">
 
   <ol class="currency flexrow">
@@ -23,20 +26,24 @@
   </ol>
   {{/if}}
 </div>
-
+<div class="flexrow" style="flex: 0"><h2 class="block-header" style="flex: 1">{{ localize
+  'D35E.Items'}}</h2><a
+        class="btn open-add-items point-buy-button blue-button open-compendium-pack" data-pack="inline:items:weapon,equipment,consumable,loot:-:{{ localize 'D35E.Items'}}" onkeydown="e.preventDefault();">
+  {{ localize 'D35E.AddItem' }}
+</a></div>
 {{!-- Inventory Navigation --}}
-<nav class="sheet-navigation tabs subtabs inventory" data-group="inventory">
-  {{#each sections as |section sid|}}
-  <a class="item" data-tab="{{sid}}">{{section.label}}</a>
-  {{/each}}
-</nav>
+<!--<nav class="sheet-navigation tabs subtabs inventory" data-group="inventory">-->
+<!--  {{#each sections as |section sid|}}-->
+<!--  <a class="item" data-tab="{{sid}}">{{section.label}}</a>-->
+<!--  {{/each}}-->
+<!--</nav>-->
 
-<section class="inventory-body">
-  {{#each sections as |section sid|}}
-  <div class="tab inventory-group flexcol" data-group="inventory" data-tab="{{sid}}">
+<!--<section class="inventory-body">-->
+<!--  <div class="tab inventory-group flexcol" data-group="inventory" data-tab="{{sid}}">-->
     <ol class="inventory-list sub-scroll scroll-inventory">
-      <li class="inventory-header flexrow">
-        <h3 class="item-name flexrow"></h3>
+  {{#each sections as |section sid|}}
+      <li class="inventory-header flexrow scrolling-header" >
+        <h3 class="item-name flexrow">{{section.label}}</h3>
 
         {{#if section.hasSlots}}<div class="item-detail item-slot"><span>{{ localize 'D35E.Slot' }}</span></div>{{/if}}
         {{#if section.hasActions}}<div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>{{/if}}
@@ -46,20 +53,20 @@
         <div class="item-detail item-identified"><span>{{ localize 'D35E.IdentifiedShort' }}</span></div>
         {{/if}}
         <div class="item-detail item-carried"><span>{{ localize 'D35E.Carried' }}</span></div>
-        <div class="item-detail item-container"><span>{{ localize 'D35E.Container' }}</span></div>
         {{#if section.canEquip}}
         <div class="item-detail item-equipped"><span>{{ localize 'D35E.Equipped' }}</span></div>
         {{/if}}
+        <div class="item-detail item-container"><span>{{ localize 'D35E.Container' }}</span></div>
         <div class="item-detail item-uses"><span>{{ localize 'D35E.ChargePlural' }}</span></div>
 
         {{#if ../owner}}
         <div class="item-controls">
           {{#if section.canCreate}}
-          {{#if section.hasPack}}
-          <a  class="open-compendium-pack" data-pack="{{section.pack}}" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
-          <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}
-          </a>
-          {{/if}}
+<!--          {{#if section.hasPack}}-->
+<!--          <a  class="open-compendium-pack" data-pack="{{section.pack}}" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>-->
+<!--          <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}-->
+<!--          </a>-->
+<!--          {{/if}}-->
           <a class="item-control item-create" style="flex: 0; margin-left: 4px;" title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"{{/each}}>
           <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
           </a>
@@ -133,16 +140,21 @@
             <a class="item-control item-carry"><span>{{item.labels.carried}}</span></a>
           </div>
 
-          <div class="item-detail item-container">
-            <span>{{item.container}}</span>
-          </div>
-
           {{#if section.canEquip}}
           <div class="item-detail item-equipped">
             <a class="item-control item-equip"><span>{{item.labels.equipped}}</span></a>
           </div>
           {{/if}}
-
+          <div class=" item-detail item-container">
+            <select name="item.data.containerId" style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String" class="container-selector">
+              {{#select item.data.containerId}}
+              <option value="">{{ localize 'D35E.None' }}</option>
+              {{#each @root.containerList as |container a|}}
+              <option value="{{container.id}}" style="text-transform: capitalize">{{container.name}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+          </div>
           <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
             {{#unless item.showUnidentifiedData}}
             {{#if item.isCharged}}
@@ -157,6 +169,7 @@
             {{/unless}}
           </div>
 
+
           {{#if ../../owner}}
           <div class="item-controls">
             <a class="item-control item-quantity-add"><i class="fas fa-plus"></i></a>
@@ -166,17 +179,27 @@
           </div>
           {{/if}}
           {{#if section.isContainer}}
-          <div class="item-summary" style="border-top: none; border-bottom: 1px solid #c9c7b8;">
-            <h3 class="block-header">Container Contents</h3>
-            <ol class="item-list">
+          <div class="item-summary" style="padding: 0">
+            <ol class="item-list" style="border-top: none; border-bottom: 1px solid #c9c7b8; padding-left: 11px; margin-left: 12px; border-left: 3px dotted #c9c7b8;">
               {{#each item.containerItems as |iitem iiid|}}
-              <li class="item flexrow" data-item-id="{{iitem._id}}">
-                <div class="item-name flexrow rollable">
+              <li class="item item-box flexrow" data-item-id="{{iitem._id}}">
+                <div class="item-name child-item  flexrow rollable">
                   <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
                   <h4>
                     {{~#if iitem.isStack}}({{iitem.data.quantity}}) {{/if}}{{iitem.name}}</h4>
                 </div>
-
+                <div class="item-detail item-container">
+                  <select name="iitem.data.containerId" style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String" class="container-selector">
+                    {{#select iitem.data.containerId}}
+                    <option value="">{{ localize 'D35E.None' }}</option>
+                    {{#each @root.containerList as |container a|}}
+                    <option value="{{container.id}}" style="text-transform: capitalize">{{container.name}}</option>
+                    {{/each}}
+                    {{/select}}
+                  </select>
+                </div>
+                <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                </div>
                 {{#if ../../../owner}}
                 <div class="item-controls">
                   <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
@@ -195,10 +218,10 @@
         </li>
         {{/each}}
       </ol>
-    </ol>
-  </div>
   {{/each}}
-</section>
+    </ol>
+<!--</div>-->
+<!--</section>-->
 
 
 {{#unless isLootSheet}}

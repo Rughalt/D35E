@@ -422,6 +422,17 @@
     overflow-y: auto;
   }
 
+  a.open-compendium-browser {
+    border-radius: 4px;
+    height: 30px;
+    display: block;
+    line-height: 30px;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 4px;
+    font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  }
+
   /* ----------------------------------------- */
   /*  Attributes                               */
   /* ----------------------------------------- */
@@ -455,6 +466,8 @@
       font-size: 18px;
       font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
     }
+
+
 
 
 
@@ -1530,7 +1543,7 @@
   /* ----------------------------------------- */
   /*  Spellbook                                */
   /* ----------------------------------------- */
-    a.configure-spellbook {
+    a.configure-spellbook, a.open-add-items {
       border-radius: 4px;
       height: 30px;
       display: block;
@@ -1682,7 +1695,7 @@
     height: calc(100% - 30px);
     left: 0;
     top: 30px;
-    z-index: 1;
+    z-index: 30;
 
     .item-add-list {
       border-bottom-right-radius: 0;

@@ -267,15 +267,42 @@ export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
   return formula;
 };
 
-export const sizeNaturalDie = function(block, targetSize="M", crit=1) {
+export const sizeMonkDamageDie = function(level, targetSize="M", crit=1) {
+  let monkLevelDamageDies =
+      [
+        [1,6],
+        [1,6],
+        [1,6],
+        [1,8],
+        [1,8],
+        [1,8],
+        [1,8],
+        [1,10],
+        [1,10],
+        [1,10],
+        [1,10],
+        [2,6],
+        [2,6],
+        [2,6],
+        [2,6],
+        [2,8],
+        [2,8],
+        [2,8],
+        [2,8],
+        [2,10],
+      ]
+  return sizeDie(monkLevelDamageDies[Math.max(Math.min(level,20),1)][0],monkLevelDamageDies[Math.max(Math.min(level,20),1)][1], targetSize, crit);
+};
+
+export const sizeNaturalDie= function(block, targetSize="M", crit=1) {
   if (typeof targetSize === "string") targetSize = Object.values(CONFIG.D35E.sizeChart).indexOf(targetSize.toUpperCase());
   else if (typeof targetSize === "number") targetSize = Math.max(0, Math.min(Object.values(CONFIG.D35E.sizeChart).length - 1, Object.values(CONFIG.D35E.sizeChart).indexOf("M") + targetSize));
   let naturalDamageSizes =
       [
-          ['0','1','1','1d3','1d4','1d6','1d8','2d6','2d8'],
-          ['1','1d2','1d3','1d4','1d6','1d8','2d6','2d8','4d6'],
-          ['0','1','1d2','1d3','1d4','1d6','1d8','2d6','2d8'],
-          ['0','1','1d2','1d4','1d6','1d8','2d6','2d8','4d6'],
+        ['0','1','1','1d3','1d4','1d6','1d8','2d6','2d8'],
+        ['1','1d2','1d3','1d4','1d6','1d8','2d6','2d8','4d6'],
+        ['0','1','1d2','1d3','1d4','1d6','1d8','2d6','2d8'],
+        ['0','1','1d2','1d4','1d6','1d8','2d6','2d8','4d6'],
       ]
   let formula = naturalDamageSizes[block][targetSize+1]
   if (crit !== 1 && formula.match(/^([0-9]+)d([0-9]+)(.*)/)) {
@@ -314,6 +341,12 @@ export const sizeRoll = function(origCount, origSides, targetSize="M", crit=1) {
 export const sizeNaturalRoll = function(block, targetSize="M", crit=1) {
   return new Roll(sizeNaturalDie(block, targetSize, crit)).roll().total;
 };
+
+
+export const sizeMonkDamageRoll = function(level, targetSize="M", crit=1) {
+  return new Roll(sizeMonkDamageDie(level, targetSize, crit)).roll().total;
+};
+
 
 export const getActorFromId = function(id) {
   const speaker = ChatMessage.getSpeaker();

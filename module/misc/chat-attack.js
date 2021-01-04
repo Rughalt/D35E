@@ -310,13 +310,13 @@ export class ChatAttack {
         }
     }
 
-    async addEffect({primaryAttack = true, actor = null} = {}) {
+    async addEffect({primaryAttack = true, actor = null, useAmount = 1} = {}) {
         if (!this.item) return;
         this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor, this.rollData);
-        this.addSpecial(actor);
+        this.addSpecial(actor, useAmount);
     }
 
-    async addSpecial(actor = null) {
+    async addSpecial(actor = null, useAmount = 1) {
         let _actor = this.item.actor;
         if (actor != null)
             _actor = actor
@@ -340,7 +340,7 @@ export class ChatAttack {
 
             this.special.push({
                 label: action.name,
-                value: action.action.replace(/\(@cl\)/g, `${cl}`),
+                value: action.action.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`),
                 isTargeted: action.action.endsWith("target") || action.action.endsWith("target;"),
                 action: "customAction",
                 img: action.img,

@@ -1268,6 +1268,11 @@
   "D35E.TotalInventoryValue": "Total Inventory Value",
   "D35E.SavingThrowOptional": "Saving Throw (Optional)",
   "D35E.BrowseBuffs": "Browse Buffs",
+  "D35E.Half": "Half",
+  "D35E.TurnUndeadDiceTotal": "Turn Undead Level",
+  "D35E.ItemHasUID": "This item has Unique ID set. It is designed to be added to characters <strong>only</strong> by adding it as class or race ability.<br><br>Remember to start your own UIDs with <span style='font-family: monospace'>user-</span> prefix.",
+  "D35E.AddItem": "Add Item",
+  "D35E.Wealth": "Wealth",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1280,5 +1285,7 @@
   "SETTINGS.D35EHideSpellDescriptionsN": "Hide short Spell Descriptions",
   "SETTINGS.D35EHideSpellDescriptionsH": "Hides short description from spell list in the character sheet",
   "SETTINGS.D35EColorblindN": "Use Colorblind Accessible Colors",
-  "SETTINGS.D35EColorblindL": "Changes some colors to use Accessible Palette"
+  "SETTINGS.D35EColorblindL": "Changes some colors to use Accessible Palette",
+  "SETTINGS.D35EDisplayItemsInContainersN": "Display items in Containers in Categories",
+  "SETTINGS.D35EDisplayItemsInContainersH": "Will display items stored in containers in correct categories as well as in All category"
 }

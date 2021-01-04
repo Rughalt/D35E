@@ -1405,7 +1405,7 @@ export class ItemPF extends Item {
 
                         }
                     }
-                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
+                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1});
 
                     // Add to list
                     attacks.push(attack);
@@ -1417,7 +1417,7 @@ export class ItemPF extends Item {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
                 await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
-                await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
+                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1});
                 // Add to list
                 attacks.push(attack);
             }
@@ -1425,13 +1425,13 @@ export class ItemPF extends Item {
             else if (this.hasEffect) {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
-                await attack.addEffect({primaryAttack: primaryAttack, actor:actor});
+                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1});
                 // Add to list
                 attacks.push(attack);
             } else if (getProperty(this.data, "data.actionType") === "special") {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
-                await attack.addSpecial(actor);
+                await attack.addSpecial(actor,rollData.useAmount || 1);
                 // Add to list
                 attacks.push(attack);
             }
@@ -2330,7 +2330,7 @@ export class ItemPF extends Item {
         }
     }
 
-    addElapsedTime(time) {
+    async addElapsedTime(time) {
         if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
             if (!this.data.data.timeline.enabled)
                 return
@@ -2340,15 +2340,15 @@ export class ItemPF extends Item {
                 if (!this.data.data.timeline.deleteOnExpiry) {
                     let updateData = {}
                     updateData["data.active"] = false;
-                    this.update(updateData);
+                    await this.update(updateData);
                 } else {
                     if (!this.actor) return;
-                    this.actor.deleteOwnedItem(this.id)
+                    await this.actor.deleteOwnedItem(this.id)
                 }
             } else {
                 let updateData = {}
                 updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
-                this.update(updateData);
+                await this.update(updateData);
             }
         }
     }

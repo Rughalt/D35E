@@ -111,12 +111,42 @@
         <h4 class="attribute-name box-title rollable">{{ localize 'D35E.Melee' }}</h4>
         <div class="attribute-value tooltip">
           <span>{{attackBonuses.melee}}</span>
+          <span class="tooltipcontent">
+              {{ localize 'D35E.FromSources' }}:<br/>
+               {{ localize 'D35E.BAB' }}: {{data.attributes.bab.total}}<br/>
+               {{ localize 'D35E.AbilityStr' }}: {{data.abilities.str.mod}}<br/>
+               {{ localize 'D35E.Size' }}: {{attackBonuses.sizeMod}}<br/>
+            {{#if data.attributes.energyDrain}}
+              {{ localize 'D35E.LevelDrain' }}: -{{data.attributes.energyDrain}}<br/>
+            {{/if}}
+            {{#if data.attributes.attack.general}}
+              {{localize "D35E.AttackBonuses"}}: {{data.attributes.attack.general}}<br/>
+            {{/if}}
+            {{#if data.attributes.attack.melee}}
+              {{localize "D35E.Melee"}} {{localize "D35E.AttackBonuses"}}: {{data.attributes.attack.melee}}<br/>
+            {{/if}}
+          </span>
         </div>
       </li>
       <li class="attribute ranged-bab" data-attribute="ranged-ab">
         <h4 class="attribute-name box-title rollable">{{ localize 'D35E.Ranged' }}</h4>
         <div class="attribute-value tooltip">
           <span>{{attackBonuses.ranged}}</span>
+          <span class="tooltipcontent">
+              {{ localize 'D35E.FromSources' }}:<br/>
+               {{ localize 'D35E.BAB' }}: {{data.attributes.bab.total}}<br/>
+               {{ localize 'D35E.AbilityDex' }}: {{data.abilities.dex.mod}}<br/>
+               {{ localize 'D35E.Size' }}: {{attackBonuses.sizeMod}}<br/>
+              {{#if data.attributes.energyDrain}}
+                {{ localize 'D35E.LevelDrain' }}: -{{data.attributes.energyDrain}}<br/>
+              {{/if}}
+            {{#if data.attributes.attack.general}}
+              {{localize "D35E.AttackBonuses"}}: {{data.attributes.attack.general}}<br/>
+            {{/if}}
+            {{#if data.attributes.attack.ranged}}
+              {{localize "D35E.Ranged"}} {{localize "D35E.AttackBonuses"}}: {{data.attributes.attack.ranged}}<br/>
+            {{/if}}
+          </span>
         </div>
       </li>
     </ul>

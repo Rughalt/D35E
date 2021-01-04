@@ -68,7 +68,7 @@
             {{#if damageData.isHealing}}
             <div class="dice-flavor">{{localize "D35E.HealingApplied"}}</div>
             {{else}}
-            <div class="dice-flavor">{{localize "D35E.DamageApplied"}}</div>
+            <div class="dice-flavor">{{localize "D35E.DamageApplied"}}{{#if applyHalf}} ({{localize "D35E.Half"}}){{/if}}</div>
             {{/if}}
             <div class="flexrow">
                 <div class="flexcol">
@@ -124,7 +124,7 @@
             {{/if}}
         </div>
     </div>
-    <div class="chat-attack">
+    <div class="chat-attack chat-attack-details">
         <div class="dice-roll attack-roll flexcol">
             <div class="dice-flavor">{{localize "D35E.DRERApplied"}}</div>
             {{#if damageData.baseBeforeDR}}

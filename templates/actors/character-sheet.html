@@ -47,6 +47,9 @@
         <ol class="item-list" style="overflow: auto" id="{{randomUuid}}-itemList">
 
         </ol>
+        <div style="flex: 0">
+          <a class="blue-button open-compendium-browser items-add-{{randomUuid}}-openCompendium" style="text-align: center">Open Browser</a>
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +154,8 @@
           <li>
             <input type="text" name="data.details.weight" value="{{data.details.weight}}" placeholder="{{ localize 'D35E.Weight' }}" title="{{ localize 'D35E.Weight' }}"/>
           </li>
-          <li class="flexrow race-container item  {{#unless race}}norace{{/unless}}" {{#if race}}data-item-id="{{race._id}}"{{/if}} style="width: 66.66%">
+          <ol class="item-list race-container" style="width: 66.66%">
+          <li class="flexrow item {{#unless race}}norace{{/unless}}" {{#if race}}data-item-id="{{race._id}}"{{/if}} style="width: 100%">
             <div class="race item-image rollable" style="background-image: url({{race.img}})" title="{{labels.race}}">
               {{#unless race}}{{ localize 'D35E.Race' }}
               {{/unless}}
@@ -180,6 +184,7 @@
               {{/if}}
             </div>
           </li>
+          </ol>
 
           <li>
            <span style="margin-left: 4px">{{data.attributes.speed.land.total}}{{ localize 'D35E.DistFtAbbr' }} ({{ localize 'D35E.SpeedLand' }}) </span>
