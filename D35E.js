@@ -20,7 +20,14 @@ import { ItemSheetPF } from "./module/item/sheets/base.js";
 import { CompendiumDirectoryPF } from "./module/sidebar/compendium.js";
 import { PatchCore } from "./module/patch-core.js";
 import { DicePF } from "./module/dice.js";
-import { getItemOwner, sizeDie, getActorFromId, isMinimumCoreVersion } from "./module/lib.js";
+import {
+  getItemOwner,
+  sizeDie,
+  getActorFromId,
+  isMinimumCoreVersion,
+  sizeNaturalDie,
+  sizeMonkDamageDie
+} from "./module/lib.js";
 import { ChatMessagePF } from "./module/sidebar/chat-message.js";
 import { TokenQuickActions } from "./module/token-quick-actions.js";
 import { TopPortraitBar } from "./module/top-portrait-bar.js";
@@ -30,6 +37,8 @@ import {SemanticVersion} from "./semver.js";
 import {sizeInt} from "./module/lib.js";
 import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
+import D35ELayer from "./module/layer.js";
+import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -62,9 +71,12 @@ Hooks.once("init", async function() {
     CompendiumDirectoryPF,
     rollPreProcess: {
       sizeRoll: sizeDie,
+      sizeNaturalRoll: sizeNaturalDie,
+      sizeMonkDamageRoll: sizeMonkDamageDie,
       sizeVal: sizeInt
     },
     migrateWorld: migrations.migrateWorld,
+    createdMeasureTemplates: new Set()
   };
 
   // Record Configuration Values
@@ -78,6 +90,7 @@ Hooks.once("init", async function() {
   // Register System Settings
   registerSystemSettings();
 
+  D35ELayer.registerLayer();
   // Preload Handlebars Templates
   await preloadHandlebarsTemplates();
 
@@ -92,11 +105,11 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable", "equipment", "loot", "weapon", "buff", "attack", "race", "enhancement"], makeDefault: true });
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
-  $('body').toggleClass('d35gm', game.user.isGM);
+  $('body').toggleClass('color-blind', game.settings.get("D35E", "colorblindColors"));
 });
 
 
@@ -108,15 +121,14 @@ Hooks.once("init", async function() {
  * This function runs after game data has been requested and loaded from the servers, so entities exist
  */
 Hooks.once("setup", function() {
-
   // Localize CONFIG objects once up-front
   const toLocalize = [
     "abilities", "abilitiesShort", "alignments", "currencies", "distanceUnits", "itemActionTypes", "senses", "skills", "targetTypes",
     "timePeriods", "savingThrows", "ac", "acValueLabels", "featTypes", "conditions", "lootTypes", "flyManeuverabilities",
     "spellPreparationModes", "weaponTypes", "weaponProperties", "spellComponents", "spellSchools", "spellLevels", "conditionTypes",
-    "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
+    "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "actorTokenSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
     "limitedUsePeriods", "equipmentTypes", "equipmentSlots", "consumableTypes", "attackTypes", "buffTypes", "buffTargets", "contextNoteTargets",
-    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race"
+    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets","savingThrowTypes"
   ];
 
   const doLocalize = function(obj) {
@@ -127,7 +139,11 @@ Hooks.once("setup", function() {
     }, {});
   };
   for ( let o of toLocalize ) {
-    CONFIG.D35E[o] = doLocalize(CONFIG.D35E[o]);
+    try {
+      CONFIG.D35E[o] = doLocalize(CONFIG.D35E[o]);
+    } catch (e) {
+      //ignore
+    }
   }
 });
 
@@ -137,7 +153,9 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  const NEEDS_MIGRATION_VERSION = "0.86.7";
+
+  $('body').toggleClass('d35gm', game.user.isGM);
+  const NEEDS_MIGRATION_VERSION = "0.87.7";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
     PREVIOUS_MIGRATION_VERSION = PREVIOUS_MIGRATION_VERSION.toString() + ".0";
@@ -171,6 +189,7 @@ Hooks.once("ready", async function() {
     ).default();
     return;
   }
+
   // Edit next line to match module.
   const system = game.system;
   const title = system.data.title;
@@ -225,11 +244,14 @@ Hooks.on("deleteActor", function() {
 
 Hooks.on('createActor', (actor, data, options) => {
   if( actor.data.type === 'character') {
+    let updateData = {}
     if (actor.data.data.details?.levelUpProgression === undefined || actor.data.data.details?.levelUpProgression === null) {
-      let updateData = {}
       updateData["data.details.levelUpProgression"] = true;
-      actor.update(updateData)
     }
+    updateData["token.vision"] = true;
+    updateData["token.actorLink"] = true;
+    if (updateData)
+      actor.update(updateData)
   }
 });
 /* -------------------------------------------- */
@@ -256,30 +278,32 @@ Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
 
 Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
+  TopPortraitBar.render(actor)
   if (!(actor instanceof Actor)) return;
 
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  actor.refresh(options); //We do not want to update actor again if we are in first update loop
   //actor.updateContainerData(updateData)
   const item = actor.getOwnedItem(changedData._id);
   if (item == null) return;
   actor.updateItemResources(item);
 });
 Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
   const actor = game.actors.tokens[data._id];
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
+
     actor.refresh(options);
 
     // Update items
     for (let i of actor.items) {
       actor.updateItemResources(i);
     }
-  }
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
   }
 });
 
@@ -292,6 +316,10 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {
+  if (user !== game.userId) {
+    console.log("Not updating actor as action was started by other user")
+    return
+  }
   const actor = game.actors.tokens[combatant.tokenId];
   if (actor != null) {
     actor.refresh();
@@ -311,14 +339,28 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
   const actor = combat.combatant.actor;
   if (actor != null) {
     actor.refresh();
+    let itemUpdateData = []
+    let itemResourcesData = {}
     if (actor.items !== undefined && actor.items.size > 0) {
       // Update items
       for (let i of actor.items) {
-        actor.updateItemResources(i);
-        i.addElapsedTime(1);
+        actor.getItemResourcesUpdate(i, itemResourcesData);
+        let _data = i.getElapsedTimeUpdateData(1)
+        if (_data && !_data.delete) itemUpdateData.push(_data);
+        else if (_data && _data.delete === true) {
+          actor.deleteOwnedItem(_data._id, { stopUpdates: true })
+        }
       }
     }
+
+    if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
+    if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
   }
+});
+
+
+Hooks.on("createMeasuredTemplate", (scene, _template, data, user) => {
+  game.D35E.createdMeasureTemplates.add(_template._id)
 });
 
 // Create race on actor
@@ -353,12 +395,12 @@ Hooks.on("deleteOwnedItem", (actor, data, options, user) => {
 });
 
 Hooks.on("updateActor",  (actor, data, options, user) => {
+  TopPortraitBar.render(actor)
   if (!(actor instanceof Actor)) return;
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  TopPortraitBar.render(actor)
 });
 
 /* -------------------------------------------- */
@@ -370,6 +412,19 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
   createItemMacro(data.data, slot);
   return false;
 });
+
+Hooks.on('diceSoNiceReady', (dice3d) => {
+  dice3d.addColorset({
+    name: 'Legacies of the Dragon',
+    description: "Legacies of the Dragon",
+    category: "Standard",
+    foreground: '#fff4eb',
+    background: "#340403",
+    texture: 'dragon',
+    edge: '#340403'
+  },"default");
+
+})
 
 /**
  * Create a Macro from an Item drop.
@@ -438,7 +493,7 @@ function rollDefenses({actorName=null, actorId=null}={}) {
   if (!actor) actor = game.actors.get(speaker.actor);
   if (!actor) return ui.notifications.warn("No applicable actor found");
 
-  return actor.rollDefenses();
+  return actor.displayDefenses();
 };
 
 function rollTurnUndead({actorName=null, actorId=null}={}) {
@@ -455,3 +510,31 @@ function rollTurnUndead({actorName=null, actorId=null}={}) {
 
   return actor.rollTurnUndead();
 };
+
+
+Hooks.on("getSceneControlButtons", (controls) => {
+
+  if (!game.user.isGM) return;
+  controls.push({
+    name: "d35e-gm-tools",
+    title: "D35E.GMTools",
+    icon: "fas fa-dungeon",
+    layer: "D35ELayer",
+    tools: [
+      {
+        name: "d35e-gm-tools-encounter-generator",
+        title: "D35E.EncounterGenerator",
+        icon: "fas fa-dragon",
+        onClick: () => {new EncounterGeneratorDialog().render(true)
+          //QuestLog.render(true)
+          // Place your code here - <app class name>.render()
+          // Remember you must import file on the top - look at imports
+        },
+        button: true
+      }
+    ]
+  });
+});
+
+
+

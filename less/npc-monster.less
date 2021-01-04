@@ -1,0 +1,49 @@
+@import "./variables.less";
+
+.D35E.sheet.actor.npc.monster {
+  min-width: 340px;
+  min-height: 200px;
+  height: auto !important;
+
+  .sheet-header {
+    img.profile {
+      flex: 0 0 140px;
+      max-width: 140px;
+      min-height: 100px;
+      max-height: 140px;
+    }
+
+    .header-top {
+      max-height: 40px;
+      
+      .charname {
+        padding: 0;
+        margin: 0;
+
+        input[type="text"] {
+          padding: 0;
+          margin: 0;
+          font-size: 24px;
+          height: 24px;
+        }
+      }
+
+      .charlevel {
+        flex: 0 0 128px;
+      }
+    }
+
+    .attribute.health {
+      border-right: 0;
+    }
+  }
+
+  .monsterblock {
+    .actor-name {
+      text-align: left;
+      text-transform: uppercase;
+      flex: 0;
+      color: #3a5868;
+    }
+  }
+}

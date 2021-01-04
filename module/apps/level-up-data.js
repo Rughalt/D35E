@@ -34,7 +34,7 @@ export class LevelUpDataDialog extends FormApplication {
                 label: this.options.skillset.all.skills[s].label,
                 arbitrary: this.options.skillset.all.skills[s].arbitrary,
                 custom: this.options.skillset.all.skills[s].custom,
-                baseRank: this.options.skillset.all.skills[s].rank - (this.levelUpData.skills[s] !== undefined ? this.levelUpData.skills[s].rank : 0),
+                baseRank: this.options.skillset.all.skills[s].rank - (this.levelUpData.skills[s] !== undefined ? (this.levelUpData.skills[s].cls ? this.levelUpData.skills[s].rank : this.levelUpData.skills[s].rank/2) : 0),
                 rt: this.options.skillset.all.skills[s].rt,
                 cs: this.options.skillset.all.skills[s].cs,
                 subSkills: {}
@@ -47,22 +47,25 @@ export class LevelUpDataDialog extends FormApplication {
                     label: this.options.skillset.all.skills[s].subSkills[sb].label,
                     arbitrary: this.options.skillset.all.skills[s].subSkills[sb].arbitrary,
                     custom: this.options.skillset.all.skills[s].subSkills[sb].custom,
-                    baseRank: this.options.skillset.all.skills[s].subSkills[sb].rank - ((this.levelUpData.skills[s] !== undefined && this.levelUpData.skills[s].subskills[sb] !== undefined) ? this.levelUpData.skills[s].subskills[sb].rank : 0),
+                    baseRank: this.options.skillset.all.skills[s].subSkills[sb].rank - ((this.levelUpData.skills[s] !== undefined && this.levelUpData.skills[s].subskills[sb] !== undefined) ? (this.levelUpData.skills[s].subskills[sb].cls ? this.levelUpData.skills[s].subskills[sb].rank : this.levelUpData.skills[s].subskills[sb].rank/2) : 0),
                     rt: this.options.skillset.all.skills[s].rt,
                     cs: this.options.skillset.all.skills[s].cs,
                 }
             })
         })
+        let classes = this.actor.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
+            return a.sort - b.sort;
+        })
         let data = {
             actor: this.actor,
-            classes: this.actor.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
-                return a.sort - b.sort;
-            }),
+            classes: classes,
+            classesJson: JSON.stringify(classes.map(_c => { return {id: _c._id, classSkills: _c.data.classSkills}})),
             level: this.actor.data.details.levelUpData.findIndex(a => a.id === this.levelUpId) + 1,
             totalLevel: this.actor.data.details.level.available,
             skillset: skillset,
             maxSkillRank: this.actor.data.details.level.available + 3,
             levelUpData: this.levelUpData,
+            bonusSkillPoints: this.actor.data?.counters?.bonusSkillPoints?.value || 0,
             config: CONFIG.D35E}
         return data
     }
@@ -93,13 +96,13 @@ export class LevelUpDataDialog extends FormApplication {
                     a.classImage = _class.img;
                     a.classId = _class._id;
                     a.hp = hp;
-
                     Object.keys(formData).forEach(s => {
                         let key = s.split(".");
                         if (key[0] === "skills" && key.length === 3) {
                             if (a.skills[key[1]] === undefined) {
-                                a.skills[key[1]] = {rank: 0, cls: this.actor.data.skills[key[1]]}
+                                a.skills[key[1]] = {rank: 0, cls: _class.data.classSkills[key[1]]}
                             }
+                            a.skills[key[1]].cls = _class.data.classSkills[key[1]]
                             a.skills[key[1]].rank = parseInt(formData[s])
                         }
                         if (key[0] === "skills" && key.length === 5) {
@@ -107,8 +110,9 @@ export class LevelUpDataDialog extends FormApplication {
                                 a.skills[key[1]] = {subskills: {}}
                             }
                             if (a.skills[key[1]].subskills[key[3]] === undefined) {
-                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: this.actor.data.skills[key[1]].subSkills[key[3]]}
+                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: _class.data.classSkills[key[1]]}
                             }
+                            a.skills[key[1]].subskills[key[3]].cls = _class.data.classSkills[key[1]]
                             a.skills[key[1]].subskills[key[3]].rank = parseInt(formData[s])
                         }
                     })
@@ -135,9 +139,7 @@ export class LevelUpDataDialog extends FormApplication {
                     classHP.set(_class._id,0)
                 classHP.set(_class._id,classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
-                    if (lud.skills[s].rank) {
-                        updateData[`data.skills.${s}.rank`] = Math.floor(lud.skills[s].rank * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
-                    }
+                    updateData[`data.skills.${s}.rank`] = Math.floor((lud.skills[s].rank || 0) * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
                             updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);

@@ -108,7 +108,6 @@ export const registerSystemSettings = function() {
       [...game.actors.entities, ...Object.values(game.actors.tokens)].filter(o => {
         return o.data.type === "character";
       }).forEach(o => {
-        o.update({});
         if (o.sheet != null && o.sheet._state > 0) o.sheet.render();
       });
     },
@@ -126,6 +125,17 @@ export const registerSystemSettings = function() {
     type: Boolean,
   });
 
+  /**
+   * Option to display class features in other tabs as well
+   */
+  game.settings.register("D35E", "classFeaturesInTabs", {
+    name: "SETTINGS.D35EClassFeaturesInTabsN",
+    hint: "SETTINGS.D35EClassFeaturesInTabsL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 
   /**
    * Option to allow the background skills optional ruleset.
@@ -204,6 +214,18 @@ export const registerSystemSettings = function() {
     },
   });
 
+  game.settings.register("D35E", "colorblindColors", {
+    name: "SETTINGS.D35EColorblindN",
+    hint: "SETTINGS.D35EColorblindL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      $('body').toggleClass('color-blind', game.settings.get("D35E", "colorblindColors"));
+    },
+  });
+
   /**
    * Option to change measure style
    */
@@ -249,4 +271,22 @@ export const registerSystemSettings = function() {
     config: true,
     scope: 'client',
   });
+
+  game.settings.register("D35E", 'hideSpells', {
+    name: `SETTINGS.D35EHideSpellDescriptionsN`,
+    hint: 'SETTINGS.D35EHideSpellDescriptionsH',
+    default: false,
+    type: Boolean,
+    config: true,
+    scope: 'client',
+  });
+
+  // game.settings.register("D35E", 'displayItemsInContainers', {
+  //   name: `SETTINGS.D35EDisplayItemsInContainersN`,
+  //   hint: 'SETTINGS.D35EDisplayItemsInContainersH',
+  //   default: false,
+  //   type: Boolean,
+  //   config: true,
+  //   scope: 'client',
+  // });
 };

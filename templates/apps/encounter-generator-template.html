@@ -1,0 +1,29 @@
+{{#each monsters}}
+<a class="entity-link" draggable="true" data-pack="D35E.bestiary" data-id="{{id}}">
+          <div class="flex-container" draggable="true">
+            <div class="image">
+                <img src="{{img}}" width="48" height="48">
+
+            </div>
+            <div class="column">
+                <div class="head">
+                    <span>{{name}} x{{count}}</span>
+                </div>
+                    <div class="row">
+                    <div class="body">
+                        <span>{{localize "D35E.HPShort"}}:{{HP}}</span>
+                    </div>
+                    <div class="body">
+                        <span>{{localize "D35E.ACNormal"}}:{{AC}}</span>
+                    </div>
+                    <div class="body">
+                        <span>{{localize "D35E.SpeedLand"}}:{{SPD}}</span>
+                    </div>
+                </div>
+            </div>
+                <div class="cr">
+                    {{localize "D35E.CR"}}:{{cr}}
+                </div>
+        </div>
+    </a>
+{{/each}}

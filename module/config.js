@@ -68,6 +68,8 @@ D35E.classTypes = {
   "base": "D35E.ClassTypeBase",
   "prestige": "D35E.ClassTypePrestige",
   "racial": "D35E.ClassTypeRacial",
+  "minion": "D35E.Minion",
+  "template": "D35E.ClassTypeTemplate",
 };
 
 D35E.classBAB = {
@@ -99,6 +101,14 @@ D35E.classSavingThrowFormulas = {
   "racial": {
     "low": "floor(@level / 3)",
     "high": "2 + floor(@level / 2)",
+  },
+  "minion": {
+    "low": "floor(@level / 3)",
+    "high": "2 + floor(@level / 2)",
+  },
+  "template": {
+    "low": "0",
+    "high": "0",
   },
 };
 
@@ -219,6 +229,7 @@ D35E.measureTemplateTypes = {
   "cone": "D35E.MeasureTemplateCone",
   "circle": "D35E.MeasureTemplateCircle",
   "ray": "D35E.MeasureTemplateRay",
+  "cube": "D35E.MeasureTemplateCube",
 };
 
 /* -------------------------------------------- */
@@ -234,6 +245,22 @@ D35E.actorSizes = {
   "huge": "D35E.ActorSizeHuge",
   "grg": "D35E.ActorSizeGargantuan",
   "col": "D35E.ActorSizeColossal",
+};
+
+// Token Sizes
+D35E.actorTokenSizes = {
+  "actor": "D35E.ActorSizeActor",
+  "fine": "D35E.ActorSizeFine",
+  "dim": "D35E.ActorSizeDiminutive",
+  "tiny": "D35E.ActorSizeTiny",
+  "sm": "D35E.ActorSizeSmall",
+  "med": "D35E.ActorSizeMedium",
+  "lg": "D35E.ActorSizeLarge",
+  "lglong": "D35E.ActorSizeLargeLong",
+  "huge": "D35E.ActorSizeHuge",
+  "grg": "D35E.ActorSizeGargantuan",
+  "col": "D35E.ActorSizeColossal",
+  "none": "D35E.ActorSizeDoNotLink",
 };
 
 D35E.sizeChart = {
@@ -255,6 +282,7 @@ D35E.tokenSizes = {
   "sm": { w: 1, h: 1, scale: 0.8 },
   "med": { w: 1, h: 1, scale: 1 },
   "lg": { w: 2, h: 2, scale: 1 },
+  "lglong": { w: 1, h: 2, scale: 1 },
   "huge": { w: 3, h: 3, scale: 1 },
   "grg": { w: 4, h: 4, scale: 1 },
   "col": { w: 6, h: 6, scale: 1 },
@@ -517,8 +545,8 @@ D35E.featTypes = {
   "feat": "D35E.FeatTypeFeat",
   "classFeat": "D35E.FeatTypeClassFeat",
   "trait": "D35E.FeatTypeTraits",
-  "template": "D35E.FeatTypeTemplate",
   "racial": "D35E.FeatTypeRacial",
+  "spellSpecialization": "D35E.FeatTypeSpellSpecialization",
   "misc": "D35E.Misc",
 };
 
@@ -649,6 +677,20 @@ D35E.healingTypes = {
   "healing": "D35E.Healing",
   "temphp": "D35E.HealingTemp"
 };
+
+D35E.areaTargetTypes = {
+  cone: "cone",
+  cube: "rect",
+  cylinder: "circle",
+  circle: "circle",
+  line: "ray",
+  ray: "ray",
+  radius: "circle",
+  sphere: "circle",
+  square: "rect",
+  wall: "ray"
+};
+
 
 /* -------------------------------------------- */
 
@@ -914,6 +956,7 @@ D35E.buffTargets = {
     "aac": "D35E.BuffTarACArmor",
     "sac": "D35E.BuffTarACShield",
     "nac": "D35E.BuffTarACNatural",
+    "tch": "D35E.BuffTarACTouch",
   },
   "attack": {
     "_label": "D35E.AttackRollPlural",
@@ -990,14 +1033,17 @@ D35E.buffTargets = {
     "vigor": "D35E.Vigor",
     "sneakAttack": "D35E.SneakAttackBonusDice",
     "turnUndead": "D35E.TurnUndeadUses",
+    "turnUndeadDiceTotal": "D35E.TurnUndeadDiceTotal",
     "spellResistance": "D35E.SpellResistance",
+    "cr": "D35E.CR",
+    "fortification": "D35E.Fortification",
   },
   "prestigeCl": {
     "_label": "D35E.PrestigeCl",
     "arcaneCl": "D35E.Arcane",
     "psionicCl": "D35E.Psionic",
     "divineCl": "D35E.Divine"
-  },
+  }
 };
 
 D35E.contextNoteTargets = {
@@ -1041,7 +1087,7 @@ D35E.contextNoteTargets = {
     "ac": "D35E.ACNormal",
     "cmb": "CMB",
     "cmd": "CMD",
-    "sr": "D35E.SpellResistance",
+    "sr": "D35E.SpellResistance"
   },
 };
 
@@ -1084,6 +1130,8 @@ D35E.creatureTypes = {
   "plant": "D35E.CreatureTypePlant",
   "undead": "D35E.CreatureTypeUndead",
   "vermin": "D35E.CreatureTypeVermin",
+  "giant": "D35E.CreatureTypeGiant",
+  "elemental": "D35E.CreatureTypeElemental",
 };
 
 D35E.sizeDie = [
@@ -1163,6 +1211,46 @@ D35E.combatChangeType = {
   'attack': 'D35E.Attack',
   'attackOptional': 'D35E.AttackOptional',
   'spell': 'D35E.Spell',
+  'spellOptional': 'D35E.SpellOptional',
+  'defense': 'D35E.Defense',
+  'defenseOptional': 'D35E.DefenseOptional',
+  'savingThrow': 'D35E.SavingThrow',
+  'savingThrowOptional': 'D35E.SavingThrowOptional',
 };
 
 CONFIG.Combat.initiative.decimals = 2;
+
+// Static conditional modifier targets
+D35E.conditionalTargets = {
+  attack: {
+    _label: "D35E.AttackRollPlural",
+    allAttack: "D35E.All",
+  },
+  damage: {
+    _label: "D35E.Damage",
+    allDamage: "D35E.All",
+  },
+  effect: {
+    _label: "D35E.Effects",
+  },
+  misc: {
+    _label: "D35E.MiscShort",
+  },
+};
+
+D35E.damageTypes = {
+  'energy': 'D35E.Energy',
+  'type': 'D35E.BaseDamage'
+};
+
+D35E.savingThrowTypes = {
+  'willhalf': 'D35E.STWillHalf',
+  'willnegates': 'D35E.STWillNegates',
+  'reflexhalf': 'D35E.STReflexHalf',
+  'reflexnegates': 'D35E.STReflexNegates',
+  'fortitudehalf': 'D35E.STFortitudeHalf',
+  'fortitudenegates': 'D35E.STFortitudeNegates',
+};
+
+
+

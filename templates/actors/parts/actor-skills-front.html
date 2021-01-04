@@ -1,64 +1,66 @@
 {{!-- Skill Rank Info --}}
-{{#unless useBGSkills}}
-<div class="flexcol skill-rank">
-  <ol class="form-group">
-    <li class="flexrow skill-rank-formula">
-      <label>{{localize "D35E.SkillBonusRankFormula"}}</label>
-      <input type="text" name="data.details.bonusSkillRankFormula" value="{{data.details.bonusSkillRankFormula}}" placeholder="{{localize "D35E.Formula"}}"/>
-    </li>
-  </ol>
-  <ol class="form-group">
-    <li class="flexrow skill-rank-info">
-      <label>{{localize "D35E.SkillRankPlural"}}</label>
-      <input type="text" disabled value="{{skillRanks.allowed}}"/>
-      <label>{{localize "D35E.Used"}}</label>
-      <input type="text" disabled value="{{skillRanks.used}}"/>
-    </li>
-  </ol>
-</div>
-{{else}}
-<div class="flexcol skill-rank">
-  <ol class="form-group">
-    <li class="flexrow skill-rank-formula">
-      <label>{{localize "D35E.SkillBonusRankFormula"}}</label>
-      <input type="text" name="data.details.bonusSkillRankFormula" value="{{data.details.bonusSkillRankFormula}}" placeholder="{{localize "D35E.Formula"}}"/>
-    </li>
-  </ol>
-  <ol class="form-group">
-    <li class="flexrow skill-rank-info">
-      <label>{{localize "D35E.SkillRankPlural"}}</label>
-      <input type="text" disabled value="{{skillRanks.allowed}}"/>
-      <label>{{localize "D35E.Used"}}</label>
-      <input type="text" disabled value="{{skillRanks.used}}"/>
-      <label>{{localize "D35E.AdventureRanksToBG"}}</label>
-      <input type="text" disabled value="{{skillRanks.sentToBG}}"/>
-      <label>{{localize "D35E.BGSkillRanks"}}</label>
-      <input type="text" disabled value="{{skillRanks.bgAllowed}}"/>
-      <label>{{localize "D35E.BGUsed"}}</label>
-      <input type="text" disabled value="{{skillRanks.bgUsed}}"/>
-    </li>
-  </ol>
-</div>
-
-<nav class="sheet-navigation tabs" data-group="skillset">
-  <a class="item" data-tab="adventure">{{localize "D35E.SkillTypeAdventure"}}</a>
-  <a class="item" data-tab="background">{{localize "D35E.SkillTypeBackground"}}</a>
-</nav>
-
-<section class="skillset-body">
-  <div class="tab flexcol" data-group="skillset" data-tab="adventure">
-    {{> "systems/D35E/templates/actors/parts/actor-skills.html" skillset=skillsets.adventure.skills isBackgroundSkills="false"}}
+{{#unless data.details.levelUpProgression}}
+  {{#unless useBGSkills}}
+  <div class="flexcol skill-rank">
+    <ol class="form-group">
+      <li class="flexrow skill-rank-formula">
+        <label>{{ localize 'D35E.SkillBonusRankFormula' }}</label>
+        <input type="text" name="data.details.bonusSkillRankFormula" value="{{data.details.bonusSkillRankFormula}}" placeholder="{{ localize 'D35E.Formula' }}"/>
+      </li>
+    </ol>
+    <ol class="form-group">
+      <li class="flexrow skill-rank-info">
+        <label>{{ localize 'D35E.SkillRankPlural' }}</label>
+        <input type="text" disabled value="{{skillRanks.allowed}}"/>
+        <label>{{ localize 'D35E.Used' }}</label>
+        <input type="text" disabled value="{{skillRanks.used}}"/>
+      </li>
+    </ol>
   </div>
-  
-  <div class="tab flexcol" data-group="skillset" data-tab="background">
-    {{> "systems/D35E/templates/actors/parts/actor-skills.html" skillset=skillsets.background.skills isBackgroundSkills="true"}}
+  {{else}}
+  <div class="flexcol skill-rank">
+    <ol class="form-group">
+      <li class="flexrow skill-rank-formula">
+        <label>{{ localize 'D35E.SkillBonusRankFormula' }}</label>
+        <input type="text" name="data.details.bonusSkillRankFormula" value="{{data.details.bonusSkillRankFormula}}" placeholder="{{ localize 'D35E.Formula' }}"/>
+      </li>
+    </ol>
+    <ol class="form-group">
+      <li class="flexrow skill-rank-info">
+        <label>{{ localize 'D35E.SkillRankPlural' }}</label>
+        <input type="text" disabled value="{{skillRanks.allowed}}"/>
+        <label>{{ localize 'D35E.Used' }}</label>
+        <input type="text" disabled value="{{skillRanks.used}}"/>
+        <label>{{ localize 'D35E.AdventureRanksToBG' }}</label>
+        <input type="text" disabled value="{{skillRanks.sentToBG}}"/>
+        <label>{{ localize 'D35E.BGSkillRanks' }}</label>
+        <input type="text" disabled value="{{skillRanks.bgAllowed}}"/>
+        <label>{{ localize 'D35E.BGUsed' }}</label>
+        <input type="text" disabled value="{{skillRanks.bgUsed}}"/>
+      </li>
+    </ol>
   </div>
-</section>
+
+  <nav class="sheet-navigation tabs" data-group="skillset">
+    <a class="item" data-tab="adventure">{{ localize 'D35E.SkillTypeAdventure' }}</a>
+    <a class="item" data-tab="background">{{ localize 'D35E.SkillTypeBackground' }}</a>
+  </nav>
+
+  <section class="skillset-body">
+    <div class="tab flexcol" data-group="skillset" data-tab="adventure">
+      {{> "systems/D35E/templates/actors/parts/actor-skills.html" skillset=skillsets.adventure.skills isBackgroundSkills="false"}}
+    </div>
+
+    <div class="tab flexcol" data-group="skillset" data-tab="background">
+      {{> "systems/D35E/templates/actors/parts/actor-skills.html" skillset=skillsets.background.skills isBackgroundSkills="true"}}
+    </div>
+  </section>
+  {{/unless}}
 {{/unless}}
 
 {{#unless useBGSkills}}
 <nav class="sheet-navigation tabs" data-group="skillset" style="display: none">
-  <a class="item" data-tab="all">{{localize "D35E.AllSkills"}}</a>
+  <a class="item" data-tab="all">{{ localize 'D35E.AllSkills' }}</a>
 </nav>
 
 <section class="skillset-body">

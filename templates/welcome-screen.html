@@ -108,74 +108,84 @@
 <h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png"
                                     style="height: 64px; border: none; float: left">
     <span style='font-family: "Nodesto", sans-serif;
-        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>DND 3.5e</span>
-    <br><span style="font-size: 14px">DND 3.5 SRD implementation for Foundry VTT</span></h1>
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>3.5e SRD</span>
+    <br><span style="font-size: 14px">3.5 SRD implementation for Foundry VTT</span></h1>
 <div class="flexrow">
     <nav class="welcome-tabs">
         <a class="item" data-tab="welcome">{{ localize "D35E.Welcome" }}</a>
         <a class="item" data-tab="changelog">{{ localize "D35E.Changelog" }}</a>
+        <a class="item" data-tab="ogl">OGL</a>
+        <a class="item" data-tab="licenses">{{ localize "D35E.Licenses" }}</a>
     </nav>
 </div>
 
 <section class="welcome-content">
     <div class="tab" data-tab="welcome">
 
-        <p>Welcome to DND 3.5E SRD implementation for Foundry VTT! It was created from love for old DND editions and
+        <p>Welcome to 3.5E SRD implementation for Foundry VTT! It was created from love for one of the best versions of most popular Role Playing Game and
             aims to provide full 3.5E SRD implementation and system flexible enough for anything else.</p>
 
 
         <p style="font-weight: bold; text-align: right;">Happy GMing,<br>Rughalt</p>
         <h2>News</h2>
         <div class="flexrow">
-
             <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Class progression</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.86-class-progression.png"
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Damage Types</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-damage-types.png"
                      style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    Release 0.86 bring proper class and level progression - no more guessing which skills were class
-                    skills on level 5 and how many Hit Points you got. Each gained level can have a class assigned to
-                    it, so everything is calculated properly. <span style="opacity: 0.8">(This option is turned off for existing Actors)</span><br><br>
+                    Version 0.87.8 brings much anticipated system - complex damage types and resistances support!
+                    Now you can forget about manually substracting those pesky DR 10/magic and Fire Resistances and let system do the work!
+                    <span style="opacity: 0.8">(Using this requires setting up DR and Energy Resistances on actor using new system.)</span><br>
                 </p>
-                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/classes">Learn
-                    more about Level progression</a>
+                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/system/damage-types">Learn
+                    more about Damage Types</a>
 
             </div>
             <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Updated Theme</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.86-theme.png" style="padding: 0 0.7rem; flex: 0">
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Domains and Spell Schools</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-magic.png"
+                     style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    Release 0.86 comes with a first version of redesigned theme - now enabled for all new players!
-                    <br><br>
-                    More theme changes and minor redesigns will come in minor updates in 0.86 line.
+                    Release 0.87.8 brings domains and spell schools for all spellcasters, along with a slew of spell
+                    related updates - short spell descriptions, ability to automatically add spells to your character list and more! <span style="opacity: 0.8">(Some options is turned off for classes already on actors by default)</span><br><br>
                 </p>
-<!--                <a class="btn bottom"-->
-<!--                   href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Visit-->
-<!--                    Enhancements page on Wiki</a>-->
+                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/character/spells">Learn
+                    more about Spellcasting</a>
+
             </div>
             <div class="flexcol" style="max-height: 410px">
-
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Onboarding</h2>
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Monsters</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-monsters.png"
+                     style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    We introduced a new onboarding process for players. You can check it yourself - just interact with
-                    dialogue box below.
-                </p>
-                <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/gm/onboarding">Read more
-                    about Onboarding</a>
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Magic Items</h2>
-                <p style="padding: 0 0.7rem; flex: 0">
-                    Magic Items system allows for creating any magic item you want - from simple Longsword +1 to complex
-                    ones like Flame Tongue.
+                    Starting with release of 0.87.12, you find reimported monsters from SRD in the monster compendium! While some of the creatures may still be a little broken, they should be in much better shape than ever before!<br><br>
                 </p>
 
-                <a class="btn mid"
-                   href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Learn more
-                    about Magic Items</a>
-                <!--        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Custom Theme</h2>-->
-                <!--        <p style="padding: 0 0.7rem; flex: 0">-->
-                <!--            Did you know DND 3.5E comes with custom skin for Foundry? You - or any of your players - can enable it in options for themselves!-->
-                <!--        </p>-->
             </div>
+<!--            <div class="flexcol" style="max-height: 410px">-->
+
+<!--                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Onboarding</h2>-->
+<!--                <p style="padding: 0 0.7rem; flex: 0">-->
+<!--                    We introduced a new onboarding process for players. You can check it yourself - just interact with-->
+<!--                    dialogue box below.-->
+<!--                </p>-->
+<!--                <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/gm/onboarding">Read more-->
+<!--                    about Onboarding</a>-->
+<!--                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Magic Items</h2>-->
+<!--                <p style="padding: 0 0.7rem; flex: 0">-->
+<!--                    Magic Items system allows for creating any magic item you want - from simple Longsword +1 to complex-->
+<!--                    ones like Flame Tongue.-->
+<!--                </p>-->
+
+<!--                <a class="btn mid"-->
+<!--                   href="https://docs.legaciesofthedragon.com/en/documentation/advanced/magic-item-creation">Learn more-->
+<!--                    about Magic Items</a>-->
+<!--                &lt;!&ndash;        <h2 class="news" style="padding: 0 0.7rem; flex: 0">Custom Theme</h2>&ndash;&gt;-->
+<!--                &lt;!&ndash;        <p style="padding: 0 0.7rem; flex: 0">&ndash;&gt;-->
+<!--                &lt;!&ndash;            Did you know DND 3.5E comes with custom skin for Foundry? You - or any of your players - can enable it in options for themselves!&ndash;&gt;-->
+<!--                &lt;!&ndash;        </p>&ndash;&gt;-->
+<!--            </div>-->
         </div>
 
         <h2></h2>
@@ -192,8 +202,214 @@
             Patron</a>
         </div>
     </div>
-    <div class="tab" data-tab="changelog">
+    <div class="tab" data-tab="changelog" style="overflow-y: scroll; height: 570px;">
+        <h2>v0.87.13</h2>
+        <h3 >SRD</h3>
+        <ul>
+            <li>Fixed Bugbear, Lacedon, Ghoul, Dire Rat, Thoqqua, Water Mephit, Ghast, Ogre, Ogre Mage</li>
+            <li>Fixed Monk entry</li>
+        </ul>
+        <h3 >Features</h3>
+        <ul>
+            <li>Moved inventory from tabs to separated list, improved in-place add overlay</li>
+        </ul>
+        <h3 >Bug Fixes</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/206">#206</a> - Armor Check penalty on Swim Skill should be doubled Bug</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/115">#115</a> - Monk&#39;s and regular unarmed strike</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/130">#130</a> - SRD Monk issues</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/209">#209</a> - Arcane Trickster Prestige Class issues</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/208">#208</a> - Class Features do not display properly</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/200">#200</a> - Ability damage modifications apply correct carry weight ranges, but it does not apply related maluses until you modify the inventory</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/191">#191</a> - Set buff &quot;x&quot; field data.level to random Value</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/170">#170</a> - Fast Clicking breaks how Full attack should work</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/90">#90</a> - Make all bonuses showed for attack bonuses fields on mouse over.</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/184">#184</a> - Ranger doesn&#39;t have armor and weapon proficiencies</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/201">#201</a> - HP reg and Buff lost while rest</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/199">#199</a> - Apply half Damage and the Chatcard</li>
+        </ul>
+
+        <h2>v0.87.12</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li>Implemented Improved Critical, Epic Weapon Focus, Multiweapon Fighting, Multiattack</li>
+            <li>Implemented automatic ability modifier change for creatures with one natural attack</li>
+            <li>Reimported monsters from SRD</li>
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Saving Throws system rework<ul>
+                <li>Saving Throw Combat Modifiers (working like attacks and AC combat modifiers)</li>
+                <li>Saving Throw common types (Will/Reflex/Fortitude Negates or Half) with possibility of assigning different Ability modifier to roll</li>
+            </ul>
+            </li>
+            <li>Added <code>featSpellDCBonus</code> combat change that raises spell DC</li>
+            <li>Attacks created from unidentified weapons now create attacks with base weapon stats</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li>Magic Items abilities not resetting on rest</li>
+            <li>Item Type and Action Type in Combat Changes have more meaningful names now.</li>
+            <li>Bag of Holding (and similar items) now correctly do not count content weights to Character carrying weight </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/177">#177</a> - Skill points now correctly calculate for cross and non-class skills</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/179">#179</a> - Skill points now correctly reset after reducing them to 0 in level up data.</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/176">#176</a> - Ability damage correctly changes carry weight</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/185">#185</a> - Disabled abilities disappear from Class Progression table</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/194">#194</a> - Input for sub-skill name now takes all available space</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/194">#169</a> - Wrong special action order in spell fixed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/62">#62</a> - Swarms have correct token size</li>
+        </ul>
+        <h2>v0.87.10</h2>
         <h1>Changelog</h1>
+        <h3 id="features">Features</h3>
+        <ul>
+            <li>Automated AC checking when applying damage<ul>
+                <li>Added support for Optional AC modifiers, added Optional AC modifiers to feats in compendium</li>
+            </ul>
+            </li>
+            <li>Fortification - keeping information about fortification critical hit immunity<ul>
+                <li>Automatically resolved on Apply Dialog critical hit check</li>
+                <li>Possibility to add via changes</li>
+                <li>Implemented in all Racial HD and Templates in Compendium, added to Fortification enhancement</li>
+            </ul>
+            </li>
+        </ul>
+        <h3 id="changes">Changes</h3>
+        <ul>
+            <li>Added new Sneak Attack class feature that uses Combat Changes mechanism. It will replace old one on chars on update.</li>
+            <li>Added new Turn/Rebuke undead feature (to allow non-standard Turn/Rebuke creatures in future). It will be added to chars on update.</li>
+        </ul>
+        <h3 id="bug-fixes">Bug Fixes</h3>
+        <ul>
+            <li>Fixed rolling skills from summary tab on Character sheet</li>
+            <li>Fixed some icons having &quot;.PNG&quot; file extension instead of &quot;.png&quot;</li>
+            <li>Fixed classes/races with EL set to empty breaking Exp calculation</li>
+            <li>Fixed domain spell slot assignments</li>
+            <li>Fixed class skills/non-class when using level progression</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/162">#162</a> - Token light radius fixes</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/168">#168</a> - Added Change target for Touch AC</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/166">#166</a> - +1 Armor Enhancement correctly adds +1 by default</li>
+            <li>Other minor fixes</li>
+        </ul>
+
+        <h2>v0.87.8</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li>Added most basic Templates (except Lycanthrope)</li>
+            <li>Added basic support for Domains and Spell Schools (spell list, description)</li>
+            <li>Added short spell descriptions to all Spells and Powers</li>
+            <li>Added spell list for Psychic Warrior</li>
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Damage Types implementation with Resistances and Damage Reduction<ul>
+                <li>You can now set complex Damage Reduction schemes and Energy Resistances</li>
+                <li>Weapons can be set to use correct Damage types on Attacks (with simple mapping provided for existing attacks).</li>
+                <li>Ability to create custom Energy types for damage</li>
+                <li>Automatic DR/ER resolving when using Apply Damage functionality</li>
+                <li>Basic Material support for Weapons (you can find basic materials in Materials Compendium)</li>
+                <li><strong>Warning!</strong> Old Damage Reduction and Energy Resistances will not be migrated automatically to new version! You have to do it manually.</li>
+            </ul>
+            </li>
+            <li>Spell School and Domain Support<ul>
+                <li>Added support for Spell School and Domain slot for classes that support it</li>
+                <li>Spells from Spell School or Domain have their own spell slot that does not use slots for normal spells.</li>
+                <li><strong>Warning!</strong> Classes that were added to characters before this udate will net to have the option &quot;Has special spell slot (Domain/School)&quot; enabled manually</li>
+            </ul>
+            </li>
+            <li>Template support<ul>
+                <li>Added special class type &quot;Template&quot;, that has its level automatically set to actor HD</li>
+                <li>Most of the templates are drag-and-drop, with only very complex ones needing manual character alteration</li>
+            </ul>
+            </li>
+        </ul>
+        <h3>Quality of Life Improvements</h3>
+        <ul>
+            <li>Spells now display short description in the spell list (this can be turned off in options)</li>
+            <li>More links to the compendium on character sheet to ease access to pre-generated data</li>
+            <li>Skill screen has been reworked to better show which skills have ranks, which require training and more</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li>Fixed enhancements to be in line with new Damage Types system</li>
+            <li>Changed how Undead 0 Constitution is handled by the system.</li>
+        </ul>
+
+        <h2>v0.87.7</h2>
+        <h3>Features</h3>
+        <ul>
+            <li> Reworked Class and Racial Abilities
+            <li>
+                <ul>
+                    <li> You can now add Ability from all scanned compendia directly on Race or Class Item details
+                    <li> You can disable default Abilities to add Alternative Class Features
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li> Fixed inifinte loop when updating Tokens with containers
+            <li> <a href="https://github.com/Rughalt/D35E/issues/138">#138</a> - Fixed buff tracking for linked actors
+            <li> <a href="https://github.com/Rughalt/D35E/issues/135">#135</a> - Fixed spell with no material component toggle selected displaying message.
+        </ul>
+        <h2>v0.87.2</h2>
+        <h3>Features</h3>
+        <ul>
+            <li> Added simple Statblock NPC char sheet. It currently displays basic statistics that are needed in combat and allows updating health and rolling attacks, special abilities and saves
+            <li> Added ability to unlink Token size from Actor size, so they can be set independently
+            <li> Added ability to list Class Features in lists by type (Client setting, default off)
+            <li> Added integration with Dice So Nice! for Attack rolls.
+        </ul>
+
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li> Fixed permission error for Minion distance calculation
+            <li> Fixed wrong color in selects when using Custom Theme
+        </ul>
+
+
+        <h2>v0.87.1</h2>
+        <h3>Features</h3>
+        <ul>
+            <li> Added and assigned over 100 icons to Spells from SRD
+        </ul>
+
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li> Fixed message about Constitution Drain not existing in roll data
+            <li> Fixes attack effect rolls not appearing correctly
+        </ul>
+
+        <h2>v0.87.0</h2>
+        <h3>SRD</h3>
+        <ul>
+            <li>Implemented numerous Magical Items
+        </ul>
+        <h3>Features</h3>
+        <ul>
+            <li>Minions - Familiars, Animal Companions and Paladin Mounts
+            <li>
+
+                <ul>
+                    <li>Ability to assign Characters to NPCa as Masters. NPC that has a Master assigned becomes a Minion, and has access to Masters data</li>
+                    <li>Compendium with basic Minion Classes (Familiar, Animal Companion and Paladin Mount) and Minions (all Wizard Familiars and Paladins' Heavy War Horse mount), ready to be used</li>
+                    <li>Ability to use distance between Minion and Master as a variable in both Minion and Master formulas</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/119">#119</a> - Racial HDs counts towards Epic calculations</li>
+        <li><a href="https://github.com/Rughalt/D35E/issues/120">#120</a> - Actor inventory weight calculated wrongly using containers</li>
+        <li><a href="https://github.com/Rughalt/D35E/issues/118">#118</a> - Elemental and Giant types missed in race details</li>
+        <li><a href="https://github.com/Rughalt/D35E/issues/116">#116</a> - Ki strike and Purity of Body have empty "classes" list and not added automatically</li>
+        <li><a href="https://github.com/Rughalt/D35E/issues/110">#110</a> - Size modifiers to carrying weight stops applying if Strength is over 30 (thanks to @red5h4d0w)</li>
+
+        </ul>
+
+
         <h2>v0.86.9</h2>
         <h3>SRD</h3>
         <ul>
@@ -497,5 +713,17 @@
             <li><a href="https://github.com/Rughalt/D35E/issues/2">#2</a> - Limited character sheet scrollbars</li>
             <li><a href="https://github.com/Rughalt/D35E/issues/3">#3</a> - Saving throws rolled multiple times</li>
         </ul>
+    </div>
+
+    <div class="tab" data-tab="ogl" style="overflow-y: scroll; height: 570px;">
+        <p><strong>Product Identity:</strong><br>The following items are hereby identified as Product Identity, as defined in the Open Game License 1.0a, Section 1(e), and are not Open Content: All trademarks, registered trademarks, proper names (characters, deities, etc.), dialogue, plots, storylines, locations, characters, artworks, and trade dress. (Elements that have previously been designated as Open Game Content are not included in this declaration.)<br><br><strong>Open Content:</strong><br>Except for material designated as Product Identity (see above), the game mechanics of this Dragonshorn Studios game product are Open Game Content, as defined in the Open Game License version 1.0a Section 1(d). No portion of this work other than the material designated as Open Game Content may be reproduced in any form without written permission.</p><div></div><h1 id="open-game-license-version-10a" class="toc-header">OPEN GAME LICENSE Version 1.0a</h1><div></div><p>The following text is the property of Wizards of the Coast, Inc. and is Copyright 2000 Wizards of the Coast, Inc ("Wizards"). All Rights Reserved.<br><br>1. Definitions:<br>(a)"Contributors" means the copyright and/or trademark owners who have contributed Open Game Content;<br>(b)"Derivative Material" means copyrighted material including derivative works and translations (including into other computer languages), potation, modification, correction, addition, extension, upgrade, improvement, compilation, abridgment or other form in which an existing work may be recast, transformed or adapted;<br>(c) "Distribute" means to reproduce, license, rent, lease, sell, broadcast, publicly display, transmit or otherwise distribute;<br>(d) "Open Game Content" means the game mechanic and includes the methods, procedures, processes and routines to the extent such content does not embody the Product Identity and is an enhancement over the prior art and any additional content clearly identified as Open Game Content by the Contributor, and means any work covered by this License, including translations and derivative works under copyright law, but specifically excludes Product Identity.<br>(e) "Product Identity" means product and product line names, logos and identifying marks including trade dress; artifacts; creatures characters; stories, storylines, plots, thematic elements, dialogue, incidents, language, artwork, symbols, designs, depictions, likenesses, formats, poses, concepts, themes and graphic, photographic and other visual or audio representations; names and descriptions of characters, spells, enchantments, personalities, teams, personas, likenesses and special abilities; places, locations, environments, creatures, equipment, magical or supernatural abilities or effects, logos, symbols, or graphic designs; and any other trademark or registered trademark clearly identified as Product identity by the owner of the Product Identity, and which specifically excludes the Open Game Content;<br>(f) "Trademark" means the logos, names, mark, sign, motto, designs that are used by a Contributor to identify itself or its products or the associated products contributed to the Open Game License by the Contributor<br>(g) "Use", "Used" or "Using" means to use, Distribute, copy, edit, format, modify, translate and otherwise create Derivative Material of Open Game Content.<br>(h) "You" or "Your" means the licensee in terms of this agreement.<br><br>2. The License: This License applies to any Open Game Content that contains a notice indicating that the Open Game Content may only be Used under and in terms of this License. You must affix such a notice to any Open Game Content that you Use. No terms may be added to or subtracted from this License except as described by the License itself. No other terms or conditions may be applied to any Open Game Content distributed using this License.<br><br>3. Offer and Acceptance: By Using the Open Game Content You indicate Your acceptance of the terms of this License.<br><br>4. Grant and Consideration: In consideration for agreeing to use this License, the Contributors grant You a perpetual, worldwide, royalty-free, non-exclusive license with the exact terms of this License to Use, the Open Game Content.<br><br>5. Representation of Authority to Contribute: If You are contributing original material as Open Game Content, You represent that Your Contributions are Your original creation and/or You have sufficient rights to grant the rights conveyed by this License.<br><br>6. Notice of License Copyright: You must update the COPYRIGHT NOTICE portion of this License to include the exact text of the COPYRIGHT NOTICE of any Open Game Content You are copying, modifying or distributing, and You must add the title, the copyright date, and the copyright holder's name to the COPYRIGHT NOTICE of any original Open Game Content you Distribute.<br><br>7. Use of Product Identity: You agree not to Use any Product Identity, including as an indication as to compatibility, except as expressly licensed in another, independent Agreement with the owner of each element of that Product Identity. You agree not to indicate compatibility or co-adaptability with any Trademark or Registered Trademark in conjunction with a work containing Open Game Content except as expressly licensed in another, independent Agreement with the owner of such Trademark or Registered Trademark. The use of any Product Identity in Open Game Content does not constitute a challenge to the ownership of that Product Identity. The owner of any Product Identity used in Open Game Content shall retain all rights, title and interest in and to that Product Identity.<br><br>8. Identification: If you distribute Open Game Content You must clearly indicate which portions of the work that you are distributing are Open Game Content.<br><br>9. Updating the License: Wizards or its designated Agents may publish updated versions of this License. You may use any authorized version of this License to copy, modify and distribute any Open Game Content originally distributed under any version of this License.<br><br>10. Copy of this License: You MUST include a copy of this License with every copy of the Open Game Content You Distribute.<br><br>11. Use of Contributor Credits: You may not market or advertise the Open Game Content using the name of any Contributor unless You have written permission from the Contributor to do so.<br><br>12. Inability to Comply: If it is impossible for You to comply with any of the terms of this License with respect to some or all of the Open Game Content due to statute, judicial order, or governmental regulation then You may not Use any Open Game Material so affected.<br><br>13. Termination: This License will terminate automatically if You fail to comply with all terms herein and fail to cure such breach within 30 days of becoming aware of the breach. All sublicenses shall survive the termination of this License.<br><br>14. Reformation: If any provision of this License is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable.<br><br>15. COPYRIGHT NOTICE<br>Open Game License v 1.0 Copyright 2000, Wizards of the Coast, Inc.<br>System Reference Document Copyright 2000-2003, Wizards of the Coast, Inc.; Authors Jonathan Tweet, Monte Cook, Skip Williams, Rich Baker, Andy Collins, David Noonan, Rich Redman, Bruce R. Cordell, John D. Rateliff, Thomas Reid, James Wyatt, based on original material by E. Gary Gygax and Dave Arneson.<br>Monster Manual II Copyright 2002, Wizards of the Coast, Inc.<br>Unearthed Arcana Copyright 2004, Wizards of the Coast, Inc.; Andy Collins, Jesse Decker, David Noonan, Rich Redman.<br>Pathfinder Roleplaying Game Reference Document. © 2011, Paizo Publishing, LLC; Author: Paizo Publishing, LLC.<br>Pathfinder Roleplaying Game Core Rulebook. © 2009, Paizo Publishing, LLC; Author: Jason Bulmahn, based on material by Jonathan Tweet, Monte Cook, and Skip Williams.<br>Foundry Virtual Tabletop © 2019, Foundry Gaming LLC<br>&nbsp;</p><div></div>
+    </div>
+
+    <div class="tab" data-tab="licenses" style="overflow-y: scroll; height: 570px;">
+        <p>Copyright © Antoni Sobkowicz / Dragonshorn Studios 2020. 'Legacies of the Dragon` name and logo are copyright by Dragonshorn Studios.</p>
+        <p>Icons used in this system are copyright by J. W. Bjerk (eleazzaar) (www.jwbjerk.com/art, CC-BY 3.0), and various authors at game-icons.net (CC-BY). Rest of icons provided in binary distribution are used with permission of the authors and licensed to use only in this application. Any other use is prohibited.</p>
+        <p>Some artwork © Trevor Armstrong / Grimpress, used with permission. All rights reserved.</p>
+        <p>Some artwork © Daniel Comerci, used with permission. All rights reserved.</p>
+        <p>Some artwork © 2015 Dean Spencer, used with permission. All rights reserved.</p>
     </div>
 </section>

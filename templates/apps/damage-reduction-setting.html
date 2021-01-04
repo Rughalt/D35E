@@ -1,0 +1,116 @@
+<form autocomplete="off" onsubmit="event.preventDefault();">
+    <div class="flexcol">
+        <div class="flexrow">
+            <ol class="item-list dr-list">
+                <li class="item flexrow" data-ability="{{dr.uid}}">
+
+                    <div style="position: relative; flex: 0 20px; text-align: center; font-weight: 600" class="tooltip">
+                        <span class="tooltipcontent">
+                            <strong>{{localize "D35E.DROr"}}</strong><br>
+                            {{localize "D35E.DROrDesc"}}
+                          </span>
+                        <i class="far fa-plus-square"></i>
+                    </div>
+                    <div class="item-name" style="font-weight: 600">
+                        <h4  style="font-weight: 600">
+                            {{localize "D35E.DRDamageType"}}
+                        </h4>
+                    </div>
+                    <div  style="font-weight: 600;flex: 0 40px">
+                        {{localize "D35E.DRValue"}}
+                    </div>
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="lethal tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERLethalDamage"}}
+                          </span>
+                        <i class="fas fa-tint"></i>
+                    </div>
+                </li>
+                {{#each damageReduction as |dr|}}
+                <li class="item flexrow" data-ability="{{dr.uid}}">
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="dr-or-{{dr.uid}}" {{checked dr.or}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="item-name">
+                        <h4>
+                            {{dr.name}}
+                        </h4>
+                    </div>
+                    <input style="flex: 0 40px" type="text" name="dr-value-{{dr.uid}}" class="item-detail value" value="{{dr.value}}">
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="dr-lethal-{{dr.uid}}" {{checked dr.lethal}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                </li>
+                {{/each}}
+            </ol>
+            <ol class="item-list" style="margin-left: 4px">
+                <li class="item flexrow" data-ability="{{dr.uid}}">
+                    <div class="item-name" >
+                        <h4  style="font-weight: 600">
+                            {{localize "D35E.EREnergyType"}}
+                        </h4>
+                    </div>
+                    <div  style="font-weight: 600;flex: 0 40px">
+                        {{localize "D35E.ERValue"}}
+                    </div>
+
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="resistance tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERImmunity"}}
+                          </span>
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="vulnerability tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERVulnerability"}}
+                          </span>
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="lethal tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERLethalDamage"}}
+                          </span>
+                        <i class="fas fa-tint"></i>
+                    </div>
+                </li>
+                {{#each energyResistance as |dr|}}
+                <li class="item flexrow" data-ability="{{dr.uid}}">
+                    <div class="item-name">
+                        <h4>
+                            {{dr.name}}
+                        </h4>
+                    </div>
+                    <input style="flex: 0 40px" type="text" name="er-value-{{dr.uid}}" class="item-detail value" value="{{dr.value}}">
+
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="er-immunity-{{dr.uid}}" {{checked dr.immunity}}/>
+                        <span class="checkmark"></span>
+                    </label>
+
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="er-vulnerable-{{dr.uid}}" {{checked dr.vulnerable}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="er-lethal-{{dr.uid}}" {{checked dr.lethal}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                </li>
+                {{/each}}
+            </ol>
+        </div>
+        <div class="flexrow" style="margin-top: 4px;    padding: 0 4px">
+            <h3 style="margin-bottom: 0">{{localize "D35E.DRERFinal"}}</h3>
+        </div>
+        <div class="flexrow" style="margin-top: 4px;    padding: 0 4px">
+            <span style="line-height: 26px; flex: 0 150px">{{localize "D35E.ComputedDR"}}</span><input type="text" name="computed-dr" class="item-detail readonly" readonly style="border: none">
+        </div>
+        <div class="flexrow" style="margin-top: 4px;    padding: 0 4px; margin-bottom: 4px">
+            <span style="line-height: 26px; flex: 0 150px">{{localize "D35E.ComputedER"}}</span><input type="text" name="computed-er" class="item-detail readonly" readonly style="border: none">
+        </div>
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.Confirm"}}</button>
+    </div>
+</form>

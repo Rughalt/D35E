@@ -1,0 +1,38 @@
+<form onkeydown="return event.key != 'Enter';">
+    <style>
+
+
+    </style>
+    <div class="flexrow">
+
+        <label>Encounter Roll Table</label>
+        <select id="choicesCompendium" name="choices">
+            {{#each tables}}
+            <option value="{{id}}">{{name}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="flexrow" style="margin-top: 4px" >
+        <label>Target EL</label>
+        <input type="number" id="ELTarget"></input>
+    </div>
+
+    <em style="opacity: 0.7">Generator will try to create encounter list from selected Roll Table matching as closely to target EL as possible.</em>
+
+    <button style="margin-top: 8px" class="MonsterButton" type=button>Generate Encounter</button>
+    <div class="encounter-block" style="margin-top: 4px; display: none">
+        <div class="flexrow">
+            <h2 class="block-header">Generated Encounter</h2>
+        </div>
+        <div class="flexrow">
+            Generated encounter EL <span id="ELGoesHere"></span>
+        </div>
+        <div class="flexrow" style="margin-top: 4px;">
+            <label class="block-header">Monsters in encounter</label>
+        </div>
+        <fieldset id="putMonstersHere" style="padding: 0; border: 0" >
+
+        </fieldset>
+    </div>
+</form> 

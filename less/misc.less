@@ -1,4 +1,4 @@
-form {
+form, .compendium-browser-window {
   
   .form-group.stacked {
     label {
@@ -115,4 +115,109 @@ input[type=range]:disabled {
   img {
     border: none !important;
   }
+}
+
+.resistance {
+  color: #006400;
+}
+
+.vulnerability {
+  color: #8b0000;
+}
+
+.lethal {
+  color: #d04702;
+}
+
+.nonlethal {
+  color: #007b49;
+}
+
+.welcome-screen {
+  &.window-app {
+    border: 8px solid #55493B;
+    border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+    background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+    border-radius: 0;
+  }
+  .window-content {
+    overflow: hidden;
+  }
+}
+
+.scrolling-header {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  background: url(../ui/denim075.png) repeat;
+  z-index: 10;
+}
+
+.rolled-attack {
+  background: url(/systems/D35E/icons/damage-type/badges/gladius.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 44px!important;
+}
+
+.rolled-defense {
+  background: url(/systems/D35E/icons/damage-type/badges/shield.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 44px!important;
+}
+
+.rolled-fortify-value {
+  background: url(/systems/D35E/icons/damage-type/badges/chest-armor.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 34px!important;
+}
+
+.rolled-roll {
+  background: url(/systems/D35E/icons/damage-type/badges/rolling-dices.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 34px!important;
+}
+
+.rolled-versus {
+  background: url(/systems/D35E/icons/damage-type/badges/shield-impact.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif!important;
+  font-size: 34px!important;
+}
+
+span.bold {
+  font-weight: 900;
+}
+
+.game:not(.d35gm) {
+  .gm-sensitive {
+    display: none;
+  }
+}
+
+.custom-dialog.wide {
+  width: 600px !important;
 }

@@ -1,6 +1,18 @@
 <div class="traits">
+
+  {{!-- Racial Type --}}
   <div class="form-group">
-    <label>{{localize "D35E.Size"}}</label>
+    <label>{{localize "D35E.CreatureType"}}</label>
+    <select name="data.attributes.creatureType" disabled>
+      {{#select data.attributes.creatureType}}
+      {{#each config.creatureTypes as |name type|}}
+      <option value="{{type}}">{{name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{ localize 'D35E.Size' }}</label>
     <select class="actor-size" name="data.traits.size">
       {{#select data.traits.size}}
       {{#each config.actorSizes as |label size|}}
@@ -10,48 +22,43 @@
     </select>
   </div>
 
+  <div class="form-group">
+    <label>{{ localize 'D35E.TokenSize' }}</label>
+    <select class="actor-size" name="data.traits.tokenSize">
+      {{#select data.traits.tokenSize}}
+      {{#each config.actorTokenSizes as |label size|}}
+      <option value="{{size}}">{{label}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+  </div>
+
   <div class="form-group {{#unless data.traits.senses}}inactive{{/unless}}">
-    <label>{{localize "D35E.Senses"}}</label>
-    <input type="text" name="data.traits.senses" value="{{data.traits.senses}}" placeholder="{{localize "D35E.None"}}"/>
-  </div>
-
-  <div class="form-group {{#unless data.traits.dr}}inactive{{/unless}}">
-    <label>{{localize "D35E.DamRed"}}</label>
-    <input type="text" name="data.traits.dr" value="{{data.traits.dr}}" placeholder="{{localize "D35E.None"}}"/>
-  </div>
-
-  <div class="form-group {{#unless data.traits.eres}}inactive{{/unless}}">
-    <label>{{localize "D35E.EnRes"}}</label>
-    <input type="text" name="data.traits.eres" value="{{data.traits.eres}}" placeholder="{{localize "D35E.None"}}"/>
-  </div>
-
-  <div class="form-group {{#unless data.traits.cres}}inactive{{/unless}}">
-    <label>{{localize "D35E.ConRes"}}</label>
-    <input type="text" name="data.traits.cres" value="{{data.traits.cres}}" placeholder="{{localize "D35E.None"}}"/>
+    <label>{{ localize 'D35E.Senses' }}</label>
+    <input type="text" name="data.traits.senses" value="{{data.traits.senses}}" placeholder="{{ localize 'D35E.None-FrM' }}"/>
   </div>
 
   <div class="form-group {{data.traits.di.cssClass}}">
-    <label for="data.traits.di">{{localize "D35E.DamImm"}}</label>
-    <ul class="traits-list">
-      {{#each data.traits.di.selected as |v k|}}
-      <li class="tag {{k}}">{{v}}</li>
-      {{/each}}
-    </ul>
-    <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
+    <label>{{ localize 'D35E.DamRed' }}</label>
+    <input type="text" class="readonly" style="border: none" readonly value="{{damageReduction}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+    <a style="flex: 0 20px;" class="drer-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
   </div>
 
-  <div class="form-group {{data.traits.dv.cssClass}}">
-    <label for="data.traits.dv">{{localize "D35E.DamVuln"}}</label>
-    <ul class="traits-list">
-      {{#each data.traits.dv.selected as |v k|}}
-      <li class="tag {{k}}">{{v}}</li>
-      {{/each}}
-    </ul>
-    <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
+  <div class="form-group {{data.traits.di.cssClass}}">
+    <label>{{ localize 'D35E.EnRes' }}</label>
+    <input type="text" class="readonly" style="border: none" readonly value="{{energyResistance}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+    <a style="flex: 0 20px;" class="drer-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
   </div>
+
+
+  <div class="form-group {{#unless data.traits.cres}}inactive{{/unless}}">
+    <label>{{ localize 'D35E.ConRes' }}</label>
+    <input type="text" name="data.traits.cres" value="{{data.traits.cres}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+  </div>
+
 
   <div class="form-group {{data.traits.ci.cssClass}}">
-    <label for="data.traits.ci">{{localize "D35E.ConImm"}}</label>
+    <label for="data.traits.ci">{{ localize 'D35E.ConImm' }}</label>
     <ul class="traits-list">
       {{#each data.traits.ci.selected as |v k|}}
       <li class="tag {{k}}">{{v}}</li>
@@ -61,7 +68,7 @@
   </div>
 
   <div class="form-group {{data.traits.languages.cssClass}}">
-    <label for="data.traits.languages">{{localize "D35E.Languages"}}</label>
+    <label for="data.traits.languages">{{ localize 'D35E.Languages' }}</label>
     <ul class="traits-list">
       {{#each data.traits.languages.selected as |v k|}}
       <li class="tag {{k}}">{{v}}</li>
@@ -72,7 +79,7 @@
 
   {{#if isCharacter}}
   <div class="form-group {{data.traits.weaponProf.cssClass}}">
-    <label for="data.traits.weaponProf">{{localize "D35E.TraitWeaponProf"}}</label>
+    <label for="data.traits.weaponProf">{{ localize 'D35E.TraitWeaponProf' }}</label>
     <ul class="traits-list">
       {{#each data.traits.weaponProf.selected as |v k|}}
       <li class="tag {{k}}">{{v}}</li>
@@ -82,7 +89,7 @@
   </div>
 
   <div class="form-group {{data.traits.armorProf.cssClass}}">
-    <label for="data.traits.armorProf">{{localize "D35E.TraitArmorProf"}}</label>
+    <label for="data.traits.armorProf">{{ localize 'D35E.TraitArmorProf' }}</label>
     <ul class="traits-list">
       {{#each data.traits.armorProf.selected as |v k|}}
       <li class="tag {{k}}">{{v}}</li>
@@ -93,28 +100,58 @@
   {{/if}}
 
   <div class="form-group">
-    <label>{{localize "D35E.Quadruped"}}</label>
+    <label>{{ localize 'D35E.Quadruped' }}</label>
     <label class="checkbox">
       <input type="checkbox" name="data.attributes.quadruped" {{checked data.attributes.quadruped}}/>
     </label>
   </div>
 
   <div class="form-group">
-    <label>{{localize "D35E.LevelDrain"}}</label>
+    <label>{{ localize 'D35E.LevelDrain' }}</label>
     <label class="checkbox">
       <input type="text" name="data.attributes.energyDrain" value="{{#if data.attributes.energyDrain}}{{data.attributes.energyDrain}}{{/if}}"
-                                                            placeholder="0" data-dtype="Number" />
+             placeholder="0" data-dtype="Number" />
     </label>
   </div>
   <div class="form-group">
-    <label>{{localize "D35E.PartyMember"}}</label>
+    <label>{{ localize 'D35E.PartyMember' }}</label>
     <label class="checkbox">
       <input type="checkbox" name="data.isPartyMember" {{checked data.isPartyMember}}/>
     </label>
   </div>
 
   <div class="form-group">
-    <label>{{localize "D35E.Rest"}}</label>
+    <label>{{ localize 'D35E.Rest' }}</label>
     <a class="rest"><i class="fas fa-edit"></i></a>
+  </div>
+  <h3 class="block-header">{{localize "D35E.LegacyAttributes"}}</h3>
+  <div class="form-group {{#unless data.traits.dr}}inactive{{/unless}}">
+    <label>{{ localize 'D35E.DamRed' }}</label>
+    <input type="text" name="data.traits.dr" value="{{data.traits.dr}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+  </div>
+
+  <div class="form-group {{#unless data.traits.eres}}inactive{{/unless}}">
+    <label>{{ localize 'D35E.EnRes' }}</label>
+    <input type="text" name="data.traits.eres" value="{{data.traits.eres}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+  </div>
+
+  <div class="form-group {{data.traits.di.cssClass}}">
+    <label for="data.traits.di">{{ localize 'D35E.DamImm' }}</label>
+    <ul class="traits-list">
+      {{#each data.traits.di.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
+  </div>
+
+  <div class="form-group {{data.traits.dv.cssClass}}">
+    <label for="data.traits.dv">{{ localize 'D35E.DamVuln' }}</label>
+    <ul class="traits-list">
+      {{#each data.traits.dv.selected as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
   </div>
 </div>

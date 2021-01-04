@@ -41,17 +41,12 @@
             {{#if skill.arbitrary}}
                 {{#each skill.subSkills as |subSkill b|}}
                 <li class="skill flexrow" data-skill="{{s}}.{{b}}">
-
-                    {{#if skill.cs}}
-                    <strong>{{skill.label}} - {{subSkill.name}}{{#if skill.rt}}■{{/if}}</strong>
-                    {{else}}
-                    <span>{{skill.label}} - {{subSkill.name}}{{#if skill.rt}}■{{/if}}</span>
-                    {{/if}}
+                    <span  data-class-skillid="{{s}}">{{skill.label}} - {{subSkill.name}}{{#if skill.rt}}■{{/if}}</span>
                     <a class="item-control" title="Remove Skill Point" onclick="addRemoveSkill('skills.{{s}}.subSkills.{{b}}.rank',-1,{{subSkill.cs}})">
                         <i class="fas fa-minus remove-skill"></i>
                     </a>
                     <input type="text" class="skill-value" name="skills.{{s}}.subSkills.{{b}}.rank" value="{{subSkill.rank}}" readonly style="border: none" placeholder="0"/>
-                    <input type="hidden" class="skill-class"  value="{{subSkill.cs}}" readonly placeholder="0"/>
+                    <input type="hidden" class="skill-class" data-class-skillid="{{s}}" value="{{subSkill.cs}}" readonly placeholder="0"/>
                     <a class="item-control" title="Add Skill Point" onclick="addRemoveSkill('skills.{{s}}.subSkills.{{b}}.rank',1,{{subSkill.cs}})">
                         <i class="fas fa-plus add-skill"></i>
                     </a>
@@ -66,25 +61,15 @@
             <li class="skill flexrow" data-skill="{{s}}">
 
                 {{#if skill.custom}}
-                {{#if skill.cs}}
-                <strong>{{skill.name}}{{#if skill.rt}}■{{/if}}</strong>
-                {{else}}
                 <span>{{skill.name}}{{#if skill.rt}}■{{/if}}</span>
-                {{/if}}
                 {{else}}
-                {{#if skill.cs}}
-                <strong>{{skill.label}}{{#if skill.rt}}■{{/if}}
-                </strong>
-                {{else}}
-                <span>{{skill.label}}{{#if skill.rt}}■{{/if}}
-                </span>
-                {{/if}}
+                <span data-class-skillid="{{s}}">{{skill.label}}{{#if skill.rt}}■{{/if}}</span>
                 {{/if}}
                 <a class="item-control" title="Remove Skill Point" onclick="addRemoveSkill('skills.{{s}}.rank',-1,{{skill.cs}})">
                     <i class="fas fa-minus remove-skill"></i>
                 </a>
                 <input type="text" class="skill-value" name="skills.{{s}}.rank" style="border: none" value="{{skill.rank}}" readonly placeholder="0"/>
-                <input type="hidden" class="skill-class"  value="{{skill.cs}}" readonly placeholder="0"/>
+                <input type="hidden" class="skill-class" data-class-skillid="{{s}}" value="{{skill.cs}}" readonly placeholder="0"/>
                 <a class="item-control" title="Add Skill Point" onclick="addRemoveSkill('skills.{{s}}.rank',1,{{skill.cs}})">
                     <i class="fas fa-plus add-skill"></i>
                 </a>
@@ -109,8 +94,19 @@
             var skills = parseInt($('option:selected', select).attr('data-skill'));
             $('#spl-base').val(skills)
             $('#hd').val(hd)
+            let classId = $('option:selected', select).val();
             let intSkills = {{actor.data.abilities.int.mod}};
+            let bonusSkillPoints = '{{bonusSkillPoints}}';
             skills += intSkills
+            skills += parseInt(bonusSkillPoints)
+            skills = Math.max(1,skills)
+            let classes = JSON.parse('{{{classesJson}}}')
+            let classSkills = classes.find(_c => _c.id === classId).classSkills;
+            console.log(classSkills)
+            for (let key of Object.keys(classSkills)) {
+                $(`input[data-class-skillid='${key}'`).val(classSkills[key])
+                $(`span[data-class-skillid='${key}'`).toggleClass("bold", classSkills[key])
+            }
             let level = {{level}};
             let isCharacter = '{{actor.type}}' === "character";
             if (level === 1 && isCharacter)
@@ -156,12 +152,14 @@
                 $('#skill-used').css('color','black')
             }
             let intSkills = '{{actor.data.abilities.int.mod}}';
+            let bonusSkillPoints = '{{bonusSkillPoints}}';
             let level = {{level}};
             if (level === 1) {
                 $('#flb').text(', {{localize "D35E.FirstLevelMultiplier"}}')
             }
             $('#skill-per-level-base').text(splBase)
             $('#skill-per-level-int').text(intSkills)
+            $('#skill-per-level-bonus').text(bonusSkillPoints)
             $('#skill-per-level').text(spl)
             $('#skill-used').text(`${usedSkillpoints} / ${spl}`)
             $('#class-hd').text(`${hd}`)

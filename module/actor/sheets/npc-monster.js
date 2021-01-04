@@ -8,9 +8,9 @@ export class ActorSheetPFNPCMonster extends ActorSheetPFNPC {
    */
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
-      classes: ["D35E", "sheet", "actor", "npc", "lite"],
-      width: 440,
-      height: 200,
+      classes: ["D35E", "sheet", "actor", "npc", "monster"],
+        width: 350,
+        height: 200
     });
   }
     

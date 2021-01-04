@@ -1,8 +1,9 @@
-import {createTabs} from "../../lib.js";
+import {createTabs, uuidv4} from "../../lib.js";
 import {EntrySelector} from "../../apps/entry-selector.js";
 import {ItemPF} from "../entity.js";
 import {CACHE} from "../../cache.js";
 import {isMinimumCoreVersion} from "../../lib.js";
+import {DamageTypes} from "../../damage-types.js";
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -70,6 +71,11 @@ export class ItemSheetPF extends ItemSheet {
         // Include CONFIG values
         data.config = CONFIG.D35E;
 
+        // Include relevant settings
+        data.usesImperialSystem = game.settings.get("D35E", "units") === "imperial";
+
+        data.randomUuid = uuidv4();
+
         // Item Type, Status, and Details
         data.itemType = data.item.type.titleCase();
         data.itemStatus = this._getItemStatus(data.item);
@@ -87,7 +93,10 @@ export class ItemSheetPF extends ItemSheet {
         data.isGM = game.user.isGM;
         data.showIdentifyDescription = data.isGM && data.isPhysical;
         data.showUnidentifiedData = this.item.showUnidentifiedData;
-
+        data.materials = Array.from(CACHE.Materials.values());
+        data.damageTypes = Array.from(CACHE.DamageTypes.values());
+        data.baseDamageTypes = DamageTypes.getBaseDRDamageTypes()
+        data.energyDamageTypes = DamageTypes.getERDamageTypes();
 
         // Unidentified data
         if (this.item.showUnidentifiedData) {
@@ -115,6 +124,8 @@ export class ItemSheetPF extends ItemSheet {
         // Prepare feat specific stuff
         if (data.item.type === "feat") {
             data.isClassFeature = true; //Any feat can be a class feature
+            if (data.item.data.featType === 'spellSpecialization')
+                data.isSpellSpecialization = true;
         }
 
         data.is07Xup = isMinimumCoreVersion("0.7.2");
@@ -241,6 +252,11 @@ export class ItemSheetPF extends ItemSheet {
             data.isNaturalAttack = data.item.data.attackType === "natural";
         }
 
+        if (data.item.data.weight) {
+            const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
+            data.convertedWeight = data.item.data.weight * conversion;
+        }
+
         // Prepare spell specific stuff
         if (data.item.type === "spell") {
             let spellbook = null;
@@ -263,7 +279,10 @@ export class ItemSheetPF extends ItemSheet {
                 spelllikes: [],
                 abilities: [],
                 traits: [],
+                addedAbilities: []
             }
+
+            let alreadyAddedAbilities = new Set();
 
             {
                 let spellLikes = game.packs.get("D35E.spelllike");
@@ -282,22 +301,34 @@ export class ItemSheetPF extends ItemSheet {
             }
 
             {
-                let itemPack = game.packs.get("D35E.racial-abilities");
-                let items = []
-                await itemPack.getIndex().then(index => items = index);
-                for (let entry of items) {
-                    await itemPack.getEntity(entry._id).then(e => {
-                            if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
-                                if (e.data.type === "feat")
-                                    data.children.traits.push(e);
-                                else
-                                    data.children.abilities.push(e);
-                                this.childItemMap.set(entry._id, e);
-                            }
-                        }
-                    )
+
+                for (let e of new Set(CACHE.RacialFeatures.get(this.item.data.name) || [])) {
+                    if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
+                        data.children.abilities.push({
+                            item:e,
+                            pack:e.pack,
+                            disabled: (this.item.data.data.disabledAbilities || []).some(obj => obj.uid === e.data.data.uniqueId)
+                        });
+                        this.childItemMap.set(e._id, e);
+                    }
+
                 }
 
+            }
+
+            for (let ability of this.item.data.data.addedAbilities || []) {
+                let e = CACHE.AllAbilities.get(ability.uid);
+                data.children.addedAbilities.push({
+                    item:e,
+                    pack:e.pack,
+                });
+                if (e.data.data.uniqueId.indexOf("*" === -1)) alreadyAddedAbilities.add(e.data.data.uniqueId)
+            }
+
+            data.allAbilities = []
+            for (var e of CACHE.AllAbilities.values()) {
+                if (!alreadyAddedAbilities.has(e.data.data.uniqueId))
+                    data.allAbilities.push(e);
             }
         }
 
@@ -340,6 +371,7 @@ export class ItemSheetPF extends ItemSheet {
             data.hasMaxLevel = data.data.maxLevel !== undefined && data.data.maxLevel !== null && data.data.maxLevel !== "" && data.data.maxLevel !== 0;
             data.isBaseClass = data.data.classType === "base";
             data.isRacialHD = data.data.classType === "racial";
+            data.isTemplate = data.data.classType === "template";
             data.isPsionSpellcaster = data.data.spellcastingType === "psionic";
             data.isSpellcaster = data.data.spellcastingType !== undefined && data.data.spellcastingType !== null && data.data.spellcastingType !== "none";
             data.isNonPsionSpellcaster = data.isSpellcaster && !data.isPsionSpellcaster
@@ -351,15 +383,13 @@ export class ItemSheetPF extends ItemSheet {
                 spelllikes: [],
                 abilities: [],
                 traits: [],
+                addedAbilities: []
             }
-            let alreadyAddedDescriptions = new Set()
+            let alreadyAddedAbilities = new Set();
+            let alreadyAddedDescriptions = new Set();
             data.abilitiesDescription = []
             {
                 for (let e of new Set(CACHE.ClassFeatures.get(this.item.data.name) || [])) {
-                    if (e.data.type === "feat")
-                        data.children.traits.push(e);
-                    else
-                        data.children.abilities.push(e);
 
                     this.childItemMap.set(e._id, e);
 
@@ -369,7 +399,15 @@ export class ItemSheetPF extends ItemSheet {
                         if (!data.childItemLevels.has(level)) {
                             data.childItemLevels.set(level, [])
                         }
-                        data.childItemLevels.get(level).push(e);
+                        let _e = {
+                            item:e,
+                            level:level,
+                            pack:e.pack,
+                            disabled: (this.item.data.data.disabledAbilities || []).some(obj => parseInt(obj.level || "0") === level && obj.uid === e.data.data.uniqueId)
+                        }
+                        data.children.abilities.push(_e);
+                        data.childItemLevels.get(level).push(_e);
+                        if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
                         if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
                             data.abilitiesDescription.push({
                                 level: level,
@@ -382,8 +420,36 @@ export class ItemSheetPF extends ItemSheet {
                     }
                 }
 
+                for (let ability of this.item.data.data.addedAbilities || []) {
+                    let e = CACHE.AllAbilities.get(ability.uid);
+                    let _e = {
+                        item:e,
+                        level:ability.level,
+                        pack:e.pack,
+                    }
+                        data.children.addedAbilities.push(_e);
+                    if (!data.childItemLevels.has(ability.level)) {
+                        data.childItemLevels.set(ability.level, [])
+                    }
+                    data.childItemLevels.get(ability.level).push(_e);
+                    if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
+                    if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
+                        data.abilitiesDescription.push({
+                            level: ability.level,
+                            name: e.name,
+                            description: TextEditor.enrichHTML(e.data.data.description.value)
+                        })
+                        alreadyAddedDescriptions.add(e._id)
+                    }
+                }
+
             }
 
+            data.allAbilities = []
+            for (var e of CACHE.AllAbilities.values()) {
+                if (!alreadyAddedAbilities.has(e.data.data.uniqueId) || e.data.data.uniqueId.indexOf("*") !== -1)
+                    data.allAbilities.push(e);
+            }
 
 
             for (let level = 1; level < data.data.maxLevel + 1; level++) {
@@ -519,6 +585,23 @@ export class ItemSheetPF extends ItemSheet {
                 }
             });
         }
+
+        // Prepare stuff for attacks with conditionals
+        if (data.item.data.conditionals) {
+            data.conditionals = { targets: {}, conditionalModifierTypes: {} };
+            for (const conditional of data.item.data.conditionals) {
+                for (const modifier of conditional.modifiers) {
+                    modifier.targets = this.item.getConditionalTargets();
+                    modifier.subTargets = this.item.getConditionalSubTargets(modifier.target);
+                    modifier.conditionalModifierTypes = this.item.getConditionalModifierTypes(modifier.target);
+                    modifier.conditionalCritical = this.item.getConditionalCritical(modifier.target);
+                    modifier.isAttack = modifier.target === "attack";
+                    modifier.isDamage = modifier.target === "damage";
+                    modifier.isSpell = modifier.target === "spell";
+                }
+            }
+        }
+
 
         // Prepare stuff for items with context notes
         if (data.item.data.contextNotes) {
@@ -677,6 +760,43 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        // Handle conditionals array
+        let conditionals = Object.entries(formData).filter((e) => e[0].startsWith("data.conditionals"));
+        formData["data.conditionals"] = conditionals.reduce((arr, entry) => {
+            let [i, j, k] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = ItemPF.defaultConditional;
+            if (k) {
+                const target = formData[`data.conditionals.${i}.${j}.target`];
+                if (!arr[i].modifiers[j]) arr[i].modifiers[j] = ItemPF.defaultConditionalModifier;
+                arr[i].modifiers[j][k] = entry[1];
+                // Target dependent keys
+                if (["subTarget", "critical", "type"].includes(k)) {
+                    const target = (conditionals.find((o) => o[0] === `data.conditionals.${i}.${j}.target`) || [])[1];
+                    const val = entry[1];
+                    if (typeof target === "string") {
+                        let keys;
+                        switch (k) {
+                            case "subTarget":
+                                keys = Object.keys(this.item.getConditionalSubTargets(target));
+                                break;
+                            case "type":
+                                keys = Object.keys(this.item.getConditionalModifierTypes(target));
+                                break;
+                            case "critical":
+                                keys = Object.keys(this.item.getConditionalCritical(target));
+                                break;
+                        }
+                        // Reset subTarget, non-damage type, and critical if necessary
+                        if (!keys.includes(val) && target !== "damage" && k !== "type") arr[i].modifiers[j][k] = keys[0];
+                    }
+                }
+            } else {
+                arr[i][j] = entry[1];
+            }
+            return arr;
+        }, []);
+
+
         // Handle change array
         let change = Object.entries(formData).filter(e => e[0].startsWith("data.changes"));
         formData["data.changes"] = change.reduce((arr, entry) => {
@@ -688,6 +808,22 @@ export class ItemSheetPF extends ItemSheet {
 
         let changes = Object.entries(formData).filter(e => e[0].startsWith("data.combatChanges"));
         formData["data.combatChanges"] = changes.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
+        let resistances = Object.entries(formData).filter(e => e[0].startsWith("data.resistances"));
+        formData["data.resistances"] = resistances.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
+        let damageReduction = Object.entries(formData).filter(e => e[0].startsWith("data.damageReduction"));
+        formData["data.damageReduction"] = damageReduction.reduce((arr, entry) => {
             let [i, j] = entry[0].split(".").slice(2);
             if (!arr[i]) arr[i] = [];
             arr[i][j] = entry[1];
@@ -756,6 +892,7 @@ export class ItemSheetPF extends ItemSheet {
             const tabGroups = {
                 "primary": {
                     "description": {},
+                    "configuration": {},
                 },
             };
             createTabs.call(this, html, tabGroups);
@@ -808,6 +945,8 @@ export class ItemSheetPF extends ItemSheet {
         // Modify buff changes
         html.find(".change-control").click(this._onChangeControl.bind(this));
         html.find(".combat-change-control").click(this._onCombatChangeControl.bind(this));
+        html.find(".resistance-control").click(this._onResistanceControl.bind(this));
+        html.find(".dr-control").click(this._onDRControl.bind(this));
 
 
         // Modify note changes
@@ -818,6 +957,15 @@ export class ItemSheetPF extends ItemSheet {
             html.find("button[name='create-attack']").click(this._createAttack.bind(this));
         }
 
+        if (["feat"].includes(this.item.data.type)) {
+            html.find("button[name='add-domain-spells']").click(this._addSpellsToSpellbook.bind(this));
+        }
+
+
+        // Modify conditionals
+        html.find(".conditional-control").click(this._onConditionalControl.bind(this));
+
+
         // Listen to field entries
         html.find(".entry-selector").click(this._onEntrySelector.bind(this));
 
@@ -825,6 +973,14 @@ export class ItemSheetPF extends ItemSheet {
         // Item summaries
         html.find('.item .child-item h4').click(event => this._onChildItemSummary(event));
         html.find('.item .enh-item h4').click(event => this._onEnhItemSummary(event));
+        html.find('.item a.disable-ability').click(event => this._onDisableAbility(event));
+        html.find('.item a.enable-ability').click(event => this._onEnableAbility(event));
+        html.find('.item a.delete-ability').click(event => this._onDeleteAbility(event));
+        html.find('.item a.add-ability').click(event => this._onAddAbility(event));
+        html.find(".item .change-class-ability-level").off("change").change(this._onAbilityLevelChange.bind(this));
+
+
+        html.find('.view-details-material').click(event => this._onMaterialItemSummary(event));
 
         let handler = ev => this._onDragStart(ev);
         html.find('li.item').each((i, li) => {
@@ -834,6 +990,8 @@ export class ItemSheetPF extends ItemSheet {
         });
 
 
+        html.find('.spell').on("drop", this._onDropSpell.bind(this));
+        html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
         html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
 
         html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
@@ -848,6 +1006,18 @@ export class ItemSheetPF extends ItemSheet {
 
         // Quick Item Action control
         html.find(".item-actions a").mouseup(ev => this._quickItemActionControl(ev));
+
+        html.find(".search-list").on("change", event => event.stopPropagation());
+
+        // Conditional Dragging
+        html.find("li.conditional").each((i, li) => {
+            li.setAttribute("draggable", true);
+            li.addEventListener("dragstart", (ev) => this._onDragConditionalStart(ev), false);
+        });
+
+        // Conditional Dropping
+        html.find('div[data-tab="conditionals"]').on("drop", this._onConditionalDrop.bind(this));
+
     }
 
     /* -------------------------------------------- */
@@ -1071,6 +1241,50 @@ export class ItemSheetPF extends ItemSheet {
         }
     }
 
+    async _onResistanceControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = this.item.data.data.resistances || [];
+            // Combat Changes are
+            return this.item.update({"data.resistances": changes.concat([["", "", false, false]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.resistances);
+            changes.splice(Number(li.dataset.change), 1);
+            return this.item.update({"data.resistances": changes});
+        }
+    }
+
+    async _onDRControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = this.item.data.data.damageReduction || [];
+            // Combat Changes are
+            return this.item.update({"data.damageReduction": changes.concat([["", ""]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.damageReduction);
+            changes.splice(Number(li.dataset.change), 1);
+            return this.item.update({"data.damageReduction": changes});
+        }
+    }
+
     async _onNoteControl(event) {
         event.preventDefault();
         const a = event.currentTarget;
@@ -1104,6 +1318,12 @@ export class ItemSheetPF extends ItemSheet {
         await this.item.actor.createAttackFromWeapon(this.item);
     }
 
+    async _addSpellsToSpellbook(event) {
+        if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
+        await this.item.actor.addSpellsToSpellbook(this.item);
+
+    }
+
     _onEntrySelector(event) {
         event.preventDefault();
         const a = event.currentTarget;
@@ -1133,27 +1353,101 @@ export class ItemSheetPF extends ItemSheet {
         if (manualUpdate && Object.keys(updateData).length > 0) await this.item.update(updateData);
     }
 
+    async _onAbilityLevelChange(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        const value = Number(event.currentTarget.value);
+        let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
+        _addedAbilities.filter(function (obj) {
+            return (obj.uid === uid && (level === "" || parseInt(obj.level) === parseInt(level)))
+        }).forEach(i => {
+            i.level = value;
+        });
+        updateData[`data.addedAbilities`] = _addedAbilities;
+        this.item.update(updateData);
+    }
+
+    async _onAddAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
+        _addedAbilities.push({uid: uid, level: 0})
+        updateData[`data.addedAbilities`] = _addedAbilities;
+        await this.item.update(updateData);
+    }
+
+    async _onDeleteAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        let _addedAbilities = duplicate(getProperty(this.item.data, `data.addedAbilities`) || []);
+        _addedAbilities = _addedAbilities.filter(function (obj) {
+            return !(obj.uid === uid && (level === "" || parseInt(obj.level) === parseInt(level)));
+        });
+        updateData[`data.addedAbilities`] = _addedAbilities;
+        await this.item.update(updateData);
+    }
+    async _onEnableAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+
+        let updateData = {}
+        let _disabledAbilities = duplicate(getProperty(this.item.data, `data.disabledAbilities`) || []);
+        _disabledAbilities = _disabledAbilities.filter(function (obj) {
+            return !(obj.uid === uid && (level === "" || parseInt(obj.level) === parseInt(level)));
+        });
+        updateData[`data.disabledAbilities`] = _disabledAbilities;
+        await this.item.update(updateData);
+    }
+
+    async _onDisableAbility(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            uid = li.attr("data-item-uid"),
+            level = li.attr("data-item-level"),
+            pack = li.attr("data-pack");
+        let updateData = {}
+        let _disabledAbilities = duplicate(getProperty(this.item.data, `data.disabledAbilities`) || []);
+        _disabledAbilities.push({uid: uid, level: level})
+        updateData[`data.disabledAbilities`] = _disabledAbilities;
+        await this.item.update(updateData);
+    }
+
     _onChildItemSummary(event) {
         event.preventDefault();
         let li = $(event.currentTarget).parents(".item-box"),
-            item = this.childItemMap.get(li.attr("data-item-id"));
+            item = CACHE.AllAbilities.get(li.attr("data-item-uid")),
+            pack = this.childItemMap.get(li.attr("data-pack"));
 
 
         item.sheet.render(true);
+    }
 
-        // // Toggle summary
-        // if ( li.hasClass("expanded") ) {
-        //   let summary = li.children(".item-summary");
-        //   summary.slideUp(200, () => summary.remove());
-        // } else {
-        //   let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
-        //   let props = $(`<div class="item-properties"></div>`);
-        //   chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
-        //   div.append(props);
-        //   li.append(div.hide());
-        //   div.slideDown(200);
-        // }
-        // li.toggleClass("expanded");
+    _onMaterialItemSummary(event) {
+        event.preventDefault();
+        let li = $(event.currentTarget).parents(".item-box"),
+            item = CACHE.Materials.get(this.item.data.data.material.data.uniqueId),
+            pack = this.childItemMap.get(li.attr("data-pack"));
+
+
+        item.sheet.render(true);
     }
 
     _onEnhItemSummary(event) {
@@ -1180,7 +1474,7 @@ export class ItemSheetPF extends ItemSheet {
     _onDragStart(event) {
         // Get the Compendium pack
         const li = event.currentTarget;
-        const packName = li.parentElement.getAttribute("data-pack");
+        const packName = li.getAttribute('data-pack');
         const pack = game.packs.get(packName);
         // console.log(event)
         if (!pack) return;
@@ -1190,6 +1484,68 @@ export class ItemSheetPF extends ItemSheet {
             pack: pack.collection,
             id: li.getAttribute('data-item-id')
         }));
+    }
+
+    async _onDropFullAttack(event) {
+        event.preventDefault();
+        let attackId = $(event.delegateTarget).attr('data-attack')
+        let data;
+
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+
+        if (!data.actorId) {
+            return ui.notifications.warn(game.i18n.localize("D35E.FullAttackNeedDropFromActor"));
+        }
+        if (data.type === "Item" && data?.data?.type === "attack") {
+            let updateData = {}
+            updateData[`data.attacks.${attackId}.id`] = data.data._id;
+            updateData[`data.attacks.${attackId}.name`] = data.data.name;
+            updateData[`data.attacks.${attackId}.img`] = data.data.img;
+            updateData[`data.attacks.${attackId}.count`] = 1;
+            updateData[`data.attacks.${attackId}.primary`] = data.data.data.attackType === "natural" && data.data.data.primaryAttack;
+            updateData[`data.attacks.${attackId}.isWeapon`] = data.data.data.attackType === "weapon";
+            this.item.update(updateData)
+        }
+    }
+
+    async _onDropSpell(event) {
+        event.preventDefault();
+        let spellLevel = $(event.delegateTarget).attr('data-spell')
+        let data;
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+
+        let dataType = "";
+
+        if (data.type === "Item") {
+            let itemData = {};
+            if (data.pack) {
+                let updateData = {}
+                dataType = "compendium";
+                const pack = game.packs.find(p => p.collection === data.pack);
+                const packItem = await pack.getEntity(data.id);
+                if (packItem != null) 
+                {
+                    itemData = packItem.data;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.id`] = data.id;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.pack`] = data.pack;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.name`] = packItem.name;
+                    updateData[`data.spellSpecialization.spells.${spellLevel}.img`] = packItem.img;
+                    this.item.update(updateData)
+                }
+            }
+        }
+
+
     }
 
     async _onDrop(event) {
@@ -1256,6 +1612,8 @@ export class ItemSheetPF extends ItemSheet {
 
 
     }
+
+
 
 
     _createEnhancementSpellDialog(itemData) {
@@ -1587,6 +1945,88 @@ export class ItemSheetPF extends ItemSheet {
         // Quick Attack
         if (a.classList.contains("item-attack")) {
             await this.item.useEnhancementItem(item)
+        }
+    }
+
+    _onDragConditionalStart(event) {
+        const elem = event.currentTarget;
+        const conditional = this.object.data.data.conditionals[elem.dataset?.conditional];
+        event.dataTransfer.setData("text/plain", JSON.stringify(conditional));
+    }
+
+    async _onConditionalDrop(event) {
+        event.preventDefault();
+
+        let data;
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData("text/plain"));
+            // Surface-level check for conditional
+            if (!(data.default != null && typeof data.name === "string" && Array.isArray(data.modifiers))) return;
+        } catch (e) {
+            return false;
+        }
+
+        const item = this.object;
+        // Check targets and other fields for valid values, reset if necessary
+        for (let modifier of data.modifiers) {
+            if (!Object.keys(item.getConditionalTargets()).includes(modifier.target)) modifier.target = "";
+            let keys;
+            for (let [k, v] of Object.entries(modifier)) {
+                switch (k) {
+                    case "subTarget":
+                        keys = Object.keys(item.getConditionalSubTargets(modifier.target));
+                        break;
+                    case "type":
+                        keys = Object.keys(item.getConditionalModifierTypes(modifier.target));
+                        break;
+                    case "critical":
+                        keys = Object.keys(item.getConditionalCritical(modifier.target));
+                        break;
+                }
+                if (!keys?.includes(v)) v = keys?.[0] ?? "";
+            }
+        }
+
+        const conditionals = item.data.data.conditionals || [];
+        await this.object.update({ "data.conditionals": conditionals.concat([data]) });
+    }
+    async _onConditionalControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new conditional
+        if (a.classList.contains("add-conditional")) {
+            await this._onSubmit(event); // Submit any unsaved changes
+            const conditionals = this.item.data.data.conditionals || [];
+            return this.item.update({ "data.conditionals": conditionals.concat([ItemPF.defaultConditional]) });
+        }
+
+        // Remove a conditional
+        if (a.classList.contains("delete-conditional")) {
+            await this._onSubmit(event); // Submit any unsaved changes
+            const li = a.closest(".conditional");
+            const conditionals = duplicate(this.item.data.data.conditionals);
+            conditionals.splice(Number(li.dataset.conditional), 1);
+            return this.item.update({ "data.conditionals": conditionals });
+        }
+
+        // Add a new conditional modifier
+        if (a.classList.contains("add-conditional-modifier")) {
+            await this._onSubmit(event);
+            const li = a.closest(".conditional");
+            const conditionals = this.item.data.data.conditionals;
+            conditionals[Number(li.dataset.conditional)].modifiers.push(ItemPF.defaultConditionalModifier);
+            // duplicate object to ensure update
+            return this.item.update({ "data.conditionals": duplicate(conditionals) });
+        }
+
+        // Remove a conditional modifier
+        if (a.classList.contains("delete-conditional-modifier")) {
+            await this._onSubmit(event);
+            const li = a.closest(".conditional-modifier");
+            const conditionals = duplicate(this.item.data.data.conditionals);
+            conditionals[Number(li.dataset.conditional)].modifiers.splice(Number(li.dataset.modifier), 1);
+            return this.item.update({ "data.conditionals": conditionals });
         }
     }
 

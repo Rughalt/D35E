@@ -10,9 +10,14 @@ export const migrateWorld = async function() {
   // Migrate World Actors
   for ( let a of game.actors.entities ) {
     try {
-      const updateData = await migrateActorData(a);
+
+      let itemsToAdd = []
+      const updateData = await migrateActorData(a,itemsToAdd);
       console.log(`Migrating Actor entity ${a.name}`);
       await a.update(updateData);
+      console.log(`Adding missing items to ${a.name}`);
+      if (itemsToAdd.length)
+        await a.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
     } catch(err) {
       console.error(err);
     }
@@ -102,9 +107,8 @@ export const migrateCompendium = async function(pack) {
  * @param {Actor} actor   The actor to Update
  * @return {Object}       The updateData to apply
  */
-export const migrateActorData = async function(actor) {
+export const migrateActorData = async function(actor, itemsToAdd) {
   const updateData = {};
-
   _migrateCharacterLevel(actor, updateData);
   _migrateActorEncumbrance(actor, updateData);
   _migrateActorDefenseNotes(actor, updateData);
@@ -116,7 +120,8 @@ export const migrateActorData = async function(actor) {
   _migrateActorSpellbookDCFormula(actor, updateData);
   _migrateActorRace(actor, updateData)
   _migrateActorTokenVision(actor, updateData);
-
+  await _migrateWeaponProficiencies(actor,updateData,itemsToAdd)
+  await _migrateArmorProficiencies(actor,updateData,itemsToAdd)
 
   if ( !actor.items ) return updateData;
 
@@ -157,6 +162,7 @@ export const migrateItemData = function(item) {
   _migrateWeaponSize(item, updateData);
   _migrateContainer(item, updateData);
   _migrateEnhancement(item, updateData);
+  _migrateSpellName(item, updateData);
 
   // Return the migrated update data
   return updateData;
@@ -298,6 +304,90 @@ const _migrateActorEncumbrance = function(ent, updateData) {
     }
   }
 };
+
+const _migrateWeaponProficiencies = async function(actor, updateData, itemsToAdd) {
+  if (!itemsToAdd) return;
+  let weaponProfItemId = "F7ouXcMvMxDFNq8S";
+  let martialWeaponProfItemId = "L6Zih954XajPhxk0";
+  let simpleWeaponProfItemId = "5jR5ehCRndtJpCGb";
+  let pack = game.packs.get("D35E.feats");
+  if (!(actor instanceof Actor)) return;
+  let data = actor.data.data;
+  if (data.traits && data.traits.weaponProf && data.traits.weaponProf.value) {
+    if (data.traits.weaponProf.value.indexOf("sim") !== -1) {
+      let item = await pack.getEntity(simpleWeaponProfItemId)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    if (data.traits.weaponProf.value.indexOf("mar") !== -1) {
+      let item = await pack.getEntity(martialWeaponProfItemId)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    updateData["data.traits.weaponProf.value"] = [];
+  }
+  if (data.traits && data.traits.weaponProf && data.traits.weaponProf.custom) {
+    let weaponProfsCustom =  data.traits.weaponProf.custom.split(";");
+    for (const weaponName of weaponProfsCustom) {
+      let item = await pack.getEntity(weaponProfItemId)
+      let data = duplicate(item.data);
+      delete data._id;
+      data.data.customAttributes["_87nolel8u"].value = weaponName
+      data.name = data.data.nameFormula.replace("${this.custom.weaponname}",weaponName)
+      itemsToAdd.push(data);
+    }
+    updateData["data.traits.weaponProf.custom"] = '';
+  }
+}
+
+const _migrateArmorProficiencies = async function(actor, updateData, itemsToAdd) {
+  if (!itemsToAdd) return;
+  let spr = "AfSyZ6BqEOyyDzBD"
+  let sprTower = "L2aYtdPHUaGH8UPE"
+  let armProfLight = "tflks0QMIbzAyEle"
+  let armProfMed = "ZwIMzns2opN6xxIo"
+  let armProfHeavy = "sh3SLeHp45GMtm3n"
+  let pack = game.packs.get("D35E.feats");
+  if (!(actor instanceof Actor)) return;
+  let data = actor.data.data;
+  if (data.traits && data.traits.weaponProf && data.traits.armorProf.value) {
+    if (data.traits.armorProf.value.indexOf("twr") !== -1) {
+      let item = await pack.getEntity(sprTower)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    if (data.traits.armorProf.value.indexOf("shl") !== -1) {
+      let item = await pack.getEntity(spr)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    if (data.traits.armorProf.value.indexOf("lgt") !== -1) {
+      let item = await pack.getEntity(armProfLight)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    if (data.traits.armorProf.value.indexOf("med") !== -1) {
+      let item = await pack.getEntity(armProfMed)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    if (data.traits.armorProf.value.indexOf("hvy") !== -1) {
+      let item = await pack.getEntity(armProfHeavy)
+      let data = duplicate(item.data);
+      delete data._id;
+      itemsToAdd.push(data);
+    }
+    updateData["data.traits.armorProf.value"] = [];
+  }
+
+}
+
 
 const _migrateActorRace = function(actor, updateData) {
   // if (!(actor instanceof Actor)) return;
@@ -458,6 +548,11 @@ const _migrateWeaponImprovised = function(ent, updateData) {
   }
 };
 
+const _migrateSpellName = function(ent, updateData) {
+  if (ent.type !== "spell") return;
+  updateData["name"] = ent.data.name.trim()
+}
+
 const _migrateSpellDescription = function(ent, updateData) {
   if (ent.type !== "spell") return;
 
@@ -480,13 +575,13 @@ const _migrateSpellDivineFocus = function(ent, updateData) {
 };
 
 const _migrateItemDC = function(ent, updateData) {
-  const value = getProperty(ent.data.data, "save.type");
-  if (value == null) return;
-  if (value === "") updateData["data.save.description"] = "";
-  else if (value === "fort") updateData["data.save.description"] = "Fortitude partial";
-  else if (value === "ref") updateData["data.save.description"] = "Reflex half";
-  else if (value === "will") updateData["data.save.description"] = "Will negates";
-  updateData["data.save.-=type"] = null;
+  // const value = getProperty(ent.data.data, "save.type");
+  // if (value == null) return;
+  // if (value === "") updateData["data.save.description"] = "";
+  // else if (value === "fort") updateData["data.save.description"] = "Fortitude partial";
+  // else if (value === "ref") updateData["data.save.description"] = "Reflex half";
+  // else if (value === "will") updateData["data.save.description"] = "Will negates";
+  // updateData["data.save.-=type"] = null;
 };
 
 const _migrateClassDynamics = function(ent, updateData) {

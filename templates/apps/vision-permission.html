@@ -14,7 +14,7 @@
         <hr/>
 
         {{#each users}}
-        <div class="form-group{{#if this.hidden}} hidden{{/if}}">
+        <div class="form-group{{#if this.hidden}} visionperm-hidden{{/if}}">
             <label>{{this.user.name}}</label>
             <select name="users.{{this.user._id}}.level">
                 {{#select this.level}}

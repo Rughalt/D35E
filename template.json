@@ -110,6 +110,10 @@
             }
           },
           "naturalAC": 0,
+          "fortification": {
+            "value": 0,
+            "total": 0
+          },
           "ac": {
             "normal": {
               "value": 0,
@@ -126,7 +130,8 @@
           },
           "bab": {
             "value": 0,
-            "total": 0
+            "total": 0,
+            "base": 0
           },
           "cmd": {
             "value": 0,
@@ -166,13 +171,16 @@
           "quadruped": false,
           "savingThrows": {
             "fort": {
-              "total": 0
+              "total": 0,
+              "base": 0
             },
             "ref": {
-              "total": 0
+              "total": 0,
+              "base": 0
             },
             "will": {
-              "total": 0
+              "total": 0,
+              "base": 0
             }
           },
           "hp": {
@@ -180,8 +188,8 @@
             "min": -100,
             "base": 0,
             "max": 0,
-            "temp": null,
-            "nonlethal": null
+            "temp": 0,
+            "nonlethal": 0
           },
           "turnUndeadHdTotal": 0,
           "turnUndeadUsesBonusFormula": "",
@@ -205,6 +213,8 @@
           },
           "turnUndeadUsesTotal": 0,
           "sneakAttackDiceTotal": 0,
+          "minionClassLevels": {},
+          "minionDistance": {},
           "spellPointsTotal": [],
           "powerPointsTotal": 0,
           "wounds": {
@@ -290,7 +300,19 @@
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
-                "spontaneous": false
+                "spontaneous": false,
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               },
               "secondary": {
                 "name": "Secondary",
@@ -315,7 +337,19 @@
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
-                "spontaneous": false
+                "spontaneous": false,
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               },
               "tertiary": {
                 "name": "Tertiary",
@@ -340,7 +374,19 @@
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
-                "spontaneous": false
+                "spontaneous": false,
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               },
               "spelllike": {
                 "name": "Spell-likes",
@@ -365,7 +411,19 @@
                 "powerPoints": 0,
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
-                "spontaneous": false
+                "spontaneous": false,
+                "hasSpecialSlot": false,
+                "specialSlots": {
+                  "level1": null,
+                  "level2": null,
+                  "level3": null,
+                  "level4": null,
+                  "level5": null,
+                  "level6": null,
+                  "level7": null,
+                  "level8": null,
+                  "level9": null
+                }
               }
             }
           },
@@ -374,7 +432,12 @@
           },
           "spelldc": {
             "_deprecated": true
-          }
+          },
+          "damageReduction": {
+            "any": 0,
+            "types": []
+          },
+          "energyResistance": []
         },
         "details": {
           "level": {
@@ -893,6 +956,7 @@
         "customSkills": {},
         "traits": {
           "size": "med",
+          "tokensize": "actor",
           "senses": "",
           "dr": "",
           "eres": "",
@@ -971,15 +1035,23 @@
         "type": "",
         "environment": "",
         "cr": 1,
+        "totalCr": 1,
         "xp": {
           "value": 10
         },
         "levelUpProgression": false
+      },
+      "master": {
+        "id": null,
+        "img": null,
+        "name": null,
+        "data": {},
+        "distance": 0
       }
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement"],
+    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"],
     "templates": {
       "changes": {
         "changes": [],
@@ -987,12 +1059,16 @@
           "loseDexToAC": false,
           "noStr": false,
           "noDex": false,
+          "noInt": false,
+          "noCon": false,
           "oneInt": false,
           "oneWis": false,
           "oneCha": false,
           "noEncumbrance": false,
           "mediumArmorFullSpeed": false,
-          "heavyArmorFullSpeed": false
+          "heavyArmorFullSpeed": false,
+          "multiAttack": false,
+          "multiweaponAttack": false
         },
         "conditionFlags": {
           "dazzled": false,
@@ -1001,7 +1077,9 @@
         },
         "combatChanges": [],
         "sizeOverride": "",
-        "counterName": ""
+        "counterName": "",
+        "resistances": [],
+        "damageReduction": []
       },
       "contextNotes": {
         "contextNotes": []
@@ -1031,6 +1109,11 @@
             "updatePrice": false
           },
           "items": []
+        }
+      },
+      "physicalMaterial": {
+        "material": {
+          "data": null
         }
       },
       "itemDescription": {
@@ -1118,11 +1201,14 @@
           "damageMult": 1,
           "critRange": 20,
           "critMult": 2,
-          "twoHandedOnly": false
+          "twoHandedOnly": false,
+          "vsTouchAc": false
         },
         "save": {
           "dc": 0,
-          "description": ""
+          "description": "",
+          "ability": "",
+          "type": ""
         },
         "effectNotes": "",
         "attackNotes": "",
@@ -1140,10 +1226,17 @@
       "levels": 1,
       "maxLevel": 20,
       "prestigeLevels": 0,
+      "la": 0,
+      "hdReplace": "",
+      "hdReplaceRacialOnly": false,
+      "addedAbilities": [],
+      "disabledAbilities": [],
       "turnUndeadLevelFormula": "0",
       "sneakAttackGroup": "none",
       "automaticFeatures": false,
       "sneakAttackFormula": "0",
+      "minionGroup": "none",
+      "minionLevelFormula": "0",
       "spellcastingType": null,
       "spellcastingSpontaneus": false,
       "spellsPerLevel": [],
@@ -1151,6 +1244,7 @@
       "spellcastingDescription": "None",
       "spellcastingSpellname": "Spell",
       "spellcastingSpellnamePl": "Spells",
+      "hasSpecialSlot": false,
       "spellPointGroup": "wizard",
       "spellcastingAbility": "int",
       "spellPointBonusFormula": "0",
@@ -1247,6 +1341,7 @@
       "hp": 8,
       "bab": "low",
       "skillsPerLevel": 0,
+      "allSpellsKnown": false,
       "creatureType": "humanoid",
       "savingThrows": {
         "fort": { "value": "low" },
@@ -1308,7 +1403,7 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light"],
+      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light","physicalMaterial"],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
@@ -1334,6 +1429,76 @@
         "classes": []
       },
       "crOffset": "",
+      "spellSpecializationName": "",
+      "spellSpecializationForbiddenNames": "",
+      "spellSpecialization" : {
+        "isDomain": false,
+        "spells": {
+          "level1": {
+            "level": 1,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level2": {
+            "level": 2,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level3": {
+            "level": 3,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level4": {
+            "level": 4,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level5": {
+            "level": 5,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level6": {
+            "level": 6,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level7": {
+            "level": 7,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level8": {
+            "level": 8,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          },
+          "level9": {
+            "level": 9,
+            "name": "",
+            "img": "",
+            "pack": null,
+            "id": null
+          }
+        }
+      },
       "recharge": {
         "value": null,
         "charged": false,
@@ -1377,6 +1542,7 @@
         "divineFocus": 0
       },
       "castTime": "",
+      "conditionals": [],
       "materials": {
         "value": "",
         "consumed": {
@@ -1385,6 +1551,7 @@
         },
         "focus": ""
       },
+      "isSpellSpontaneousReplacement": false,
       "spellbook": "primary",
       "preparation": {
         "preparedAmount": 0,
@@ -1398,6 +1565,7 @@
       "sr": true,
       "pr": true,
       "shortDescription": "",
+      "snip": "",
       "spellDuration": "",
       "spellEffect": "",
       "spellArea": "",
@@ -1405,11 +1573,14 @@
         "value": "",
         "_deprecated": true
       },
-      "showInQuickbar": false
+      "showInQuickbar": false,
+      "specialPrepared": false,
+      "isDomainSpell": false,
+      "specialId": null
 
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light"],
+      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light","physicalMaterial"],
       "equipped": true,
       "masterwork": false,
       "weaponType": "simple",
@@ -1420,12 +1591,19 @@
       "weaponData": {
         "damageRoll": "",
         "damageType": "",
+        "damageTypeId": "",
         "critRange": 20,
         "critMult": 2,
         "range": null,
         "attackFormula": "",
         "damageFormula": "",
-        "size": "med"
+        "size": "med",
+        "alignment": {
+          "good": false,
+          "evil": false,
+          "lawful": false,
+          "chaotic": false
+        }
       },
       "attackNotes": "",
       "bonus": {
@@ -1464,13 +1642,22 @@
       "isFromBuff": false,
       "weaponData": {
         "damageRoll": "",
-        "damageType": ""
+        "damageType": "",
+        "damageTypeId": "",
+        "attackRoll": "",
+        "optionalDamage": false,
+        "alignment": {
+          "good": false,
+          "evil": false,
+          "lawful": false,
+          "chaotic": false
+        }
       },
       "weaponAttackNotes": [],
       "allowedTypes": []
     },
     "attack": {
-      "templates": ["itemDescription", "activatedEffect", "action"],
+      "templates": ["itemDescription", "activatedEffect", "action","physicalMaterial"],
       "associations": {
         "classes": []
       },
@@ -1484,17 +1671,107 @@
       "showInQuickbar": true,
       "melded": false,
       "baseWeaponType": "",
+      "nonLethal": false,
       "originalWeaponCreated": false,
       "originalWeaponId": null,
       "originalWeaponName": "",
       "originalWeaponImg": "",
-      "originalWeaponProperties": {}
+      "originalWeaponProperties": {},
+      "conditionals": [],
+      "alignment": {
+        "good": false,
+        "evil": false,
+        "lawful": false,
+        "chaotic": false
+      }
+    },
+    "full-attack": {
+      "templates": ["itemDescription"],
+      "attacks" : {
+        "attack1": {
+          "_id": 1,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack2": {
+          "_id": 2,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack3": {
+          "_id": 3,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack4": {
+          "_id": 4,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        },
+        "attack5": {
+          "_id": 5,
+          "name": "",
+          "img": "",
+          "primary": false,
+          "isWeapon": false,
+          "attackMode": "primary",
+          "id": null,
+          "count": 0
+        }
+      },
+      "attackType": "full"
     },
     "race": {
       "templates": ["itemDescription", "changes", "contextNotes", "links"],
       "creatureType": "humanoid",
       "la": 0,
-      "subTypes": []
+      "subTypes": [],
+      "addedAbilities": [],
+      "disabledAbilities": []
+    },
+    "damage-type": {
+      "description": {
+        "value": ""
+      },
+      "uniqueId": "",
+      "slug": "damage",
+      "damageType": null,
+      "isPiercing": false,
+      "isBludgeoning": false,
+      "isSlashing": false,
+      "identifiers": []
+    },
+    "material": {
+      "description": {
+        "value": ""
+      },
+      "uniqueId": "",
+      "slug": "damage",
+      "magicEquivalent": 0,
+      "isAlchemicalSilverEquivalent": false,
+      "isAdamantineEquivalent": false,
+      "isColdIronEquivalent": false,
+      "identifiers": []
     }
   }
 }

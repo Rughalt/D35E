@@ -516,8 +516,9 @@
     .filter-container {
       overflow-x: hidden;
       overflow-y: scroll;
-      max-height: calc(100% - 48px);
+      max-height: calc(100% - 84px);
       margin-bottom: 8px;
+      min-height: calc(100% - 84px);
 
       .filter {
         margin-top: 8px;
@@ -566,5 +567,106 @@
         }
       }
     }
+  }
+}
+
+.dr-setting {
+  .item-list {
+    margin: 0;
+    padding: 0;
+    h4 {
+      margin: 0;
+    }
+  }
+}
+/* ----------------------------------------- */
+/* Encounter Generator
+/* ----------------------------------------- */
+
+
+.auto-height-dialog {
+  height: auto !important;
+}
+
+.encounter-roller {
+  width: 400px;
+  .window-content {
+    overflow: hidden;
+
+    img {
+      border: none !important;
+    }
+
+    .head {
+      line-height: 16px;
+      height: 16px;
+      font-size: 14px;
+      font-family: nodesto;
+      text-align: left;
+      background-color: darkgray;
+    }
+
+  }
+
+  .entity-link, a.inline-roll {
+    all: inherit;
+    height: 64px;
+  }
+
+  .flex-container {
+    display: flex;
+  }
+
+  .flex-container > div {
+    width: 144px;
+    margin: 2px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 14px;
+  }
+
+  .flex-container > div.double-wide {
+    width: 288px;
+    margin: 4px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 14px;
+  }
+
+  .flex-container > div.column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 100%
+  }
+
+  .flex-container > div.image {
+    font-family: nodesto;;
+    width: 64px;
+    margin: 0px;
+    text-align: left;
+  }
+
+  .flex-container > div.column > div.row {
+    display: flex;
+    height: 64px;
+    width: 100%
+  }
+
+  .flex-container > div.column > div.row > div.body {
+    font-family: "Signika", sans-serif;
+    font-size: 13px;
+    padding-left: 24px;
+    text-align: right;
+  }
+
+  .flex-container > div.cr {
+    height: 64px;
+    width: 64px;
+    margin: 0px;
+    font-size: 24px;
+    line-height: 64px;
+    font-family: nodesto;
   }
 }

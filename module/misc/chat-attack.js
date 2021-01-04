@@ -6,7 +6,7 @@ export class ChatAttack {
         this.attack = {
             flavor: "",
             tooltip: "",
-            total: 0,
+            total: -1337,
             isCrit: false,
             isFumble: false,
         };
@@ -39,6 +39,12 @@ export class ChatAttack {
         this.cards = [];
         this.special = [];
         this.effectNotes = "";
+        this.rolls = []
+        this.normalDamage = "";
+        this.natural20 = false;
+        this.natural20Crit = false;
+        this.fumble = false;
+        this.fumbleCrit = false;
     }
 
     get critRange() {
@@ -76,6 +82,7 @@ export class ChatAttack {
             extraParts: extraParts,
             primaryAttack: primaryAttack
         });
+        this.rolls.push(roll)
         let d20 = roll.parts[0];
         let critType = 0;
         if ((d20.total >= this.critRange && !critical) || (d20.total === 20 && critical)) critType = 1;
@@ -87,9 +94,16 @@ export class ChatAttack {
         data.tooltip = tooltip;
         data.total = roll.total;
         data.isCrit = critType === 1;
+        data.isNatural20 = (d20.total === 20 && !critical);
         data.isFumble = critType === 2;
-
-
+        if (!critical) {
+            this.natural20 = data.isNatural20
+            this.fumble = data.isFumble
+        }
+        else {
+            this.natural20Crit = data.isNatural20
+            this.fumbleCrit = data.isFumble
+        }
         // Add crit confirm
         if (!critical && d20.total >= this.critRange) {
             this.hasCritConfirm = true;
@@ -167,20 +181,29 @@ export class ChatAttack {
             primaryAttack: primaryAttack,
             critical: critical
         });
+        rolls.forEach(r => {
+            this.rolls.push(r.roll || r)
+        })
         // Add tooltip
         let tooltips = "";
         let totalDamage = 0;
         let shortTooltips = []
         let critShortTooltips = []
         for (let roll of rolls) {
-            let tooltip = $(await roll.roll.getTooltip()).prepend(`<div class="dice-formula">${roll.roll.formula}</div>`)[0].outerHTML;
+            let tooltip = $(await roll.roll.getTooltip());
+
+            let totalText = roll.roll.total.toString();
+            if (roll.damageType.length) totalText += ` (${roll.damageType})`;
+            tooltip = tooltip.prepend(`
+                <header class="part-header flexrow" style="border-bottom: none; margin-top: 4px">
+                    <span class="part-formula"></span>
+                    <span class="part-total">${totalText}</span>
+                </header>
+                <div class="dice-formula">${roll.roll.formula}</div>
+                `)[0].outerHTML;
             // Alter tooltip
             let tooltipHtml = $(tooltip);
             totalDamage += roll.roll.total;
-            let totalText = roll.roll.total.toString();
-
-            if (roll.damageType.length) totalText += ` (${roll.damageType})`;
-            tooltipHtml.find(".part-total").text(totalText);
             tooltip = tooltipHtml[0].outerHTML;
             if (!critical)
                 shortTooltips.push(this.getShortToolTip(totalText))
@@ -193,38 +216,82 @@ export class ChatAttack {
         if (isMultiattack) flavor = game.i18n.localize("D35E.Damage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`;
         else if (!critical) flavor = this.item.isHealing ? game.i18n.localize("D35E.Healing") : game.i18n.localize("D35E.Damage");
         else flavor = this.item.isHealing ? game.i18n.localize("D35E.HealingCritical") : game.i18n.localize("D35E.DamageCritical");
-        const damageTypes = this.item.data.data.damage.parts.reduce((cur, o) => {
-            if (o[1] !== "" && cur.indexOf(o[1]) === -1) cur.push(o[1]);
+        const damageTypes = rolls.reduce((cur, o) => {
+            if (o.damageType !== "" && cur.indexOf(o.damageType) === -1) cur.push(o.damageType);
             return cur;
         }, []);
 
         // Add card
         if (critical) {
+            this.cards = []
             if (this.item.isHealing) this.cards.push({
+                normalDamage: this.normalDamage,
                 label: game.i18n.localize("D35E.ApplyCriticalHealing"),
                 value: -totalDamage,
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit,
             });
             else this.cards.push({
+                normalDamage: this.normalDamage,
                 label: game.i18n.localize("D35E.ApplyCriticalDamage"),
-                value: totalDamage,
+                value: Math.max(totalDamage,1),
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
         } else {
+            this.normalDamage = JSON.stringify(rolls)
             if (this.item.isHealing) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyHealing"),
                 value: -totalDamage,
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
             else if (isMultiattack) this.cards.push({
                 label: game.i18n.localize("D35E.ApplyDamage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`,
-                value: totalDamage,
+                value: Math.max(totalDamage,1),
+                data: JSON.stringify(rolls),
+                alignment: JSON.stringify(this.item.data.data.alignment),
+                material: JSON.stringify(this.item.data.data.material),
+                enh: this.item.data.data.enh,
                 action: "applyDamage",
+                natural20: this.natural20,
+                fumble: this.fumble,
+                natural20Crit: this.natural20Crit,
+                fumbleCrit: this.fumbleCrit
             });
             else this.cards.push({
                     label: game.i18n.localize("D35E.ApplyDamage"),
-                    value: totalDamage,
+                    value: Math.max(totalDamage,1),
+                    data: JSON.stringify(rolls),
+                    alignment: JSON.stringify(this.item.data.data.alignment),
+                    material: JSON.stringify(this.item.data.data.material),
+                    enh: this.item.data.data.enh,
                     action: "applyDamage",
+                    natural20: this.natural20,
+                    fumble: this.fumble,
+                    natural20Crit: this.natural20Crit,
+                    fumbleCrit: this.fumbleCrit
                 });
         }
 
@@ -243,13 +310,13 @@ export class ChatAttack {
         }
     }
 
-    async addEffect({primaryAttack = true, actor = null} = {}) {
+    async addEffect({primaryAttack = true, actor = null, useAmount = 1} = {}) {
         if (!this.item) return;
-        this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor);
-        this.addSpecial(actor);
+        this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor, this.rollData);
+        this.addSpecial(actor, useAmount);
     }
 
-    async addSpecial(actor = null) {
+    async addSpecial(actor = null, useAmount = 1) {
         let _actor = this.item.actor;
         if (actor != null)
             _actor = actor
@@ -273,7 +340,7 @@ export class ChatAttack {
 
             this.special.push({
                 label: action.name,
-                value: action.action.replace(/\(@cl\)/g, `${cl}`),
+                value: action.action.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`),
                 isTargeted: action.action.endsWith("target") || action.action.endsWith("target;"),
                 action: "customAction",
                 img: action.img,

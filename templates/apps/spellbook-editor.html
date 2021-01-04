@@ -73,6 +73,11 @@
                        {{checked spellbook.usePowerPoints}}/> {{localize "D35E.UsePowerPoints"}}
             </label>
 
+
+            <label class="checkbox">
+                <input type="checkbox" name="hasSpecialSlot"
+                       {{checked spellbook.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
+            </label>
         </div>
         {{else}}
         <h4 style="text-align: center; opacity: 0.7">Options set from Class</h4>
@@ -120,6 +125,11 @@
             <label class="checkbox">
                 <input type="checkbox" name="usePowerPoints" disabled
                        {{checked spellbook.usePowerPoints}}/> {{localize "D35E.UsePowerPoints"}}
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" name="hasSpecialSlot" disabled
+                       {{checked spellbook.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
             </label>
 
         </div>

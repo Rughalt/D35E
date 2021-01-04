@@ -11,7 +11,7 @@ export const displayChatActionButtons = function(message, html, data) {
     else if (game.user.isGM || (data.author.id === game.user.id)) return;
 
     // Otherwise make buttons disabled, but show the actions action buttons
-    const buttons = chatCard.find("button[data-action]");
+    const buttons = chatCard.find("button[data-action]:not(.everyone)");
     buttons.each((a, btn) => {
       btn.disabled = true
     });
@@ -44,11 +44,13 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
 
   // Dice So Nice integration
   if (chatData.roll != null && rolls.length === 0) rolls = [chatData.roll];
-  if (game.dice3d != null) {
+  if (game.dice3d) {
+    let promises = []
     for (let roll of rolls) {
-      await game.dice3d.showForRoll(roll, chatData.whisper, chatData.blind);
-      chatData.sound = null;
+      promises.push(game.dice3d.showForRoll(roll, game.user, false, chatData.whisper, chatData.blind));
     }
+    await Promise.all(promises)
+    chatData.sound = null;
   }
 
   ChatMessage.create(chatData);

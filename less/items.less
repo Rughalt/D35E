@@ -453,7 +453,7 @@
     }
   }
 
-  .damage-control, .attack-control, .change-control,.combat-change-control, .context-note-control, .special-control {
+  .damage-control, .attack-control, .change-control, .resistance-control, .dr-control,.combat-change-control, .context-note-control, .special-control {
     width: 18px;
     flex: 0 0 18px;
     line-height: 24px;
@@ -519,8 +519,12 @@
 
       // Item Header Name
       .item-name {
-        cursor: pointer;
+        &:not(.non-rollable) {
+          cursor: pointer;
+        }
         white-space: nowrap;
+
+
 
         .item-image {
           flex: 0 0 24px;
@@ -532,11 +536,11 @@
           margin: 0;
         }
 
-        &:hover .item-image {
+        &:hover .item-image:not(.non-rollable) {
           background-image: url("/icons/svg/d20-grey.svg") !important;
         }
 
-        .item-image:hover {
+        .item-image:hover:not(.non-rollable) {
           background-image: url("/icons/svg/d20-black.svg") !important;
         }
       }
@@ -819,5 +823,142 @@
     }
   }
 
+  .conditionals {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
 
+    .change,
+    .context-note {
+      flex: 0 0 100%;
+      padding: 1px;
+      input {
+        flex: 3;
+        border: 1px solid @colorTan;
+        background: rgba(0, 0, 0, 0.05);
+        height: 24px;
+      }
+      input[type="text"]:invalid {
+        border: 2px solid darkred;
+      }
+      input[type="text"]:not(:first-child) {
+        margin-left: 5px;
+      }
+      select {
+        flex: 0 0 80px;
+        width: 80px;
+        background: rgba(0, 0, 0, 0.05);
+
+        &.change-sub-target {
+          flex: 0 0 128px;
+          width: 128px;
+        }
+      }
+      select:invalid {
+        border: 2px solid darkred;
+      }
+      select:not(:first-child) {
+        margin-left: 5px;
+      }
+
+      .change-priority {
+        flex: 0 0 24px;
+      }
+      .change-operator {
+        flex: 0 0 24px;
+      }
+      .conditional-default {
+        flex: 0 0 18px;
+      }
+      .conditional-modifier {
+        display: flex;
+      }
+    }
+  }
+
+  .conditionals {
+    .conditional,
+    .conditional-modifier {
+      padding: 1px;
+
+      select {
+        max-width: max-content;
+        min-width: 80px;
+        flex: 1;
+        border: 1px solid @colorTan;
+        background: rgba(0, 0, 0, 0.05);
+      }
+      select:not(:first-child) {
+        margin-left: 5px;
+      }
+      select:invalid {
+        border: 2px solid darkred;
+      }
+      input[type="text"] {
+        height: 24px;
+        border: 1px solid @colorTan;
+        background: rgba(0, 0, 0, 0.05);
+      }
+      input[type="text"]:invalid {
+        border: 2px solid darkred;
+      }
+      input[type="text"]:not(:first-child) {
+        margin-left: 5px;
+      }
+      input[class*="conditional-name"]:not(:first-child) {
+        margin-left: 0;
+      }
+      .conditional-name,
+      .conditional-formula {
+        min-width: 140px;
+      }
+      .conditional-damage-type {
+        min-width: 90px;
+        max-width: 200px;
+      }
+      .form-group {
+        padding-left: 30px;
+      }
+    }
+  }
+
+  .spell, .full-attack {
+    img {
+      flex: 0 24px;
+      height: 24px;
+    }
+    label {
+      margin-left: 4px;
+    }
+    input {
+      flex: 0 80px;
+    }
+    padding: 4px;
+    border: @borderGroove;
+    border-radius: 2px;
+  }
+
+  .inventory-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    .inventory-header {
+      border: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .uid-warning {
+    flex: 0;
+    position: absolute;
+    right: 4px;
+    padding: 9px;
+    font-size: 16px;
+    color: #6d2c2c;
+  }
 }

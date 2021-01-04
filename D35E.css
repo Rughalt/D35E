@@ -4,7 +4,7 @@
 /* ----------------------------------------- */
 @font-face {
   font-family: "Nodesto";
-  src: url("fonts/NodestoCapsCondensed.otf");
+  src: url("../../fonts/modesto-condensed/modesto-condensed-bold.woff2") format("woff2");
 }
 .nodesto {
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
@@ -76,7 +76,7 @@
 .strikethrough-text {
   text-decoration: line-through;
 }
-.hidden {
+.visionperm-hidden:not(.combatant) {
   display: none !important;
 }
 /* ----------------------------------------- */
@@ -515,8 +515,9 @@
 .compendium-browser .header .filter-container {
   overflow-x: hidden;
   overflow-y: scroll;
-  max-height: calc(100% - 48px);
+  max-height: calc(100% - 84px);
   margin-bottom: 8px;
+  min-height: calc(100% - 84px);
 }
 .compendium-browser .header .filter-container .filter {
   margin-top: 8px;
@@ -555,6 +556,90 @@
 }
 .compendium-browser .directory-container .directory-list .directory-item h4 {
   margin-left: 4px;
+}
+.dr-setting .item-list {
+  margin: 0;
+  padding: 0;
+}
+.dr-setting .item-list h4 {
+  margin: 0;
+}
+/* ----------------------------------------- */
+/* Encounter Generator
+/* ----------------------------------------- */
+.auto-height-dialog {
+  height: auto !important;
+}
+.encounter-roller {
+  width: 400px;
+}
+.encounter-roller .window-content {
+  overflow: hidden;
+}
+.encounter-roller .window-content img {
+  border: none !important;
+}
+.encounter-roller .window-content .head {
+  line-height: 16px;
+  height: 16px;
+  font-size: 14px;
+  font-family: nodesto;
+  text-align: left;
+  background-color: darkgray;
+}
+.encounter-roller .entity-link,
+.encounter-roller a.inline-roll {
+  all: inherit;
+  height: 64px;
+}
+.encounter-roller .flex-container {
+  display: flex;
+}
+.encounter-roller .flex-container > div {
+  width: 144px;
+  margin: 2px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+}
+.encounter-roller .flex-container > div.double-wide {
+  width: 288px;
+  margin: 4px;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+}
+.encounter-roller .flex-container > div.column {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+}
+.encounter-roller .flex-container > div.image {
+  font-family: nodesto;
+  width: 64px;
+  margin: 0px;
+  text-align: left;
+}
+.encounter-roller .flex-container > div.column > div.row {
+  display: flex;
+  height: 64px;
+  width: 100%;
+}
+.encounter-roller .flex-container > div.column > div.row > div.body {
+  font-family: "Signika", sans-serif;
+  font-size: 13px;
+  padding-left: 24px;
+  text-align: right;
+}
+.encounter-roller .flex-container > div.cr {
+  height: 64px;
+  width: 64px;
+  margin: 0px;
+  font-size: 24px;
+  line-height: 64px;
+  font-family: nodesto;
 }
 .D35E.sheet.actor {
   /* ----------------------------------------- */
@@ -649,10 +734,9 @@
 }
 .D35E.sheet.actor .working h1 {
   text-align: center;
-  color: white;
-  font-family: "Signika", "Palatino Linotype", serif;
-  margin-top: 50%;
+  font-family: "Nodesto", "Palatino Linotype", serif;
   border-bottom: none;
+  color: #b1d8e0;
 }
 .D35E.sheet.actor.isWorking .working {
   display: block;
@@ -946,6 +1030,16 @@
 }
 .D35E.sheet.actor section {
   overflow-y: auto;
+}
+.D35E.sheet.actor a.open-compendium-browser {
+  border-radius: 4px;
+  height: 30px;
+  display: block;
+  line-height: 30px;
+  text-align: center;
+  font-size: 18px;
+  margin-top: 4px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
 }
 .D35E.sheet.actor ul.attributes.misc-base .attribute-footer input,
 .D35E.sheet.actor ul.attributes.misc-defenses .attribute-footer input {
@@ -1281,7 +1375,7 @@
 .D35E.sheet.actor ul.skills-list li.skill,
 .D35E.sheet.actor ul.skills-list li.sub-skill {
   height: 28px;
-  padding: 3px 0;
+  line-height: 28px;
   background-color: rgba(155, 155, 155, 0.3);
 }
 .D35E.sheet.actor ul.skills-list li.skill:nth-child(2n+1),
@@ -1293,8 +1387,9 @@
   display: flex;
   flex: 180px;
   margin: 0;
-  font-size: 11px;
+  font-size: 13px;
   align-items: center;
+  margin-left: 4px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name .image-d20,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .image-d20 {
@@ -1308,6 +1403,7 @@
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name h4 {
   display: inline-block;
   margin: 0 0 0.25rem;
+  font-size: 13px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name input[type="text"],
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
@@ -1324,6 +1420,8 @@
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control {
   display: flex;
   align-items: center;
+  line-height: 28px;
+  margin-bottom: 4px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-name .skill-control .fas,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name .skill-control .fas {
@@ -1333,11 +1431,16 @@
 }
 .D35E.sheet.actor ul.skills-list li.skill .checkbox,
 .D35E.sheet.actor ul.skills-list li.sub-skill .checkbox {
-  flex: 1 0 48px;
+  flex: 0 48px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .toggle,
+.D35E.sheet.actor ul.skills-list li.sub-skill .toggle {
+  flex: 0;
+  margin-bottom: 4px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-ability,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-ability {
-  flex: 1 0 48px;
+  flex: 0 48px;
   margin: 0 2px;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-mod,
@@ -1350,7 +1453,28 @@
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-rank,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-rank {
-  flex: 1 0 48px;
+  flex: 0 48px;
+  margin-bottom: 4px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod-total,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod-total {
+  flex: 0 60px;
+  margin-right: 12px;
+  border: 1px black dashed;
+  margin-bottom: 4px;
+  text-align: right;
+  border-radius: 3px;
+  height: 24px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod-total .image-d20,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod-total .image-d20 {
+  margin-top: 1px;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-mod-total input,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-mod-total input {
+  border: none !important;
+  margin-bottom: 4px;
+  font-weight: 800;
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-passive,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-passive {
@@ -1360,7 +1484,14 @@
 }
 .D35E.sheet.actor ul.skills-list li.skill .skill-controls,
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-controls {
-  flex: 0 0 24px;
+  flex: 0 24px;
+  line-height: 28px;
+  text-align: center;
+}
+.D35E.sheet.actor ul.skills-list li.skill .skill-untrained,
+.D35E.sheet.actor ul.skills-list li.sub-skill .skill-untrained {
+  text-decoration: line-through;
+  color: #4b4a44;
 }
 .D35E.sheet.actor ul.skills-list li.sub-skill .skill-name input[type="text"] {
   padding-left: 8px;
@@ -1638,10 +1769,13 @@
 }
 .D35E.sheet.actor .inventory-list .item .item-name,
 .D35E.sheet.actor .inventory-list .item .item-name-ne {
-  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.D35E.sheet.actor .inventory-list .item .item-name:not(.non-rollable),
+.D35E.sheet.actor .inventory-list .item .item-name-ne:not(.non-rollable) {
+  cursor: pointer;
 }
 .D35E.sheet.actor .inventory-list .item .item-name.melded,
 .D35E.sheet.actor .inventory-list .item .item-name-ne.melded {
@@ -1668,12 +1802,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.D35E.sheet.actor .inventory-list .item .item-name:hover .item-image,
-.D35E.sheet.actor .inventory-list .item .item-name-ne:hover .item-image {
+.D35E.sheet.actor .inventory-list .item .item-name:hover .item-image:not(.non-rollable),
+.D35E.sheet.actor .inventory-list .item .item-name-ne:hover .item-image:not(.non-rollable) {
   background-image: url("/icons/svg/d20-grey.svg") !important;
 }
-.D35E.sheet.actor .inventory-list .item .item-name .item-image:hover,
-.D35E.sheet.actor .inventory-list .item .item-name-ne .item-image:hover {
+.D35E.sheet.actor .inventory-list .item .item-name .item-image:hover:not(.non-rollable),
+.D35E.sheet.actor .inventory-list .item .item-name-ne .item-image:hover:not(.non-rollable) {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor .inventory-list .item .class-level-box {
@@ -1705,10 +1839,10 @@
 .D35E.sheet.actor .inventory-list .inventory-header {
   margin: 2px 0;
   padding: 0;
-  background: rgba(0, 0, 0, 0.05);
   border: 2px groove #eeede0;
   font-weight: bold;
   line-height: 24px;
+  background: url(ui/parchment.jpg) repeat;
 }
 .D35E.sheet.actor .inventory-list .inventory-header h3 {
   margin: 0;
@@ -1805,7 +1939,8 @@
 }
 .D35E.sheet.actor .inventory-list a.item-control.spell-add-uses,
 .D35E.sheet.actor .inventory-list a.item-control.spell-remove-uses,
-.D35E.sheet.actor .inventory-list a.item-control.spell-add-metamagic {
+.D35E.sheet.actor .inventory-list a.item-control.spell-add-metamagic,
+.D35E.sheet.actor .inventory-list a.item-control.spell-prepare-special {
   flex: 0 16px;
   font-size: 10px;
 }
@@ -1868,7 +2003,20 @@
   padding: 0.25em 0.5em;
   border-top: 1px solid #c9c7b8;
 }
-.D35E.sheet.actor a.configure-spellbook {
+.D35E.sheet.actor .inventory-list .item-banned {
+  color: darkred;
+}
+.D35E.sheet.actor .inventory-list .item-banned h4 {
+  color: darkred;
+}
+.D35E.sheet.actor .inventory-list .item-specialized {
+  color: #2b6703;
+}
+.D35E.sheet.actor .inventory-list .item-specialized h4 {
+  color: #2b6703;
+}
+.D35E.sheet.actor a.configure-spellbook,
+.D35E.sheet.actor a.open-add-items {
   border-radius: 4px;
   height: 30px;
   display: block;
@@ -1966,6 +2114,77 @@
   padding-left: 0.5rem;
   padding-top: 4px;
   border-top: 2px groove #eeede0;
+}
+.D35E.sheet.actor .readonly {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.1);
+  cursor: not-allowed;
+}
+.D35E.sheet.actor .readonly:hover {
+  box-shadow: none !important;
+  border: none !important;
+}
+.D35E.sheet.actor .readonly:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
+.D35E.sheet.actor a.item-attack-convert {
+  display: block !important;
+  line-height: 19px;
+  background: black;
+  color: white;
+  border-radius: 2px;
+  margin-left: 4px;
+  width: 16px;
+  font-size: 12px;
+  text-align: center;
+}
+.D35E.sheet.actor .item-add-overlay {
+  flex: none;
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 30px);
+  left: 0;
+  top: 30px;
+  z-index: 30;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  overflow: visible;
+  height: 100%;
+  width: 400px;
+  position: absolute;
+  right: 0;
+  background: url("ui/parchment.jpg") repeat;
+  padding: 8px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-add-label {
+  flex: 0;
+  margin-left: 2px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-search-input {
+  padding: 10px 10px 10px 35px;
+  width: 100%;
+  box-sizing: border-box;
+  background: 10px transparent url(https://www.dndbeyond.com/Content/Skins/Waterdeep/images/icons/search-grey.svg) no-repeat;
+  background-size: 15px;
+  flex: 0;
+  height: 30px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-add-close-box {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background: url("ui/parchment.jpg") repeat;
+  text-align: center;
+  line-height: 30px;
+  font-size: 18px;
+  left: -30px;
+  cursor: pointer;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
 }
 .locked img.sheet-profile {
   max-height: 360px;
@@ -2425,6 +2644,8 @@
 .D35E.sheet.item .damage-control,
 .D35E.sheet.item .attack-control,
 .D35E.sheet.item .change-control,
+.D35E.sheet.item .resistance-control,
+.D35E.sheet.item .dr-control,
 .D35E.sheet.item .combat-change-control,
 .D35E.sheet.item .context-note-control,
 .D35E.sheet.item .special-control {
@@ -2474,8 +2695,10 @@
   background-color: rgba(210, 210, 210, 0.3);
 }
 .D35E.sheet.item .inventory-list .item .item-name {
-  cursor: pointer;
   white-space: nowrap;
+}
+.D35E.sheet.item .inventory-list .item .item-name:not(.non-rollable) {
+  cursor: pointer;
 }
 .D35E.sheet.item .inventory-list .item .item-name .item-image {
   flex: 0 0 24px;
@@ -2485,10 +2708,10 @@
 .D35E.sheet.item .inventory-list .item .item-name h4 {
   margin: 0;
 }
-.D35E.sheet.item .inventory-list .item .item-name:hover .item-image {
+.D35E.sheet.item .inventory-list .item .item-name:hover .item-image:not(.non-rollable) {
   background-image: url("/icons/svg/d20-grey.svg") !important;
 }
-.D35E.sheet.item .inventory-list .item .item-name .item-image:hover {
+.D35E.sheet.item .inventory-list .item .item-name .item-image:hover:not(.non-rollable) {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.item .inventory-list .item input[type="checkbox"] {
@@ -2760,6 +2983,160 @@
 .D35E.sheet.item .progression-ability-description br {
   margin: 1rem;
 }
+.D35E.sheet.item .conditionals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+.D35E.sheet.item .conditionals .change,
+.D35E.sheet.item .conditionals .context-note {
+  flex: 0 0 100%;
+  padding: 1px;
+}
+.D35E.sheet.item .conditionals .change input,
+.D35E.sheet.item .conditionals .context-note input {
+  flex: 3;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+  height: 24px;
+}
+.D35E.sheet.item .conditionals .change input[type="text"]:invalid,
+.D35E.sheet.item .conditionals .context-note input[type="text"]:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .change input[type="text"]:not(:first-child),
+.D35E.sheet.item .conditionals .context-note input[type="text"]:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .change select,
+.D35E.sheet.item .conditionals .context-note select {
+  flex: 0 0 80px;
+  width: 80px;
+  background: rgba(0, 0, 0, 0.05);
+}
+.D35E.sheet.item .conditionals .change select.change-sub-target,
+.D35E.sheet.item .conditionals .context-note select.change-sub-target {
+  flex: 0 0 128px;
+  width: 128px;
+}
+.D35E.sheet.item .conditionals .change select:invalid,
+.D35E.sheet.item .conditionals .context-note select:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .change select:not(:first-child),
+.D35E.sheet.item .conditionals .context-note select:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .change .change-priority,
+.D35E.sheet.item .conditionals .context-note .change-priority {
+  flex: 0 0 24px;
+}
+.D35E.sheet.item .conditionals .change .change-operator,
+.D35E.sheet.item .conditionals .context-note .change-operator {
+  flex: 0 0 24px;
+}
+.D35E.sheet.item .conditionals .change .conditional-default,
+.D35E.sheet.item .conditionals .context-note .conditional-default {
+  flex: 0 0 18px;
+}
+.D35E.sheet.item .conditionals .change .conditional-modifier,
+.D35E.sheet.item .conditionals .context-note .conditional-modifier {
+  display: flex;
+}
+.D35E.sheet.item .conditionals .conditional,
+.D35E.sheet.item .conditionals .conditional-modifier {
+  padding: 1px;
+}
+.D35E.sheet.item .conditionals .conditional select,
+.D35E.sheet.item .conditionals .conditional-modifier select {
+  max-width: max-content;
+  min-width: 80px;
+  flex: 1;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+}
+.D35E.sheet.item .conditionals .conditional select:not(:first-child),
+.D35E.sheet.item .conditionals .conditional-modifier select:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .conditional select:invalid,
+.D35E.sheet.item .conditionals .conditional-modifier select:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .conditional input[type="text"],
+.D35E.sheet.item .conditionals .conditional-modifier input[type="text"] {
+  height: 24px;
+  border: 1px solid #7a7971;
+  background: rgba(0, 0, 0, 0.05);
+}
+.D35E.sheet.item .conditionals .conditional input[type="text"]:invalid,
+.D35E.sheet.item .conditionals .conditional-modifier input[type="text"]:invalid {
+  border: 2px solid darkred;
+}
+.D35E.sheet.item .conditionals .conditional input[type="text"]:not(:first-child),
+.D35E.sheet.item .conditionals .conditional-modifier input[type="text"]:not(:first-child) {
+  margin-left: 5px;
+}
+.D35E.sheet.item .conditionals .conditional input[class*="conditional-name"]:not(:first-child),
+.D35E.sheet.item .conditionals .conditional-modifier input[class*="conditional-name"]:not(:first-child) {
+  margin-left: 0;
+}
+.D35E.sheet.item .conditionals .conditional .conditional-name,
+.D35E.sheet.item .conditionals .conditional-modifier .conditional-name,
+.D35E.sheet.item .conditionals .conditional .conditional-formula,
+.D35E.sheet.item .conditionals .conditional-modifier .conditional-formula {
+  min-width: 140px;
+}
+.D35E.sheet.item .conditionals .conditional .conditional-damage-type,
+.D35E.sheet.item .conditionals .conditional-modifier .conditional-damage-type {
+  min-width: 90px;
+  max-width: 200px;
+}
+.D35E.sheet.item .conditionals .conditional .form-group,
+.D35E.sheet.item .conditionals .conditional-modifier .form-group {
+  padding-left: 30px;
+}
+.D35E.sheet.item .spell,
+.D35E.sheet.item .full-attack {
+  padding: 4px;
+  border: 2px groove #eeede0;
+  border-radius: 2px;
+}
+.D35E.sheet.item .spell img,
+.D35E.sheet.item .full-attack img {
+  flex: 0 24px;
+  height: 24px;
+}
+.D35E.sheet.item .spell label,
+.D35E.sheet.item .full-attack label {
+  margin-left: 4px;
+}
+.D35E.sheet.item .spell input,
+.D35E.sheet.item .full-attack input {
+  flex: 0 80px;
+}
+.D35E.sheet.item .inventory-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+.D35E.sheet.item .inventory-list .inventory-header {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.D35E.sheet.item .uid-warning {
+  flex: 0;
+  position: absolute;
+  right: 4px;
+  padding: 9px;
+  font-size: 16px;
+  color: #6d2c2c;
+}
 /* ----------------------------------------- */
 /*  Chat Cards
 /* ----------------------------------------- */
@@ -2965,6 +3342,12 @@
   vertical-align: middle;
   margin-bottom: 2px;
 }
+.damage-divider {
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+  flex: 0 30px;
+}
 /* ----------------------------------------- */
 /*  Basic Structure                          */
 /* ----------------------------------------- */
@@ -3117,6 +3500,19 @@
 .D35E.sheet.actor.npc .race-container .race .rollable:hover {
   background-image: url("/icons/svg/d20-black.svg") !important;
 }
+.D35E.sheet.actor.npc .master-block {
+  border-right: 2px groove #eeede0;
+}
+.D35E.sheet.actor.npc .master-block .minion-name {
+  font-size: 35px;
+}
+.D35E.sheet.actor.npc .master-block .unbind-minion {
+  float: right;
+  position: absolute;
+  right: 5px;
+  font-size: 12px;
+  top: 5px;
+}
 .D35E.sheet.actor.npc.lite {
   min-width: 440px;
   min-height: 200px;
@@ -3147,7 +3543,43 @@
   border-right: 0;
 }
 .D35E.sheet.actor.npc.lite .monsterblock .actor-name {
-  text-align: right;
+  text-align: left;
+  text-transform: uppercase;
+  flex: 0;
+  color: #3a5868;
+}
+.D35E.sheet.actor.npc.monster {
+  min-width: 340px;
+  min-height: 200px;
+  height: auto !important;
+}
+.D35E.sheet.actor.npc.monster .sheet-header img.profile {
+  flex: 0 0 140px;
+  max-width: 140px;
+  min-height: 100px;
+  max-height: 140px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top {
+  max-height: 40px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top .charname {
+  padding: 0;
+  margin: 0;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top .charname input[type="text"] {
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  height: 24px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .header-top .charlevel {
+  flex: 0 0 128px;
+}
+.D35E.sheet.actor.npc.monster .sheet-header .attribute.health {
+  border-right: 0;
+}
+.D35E.sheet.actor.npc.monster .monsterblock .actor-name {
+  text-align: left;
   text-transform: uppercase;
   flex: 0;
   color: #3a5868;
@@ -3161,27 +3593,32 @@
 .icon.punch-blast {
   background-image: url(icons/actions/punch-blast.svg), none;
 }
-form .form-group.stacked label {
+form .form-group.stacked label,
+.compendium-browser-window .form-group.stacked label {
   flex: 0 0 100%;
 }
-form .form-group.stacked label.checkbox {
+form .form-group.stacked label.checkbox,
+.compendium-browser-window .form-group.stacked label.checkbox {
   flex: auto;
   text-align: left;
   line-height: 20px;
   font-size: 13px;
 }
-form .form-group.stacked label.checkbox input[type="checkbox"] {
+form .form-group.stacked label.checkbox input[type="checkbox"],
+.compendium-browser-window .form-group.stacked label.checkbox input[type="checkbox"] {
   height: unset;
   margin: unset;
 }
-form input[type="checkbox"].stylized {
+form input[type="checkbox"].stylized,
+.compendium-browser-window input[type="checkbox"].stylized {
   position: absolute;
   opacity: 0;
   cursor: pointer;
   height: 0;
   width: 0;
 }
-form .checkmark {
+form .checkmark,
+.compendium-browser-window .checkmark {
   position: absolute;
   top: 3px;
   left: 0;
@@ -3191,25 +3628,31 @@ form .checkmark {
   background-color: #eee;
   border-radius: 2px;
 }
-form input ~ .checkmark {
+form input ~ .checkmark,
+.compendium-browser-window input ~ .checkmark {
   background-color: #ccc;
 }
-form input:checked ~ .checkmark {
+form input:checked ~ .checkmark,
+.compendium-browser-window input:checked ~ .checkmark {
   background-color: #782e22;
 }
-form input:disabled ~ .checkmark {
+form input:disabled ~ .checkmark,
+.compendium-browser-window input:disabled ~ .checkmark {
   filter: grayscale(1);
   cursor: initial;
 }
-form .checkmark:after {
+form .checkmark:after,
+.compendium-browser-window .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
-form input:checked ~ .checkmark:after {
+form input:checked ~ .checkmark:after,
+.compendium-browser-window input:checked ~ .checkmark:after {
   display: block;
 }
-form .checkmark:after {
+form .checkmark:after,
+.compendium-browser-window .checkmark:after {
   left: 4px;
   top: -1px;
   width: 5px;
@@ -3255,6 +3698,94 @@ input[type=range]:disabled {
 }
 .welcome-content img {
   border: none !important;
+}
+.resistance {
+  color: #006400;
+}
+.vulnerability {
+  color: #8b0000;
+}
+.lethal {
+  color: #d04702;
+}
+.nonlethal {
+  color: #007b49;
+}
+.welcome-screen.window-app {
+  border: 8px solid #55493B;
+  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-radius: 0;
+}
+.welcome-screen .window-content {
+  overflow: hidden;
+}
+.scrolling-header {
+  position: -webkit-sticky;
+  /* Safari */
+  position: sticky;
+  top: 0;
+  background: url(../ui/denim075.png) repeat;
+  z-index: 10;
+}
+.rolled-attack {
+  background: url(/systems/D35E/icons/damage-type/badges/gladius.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 44px!important;
+}
+.rolled-defense {
+  background: url(/systems/D35E/icons/damage-type/badges/shield.svg) no-repeat !important;
+  border: none !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 44px!important;
+}
+.rolled-fortify-value {
+  background: url(/systems/D35E/icons/damage-type/badges/chest-armor.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 34px!important;
+}
+.rolled-roll {
+  background: url(/systems/D35E/icons/damage-type/badges/rolling-dices.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 34px!important;
+}
+.rolled-versus {
+  background: url(/systems/D35E/icons/damage-type/badges/shield-impact.svg) no-repeat !important;
+  border: none !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  background-position: center !important;
+  box-shadow: none !important;
+  font-family: "Nodesto", serif !important;
+  font-size: 34px!important;
+}
+span.bold {
+  font-weight: 900;
+}
+.game:not(.d35gm) .gm-sensitive {
+  display: none;
+}
+.custom-dialog.wide {
+  width: 600px !important;
 }
 #token-hud .col.actions {
   height: calc(100% + 150px);
@@ -4036,10 +4567,103 @@ tr.introjs-showElement > th {
   flex: 0 20px;
   text-align: center;
 }
+.dropdown-select .select-field:hover .select-label,
+.dropdown-select .select-list li:hover {
+  text-decoration: dotted underline;
+}
+.dropdown-select .select-field {
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+}
+.dropdown-select .select-label {
+  cursor: pointer;
+}
+.dropdown-select .select-list,
+.dropdown-select .hover-list,
+.dropdown-select .simple-menu ul {
+  padding-left: 0.3em;
+  padding-right: 0.4em;
+  box-shadow: 0px 0px 1px 0px var(--shadow-color);
+}
+.dropdown-select .select-list,
+.dropdown-select .hover-list,
+.dropdown-select .menu ul {
+  visibility: hidden;
+  display: block;
+  position: absolute;
+  list-style: none;
+  background: var(--background-image), var(--background-filter);
+  background-repeat: repeat;
+  background-blend-mode: var(--background-blend);
+  z-index: 1;
+}
+.dropdown-select .menu ul {
+  text-align: left;
+}
+.dropdown-select .select-list {
+  width: 100%;
+  overflow: auto;
+  height: 100px;
+  top: 0.7em;
+  left: -0.3em;
+}
+.dropdown-select .select-list li {
+  cursor: pointer;
+}
+.dropdown-select .select-field:hover .select-list {
+  visibility: visible;
+}
 .form-header .form-group label {
   font-family: Signika;
   line-height: 20px;
   font-size: 13px;
+}
+.toggle input[type=checkbox] {
+  display: none;
+}
+.toggle input[type=checkbox] + label {
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 2px;
+  text-align: center;
+  flex: 3;
+  padding: 1px 10px;
+  display: flex;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  line-height: 24px;
+  font-weight: normal;
+  color: #474747;
+  border: 1px solid #474747;
+}
+.toggle input[type=checkbox] + label i {
+  margin-right: 2px;
+  line-height: 24px;
+}
+.toggle.small input[type=checkbox] + label {
+  height: 24px;
+  line-height: 20px;
+  font-weight: normal;
+}
+.toggle.small input[type=checkbox] + label i {
+  display: none;
+  margin-right: 2px;
+  line-height: 20px;
+}
+.toggle input[type=checkbox]:checked + label {
+  margin: 2px;
+  color: #782e22;
+  border: 1px solid #782e22;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+.toggle.small input[type=checkbox]:disabled + label {
+  filter: grayscale(1) !important;
+  cursor: not-allowed !important;
 }
 .window-app.dialog label.block-header {
   position: relative;
@@ -4055,6 +4679,187 @@ tr.introjs-showElement > th {
   height: 0px;
   background-color: transparent;
   border-top: 2px groove #eeede0;
+}
+#chat-log .chat-message .message-content .property-group:not(.footer) .flexrow {
+  flex-direction: column !important;
+}
+#chat-log .chat-message .message-content .property-group:not(.footer) .flexrow .tag {
+  white-space: unset;
+}
+.d35ecustom .dice-roll .dice-total.failure {
+  color: #b70000;
+}
+.d35ecustom .dice-roll .dice-total.success {
+  color: #005a00;
+}
+.d35ecustom .encounter-roller .entity-link {
+  border: none;
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  color: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.d35ecustom .encounter-roller .entity-link:hover {
+  text-shadow: none !important;
+}
+.d35ecustom .encounter-roller .entity-link:hover .head {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .encounter-roller .head {
+  background: none;
+  color: #2C606D;
+  font-size: 19px;
+}
+.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas,
+.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas {
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas:hover,
+.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item a:not(.header-button) i.fas,
+.d35ecustom .D35E.sheet.actor a:not(.header-button) i.fas {
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item a:not(.header-button) i.fas:hover,
+.d35ecustom .D35E.sheet.actor a:not(.header-button) i.fas:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .D35E.sheet.item .spell,
+.d35ecustom .D35E.sheet.item .full-attack {
+  border-radius: 2px;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+}
+.d35ecustom .toggle input[type=checkbox] + label {
+  margin: 2px;
+  color: white;
+  background: none !important;
+  border-image: url(/systems/D35E/icons/ui/toggle-off.png);
+  border-image-slice: 20 20 fill;
+  border-image-width: 170px;
+  cursor: pointer;
+  border-radius: 2px;
+  text-align: center;
+  flex: 3;
+  padding: 1px 10px;
+  display: flex;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  font-weight: normal;
+}
+.d35ecustom .toggle input[type=checkbox]:checked + label {
+  margin: 2px;
+  color: white;
+  background: none !important;
+  border-image: url(/systems/D35E/icons/ui/toggle-on.png);
+  border-image-slice: 20 20 fill;
+  border-image-width: 170px;
+  cursor: pointer;
+  font-weight: normal;
+  border-radius: 2px;
+}
+.d35ecustom .dr-setting.window-app {
+  border: 8px solid #55493B;
+  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-radius: 0;
+}
+.d35ecustom .dr-setting.window-app .window-content {
+  padding: 0 !important;
+  background: none;
+  color: white;
+}
+.d35ecustom .dr-setting.window-app .window-content input,
+.d35ecustom .dr-setting.window-app .window-content select {
+  color: white;
+}
+.d35ecustom .dr-setting.window-app .window-content select {
+  background-color: black;
+}
+.d35ecustom .dr-setting.window-app .window-content label.block-header::after {
+  border-top: 1px solid #75514b !important;
+}
+.d35ecustom .dr-setting.window-app .window-content ol {
+  border: none;
+  margin: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+}
+.d35ecustom .dr-setting.window-app .window-content ol li {
+  padding: 2px 4px;
+}
+.d35ecustom .dr-setting.window-app .window-content ol li:first-of-type {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.d35ecustom .dr-setting.window-app .window-content input.readonly {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.d35ecustom .dr-setting.window-app .window-content input.readonly:hover {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.d35ecustom .dr-setting.window-app .window-content .resistance {
+  color: #3b8f3b;
+}
+.d35ecustom .dr-setting.window-app .window-content .vulnerability {
+  color: #d02e2e;
+}
+.d35ecustom .chat-card .card-header {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+.d35ecustom .compendium-browser-window.window-app {
+  border: 8px solid #55493B;
+  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-radius: 0;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content {
+  padding: 0 !important;
+  background: none;
+  color: white;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content input,
+.d35ecustom .compendium-browser-window.window-app .window-content select {
+  color: white;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content select {
+  background-color: black;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content label.block-header::after {
+  border-top: 1px solid #75514b !important;
+}
+.d35ecustom .compendium-browser-window.window-app .window-content .filter {
+  border: none;
+  margin-right: 6px;
+  margin-left: 2px;
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.75);
+}
+.d35ecustom .compendium-browser-window.window-app .window-content .filter h3 {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.d35ecustom .compendium-browser-window.window-app .window-content .filter h3:hover {
+  color: white;
 }
 .d35ecustom #chat-log .chat-message {
   background: url(/systems/D35E/icons/ui/parchment-tile.png) repeat;
@@ -4090,6 +4895,9 @@ tr.introjs-showElement > th {
 .d35ecustom .window-app.dialog .window-content input,
 .d35ecustom .window-app.dialog .window-content select {
   color: white;
+}
+.d35ecustom .window-app.dialog .window-content select {
+  background-color: black;
 }
 .d35ecustom .window-app.dialog .window-content label.block-header::after {
   border-top: 1px solid #75514b !important;
@@ -4146,13 +4954,13 @@ tr.introjs-showElement > th {
   left: 2px;
   top: 0;
 }
-.d35ecustom button {
+.d35ecustom button:not(.tah-title-button):not(.tox-tbtn) {
   background: url(/systems/D35E/icons/ui/long-button.png);
   background-size: 100% 100%;
   border: none;
   color: white;
 }
-.d35ecustom button:disabled {
+.d35ecustom button:not(.tah-title-button):not(.tox-tbtn):disabled {
   filter: grayscale(1);
 }
 .d35ecustom .D35E button:not(.tox-tbtn) {
@@ -4171,16 +4979,25 @@ tr.introjs-showElement > th {
   filter: grayscale(1);
 }
 .d35ecustom .D35E.chat-card .card-buttons button {
-  background: url(/systems/D35E/icons/ui/long-button.png);
-  background-size: 100% 100%;
-  border: none;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+  border: 1px solid rgba(0, 0, 0, 0.7) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 2px !important;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 19px;
+  cursor: pointer;
   color: white;
   line-height: 32px;
   padding: 0;
-  border-radius: 0;
+}
+.d35ecustom .D35E.chat-card .card-buttons button:hover:not(:disabled) {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+  text-shadow: none !important;
+  box-shadow: none;
 }
 .d35ecustom .D35E.chat-card .card-buttons button:disabled {
   filter: grayscale(1);
+  cursor: unset;
 }
 .d35ecustom #navigation #nav-toggle {
   border-radius: 0;
@@ -4408,6 +5225,11 @@ tr.introjs-showElement > th {
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
   text-shadow: none !important;
 }
+.d35ecustom .blue-button:disabled {
+  filter: grayscale(1);
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .d35ecustom .rollable.image-d20 {
   filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
 }
@@ -4497,6 +5319,7 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet.actor .inventory-list .inventory-header {
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.05);
 }
 .d35ecustom .sheet.actor .inventory-list .item:nth-child(2n+1) {
   background-color: rgba(255, 255, 255, 0.1) !important;
@@ -4543,6 +5366,32 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet.actor .spellbook-spelllist {
   padding: 4px;
 }
+.d35ecustom .sheet .skill-mod-total {
+  flex: 0 60px;
+  margin-right: 12px;
+  border: 1px #2C606D dashed !important;
+  margin-bottom: 4px;
+  text-align: right;
+  border-radius: 3px;
+  height: 24px;
+}
+.d35ecustom .sheet .skill-mod-total:hover {
+  border: 1px solid #2C606D !important;
+  box-shadow: 0 0 8px #4d8d9d;
+}
+.d35ecustom .sheet input.skill-rank:read-only {
+  border: none !important;
+  background: rgba(0, 0, 0, 0.1);
+  cursor: not-allowed;
+}
+.d35ecustom .sheet input.skill-rank:read-only:hover {
+  box-shadow: none !important;
+  border: none !important;
+}
+.d35ecustom .sheet input.skill-rank:read-only:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
 .d35ecustom .sheet ul.attributes li.attribute {
   border: none !important;
   background: rgba(255, 255, 255, 0.2);
@@ -4554,6 +5403,14 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet .details-attack-simple,
 .d35ecustom .sheet .details-skills-list,
 .d35ecustom .sheet .ability-scores .ability {
+  border: none !important;
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+}
+.d35ecustom .sheet .skills-list {
+  border-radius: 2px;
   border: none !important;
   background: rgba(255, 255, 255, 0.2);
   -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
@@ -4582,10 +5439,24 @@ tr.introjs-showElement > th {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
+.d35ecustom .sheet .unbind-minion {
+  color: #2C606D;
+}
+.d35ecustom .sheet .unbind-minion:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
 .d35ecustom .sheet .item-controls a {
   color: #2C606D !important;
 }
 .d35ecustom .sheet .item-controls a:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .sheet a.open-compendium-pack:not(.open-add-items) {
+  color: #2C606D !important;
+}
+.d35ecustom .sheet a.open-compendium-pack:not(.open-add-items):hover {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }
@@ -4727,6 +5598,161 @@ tr.introjs-showElement > th {
 .d35ecustom .scroll-spellbooks {
   margin: 4px !important;
 }
+.d35ecustom .master-block {
+  border-right: none;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 2px;
+  margin: 2px -1px;
+}
+.d35ecustom .master-block img {
+  flex: 0 0 51px !important;
+  height: 51px !important;
+  margin-right: 6px !important;
+}
+.d35ecustom .master-block .minion-name {
+  font-size: 30px;
+  line-height: 30px;
+}
+.d35ecustom .master-block .minion-of {
+  font-size: 18px;
+}
+.d35ecustom img.rollable {
+  filter: invert(31%) sepia(6%) saturate(3178%) hue-rotate(145deg) brightness(102%) contrast(94%);
+}
+.d35ecustom .non-rollable {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.d35ecustom .non-rollable:hover {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.d35ecustom .scrolling-header {
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+}
+.d35ecustom .item-add-overlay .item-add-list {
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+}
+.d35ecustom .item-add-overlay .item-add-list .item-search-input {
+  padding: 10px 10px 10px 35px;
+  width: 100%;
+  box-sizing: border-box;
+  background: 10px rgba(0, 0, 0, 0) url(https://www.dndbeyond.com/Content/Skins/Waterdeep/images/icons/search-grey.svg) no-repeat;
+  background-size: 15px;
+  flex: 0;
+  height: 30px;
+  border: 1px solid transparent;
+  margin: 4px 0;
+}
+.d35ecustom .item-add-overlay .item-add-list .item-add-close-box {
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+  color: #2C606D;
+}
+.d35ecustom .npc.monster {
+  padding: 0;
+  border-radius: 2px;
+  border: none !important;
+  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+}
+.d35ecustom .npc.monster input[type="text"],
+.d35ecustom .npc.monster textarea {
+  background: none;
+  border: 1px solid transparent;
+}
+.d35ecustom .npc.monster input[type="text"]:hover,
+.d35ecustom .npc.monster textarea:hover,
+.d35ecustom .npc.monster input[type="text"]:focus,
+.d35ecustom .npc.monster textarea:focus {
+  border: 1px solid #111;
+}
+.d35ecustom .npc.monster .window-header {
+  color: black;
+  background: none;
+  padding: 0 4px 0 0;
+}
+.d35ecustom .npc.monster .window-header .window-title {
+  font-family: "HandSerif", "Signika", serif;
+  font-size: 24px;
+  color: #2C606D;
+  background: none;
+  padding: 0 5px;
+}
+.d35ecustom .npc.monster .window-header .header-button {
+  font-size: 0;
+  line-height: 30px;
+}
+.d35ecustom .npc.monster .window-header .header-button i {
+  font-size: 14px;
+  vertical-align: middle;
+}
+.d35ecustom .npc.monster .window-content {
+  background: none !important;
+  height: auto;
+}
+.d35ecustom .npc.monster .monsterblock {
+  height: unset !important;
+  overflow: unset !important;
+}
+.d35ecustom .npc.monster .monsterblock .flexcol div {
+  flex: none;
+}
+.d35ecustom .npc.monster .monsterblock .roll-link {
+  color: #2C606D !important;
+}
+.d35ecustom .npc.monster .monsterblock .roll-link:hover {
+  text-shadow: 0 0 10px #2C606D !important;
+  color: #2C606D !important;
+}
+.d35ecustom .npc.monster .monsterblock .image-d20 {
+  display: inline-block;
+  background-image: url(../../icons/dice/d20black.svg);
+  background-size: 100%;
+  height: 20px !important;
+  width: 20px !important;
+  vertical-align: middle;
+}
+.d35ecustom .compendium-browser header {
+  border: 8px solid red;
+  /* border-right: none; */
+  border-image: url(/systems/D35E/icons/ui/side-panel.png);
+  padding-right: 0;
+  background-size: 100% 100%;
+  /* border: 8px solid #55493B; */
+  border-image-slice: 20 fill;
+}
+.d35ecustom .compendium-browser .entry-name a {
+  color: #76bacc !important;
+}
+.d35ecustom .compendium-browser .entry-name a:hover {
+  text-shadow: 0 0 10px #76bacc !important;
+  color: #76bacc !important;
+}
+.d35ecustom .compendium-browser .directory-container .directory-list {
+  margin: 0;
+}
+.d35ecustom .compendium-browser .directory-container .directory-list .directory-item {
+  align-items: center;
+  border-bottom: none;
+  background-image: url(/systems/D35E/icons/ui/basic-bar.png);
+  background-size: 100% 100%;
+}
+.d35ecustom .compendium-browser .directory-container .directory-list .directory-item img {
+  margin: 4px;
+}
+.d35ecustom #token-action-hud button {
+  border-radius: 0;
+  background: url(/systems/D35E/icons/ui/name-frame.png);
+  background-size: 100% 100%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  padding: 0 5px;
+}
+.d35ecustom #token-action-hud button:hover {
+  border: 1px solid red;
+  border-bottom: 1px solid #ff6400;
+  box-shadow: 0 0 10px #ff6400;
+}
 .secret {
   display: none;
 }
@@ -4793,4 +5819,18 @@ tr.introjs-showElement > th {
 }
 a.inline-roll {
   display: inline-block;
+}
+.color-blind .resistance,
+.color-blind .success {
+  color: #4E854E !important;
+}
+.color-blind .vulnerability,
+.color-blind .failure {
+  color: #8F2E55 !important;
+}
+.color-blind .lethal {
+  color: #d04702 !important;
+}
+.color-blind .nonlethal {
+  color: #007BAA !important;
 }

@@ -9,11 +9,14 @@
       {{#each filters as |filter|}}
       <div class="filter" data-path="{{filter.path}}">
         <h3 class="rollable">{{filter.label}}</h3>
-        <div class="filter-content">
+        <div class="filter-content clexcol">
           {{#each filter.items as |i|}}
-          <div class="checkbox">
-            <input type="checkbox" name="{{i.key}}" />
-            <span>{{i.name}}</span>
+          <div class="flexrow" style="padding: 0 4px">
+            <label class="checkbox" style="position: relative; flex: 0 20px">
+              <input type="checkbox" class="stylized" name="{{i.key}}"/>
+              <span class="checkmark"></span>
+            </label>
+            <label style="line-height: 22px; margin-left: 4px">{{i.key}}</label>
           </div>
           {{/each}}
         </div>
@@ -30,7 +33,14 @@
       {{#each collection as |c|}}
       <li class="directory-item flexrow" data-collection="{{c.collection}}" data-entry-id="{{c.item._id}}">
         <img class="profile" src="{{c.item.img}}" title="{{c.item.name}}"/>
-        <h4 class="entry-name"><a>{{c.item.name}}</a></h4>
+        <div class="flexcol">
+          <h4 class="entry-name"><a>{{c.item.name}}</a></h4>
+          {{#if c.item.isSpell}}
+          <span style="margin-left: 4px;">
+            {{localize "D35E.SpellLevel"}}: {{c.item.data.level}}
+          </span>
+          {{/if}}
+        </div>
       </li>
       {{/each}}
     </ol>
