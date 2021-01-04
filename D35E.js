@@ -153,6 +153,7 @@ Hooks.once("setup", function() {
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
+
   $('body').toggleClass('d35gm', game.user.isGM);
   const NEEDS_MIGRATION_VERSION = "0.87.7";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
@@ -512,6 +513,8 @@ function rollTurnUndead({actorName=null, actorId=null}={}) {
 
 
 Hooks.on("getSceneControlButtons", (controls) => {
+
+  if (!game.user.isGM) return;
   controls.push({
     name: "d35e-gm-tools",
     title: "D35E.GMTools",

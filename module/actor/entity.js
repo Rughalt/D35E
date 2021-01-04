@@ -4112,7 +4112,9 @@ export class ActorPF extends Actor {
      */
     async rollSavingThrow(_savingThrow,ability, target, options = {}) {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
-
+        if (_savingThrow === "fort") _savingThrow = "fortitudenegates"
+        if (_savingThrow === "ref") _savingThrow = "reflexnegates"
+        if (_savingThrow === "will") _savingThrow = "willnegates"
 
         const _roll = async function (saveType, ability, baseAbility, target, form) {
             let savingThrowBonus = getProperty(this.data,`data.attributes.savingThrows.${saveType}.total`) || 0,
