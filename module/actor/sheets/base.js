@@ -1489,6 +1489,7 @@ export class ActorSheetPF extends ActorSheet {
     let containerItems = new Map()
     let containerList = []
 
+    data.totalInventoryValue = 0;
     // Partition items by category
     let [items, spells, feats, classes, attacks] = data.items.reduce((arr, item) => {
       item.img = item.img || DEFAULT_TOKEN;
@@ -1516,6 +1517,8 @@ export class ActorSheetPF extends ActorSheet {
         } else {
           arr[0].push(item)
         }
+
+        data.totalInventoryValue += ((item.data.identified || game.user.isGM) ? item.data.price : item.data.unidentified.price) * item.data.quantity
         //inventory.all.items.push(item);
       }
 
@@ -1571,7 +1574,6 @@ export class ActorSheetPF extends ActorSheet {
       };
 
     }
-    data.totalInventoryValue = 0;
     // Organize Inventory
     for ( let i of items ) {
       const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
@@ -1581,7 +1583,6 @@ export class ActorSheetPF extends ActorSheet {
       let weightMult = i.data.containerWeightless ? 0 : 1
       i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * conversion * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
-      data.totalInventoryValue += ((i.data.identified || game.user.isGM) ? i.data.price : i.data.unidentified.price) * i.data.quantity
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
       if (i?.data?.subType === 'container') containerList.push({id: i.id, name: i.name})
