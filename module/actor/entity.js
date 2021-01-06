@@ -2002,23 +2002,6 @@ export class ActorPF extends Actor {
         });
 
 
-        // Update encumbrance
-        this._computeEncumbrance(updateData, data);
-        switch (data.data.attributes.encumbrance.level) {
-            case 0:
-                linkData(data, updateData, "data.attributes.acp.encumbrance", 0);
-                break;
-            case 1:
-                linkData(data, updateData, "data.attributes.acp.encumbrance", 3);
-                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 3));
-                break;
-            case 2:
-                linkData(data, updateData, "data.attributes.acp.encumbrance", 6);
-                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 1));
-                break;
-        }
-        linkData(data, updateData, "data.attributes.acp.total", Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]));
-
         // Reset specific skill bonuses
         for (let sklKey of this._getChangeFlat("skills", "", this.data.data)) {
             if (hasProperty(data, sklKey)) linkData(data, updateData, sklKey, 0);
@@ -2467,6 +2450,25 @@ export class ActorPF extends Actor {
             linkData(data, updateData, `data.abilities.${a}.drain`, updateData[`data.abilities.${a}.drain`] + (changes[`data.abilities.${a}.drain`] || 0));
             modDiffs[a] = updateData[`data.abilities.${a}.mod`] - prevMods[a];
         }
+
+
+        // Update encumbrance
+        this._computeEncumbrance(updateData, data);
+        switch (data.data.attributes.encumbrance.level) {
+            case 0:
+                linkData(data, updateData, "data.attributes.acp.encumbrance", 0);
+                break;
+            case 1:
+                linkData(data, updateData, "data.attributes.acp.encumbrance", 3);
+                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 3));
+                break;
+            case 2:
+                linkData(data, updateData, "data.attributes.acp.encumbrance", 6);
+                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 1));
+                break;
+        }
+        linkData(data, updateData, "data.attributes.acp.total", Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]));
+
 
         // Force speed to creature speed
         for (let speedKey of Object.keys(this.data.data.attributes.speed)) {
@@ -4116,7 +4118,7 @@ export class ActorPF extends Actor {
         if (_savingThrow === "ref") _savingThrow = "reflexnegates"
         if (_savingThrow === "will") _savingThrow = "willnegates"
 
-        const _roll = async function (saveType, ability, baseAbility, target, form) {
+        const _roll = async function (saveType, ability, baseAbility, target, form,props) {
             let savingThrowBonus = getProperty(this.data,`data.attributes.savingThrows.${saveType}.total`) || 0,
                 optionalFeatIds = [],
                 rollMode = null;
@@ -4165,12 +4167,15 @@ export class ActorPF extends Actor {
             };
             const templateData = mergeObject(chatTemplateData, {
                 img: this.img,
+                saveTypeName: game.i18n.localize(CONFIG.D35E.savingThrows[saveType]),
                 roll: roll,
                 total: roll.total,
                 result: roll.result,
                 target: target,
                 tooltip: $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML,
                 success: target && roll.total >= target,
+                properties: props,
+                hasProperties: props.length > 0,
             }, {inplace: false});
             // Create message
 
@@ -4242,7 +4247,7 @@ export class ActorPF extends Actor {
             label: game.i18n.localize("D35E.Roll"),
             callback: html => {
                 wasRolled = true;
-                roll = _roll.call(this,savingThrowId,savingThrowAbility,savingThrowBaseAbility,target, html)
+                roll = _roll.call(this,savingThrowId,savingThrowAbility,savingThrowBaseAbility,target,html,props)
             }
         };
         await new Promise(resolve => {
@@ -5087,7 +5092,7 @@ export class ActorPF extends Actor {
         const size = srcData.data.traits.size;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
         else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
-        let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr }).roll().total;
+        let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr > 0 ? carryStr : 0 }).roll().total;
 
         // 1 kg = 0.5 lb
         // if (game.settings.get("D35E", "units") === "metric") {
