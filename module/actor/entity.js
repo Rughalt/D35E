@@ -4118,7 +4118,7 @@ export class ActorPF extends Actor {
         if (_savingThrow === "ref") _savingThrow = "reflexnegates"
         if (_savingThrow === "will") _savingThrow = "willnegates"
 
-        const _roll = async function (saveType, ability, baseAbility, target, form) {
+        const _roll = async function (saveType, ability, baseAbility, target, form,props) {
             let savingThrowBonus = getProperty(this.data,`data.attributes.savingThrows.${saveType}.total`) || 0,
                 optionalFeatIds = [],
                 rollMode = null;
@@ -4167,12 +4167,15 @@ export class ActorPF extends Actor {
             };
             const templateData = mergeObject(chatTemplateData, {
                 img: this.img,
+                saveTypeName: game.i18n.localize(CONFIG.D35E.savingThrows[saveType]),
                 roll: roll,
                 total: roll.total,
                 result: roll.result,
                 target: target,
                 tooltip: $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML,
                 success: target && roll.total >= target,
+                properties: props,
+                hasProperties: props.length > 0,
             }, {inplace: false});
             // Create message
 
@@ -4244,7 +4247,7 @@ export class ActorPF extends Actor {
             label: game.i18n.localize("D35E.Roll"),
             callback: html => {
                 wasRolled = true;
-                roll = _roll.call(this,savingThrowId,savingThrowAbility,savingThrowBaseAbility,target, html)
+                roll = _roll.call(this,savingThrowId,savingThrowAbility,savingThrowBaseAbility,target,html,props)
             }
         };
         await new Promise(resolve => {

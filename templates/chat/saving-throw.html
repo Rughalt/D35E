@@ -2,7 +2,7 @@
      tokenId}}data-token-id="{{tokenId}}" {{/if}}>
 <header class="card-header flexrow">
     <img src="{{img}}" title="{{name}}" width="36" height="36"/>
-    {{#if name}}<h3>{{name}}</h3>{{/if}}
+    <h3>{{name}} - {{saveTypeName}}</h3>
 </header>
 
 <div class="card-content">
@@ -45,11 +45,11 @@
 <footer class="card-footer">
     {{#if hasProperties}}
     {{#each properties as |prop|}}
-    <div class="footer flexcol property-group gm-sensitive">
+    <div class="flexcol property-group gm-sensitive">
         <label>{{prop.header}}</label>
         <div class="flexrow">
             {{#each prop.value as |v|}}
-            <span class="tag">{{v}}</span>
+            <span class="tag">{{{v}}}</span>
             {{/each}}
         </div>
     </div>
