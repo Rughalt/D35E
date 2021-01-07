@@ -224,6 +224,11 @@
       "lang": "fr",
       "name": "French",
       "path": "lang/fr.json"
+    },
+    {
+      "lang": "it",
+      "name": "Italian",
+      "path": "lang/it.json"
     }
   ],
   "socket": true,
