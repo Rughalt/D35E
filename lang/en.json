@@ -1289,5 +1289,7 @@
   "SETTINGS.D35EDisplayItemsInContainersN": "Display items in Containers in Categories",
   "SETTINGS.D35EDisplayItemsInContainersH": "Will display items stored in containers in correct categories as well as in All category",
   "SETTINGS.D35EAllowPlayersApplyActionsN": "Allow players to use Apply action",
-  "SETTINGS.D35EAllowPlayersApplyActionsH": "Displays Apply Action/Apply Damage in chat cards for players. Does not allow them apply things to actors they have no permission for."
+  "SETTINGS.D35EAllowPlayersApplyActionsH": "Displays Apply Action/Apply Damage in chat cards for players. Does not allow them apply things to actors they have no permission for.",
+  "SETTINGS.D35ETransparentSidebarWhenUsingThemeN": "Use Transparent sidebar Background when using custom theme",
+  "SETTINGS.D35ETransparentSidebarWhenUsingThemeH": "Uses standard Foundry texture for sidebar Background when using theme"
 }
