@@ -197,6 +197,13 @@
       "entity": "JournalEntry"
     },
     {
+      "name": "docs",
+      "label": "Documentation",
+      "system": "D35E",
+      "path": "./packs/documentation.db",
+      "entity": "JournalEntry"
+    },
+    {
       "name": "scenes",
       "label": "Scenes",
       "system": "D35E",

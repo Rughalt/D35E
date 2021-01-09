@@ -892,7 +892,7 @@ export class ItemPF extends Item {
             if (change[3].indexOf('$') !== -1) {
                 setProperty(rollData, change[3].substr(1), ItemPF._fillTemplate(change[4], rollData))
             } else if (change[3].indexOf('&') !== -1) {
-                setProperty(rollData, change[3].substr(1), (getProperty(rollData, change[3]) || "") + ItemPF._fillTemplate(change[4], rollData))
+                setProperty(rollData, change[3].substr(1), (getProperty(rollData, change[3].substr(1)) || "0") + " + " + ItemPF._fillTemplate(change[4], rollData))
             } else {
                 setProperty(rollData, change[3], (getProperty(rollData, change[3]) || 0) + (change[4] || 0))
             }
@@ -1088,7 +1088,10 @@ export class ItemPF extends Item {
                 hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Greater Two-Weapon Fighting").length > 0,
                 rollMode = null,
                 optionalFeatIds = [],
-                enabledConditionals = [];
+                enabledConditionals = [],
+                props = [],
+                rollModifiers = [],
+                extraText = "";
             // Get form data
             if (form) {
 
@@ -1131,12 +1134,15 @@ export class ItemPF extends Item {
                     damageExtraParts.push("floor(@powerAttackBonus * @weaponHands) * @critMult");
                     rollData.powerAttackPenalty = -rollData.powerAttackBonus;
                     attackExtraParts.push("@powerAttackPenalty");
+                    if (rollData.powerAttackBonus > 0)
+                        rollModifiers.push(`${game.i18n.localize("D35E.PowerAttack")} ${rollData.powerAttackBonus}`)
                 }
                 if (form.find('[name="manyshot"]').prop("checked")) {
                     manyshot = true;
                     manyshotCount = parseInt(form.find('[name="manyshot-count"]').val())
                     rollData.manyshotPenalty = -manyshotCount*2;
                     attackExtraParts.push("@manyshotPenalty");
+                    rollModifiers.push(`${game.i18n.localize("D35E.FeatManyshot")}`)
                 }
 
                 if (form.find('[name="nonLethal"]').prop("checked")) {
@@ -1146,31 +1152,39 @@ export class ItemPF extends Item {
                 if (nonLethal !== itemNonLethal) {
                     rollData.nonLethalPenalty = -4;
                     attackExtraParts.push("@nonLethalPenalty");
+                    rollModifiers.push(`${game.i18n.localize("D35E.WeaponPropNonLethal")}`)
+
                 }
 
                 if (form.find('[name="prone"]').prop("checked")) {
                     rollData.pronePenalty = -4;
                     attackExtraParts.push("@pronePenalty");
+                    rollModifiers.push(`${game.i18n.localize("D35E.Prone")}`)
                 }
                 if (form.find('[name="squeezing"]').prop("checked")) {
                     rollData.squeezingPenalty = -4;
                     attackExtraParts.push("@squeezingPenalty");
+                    rollModifiers.push(`${game.i18n.localize("D35E.Squeezing")}`)
                 }
                 if (form.find('[name="highground"]').prop("checked")) {
                     rollData.highground = 1;
                     attackExtraParts.push("@highground");
+                    rollModifiers.push(`${game.i18n.localize("D35E.HighGround")}`)
                 }
                 if (form.find('[name="defensive"]').prop("checked")) {
                     rollData.defensive = -4;
                     attackExtraParts.push("@defensive");
+                    rollModifiers.push(`${game.i18n.localize("D35E.DefensiveFighting")}`)
                 }
                 if (form.find('[name="charge"]').prop("checked")) {
                     rollData.charge = 2;
                     attackExtraParts.push("@charge");
+                    rollModifiers.push(`${game.i18n.localize("D35E.Charge")}`)
                 }
                 if (form.find('[name="flanking"]').prop("checked")) {
                     rollData.flanking = 2;
                     attackExtraParts.push("@flanking");
+                    rollModifiers.push(`${game.i18n.localize("D35E.Flanking")}`)
                 }
 
                 if (form.find('[name="greater-manyshot"]').prop("checked")) {
@@ -1178,6 +1192,7 @@ export class ItemPF extends Item {
                     greaterManyshot = true;
                     rollData.greaterManyshotPenalty = -greaterManyshotCount*2;
                     attackExtraParts.push("@greaterManyshotPenalty");
+                    rollModifiers.push(`${game.i18n.localize("D35E.FeatGreaterManyshot")}`)
                 }
                 if (form.find('[name="rapid-shot"]').prop("checked")) {
                     rapidShot = true;
@@ -1304,6 +1319,7 @@ export class ItemPF extends Item {
             let damageEnhancementMap = new Map();
             for (let enabledConditional of enabledConditionals) {
                 let conditional = itemData.conditionals.find(c => c.name === enabledConditional);
+                rollModifiers.push(`${c.name}`)
                 for (let modifier of conditional.modifiers) {
                     if (modifier.target === "attack") {
                         if (modifier.subTarget !== "allAttack") {
@@ -1336,8 +1352,10 @@ export class ItemPF extends Item {
             actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                    rollModifiers.push(`${i.name}`)
                 } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    rollModifiers.push(`${i.name}`)
                 }
             })
             this._addCombatChangesToRollData(allCombatChanges, rollData);
@@ -1350,10 +1368,16 @@ export class ItemPF extends Item {
             }
 
             if (rollData.featDamageBonus) {
-                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*@featDamageBonus",'Feats']);
+                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*(${this.featDamageBonus})",'Feats']);
             }
             if (rollData.featDamagePrecision) {
-                damageExtraParts.push(["${this.featDamagePrecision}",'Precision']);
+                damageExtraParts.push(["(${this.featDamagePrecision})",'Precision']);
+            }
+            if (rollData.featDamage) {
+                for (let dmg of Object.keys(rollData.featDamage)) {
+                    console.log('Bonus damage!', dmg, rollData.featDamage[dmg])
+                    damageExtraParts.push(["(${this.featDamage."+dmg+"})",dmg]);
+                }
             }
 
             let attacks = [];
@@ -1486,8 +1510,6 @@ export class ItemPF extends Item {
 
                 console.log(`D35E | Generating chat message.`)
                 // Get extra text and properties
-                let props = [],
-                    extraText = "";
                 let hasBoxInfo = this.hasAttack || this.hasDamage || this.hasEffect;
                 let attackNotes = []
                 const noteObjects = actor.getContextNotes("attacks.attack");
@@ -1522,6 +1544,10 @@ export class ItemPF extends Item {
                 if (properties.length > 0) props.push({
                     header: game.i18n.localize("D35E.InfoShort"),
                     value: properties
+                });
+                if (rollModifiers.length > 0) props.push({
+                    header: game.i18n.localize("D35E.RollModifiers"),
+                    value: rollModifiers
                 });
                 const templateData = mergeObject(chatTemplateData, {
                     extraText: extraText,
@@ -1741,7 +1767,7 @@ export class ItemPF extends Item {
         return combatChanges.filter(change => {
             return (change[0] === 'all' || change[0] === itemType) && (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
         }).map(c => {
-            if (c[3].indexOf('$') === -1) {
+            if (c[3].indexOf('$') === -1 && c[3].indexOf('&') === -1) {
                 c[4] = new Roll(`${c[4]}`,combatChangesRollData).roll().total
             }
             return c;
@@ -1785,7 +1811,7 @@ export class ItemPF extends Item {
         // Add size bonus
         if (rollData.sizeBonus !== 0) parts.push("@sizeBonus");
         if (rollData.featAttackBonus) {
-            if (rollData.featAttackBonus !== 0) parts.push("@featAttackBonus");
+            if (rollData.featAttackBonus !== 0) parts.push("${this.featAttackBonus}");
         }
         // Add attack bonus
         if (itemData.attackBonus !== "") {
