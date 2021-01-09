@@ -3664,10 +3664,10 @@ export class ActorPF extends Actor {
                 if (obj.type !== 'spell') continue;
                 let foundLevel = false;
                 let spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey];
-                let spellbookClass = spellbook.class
+                let spellbookClass = this.data.data.classes[spellbook.class]?.name || "Missing";
                 if (obj.data.data.learnedAt !== undefined) {
                     obj.data.data.learnedAt.class.forEach(learnedAtObj => {
-                        if (learnedAtObj[0].toLowerCase() === spellbookClass) {
+                        if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
                             obj.data.data.level = learnedAtObj[1]
                             foundLevel = true;
                         }
@@ -5032,10 +5032,11 @@ export class ActorPF extends Actor {
                         // We try to set spellbook to correct one
                         for (let _spellbookKey of Object.keys(this.data.data.attributes.spells.spellbooks)) {
                             let _spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey]
-                            let spellbookClass = _spellbook.class
+
+                            let spellbookClass = this.data.data.classes[_spellbook.class]?.name || "Missing";
                             if (obj.data.learnedAt !== undefined) {
                                 for (const learnedAtObj of obj.data.learnedAt.class) {
-                                    if (learnedAtObj[0].toLowerCase() === spellbookClass) {
+                                    if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
                                         spellbook = _spellbook
                                         obj.data.spellbook = _spellbookKey
                                     }
@@ -5049,10 +5050,10 @@ export class ActorPF extends Actor {
                         } else {
                         }
                     }
-                    let spellbookClass = spellbook.class
+                    let spellbookClass = this.data.data.classes[spellbook.class]?.name || "Missing";
                     if (obj.data.learnedAt !== undefined) {
                         obj.data.learnedAt.class.forEach(learnedAtObj => {
-                            if (learnedAtObj[0].toLowerCase() === spellbookClass) {
+                            if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
                                 obj.data.level = learnedAtObj[1]
                                 foundLevel = true;
                             }
