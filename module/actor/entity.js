@@ -339,7 +339,9 @@ export class ActorPF extends Actor {
                 }
                 return ["data.attributes.ac.normal.total", "data.attributes.ac.touch.total", "data.attributes.ac.flatFooted.total"];
             case "aac":
+                return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
             case "sac":
+                return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
             case "nac":
                 return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
             case "tch":
@@ -2651,6 +2653,7 @@ export class ActorPF extends Actor {
         data.combinedResistances = data.energyResistance ? duplicate(data.energyResistance) : [];
         data.combinedDR = data.damageReduction ? duplicate(data.damageReduction) : [];
 
+        data.shieldType = "none";
         actorData.items.filter(obj => {
             if (obj.type === "buff") return obj.data.active;
             if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.equipped && !obj.data.melded);
@@ -2690,6 +2693,8 @@ export class ActorPF extends Actor {
                 })
             }
             if (obj.type === "weapon" || obj.type === "equipment") {
+                if (obj.data?.equipmentType === "shield")
+                    data.shieldType = obj.data?.equipmentSubtype
                 if (obj.data.enhancements !== undefined) {
                     obj.data.enhancements.items.forEach(enhancementItem => {
                         (enhancementItem.data?.resistances || []).forEach(resistance => {
