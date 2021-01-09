@@ -4150,14 +4150,23 @@ export class ActorPF extends Actor {
 
             // Parse combat changes
             let allCombatChanges = []
+            let rollModifiers = []
             let attackType = 'savingThrow';
             this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                    rollModifiers.push(`${i.name}`)
                 } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    rollModifiers.push(`${i.name}`)
                 }
             })
+
+            if (rollModifiers.length > 0) props.push({
+                header: game.i18n.localize("D35E.RollModifiers"),
+                value: rollModifiers
+            });
+
             this._addCombatChangesToRollData(allCombatChanges, rollData);
             rollData.featSavingThrow = rollData.featSavingThrow || 0;
             rollData.savingThrowBonus = savingThrowBonus;
@@ -4580,6 +4589,8 @@ export class ActorPF extends Actor {
      */
     async rollDefenseDialog({ev = null, skipDialog = false} = {}) {
         const _roll = async function (acType, form) {
+
+            let rollModifiers = []
             let ac = getProperty(this.data,`data.attributes.ac.${acType}.total`) || 0,
                 optionalFeatIds = [],
                 applyHalf = false,
@@ -4612,21 +4623,27 @@ export class ActorPF extends Actor {
                 }
                 if (form.find('[name="prone"]').prop("checked")) {
                     ac += new Roll("-4").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.Prone")}`)
                 }
                 if (form.find('[name="squeezing"]').prop("checked")) {
                     ac += new Roll("-4").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.Squeezing")}`)
                 }
                 if (form.find('[name="defense"]').prop("checked")) {
                     ac += new Roll("+2").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.Defense")}`)
                 }
                 if (form.find('[name="totaldefense"]').prop("checked")) {
                     ac += new Roll("+4").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.TotalDefense")}`)
                 }
                 if (form.find('[name="covered"]').prop("covered")) {
                     ac += new Roll("+4").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.Covered")}`)
                 }
                 if (form.find('[name="charged"]').prop("charged")) {
                     ac += new Roll("-2").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.Charged")}`)
                 }
             }
 
@@ -4635,13 +4652,18 @@ export class ActorPF extends Actor {
             this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                    rollModifiers.push(`${i.name}`)
                 } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    rollModifiers.push(`${i.name}`)
                 }
             })
+
+
+
             for (const change of allCombatChanges) {
                 console.log('D35E | Change', change[4])
-                if (change[3].indexOf('$') !== -1) {
+                if (change[3].indexOf('$') !== -1 && change[3].indexOf('&') !== -1) {
                     setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
                 } else {
                     setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
@@ -4651,7 +4673,7 @@ export class ActorPF extends Actor {
             ac += rollData.featAC || 0;
 
             console.log('D35E | Final roll AC', ac)
-            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision};
+            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision, rollModifiers: rollModifiers};
         }
         let rollData = this.getRollData();
         // Render modal dialog
@@ -4807,6 +4829,12 @@ export class ActorPF extends Actor {
 
                 damageData.nonLethalDamage = nonLethal
                 damageData.displayDamage = value
+                let props = []
+                if ((finalAc.rollModifiers || []).length > 0) props.push({
+                    header: game.i18n.localize("D35E.RollModifiers"),
+                    value: finalAc.rollModifiers
+                });
+
                 // Set chat data
                 let chatData = {
                     speaker: ChatMessage.getSpeaker({actor: a.data}),
@@ -4831,7 +4859,9 @@ export class ActorPF extends Actor {
                     fortifyRolled: fortifyRolled,
                     fortifyValue: Math.min(fortifyValue,100),
                     fortifyRoll: fortifyRoll,
-                    fortifySuccessfull: fortifySuccessfull
+                    fortifySuccessfull: fortifySuccessfull,
+                    hasProperties: props.length,
+                    properties: props
                 }, {inplace: false});
                 // Create message
 

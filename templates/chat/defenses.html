@@ -125,4 +125,20 @@
       <button data-action="save" data-save="will">{{localize "D35E.SavingThrowWill"}}</button>
     </div>
   </div>
+
+  <footer class="card-footer">
+    {{#if hasProperties}}
+    {{#each properties as |prop|}}
+    <div class="flexcol property-group gm-sensitive">
+      <label>{{prop.header}}</label>
+      <div class="flexrow">
+        {{#each prop.value as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+  </footer>
 </div>
+
