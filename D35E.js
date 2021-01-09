@@ -156,6 +156,7 @@ Hooks.once("ready", async function() {
 
   $('body').toggleClass('d35gm', game.user.isGM);
   $('body').toggleClass('hide-special-action', !game.settings.get("D35E", "allowPlayersApplyActions"));
+  $('body').toggleClass('transparent-sidebar', game.settings.get("D35E", "transparentSidebarWhenUsingTheme"));
 
 
   const NEEDS_MIGRATION_VERSION = "0.87.7";

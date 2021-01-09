@@ -226,6 +226,19 @@ export const registerSystemSettings = function() {
     },
   });
 
+
+  game.settings.register("D35E", 'transparentSidebarWhenUsingTheme', {
+    name: `SETTINGS.D35ETransparentSidebarWhenUsingThemeN`,
+    hint: 'SETTINGS.D35ETransparentSidebarWhenUsingThemeH',
+    default: false,
+    type: Boolean,
+    config: true,
+    scope: 'client',
+    onChange: () => {
+      $('body').toggleClass('transparent-sidebar', game.settings.get("D35E", "transparentSidebarWhenUsingTheme"));
+    },
+  });
+
   /**
    * Option to change measure style
    */
@@ -280,6 +293,8 @@ export const registerSystemSettings = function() {
     config: true,
     scope: 'client',
   });
+
+
 
   game.settings.register("D35E", "allowPlayersApplyActions", {
     name: "SETTINGS.D35EAllowPlayersApplyActionsN",

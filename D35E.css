@@ -4946,8 +4946,7 @@ tr.introjs-showElement > th {
 .d35ecustom .sidebar-tab .directory-list .directory-item {
   position: relative;
 }
-.d35ecustom .sidebar-tab .directory-list .directory-item.entity.item::after,
-.d35ecustom .sidebar-tab .directory-list .directory-item.entity.actor::after {
+.d35ecustom .sidebar-tab .directory-list .directory-item.entity.item::after {
   content: '';
   background: url(/systems/D35E/icons/ui/skill-frame.png);
   background-size: contain;
@@ -5038,12 +5037,14 @@ tr.introjs-showElement > th {
   background: url(/systems/D35E/icons/ui/sidebar-bg.png);
   background-size: 100% 100%;
 }
+.d35ecustom:not(.transparent-sidebar) #sidebar {
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  background-size: 100% 100%;
+}
 .d35ecustom #sidebar {
   border-radius: 0;
   border: none;
   line-height: 27px;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
-  background-size: 100% 100%;
 }
 .d35ecustom #sidebar .card-content {
   line-height: initial;
