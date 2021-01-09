@@ -915,7 +915,7 @@
           "kps": {
             "value": 0,
             "ability": "int",
-            "rt": false,
+            "rt": true,
             "acp": false,
             "rank": 0,
             "notes": "",
@@ -998,6 +998,7 @@
     "character": {
       "templates": ["common"],
       "isPartyMember": false,
+      "displayNonRTSkills": false,
       "details": {
         "xp": {
           "value": 0,

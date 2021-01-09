@@ -397,7 +397,7 @@ export class ActorSheetPF extends ActorSheet {
     keys.forEach( a => {
       let skl = skillset[a]
       result.all.skills[a] = skl;
-      if (skl.rank > 0) result.known.skills[a] = skl;
+      if (skl.rank > 0 || (!skl.rt && this.actor.data.data.displayNonRTSkills)) result.known.skills[a] = skl;
       else if (skl.subSkills !== undefined) {
         result.known.skills[a] = skl;
       }

@@ -1273,6 +1273,9 @@
   "D35E.ItemHasUID": "This item has Unique ID set. It is designed to be added to characters <strong>only</strong> by adding it as class or race ability.<br><br>Remember to start your own UIDs with <span style='font-family: monospace'>user-</span> prefix.",
   "D35E.AddItem": "Add Item",
   "D35E.Wealth": "Wealth",
+  "D35E.PartyMemberH": "If checked this character will be displayed in HUD.",
+  "D35E.DisplayNonRTSkills": "Display usable untrained skills in Summary",
+  "D35E.DisplayNonRTSkillsH": "Displays skills that character does not have ranks but do nor require training in the Summary tab.",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
