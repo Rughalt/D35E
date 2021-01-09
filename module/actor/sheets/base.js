@@ -707,6 +707,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find("input[type='checkbox'].level-up-progression").click(ev => this._onChangeUseProgression(ev));
 
     html.find(".item-search-input").off("keyup").keyup(this._filterData.bind(this))
+    html.find(".item-search-input").on("change", event => event.stopPropagation());
     html.find(".item-add-close-box").click(ev => { this._closeInlineData(ev); });
 
 
