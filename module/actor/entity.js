@@ -4146,7 +4146,7 @@ export class ActorPF extends Actor {
             // Parse combat changes
             let allCombatChanges = []
             let attackType = 'savingThrow';
-            this.items.filter(o => o.type === "feat").forEach(i => {
+            this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                 } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
@@ -4241,8 +4241,8 @@ export class ActorPF extends Actor {
             savingThrow: savingThrow,
             rollMode: game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
-            stFeats: this.items.filter(o => o.type === "feat" && o.hasCombatChange('savingThrow',rollData)),
-            stFeatsOptional: this.items.filter(o => o.type === "feat" && o.hasCombatChange(`savingThrowOptional`,rollData)),
+            stFeats: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange('savingThrow',rollData)),
+            stFeatsOptional: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`savingThrowOptional`,rollData)),
             label: label,
         };
         const html = await renderTemplate(template, dialogData);
@@ -4627,7 +4627,7 @@ export class ActorPF extends Actor {
 
             let allCombatChanges = []
             let attackType = 'defense';
-            this.items.filter(o => o.type === "feat").forEach(i => {
+            this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                 } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
@@ -4656,8 +4656,8 @@ export class ActorPF extends Actor {
             item: this.data.data,
             rollMode: "gmroll",
             rollModes: CONFIG.Dice.rollModes,
-            defenseFeats: this.items.filter(o => o.type === "feat" && o.hasCombatChange('defense',rollData)),
-            defenseFeatsOptional: this.items.filter(o => o.type === "feat" && o.hasCombatChange(`defenseOptional`,rollData)),
+            defenseFeats: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange('defense',rollData)),
+            defenseFeatsOptional: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`defenseOptional`,rollData)),
             conditionals: this.data.data.conditionals,
         };
         const html = await renderTemplate(template, dialogData);

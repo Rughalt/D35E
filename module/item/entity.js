@@ -787,7 +787,7 @@ export class ItemPF extends Item {
         if (this.actor) {
             let allCombatChanges = []
             let attackType = this.type;
-            this.actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType, rollData)).forEach(i => {
+            this.actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
             })
             this._addCombatChangesToRollData(allCombatChanges, rollData);
@@ -1333,7 +1333,7 @@ export class ItemPF extends Item {
             // Getting all combat changes from items
             let allCombatChanges = []
             let attackType = this.type;
-            actor.items.filter(o => o.type === "feat").forEach(i => {
+            actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                 } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
@@ -1574,8 +1574,8 @@ export class ItemPF extends Item {
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
-            weaponFeats: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(this.type,rollData)),
-            weaponFeatsOptional: actor.items.filter(o => o.type === "feat" && o.hasCombatChange(`${this.type}Optional`,rollData)),
+            weaponFeats: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(this.type,rollData)),
+            weaponFeatsOptional: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`${this.type}Optional`,rollData)),
             conditionals: this.data.data.conditionals,
         };
         const html = await renderTemplate(template, dialogData);
@@ -1636,7 +1636,7 @@ export class ItemPF extends Item {
         if (this.actor) {
             let allCombatChanges = []
             let attackType = this.type;
-            this.actor.items.filter(o => o.type === "feat" && o.hasCombatChange(attackType, rollData)).forEach(i => {
+            this.actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
             })
 

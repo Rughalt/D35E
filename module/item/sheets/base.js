@@ -333,6 +333,9 @@ export class ItemSheetPF extends ItemSheet {
         }
 
 
+        if (data.item.type === "buff") {
+            data.hasCombatChanges = true;
+        }
         if (data.item.type === "feat") {
             data.isFeat = data.item.data.featType === "feat"
             data.hasCombatChanges = true;
