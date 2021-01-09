@@ -3784,6 +3784,9 @@ span.bold {
 .game:not(.d35gm) .gm-sensitive {
   display: none;
 }
+.game.hide-special-action:not(.d35gm) .special-action-button {
+  display: none;
+}
 .custom-dialog.wide {
   width: 600px !important;
 }
@@ -4930,7 +4933,7 @@ tr.introjs-showElement > th {
   background: url(/systems/D35E/icons/ui/vert-button.png);
   background-size: contain;
   border: none;
-  flex: 0 0 26px;
+  flex: 1;
   padding-top: 1px;
 }
 .d35ecustom #hotbar #hotbar-directory-controls {

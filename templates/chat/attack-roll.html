@@ -90,7 +90,7 @@
         {{/if}}
 
         {{#if atk.cards.length}}
-        <div class="flexcol card-buttons gm-sensitive">
+        <div class="flexcol card-buttons special-action-button">
             {{#each atk.cards as |card|}}
             <button data-action="{{card.action}}" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
                     data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}">
@@ -112,7 +112,7 @@
         <strong>Special actions</strong><br>
         <div class="flexcol card-buttons">
             {{#each atk.special as |card|}}
-            <button class="{{#if card.isTargeted}}gm-sensitive{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
+            <button class="{{#if card.isTargeted}}special-action-button{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
                 card.hasImg}}<img src="{{card.img}}">{{/if}}{{#if card.isTargeted}}<img class="target"
                                                                                         src="/systems/D35E/icons/actions/reticule.svg">{{/if}}{{#unless
                 card.isTargeted}}<img class="target" src="/systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}

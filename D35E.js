@@ -155,6 +155,9 @@ Hooks.once("setup", function() {
 Hooks.once("ready", async function() {
 
   $('body').toggleClass('d35gm', game.user.isGM);
+  $('body').toggleClass('hide-special-action', !game.settings.get("D35E", "allowPlayersApplyActions"));
+
+
   const NEEDS_MIGRATION_VERSION = "0.87.7";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
@@ -298,12 +301,11 @@ Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
   const actor = game.actors.tokens[data._id];
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
-    actor.refresh(options);
-
-    // Update items
-    for (let i of actor.items) {
-      actor.updateItemResources(i);
+    let itemResourcesData = {}
+    for (let i of actor.items || []) {
+      actor.getItemResourcesUpdate(i, itemResourcesData);
     }
+    actor.refreshWithData(itemResourcesData, options)
   }
 });
 
@@ -316,20 +318,15 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
-    return
-  }
+  if (!game.user.isGM)
+    return;
   const actor = game.actors.tokens[combatant.tokenId];
   if (actor != null) {
-    actor.refresh();
-    if (actor.items !== undefined && actor.items.size > 0) {
-      // Update items
-      for (let i of actor.items) {
-        actor.updateItemResources(i);
-        i.resetPerEncounterUses();
-      }
+    let itemResourcesData = {}
+    for (let i of actor.items || []) {
+      actor.getItemResourcesUpdate(i, itemResourcesData);
     }
+    actor.refreshWithData(itemResourcesData, {})
   }
 });
 

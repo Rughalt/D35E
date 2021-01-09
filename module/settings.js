@@ -281,6 +281,15 @@ export const registerSystemSettings = function() {
     scope: 'client',
   });
 
+  game.settings.register("D35E", "allowPlayersApplyActions", {
+    name: "SETTINGS.D35EAllowPlayersApplyActionsN",
+    hint: "SETTINGS.D35EAllowPlayersApplyActionsH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   // game.settings.register("D35E", 'displayItemsInContainers', {
   //   name: `SETTINGS.D35EDisplayItemsInContainersN`,
   //   hint: 'SETTINGS.D35EDisplayItemsInContainersH',

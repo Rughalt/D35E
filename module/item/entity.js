@@ -2356,29 +2356,29 @@ export class ItemPF extends Item {
     getElapsedTimeUpdateData(time) {
         if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
             if (!this.data.data.timeline.enabled)
-                return {'_id': this.data.id}
+                return {'_id': this._id}
             if (!this.data.data.active)
-                return {'_id': this.data.id}
+                return {'_id': this._id}
             if (this.data.data.timeline.elapsed + time >= this.data.data.timeline.total) {
                 if (!this.data.data.timeline.deleteOnExpiry) {
                     let updateData = {}
                     updateData["data.active"] = false;
-                    updateData["_id"] = this.data.id;
+                    updateData["_id"] = this._id;
                     return updateData;
                 } else {
                     if (!this.actor) return;
                     if (this.actor.token) {
                         let updateData = {}
                         updateData["data.active"] = false;
-                        updateData["_id"] = this.data.id;
+                        updateData["_id"] = this._id;
                         return updateData;
                     } else
-                        return {'_id': this.data.id, 'delete': true};
+                        return {'_id': this._id, 'delete': true};
                 }
             } else {
                 let updateData = {}
                 updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
-                updateData["_id"] = this.data.id;
+                updateData["_id"] = this._id;
                 return updateData;
             }
         }

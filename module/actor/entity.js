@@ -2992,6 +2992,12 @@ export class ActorPF extends Actor {
         }
     }
 
+    async refreshWithData(data, options = {}) {
+        if (this.hasPerm(game.user, "OWNER") && options.stopUpdates !== true) {
+            return this.update(data);
+        }
+    }
+
     /**
      * Prepare Character type specific
      * data
@@ -4156,14 +4162,14 @@ export class ActorPF extends Actor {
             // Set chat data
             let chatData = {
                 speaker: ChatMessage.getSpeaker({actor: this.data}),
-                rollMode: rollMode || "blindroll",
+                rollMode: rollMode || "gmroll",
                 sound: CONFIG.sounds.dice,
                 "flags.D35E.noRollRender": true,
             };
             let chatTemplateData = {
                 name: this.name,
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-                rollMode: rollMode || "blindroll",
+                rollMode: rollMode || "gmroll",
             };
             const templateData = mergeObject(chatTemplateData, {
                 img: this.img,
@@ -4574,7 +4580,7 @@ export class ActorPF extends Actor {
                 applyHalf = false,
                 noCritical = false,
                 applyPrecision = false,
-                rollMode = "blindroll";
+                rollMode = "gmroll";
             // Get form data
             if (form) {
 
@@ -4648,7 +4654,7 @@ export class ActorPF extends Actor {
         let dialogData = {
             data: rollData,
             item: this.data.data,
-            rollMode: "blindroll",
+            rollMode: "gmroll",
             rollModes: CONFIG.Dice.rollModes,
             defenseFeats: this.items.filter(o => o.type === "feat" && o.hasCombatChange('defense',rollData)),
             defenseFeatsOptional: this.items.filter(o => o.type === "feat" && o.hasCombatChange(`defenseOptional`,rollData)),
@@ -4726,6 +4732,7 @@ export class ActorPF extends Actor {
             return
         }
         for (let t of tokensList) {
+
             let a = t.actor,
                 hp = a.data.data.attributes.hp,
                 nonLethal = a.data.data.attributes.hp.nonlethal || 0,
@@ -4733,6 +4740,11 @@ export class ActorPF extends Actor {
                 hit = false,
                 crit = false,
                 dt = value > 0 ? Math.min(tmp, value) : 0;
+
+            if (!a.hasPerm(game.user, "OWNER")) {
+                ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+                continue;
+            }
             if (simpleDamage) {
                 hit = true
                 value = damage;
@@ -4793,14 +4805,14 @@ export class ActorPF extends Actor {
                 // Set chat data
                 let chatData = {
                     speaker: ChatMessage.getSpeaker({actor: a.data}),
-                    rollMode: finalAc.rollMode || "blindroll",
+                    rollMode: finalAc.rollMode || "gmroll",
                     sound: CONFIG.sounds.dice,
                     "flags.D35E.noRollRender": true,
                 };
                 let chatTemplateData = {
                     name: a.name,
                     type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-                    rollMode: finalAc.rollMode || "blindroll",
+                    rollMode: finalAc.rollMode || "gmroll",
                 };
                 const templateData = mergeObject(chatTemplateData, {
                     damageData: damageData,
@@ -4822,10 +4834,6 @@ export class ActorPF extends Actor {
             }
 
 
-            if (!a.hasPerm(game.user, "OWNER")) {
-                ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
-                continue;
-            }
             if (hit)
                 promises.push(t.actor.update({
                     "data.attributes.hp.nonlethal": nonLethal,
