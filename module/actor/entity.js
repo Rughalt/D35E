@@ -647,7 +647,7 @@ export class ActorPF extends Actor {
                 });
             }
             // Push enhancement bonus to armor
-            if (item.data.armor.enh) {
+            if (item.data.armor.enh && item.data.equipmentType !== "misc") {
                 changes.push({
                     raw: [item.data.armor.enh.toString(), "ac", armorTarget, "enh", 0],
                     source: {

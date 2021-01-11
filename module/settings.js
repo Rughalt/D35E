@@ -170,6 +170,18 @@ export const registerSystemSettings = function() {
   });
 
   /**
+   * Option to use automatically scale weapon attacks using BAB
+   */
+  game.settings.register("D35E", "autoScaleAttacksBab", {
+    name: "SETTINGS.D35EAutoScaleAttackBABN",
+    hint: "SETTINGS.D35EAutoScaleAttackBABH",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean
+  });
+
+  /**
    * Option to automatically collapse Item Card descriptions
    */
   game.settings.register("D35E", "autoCollapseItemCards", {

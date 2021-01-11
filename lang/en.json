@@ -1230,6 +1230,7 @@
   "D35E.Hit": "Hit!",
   "D35E.Miss": "Miss!",
   "D35E.Crit": "Critical Hit!",
+  "D35E.CritS": "Critical",
   "D35E.Fortification": "Fortification",
   "D35E.BuffTarACTouch": "Touch",
   "D35E.Defense": "Defense",
@@ -1276,6 +1277,7 @@
   "D35E.PartyMemberH": "If checked this character will be displayed in HUD.",
   "D35E.DisplayNonRTSkills": "Display usable untrained skills in Summary",
   "D35E.DisplayNonRTSkillsH": "Displays skills that character does not have ranks but do nor require training in the Summary tab.",
+  "D35E.Apply": "Apply",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1294,5 +1296,7 @@
   "SETTINGS.D35EAllowPlayersApplyActionsN": "Allow players to use Apply action",
   "SETTINGS.D35EAllowPlayersApplyActionsH": "Displays Apply Action/Apply Damage in chat cards for players. Does not allow them apply things to actors they have no permission for.",
   "SETTINGS.D35ETransparentSidebarWhenUsingThemeN": "Use Transparent sidebar Background when using custom theme",
-  "SETTINGS.D35ETransparentSidebarWhenUsingThemeH": "Uses standard Foundry texture for sidebar Background when using theme"
+  "SETTINGS.D35ETransparentSidebarWhenUsingThemeH": "Uses standard Foundry texture for sidebar Background when using theme",
+  "SETTINGS.D35EAutoScaleAttackBABN": "Automatically scale number of attacks for Characters using Weapons",
+  "SETTINGS.D35EAutoScaleAttackBABH": "Characters attack count when using weapons will use automatic scaling instead of Extra Attacks table"
 }

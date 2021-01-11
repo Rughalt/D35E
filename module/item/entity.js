@@ -1273,14 +1273,23 @@ export class ItemPF extends Item {
                 rollMode: rollMode,
             };
 
-            // Create attacks
-            let allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
-                cur.push({bonus: r[0], label: r[1]});
-                return cur;
-            }, [{bonus: 0, label: `${game.i18n.localize("D35E.Attack")}`}]) : [{
-                bonus: 0,
-                label: `${game.i18n.localize("D35E.Attack")}`
-            }];
+            let allAttacks = []
+            // Auto scaling attacks
+            if (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon") {
+                allAttacks.push({bonus: 0, label: `${game.i18n.localize("D35E.Attack")}`})
+                for (let a = 5; a < actor.data.data.attributes.bab.total; a += 5) {
+                    allAttacks.push({bonus:`-${a}`, label:`${game.i18n.localize("D35E.Attack")} ${Math.floor((a + 5) / 5)}`});
+                }
+            } else {
+                allAttacks = fullAttack ? this.data.data.attackParts.reduce((cur, r) => {
+                    cur.push({bonus: r[0], label: r[1]});
+                    return cur;
+                }, [{bonus: 0, label: `${game.i18n.localize("D35E.Attack")}`}]) : [{
+                    bonus: 0,
+                    label: `${game.i18n.localize("D35E.Attack")}`
+                }];
+            }
+
             if ((fullAttack || this.data.data.attackParts.length === 0) && rapidShot) {
                 allAttacks.push({
                     bonus: 0,
@@ -1380,9 +1389,20 @@ export class ItemPF extends Item {
                 }
             }
 
+            let dc = this._getSpellDC(rollData)
             let attacks = [];
             if (this.hasAttack) {
                 let attackId = 0;
+                // Scaling number of attacks for spells (based on formula provided)
+                if (itemData.attackCountFormula && itemData.attackParts.length === 0) {
+                    let attackCount = (new Roll(itemData.attackCountFormula, rollData).roll().total || 1) - 1;
+                    for (let i = 0; i < attackCount; i++) {
+                        allAttacks.push({
+                            bonus: "0",
+                            label: "Attack"
+                        })
+                    }
+                }
                 for (let atk of allAttacks) {
                     // Create attack object
                     let attack = new ChatAttack(this, atk.label, actor);
@@ -1429,7 +1449,7 @@ export class ItemPF extends Item {
 
                         }
                     }
-                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1});
+                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
 
                     // Add to list
                     attacks.push(attack);
@@ -1438,24 +1458,29 @@ export class ItemPF extends Item {
             }
             // Add damage only
             else if (this.hasDamage) {
-                let attack = new ChatAttack(this,"",actor);
-                attack.rollData = rollData;
-                await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
-                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1});
-                // Add to list
-                attacks.push(attack);
+                let attackCount = 1;
+                if (itemData.attackCountFormula)
+                    attackCount = new Roll(itemData.attackCountFormula,rollData).roll().total || 1;
+                for (let i = 0; i < attackCount; i++) {
+                    let attack = new ChatAttack(this,"",actor);
+                    attack.rollData = rollData;
+                    await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
+                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
+                    // Add to list
+                    attacks.push(attack);
+                }
             }
             // Add effect notes only
             else if (this.hasEffect) {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
-                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1});
+                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
                 // Add to list
                 attacks.push(attack);
             } else if (getProperty(this.data, "data.actionType") === "special") {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
-                await attack.addSpecial(actor,rollData.useAmount || 1);
+                await attack.addSpecial(actor,rollData.useAmount || 1,rollData.cl);
                 // Add to list
                 attacks.push(attack);
             }
@@ -1539,7 +1564,6 @@ export class ItemPF extends Item {
                     extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
                 }
 
-                let dc = this._getSpellDC()
                 const properties = this.getChatData().properties;
                 if (properties.length > 0) props.push({
                     header: game.i18n.localize("D35E.InfoShort"),
@@ -1574,6 +1598,7 @@ export class ItemPF extends Item {
         let template = "systems/D35E/templates/apps/attack-roll-dialog.html";
         let weaponName = this.data.data.baseWeaponType || "";
         let featWeaponName = `(${weaponName})`;
+        let extraAttacksCount = game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" ? Math.ceil((actor.data.data.attributes.bab.total)/5.0) : (getProperty(this.data, "data.attackParts") || []).length + 1;
         let dialogData = {
             data: rollData,
             item: this.data.data,
@@ -1591,7 +1616,7 @@ export class ItemPF extends Item {
             isWeaponAttack: getProperty(this.data, "data.attackType") === "weapon",
             isRangedWeapon: getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.actionType") === "rwak",
             ammunition: actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
-            extraAttacksCount: (getProperty(this.data, "data.attackParts") || []).length + 1,
+            extraAttacksCount: extraAttacksCount,
             hasTemplate: this.hasTemplate,
             canPowerAttack: actor.items.filter(o => o.type === "feat" && o.name === "Power Attack").length > 0,
             maxPowerAttackValue: getProperty(actor.data, "data.attributes.bab.total"),
@@ -1619,9 +1644,9 @@ export class ItemPF extends Item {
                     }
                 };
             }
-            if ((getProperty(this.data, "data.attackParts") || []).length || this.type === "spell") {
+            if (extraAttacksCount > 1 || this.type === "spell") {
                 buttons.multi = {
-                    label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : (game.i18n.localize("D35E.FullAttack") + " (" + ((getProperty(this.data, "data.attackParts") || []).length + 1) + " attacks)"),
+                    label: this.type === "spell" ? game.i18n.localize("D35E.Cast") : (game.i18n.localize("D35E.FullAttack") + " (" + (extraAttacksCount) + " attacks)"),
                     callback: html => {
                         wasRolled = true;
                         roll = _roll.call(this, true, html)
@@ -1656,17 +1681,18 @@ export class ItemPF extends Item {
         const data = duplicate(this.data.data);
         let spellDC = {dc: null, type: null, description: null}
 
-        const rollData = this.actor ? this.actor.getRollData() : {};
-        rollData.item = data;
+        const rollData = _rollData ? _rollData : this.actor ? this.actor.getRollData() : {};
+        if (!_rollData) {
+            rollData.item = data;
+            if (this.actor) {
+                let allCombatChanges = []
+                let attackType = this.type;
+                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                })
 
-        if (this.actor) {
-            let allCombatChanges = []
-            let attackType = this.type;
-            this.actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
-                allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
-            })
-
-            this._addCombatChangesToRollData(allCombatChanges, rollData);
+                this._addCombatChangesToRollData(allCombatChanges, rollData);
+            }
         }
 
         // Get the spell specific info
@@ -1927,7 +1953,10 @@ export class ItemPF extends Item {
         notes.push(...(itemData.effectNotes || "").split(/[\n\r]+/).filter(o => o.length > 0).map(o => TextEditor.enrichHTML(`<span class="tag">${ItemPF._fillTemplate(o,rollData)}</span>`, {rollData: rollData})));
 
         const inner = notes.join('')
-        return `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.EffectNotes")}</label><div class="flexrow">${inner}</div></div>`;
+        if  (notes.length > 0) {
+            return `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.EffectNotes")}</label><div class="flexrow">${inner}</div></div>`;
+        } else
+            return '';
     }
 
     /**

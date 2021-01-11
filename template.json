@@ -1195,7 +1195,9 @@
           "parts": []
         },
         "attackParts": [],
+        "autoscaleAttackParts": "",
         "formula": "",
+        "attackCountFormula": "",
         "ability": {
           "attack": null,
           "damage": null,

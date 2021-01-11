@@ -80,3 +80,14 @@ export const hideGMSensitiveInfo = function(app, html, data) {
   // Hide info
   html.find(".gm-sensitive").remove();
 };
+
+
+export const enableToggles = function(app, html, data) {
+  html.on('click', '.toggle-header', (event) => {
+    event.preventDefault();
+    const header = event.currentTarget;
+    const card = header.closest(".toggle-box");
+    const content = card.querySelector(".toggle-content");
+    $(content).slideToggle(400)
+  })
+}
