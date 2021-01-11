@@ -42,6 +42,7 @@
 <!--  <div class="tab inventory-group flexcol" data-group="inventory" data-tab="{{sid}}">-->
     <ol class="inventory-list sub-scroll scroll-inventory">
   {{#each sections as |section sid|}}
+      <div class="inventory-sublist" data-sublist-id="inventory-{{sid}}">
       <li class="inventory-header flexrow scrolling-header" >
         <h3 class="item-name flexrow">{{section.label}}</h3>
 
@@ -229,6 +230,7 @@
         </li>
         {{/each}}
       </ol>
+      </div>
   {{/each}}
     </ol>
 <!--</div>-->

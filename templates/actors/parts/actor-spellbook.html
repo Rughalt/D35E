@@ -207,6 +207,7 @@
     </li>
     {{/if}}
     {{#each spellbook.data as |section sid|}}
+    <div class="inventory-sublist" data-sublist-id="spellbook-{{spellbookIndex}}-{{sid}}">
     {{#unless ../spellbook.isSpellLike }}
     <li class="flexrow inventory-header spellbook-header scrolling-header">
         <div class="item-name flexrow">
@@ -415,6 +416,7 @@
         {{/unless}}
         {{/if}}
     </ol>
+    </div>
     {{/each}}
 </ol>
 <div class="flexrow spell-range" style="">

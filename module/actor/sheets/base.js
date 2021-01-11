@@ -712,7 +712,37 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".item-search-input").on("change", event => event.stopPropagation());
     html.find(".item-add-close-box").click(ev => { this._closeInlineData(ev); });
 
+    html.on('click', '.inventory-header', (event) => {
+      event.preventDefault();
+      const header = event.currentTarget;
+      const card = header.closest(".inventory-sublist");
+      if (card == null) return;
+      const content = card.querySelector(".item-list");
+      let sublistId = card.dataset.sublistId
+      let actor = this.actor;
+      $(content).slideToggle(400, function(){
+        let isHidden = ($(this).is(':hidden'));
+        let parsedDrawerState = JSON.parse(localStorage.getItem(`D35E-drawer-state-${actor.id}`) || 'null');
+        let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
+        if (isHidden) {
+          drawerState.add(sublistId)
+        } else {
+          drawerState.delete(sublistId)
+        }
+        localStorage.setItem(`D35E-drawer-state-${actor.id}`, JSON.stringify(Array.from(drawerState)))
+      });
 
+
+    })
+
+    {
+      let parsedDrawerState = JSON.parse(localStorage.getItem(`D35E-drawer-state-${this.actor.id}`) || 'null');
+      let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
+      let x = 2;
+      drawerState.forEach(id => {
+        $(`[data-sublist-id='${id}'] .item-list`).hide()
+      })
+    }
     {
 
       console.log("D35E | Item Browser | Loading pack inline browser on load")
