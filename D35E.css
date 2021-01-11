@@ -1826,10 +1826,11 @@
   margin-top: 3px;
 }
 .D35E.sheet.actor .inventory-list .item .item-recharge {
-  flex: 0 0 80px;
-  text-align: right;
-  font-size: 11px;
-  color: #7a7971;
+  display: flex;
+  flex: 0 0 16px;
+  padding: 0;
+  margin-right: 1px;
+  height: 16px;
 }
 .D35E.sheet.actor .inventory-list .item .item-actions > div a {
   display: flex;
@@ -1930,7 +1931,7 @@
   padding: 0 1px 0 1px;
 }
 .D35E.sheet.actor .inventory-list .item-detail.item-uses {
-  flex: 0 0 64px;
+  flex: 0 0 81px;
   padding: 0 1px 0 1px;
 }
 .D35E.sheet.actor .inventory-list .item-detail:nth-child(2) {
@@ -2726,7 +2727,7 @@
   margin-top: 3px;
 }
 .D35E.sheet.item .inventory-list .item .item-recharge {
-  flex: 0 0 80px;
+  flex: 0 0 16px;
   text-align: right;
   font-size: 11px;
   color: #7a7971;

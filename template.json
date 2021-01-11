@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc"],
+    "types": ["character", "npc", "trap"],
     "templates": {
       "common": {
         "shapechangeImg": "icons/svg/mystery-man.svg",
@@ -1041,6 +1041,39 @@
           "value": 10
         },
         "levelUpProgression": false
+      },
+      "master": {
+        "id": null,
+        "img": null,
+        "name": null,
+        "data": {},
+        "distance": 0
+      }
+    },
+    "trap": {
+      "templates": ["common"],
+      "attributes": {
+        "spellLevel": 0,
+        "hp": {
+          "value": 0,
+          "max": 0
+        }
+      },
+      "details": {
+        "type": "",
+        "environment": "",
+        "cr": 1,
+        "totalCr": 1,
+        "xp": {
+          "value": 10
+        },
+        "levelUpProgression": false,
+        "findDC": 1,
+        "disarmDC": 1
+      },
+
+      "traits": {
+        "tokensize": "none"
       },
       "master": {
         "id": null,

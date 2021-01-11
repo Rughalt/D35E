@@ -616,6 +616,8 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.item-create').click(ev => this._onItemCreate(ev));
     html.find('.item-edit').click(this._onItemEdit.bind(this));
     html.find('.item-delete').click(this._onItemDelete.bind(this));
+    html.find('.item-recharge').click(this._onItemRestoreUses.bind(this));
+
     html.find(".item .container-selector").change(ev => { this._onItemChangeContainer(ev) });
 
 
@@ -1334,6 +1336,58 @@ export class ActorSheetPF extends ActorSheet {
     }
   }
 
+  _onItemRestoreUses(event) {
+    event.preventDefault();
+
+    const button = event.currentTarget;
+    if (button.disabled) return;
+
+    const li = event.currentTarget.closest(".item");
+
+    button.disabled = true;
+    const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
+    Dialog.confirm({
+      title: game.i18n.localize("D35E.DeleteItem"),
+      content: msg,
+      yes: () => {
+        let itemId = li.dataset.itemId;
+        const item = this.actor.getOwnedItem(li.dataset.itemId);
+        let itemUpdate = {};
+        const itemData = item.data.data;
+        itemUpdate['_id'] = itemId
+        if (itemData.uses && itemData.uses.value !== itemData.uses.max) {
+          itemUpdate["data.uses.value"] = itemData.uses.max;
+        }
+        if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
+          itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+        }
+        else if (item.type === "spell") {
+          const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
+              isSpontaneous = spellbook.spontaneous,
+              usePowerPoints = spellbook.usePowerPoints;
+          if (!isSpontaneous && !usePowerPoints && itemData.preparation.preparedAmount < itemData.preparation.maxAmount) {
+            itemUpdate["data.preparation.preparedAmount"] = itemData.preparation.maxAmount;
+          }
+        }
+
+        if (itemData.enhancements && itemData.enhancements && itemData.enhancements.items) {
+          let enhItems = duplicate(itemData.enhancements.items)
+          for (let _item of enhItems) {
+            if (_item.data.uses.value !== _item.data.uses.max) {
+              _item.data.uses.value = _item.data.uses.max;
+            }
+          }
+          itemUpdate[`data.enhancements.items`] = enhItems;
+        }
+        this.actor.updateOwnedItem(itemUpdate)
+        button.disabled = false;
+      },
+      no: () => button.disabled = false
+    });
+
+
+  }
+
   _onSpellAddUses(event) {
     event.preventDefault();
     let add = 1
@@ -1499,6 +1553,7 @@ export class ActorSheetPF extends ActorSheet {
       item.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(item, "data.uses.per"));
       item.isFullAttack = item.type === "full-attack";
 
+      item.canRecharge = !!((item.isCharged && item.data?.uses?.max && item.data?.uses?.per !== "charges") || (item.data?.enhancements?.uses?.max) || (Object.values(item.data?.enhancements?.items || {})).some(o => o.data.uses.max))
       const itemQuantity = getProperty(item, "data.quantity") != null ? getProperty(item, "data.quantity") : 1;
       const itemCharges = getProperty(item, "data.uses.value") != null ? getProperty(item, "data.uses.value") : 1;
       item.empty = itemQuantity <= 0 || (item.isCharged && itemCharges <= 0);
@@ -1703,7 +1758,7 @@ export class ActorSheetPF extends ActorSheet {
 
   _isAttackUseable(a,equippedWeapons) {
     if (a.data.melded) return false;
-    if (!equippedWeapons.has(a.data.originalWeaponId)) return false;
+    if (a.data.originalWeaponId && !equippedWeapons.has(a.data.originalWeaponId)) return false;
     return true;
   }
 

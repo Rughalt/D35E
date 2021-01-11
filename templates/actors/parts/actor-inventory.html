@@ -109,16 +109,17 @@
 
           {{#if section.hasActions}}
           <div class="item-detail item-actions">
+            {{#unless item.showUnidentifiedData}}
+            {{#if item.hasAction}}
             <div class="item-attack">
-              {{#unless item.showUnidentifiedData}}
-              {{#if item.hasAction}}
 
               {{#unless item.data.melded}}
               <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
-              {{/unless}}
-              {{/if}}
+
               {{/unless}}
             </div>
+            {{/if}}
+            {{/unless}}
           </div>
           {{/if}}
 
@@ -156,6 +157,7 @@
             </select>
           </div>
           <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+            <div class="flexrow">
             {{#unless item.showUnidentifiedData}}
             {{#if item.isCharged}}
             <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
@@ -165,6 +167,15 @@
               @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
               @resources.{{item.tag}}.max : {{item.data.uses.max}}
             </span>
+            {{/if}}
+            {{/unless}}
+            </div>
+
+            {{#unless item.showUnidentifiedData}}
+            {{#if item.canRecharge}}
+            <div class="item-attack" style="margin-left: 4px; flex: 0 17px">
+              <a class="item-control item-recharge"><img class="icon" src="systems/D35E/icons/actions/lightning-electron.svg"></a>
+            </div>
             {{/if}}
             {{/unless}}
           </div>

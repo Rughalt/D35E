@@ -190,6 +190,13 @@
       "entity": "Actor"
     },
     {
+      "name": "traps",
+      "label": "Traps",
+      "system": "D35E",
+      "path": "./packs/traps.db",
+      "entity": "Actor"
+    },
+    {
       "name": "conditions",
       "label": "Conditions",
       "system": "D35E",

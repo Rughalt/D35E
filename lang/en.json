@@ -1278,6 +1278,10 @@
   "D35E.DisplayNonRTSkills": "Display usable untrained skills in Summary",
   "D35E.DisplayNonRTSkillsH": "Displays skills that character does not have ranks but do nor require training in the Summary tab.",
   "D35E.Apply": "Apply",
+  "D35E.RollModifiers": "Roll Modifiers",
+  "D35E.TrapDescription": "Trap Description",
+  "D35E.FindDC": "Find DC",
+  "D35E.DisarmDC": "Disable DC",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

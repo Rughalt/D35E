@@ -39,6 +39,7 @@ import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
+import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -104,6 +105,7 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
 
