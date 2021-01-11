@@ -1782,6 +1782,11 @@
   color: #4b4a44;
   text-decoration: line-through;
 }
+.D35E.sheet.actor .inventory-list .item .item-name.attack-disabled,
+.D35E.sheet.actor .inventory-list .item .item-name-ne.attack-disabled {
+  color: #4b4a44;
+  text-decoration: line-through;
+}
 .D35E.sheet.actor .inventory-list .item .item-name .item-image,
 .D35E.sheet.actor .inventory-list .item .item-name-ne .item-image {
   flex: 0 0 24px;

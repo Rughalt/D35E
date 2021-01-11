@@ -1576,6 +1576,7 @@ export class ActorSheetPF extends ActorSheet {
 
     }
     // Organize Inventory
+    let equippedWeapons = new Set();
     for ( let i of items ) {
       const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
       const subType = i.type === "loot" ? i.data.subType || "gear" : i.data.subType;
@@ -1584,6 +1585,7 @@ export class ActorSheetPF extends ActorSheet {
       let weightMult = i.data.containerWeightless ? 0 : 1
       i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * conversion * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
+      if (i.type === "weapon" && i.data.carried === true && i.data.equipped === true && !i.data.melded) equippedWeapons.add(i.id)
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
       if (i?.data?.subType === 'container') containerList.push({id: i.id, name: i.name})
@@ -1664,7 +1666,8 @@ export class ActorSheetPF extends ActorSheet {
 
     for (let a of attacks) {
       let s = a.data.attackType;
-      if (!a.data.melded) data.useableAttacks.push(a)
+      a.disabled = !this._isAttackUseable(a,equippedWeapons);
+      if (this._isAttackUseable(a,equippedWeapons)) data.useableAttacks.push(a)
       if (!attackSections[s]) continue;
       attackSections[s].items.push(a);
       attackSections.all.items.push(a);
@@ -1696,6 +1699,12 @@ export class ActorSheetPF extends ActorSheet {
 
     // Handlebars.registerPartial('myPartial', 'This is a tab generated from something!{{prefix}}');
     // data.myVariable = "myPartial";
+  }
+
+  _isAttackUseable(a,equippedWeapons) {
+    if (a.data.melded) return false;
+    if (!equippedWeapons.has(a.data.originalWeaponId)) return false;
+    return true;
   }
 
   /**

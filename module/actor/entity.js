@@ -3745,7 +3745,7 @@ export class ActorPF extends Actor {
         attackData["data.threatRangeExtended"] = isKeen;
         attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
         attackData["data.originalWeaponCreated"] = true;
-        attackData["data.originalWeaponId"] = item.id;
+        attackData["data.originalWeaponId"] = item._id;
         attackData["data.originalWeaponName"] = identified ? item.data.name : item.data.data.unidentified.name;
         attackData["data.originalWeaponImg"] = item.img;
         attackData["data.originalWeaponProperties"] = item.data.data.properties;

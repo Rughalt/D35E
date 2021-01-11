@@ -240,7 +240,7 @@
       <ol class="item-list">
         {{#each section.items as |item iid|}}
         <li class="item flexrow" data-item-id="{{item._id}}">
-          <div class="item-name flexrow rollable {{#if item.data.melded}}melded{{/if}}">
+          <div class="item-name flexrow rollable {{#if item.data.melded}}melded{{/if}} {{#if item.disabled}}attack-disabled{{/if}}">
             <div class="item-image" style="background-image: url('{{item.img}}')"></div>
             <h4>
               {{item.name~}} {{#if item.data.melded}}<i class="fas fa-leaf"></i>{{/if}}
@@ -257,7 +257,9 @@
             <div class="item-attack">
               {{#if item.hasAction}}
               {{#unless item.data.melded}}
+              {{#unless item.disabled}}
               <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+              {{/unless}}
               {{/unless}}
               {{/if}}
               {{#if item.isFullAttack}}
