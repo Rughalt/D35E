@@ -2182,15 +2182,16 @@
 .D35E.sheet.actor .item-add-overlay .item-add-list .item-add-close-box {
   position: absolute;
   height: 30px;
-  width: 30px;
-  background: url("ui/parchment.jpg") repeat;
+  width: 16px;
+  background: url(ui/parchment.jpg) repeat;
   text-align: center;
   line-height: 30px;
   font-size: 18px;
-  left: -30px;
+  right: 8px;
   cursor: pointer;
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
+  text-align: right;
 }
 .locked img.sheet-profile {
   max-height: 360px;

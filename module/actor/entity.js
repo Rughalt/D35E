@@ -197,7 +197,7 @@ export class ActorPF extends Actor {
                 "skills", "strSkills", "dexSkills", "conSkills", "intSkills", "wisSkills", "chaSkills", ...skillTargets,
                 "allChecks", "strChecks", "dexChecks", "conChecks", "intChecks", "wisChecks", "chaChecks",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
-                "ac", "aac", "sac", "nac","tch",
+                "ac", "aac", "sac", "nac","tch","ddg","pac",
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will", "turnUndead","turnUndeadDiceTotal", "spellResistance", "powerPoints", "sneakAttack",
@@ -346,6 +346,8 @@ export class ActorPF extends Actor {
                 return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
             case "tch":
                 return ["data.attributes.ac.touch.total"];
+            case "pac":
+                return ["data.attributes.ac.normal.total"];
             case "attack":
                 return "data.attributes.attack.general";
             case "mattack":
