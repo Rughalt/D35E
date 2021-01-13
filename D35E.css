@@ -3874,6 +3874,7 @@ span.bold {
 .portrait-bar .portrait .barbox .name {
   color: #c9c7b8;
   padding-left: 20px;
+  line-height: 22px;
 }
 .portrait-bar .portrait .barbox .damagebar {
   background-image: url(/systems/D35E/icons/ui/hp-frame.png);
@@ -3902,9 +3903,7 @@ span.bold {
   z-index: -1;
 }
 .portrait-bar .portrait .barbox .life {
-  color: black;
-  font-weight: 600;
-  -webkit-text-stroke: 1px white;
+  color: white;
   line-height: 24px;
 }
 .portrait-bar .portrait .barbox.narrow {
