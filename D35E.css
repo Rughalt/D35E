@@ -1604,6 +1604,63 @@
 .D35E.sheet.actor .traits .inactive input[type="text"]::placeholder {
   color: #7a7971;
 }
+.D35E.sheet.actor .capacity {
+  flex: 0 0 60px;
+  background: #7a7971;
+  border: 1px solid #191813;
+  border-radius: 3px;
+  position: relative;
+  height: 13px;
+  width: 130px;
+  float: right;
+}
+.D35E.sheet.actor .capacity .capacity-bar {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  background: #77504a;
+  height: 8px;
+  border: 1px solid #2f2220;
+  border-radius: 2px;
+}
+.D35E.sheet.actor .capacity .capacity-label {
+  height: 10px;
+  padding: 0 5px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 13px;
+  line-height: 12px;
+  text-align: right;
+  color: #EEE;
+  text-shadow: 0 0 5px #000;
+}
+.D35E.sheet.actor .capacity .capacity-breakpoint {
+  position: absolute;
+  left: 66%;
+}
+.D35E.sheet.actor .capacity .arrow-up {
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #666;
+}
+.D35E.sheet.actor .capacity .arrow-down {
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #666;
+}
+.D35E.sheet.actor .capacity.encumbered .arrow-up {
+  border-bottom: 4px solid #000;
+}
+.D35E.sheet.actor .capacity.encumbered .arrow-down {
+  border-top: 4px solid #000;
+}
 .D35E.sheet.actor .encumbrance {
   flex: 0 0 12px;
   background: #7a7971;

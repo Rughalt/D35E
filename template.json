@@ -1552,7 +1552,8 @@
       "bonusAmmoDamage": "",
       "bonusAmmoDamageType": "",
       "bonusAmmoAttackNote": "",
-      "bagOfHoldingLike": false
+      "bagOfHoldingLike": false,
+      "capacity": 0
     },
     "spell": {
       "templates": ["itemDescription", "activatedEffect", "action"],

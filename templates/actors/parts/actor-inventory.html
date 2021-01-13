@@ -49,6 +49,7 @@
         {{#if section.hasSlots}}<div class="item-detail item-slot"><span>{{ localize 'D35E.Slot' }}</span></div>{{/if}}
         {{#if section.hasActions}}<div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>{{/if}}
 
+        {{#if section.isContainer}}<div class="item-detail item-actions"><span>{{ localize 'D35E.Capacity' }}</span></div>{{/if}}
         <div class="item-detail item-weight"><span>{{ localize 'D35E.ItemWeight' }}</span></div>
         {{#if ../isGM}}
         <div class="item-detail item-identified"><span>{{ localize 'D35E.IdentifiedShort' }}</span></div>
@@ -87,6 +88,7 @@
               {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
               {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
             </h4>
+
           </div>
           {{else}}
           <div class="item-name flexrow  {{#if item.data.melded}}melded{{/if}}">
@@ -121,6 +123,15 @@
             </div>
             {{/if}}
             {{/unless}}
+          </div>
+          {{/if}}
+
+          {{#if section.isContainer}}
+          <div class="item-actions">
+            <div class="capacity">
+              <span class="capacity-bar" style="width:{{#if item.data.capacity}}{{item.itemsWeightPercentage}}%{{/if}}"></span>
+              <span class="capacity-label">{{item.itemsWeight}}{{#if item.data.capacity}}/{{item.data.capacity}}{{/if}} {{ item.units }}</span>
+            </div>
           </div>
           {{/if}}
 
@@ -199,6 +210,7 @@
                   <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
                   <h4>
                     {{~#if iitem.isStack}}({{iitem.data.quantity}}) {{/if}}{{iitem.name}}</h4>
+
                 </div>
                 <div class="item-detail item-container">
                   <select name="iitem.data.containerId" style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String" class="container-selector">

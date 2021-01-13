@@ -76,6 +76,16 @@
           <input type="checkbox" name="data.bagOfHoldingLike" {{checked data.bagOfHoldingLike}}/>
         </label>
       </div>
+
+      <div class="form-group">
+        <label>{{localize "D35E.WeightCapacity"}}</label>
+        <input type="text" name="data.convertedCapacity" value="{{convertedCapacity}}" data-dtype="Number"/>
+        {{#if usesImperialSystem}}
+        <label class="unit" style="flex: 0">{{ localize 'D35E.Lbs' }}</label>
+        {{else}}
+        <label class="unit" style="flex: 0">{{ localize 'D35E.Kgs' }}</label>
+        {{/if}}
+      </div>
       {{/if}}
 
       {{#if isAmmo}}

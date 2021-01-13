@@ -1572,6 +1572,7 @@ export class ActorSheetPF extends ActorSheet {
     };
 
     let containerItems = new Map()
+    let containerItemsWeight = new Map()
     let containerList = []
 
     data.totalInventoryValue = 0;
@@ -1598,6 +1599,7 @@ export class ActorSheetPF extends ActorSheet {
         if (item.data.containerId !== "none") {
           if (!containerItems.has(item.data.containerId)) {
             containerItems.set(item.data.containerId,[])
+            containerItemsWeight.set(item.data.containerId,0)
           }
           containerItems.get(item.data.containerId).push(item)
         } else {
@@ -1662,18 +1664,32 @@ export class ActorSheetPF extends ActorSheet {
     }
     // Organize Inventory
     let equippedWeapons = new Set();
+    let containersMap = new Map();
+    const weightConversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
     for ( let i of items ) {
-      const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
       const subType = i.type === "loot" ? i.data.subType || "gear" : i.data.subType;
       i.data.quantity = i.data.quantity || 0;
-      i.data.displayWeight =  i.data.weight * conversion || 0;
+      i.data.displayWeight =  i.data.weight * weightConversion || 0;
       let weightMult = i.data.containerWeightless ? 0 : 1
-      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * conversion * 10) / 10;
+      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * weightConversion * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (i.type === "weapon" && i.data.carried === true && i.data.equipped === true && !i.data.melded) equippedWeapons.add(i.id)
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
-      if (i?.data?.subType === 'container') containerList.push({id: i.id, name: i.name})
+      if (i?.data?.subType === 'container') {
+        containerList.push({id: i.id, name: i.name})
+        containersMap.set(i.id,i)
+      }
+    }
+
+    for (let containerItem of containerList) {
+      for (let i of containerItems.get(containerItem.id)) {
+        i.data.quantity = i.data.quantity || 0;
+        if (i.data.containerId)
+          containerItemsWeight.set(i.data.containerId,(containerItemsWeight.get(i.data.containerId) || 0) + Math.round(i.data.quantity * i.data.weight * weightConversion * 10) / 10)
+      }
+      containersMap.get(containerItem.id).itemsWeight = containerItemsWeight.get(containerItem.id) || 0
+      containersMap.get(containerItem.id).itemsWeightPercentage = Math.min(98,Math.floor(containerItemsWeight.get(containerItem.id) / containersMap.get(containerItem.id).data.capacity * 100.0))
     }
 
     data.containerList = containerList;

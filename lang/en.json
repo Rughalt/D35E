@@ -1284,6 +1284,8 @@
   "D35E.DisarmDC": "Disable DC",
   "D35E.BuffTarACDodgeLike" : "Dodge-Like",
   "D35E.BuffTarACOnly" : "Base AC only",
+  "D35E.Capacity" : "Capacity",
+  "D35E.WeightCapacity": "Weight Capacity",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

@@ -422,6 +422,11 @@ export class ItemPF extends Item {
             data["data.weight"] = data["data.convertedWeight"] * conversion;
         }
 
+        if (data["data.convertedCapacity"] !== undefined && data["data.convertedCapacity"] !== null) {
+            const conversion = game.settings.get("D35E", "units") === "metric" ? 2 : 1;
+            data["data.capacity"] = data["data.convertedCapacity"] * conversion;
+        }
+
         if (data["data.selectedMaterial"] && data["data.selectedMaterial"] !== "none") {
             data["data.material"] = duplicate(CACHE.Materials.get(data["data.selectedMaterial"]).data);
         } else if (data["data.selectedMaterial"]  && data["data.selectedMaterial"] === "none") {
