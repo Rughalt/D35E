@@ -712,7 +712,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".item-search-input").on("change", event => event.stopPropagation());
     html.find(".item-add-close-box").click(ev => { this._closeInlineData(ev); });
 
-    html.on('click', '.inventory-header', (event) => {
+    html.on('click', '.inventory-toggleable-header', (event) => {
       event.preventDefault();
       const header = event.currentTarget;
       const card = header.closest(".inventory-sublist");
@@ -1740,14 +1740,14 @@ export class ActorSheetPF extends ActorSheet {
       misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
       //all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
-
+    data.allbuffs = []
     data.shapechanges = []
     for (let b of buffs) {
       let s = b.data.buffType;
       if (s === 'shapechange') data.shapechanges.push(b)
       if (!buffSections[s]) continue;
       buffSections[s].items.push(b);
-      //buffSections.all.items.push(b);
+      data.allbuffs.push(b);
     }
 
 

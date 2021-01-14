@@ -61,7 +61,7 @@ export class TopPortraitBar {
       const icon = item.img;
       let title = item.name;
       const type = item.type;
-      buffBarItems += `<div class="item-image tooltip" style="background-image: url('${item.img}')"><div class="pretty-border"></div></div>`;
+      buffBarItems += `<div class="item-image tooltip" style="background-image: url('${item.img}')"><div class="tooltipcontent">${title}</div><div class="pretty-border"></div></div>`;
     });
 
     buffBar.append(buffBarItems);

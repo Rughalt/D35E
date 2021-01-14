@@ -29,11 +29,15 @@ export class ActorPF extends Actor {
         // Get the Actor
         const actor = ItemPF._getChatCardActor(card);
 
+
+        button.disabled = true;
         // Roll saving throw
         if (action === "save") {
             const saveId = button.dataset.save;
-            if (actor) actor.rollSavingThrow(saveId,null,null, { event: event });
+            if (actor) await actor.rollSavingThrow(saveId,null,null, { event: event });
         }
+
+        button.disabled = false;
     }
 
     /* -------------------------------------------- */
@@ -4746,20 +4750,25 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false) {
+    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false, actor = null) {
 
         let value = 0;
 
-        let tokensList;
-        if (game.user.targets.size > 0)
-            tokensList = Array.from(game.user.targets);
-        else
-            tokensList = canvas.tokens.controlled;
+        let tokensList = [];
         const promises = [];
-        if (!tokensList.length) {
-            ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
-            return
+        if (actor === null) {
+            if (game.user.targets.size > 0)
+                tokensList = Array.from(game.user.targets);
+            else
+                tokensList = canvas.tokens.controlled;
+            if (!tokensList.length) {
+                ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+                return
+            }
+        } else {
+            tokensList.push({actor: actor})
         }
+
         for (let t of tokensList) {
 
             let a = t.actor,
@@ -4876,6 +4885,37 @@ export class ActorPF extends Actor {
                     "data.attributes.hp.nonlethal": nonLethal,
                     "data.attributes.hp.temp": tmp - dt,
                     "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
+                }));
+        }
+        return Promise.all(promises);
+    }
+
+    static async applyRegeneration(damage,actor = null) {
+
+        let value = 0;
+
+        let tokensList = [];
+        const promises = [];
+        if (actor === null) {
+            if (game.user.targets.size > 0)
+                tokensList = Array.from(game.user.targets);
+            else
+                tokensList = canvas.tokens.controlled;
+            if (!tokensList.length) {
+                ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+                return
+            }
+        } else {
+            tokensList.push({actor: actor})
+        }
+
+        for (let t of tokensList) {
+
+            let a = t.actor,
+                nonLethal = a.data.data.attributes.hp.nonlethal || 0;
+
+                promises.push(t.actor.update({
+                    "data.attributes.hp.nonlethal": Math.max(0,nonLethal-damage)
                 }));
         }
         return Promise.all(promises);
@@ -5436,8 +5476,18 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll()
-                    ActorPF.applyDamage(null,roll,null,null,null,null,null,damage,null,null,null,null,false,true);
+                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll().total
+                    ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, actor);
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
+
+            case "Regenerate":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 1) {
+                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll().total
+                    ActorPF.applyRegeneration(damage,actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -5818,6 +5868,54 @@ export class ActorPF extends Actor {
             hp = Math.floor(parseInt(levels) * (hd / 2 + 0.5))
             await this.updateOwnedItem({_id: item._id, "data.hp": hp});
             await this.refresh()
+        }
+    }
+
+    async renderFastHealingRegenerationChatCard() {
+        let d = this.data.data;
+
+        const token = this ? this.token : null;
+        let chatTemplateData = {
+            name: this.name,
+            img: this.img,
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            rollMode: "selfroll",
+            tokenId: token ? `${token.scene._id}.${token.id}` : null,
+            actor: this
+        };
+        let chatData = {
+            speaker: ChatMessage.getSpeaker({actor: this}),
+            rollMode: "selfroll",
+            sound: CONFIG.sounds.dice,
+            "flags.D35E.noRollRender": true,
+        };
+        let actions = []
+        if (d.traits.regen) {
+            actions.push({
+                label: game.i18n.localize("D35E.Regeneration"),
+                value: `Regenerate ${d.traits.regen} on self;`,
+                isTargeted: false,
+                action: "customAction",
+                img: "",
+                hasImg: false
+            });
+        }
+        if (d.traits.fastHealing) {
+            actions.push({
+                label: game.i18n.localize("D35E.FastHealing"),
+                value: `SelfDamage -${d.traits.fastHealing} on self;`,
+                isTargeted: false,
+                action: "customAction",
+                img: "",
+                hasImg: false
+            });
+        }
+        if (actions.length) {
+            const templateData = mergeObject(chatTemplateData, {
+                actions: actions
+            }, {inplace: false});
+            // Create message
+            await createCustomChatMessage("systems/D35E/templates/chat/fastheal-roll.html", templateData, chatData, {});
         }
     }
 }

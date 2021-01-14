@@ -44,7 +44,7 @@
   {{#each sections as |section sid|}}
       <div class="inventory-sublist" data-sublist-id="inventory-{{sid}}">
       <li class="inventory-header flexrow scrolling-header" >
-        <h3 class="item-name flexrow">{{section.label}}</h3>
+        <h3 class="item-name inventory-toggleable-header flexrow">{{section.label}}</h3>
 
         {{#if section.hasSlots}}<div class="item-detail item-slot"><span>{{ localize 'D35E.Slot' }}</span></div>{{/if}}
         {{#if section.hasActions}}<div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>{{/if}}

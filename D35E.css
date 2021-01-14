@@ -1604,6 +1604,9 @@
 .D35E.sheet.actor .traits .inactive input[type="text"]::placeholder {
   color: #7a7971;
 }
+.D35E.sheet.actor .inventory-toggleable-header {
+  cursor: pointer;
+}
 .D35E.sheet.actor .capacity {
   flex: 0 0 60px;
   background: #7a7971;

@@ -353,10 +353,13 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
           actor.deleteOwnedItem(_data._id, { stopUpdates: true })
         }
       }
+
     }
 
     if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
     if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+
+    actor.renderFastHealingRegenerationChatCard();
   }
 });
 

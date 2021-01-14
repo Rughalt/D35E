@@ -88,7 +88,7 @@
   <header class="sheet-header flexrow">
     <div class="profile"  >
       <div class="buffbox flexrow">
-        {{#each buffs.all.items as |buff bif|}}
+        {{#each allbuffs as |buff bif|}}
           {{#if buff.data.active}}
             <div class="item-image tooltip" style="background-image: url('{{buff.img}}')">
               <span class="tooltipcontent">
