@@ -5934,3 +5934,9 @@ a.inline-roll {
 .color-blind .nonlethal {
   color: #007BAA !important;
 }
+.no-players-list #players {
+  display: none;
+}
+.no-players-list #hotbar {
+  left: 20px;
+}

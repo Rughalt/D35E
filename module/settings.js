@@ -251,6 +251,19 @@ export const registerSystemSettings = function() {
     },
   });
 
+
+  game.settings.register("D35E", "hidePlayersList", {
+    name: "SETTINGS.D35ENoPlayersListN",
+    hint: "SETTINGS.D35ENoPlayersListL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      $('body').toggleClass('no-players-list', game.settings.get("D35E", "hidePlayersList"));
+    },
+  });
+
   /**
    * Option to change measure style
    */
