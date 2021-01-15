@@ -1280,7 +1280,7 @@ export class ItemPF extends Item {
 
             let allAttacks = []
             // Auto scaling attacks
-            if (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon") {
+            if (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" && fullAttack) {
                 allAttacks.push({bonus: 0, label: `${game.i18n.localize("D35E.Attack")}`})
                 for (let a = 5; a < actor.data.data.attributes.bab.total; a += 5) {
                     allAttacks.push({bonus:`-${a}`, label:`${game.i18n.localize("D35E.Attack")} ${Math.floor((a + 5) / 5)}`});

@@ -749,7 +749,7 @@ export class ActorPF extends Actor {
 
 
         // Apply changes in Actor size to Token width/height
-        if (!options.skipToken && tokenSizeKey !== 'none')
+        if (!options.skipToken && tokenSizeKey !== 'none' && this.data.type !== "trap")
         {
             let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
             //console.log(size)
@@ -772,7 +772,7 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
-        if (!options.skipToken)
+        if (!options.skipToken && this.data.type !== "trap")
         {
             let dimLight = 0;
             let brightLight = 0;
@@ -4205,7 +4205,7 @@ export class ActorPF extends Actor {
             }, {inplace: false});
             // Create message
 
-            await createCustomChatMessage("systems/D35E/templates/chat/saving-throw.html", templateData, chatData);
+            await createCustomChatMessage("systems/D35E/templates/chat/saving-throw.html", templateData, chatData, {rolls: [roll]});
         }
 
         let savingThrowId = "";

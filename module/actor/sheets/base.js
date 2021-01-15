@@ -1683,7 +1683,7 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     for (let containerItem of containerList) {
-      for (let i of containerItems.get(containerItem.id)) {
+      for (let i of containerItems.get(containerItem.id) || []) {
         i.data.quantity = i.data.quantity || 0;
         if (i.data.containerId)
           containerItemsWeight.set(i.data.containerId,(containerItemsWeight.get(i.data.containerId) || 0) + Math.round(i.data.quantity * i.data.weight * weightConversion * 10) / 10)
