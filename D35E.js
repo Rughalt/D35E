@@ -278,7 +278,7 @@ Hooks.on("renderChatMessage", (app, html, data) => {
   chat.enableToggles(app, html, data);
 
   // Optionally collapse the content
-  if (game.settings.get("D35E", "autoCollapseItemCards")) html.find(".card-content").hide();
+  if (game.settings.get("D35E", "autoCollapseItemCards")) html.find(".card-content.item").hide();
 });
 
 // Hooks.on("getChatLogEntryContext", addChatMessageContextOptions);

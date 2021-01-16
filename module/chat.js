@@ -13,7 +13,8 @@ export const displayChatActionButtons = function(message, html, data) {
     // Otherwise make buttons disabled, but show the actions action buttons
     const buttons = chatCard.find("button[data-action]:not(.everyone)");
     buttons.each((a, btn) => {
-      btn.disabled = true
+      if (!game.settings.get("D35E", "allowPlayersApplyActions"))
+        btn.disabled = true
     });
   }
 };

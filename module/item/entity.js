@@ -2349,7 +2349,7 @@ export class ItemPF extends Item {
         event.preventDefault();
         const header = event.currentTarget;
         const card = header.closest(".chat-card");
-        const content = card.querySelector(".card-content");
+        const content = card.querySelector(".card-content.item");
         content.style.display = content.style.display === "none" ? "block" : "none";
     }
 
