@@ -999,6 +999,7 @@ D35E.buffTargets = {
     "chaSkills": "D35E.BuffTarChaSkills",
     "perfSkills": "D35E.BuffTarPerfSkills",
     "craftSkills": "D35E.BuffTarCraftSkills",
+    "profSkills": "D35E.BuffTarProfSkills",
     "knowSkills": "D35E.BuffTarKnowSkills",
   },
   "skill": {

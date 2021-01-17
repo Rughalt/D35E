@@ -470,6 +470,18 @@ export class ActorPF extends Actor {
                 }
                 return result;
             }
+            case "profSkills": {
+                let skl = curData.skills["pro"];
+                if (skl != null) {
+                    result.push(`data.skills.pro.changeBonus`);
+                    if (skl.subSkills != null) {
+                        for (let [b, subSkl] of Object.entries(skl.subSkills)) {
+                            if (subSkl != null) result.push(`data.skills.pro.subSkills.${b}.changeBonus`);
+                        }
+                    }
+                }
+                return result;
+            }
             case "craftSkills": {
                 let skl = curData.skills["crf"];
                 if (skl != null) {
