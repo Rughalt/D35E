@@ -997,6 +997,9 @@ D35E.buffTargets = {
     "intSkills": "D35E.BuffTarIntSkills",
     "wisSkills": "D35E.BuffTarWisSkills",
     "chaSkills": "D35E.BuffTarChaSkills",
+    "perfSkills": "D35E.BuffTarPerfSkills",
+    "craftSkills": "D35E.BuffTarCraftSkills",
+    "knowSkills": "D35E.BuffTarKnowSkills",
   },
   "skill": {
     "_label": "D35E.BuffTarSpecificSkill",

@@ -198,7 +198,7 @@ export class ActorPF extends Actor {
                 "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl","resistance","dr"
             ], types: [
                 "str", "dex", "con", "int", "wis", "cha",
-                "skills", "strSkills", "dexSkills", "conSkills", "intSkills", "wisSkills", "chaSkills", ...skillTargets,
+                "skills", "strSkills", "dexSkills", "conSkills", "intSkills", "wisSkills", "chaSkills","perfSkills","craftSkills","knowSkills", ...skillTargets,
                 "allChecks", "strChecks", "dexChecks", "conChecks", "intChecks", "wisChecks", "chaChecks",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
                 "ac", "aac", "sac", "nac","tch","ddg","pac",
@@ -458,6 +458,40 @@ export class ActorPF extends Actor {
                     }
                 }
                 return result;
+            case "perfSkills": {
+                let skl = curData.skills["prf"];
+                if (skl != null) {
+                    result.push(`data.skills.prf.changeBonus`);
+                    if (skl.subSkills != null) {
+                        for (let [b, subSkl] of Object.entries(skl.subSkills)) {
+                            if (subSkl != null) result.push(`data.skills.prf.subSkills.${b}.changeBonus`);
+                        }
+                    }
+                }
+                return result;
+            }
+            case "craftSkills": {
+                let skl = curData.skills["crf"];
+                if (skl != null) {
+                    result.push(`data.skills.crf.changeBonus`);
+                    if (skl.subSkills != null) {
+                        for (let [b, subSkl] of Object.entries(skl.subSkills)) {
+                            if (subSkl != null) result.push(`data.skills.crf.subSkills.${b}.changeBonus`);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            case "knowSkills": {
+                let knowledgeSkills = new Set(['kna','kno','kpl','kre','klo','khi','kge','ken','kdu','kar','kps'])
+                for (let [a, skl] of Object.entries(curData.skills)) {
+                    if (skl == null) continue;
+                    if (knowledgeSkills.has(a))
+                        result.push(`data.skills.${a}.changeBonus`);
+                }
+                return result;
+            }
             case "allChecks":
                 return ["data.abilities.str.checkMod", "data.abilities.dex.checkMod", "data.abilities.con.checkMod",
                     "data.abilities.int.checkMod", "data.abilities.wis.checkMod", "data.abilities.cha.checkMod"];
