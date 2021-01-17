@@ -4773,7 +4773,8 @@ export class ActorPF extends Actor {
 
             let a = t.actor,
                 hp = a.data.data.attributes.hp,
-                nonLethal = a.data.data.attributes.hp.nonlethal || 0,
+                _nonLethal = a.data.data.attributes.hp.nonlethal || 0,
+                nonLethal = 0,
                 tmp = parseInt(hp.temp) || 0,
                 hit = false,
                 crit = false,
@@ -4794,11 +4795,13 @@ export class ActorPF extends Actor {
                     finalAc.noCheck = true
                     finalAc.ac = 0;
                     finalAc.noCritical = false;
-                    finalAc.applyHalf = false;
+                    finalAc.applyHalf = ev.applyHalf === true;
                 } else {
                     if (roll > -1337) { // Spell roll value
                         finalAc = await a.rollDefenseDialog({});
                         if (finalAc.ac === -1) continue;
+                    } else {
+                        finalAc.applyHalf = ev.applyHalf === true;
                     }
                 }
                 hit = roll >= finalAc.ac || roll === -1337 || natural20 || finalAc.noCheck // This is for spells and natural 20
@@ -4882,7 +4885,7 @@ export class ActorPF extends Actor {
 
             if (hit)
                 promises.push(t.actor.update({
-                    "data.attributes.hp.nonlethal": nonLethal,
+                    "data.attributes.hp.nonlethal": _nonLethal + nonLethal,
                     "data.attributes.hp.temp": tmp - dt,
                     "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
                 }));
@@ -5812,7 +5815,7 @@ export class ActorPF extends Actor {
                     const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
                         isSpontaneous = spellbook.spontaneous,
                         usePowerPoints = spellbook.usePowerPoints;
-                    if (!isSpontaneous && !usePowerPoints && itemData.preparation.preparedAmount < itemData.preparation.maxAmount) {
+                    if (!isSpontaneous && !usePowerPoints && itemData.preparation.preparedAmount !== itemData.preparation.maxAmount) {
                         hasItemUpdates = true;
                         itemUpdate["data.preparation.preparedAmount"] = itemData.preparation.maxAmount;
                     }

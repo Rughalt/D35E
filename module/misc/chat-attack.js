@@ -221,79 +221,19 @@ export class ChatAttack {
             return cur;
         }, []);
 
-        // Add card
+        // Add cards
         if (critical) {
             this.cards = []
-            if (this.item.isHealing) this.cards.push({
-                normalDamage: this.normalDamage,
-                label: game.i18n.localize("D35E.Apply"),
-                value: -totalDamage,
-                data: JSON.stringify(rolls),
-                alignment: JSON.stringify(this.item.data.data.alignment),
-                material: JSON.stringify(this.item.data.data.material),
-                enh: this.item.data.data.enh,
-                action: "applyDamage",
-                natural20: this.natural20,
-                fumble: this.fumble,
-                natural20Crit: this.natural20Crit,
-                fumbleCrit: this.fumbleCrit,
-            });
-            else this.cards.push({
-                normalDamage: this.normalDamage,
-                label: game.i18n.localize("D35E.Apply"),
-                value: Math.max(totalDamage,1),
-                data: JSON.stringify(rolls),
-                alignment: JSON.stringify(this.item.data.data.alignment),
-                material: JSON.stringify(this.item.data.data.material),
-                enh: this.item.data.data.enh,
-                action: "applyDamage",
-                natural20: this.natural20,
-                fumble: this.fumble,
-                natural20Crit: this.natural20Crit,
-                fumbleCrit: this.fumbleCrit
-            });
+            if (this.item.isHealing) this.cards.push(this.createCriticalChatCardData(game.i18n.localize("D35E.Apply"), -totalDamage, rolls));
+            else this.cards.push(this.createCriticalChatCardData(game.i18n.localize("D35E.Apply"), totalDamage, rolls));
         } else {
             this.normalDamage = JSON.stringify(rolls)
-            if (this.item.isHealing) this.cards.push({
-                label: game.i18n.localize("D35E.Apply"),
-                value: -totalDamage,
-                data: JSON.stringify(rolls),
-                alignment: JSON.stringify(this.item.data.data.alignment),
-                material: JSON.stringify(this.item.data.data.material),
-                enh: this.item.data.data.enh,
-                action: "applyDamage",
-                natural20: this.natural20,
-                fumble: this.fumble,
-                natural20Crit: this.natural20Crit,
-                fumbleCrit: this.fumbleCrit
-            });
-            else if (isMultiattack) this.cards.push({
-                label: game.i18n.localize("D35E.Apply") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`,
-                value: Math.max(totalDamage,1),
-                data: JSON.stringify(rolls),
-                alignment: JSON.stringify(this.item.data.data.alignment),
-                material: JSON.stringify(this.item.data.data.material),
-                enh: this.item.data.data.enh,
-                action: "applyDamage",
-                natural20: this.natural20,
-                fumble: this.fumble,
-                natural20Crit: this.natural20Crit,
-                fumbleCrit: this.fumbleCrit
-            });
-            else this.cards.push({
-                    label: game.i18n.localize("D35E.Apply"),
-                    value: Math.max(totalDamage,1),
-                    data: JSON.stringify(rolls),
-                    alignment: JSON.stringify(this.item.data.data.alignment),
-                    material: JSON.stringify(this.item.data.data.material),
-                    enh: this.item.data.data.enh,
-                    action: "applyDamage",
-                    natural20: this.natural20,
-                    fumble: this.fumble,
-                    natural20Crit: this.natural20Crit,
-                    fumbleCrit: this.fumbleCrit
-                });
+            if (this.item.isHealing) this.cards.push(this.createChatCardData(game.i18n.localize("D35E.Apply"), -totalDamage, rolls));
+            else if (isMultiattack) this.cards.push(this.createChatCardData(game.i18n.localize("D35E.Apply") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`, totalDamage, rolls));
+            else this.cards.push(this.createChatCardData(game.i18n.localize("D35E.Apply"), totalDamage, rolls));
         }
+
+
 
         data.flavor = damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor;
         data.tooltip = tooltips;
@@ -308,6 +248,39 @@ export class ChatAttack {
             this.subDamage.push(data);
             this.hasSubdamage = true;
         }
+    }
+
+    createCriticalChatCardData(label, totalDamage, rolls) {
+        return {
+            normalDamage: this.normalDamage,
+            label: label,
+            value: Math.max(totalDamage, 1),
+            data: JSON.stringify(rolls),
+            alignment: JSON.stringify(this.item.data.data.alignment),
+            material: JSON.stringify(this.item.data.data.material),
+            enh: this.item.data.data.enh,
+            action: "applyDamage",
+            natural20: this.natural20,
+            fumble: this.fumble,
+            natural20Crit: this.natural20Crit,
+            fumbleCrit: this.fumbleCrit
+        };
+    }
+
+    createChatCardData(label, totalDamage, rolls) {
+        return {
+            label: label,
+            value: Math.max(totalDamage, 1),
+            data: JSON.stringify(rolls),
+            alignment: JSON.stringify(this.item.data.data.alignment),
+            material: JSON.stringify(this.item.data.data.material),
+            enh: this.item.data.data.enh,
+            action: "applyDamage",
+            natural20: this.natural20,
+            fumble: this.fumble,
+            natural20Crit: this.natural20Crit,
+            fumbleCrit: this.fumbleCrit
+        };
     }
 
     async addEffect({primaryAttack = true, actor = null, useAmount = 1, cl = null} = {}) {

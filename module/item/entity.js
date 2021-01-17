@@ -1735,6 +1735,7 @@ export class ItemPF extends Item {
                 spellDC.dc = saveDC + (rollData.featSpellDCBonus || 0);
                 spellDC.type = data.save.type;
                 spellDC.ability = data.save.ability;
+                spellDC.isHalf = data.save.type.indexOf('half') !== -1;
                 spellDC.description = `${CONFIG.D35E.savingThrowTypes[data.save.type]}`;
                 if (data.save.ability) spellDC.description += ` (${CONFIG.D35E.abilitiesShort[data.save.ability]})`;
             }
@@ -1758,6 +1759,7 @@ export class ItemPF extends Item {
                     spellDC.type += 'negates';
                 } else if (saveDesc.toLowerCase().indexOf('half') !== -1) {
                     spellDC.type += 'half';
+                    spellDC.isHalf = true;
                 }
 
                 if (saveDesc.toLowerCase().indexOf('cha') !== -1) {
@@ -2263,7 +2265,7 @@ export class ItemPF extends Item {
         // Consumable usage
         if (action === "consume") await item.rollConsumable({event});
         // Apply damage
-        else if (action === "applyDamage") {
+        else if (action === "applyDamage" || action === "applyDamageHalf") {
             //const value = button.dataset.value;
             const damage = JSON.parse(button.dataset.json || {});
             const normalDamage = JSON.parse(button.dataset.normaljson || "{}");
@@ -2278,6 +2280,7 @@ export class ItemPF extends Item {
             const natural20Crit = button.dataset.naturalcrit === "true";
             const fumble = button.dataset.fumble === "true";
             const fumbleCrit = button.dataset.fumblecrit === "true";
+            event.applyHalf = action === "applyDamageHalf";
             ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage);
         } else if (action === "applyHealing") {
             const value = button.dataset.value;
