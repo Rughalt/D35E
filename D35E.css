@@ -1607,6 +1607,12 @@
 .D35E.sheet.actor .inventory-toggleable-header {
   cursor: pointer;
 }
+.D35E.sheet.actor .inventory-toggleable-header .toggle-close,
+.D35E.sheet.actor .inventory-toggleable-header .toggle-open {
+  flex: 0 20px;
+  line-height: 24px;
+  opacity: 0.7;
+}
 .D35E.sheet.actor .capacity {
   flex: 0 0 60px;
   background: #7a7971;

@@ -726,8 +726,12 @@ export class ActorSheetPF extends ActorSheet {
         let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
         if (isHidden) {
           drawerState.add(sublistId)
+          $(card.querySelector(".toggle-open")).hide();
+          $(card.querySelector(".toggle-close")).show();
         } else {
           drawerState.delete(sublistId)
+          $(card.querySelector(".toggle-open")).show();
+          $(card.querySelector(".toggle-close")).hide();
         }
         localStorage.setItem(`D35E-drawer-state-${actor.id}`, JSON.stringify(Array.from(drawerState)))
       });
@@ -741,6 +745,8 @@ export class ActorSheetPF extends ActorSheet {
       let x = 2;
       drawerState.forEach(id => {
         $(`[data-sublist-id='${id}'] .item-list`).hide()
+        $(`[data-sublist-id='${id}'] .toggle-open`).hide()
+        $(`[data-sublist-id='${id}'] .toggle-close`).show()
       })
     }
     {
@@ -1070,12 +1076,12 @@ export class ActorSheetPF extends ActorSheet {
       console.log('D35E | Enchancement item data',getProperty(item.data, `data.enhancements.items`) || [] );
       (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
         let enh = new ItemPF(_enh, {owner: this.owner})
-        if (enh.hasAction) {
+        if (enh.hasAction || enh.isCharged) {
           let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
-                            ${enh.name} <em style="opacity: 0.7">${enh.data.data.uses.per}</em>
+                            ${enh.name} <em style="opacity: 0.7">${enh.data.data.uses.per} ${item.data.data.enhancements.uses.commonPool ? 'common pool' : ''}</em>
                         </h4>
                     </div>
                     <div class="item-detail item-actions">
@@ -1083,7 +1089,20 @@ export class ActorSheetPF extends ActorSheet {
                             <a class="item-control item-enh-attack"><img class="icon"
                                                                      src="systems/D35E/icons/actions/gladius.svg"></a>
                         </div>
-                    </div>`+ (enh.isCharged ? `
+                    </div>` +
+              (item.data.data.enhancements.uses.commonPool ? (
+                  `
+                    <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                        <input type="text" class="uses" disabled value="${item.data.data.enhancements.uses.value}" data-dtype="Number"/>
+                        <span class="sep"> of </span>
+                        <input type="text" class="maxuses" disabled value="${item.data.data.enhancements.uses.max}" data-dtype="Number"/>
+                    </div>
+                    <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
+                        <input type="text" disabled value="${enh.data.data.uses.chargesPerUse}" data-dtype="Number"/>
+                    </div>
+
+                </li>`
+              ) : (enh.isCharged ? `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
                         <input type="text" class="uses" disabled value="${enh.data.data.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
@@ -1093,7 +1112,7 @@ export class ActorSheetPF extends ActorSheet {
                         <input type="text" disabled value="${enh.data.data.uses.chargesPerUse}" data-dtype="Number"/>
                     </div>
 
-                </li>` : `</li>`)
+                </li>` : `</li>`))
           subElements.append(enhString)
         }
       })
