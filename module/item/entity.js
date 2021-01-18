@@ -386,6 +386,11 @@ export class ItemPF extends Item {
     }
 
     async update(data, options = {}) {
+        if (options['recursive'] !== undefined && options['recursive'] === false) {
+            console.log('D35E | Skipping update logic since it is not recursive')
+            await super.update(data, options);
+            return
+        }
         const srcData = mergeObject(this.data, expandObject(data), {inplace: false});
         //const srcDataWithRolls = mergeObject(srcData, this.getRollData(), {inplace: false});
         const srcDataWithRolls = new ItemPF(srcData, {owner: this.owner}).data;
