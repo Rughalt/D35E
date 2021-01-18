@@ -130,16 +130,13 @@
         <h2>News</h2>
         <div class="flexrow">
             <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Damage Types</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.87-damage-types.png"
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Traps</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.88-traps.png"
                      style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    Version 0.87.8 brings much anticipated system - complex damage types and resistances support!
-                    Now you can forget about manually substracting those pesky DR 10/magic and Fire Resistances and let system do the work!
-                    <span style="opacity: 0.8">(Using this requires setting up DR and Energy Resistances on actor using new system.)</span><br>
+                    Version 0.88 brings Traps to the Dungeons! New actor type streamlined to be used as a trap and several assets (courtesy of
+                    Forgotten Adventures) will bring your traps to life and player characters - to their deaths.
                 </p>
-                <a class="btn bottom" href="https://docs.legaciesofthedragon.com/en/documentation/system/damage-types">Learn
-                    more about Damage Types</a>
 
             </div>
             <div class="flexcol" style="max-height: 410px">
@@ -161,7 +158,6 @@
                 <p style="padding: 0 0.7rem; flex: 0">
                     Starting with release of 0.87.12, you find reimported monsters from SRD in the monster compendium! While some of the creatures may still be a little broken, they should be in much better shape than ever before!<br><br>
                 </p>
-
             </div>
 <!--            <div class="flexcol" style="max-height: 410px">-->
 
@@ -203,6 +199,36 @@
         </div>
     </div>
     <div class="tab" data-tab="changelog" style="overflow-y: scroll; height: 570px;">
+        <h2>v0.88</h2>
+        <h3>Features</h3>
+        <ul>
+            <li>Variable attack number<ul>
+                <li>Spell with multiple attack parts, like Magic Missile or Scorching Ray can now scale number of rolled damages/attacks based on things like Caster Leve</li>
+                <li>Weapon attacks can be set to use BAB automatic scaling</li>
+            </ul>
+            </li>
+            <li>Condensed chat cards<ul>
+                <li>Attack chat card has been condensed to better work with limited space available for chat</li>
+                <li>Damage chat card not by default displays only damage dealt, with rest of details available on demand</li>
+            </ul>
+            </li>
+            <li>Trap Support - New actor type - Trap - with optimized character sheet</li>
+            <li>Character Sheet UX Changes<ul>
+                <li>Slide toggle for categories in inventory and spellbook tab</li>
+            </ul>
+            </li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/260">#260</a> - Allow Special Actions... players setting works correctly now</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/261">#261</a> - Saving throws roll animation from Dice so Nice!</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/259">#259</a> - Single attack no longer rolls full attack</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/255">#255</a> - Spells use correct class information</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/244">#244</a> - Add item dialog correctly adds item after search</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/229">#229</a> - Race can be dragged to world directory from NPC char sheet</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/117">#117</a> - Modifiers from Changes tab to attack rolls are added to Attack bonuses fields</li>
+        </ul>
+
         <h2>v0.87.13</h2>
         <h3 >SRD</h3>
         <ul>
@@ -725,5 +751,8 @@
         <p>Some artwork © Trevor Armstrong / Grimpress, used with permission. All rights reserved.</p>
         <p>Some artwork © Daniel Comerci, used with permission. All rights reserved.</p>
         <p>Some artwork © 2015 Dean Spencer, used with permission. All rights reserved.</p>
+        <p>Trap images by Forgotten Adventures (https://www.forgotten-adventures.net)</p>
+        <p>Some images from Publisher's Choice Quality Stock Art © Rick Hershey / Fat Goblin Games</p>
+        <p>Monster token border by RollAdvantage.</p>
     </div>
 </section>

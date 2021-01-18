@@ -1604,6 +1604,72 @@
 .D35E.sheet.actor .traits .inactive input[type="text"]::placeholder {
   color: #7a7971;
 }
+.D35E.sheet.actor .inventory-toggleable-header {
+  cursor: pointer;
+}
+.D35E.sheet.actor .inventory-toggleable-header .toggle-close,
+.D35E.sheet.actor .inventory-toggleable-header .toggle-open {
+  flex: 0 20px;
+  line-height: 24px;
+  opacity: 0.7;
+}
+.D35E.sheet.actor .capacity {
+  flex: 0 0 60px;
+  background: #7a7971;
+  border: 1px solid #191813;
+  border-radius: 3px;
+  position: relative;
+  height: 13px;
+  width: 130px;
+  float: right;
+}
+.D35E.sheet.actor .capacity .capacity-bar {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  background: #77504a;
+  height: 8px;
+  border: 1px solid #2f2220;
+  border-radius: 2px;
+}
+.D35E.sheet.actor .capacity .capacity-label {
+  height: 10px;
+  padding: 0 5px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 13px;
+  line-height: 12px;
+  text-align: right;
+  color: #EEE;
+  text-shadow: 0 0 5px #000;
+}
+.D35E.sheet.actor .capacity .capacity-breakpoint {
+  position: absolute;
+  left: 66%;
+}
+.D35E.sheet.actor .capacity .arrow-up {
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #666;
+}
+.D35E.sheet.actor .capacity .arrow-down {
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #666;
+}
+.D35E.sheet.actor .capacity.encumbered .arrow-up {
+  border-bottom: 4px solid #000;
+}
+.D35E.sheet.actor .capacity.encumbered .arrow-down {
+  border-top: 4px solid #000;
+}
 .D35E.sheet.actor .encumbrance {
   flex: 0 0 12px;
   background: #7a7971;
@@ -1782,6 +1848,11 @@
   color: #4b4a44;
   text-decoration: line-through;
 }
+.D35E.sheet.actor .inventory-list .item .item-name.attack-disabled,
+.D35E.sheet.actor .inventory-list .item .item-name-ne.attack-disabled {
+  color: #4b4a44;
+  text-decoration: line-through;
+}
 .D35E.sheet.actor .inventory-list .item .item-name .item-image,
 .D35E.sheet.actor .inventory-list .item .item-name-ne .item-image {
   flex: 0 0 24px;
@@ -1821,10 +1892,11 @@
   margin-top: 3px;
 }
 .D35E.sheet.actor .inventory-list .item .item-recharge {
-  flex: 0 0 80px;
-  text-align: right;
-  font-size: 11px;
-  color: #7a7971;
+  display: flex;
+  flex: 0 0 16px;
+  padding: 0;
+  margin-right: 1px;
+  height: 16px;
 }
 .D35E.sheet.actor .inventory-list .item .item-actions > div a {
   display: flex;
@@ -1925,7 +1997,7 @@
   padding: 0 1px 0 1px;
 }
 .D35E.sheet.actor .inventory-list .item-detail.item-uses {
-  flex: 0 0 64px;
+  flex: 0 0 81px;
   padding: 0 1px 0 1px;
 }
 .D35E.sheet.actor .inventory-list .item-detail:nth-child(2) {
@@ -2176,15 +2248,16 @@
 .D35E.sheet.actor .item-add-overlay .item-add-list .item-add-close-box {
   position: absolute;
   height: 30px;
-  width: 30px;
-  background: url("ui/parchment.jpg") repeat;
+  width: 16px;
+  background: url(ui/parchment.jpg) repeat;
   text-align: center;
   line-height: 30px;
   font-size: 18px;
-  left: -30px;
+  right: 8px;
   cursor: pointer;
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
+  text-align: right;
 }
 .locked img.sheet-profile {
   max-height: 360px;
@@ -2721,7 +2794,7 @@
   margin-top: 3px;
 }
 .D35E.sheet.item .inventory-list .item .item-recharge {
-  flex: 0 0 80px;
+  flex: 0 0 16px;
   text-align: right;
   font-size: 11px;
   color: #7a7971;
@@ -3253,10 +3326,10 @@
   border: 1px solid #999;
   border-radius: 3px;
 }
-#chat-log .message .chat-attack .dice-roll:nth-child(n+2) .dice-flavor {
+#chat-log .message .chat-attack:not(.compact) .dice-roll:nth-child(n+2) .dice-flavor {
   margin-top: 12px;
 }
-#chat-log .message .chat-attack .dice-roll:first-child > .dice-flavor {
+#chat-log .message .chat-attack:not(.compact) .dice-roll:first-child > .dice-flavor {
   color: #782e22;
   font-size: 16px;
   text-align: center;
@@ -3323,6 +3396,31 @@
 #chat-log .message .extra-roll-label {
   font-weight: bold;
   font-size: 14px;
+}
+#chat-log .message .toggle-header {
+  margin-bottom: -3px;
+}
+#chat-log .message .dice-tooltips {
+  padding: 0px 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  flex: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: 0;
+}
+#chat-log .message .dice-tooltips .dice-formula {
+  position: relative;
+  margin: 0;
+  line-height: 24px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid #999;
+  border-radius: 3px;
+  box-shadow: 0 0 2px #FFF inset;
+  word-break: break-all;
 }
 #chat-log .message div.defense table {
   width: 100%;
@@ -3784,6 +3882,9 @@ span.bold {
 .game:not(.d35gm) .gm-sensitive {
   display: none;
 }
+.game.hide-special-action:not(.d35gm) .special-action-button {
+  display: none;
+}
 .custom-dialog.wide {
   width: 600px !important;
 }
@@ -3839,6 +3940,7 @@ span.bold {
 .portrait-bar .portrait .barbox .name {
   color: #c9c7b8;
   padding-left: 20px;
+  line-height: 22px;
 }
 .portrait-bar .portrait .barbox .damagebar {
   background-image: url(/systems/D35E/icons/ui/hp-frame.png);
@@ -3867,9 +3969,7 @@ span.bold {
   z-index: -1;
 }
 .portrait-bar .portrait .barbox .life {
-  color: black;
-  font-weight: 600;
-  -webkit-text-stroke: 1px white;
+  color: white;
   line-height: 24px;
 }
 .portrait-bar .portrait .barbox.narrow {
@@ -4930,7 +5030,7 @@ tr.introjs-showElement > th {
   background: url(/systems/D35E/icons/ui/vert-button.png);
   background-size: contain;
   border: none;
-  flex: 0 0 26px;
+  flex: 1;
   padding-top: 1px;
 }
 .d35ecustom #hotbar #hotbar-directory-controls {
@@ -4943,8 +5043,7 @@ tr.introjs-showElement > th {
 .d35ecustom .sidebar-tab .directory-list .directory-item {
   position: relative;
 }
-.d35ecustom .sidebar-tab .directory-list .directory-item.entity.item::after,
-.d35ecustom .sidebar-tab .directory-list .directory-item.entity.actor::after {
+.d35ecustom .sidebar-tab .directory-list .directory-item.entity.item::after {
   content: '';
   background: url(/systems/D35E/icons/ui/skill-frame.png);
   background-size: contain;
@@ -5035,12 +5134,14 @@ tr.introjs-showElement > th {
   background: url(/systems/D35E/icons/ui/sidebar-bg.png);
   background-size: 100% 100%;
 }
+.d35ecustom:not(.transparent-sidebar) #sidebar {
+  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  background-size: 100% 100%;
+}
 .d35ecustom #sidebar {
   border-radius: 0;
   border: none;
   line-height: 27px;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
-  background-size: 100% 100%;
 }
 .d35ecustom #sidebar .card-content {
   line-height: initial;
@@ -5713,6 +5814,11 @@ tr.introjs-showElement > th {
   width: 20px !important;
   vertical-align: middle;
 }
+.d35ecustom .sheet.item .enhancements .update-magic-item {
+  height: 24px;
+  line-height: 24px;
+  margin-top: -11px;
+}
 .d35ecustom .compendium-browser header {
   border: 8px solid red;
   /* border-right: none; */
@@ -5833,4 +5939,10 @@ a.inline-roll {
 }
 .color-blind .nonlethal {
   color: #007BAA !important;
+}
+.no-players-list #players {
+  display: none;
+}
+.no-players-list #hotbar {
+  left: 20px;
 }

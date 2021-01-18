@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc"],
+    "types": ["character", "npc", "trap"],
     "templates": {
       "common": {
         "shapechangeImg": "icons/svg/mystery-man.svg",
@@ -915,7 +915,7 @@
           "kps": {
             "value": 0,
             "ability": "int",
-            "rt": false,
+            "rt": true,
             "acp": false,
             "rank": 0,
             "notes": "",
@@ -998,6 +998,7 @@
     "character": {
       "templates": ["common"],
       "isPartyMember": false,
+      "displayNonRTSkills": false,
       "details": {
         "xp": {
           "value": 0,
@@ -1040,6 +1041,39 @@
           "value": 10
         },
         "levelUpProgression": false
+      },
+      "master": {
+        "id": null,
+        "img": null,
+        "name": null,
+        "data": {},
+        "distance": 0
+      }
+    },
+    "trap": {
+      "templates": ["common"],
+      "attributes": {
+        "spellLevel": 0,
+        "hp": {
+          "value": 0,
+          "max": 0
+        }
+      },
+      "details": {
+        "type": "",
+        "environment": "",
+        "cr": 1,
+        "totalCr": 1,
+        "xp": {
+          "value": 10
+        },
+        "levelUpProgression": false,
+        "findDC": 1,
+        "disarmDC": 1
+      },
+
+      "traits": {
+        "tokensize": "none"
       },
       "master": {
         "id": null,
@@ -1194,7 +1228,9 @@
           "parts": []
         },
         "attackParts": [],
+        "autoscaleAttackParts": "",
         "formula": "",
+        "attackCountFormula": "",
         "ability": {
           "attack": null,
           "damage": null,
@@ -1516,7 +1552,8 @@
       "bonusAmmoDamage": "",
       "bonusAmmoDamageType": "",
       "bonusAmmoAttackNote": "",
-      "bagOfHoldingLike": false
+      "bagOfHoldingLike": false,
+      "capacity": 0
     },
     "spell": {
       "templates": ["itemDescription", "activatedEffect", "action"],

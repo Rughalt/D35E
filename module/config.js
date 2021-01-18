@@ -957,6 +957,7 @@ D35E.buffTargets = {
     "sac": "D35E.BuffTarACShield",
     "nac": "D35E.BuffTarACNatural",
     "tch": "D35E.BuffTarACTouch",
+    "pac": "D35E.BuffTarACOnly",
   },
   "attack": {
     "_label": "D35E.AttackRollPlural",
@@ -996,6 +997,10 @@ D35E.buffTargets = {
     "intSkills": "D35E.BuffTarIntSkills",
     "wisSkills": "D35E.BuffTarWisSkills",
     "chaSkills": "D35E.BuffTarChaSkills",
+    "perfSkills": "D35E.BuffTarPerfSkills",
+    "craftSkills": "D35E.BuffTarCraftSkills",
+    "profSkills": "D35E.BuffTarProfSkills",
+    "knowSkills": "D35E.BuffTarKnowSkills",
   },
   "skill": {
     "_label": "D35E.BuffTarSpecificSkill",

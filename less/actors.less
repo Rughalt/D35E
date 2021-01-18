@@ -1111,6 +1111,78 @@
     }
   }
 
+  .inventory-toggleable-header {
+    cursor: pointer;
+
+    .toggle-close, .toggle-open {
+      flex: 0 20px;
+      line-height: 24px;
+      opacity: 0.7;
+    }
+  }
+
+  .capacity {
+    flex: 0 0 60px;
+    background: #7a7971;
+    border: 1px solid @colorDark;
+    border-radius: 3px;
+    position: relative;
+    height: 13px;
+    width: 130px;
+    float: right;
+
+    .capacity-bar {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      background: #77504a;
+      height: 8px;
+      border: 1px solid #2f2220;
+      border-radius: 2px;
+    }
+
+    .capacity-label {
+      height: 10px;
+      padding: 0 5px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 13px;
+      line-height: 12px;
+      text-align: right;
+      color: #EEE;
+      text-shadow: 0 0 5px #000;
+    }
+
+    .capacity-breakpoint {
+      position: absolute;
+      left: 66%;
+    }
+
+    .arrow-up {
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid #666;
+    }
+
+    .arrow-down {
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #666;
+    }
+
+    &.encumbered {
+      .arrow-up { border-bottom: 4px solid #000; }
+      .arrow-down { border-top: 4px solid #000; }
+    }
+  }
+
   /* ----------------------------------------- */
   /*  Inventory Lists                          */
   /* ----------------------------------------- */
@@ -1305,6 +1377,10 @@
           color: #4b4a44;
           text-decoration: line-through;
         }
+        &.attack-disabled {
+          color: #4b4a44;
+          text-decoration: line-through;
+        }
         .item-image {
           flex: 0 0 24px;
           background-size: 24px;
@@ -1350,10 +1426,11 @@
 
       // Charged
       .item-recharge {
-        flex: 0 0 80px;
-        text-align: right;
-        font-size: 11px;
-        color: @colorTan;
+        display: flex;
+        flex: 0 0 16px;
+        padding: 0;
+        margin-right: 1px;
+        height: 16px;
       }
 
       .item-actions {
@@ -1458,7 +1535,7 @@
       }
 
       &.item-uses {
-        flex: 0 0 64px;
+        flex: 0 0 81px;
         padding: 0 1px 0 1px;
       }
 
@@ -1725,15 +1802,16 @@
       .item-add-close-box {
         position: absolute;
         height: 30px;
-        width: 30px;
-        background: @sheetBackground;
+        width: 16px;
+        background: url(ui/parchment.jpg) repeat;
         text-align: center;
         line-height: 30px;
         font-size: 18px;
-        left: -30px;
+        right: 8px;
         cursor: pointer;
         border-bottom-left-radius: 4px;
         border-top-left-radius: 4px;
+        text-align: right;
       }
     }
   }

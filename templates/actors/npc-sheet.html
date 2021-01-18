@@ -4,7 +4,7 @@
 
     <div class="item-add-list flexcol inventory-list">
       <div class="item-add-close-box"><i class="fas fa-times"></i></div>
-      <h2 class="block-header" style="flex: 0" id="items-add-{{randomUuid}}-label">Add Things</h2>
+      <h2 class="block-header" style="flex: 0; margin-right: 24px" id="items-add-{{randomUuid}}-label">Add Things</h2>
       <div class="items-add-{{randomUuid}}-working-item">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; margin-top: calc(50% - 100px)" width="60px" height="60px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
           <defs>
@@ -37,6 +37,9 @@
         <ol class="item-list" style="overflow: auto" id="{{randomUuid}}-itemList">
 
         </ol>
+        <div style="flex: 0">
+          <a class="blue-button open-compendium-browser items-add-{{randomUuid}}-openCompendium" style="text-align: center">Open Browser</a>
+        </div>
       </div>
     </div>
   </div>
@@ -105,8 +108,8 @@
               <input type="text" name="data.details.alignment" value="{{data.details.alignment}}"
                      placeholder="{{ localize 'D35E.Alignment' }}" title="{{ localize 'D35E.Alignment' }}"/>
             </li>
-            <li>
-              <div class="race-container item flexrow" {{#if race}}data-item-id="{{race._id}}"{{/if}} title="{{ localize 'D35E.Race' }}">
+            <ol class="item-list race-container" style="margin: 0">
+              <li class="race-container item flexrow" {{#if race}}data-item-id="{{race._id}}"{{/if}} title="{{ localize 'D35E.Race' }}">
               <div class="race item-image rollable" style="background-image: url({{race.img}})"
                    title="{{labels.race}}">
                 {{#unless race}}{{ localize 'D35E.Race' }}{{/unless}}
@@ -115,7 +118,7 @@
                 <span>{{race.name}}</span>
               {{/if}}
 
-              <div class="item-controls flexrow">
+              <div class="item-controls flexrow" style="line-height: 23px;">
                 {{#if owner}}
                   {{#unless race}}
                     <a class="item-control add" title="{{ localize 'D35E.CreateItem' }}"><i
@@ -129,7 +132,7 @@
                   {{/if}}
                 {{/if}}
               </div>
-            </li>
+            </ol>
           </ul>
         </div>
 

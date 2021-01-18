@@ -14,7 +14,7 @@
 
     <div class="item-add-list flexcol inventory-list">
       <div class="item-add-close-box"><i class="fas fa-times"></i></div>
-      <h2 class="block-header" style="flex: 0" id="items-add-{{randomUuid}}-label">Add Things</h2>
+      <h2 class="block-header" style="flex: 0; margin-right: 24px" id="items-add-{{randomUuid}}-label">Add Things</h2>
       <div class="items-add-{{randomUuid}}-working-item">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; margin-top: calc(50% - 100px)" width="60px" height="60px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
           <defs>
@@ -88,7 +88,7 @@
   <header class="sheet-header flexrow">
     <div class="profile"  >
       <div class="buffbox flexrow">
-        {{#each buffs.all.items as |buff bif|}}
+        {{#each allbuffs as |buff bif|}}
           {{#if buff.data.active}}
             <div class="item-image tooltip" style="background-image: url('{{buff.img}}')">
               <span class="tooltipcontent">
@@ -207,6 +207,7 @@
     <a class="item" data-tab="spellbook">{{ localize 'D35E.Spells' }}</a>
     <a class="item" data-tab="biography">{{ localize 'D35E.Biography' }}</a>
     <a class="item" data-tab="notes">{{ localize 'D35E.Notes' }}</a>
+    <a class="item" data-tab="config"><i class="fas fa-cogs"></i></a>
   </nav>
 
   {{!-- NPC Sheet Body --}}
@@ -266,6 +267,29 @@
     {{!-- Notes Tab --}}
     <div class="tab actor-notes flexcol" data-group="primary" data-tab="notes">
       {{editor content=data.details.notes.value target="data.details.notes.value" button=true owner=owner editable=editable}}
+    </div>
+
+    {{!-- Notes Tab --}}
+    <div class="tab actor-notes flexcol" data-group="primary" data-tab="config">
+      <div class="flexcol">
+
+        <div class="form-group">
+          <label>{{ localize 'D35E.PartyMember' }}</label>
+          <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.isPartyMember" {{checked data.isPartyMember}}/>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <span style="flex: 0">{{ localize 'D35E.PartyMemberH' }}</span>
+        <div class="form-group">
+          <label>{{ localize 'D35E.DisplayNonRTSkills' }}</label>
+          <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.displayNonRTSkills" {{checked data.displayNonRTSkills}}/>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <span style="flex: 0">{{ localize 'D35E.DisplayNonRTSkillsH' }}</span>
+      </div>
     </div>
   </section>
 </form>

@@ -39,6 +39,7 @@ import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
+import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -104,12 +105,14 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
   $('body').toggleClass('color-blind', game.settings.get("D35E", "colorblindColors"));
+  $('body').toggleClass('no-players-list', game.settings.get("D35E", "hidePlayersList"));
 });
 
 
@@ -155,6 +158,10 @@ Hooks.once("setup", function() {
 Hooks.once("ready", async function() {
 
   $('body').toggleClass('d35gm', game.user.isGM);
+  $('body').toggleClass('hide-special-action', !game.settings.get("D35E", "allowPlayersApplyActions"));
+  $('body').toggleClass('transparent-sidebar', game.settings.get("D35E", "transparentSidebarWhenUsingTheme"));
+
+
   const NEEDS_MIGRATION_VERSION = "0.87.7";
   let PREVIOUS_MIGRATION_VERSION = game.settings.get("D35E", "systemMigrationVersion");
   if (typeof PREVIOUS_MIGRATION_VERSION === "number") {
@@ -268,8 +275,10 @@ Hooks.on("renderChatMessage", (app, html, data) => {
   // Hide GM sensitive info
   chat.hideGMSensitiveInfo(app, html, data);
 
+  chat.enableToggles(app, html, data);
+
   // Optionally collapse the content
-  if (game.settings.get("D35E", "autoCollapseItemCards")) html.find(".card-content").hide();
+  if (game.settings.get("D35E", "autoCollapseItemCards")) html.find(".card-content.item").hide();
 });
 
 // Hooks.on("getChatLogEntryContext", addChatMessageContextOptions);
@@ -298,12 +307,11 @@ Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
   const actor = game.actors.tokens[data._id];
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
-    actor.refresh(options);
-
-    // Update items
-    for (let i of actor.items) {
-      actor.updateItemResources(i);
+    let itemResourcesData = {}
+    for (let i of actor.items || []) {
+      actor.getItemResourcesUpdate(i, itemResourcesData);
     }
+    actor.refreshWithData(itemResourcesData, options)
   }
 });
 
@@ -316,20 +324,15 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
-    return
-  }
+  if (!game.user.isGM)
+    return;
   const actor = game.actors.tokens[combatant.tokenId];
   if (actor != null) {
-    actor.refresh();
-    if (actor.items !== undefined && actor.items.size > 0) {
-      // Update items
-      for (let i of actor.items) {
-        actor.updateItemResources(i);
-        i.resetPerEncounterUses();
-      }
+    let itemResourcesData = {}
+    for (let i of actor.items || []) {
+      actor.getItemResourcesUpdate(i, itemResourcesData);
     }
+    actor.refreshWithData(itemResourcesData, {})
   }
 });
 
@@ -351,10 +354,13 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
           actor.deleteOwnedItem(_data._id, { stopUpdates: true })
         }
       }
+
     }
 
     if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
     if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+
+    actor.renderFastHealingRegenerationChatCard();
   }
 });
 

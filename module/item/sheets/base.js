@@ -257,6 +257,11 @@ export class ItemSheetPF extends ItemSheet {
             data.convertedWeight = data.item.data.weight * conversion;
         }
 
+        if (data.item.data.capacity) {
+            const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
+            data.convertedCapacity = data.item.data.capacity * conversion;
+        }
+
         // Prepare spell specific stuff
         if (data.item.type === "spell") {
             let spellbook = null;
@@ -333,6 +338,9 @@ export class ItemSheetPF extends ItemSheet {
         }
 
 
+        if (data.item.type === "buff") {
+            data.hasCombatChanges = true;
+        }
         if (data.item.type === "feat") {
             data.isFeat = data.item.data.featType === "feat"
             data.hasCombatChanges = true;

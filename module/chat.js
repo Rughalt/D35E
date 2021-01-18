@@ -13,7 +13,8 @@ export const displayChatActionButtons = function(message, html, data) {
     // Otherwise make buttons disabled, but show the actions action buttons
     const buttons = chatCard.find("button[data-action]:not(.everyone)");
     buttons.each((a, btn) => {
-      btn.disabled = true
+      if (!game.settings.get("D35E", "allowPlayersApplyActions"))
+        btn.disabled = true
     });
   }
 };
@@ -80,3 +81,14 @@ export const hideGMSensitiveInfo = function(app, html, data) {
   // Hide info
   html.find(".gm-sensitive").remove();
 };
+
+
+export const enableToggles = function(app, html, data) {
+  html.on('click', '.toggle-header', (event) => {
+    event.preventDefault();
+    const header = event.currentTarget;
+    const card = header.closest(".toggle-box");
+    const content = card.querySelector(".toggle-content");
+    $(content).slideToggle(400)
+  })
+}

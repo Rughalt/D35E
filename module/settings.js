@@ -170,6 +170,18 @@ export const registerSystemSettings = function() {
   });
 
   /**
+   * Option to use automatically scale weapon attacks using BAB
+   */
+  game.settings.register("D35E", "autoScaleAttacksBab", {
+    name: "SETTINGS.D35EAutoScaleAttackBABN",
+    hint: "SETTINGS.D35EAutoScaleAttackBABH",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean
+  });
+
+  /**
    * Option to automatically collapse Item Card descriptions
    */
   game.settings.register("D35E", "autoCollapseItemCards", {
@@ -226,6 +238,32 @@ export const registerSystemSettings = function() {
     },
   });
 
+
+  game.settings.register("D35E", 'transparentSidebarWhenUsingTheme', {
+    name: `SETTINGS.D35ETransparentSidebarWhenUsingThemeN`,
+    hint: 'SETTINGS.D35ETransparentSidebarWhenUsingThemeH',
+    default: false,
+    type: Boolean,
+    config: true,
+    scope: 'client',
+    onChange: () => {
+      $('body').toggleClass('transparent-sidebar', game.settings.get("D35E", "transparentSidebarWhenUsingTheme"));
+    },
+  });
+
+
+  game.settings.register("D35E", "hidePlayersList", {
+    name: "SETTINGS.D35ENoPlayersListN",
+    hint: "SETTINGS.D35ENoPlayersListL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      $('body').toggleClass('no-players-list', game.settings.get("D35E", "hidePlayersList"));
+    },
+  });
+
   /**
    * Option to change measure style
    */
@@ -279,6 +317,17 @@ export const registerSystemSettings = function() {
     type: Boolean,
     config: true,
     scope: 'client',
+  });
+
+
+
+  game.settings.register("D35E", "allowPlayersApplyActions", {
+    name: "SETTINGS.D35EAllowPlayersApplyActionsN",
+    hint: "SETTINGS.D35EAllowPlayersApplyActionsH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
   });
 
   // game.settings.register("D35E", 'displayItemsInContainers', {

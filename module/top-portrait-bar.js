@@ -7,12 +7,34 @@ export class TopPortraitBar {
   static async render(actor) {
     let partyHudType = game.settings.get("D35E", "showPartyHud")
     let portraitBar = $('#portrait-bar')
+    let dragging = false;
+    let dragX = 0;
+    let dragY = 0;
     if (partyHudType === "none") {
       portraitBar.hide()
     }
     if (portraitBar.length === 0) {
       var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexcol'></div>" )
       $('#navigation').append($portraitBarDiv)
+      $($portraitBarDiv).on({
+        mousedown:function(e)
+        {
+          dragging = true;
+          dragX = e.clientX - $(this).position().left;
+          dragY = e.clientY - $(this).position().top;
+        },
+        mouseup:function(e){
+          dragging = false;
+          localStorage.setItem("D35E-portraitbar-y-location",$(this).position().top)
+          localStorage.setItem("D35E-portraitbar-x-location",$(this).position().left)
+          },
+        mousemove:function(e)
+        {
+          if(dragging)
+            $(this).offset({top:e.clientY-dragY,left:e.clientX-dragX});
+
+        }
+      })
     }
     let height = $('#scene-list').height()
     portraitBar = $('#portrait-bar')
@@ -30,8 +52,14 @@ export class TopPortraitBar {
       var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait "+partyHudType+"''><div class='barbox "+partyHudType+"'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='background'></div> <div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow "+partyHudType+"'></div><img src='"+actor.img+"'><div class='overlay'></div></div>" )
       portraitBar.append($portraitDiv)
     }
-    portraitBar.css('top','460px')
-    portraitBar.css('left','20px')
+
+
+    let posTop = localStorage.getItem("D35E-portraitbar-y-location") || 460
+    let postLeft = localStorage.getItem("D35E-portraitbar-x-location") || 20
+
+
+    portraitBar.css('top',`${posTop}px`)
+    portraitBar.css('left',`${postLeft}px`)
     let portraitDiv = portraitBar.find('#actor-portrait-'+actor.id);
     let buffBar = portraitDiv.find('.buffbox');
     buffBar.empty()
@@ -61,7 +89,7 @@ export class TopPortraitBar {
       const icon = item.img;
       let title = item.name;
       const type = item.type;
-      buffBarItems += `<div class="item-image tooltip" style="background-image: url('${item.img}')"><div class="pretty-border"></div></div>`;
+      buffBarItems += `<div class="item-image tooltip" style="background-image: url('${item.img}')"><div class="tooltipcontent">${title}</div><div class="pretty-border"></div></div>`;
     });
 
     buffBar.append(buffBarItems);

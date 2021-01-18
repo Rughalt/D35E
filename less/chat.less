@@ -141,14 +141,16 @@
     border: 1px solid #999;
     border-radius: 3px;
 
-    .dice-roll:nth-child(n+2) .dice-flavor {
-      margin-top: 12px;
-    }
+    &:not(.compact) {
+      .dice-roll:nth-child(n+2) .dice-flavor {
+        margin-top: 12px;
+      }
 
-    .dice-roll:first-child > .dice-flavor {
-      color: #782e22;;
-      font-size: 16px;
-      text-align: center;
+      .dice-roll:first-child > .dice-flavor {
+        color: #782e22;;
+        font-size: 16px;
+        text-align: center;
+      }
     }
   }
 
@@ -223,6 +225,34 @@
   .extra-roll-label {
     font-weight: bold;
     font-size: 14px;
+  }
+
+  .toggle-header {
+    margin-bottom: -3px;
+  }
+
+  .dice-tooltips {
+    padding: 0px 4px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    flex: 0;
+    background: rgba(255,255,255,0.2);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+
+    .dice-formula {
+      position: relative;
+      margin: 0;
+      line-height: 24px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.1);
+      border: 1px solid #999;
+      border-radius: 3px;
+      box-shadow: 0 0 2px #FFF inset;
+      word-break: break-all;
+    }
   }
 
   div.defense {

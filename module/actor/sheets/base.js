@@ -397,7 +397,7 @@ export class ActorSheetPF extends ActorSheet {
     keys.forEach( a => {
       let skl = skillset[a]
       result.all.skills[a] = skl;
-      if (skl.rank > 0) result.known.skills[a] = skl;
+      if (skl.rank > 0 || (!skl.rt && this.actor.data.data.displayNonRTSkills)) result.known.skills[a] = skl;
       else if (skl.subSkills !== undefined) {
         result.known.skills[a] = skl;
       }
@@ -616,6 +616,8 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.item-create').click(ev => this._onItemCreate(ev));
     html.find('.item-edit').click(this._onItemEdit.bind(this));
     html.find('.item-delete').click(this._onItemDelete.bind(this));
+    html.find('.item-recharge').click(this._onItemRestoreUses.bind(this));
+
     html.find(".item .container-selector").change(ev => { this._onItemChangeContainer(ev) });
 
 
@@ -707,9 +709,46 @@ export class ActorSheetPF extends ActorSheet {
     html.find("input[type='checkbox'].level-up-progression").click(ev => this._onChangeUseProgression(ev));
 
     html.find(".item-search-input").off("keyup").keyup(this._filterData.bind(this))
+    html.find(".item-search-input").on("change", event => event.stopPropagation());
     html.find(".item-add-close-box").click(ev => { this._closeInlineData(ev); });
 
+    html.on('click', '.inventory-toggleable-header', (event) => {
+      event.preventDefault();
+      const header = event.currentTarget;
+      const card = header.closest(".inventory-sublist");
+      if (card == null) return;
+      const content = card.querySelector(".item-list");
+      let sublistId = card.dataset.sublistId
+      let actor = this.actor;
+      $(content).slideToggle(400, function(){
+        let isHidden = ($(this).is(':hidden'));
+        let parsedDrawerState = JSON.parse(localStorage.getItem(`D35E-drawer-state-${actor.id}`) || 'null');
+        let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
+        if (isHidden) {
+          drawerState.add(sublistId)
+          $(card.querySelector(".toggle-open")).hide();
+          $(card.querySelector(".toggle-close")).show();
+        } else {
+          drawerState.delete(sublistId)
+          $(card.querySelector(".toggle-open")).show();
+          $(card.querySelector(".toggle-close")).hide();
+        }
+        localStorage.setItem(`D35E-drawer-state-${actor.id}`, JSON.stringify(Array.from(drawerState)))
+      });
 
+
+    })
+
+    {
+      let parsedDrawerState = JSON.parse(localStorage.getItem(`D35E-drawer-state-${this.actor.id}`) || 'null');
+      let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
+      let x = 2;
+      drawerState.forEach(id => {
+        $(`[data-sublist-id='${id}'] .item-list`).hide()
+        $(`[data-sublist-id='${id}'] .toggle-open`).hide()
+        $(`[data-sublist-id='${id}'] .toggle-close`).show()
+      })
+    }
     {
 
       console.log("D35E | Item Browser | Loading pack inline browser on load")
@@ -1037,12 +1076,12 @@ export class ActorSheetPF extends ActorSheet {
       console.log('D35E | Enchancement item data',getProperty(item.data, `data.enhancements.items`) || [] );
       (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
         let enh = new ItemPF(_enh, {owner: this.owner})
-        if (enh.hasAction) {
+        if (enh.hasAction || enh.isCharged) {
           let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
-                            ${enh.name} <em style="opacity: 0.7">${enh.data.data.uses.per}</em>
+                            ${enh.name} <em style="opacity: 0.7">${enh.data.data.uses.per} ${item.data.data.enhancements.uses.commonPool ? 'common pool' : ''}</em>
                         </h4>
                     </div>
                     <div class="item-detail item-actions">
@@ -1050,7 +1089,20 @@ export class ActorSheetPF extends ActorSheet {
                             <a class="item-control item-enh-attack"><img class="icon"
                                                                      src="systems/D35E/icons/actions/gladius.svg"></a>
                         </div>
-                    </div>`+ (enh.isCharged ? `
+                    </div>` +
+              (item.data.data.enhancements.uses.commonPool ? (
+                  `
+                    <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                        <input type="text" class="uses" disabled value="${item.data.data.enhancements.uses.value}" data-dtype="Number"/>
+                        <span class="sep"> of </span>
+                        <input type="text" class="maxuses" disabled value="${item.data.data.enhancements.uses.max}" data-dtype="Number"/>
+                    </div>
+                    <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
+                        <input type="text" disabled value="${enh.data.data.uses.chargesPerUse}" data-dtype="Number"/>
+                    </div>
+
+                </li>`
+              ) : (enh.isCharged ? `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
                         <input type="text" class="uses" disabled value="${enh.data.data.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
@@ -1060,7 +1112,7 @@ export class ActorSheetPF extends ActorSheet {
                         <input type="text" disabled value="${enh.data.data.uses.chargesPerUse}" data-dtype="Number"/>
                     </div>
 
-                </li>` : `</li>`)
+                </li>` : `</li>`))
           subElements.append(enhString)
         }
       })
@@ -1333,6 +1385,58 @@ export class ActorSheetPF extends ActorSheet {
     }
   }
 
+  _onItemRestoreUses(event) {
+    event.preventDefault();
+
+    const button = event.currentTarget;
+    if (button.disabled) return;
+
+    const li = event.currentTarget.closest(".item");
+
+    button.disabled = true;
+    const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
+    Dialog.confirm({
+      title: game.i18n.localize("D35E.DeleteItem"),
+      content: msg,
+      yes: () => {
+        let itemId = li.dataset.itemId;
+        const item = this.actor.getOwnedItem(li.dataset.itemId);
+        let itemUpdate = {};
+        const itemData = item.data.data;
+        itemUpdate['_id'] = itemId
+        if (itemData.uses && itemData.uses.value !== itemData.uses.max) {
+          itemUpdate["data.uses.value"] = itemData.uses.max;
+        }
+        if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
+          itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+        }
+        else if (item.type === "spell") {
+          const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
+              isSpontaneous = spellbook.spontaneous,
+              usePowerPoints = spellbook.usePowerPoints;
+          if (!isSpontaneous && !usePowerPoints && itemData.preparation.preparedAmount < itemData.preparation.maxAmount) {
+            itemUpdate["data.preparation.preparedAmount"] = itemData.preparation.maxAmount;
+          }
+        }
+
+        if (itemData.enhancements && itemData.enhancements && itemData.enhancements.items) {
+          let enhItems = duplicate(itemData.enhancements.items)
+          for (let _item of enhItems) {
+            if (_item.data.uses.value !== _item.data.uses.max) {
+              _item.data.uses.value = _item.data.uses.max;
+            }
+          }
+          itemUpdate[`data.enhancements.items`] = enhItems;
+        }
+        this.actor.updateOwnedItem(itemUpdate)
+        button.disabled = false;
+      },
+      no: () => button.disabled = false
+    });
+
+
+  }
+
   _onSpellAddUses(event) {
     event.preventDefault();
     let add = 1
@@ -1487,6 +1591,7 @@ export class ActorSheetPF extends ActorSheet {
     };
 
     let containerItems = new Map()
+    let containerItemsWeight = new Map()
     let containerList = []
 
     data.totalInventoryValue = 0;
@@ -1498,6 +1603,7 @@ export class ActorSheetPF extends ActorSheet {
       item.isCharged = ["day", "week", "charges","encounter"].includes(getProperty(item, "data.uses.per"));
       item.isFullAttack = item.type === "full-attack";
 
+      item.canRecharge = !!((item.isCharged && item.data?.uses?.max && item.data?.uses?.per !== "charges") || (item.data?.enhancements?.uses?.max) || (Object.values(item.data?.enhancements?.items || {})).some(o => o.data.uses.max))
       const itemQuantity = getProperty(item, "data.quantity") != null ? getProperty(item, "data.quantity") : 1;
       const itemCharges = getProperty(item, "data.uses.value") != null ? getProperty(item, "data.uses.value") : 1;
       item.empty = itemQuantity <= 0 || (item.isCharged && itemCharges <= 0);
@@ -1512,6 +1618,7 @@ export class ActorSheetPF extends ActorSheet {
         if (item.data.containerId !== "none") {
           if (!containerItems.has(item.data.containerId)) {
             containerItems.set(item.data.containerId,[])
+            containerItemsWeight.set(item.data.containerId,0)
           }
           containerItems.get(item.data.containerId).push(item)
         } else {
@@ -1575,17 +1682,33 @@ export class ActorSheetPF extends ActorSheet {
 
     }
     // Organize Inventory
+    let equippedWeapons = new Set();
+    let containersMap = new Map();
+    const weightConversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
     for ( let i of items ) {
-      const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
       const subType = i.type === "loot" ? i.data.subType || "gear" : i.data.subType;
       i.data.quantity = i.data.quantity || 0;
-      i.data.displayWeight =  i.data.weight * conversion || 0;
+      i.data.displayWeight =  i.data.weight * weightConversion || 0;
       let weightMult = i.data.containerWeightless ? 0 : 1
-      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * conversion * 10) / 10;
+      i.totalWeight = weightMult * Math.round(i.data.quantity * i.data.weight * weightConversion * 10) / 10;
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
+      if (i.type === "weapon" && i.data.carried === true && i.data.equipped === true && !i.data.melded) equippedWeapons.add(i.id)
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
-      if (i?.data?.subType === 'container') containerList.push({id: i.id, name: i.name})
+      if (i?.data?.subType === 'container') {
+        containerList.push({id: i.id, name: i.name})
+        containersMap.set(i.id,i)
+      }
+    }
+
+    for (let containerItem of containerList) {
+      for (let i of containerItems.get(containerItem.id) || []) {
+        i.data.quantity = i.data.quantity || 0;
+        if (i.data.containerId)
+          containerItemsWeight.set(i.data.containerId,(containerItemsWeight.get(i.data.containerId) || 0) + Math.round(i.data.quantity * i.data.weight * weightConversion * 10) / 10)
+      }
+      containersMap.get(containerItem.id).itemsWeight = containerItemsWeight.get(containerItem.id) || 0
+      containersMap.get(containerItem.id).itemsWeightPercentage = Math.min(98,Math.floor(containerItemsWeight.get(containerItem.id) / containersMap.get(containerItem.id).data.capacity * 100.0))
     }
 
     data.containerList = containerList;
@@ -1636,14 +1759,14 @@ export class ActorSheetPF extends ActorSheet {
       misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
       //all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
-
+    data.allbuffs = []
     data.shapechanges = []
     for (let b of buffs) {
       let s = b.data.buffType;
       if (s === 'shapechange') data.shapechanges.push(b)
       if (!buffSections[s]) continue;
       buffSections[s].items.push(b);
-      //buffSections.all.items.push(b);
+      data.allbuffs.push(b);
     }
 
 
@@ -1663,7 +1786,8 @@ export class ActorSheetPF extends ActorSheet {
 
     for (let a of attacks) {
       let s = a.data.attackType;
-      if (!a.data.melded) data.useableAttacks.push(a)
+      a.disabled = !this._isAttackUseable(a,equippedWeapons);
+      if (this._isAttackUseable(a,equippedWeapons)) data.useableAttacks.push(a)
       if (!attackSections[s]) continue;
       attackSections[s].items.push(a);
       attackSections.all.items.push(a);
@@ -1695,6 +1819,12 @@ export class ActorSheetPF extends ActorSheet {
 
     // Handlebars.registerPartial('myPartial', 'This is a tab generated from something!{{prefix}}');
     // data.myVariable = "myPartial";
+  }
+
+  _isAttackUseable(a,equippedWeapons) {
+    if (a.data.melded) return false;
+    if (a.data.originalWeaponId && !equippedWeapons.has(a.data.originalWeaponId)) return false;
+    return true;
   }
 
   /**

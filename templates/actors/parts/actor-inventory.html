@@ -42,12 +42,14 @@
 <!--  <div class="tab inventory-group flexcol" data-group="inventory" data-tab="{{sid}}">-->
     <ol class="inventory-list sub-scroll scroll-inventory">
   {{#each sections as |section sid|}}
+      <div class="inventory-sublist" data-sublist-id="inventory-{{sid}}">
       <li class="inventory-header flexrow scrolling-header" >
-        <h3 class="item-name flexrow">{{section.label}}</h3>
+        <h3 class="item-name inventory-toggleable-header flexrow"><i class="fas fa-folder-open toggle-open"></i><i class="fas fa-folder toggle-close" style="display: none"></i>{{section.label}}</h3>
 
         {{#if section.hasSlots}}<div class="item-detail item-slot"><span>{{ localize 'D35E.Slot' }}</span></div>{{/if}}
         {{#if section.hasActions}}<div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>{{/if}}
 
+        {{#if section.isContainer}}<div class="item-detail item-actions"><span>{{ localize 'D35E.Capacity' }}</span></div>{{/if}}
         <div class="item-detail item-weight"><span>{{ localize 'D35E.ItemWeight' }}</span></div>
         {{#if ../isGM}}
         <div class="item-detail item-identified"><span>{{ localize 'D35E.IdentifiedShort' }}</span></div>
@@ -86,6 +88,7 @@
               {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
               {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
             </h4>
+
           </div>
           {{else}}
           <div class="item-name flexrow  {{#if item.data.melded}}melded{{/if}}">
@@ -109,15 +112,25 @@
 
           {{#if section.hasActions}}
           <div class="item-detail item-actions">
+            {{#unless item.showUnidentifiedData}}
+            {{#if item.hasAction}}
             <div class="item-attack">
-              {{#unless item.showUnidentifiedData}}
-              {{#if item.hasAction}}
 
               {{#unless item.data.melded}}
               <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
+
               {{/unless}}
-              {{/if}}
-              {{/unless}}
+            </div>
+            {{/if}}
+            {{/unless}}
+          </div>
+          {{/if}}
+
+          {{#if section.isContainer}}
+          <div class="item-actions">
+            <div class="capacity">
+              <span class="capacity-bar" style="width:{{#if item.data.capacity}}{{item.itemsWeightPercentage}}%{{/if}}"></span>
+              <span class="capacity-label">{{item.itemsWeight}}{{#if item.data.capacity}}/{{item.data.capacity}}{{/if}} {{ item.units }}</span>
             </div>
           </div>
           {{/if}}
@@ -156,6 +169,7 @@
             </select>
           </div>
           <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+            <div class="flexrow">
             {{#unless item.showUnidentifiedData}}
             {{#if item.isCharged}}
             <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
@@ -165,6 +179,15 @@
               @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
               @resources.{{item.tag}}.max : {{item.data.uses.max}}
             </span>
+            {{/if}}
+            {{/unless}}
+            </div>
+
+            {{#unless item.showUnidentifiedData}}
+            {{#if item.canRecharge}}
+            <div class="item-attack" style="margin-left: 4px; flex: 0 17px">
+              <a class="item-control item-recharge"><img class="icon" src="systems/D35E/icons/actions/lightning-electron.svg"></a>
+            </div>
             {{/if}}
             {{/unless}}
           </div>
@@ -187,6 +210,7 @@
                   <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
                   <h4>
                     {{~#if iitem.isStack}}({{iitem.data.quantity}}) {{/if}}{{iitem.name}}</h4>
+
                 </div>
                 <div class="item-detail item-container">
                   <select name="iitem.data.containerId" style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String" class="container-selector">
@@ -218,6 +242,7 @@
         </li>
         {{/each}}
       </ol>
+      </div>
   {{/each}}
     </ol>
 <!--</div>-->

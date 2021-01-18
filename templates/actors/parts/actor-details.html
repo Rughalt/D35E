@@ -266,7 +266,7 @@
     <div class="item-detail item-actions">
       <span>{{ localize 'D35E.Total' }}</span></div>
   </div>
-  <ul class="noborder skills-list sub-scroll scroll-skillset" style="box-shadow: none" data-background="{{isBackgroundSkills}}">
+  <ul class="noborder skills-list sub-scroll scroll-skillset" style="box-shadow: none; overflow: hidden" data-background="{{isBackgroundSkills}}">
     {{#each skillsets.known.skills as |skill s|}}
       {{#if skill.arbitrary}}
         {{#each skill.subSkills as |subSkill b|}}
