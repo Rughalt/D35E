@@ -69,3 +69,10 @@ Some artwork © Daniel Comerci, used with permission. All rights reserved.
 
 Some artwork © 2015 Dean Spencer, used with permission. All rights reserved.
 
+Some artwork © 2015 Dean Spencer, used with permission. All rights reserved.
+
+Trap images by Forgotten Adventures (https://www.forgotten-adventures.net)
+
+Some images from Publisher's Choice Quality Stock Art © Rick Hershey / Fat Goblin Games
+
+Monster token border by RollAdvantage.
