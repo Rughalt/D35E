@@ -1338,7 +1338,7 @@ export class ItemPF extends Item {
             let damageEnhancementMap = new Map();
             for (let enabledConditional of enabledConditionals) {
                 let conditional = itemData.conditionals.find(c => c.name === enabledConditional);
-                rollModifiers.push(`${c.name}`)
+                rollModifiers.push(`${conditional.name}`)
                 for (let modifier of conditional.modifiers) {
                     if (modifier.target === "attack") {
                         if (modifier.subTarget !== "allAttack") {
