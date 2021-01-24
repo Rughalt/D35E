@@ -1112,6 +1112,25 @@ export class ActorPF extends Actor {
             });
         }
 
+        if (data.data.attributes.conditions.shaken) {
+            changes.push({
+                raw: ["-2", "savingThrows", "allAavingThrows", "penalty", 0],
+                source: { name: "Shaken" }
+            });
+            changes.push({
+                raw: ["-2", "skills", "skills", "penalty", 0],
+                source: { name: "Shaken" }
+            });
+            changes.push({
+                raw: ["-2", "abilityChecks", "allChecks", "penalty", 0],
+                source: { name: "Shaken" }
+            });
+            changes.push({
+                raw: ["-2", "attack", "attaack", "penalty", 0],
+                source: { name: "Shaken" }
+            });
+        }
+
         //Bluff
         if (data.data.skills.blf.rank >= 5) {
             changes.push({
@@ -3522,31 +3541,32 @@ export class ActorPF extends Actor {
         let classHP = new Map()
         // Iterate over all levl ups
         if (data1.details.levelUpData && data1.details.levelUpProgression) {
-            levelUpData.forEach(lud => {
+            data.forEach(lud => {
                 if (lud.classId === null || lud.classId === "") return;
-                let _class = this.items.find(cls => cls._id === lud.classId)
-                if (_class == null) {
-                    lud.classId = null;
-                    lud.classImage = null;
-                    lud.skills = {};
-                    lud.class = null;
-                    return;
-                }
+                let _class = this.actor.items.find(cls => cls._id === lud.classId)
+                if (_class === undefined) return;
                 if (!classLevels.has(_class._id))
-                    classLevels.set(_class._id, 0)
-                classLevels.set(_class._id, classLevels.get(_class._id) + 1)
+                    classLevels.set(_class._id,0)
+                classLevels.set(_class._id,classLevels.get(_class._id)+1)
                 if (!classHP.has(_class._id))
-                    classHP.set(_class._id, 0)
-                classHP.set(_class._id, classHP.get(_class._id) + (lud.hp || 0))
+                    classHP.set(_class._id,0)
+                classHP.set(_class._id,classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
-                    updateData[`data.skills.${s}.rank`] = Math.floor((lud.skills[s].rank || 0)  * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
-
+                    updateData[`data.skills.${s}.rank`] = (lud.skills[s].rank || 0) * (lud.skills[s].cls ? 1 : 0.5) + (updateData[`data.skills.${s}.rank`] || 0);
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
-                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
                         })
                     }
                 })
+            })
+            Object.keys(data[0].skills).forEach(s => {
+                updateData[`data.skills.${s}.rank`] = Math.floor(updateData[`data.skills.${s}.rank`] || 0);
+                if (data[0].skills[s].subskills) {
+                    Object.keys(data[0].skills[s].subskills).forEach(sb => {
+                        updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                    })
+                }
             })
 
             for (var _class of classes) {
@@ -4129,43 +4149,39 @@ export class ActorPF extends Actor {
         return headers;
     }
 
-    async rollInitiative() {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
-
-        let formula = _getInitiativeFormula(this);
-        let overrideRollMode = null,
-            bonus = "",
-            stop = false;
-        if (keyboard.isDown("Shift")) {
-            const dialogData = await Combat.showInitiativeDialog(formula);
-            overrideRollMode = dialogData.rollMode;
-            bonus = dialogData.bonus || "";
-            stop = dialogData.stop || false;
+    async rollInitiative({ createCombatants = false, rerollInitiative = false, initiativeOptions = {} } = {}) {
+        // Obtain (or create) a combat encounter
+        let combat = game.combat;
+        if (!combat) {
+            if (game.user.isGM && canvas.scene) {
+                combat = await game.combats.object.create({ scene: canvas.scene._id, active: true });
+            } else {
+                ui.notifications.warn(game.i18n.localize("COMBAT.NoneActive"));
+                return null;
+            }
         }
 
-        if (stop) return;
+        // Create new combatants
+        if (createCombatants) {
+            const tokens = this.isToken ? [this.token] : this.getActiveTokens();
+            const createData = tokens.reduce((arr, t) => {
+                if (t.inCombat) return arr;
+                arr.push({ tokenId: t.id, hidden: t.data.hidden });
+                return arr;
+            }, []);
+            await combat.createEmbeddedEntity("Combatant", createData);
+        }
 
-        const actorData = this.getRollData();
-        // Add bonus
-        actorData.bonus = bonus;
-        if (bonus.length > 0) formula += " + @bonus";
-
-        // Roll initiative
-        const rollMode = overrideRollMode;
-        const roll = new Roll(formula, actorData).roll();
-
-        // Construct chat message data
-        let messageData = {
-            speaker: {
-                scene: canvas.scene === null ? null : canvas.scene._id,
-                actor: this._id,
-                token: this.token ? this.token._id : null,
-                alias: this.token ? this.token.name : null,
-            },
-            flavor: game.i18n.localize("D35E.RollsForInitiative").format(this.token ? this.token.name : this.name),
-        };
-        roll.toMessage(messageData, { rollMode });
+        // Iterate over combatants to roll for
+        const combatantIds = combat.combatants.reduce((arr, c) => {
+            if (c.actor.id !== this.id || (this.isToken && c.tokenId !== this.token.id)) return arr;
+            if (c.initiative && !rerollInitiative) return arr;
+            arr.push(c._id);
+            return arr;
+        }, []);
+        return combatantIds.length ? combat.rollInitiative(combatantIds, initiativeOptions) : combat;
     }
+
 
     /**
      * Make a saving throw, with optional versus check
@@ -4260,17 +4276,17 @@ export class ActorPF extends Actor {
         if (_savingThrow === "willnegates" || _savingThrow === "willhalf") {
             savingThrowId = "will";
             savingThrowBaseAbility = "wis"
-            if (!savingThrowAbility) savingThrowAbility = "wis"
+            if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "wis"
             if (savingThrowAbility === "") savingThrowAbility = "wis"
         } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf") {
             savingThrowId = "ref";
             savingThrowBaseAbility = "dex"
-            if (!savingThrowAbility) savingThrowAbility = "dex"
+            if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "dex"
             if (savingThrowAbility === "") savingThrowAbility = "dex"
         } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf") {
             savingThrowId = "fort";
             savingThrowBaseAbility = "con"
-            if (!savingThrowAbility) savingThrowAbility = "con"
+            if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "con"
             if (savingThrowAbility === "") savingThrowAbility = "con"
         }
         // Add contextual notes

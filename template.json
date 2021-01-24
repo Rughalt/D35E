@@ -268,7 +268,10 @@
             "pinned": false,
             "fear": false,
             "sickened": false,
-            "stunned": false
+            "stunned": false,
+            "shaken": false,
+            "polymorphed": false,
+            "wildshaped": false
           },
           "spells": {
             "concentration": {

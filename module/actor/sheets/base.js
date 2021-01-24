@@ -744,7 +744,7 @@ export class ActorSheetPF extends ActorSheet {
       let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
       let x = 2;
       drawerState.forEach(id => {
-        $(`[data-sublist-id='${id}'] .item-list`).hide()
+        $(`[data-sublist-id='${id}'] .item-list:not(.container)`).hide()
         $(`[data-sublist-id='${id}'] .toggle-open`).hide()
         $(`[data-sublist-id='${id}'] .toggle-close`).show()
       })
@@ -1528,7 +1528,7 @@ export class ActorSheetPF extends ActorSheet {
 
   _onRollInitiative(event) {
     event.preventDefault();
-    this.actor.rollInitiative();
+    this.actor.rollInitiative({ createCombatants: true, rerollInitiative: game.user.isGM });
   }
 
   _onRollSavingThrow(event) {

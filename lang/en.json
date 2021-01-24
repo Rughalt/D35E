@@ -1286,6 +1286,7 @@
   "D35E.BuffTarACOnly" : "Base AC only",
   "D35E.Capacity" : "Capacity",
   "D35E.WeightCapacity": "Weight Capacity",
+  "D35E.ChangeFlagHasted": "Hasted",
 
   "D35E.BuffTarPerfSkills": "Perform Skills",
   "D35E.BuffTarCraftSkills": "Craft Skills",

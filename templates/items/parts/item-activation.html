@@ -72,47 +72,47 @@
 
 {{!-- Limited Uses --}}
 {{#unless isSpell}}
-<div class="form-group uses-per">
-  <label>{{localize "D35E.LimitedUses"}}</label>
-  <div class="form-fields">
-    {{#if isCharged}}
-    <input type="text" name="data.uses.value" value="{{data.uses.value}}" data-dtype="Number"/>
-    <span class="sep"> / </span>
-    <input type="text" value="{{data.uses.max}}" disabled data-dtype="Number"/>
-    {{/if}}
-    <select name="data.uses.per">
-      {{#select data.uses.per}}
-      <option value=""></option>
-      {{#each config.limitedUsePeriods as |name key|}}
-      <option value="{{key}}">{{name}}</option>
-      {{/each}}
-      {{/select}}
-    </select>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.LimitedUses"}}</label>
+    <div class="form-fields">
+      {{#if isCharged}}
+      <input type="text" name="data.uses.value" value="{{data.uses.value}}" data-dtype="Number"/>
+      <span class="sep"> / </span>
+      <input type="text" value="{{data.uses.max}}" disabled data-dtype="Number"/>
+      {{/if}}
+      <select name="data.uses.per">
+        {{#select data.uses.per}}
+        <option value=""></option>
+        {{#each config.limitedUsePeriods as |name key|}}
+        <option value="{{key}}">{{name}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
+    </div>
   </div>
-</div>
-{{#if isCharged}}
-<div class="form-group uses-per">
-  <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
-</div>
-{{/if}}
+  {{#if isCharged}}
+  <div class="form-group uses-per">
+    <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
+  </div>
+  {{/if}}
 
-<div class="form-group stacked">
-  <label class="checkbox">
-    <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
-  </label>
+  <div class="form-group stacked">
+    <label class="checkbox">
+      <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
+    </label>
 
 
-</div>
+  </div>
 
-<div class="form-group input">
-  <label>{{localize "D35E.ChargesToDeduct"}}</label>
-  <input style="width: 40px" type="text" value="{{data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
-</div>
+  <div class="form-group input">
+    <label>{{localize "D35E.ChargesToDeduct"}}</label>
+    <input style="width: 40px" type="text" value="{{data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
+  </div>
 
-<div class="form-group stacked">
-  <label class="checkbox">
-    <input type="checkbox" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/> {{localize "D35E.AllowMultipleUses"}}
-  </label>
-</div>
+  <div class="form-group stacked">
+    <label class="checkbox">
+      <input type="checkbox" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/> {{localize "D35E.AllowMultipleUses"}}
+    </label>
+  </div>
 {{/unless}}
 {{/if}}

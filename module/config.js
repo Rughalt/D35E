@@ -937,6 +937,7 @@ D35E.conditions = {
   "fear": "D35E.CondFear",
   "sickened": "D35E.CondSickened",
   "stunned": "D35E.CondStunned",
+  "shaken": "D35E.CondSShaken",
   "polymorphed": "D35E.CondPolymorphed",
   "wildshaped": "D35E.CondWildshaped",
 };

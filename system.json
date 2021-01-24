@@ -31,6 +31,13 @@
       "entity": "Item"
     },
     {
+      "name": "item-buffs",
+      "label": "Item Buffs",
+      "system": "D35E",
+      "path": "./packs/itembuffs.db",
+      "entity": "Item"
+    },
+    {
       "name": "magicitems",
       "label": "Magic Items",
       "system": "D35E",

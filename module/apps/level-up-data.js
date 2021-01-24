@@ -139,13 +139,21 @@ export class LevelUpDataDialog extends FormApplication {
                     classHP.set(_class._id,0)
                 classHP.set(_class._id,classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
-                    updateData[`data.skills.${s}.rank`] = Math.floor((lud.skills[s].rank || 0) * (lud.skills[s].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.rank`] || 0);
+                    updateData[`data.skills.${s}.rank`] = (lud.skills[s].rank || 0) * (lud.skills[s].cls ? 1 : 0.5) + (updateData[`data.skills.${s}.rank`] || 0);
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
-                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5)) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                            updateData[`data.skills.${s}.subSkills.${sb}.rank`] = lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
                         })
                     }
                 })
+            })
+            Object.keys(data[0].skills).forEach(s => {
+                updateData[`data.skills.${s}.rank`] = Math.floor(updateData[`data.skills.${s}.rank`] || 0);
+                if (data[0].skills[s].subskills) {
+                    Object.keys(data[0].skills[s].subskills).forEach(sb => {
+                        updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
+                    })
+                }
             })
             for (var __class of classes) {
                 if (__class.data.classType === "racial") continue;

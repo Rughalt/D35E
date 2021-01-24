@@ -1300,7 +1300,7 @@ export class ItemPF extends Item {
                 }];
             }
 
-            if ((fullAttack || this.data.data.attackParts.length === 0) && rapidShot) {
+            if ((fullAttack || actor.data.data.attributes.bab.total < 6) && rapidShot) {
                 allAttacks.push({
                     bonus: 0,
                     label: `Rapid Shot`
@@ -1308,6 +1308,15 @@ export class ItemPF extends Item {
                 rollData.rapidShotPenalty = -2;
                 attackExtraParts.push("@rapidShotPenalty");
             }
+
+            let isHasted = this.actor.items.filter(o => o.type === "buff" && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
+            if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted) {
+                allAttacks.push({
+                    bonus: 0,
+                    label: `Haste`
+                })
+            }
+
             let manyshotAttacks = []
             if (greaterManyshot) {
                 allAttacks.forEach(attack => {
