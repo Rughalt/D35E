@@ -264,6 +264,15 @@ export const registerSystemSettings = function() {
     },
   });
 
+  game.settings.register("D35E", "playersNoDamageDetails", {
+    name: "SETTINGS.D35EPlayersNoDamageDetailsN",
+    hint: "SETTINGS.D35EPlayersNoDamageDetailsL",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   /**
    * Option to change measure style
    */

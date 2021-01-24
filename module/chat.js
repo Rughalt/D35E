@@ -80,11 +80,19 @@ export const hideGMSensitiveInfo = function(app, html, data) {
 
   // Hide info
   html.find(".gm-sensitive").remove();
+
+
+  if (game.settings.get("D35E", "playersNoDamageDetails")) {
+    html.find(".toggle-content").remove();
+  }
+
 };
 
 
 export const enableToggles = function(app, html, data) {
   html.on('click', '.toggle-header', (event) => {
+    if (game.settings.get("D35E", "playersNoDamageDetails") && !game.user.isGM) return;
+
     event.preventDefault();
     const header = event.currentTarget;
     const card = header.closest(".toggle-box");

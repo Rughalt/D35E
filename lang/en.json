@@ -1312,5 +1312,9 @@
   "SETTINGS.D35ETransparentSidebarWhenUsingThemeN": "Use Transparent sidebar Background when using custom theme",
   "SETTINGS.D35ETransparentSidebarWhenUsingThemeH": "Uses standard Foundry texture for sidebar Background when using theme",
   "SETTINGS.D35EAutoScaleAttackBABN": "Automatically scale number of attacks for Characters using Weapons",
-  "SETTINGS.D35EAutoScaleAttackBABH": "Characters attack count when using weapons will use automatic scaling instead of Extra Attacks table"
+  "SETTINGS.D35EAutoScaleAttackBABH": "Characters attack count when using weapons will use automatic scaling instead of Extra Attacks table",
+  "SETTINGS.D35ENoPlayersListN": "Hide Player List",
+  "SETTINGS.D35ENoPlayersListL": "Hide default Foundry player list",
+  "SETTINGS.D35EPlayersNoDamageDetailsN": "Hide Damage Details from players",
+  "SETTINGS.D35EPlayersNoDamageDetailsL": "Disallow players from expanding and showing damage details"
 }
