@@ -132,7 +132,7 @@
             <div class="dice-flavor">Saving throw</div>
             <div class="dice-result">
                 <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
-                    {{localize "D35E.DC"}} {{../dc.dc}} {{../dc.description}}</h4>
+                    {{localize "D35E.DC"}} <span class="dc-value">{{../dc.dc}}</span> {{../dc.description}}</h4>
             </div>
         </div>
         {{/if}}

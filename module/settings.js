@@ -273,6 +273,14 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "playersNoDCDetails", {
+    name: "SETTINGS.D35EPlayersNoDCDetailsN",
+    hint: "SETTINGS.D35EPlayersNoDCDetailsL",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
   /**
    * Option to change measure style
    */

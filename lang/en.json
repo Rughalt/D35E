@@ -1316,5 +1316,7 @@
   "SETTINGS.D35ENoPlayersListN": "Hide Player List",
   "SETTINGS.D35ENoPlayersListL": "Hide default Foundry player list",
   "SETTINGS.D35EPlayersNoDamageDetailsN": "Hide Damage Details from players",
-  "SETTINGS.D35EPlayersNoDamageDetailsL": "Disallow players from expanding and showing damage details"
+  "SETTINGS.D35EPlayersNoDamageDetailsL": "Disallow players from expanding and showing damage details",
+  "SETTINGS.D35EPlayersNoDCDetailsN": "Hide DC Details from players",
+  "SETTINGS.D35EPlayersNoDCDetailsL": "Hide DC for players on rolls"
 }

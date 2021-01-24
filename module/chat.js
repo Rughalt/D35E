@@ -75,7 +75,8 @@ export const hideGMSensitiveInfo = function(app, html, data) {
   if (game.user.isGM) return;
 
   let speaker = app.data.speaker,
-    actor = speaker != null ? (speaker.token ? game.actors.tokens[speaker.token] : game.actors.get(speaker.actor)) : null;
+    actor = speaker != null ? (speaker.actor ? game.actors.get(speaker.actor) : game.actors.tokens[speaker.token]) : null;
+  console.log('D35E | Message | Cleaning ', actor, app, html)
   if (!actor || (actor && actor.hasPerm(game.user, "LIMITED"))) return;
 
   // Hide info
@@ -86,13 +87,14 @@ export const hideGMSensitiveInfo = function(app, html, data) {
     html.find(".toggle-content").remove();
   }
 
+  if (game.settings.get("D35E", "playersNoDCDetails")) {
+    html.find(".dc-value").text("?");
+  }
 };
 
 
 export const enableToggles = function(app, html, data) {
   html.on('click', '.toggle-header', (event) => {
-    if (game.settings.get("D35E", "playersNoDamageDetails") && !game.user.isGM) return;
-
     event.preventDefault();
     const header = event.currentTarget;
     const card = header.closest(".toggle-box");
