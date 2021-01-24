@@ -1126,7 +1126,7 @@ export class ActorPF extends Actor {
                 source: { name: "Shaken" }
             });
             changes.push({
-                raw: ["-2", "attack", "attaack", "penalty", 0],
+                raw: ["-2", "attack", "attack", "penalty", 0],
                 source: { name: "Shaken" }
             });
         }
