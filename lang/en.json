@@ -1287,6 +1287,8 @@
   "D35E.Capacity" : "Capacity",
   "D35E.WeightCapacity": "Weight Capacity",
   "D35E.ChangeFlagHasted": "Hasted",
+  "D35E.SpellAttackCount": "Spell/Ability Attack Count",
+  "D35E.CloseQuartersShot": "Shot into Melee",
 
   "D35E.BuffTarPerfSkills": "Perform Skills",
   "D35E.BuffTarCraftSkills": "Craft Skills",
@@ -1318,5 +1320,7 @@
   "SETTINGS.D35EPlayersNoDamageDetailsN": "Hide Damage Details from players",
   "SETTINGS.D35EPlayersNoDamageDetailsL": "Disallow players from expanding and showing damage details",
   "SETTINGS.D35EPlayersNoDCDetailsN": "Hide DC Details from players",
-  "SETTINGS.D35EPlayersNoDCDetailsL": "Hide DC for players on rolls"
+  "SETTINGS.D35EPlayersNoDCDetailsL": "Hide DC for players on rolls",
+  "SETTINGS.D35ERepeatAnimationsN": "Repeat webm Animations",
+  "SETTINGS.D35ERepeatAnimationsL": "By default 3.5e SRD disables .webm repeat. This settings changes that so animated tokens can work better."
 }

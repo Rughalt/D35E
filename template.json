@@ -1128,6 +1128,9 @@
           "opacity": 0,
           "alpha": 0.5,
           "type": "",
+          "animationSpeed": "",
+          "animationIntensity": "",
+          "dimRadius": "",
           "emitLight": false
         }
       },

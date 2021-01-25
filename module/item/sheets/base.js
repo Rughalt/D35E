@@ -85,6 +85,7 @@ export class ItemSheetPF extends ItemSheet {
         data.isSpell = this.item.type === "spell";
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
+        data.isAttack = this.item.type === "attack";
         data.isShapechangeBuff = this.item.type === "buff" && this.item.subType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";

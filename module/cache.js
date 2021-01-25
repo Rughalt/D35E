@@ -62,7 +62,7 @@ export const buildCache = async function() {
             }
         }
 
-    for (let packName of ["world.spelllike-abilities","LOTD.spelllike","D35E.spelllike"])
+    for (let packName of ["world.spelllike-abilities","world.spell-like-abilities","LOTD.spelllike","D35E.spelllike"])
         if (game.packs.has(packName)) {
             itemPack = game.packs.get(packName);
             items = [];

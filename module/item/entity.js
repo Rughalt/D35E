@@ -765,12 +765,22 @@ export class ItemPF extends Item {
 
     /* -------------------------------------------- */
 
-    getChatData(htmlOptions) {
+    getChatData(htmlOptions, rollData) {
         const data = duplicate(this.data.data);
         const labels = this.labels;
+        if (!rollData) {
+            rollData = this.actor ? this.actor.getRollData() : {};
+            rollData.item = data;
+            if (this.actor) {
+                let allCombatChanges = []
+                let attackType = this.type;
+                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                })
 
-        const rollData = this.actor ? this.actor.getRollData() : {};
-        rollData.item = data;
+                this._addCombatChangesToRollData(allCombatChanges, rollData);
+            }
+        }
 
         // Get the spell specific info
         let spellbookIndex, spellAbility, ablMod = 0;
@@ -785,6 +795,7 @@ export class ItemPF extends Item {
 
             cl += getProperty(spellbook, "cl.total") || 0;
             cl += data.clOffset || 0;
+            cl += rollData.featClBonus || 0;
 
             sl += data.level;
             sl += data.slOffset || 0;
@@ -794,14 +805,6 @@ export class ItemPF extends Item {
             rollData.ablMod = ablMod;
         }
 
-        if (this.actor) {
-            let allCombatChanges = []
-            let attackType = this.type;
-            this.actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
-                allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
-            })
-            this._addCombatChangesToRollData(allCombatChanges, rollData);
-        }
 
         // Rich text description
         if (this.showUnidentifiedData) {
@@ -1191,6 +1194,11 @@ export class ItemPF extends Item {
                     attackExtraParts.push("@charge");
                     rollModifiers.push(`${game.i18n.localize("D35E.Charge")}`)
                 }
+                if (form.find('[name="ccshot"]').prop("checked")) {
+                    rollData.ccshot = -4;
+                    attackExtraParts.push("@ccshot");
+                    rollModifiers.push(`${game.i18n.localize("D35E.CloseQuartersShot")}`)
+                }
                 if (form.find('[name="flanking"]').prop("checked")) {
                     rollData.flanking = 2;
                     attackExtraParts.push("@flanking");
@@ -1309,7 +1317,7 @@ export class ItemPF extends Item {
                 attackExtraParts.push("@rapidShotPenalty");
             }
 
-            let isHasted = this.actor.items.filter(o => o.type === "buff" && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
+            let isHasted = (this.actor?.items || []).filter(o => o.type === "buff" && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
             if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted) {
                 allAttacks.push({
                     bonus: 0,
@@ -1583,7 +1591,7 @@ export class ItemPF extends Item {
                     extraText += `<div class="flexcol property-group"><label>${game.i18n.localize("D35E.AttackNotes")}</label><div class="flexrow">${innerHTML}</div></div>`;
                 }
 
-                const properties = this.getChatData().properties;
+                const properties = this.getChatData({}, rollData).properties;
                 if (properties.length > 0) props.push({
                     header: game.i18n.localize("D35E.InfoShort"),
                     value: properties
@@ -1955,7 +1963,7 @@ export class ItemPF extends Item {
         // Determine ability multiplier
         if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
-        let naturalAttackCount = this.actor.items.filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
+        let naturalAttackCount = (this.actor?.items || []).filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
         if (rollData.item.attackType === "natural" && primaryAttack && naturalAttackCount === 1) rollData.ablMult = 1.5;
 
         // Create effect string
@@ -2010,7 +2018,7 @@ export class ItemPF extends Item {
         // Determine ability multiplier
         if (rollData.item.ability.damageMult != null) rollData.ablMult = rollData.item.ability.damageMult;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
-        let naturalAttackCount = this.actor.items.filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
+        let naturalAttackCount = (this.actor?.items || []).filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
         if (rollData.item.attackType === "natural" && primaryAttack && naturalAttackCount === 1) rollData.ablMult = 1.5;
 
 
@@ -3133,6 +3141,7 @@ export class ItemPF extends Item {
         data.data.attackBonus = origData.data.attackBonus;
         data.data.critConfirmBonus = origData.data.critConfirmBonus;
         data.data.specialActions = origData.data.specialActions;
+        data.data.attackCountFormula = origData.data.attackCountFormula.replace(/@cl/g, slcl[1]).replace(/@sl/g, slcl[0]);
 
         // Determine aura power
         let auraPower = "faint";

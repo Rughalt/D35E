@@ -19,13 +19,15 @@
     <input type="text" name="data.spellEffect" value="{{data.spellEffect}}" placeholder="{{localize "D35E.SpellEffectExample"}}"/>
   </div>
 </div>
+{{/if}}
+{{#unless isAttack}}
 <div class="form-group">
   <label>{{localize "D35E.SpellAttackCount"}}</label>
   <div class="form-fields">
     <input type="text" name="data.attackCountFormula" value="{{data.attackCountFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
   </div>
 </div>
-{{/if}}
+{{/unless}}
 
 {{!-- Attack Roll Bonus --}}
 {{#if hasAttackRoll }}

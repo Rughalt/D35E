@@ -231,7 +231,7 @@ newFun = newFun.replace(
 				// move into draw or so
 				const source = getProperty(this.texture, "baseTexture.resource.source")
 				if ( source && (source.tagName === "VIDEO") && game.D35E.createdMeasureTemplates.has(this.id) ) {
-					source.loop = false;
+					source.loop = game.settings.get("D35E", "repeatAnimations");
 					source.muted = true;
 					game.video.play(source);
 					game.D35E.createdMeasureTemplates.delete(this.id)

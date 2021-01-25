@@ -6,12 +6,17 @@ export const displayChatActionButtons = function(message, html, data) {
   if (chatCard.length > 0) {
 
     // If the user is the message author or the actor owner, proceed
+
+    const buttons = chatCard.find("button[data-action]:not(.everyone)");
+    buttons.each((a, btn) => {
+      if (game.settings.get("D35E", "allowPlayersApplyActions"))
+        $(btn).addClass('everyone')
+    });
     const actor = game.actors.get(data.message.speaker.actor);
     if (actor && actor.owner) return;
     else if (game.user.isGM || (data.author.id === game.user.id)) return;
 
     // Otherwise make buttons disabled, but show the actions action buttons
-    const buttons = chatCard.find("button[data-action]:not(.everyone)");
     buttons.each((a, btn) => {
       if (!game.settings.get("D35E", "allowPlayersApplyActions"))
         btn.disabled = true

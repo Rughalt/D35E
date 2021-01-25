@@ -824,15 +824,19 @@ export class ActorPF extends Actor {
             let brightLight = 0;
             let alpha = 0.0;
             let color = "black"
+            let animationIntensity = 5
+            let animationSpeed = 5
             let type = ""
             for (let i of this.items.values()) {
                 if (!i.data.data.hasOwnProperty("light")) continue;
                 if (i.data.data.equipped && !i.data.data.melded && i.data.data.light.emitLight) {
-                    dimLight = Math.floor(2 * i.data.data.light.radius);
+                    dimLight = i.data.data.light.dimRadius ? i.data.data.light.dimRadius : Math.floor(2 * i.data.data.light.radius);
                     brightLight = Math.floor(i.data.data.light.radius);
                     color = i.data.data.light.color;
                     type = i.data.data.light.type;
                     alpha = i.data.data.light.alpha;
+                    animationIntensity = i.data.data.light.animationIntensity;
+                    animationSpeed = i.data.data.light.animationSpeed;
                     break;
                 }
             }
@@ -840,26 +844,35 @@ export class ActorPF extends Actor {
                 let tokens = []
                 tokens.push(this.token);
                 tokens.forEach(o => {
-                    if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor)
+                    if (dimLight !== o.data.dimLight ||
+                        brightLight !== o.data.brightLight ||
+                        color !== o.data.lightColor ||
+                        animationIntensity !== o.data.lightAnimation.intensity ||
+                        type !== o.data.lightAnimation.type ||
+                        animationSpeed !== o.data.lightAnimation.speed
+                    )
                         o.update({
                             dimLight: dimLight,
                             brightLight: brightLight,
                             lightColor: color,
                             lightAlpha: alpha,
-                            lightAnimation: { type: type }
+                            lightAnimation: { type: type, intensity: animationIntensity, speed: animationSpeed }
                         }, { stopUpdates: true });
                 });
             }
             if (!this.isToken) {
                 let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
                 tokens.forEach(o => {
-                    if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor)
+                    if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor ||
+                        animationIntensity !== o.data.lightAnimation.intensity ||
+                        type !== o.data.lightAnimation.type ||
+                        animationSpeed !== o.data.lightAnimation.speed)
                         o.update({
                             dimLight: dimLight,
                             brightLight: brightLight,
                             lightColor: color,
                             lightAlpha: alpha,
-                            lightAnimation: { type: type }
+                            lightAnimation: { type: type, intensity: animationIntensity, animationSpeed: animationSpeed }
                         }, { stopUpdates: true });
                 });
                 data[`token.dimLight`] = dimLight;
@@ -5773,6 +5786,7 @@ export class ActorPF extends Actor {
             let myToken = this.getActiveTokens()[0];
             let masterId = this.data.data?.master?.id;
             let master = game.actors.get(masterId);
+            if (!master || !master.getActiveTokens()) return;
             let masterToken = master.getActiveTokens()[0];
             if (!!myToken && !!masterToken) {
                 let distance = Math.floor(canvas.grid.measureDistance(myToken, masterToken) / 5.0) * 5;
