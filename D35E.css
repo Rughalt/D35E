@@ -799,7 +799,7 @@
   position: relative;
 }
 .D35E.sheet.actor .level-class-image.active {
-  background-image: url(/systems/D35E/icons/actions/upgrade.svg);
+  background-image: url("icons/actions/upgrade.svg");
 }
 .D35E.sheet.actor .level-class-image span.level {
   width: 20px;
@@ -832,7 +832,7 @@
   left: 0;
   border-top-left-radius: 3px;
   text-align: center;
-  background-image: url(/systems/D35E/icons/actions/orb-direction.svg);
+  background-image: url("icons/actions/orb-direction.svg");
   background-size: 14px;
   background-position: center;
   background-repeat: no-repeat;
@@ -853,7 +853,7 @@
   right: 0;
   border-top-right-radius: 3px;
   text-align: center;
-  background-image: url(/systems/D35E/icons/actions/growth.svg);
+  background-image: url("icons/actions/growth.svg");
   background-size: 14px;
   background-position: center;
   background-repeat: no-repeat;
@@ -1875,11 +1875,11 @@
 }
 .D35E.sheet.actor .inventory-list .item .item-name:hover .item-image:not(.non-rollable),
 .D35E.sheet.actor .inventory-list .item .item-name-ne:hover .item-image:not(.non-rollable) {
-  background-image: url("/icons/svg/d20-grey.svg") !important;
+  background-image: url("../../icons/svg/d20-grey.svg") !important;
 }
 .D35E.sheet.actor .inventory-list .item .item-name .item-image:hover:not(.non-rollable),
 .D35E.sheet.actor .inventory-list .item .item-name-ne .item-image:hover:not(.non-rollable) {
-  background-image: url("/icons/svg/d20-black.svg") !important;
+  background-image: url("../../icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor .inventory-list .item .class-level-box {
   opacity: 0.7;
@@ -2782,10 +2782,10 @@
   margin: 0;
 }
 .D35E.sheet.item .inventory-list .item .item-name:hover .item-image:not(.non-rollable) {
-  background-image: url("/icons/svg/d20-grey.svg") !important;
+  background-image: url("../../icons/svg/d20-grey.svg") !important;
 }
 .D35E.sheet.item .inventory-list .item .item-name .item-image:hover:not(.non-rollable) {
-  background-image: url("/icons/svg/d20-black.svg") !important;
+  background-image: url("../../icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.item .inventory-list .item input[type="checkbox"] {
   height: 12px;
@@ -3515,7 +3515,7 @@
   height: 22px;
 }
 .D35E.sheet.actor.character .sheet-header .race-container .race.rollable:hover {
-  background-image: url("/icons/svg/d20-black.svg") !important;
+  background-image: url("../../icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(1),
 .D35E.sheet.actor.character .sheet-header .summary li:nth-last-child(2) {
@@ -3596,7 +3596,7 @@
   height: 22px;
 }
 .D35E.sheet.actor.npc .race-container .race .rollable:hover {
-  background-image: url("/icons/svg/d20-black.svg") !important;
+  background-image: url("../../icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor.npc .master-block {
   border-right: 2px groove #eeede0;
@@ -3811,8 +3811,8 @@ input[type=range]:disabled {
 }
 .welcome-screen.window-app {
   border: 8px solid #55493B;
-  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-image: url("icons/ui/dialog-frame.png") 30 round;
+  background: url("icons/ui/sidebar-bg.png");
   border-radius: 0;
 }
 .welcome-screen .window-content {
@@ -3827,7 +3827,7 @@ input[type=range]:disabled {
   z-index: 10;
 }
 .rolled-attack {
-  background: url(/systems/D35E/icons/damage-type/badges/gladius.svg) no-repeat !important;
+  background: url("icons/damage-type/badges/gladius.svg") no-repeat !important;
   border: none !important;
   height: 60px !important;
   line-height: 60px !important;
@@ -3837,7 +3837,7 @@ input[type=range]:disabled {
   font-size: 44px!important;
 }
 .rolled-defense {
-  background: url(/systems/D35E/icons/damage-type/badges/shield.svg) no-repeat !important;
+  background: url("icons/damage-type/badges/shield.svg") no-repeat !important;
   border: none !important;
   height: 60px !important;
   line-height: 60px !important;
@@ -3847,7 +3847,7 @@ input[type=range]:disabled {
   font-size: 44px!important;
 }
 .rolled-fortify-value {
-  background: url(/systems/D35E/icons/damage-type/badges/chest-armor.svg) no-repeat !important;
+  background: url("icons/damage-type/badges/chest-armor.svg") no-repeat !important;
   border: none !important;
   height: 50px !important;
   line-height: 50px !important;
@@ -3857,7 +3857,7 @@ input[type=range]:disabled {
   font-size: 34px!important;
 }
 .rolled-roll {
-  background: url(/systems/D35E/icons/damage-type/badges/rolling-dices.svg) no-repeat !important;
+  background: url("icons/damage-type/badges/rolling-dices.svg") no-repeat !important;
   border: none !important;
   height: 50px !important;
   line-height: 50px !important;
@@ -3867,7 +3867,7 @@ input[type=range]:disabled {
   font-size: 34px!important;
 }
 .rolled-versus {
-  background: url(/systems/D35E/icons/damage-type/badges/shield-impact.svg) no-repeat !important;
+  background: url("icons/damage-type/badges/shield-impact.svg") no-repeat !important;
   border: none !important;
   height: 50px !important;
   line-height: 50px !important;
@@ -3926,7 +3926,7 @@ span.bold {
   position: relative;
 }
 .portrait-bar .portrait .barbox {
-  background-image: url(/systems/D35E/icons/ui/portrait-bar.png);
+  background-image: url("icons/ui/portrait-bar.png");
   background-size: cover;
   width: 240px;
   height: 26px;
@@ -3943,7 +3943,7 @@ span.bold {
   line-height: 22px;
 }
 .portrait-bar .portrait .barbox .damagebar {
-  background-image: url(/systems/D35E/icons/ui/hp-frame.png);
+  background-image: url("icons/ui/hp-frame.png");
   background-size: cover;
   background-position: right;
   position: absolute;
@@ -3961,7 +3961,7 @@ span.bold {
   z-index: -3;
 }
 .portrait-bar .portrait .barbox .damage {
-  background-image: url(/systems/D35E/icons/ui/hp-bar.png);
+  background-image: url("icons/ui/hp-bar.png");
   background-size: cover;
   background-position: right;
   position: absolute;
@@ -4007,7 +4007,7 @@ span.bold {
 .portrait-bar .portrait .overlay {
   width: 100px;
   height: 100px;
-  background-image: url(/systems/D35E/icons/ui/Hero_icon_frame.png);
+  background-image: url("icons/ui/Hero_icon_frame.png");
   background-size: cover;
   position: absolute;
   top: 0px;
@@ -4029,7 +4029,7 @@ span.bold {
   height: 16px;
   width: 16px;
   margin: 0;
-  background-image: url(/systems/D35E/icons/ui/frame-sq-small.png);
+  background-image: url("icons/ui/frame-sq-small.png");
   background-size: cover;
 }
 .portrait-bar .portrait .buffbox.narrow {
@@ -4301,7 +4301,7 @@ tr.introjs-showElement > th {
   flex: 0;
   width: 50px;
   height: 50px;
-  background-image: url(/systems/D35E/icons/ui/onboarding-hero.png);
+  background-image: url("icons/ui/onboarding-hero.png");
   background-size: cover;
   position: absolute;
   left: -5px;
@@ -4327,7 +4327,7 @@ tr.introjs-showElement > th {
   white-space: nowrap;
   cursor: pointer;
   outline: none;
-  background: url(/systems/D35E/icons/ui/long-button.png);
+  background: url("icons/ui/long-button.png");
   background-size: 100% 100%;
   border: none;
   color: white;
@@ -4373,7 +4373,7 @@ tr.introjs-showElement > th {
 .introjs-disabled,
 .introjs-disabled:hover,
 .introjs-disabled:focus {
-  background: url(/systems/D35E/icons/ui/long-button.png);
+  background: url("icons/ui/long-button.png");
   background-size: 100% 100%;
   border: none;
   color: white;
@@ -4794,7 +4794,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .encounter-roller .entity-link {
   border: none;
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: url("icons/ui/parchment-2.png") repeat;
   color: rgba(0, 0, 0, 0.7);
   padding: 8px;
   margin-bottom: 4px;
@@ -4844,7 +4844,7 @@ tr.introjs-showElement > th {
   margin: 2px;
   color: white;
   background: none !important;
-  border-image: url(/systems/D35E/icons/ui/toggle-off.png);
+  border-image: url("icons/ui/toggle-off.png");
   border-image-slice: 20 20 fill;
   border-image-width: 170px;
   cursor: pointer;
@@ -4863,7 +4863,7 @@ tr.introjs-showElement > th {
   margin: 2px;
   color: white;
   background: none !important;
-  border-image: url(/systems/D35E/icons/ui/toggle-on.png);
+  border-image: url("icons/ui/toggle-on.png");
   border-image-slice: 20 20 fill;
   border-image-width: 170px;
   cursor: pointer;
@@ -4872,8 +4872,8 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .dr-setting.window-app {
   border: 8px solid #55493B;
-  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-image: url("icons/ui/dialog-frame.png") 30 round;
+  background: url("icons/ui/sidebar-bg.png");
   border-radius: 0;
 }
 .d35ecustom .dr-setting.window-app .window-content {
@@ -4926,8 +4926,8 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .compendium-browser-window.window-app {
   border: 8px solid #55493B;
-  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-image: url("icons/ui/dialog-frame.png") 30 round;
+  background: url("icons/ui/sidebar-bg.png");
   border-radius: 0;
 }
 .d35ecustom .compendium-browser-window.window-app .window-content {
@@ -4962,7 +4962,7 @@ tr.introjs-showElement > th {
   color: white;
 }
 .d35ecustom #chat-log .chat-message {
-  background: url(/systems/D35E/icons/ui/parchment-tile.png) repeat;
+  background: url("icons/ui/parchment-tile.png") repeat;
   background-size: 288px;
   background-position-y: 40px;
   border: none;
@@ -4978,14 +4978,14 @@ tr.introjs-showElement > th {
   border-right: 1px solid rgba(0, 0, 0, 0.3);
 }
 .d35ecustom #chat-log .chat-message.whisper {
-  background-image: linear-gradient(black, black), url(/systems/D35E/icons/ui/parchment-tile.png);
+  background-image: linear-gradient(black, black), url("icons/ui/parchment-tile.png");
   /* background-size: cover; */
   background-blend-mode: saturation;
 }
 .d35ecustom .window-app.dialog {
   border: 8px solid #55493B;
-  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 30 round;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  border-image: url("icons/ui/dialog-frame.png") 30 round;
+  background: url("icons/ui/sidebar-bg.png");
   border-radius: 0;
 }
 .d35ecustom .window-app.dialog .window-content {
@@ -5007,7 +5007,7 @@ tr.introjs-showElement > th {
   flex: 0 0 522px;
 }
 .d35ecustom #hotbar .macro {
-  background: url(/systems/D35E/icons/ui/skill-frame.png);
+  background: url("icons/ui/skill-frame.png");
   background-size: cover;
   padding: 2px;
   border: none;
@@ -5027,14 +5027,14 @@ tr.introjs-showElement > th {
   position: absolute;
 }
 .d35ecustom #hotbar #hotbar-page-controls {
-  background: url(/systems/D35E/icons/ui/vert-button.png);
+  background: url("icons/ui/vert-button.png");
   background-size: contain;
   border: none;
   flex: 1;
   padding-top: 1px;
 }
 .d35ecustom #hotbar #hotbar-directory-controls {
-  background: url(/systems/D35E/icons/ui/vert-button.png);
+  background: url("icons/ui/vert-button.png");
   background-size: contain;
   border: none;
   flex: 0 0 26px;
@@ -5045,7 +5045,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sidebar-tab .directory-list .directory-item.entity.item::after {
   content: '';
-  background: url(/systems/D35E/icons/ui/skill-frame.png);
+  background: url("icons/ui/skill-frame.png");
   background-size: contain;
   width: 48px;
   height: 48px;
@@ -5054,7 +5054,7 @@ tr.introjs-showElement > th {
   top: 0;
 }
 .d35ecustom button:not(.tah-title-button):not(.tox-tbtn) {
-  background: url(/systems/D35E/icons/ui/long-button.png);
+  background: url("icons/ui/long-button.png");
   background-size: 100% 100%;
   border: none;
   color: white;
@@ -5063,13 +5063,13 @@ tr.introjs-showElement > th {
   filter: grayscale(1);
 }
 .d35ecustom .D35E button:not(.tox-tbtn) {
-  background: url(/systems/D35E/icons/ui/long-button.png);
+  background: url("icons/ui/long-button.png");
   background-size: 100% 100%;
   border: none;
   color: white;
 }
 .d35ecustom .dialog .dialog-buttons button {
-  background: url(/systems/D35E/icons/ui/long-button.png);
+  background: url("icons/ui/long-button.png");
   background-size: 100% 100%;
   border: none;
   color: white;
@@ -5078,7 +5078,7 @@ tr.introjs-showElement > th {
   filter: grayscale(1);
 }
 .d35ecustom .D35E.chat-card .card-buttons button {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/button-texture.png") repeat !important;
   border: 1px solid rgba(0, 0, 0, 0.7) !important;
   color: rgba(255, 255, 255, 0.9) !important;
   border-radius: 2px !important;
@@ -5090,7 +5090,7 @@ tr.introjs-showElement > th {
   padding: 0;
 }
 .d35ecustom .D35E.chat-card .card-buttons button:hover:not(:disabled) {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/button-texture.png") repeat !important;
   text-shadow: none !important;
   box-shadow: none;
 }
@@ -5100,12 +5100,12 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #navigation #nav-toggle {
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/mini-button.png);
+  background: url("icons/ui/mini-button.png");
   background-size: 100% 100%;
 }
 .d35ecustom #navigation #scene-list .scene {
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/name-frame.png);
+  background: url("icons/ui/name-frame.png");
   filter: grayscale(0.4);
   background-size: 100% 100%;
   border: 1px solid rgba(0, 0, 0, 0);
@@ -5118,7 +5118,7 @@ tr.introjs-showElement > th {
 .d35ecustom #navigation #scene-list .scene.gm {
   filter: none;
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/name-frame.png);
+  background: url("icons/ui/name-frame.png");
   background-size: 100% 100%;
   border: 1px solid rgba(0, 0, 0, 0);
 }
@@ -5131,11 +5131,11 @@ tr.introjs-showElement > th {
   border-radius: 0;
   border: none;
   line-height: 27px;
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  background: url("icons/ui/sidebar-bg.png");
   background-size: 100% 100%;
 }
 .d35ecustom:not(.transparent-sidebar) #sidebar {
-  background: url(/systems/D35E/icons/ui/sidebar-bg.png);
+  background: url("icons/ui/sidebar-bg.png");
   background-size: 100% 100%;
 }
 .d35ecustom #sidebar {
@@ -5147,11 +5147,11 @@ tr.introjs-showElement > th {
   line-height: initial;
 }
 .d35ecustom #sidebar #scenes .scene h3 {
-  background: url(/systems/D35E/icons/ui/frame-2-1-3.png);
+  background: url("icons/ui/frame-2-1-3.png");
   background-size: 100% 100%;
 }
 .d35ecustom #sidebar #compendium li.compendium-pack {
-  background: url(/systems/D35E/icons/ui/frame-2-1-3.png);
+  background: url("icons/ui/frame-2-1-3.png");
   background-size: 100% 100%;
   margin: 0px;
   padding: 5px 15px;
@@ -5161,7 +5161,7 @@ tr.introjs-showElement > th {
   right: 10px;
 }
 .d35ecustom #sidebar header:not(.message-header):not(.folder-header):not(.card-header):not(.part-header) {
-  background: url(/systems/D35E/icons/ui/sidebar-top.png);
+  background: url("icons/ui/sidebar-top.png");
   background-position: bottom;
   background-size: cover;
   border-bottom: none !important;
@@ -5175,7 +5175,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #sidebar li.folder::before {
   content: '';
-  background: url(/systems/D35E/icons/ui/icon-folder.png);
+  background: url("icons/ui/icon-folder.png");
   background-size: contain;
   width: 32px;
   height: 32px;
@@ -5185,7 +5185,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #sidebar #journal li.journal::before {
   content: '';
-  background: url(/systems/D35E/icons/ui/icon-journal.png);
+  background: url("icons/ui/icon-journal.png");
   background-size: contain;
   width: 32px;
   height: 32px;
@@ -5203,7 +5203,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #sidebar #sidebar-tabs .item {
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/mini-button-border.png);
+  background: url("icons/ui/mini-button-border.png");
   background-size: 100% 100%;
   line-height: 27px;
   border: none;
@@ -5215,7 +5215,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #sidebar #sidebar-tabs .collapse {
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/mini-button-border.png);
+  background: url("icons/ui/mini-button-border.png");
   background-size: 100% 100%;
   line-height: 27px;
   border: none;
@@ -5226,18 +5226,18 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #controls .scene-control {
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/mini-button.png);
+  background: url("icons/ui/mini-button.png");
   background-size: cover;
   font-size: 20px;
 }
 .d35ecustom #controls .scene-control .control-tool {
-  background: url(/systems/D35E/icons/ui/mini-button.png);
+  background: url("icons/ui/mini-button.png");
   background-size: cover;
   border-radius: 0;
   font-size: 20px;
 }
 .d35ecustom #controls .scene-control .active {
-  background: url(/systems/D35E/icons/ui/mini-button.png);
+  background: url("icons/ui/mini-button.png");
   background-size: cover;
 }
 .d35ecustom ::-webkit-scrollbar-thumb {
@@ -5247,7 +5247,7 @@ tr.introjs-showElement > th {
   border: 1px solid #896f5f;
 }
 .d35ecustom .placeable-hud .control-icon {
-  background: url(/systems/D35E/icons/ui/skill-frame-bg.png);
+  background: url("icons/ui/skill-frame-bg.png");
   background-size: cover;
   border-radius: 0;
   background-color: #191919;
@@ -5257,7 +5257,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet-header-profile::after {
   content: '';
-  background: url(/systems/D35E/icons/ui/large-item-frame-empty.png);
+  background: url("icons/ui/large-item-frame-empty.png");
   background-size: contain;
   width: 100px;
   height: 100px;
@@ -5268,7 +5268,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet-header-profile.red::after {
   content: '';
-  background: url(/systems/D35E/icons/ui/large-item-frame-red.png);
+  background: url("icons/ui/large-item-frame-red.png");
   background-size: contain;
   width: 100px;
   height: 100px;
@@ -5279,7 +5279,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet-header-profile.blue::after {
   content: '';
-  background: url(/systems/D35E/icons/ui/large-item-frame-blue.png);
+  background: url("icons/ui/large-item-frame-blue.png");
   background-size: contain;
   width: 100px;
   height: 100px;
@@ -5290,7 +5290,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet-header-profile.purple::after {
   content: '';
-  background: url(/systems/D35E/icons/ui/large-item-frame-purple.png);
+  background: url("icons/ui/large-item-frame-purple.png");
   background-size: contain;
   width: 100px;
   height: 100px;
@@ -5301,29 +5301,29 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .checkmark {
   border: none;
-  background: url(/systems/D35E/icons/ui/checkbox-unchecked.png);
+  background: url("icons/ui/checkbox-unchecked.png");
   background-size: contain;
   cursor: pointer;
 }
 .d35ecustom input ~ .checkmark {
-  background: url(/systems/D35E/icons/ui/checkbox-unchecked.png);
+  background: url("icons/ui/checkbox-unchecked.png");
   background-size: contain;
 }
 .d35ecustom input:checked ~ .checkmark {
-  background: url(/systems/D35E/icons/ui/checkbox-checked.png);
+  background: url("icons/ui/checkbox-checked.png");
   background-size: contain;
 }
 .d35ecustom .checkmark:after {
   border: none;
 }
 .d35ecustom .blue-button {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/button-texture.png") repeat !important;
   border: 1px solid rgba(0, 0, 0, 0.7) !important;
   color: rgba(255, 255, 255, 0.9) !important;
   border-radius: 2px !important;
 }
 .d35ecustom .blue-button:hover {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/button-texture.png) repeat !important;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%), linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/button-texture.png") repeat !important;
   text-shadow: none !important;
 }
 .d35ecustom .blue-button:disabled {
@@ -5336,11 +5336,11 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet {
   border: 6px solid #55493B;
-  border-image: url(/systems/D35E/icons/ui/dialog-frame.png) 20 round;
+  border-image: url("icons/ui/dialog-frame.png") 20 round;
 }
 .d35ecustom .sheet.window-app .window-header {
   color: white;
-  background: url(/systems/D35E/icons/ui/background-header.png) repeat;
+  background: url("icons/ui/background-header.png") repeat;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   line-height: 30px;
 }
@@ -5354,7 +5354,7 @@ tr.introjs-showElement > th {
   border-top: 2px solid #75514b !important;
 }
 .d35ecustom .sheet.actor.character .window-content {
-  background: url(/systems/D35E/icons/ui/background-window.png) repeat;
+  background: url("icons/ui/background-window.png") repeat;
 }
 .d35ecustom .sheet.actor.character .header-details h1 {
   padding: 0;
@@ -5364,7 +5364,7 @@ tr.introjs-showElement > th {
   margin: 8px 3px;
 }
 .d35ecustom .sheet.actor.npc .window-content {
-  background: url(/systems/D35E/icons/ui/background-window.png) repeat;
+  background: url("icons/ui/background-window.png") repeat;
 }
 .d35ecustom .sheet.actor .level-up-boxes {
   flex: 110px 0;
@@ -5441,7 +5441,7 @@ tr.introjs-showElement > th {
   /* margin: 0 0 4px; */
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/parchment-2.png") repeat;
   color: rgba(0, 0, 0, 0.8);
   border-bottom: rgba(0, 0, 0, 0.2);
 }
@@ -5457,7 +5457,7 @@ tr.introjs-showElement > th {
   margin: 2px -4px;
 }
 .d35ecustom .sheet.actor .primary-body {
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: url("icons/ui/parchment-2.png") repeat;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }
@@ -5565,7 +5565,7 @@ tr.introjs-showElement > th {
   border-bottom: none;
   margin: 0 0 4px;
   padding: 4px;
-  background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/parchment-2.png") repeat;
   border-radius: 2px;
 }
 .d35ecustom .sheet .sheet-header .header-details {
@@ -5624,15 +5624,15 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .sheet.item .window-header {
   color: white;
-  background: url(/systems/D35E/icons/ui/background-header.png) repeat;
+  background: url("icons/ui/background-header.png") repeat;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   line-height: 24px;
 }
 .d35ecustom .sheet.item section.window-content {
-  background: url(/systems/D35E/icons/ui/background-window.png) repeat;
+  background: url("icons/ui/background-window.png") repeat;
 }
 .d35ecustom .sheet.item section.sheet-content {
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: url("icons/ui/parchment-2.png") repeat;
   margin: 0px;
   border-radius: 2px;
   min-height: 420px;
@@ -5646,14 +5646,14 @@ tr.introjs-showElement > th {
 .d35ecustom .sheet.item .original-weapon-box {
   margin-bottom: 4px;
   border-radius: 2px;
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: url("icons/ui/parchment-2.png") repeat;
 }
 .d35ecustom .sheet.item .original-weapon-box .sheet-header-small img {
   border: none;
 }
 .d35ecustom .sheet.item .original-weapon-box .sheet-header-small::after {
   content: '';
-  background: url(/systems/D35E/icons/ui/item-frame.png);
+  background: url("icons/ui/item-frame.png");
   background-size: contain;
   width: 40px;
   height: 40px;
@@ -5666,7 +5666,7 @@ tr.introjs-showElement > th {
   overflow: auto;
 }
 .d35ecustom .sheet.item header {
-  background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: linear-gradient(rgba(255, 255, 255, 0.3) 100%, rgba(255, 255, 255, 0.3) 100%), url("icons/ui/parchment-2.png") repeat;
   padding: 4px;
   border-radius: 2px;
 }
@@ -5678,7 +5678,7 @@ tr.introjs-showElement > th {
   margin: 8px 0;
 }
 .d35ecustom .level-up-data .window-header {
-  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background: url("icons/background/paper.png"), url("ui/parchment.jpg") repeat;
   background-size: auto;
   background-position-y: -70px;
   background-repeat: no-repeat, repeat;
@@ -5686,7 +5686,7 @@ tr.introjs-showElement > th {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 .d35ecustom .level-up-data .header {
-  background: url(/systems/D35E/icons/background/paper.png), url(ui/parchment.jpg) repeat;
+  background: url("icons/background/paper.png"), url("ui/parchment.jpg") repeat;
   background-repeat: no-repeat, repeat;
   background-position-y: bottom;
 }
@@ -5731,10 +5731,10 @@ tr.introjs-showElement > th {
   text-shadow: none !important;
 }
 .d35ecustom .scrolling-header {
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+  background: url("icons/ui/parchment-2.png") repeat !important;
 }
 .d35ecustom .item-add-overlay .item-add-list {
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+  background: url("icons/ui/parchment-2.png") repeat !important;
 }
 .d35ecustom .item-add-overlay .item-add-list .item-search-input {
   padding: 10px 10px 10px 35px;
@@ -5748,14 +5748,14 @@ tr.introjs-showElement > th {
   margin: 4px 0;
 }
 .d35ecustom .item-add-overlay .item-add-list .item-add-close-box {
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat !important;
+  background: url("icons/ui/parchment-2.png") repeat !important;
   color: #2C606D;
 }
 .d35ecustom .npc.monster {
   padding: 0;
   border-radius: 2px;
   border: none !important;
-  background: url(/systems/D35E/icons/ui/parchment-2.png) repeat;
+  background: url("icons/ui/parchment-2.png") repeat;
 }
 .d35ecustom .npc.monster input[type="text"],
 .d35ecustom .npc.monster textarea {
@@ -5822,7 +5822,7 @@ tr.introjs-showElement > th {
 .d35ecustom .compendium-browser header {
   border: 8px solid red;
   /* border-right: none; */
-  border-image: url(/systems/D35E/icons/ui/side-panel.png);
+  border-image: url("icons/ui/side-panel.png");
   padding-right: 0;
   background-size: 100% 100%;
   /* border: 8px solid #55493B; */
@@ -5841,7 +5841,7 @@ tr.introjs-showElement > th {
 .d35ecustom .compendium-browser .directory-container .directory-list .directory-item {
   align-items: center;
   border-bottom: none;
-  background-image: url(/systems/D35E/icons/ui/basic-bar.png);
+  background-image: url("icons/ui/basic-bar.png");
   background-size: 100% 100%;
 }
 .d35ecustom .compendium-browser .directory-container .directory-list .directory-item img {
@@ -5849,7 +5849,7 @@ tr.introjs-showElement > th {
 }
 .d35ecustom #token-action-hud button {
   border-radius: 0;
-  background: url(/systems/D35E/icons/ui/name-frame.png);
+  background: url("icons/ui/name-frame.png");
   background-size: 100% 100%;
   border: 1px solid rgba(0, 0, 0, 0);
   padding: 0 5px;
@@ -5866,7 +5866,7 @@ tr.introjs-showElement > th {
   display: block;
 }
 .onboarding {
-  background: url(/systems/D35E/icons/ui/onboarding.png);
+  background: url("icons/ui/onboarding.png");
   background-size: 100% 100%;
   height: auto !important;
 }
@@ -5888,7 +5888,7 @@ tr.introjs-showElement > th {
   flex: 0;
   width: 150px;
   height: 150px;
-  background-image: url(/systems/D35E/icons/ui/onboarding-hero.png);
+  background-image: url("icons/ui/onboarding-hero.png");
   background-size: cover;
   position: absolute;
   left: -160px;
