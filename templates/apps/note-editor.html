@@ -1,7 +1,9 @@
 <form autocomplete="off" onsubmit="event.preventDefault();">
 
-
-  <textarea name="noteData" placeholder="Notes">{{noteData}}</textarea>
+  <h2 class="block-header">Note Editor</h2>
+  <p>Enter each note in its separate line</p>
+  <textarea name="noteData" placeholder="+2 when fighting Bugs
+-2 when defending against Small Critters" style="height: calc(100% - 88px);">{{noteData}}</textarea>
 
   <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.UpdateItem"}}</button>
 </form>

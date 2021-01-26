@@ -316,10 +316,16 @@ Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
 });
 
 Hooks.on("renderTokenConfig", async (app, html) => {
-  let newHTML = await renderTemplate("systems/D35E/templates/internal/token-config.html", {
+  console.log(app.object.data)
+  let newHTML = await renderTemplate("systems/D35E/templates/internal/token-light-info.html", {
+    object: duplicate(app.object.data.actorLink ? game.actors.get(app.object.data.actorId).data : app.object.data.actorData),
+    globalDisable: game.settings.get("D35E", "globalDisableTokenLight")
+  });
+  html.find('.tab[data-tab="vision"] > *:nth-child(5)').after(newHTML);
+  let newHTML2 = await renderTemplate("systems/D35E/templates/internal/token-config.html", {
     object: duplicate(app.object.data),
   });
-  html.find('.tab[data-tab="vision"] > *:nth-child(2)').after(newHTML);
+  html.find('.tab[data-tab="vision"] > *:nth-child(2)').after(newHTML2);
 });
 
 

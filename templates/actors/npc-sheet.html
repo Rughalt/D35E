@@ -320,6 +320,7 @@
     <a class="item" data-tab="spellbook">{{ localize 'D35E.Spells' }}</a>
     <a class="item" data-tab="biography">{{ localize 'D35E.Biography' }}</a>
     <a class="item" data-tab="notes">{{ localize 'D35E.Notes' }}</a>
+    <a class="item header-button" data-tab="config"><i class="fas fa-cogs"></i></a>
   </nav>
 
   {{!-- NPC Sheet Body --}}
@@ -537,6 +538,11 @@
     <div class="tab actor-notes flexcol" data-group="primary" data-tab="notes">
       {{editor content=data.details.notes.value target="data.details.notes.value" button=true owner=owner
       editable=editable}}
+    </div>
+
+    {{!-- Config Tab --}}
+    <div class="tab actor-notes flexcol" data-group="primary" data-tab="config">
+      {{> "systems/D35E/templates/actors/parts/actor-config.html"}}
     </div>
   </section>
 </form>

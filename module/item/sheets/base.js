@@ -1602,15 +1602,8 @@ export class ItemSheetPF extends ItemSheet {
 
     async importItem(itemData, itemType) {
         if (itemData.type === 'enhancement') {
-            const updateData = {};
-            let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-            const enhancement = duplicate(itemData)
-            if (enhancement._id) enhancement._id = this.item._id + "-" + itemData._id;
-            _enhancements.push(enhancement);
-            this.updateMagicItemName(updateData, _enhancements);
-            this.updateMagicItemProperties(updateData, _enhancements);
-            updateData[`data.enhancements.items`] = _enhancements;
-            await this.item.update(updateData);
+
+            await this.item.addEnhancementFromData(itemData)// update(updateData);
         }
         if (itemData.type === 'spell') {
             this._createEnhancementSpellDialog(itemData)
@@ -1633,150 +1626,21 @@ export class ItemSheetPF extends ItemSheet {
                 potion: {
                     icon: '<i class="fas fa-prescription-bottle"></i>',
                     label: "50 Charges",
-                    callback: () => this.createEnhSpell(itemData, "charges"),
+                    callback: () => this.item.createEnhSpell(itemData, "charges"),
                 },
                 scroll: {
                     icon: '<i class="fas fa-scroll"></i>',
                     label: "Per Day (Command Word)",
-                    callback: () => this.createEnhSpell(itemData, "command"),
+                    callback: () => this.item.createEnhSpell(itemData, "command"),
                 },
                 wand: {
                     icon: '<i class="fas fa-magic"></i>',
                     label: "Per Day (Use)",
-                    callback: () => this.createEnhSpell(itemData, "use"),
+                    callback: () => this.item.createEnhSpell(itemData, "use"),
                 },
             },
             default: "command",
         }).render(true);
-    }
-
-    async createEnhSpell(itemData, type) {
-        const updateData = {};
-        let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-        let enhancement = await ItemPF.toEnhancement(itemData, type);
-        if (enhancement.id) enhancement._id = this.item._id + "-" + enhancement.id;
-        _enhancements.push(enhancement);
-        this.updateMagicItemName(updateData, _enhancements);
-        this.updateMagicItemProperties(updateData, _enhancements);
-        updateData[`data.enhancements.items`] = _enhancements;
-        await this.item.update(updateData);
-    }
-
-    async createEnhBuff(itemData) {
-        const updateData = {};
-        let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-        let enhancement = await ItemPF.toEnhancementBuff(itemData);
-        if (enhancement.id) enhancement._id = this.item._id + "-" + enhancement.id;
-        _enhancements.push(enhancement);
-        this.updateMagicItemName(updateData, _enhancements);
-        this.updateMagicItemProperties(updateData, _enhancements);
-        updateData[`data.enhancements.items`] = _enhancements;
-        await this.item.update(updateData);
-    }
-
-    updateMagicItemName(updateData, _enhancements, force = false) {
-
-        if ((this.item.data.data.enhancements !== undefined && this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
-            if (this.item.data.data.enhancements.automation.updateName || force) {
-                let baseName = this.item.data.data.unidentified.name
-                if (this.item.data.data.unidentified.name === '') {
-                    updateData[`data.unidentified.name`] = this.item.name;
-                    baseName = this.item.name
-                }
-                updateData[`data.identifiedName`] = this.buildName(baseName, _enhancements)
-            }
-        }
-    }
-
-    // This updates not only price, but also physical properties
-    updateMagicItemProperties(updateData, _enhancements, force = false) {
-        if ((this.item.data.data.enhancements !== undefined && this.item.data.data.enhancements.automation !== undefined && this.item.data.data.enhancements.automation !== null) || force) {
-            if (this.item.data.data.enhancements.automation.updateName || force) {
-                let basePrice = this.item.data.data.unidentified.price
-                if (this.item.data.data.unidentified.price === 0) {
-                    updateData[`data.unidentified.price`] = this.item.data.data.price;
-                    basePrice = this.item.data.data.price
-                }
-                updateData[`data.price`] = this.buildPrice(basePrice, _enhancements)
-            }
-        }
-    }
-
-    buildName(name, enhancements) {
-        let prefixes = []
-        let suffixes = []
-        let totalEnchancement = 0;
-        for (const obj of enhancements) {
-            if (obj.data.nameExtension !== undefined && obj.data.nameExtension !== null) {
-                if (obj.data.nameExtension.prefix !== null && obj.data.nameExtension.prefix.trim() !== "") prefixes.push(obj.data.nameExtension.prefix.trim())
-                if (obj.data.nameExtension.suffix !== null && obj.data.nameExtension.suffix.trim() !== "") suffixes.push(obj.data.nameExtension.suffix.trim())
-            }
-
-            if (obj.data.enhancementType === "weapon" && this.item.type === 'weapon')
-                if (!obj.data.enhIsLevel)
-                    totalEnchancement += obj.data.enh
-            if (obj.data.enhancementType === "armor" && this.item.type === 'equipment')
-                if (!obj.data.enhIsLevel)
-                    totalEnchancement += obj.data.enh
-        }
-        let enhSuffix = ''
-        let ofSuffix = ''
-        if (totalEnchancement > 0)
-            enhSuffix = ` +${totalEnchancement}`
-        if (suffixes.length > 0) {
-            ofSuffix = ` of ${suffixes.join(' and ').trim()}`
-        }
-        return `${prefixes.join(' ')} ${name}${ofSuffix}`.trim() + `${enhSuffix}`
-    }
-
-    buildPrice(basePrice, enhancements) {
-        let totalPrice = basePrice;
-        let totalEnchancementIncrease = 0;
-        let totalEnchancement = 0;
-        let maxSingleEnhancementIncrease = 0;
-        let flatPrice = 0;
-        for (const obj of enhancements) {
-            if (obj.data.enhancementType === "weapon" && this.item.type === 'weapon') {
-                totalEnchancementIncrease += obj.data.enhIncrease
-                if (!obj.data.enhIsLevel)
-                    totalEnchancement += obj.data.enh
-                flatPrice += obj.data.price
-                maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease, maxSingleEnhancementIncrease)
-            }
-            if (obj.data.enhancementType === "armor" && this.item.type === 'equipment') {
-                totalEnchancementIncrease += obj.data.enhIncrease
-                if (!obj.data.enhIsLevel)
-                    totalEnchancement += obj.data.enh
-                flatPrice += obj.data.price
-                maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease, maxSingleEnhancementIncrease)
-            }
-            if (obj.data.enhancementType === "misc") {
-                totalEnchancementIncrease += obj.data.enhIncrease
-                flatPrice += obj.data.price
-                maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease, maxSingleEnhancementIncrease)
-            }
-        }
-        let useEpicPricing = false
-        if (maxSingleEnhancementIncrease > 5 || totalEnchancement > 5)
-            useEpicPricing = true
-        // Base price for weapon
-        if (this.item.type === 'weapon') {
-            if (totalEnchancementIncrease > 0)
-                totalPrice += 300
-            if (!useEpicPricing)
-                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 2000 + flatPrice
-            else
-                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 2000 * 10 + 10 * flatPrice
-        } else if (this.item.type === 'equipment') {
-            if (totalEnchancementIncrease > 0)
-                totalPrice += 150
-            if (!useEpicPricing)
-                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 1000 + flatPrice
-            else
-                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 1000 * 10 + 10 * flatPrice
-        }
-
-        return totalPrice;
     }
 
     /**
@@ -1798,8 +1662,8 @@ export class ItemSheetPF extends ItemSheet {
                 return obj._id !== li.dataset.itemId;
             });
 
-            this.updateMagicItemName(updateData, _enhancements);
-            this.updateMagicItemProperties(updateData, _enhancements);
+            this.item.updateMagicItemName(updateData, _enhancements);
+            this.item.updateMagicItemProperties(updateData, _enhancements);
             updateData[`data.enhancements.items`] = _enhancements;
             this.item.update(updateData);
         } else {
@@ -1816,8 +1680,8 @@ export class ItemSheetPF extends ItemSheet {
                         return obj._id !== li.dataset.itemId;
                     });
 
-                    this.updateMagicItemName(updateData, _enhancements);
-                    this.updateMagicItemProperties(updateData, _enhancements);
+                    this.item.updateMagicItemName(updateData, _enhancements);
+                    this.item.updateMagicItemProperties(updateData, _enhancements);
                     updateData[`data.enhancements.items`] = _enhancements;
                     this.item.update(updateData);
                     button.disabled = false;
@@ -1887,33 +1751,15 @@ export class ItemSheetPF extends ItemSheet {
             return obj._id === itemId
         }).forEach(i => {
             i.data.enh = value;
-            this._setEnhItemPrice(i);
+            ItemPF.setEnhItemPrice(i);
         });
         updateData[`data.enhancements.items`] = _enhancements;
-        this.updateMagicItemName(updateData, _enhancements);
-        this.updateMagicItemProperties(updateData, _enhancements);
+        this.item.updateMagicItemName(updateData, _enhancements);
+        this.item.updateMagicItemProperties(updateData, _enhancements);
         await this.item.update(updateData);
     }
 
-    _setEnhItemPrice(item) {
-        {
-            let rollData = {};
-            if (this.actor != null) rollData = this.actor.getRollData();
-            rollData.enhancement = item.data.enh;
-            if (item.data.enhIncreaseFormula !== undefined && item.data.enhIncreaseFormula !== null && item.data.enhIncreaseFormula !== "") {
-                item.data.enhIncrease = new Roll(item.data.enhIncreaseFormula, rollData).roll().total;
-            }
-        }
-        {
-            let rollData = {};
-            if (this.actor != null) rollData = this.actor.getRollData();
-            rollData.enhancement = item.data.enh;
-            rollData.enhIncrease = item.data.enhIncrease;
-            if (item.data.priceFormula !== undefined && item.data.priceFormula !== null && item.data.priceFormula !== "") {
-                item.data.price = new Roll(item.data.priceFormula, rollData).roll().total;
-            }
-        }
-    }
+
 
 
     _onItemEdit(event) {
@@ -1940,8 +1786,8 @@ export class ItemSheetPF extends ItemSheet {
         const updateData = {};
         //console.log("updating name")
         let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
-        this.updateMagicItemName(updateData, _enhancements, true);
-        this.updateMagicItemProperties(updateData, _enhancements, true);
+        this.item.updateMagicItemName(updateData, _enhancements, true);
+        this.item.updateMagicItemProperties(updateData, _enhancements, true);
         await this.item.update(updateData);
     }
 

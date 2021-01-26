@@ -59,6 +59,13 @@
       "entity": "Item"
     },
     {
+      "name": "natural-attacks",
+      "label": "Natural Attacks",
+      "system": "D35E",
+      "path": "./packs/natural-attacks.db",
+      "entity": "Item"
+    },
+    {
       "name": "class-abilities",
       "label": "Class Abilities",
       "system": "D35E",

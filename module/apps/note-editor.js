@@ -11,8 +11,8 @@ export class NoteEditor extends FormApplication {
             classes: ["D35E", "entry"],
             title: "Notes Selector",
             template: "systems/D35E/templates/apps/note-editor.html",
-            width: 320,
-            height: "auto",
+            width: 800,
+            height: 600,
             closeOnSubmit: false,
             submitOnClose: false,
         });

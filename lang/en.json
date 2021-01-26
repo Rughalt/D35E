@@ -1295,6 +1295,12 @@
   "D35E.BuffTarKnowSkills": "Knowledge Skills",
   "D35E.BuffTarProfSkills": "Profession Skills",
 
+  "D35E.LightControlledToken": "Lighting settings on this token are set using items on actor (like torches or magic items). Settings below will be overridden from actor data. To change this, go to Actor settings page.",
+  "D35E.NoTokenOverride": "Do not override Token Image",
+  "D35E.NoTokenOverrideH": "This option disables overriding Token image and size from actor, so you can use animated token images. <span style='color: darkred'>This disables automatic size and image change when using Alter Self and Change buffs!</span> <em style='opacity: 0.7'>This setting will be in effect after next actor update after changing it.</em>",
+  "D35E.NoLightOverride": "Do not override Token Light",
+  "D35E.NoLightOverrideH": "This option disables overriding Token light settings from items. <span style='color: darkred'>This disables functionality of torches and magic items that shed light!</span> <em style='opacity: 0.7'>This setting will be in effect after next actor update after changing it.</em>",
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
@@ -1322,5 +1328,7 @@
   "SETTINGS.D35EPlayersNoDCDetailsN": "Hide DC Details from players",
   "SETTINGS.D35EPlayersNoDCDetailsL": "Hide DC for players on rolls",
   "SETTINGS.D35ERepeatAnimationsN": "Repeat webm Animations",
-  "SETTINGS.D35ERepeatAnimationsL": "By default 3.5e SRD disables .webm repeat. This settings changes that so animated tokens can work better."
+  "SETTINGS.D35ERepeatAnimationsL": "By default 3.5e SRD disables .webm repeat. This settings changes that so animated tokens can work better.",
+  "SETTINGS.D35EDisableTokenLightsN": "Do not override Token Light",
+  "SETTINGS.D35EDisableTokenLightsL": "This option disables overriding Token light settings from items globally. WARNING: This disables functionality of torches and magic items that shed light! This setting will take effect after each actor/token update!"
 }

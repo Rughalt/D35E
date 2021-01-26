@@ -3416,4 +3416,183 @@ export class ItemPF extends Item {
         const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`);
         return spellbook.usePowerPoints;
     }
+
+    /***
+     * Adds item from compendium to this instance as enhancement
+     * @param packName name of compendium that enhancement is imported from
+     * @param packId id of enhancement to add to item
+     * @param enhValue value to set on enhancement
+     * @returns {Promise<void>} awaitable item promise
+     */
+    async addEnhancementFromCompendium(packName, packId, enhValue) {
+        let itemData = {}
+        const pack = game.packs.find(p => p.collection === packName);
+        const packItem = await pack.getEntity(packId);
+        if (packItem != null) {
+            itemData = packItem.data
+            itemData.data.enh = value;
+            ItemPF.setEnhItemPrice(itemData)
+            await this.addEnhancementFromData(itemData)
+        }
+
+    }
+
+    static setEnhItemPrice(item) {
+        {
+            let rollData = {};
+            if (this.actor != null) rollData = this.actor.getRollData();
+            rollData.enhancement = item.data.enh;
+            if (item.data.enhIncreaseFormula !== undefined && item.data.enhIncreaseFormula !== null && item.data.enhIncreaseFormula !== "") {
+                item.data.enhIncrease = new Roll(item.data.enhIncreaseFormula, rollData).roll().total;
+            }
+        }
+        {
+            let rollData = {};
+            if (this.actor != null) rollData = this.actor.getRollData();
+            rollData.enhancement = item.data.enh;
+            rollData.enhIncrease = item.data.enhIncrease;
+            if (item.data.priceFormula !== undefined && item.data.priceFormula !== null && item.data.priceFormula !== "") {
+                item.data.price = new Roll(item.data.priceFormula, rollData).roll().total;
+            }
+        }
+    }
+
+    async addEnhancementFromData(itemData) {
+        const updateData = {};
+        let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
+        const enhancement = duplicate(itemData)
+        if (enhancement._id) enhancement._id = this._id + "-" + itemData._id;
+        _enhancements.push(enhancement);
+        this.updateMagicItemName(updateData, _enhancements);
+        this.updateMagicItemProperties(updateData, _enhancements);
+        updateData[`data.enhancements.items`] = _enhancements;
+        return this.update(updateData)
+    }
+
+    async createEnhSpell(itemData, type) {
+        const updateData = {};
+        let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
+        let enhancement = await ItemPF.toEnhancement(itemData, type);
+        if (enhancement.id) enhancement._id = this._id + "-" + enhancement.id;
+        _enhancements.push(enhancement);
+        this.updateMagicItemName(updateData, _enhancements);
+        this.updateMagicItemProperties(updateData, _enhancements);
+        updateData[`data.enhancements.items`] = _enhancements;
+        await this.update(updateData);
+    }
+
+    async createEnhBuff(itemData) {
+        const updateData = {};
+        let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
+        let enhancement = await ItemPF.toEnhancementBuff(itemData);
+        if (enhancement.id) enhancement._id = this._id + "-" + enhancement.id;
+        _enhancements.push(enhancement);
+        this.updateMagicItemName(updateData, _enhancements);
+        this.updateMagicItemProperties(updateData, _enhancements);
+        updateData[`data.enhancements.items`] = _enhancements;
+        await this.update(updateData);
+    }
+
+    updateMagicItemName(updateData, _enhancements, force = false) {
+        if ((this.data.data.enhancements !== undefined && this.data.data.enhancements.automation !== undefined && this.data.data.enhancements.automation !== null) || force) {
+            if (this.data.data.enhancements.automation.updateName || force) {
+                let baseName = this.data.data.unidentified.name
+                if (this.data.data.unidentified.name === '') {
+                    updateData[`data.unidentified.name`] = this.name;
+                    baseName = this.name
+                }
+                updateData[`data.identifiedName`] = this.buildName(baseName, _enhancements)
+            }
+        }
+    }
+
+    updateMagicItemProperties(updateData, _enhancements, force = false) {
+        if ((this.data.data.enhancements !== undefined && this.data.data.enhancements.automation !== undefined && this.data.data.enhancements.automation !== null) || force) {
+            if (this.data.data.enhancements.automation.updateName || force) {
+                let basePrice = this.data.data.unidentified.price
+                if (this.data.data.unidentified.price === 0) {
+                    updateData[`data.unidentified.price`] = this.data.data.price;
+                    basePrice = this.data.data.price
+                }
+                updateData[`data.price`] = this.buildPrice(basePrice, _enhancements)
+            }
+        }
+    }
+
+    buildName(name, enhancements) {
+        let prefixes = []
+        let suffixes = []
+        let totalEnchancement = 0;
+        for (const obj of enhancements) {
+            if (obj.data.nameExtension !== undefined && obj.data.nameExtension !== null) {
+                if (obj.data.nameExtension.prefix !== null && obj.data.nameExtension.prefix.trim() !== "") prefixes.push(obj.data.nameExtension.prefix.trim())
+                if (obj.data.nameExtension.suffix !== null && obj.data.nameExtension.suffix.trim() !== "") suffixes.push(obj.data.nameExtension.suffix.trim())
+            }
+
+            if (obj.data.enhancementType === "weapon" && this.type === 'weapon')
+                if (!obj.data.enhIsLevel)
+                    totalEnchancement += obj.data.enh
+            if (obj.data.enhancementType === "armor" && this.type === 'equipment')
+                if (!obj.data.enhIsLevel)
+                    totalEnchancement += obj.data.enh
+        }
+        let enhSuffix = ''
+        let ofSuffix = ''
+        if (totalEnchancement > 0)
+            enhSuffix = ` +${totalEnchancement}`
+        if (suffixes.length > 0) {
+            ofSuffix = ` of ${suffixes.join(' and ').trim()}`
+        }
+        return `${prefixes.join(' ')} ${name}${ofSuffix}`.trim() + `${enhSuffix}`
+    }
+
+    buildPrice(basePrice, enhancements) {
+        let totalPrice = basePrice;
+        let totalEnchancementIncrease = 0;
+        let totalEnchancement = 0;
+        let maxSingleEnhancementIncrease = 0;
+        let flatPrice = 0;
+        for (const obj of enhancements) {
+            if (obj.data.enhancementType === "weapon" && this.type === 'weapon') {
+                totalEnchancementIncrease += obj.data.enhIncrease
+                if (!obj.data.enhIsLevel)
+                    totalEnchancement += obj.data.enh
+                flatPrice += obj.data.price
+                maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease, maxSingleEnhancementIncrease)
+            }
+            if (obj.data.enhancementType === "armor" && this.type === 'equipment') {
+                totalEnchancementIncrease += obj.data.enhIncrease
+                if (!obj.data.enhIsLevel)
+                    totalEnchancement += obj.data.enh
+                flatPrice += obj.data.price
+                maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease, maxSingleEnhancementIncrease)
+            }
+            if (obj.data.enhancementType === "misc") {
+                totalEnchancementIncrease += obj.data.enhIncrease
+                flatPrice += obj.data.price
+                maxSingleEnhancementIncrease = Math.max(obj.data.enhIncrease, maxSingleEnhancementIncrease)
+            }
+        }
+        let useEpicPricing = false
+        if (maxSingleEnhancementIncrease > 5 || totalEnchancement > 5)
+            useEpicPricing = true
+        // Base price for weapon
+        if (this.type === 'weapon') {
+            if (totalEnchancementIncrease > 0)
+                totalPrice += 300
+            if (!useEpicPricing)
+                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 2000 + flatPrice
+            else
+                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 2000 * 10 + 10 * flatPrice
+        } else if (this.type === 'equipment') {
+            if (totalEnchancementIncrease > 0)
+                totalPrice += 150
+            if (!useEpicPricing)
+                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 1000 + flatPrice
+            else
+                totalPrice = totalEnchancementIncrease * totalEnchancementIncrease * 1000 * 10 + 10 * flatPrice
+        }
+
+        return totalPrice;
+    }
 }

@@ -1,0 +1,37 @@
+<div class="flexcol">
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.PartyMember' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.isPartyMember" {{checked data.isPartyMember}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <span style="flex: 0">{{ localize 'D35E.PartyMemberH' }}</span>
+    <div class="form-group">
+        <label>{{ localize 'D35E.DisplayNonRTSkills' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.displayNonRTSkills" {{checked data.displayNonRTSkills}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <span style="flex: 0">{{ localize 'D35E.DisplayNonRTSkillsH' }}</span>
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.NoTokenOverride' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.noTokenOverride" {{checked data.noTokenOverride}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <span style="flex: 0">{{{ localize 'D35E.NoTokenOverrideH' }}}</span>
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.NoLightOverride' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.noLightOverride" {{checked data.noLightOverride}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <span style="flex: 0">{{{ localize 'D35E.NoLightOverrideH' }}}</span>
+</div>

@@ -795,7 +795,7 @@ export class ActorPF extends Actor {
 
 
         // Apply changes in Actor size to Token width/height
-        if (!options.skipToken && tokenSizeKey !== 'none' && this.data.type !== "trap")
+        if (!options.skipToken && tokenSizeKey !== 'none' && this.data.type !== "trap" && !this.data.data.noTokenOverride)
         {
             let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
             //console.log(size)
@@ -818,7 +818,7 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
-        if (!options.skipToken && this.data.type !== "trap")
+        if (!options.skipToken && this.data.type !== "trap" && !this.data.data.noLightOverride && !game.settings.get("D35E", "globalDisableTokenLight"))
         {
             let dimLight = 0;
             let brightLight = 0;
@@ -1690,7 +1690,7 @@ export class ActorPF extends Actor {
             tokenImg = data.token.img;
             linkData(srcData1, updateData, "data.tokenImg", tokenImg);
         }
-        if (!options.skipToken) {
+        if (!options.skipToken && !this.data.data.noTokenOverride) {
             if (shapechangeImg !== "icons/svg/mystery-man.svg") {
                 if (this.isToken) {
                     let tokens = []

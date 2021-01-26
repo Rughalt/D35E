@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "color": "^3.1.2",
+    "cypress": "^6.3.0",
     "fs-extra": "^9.0.0",
     "gulp": "^4.0.2",
     "gulp-less": "^4.0.1",
@@ -18,4 +19,3 @@
     "webpack-cli": "^3.3.11"
   }
 }
-
