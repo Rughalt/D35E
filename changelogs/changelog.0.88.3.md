@@ -1,0 +1,18 @@
+### Bug Fixes and Changes
+- [295](https://github.com/Rughalt/D35E/issues/295) - Bag of holding not behaving as container closed
+- [292](https://github.com/Rughalt/D35E/issues/292) - Bigger text boxes for notes closed
+- [291](https://github.com/Rughalt/D35E/issues/291) - Wands missing secondary attacks closed
+- [288](https://github.com/Rughalt/D35E/issues/288) - Calculation of non-class skill rank is wrong closed
+- [287](https://github.com/Rughalt/D35E/issues/287) - Containers Hide Contents When Inventory Collapsed closed
+- [285](https://github.com/Rughalt/D35E/issues/285) - Resource Update Loop does not correctly check value after update. closed
+- [284](https://github.com/Rughalt/D35E/issues/284) - Toggle ability for players to see expanded damage chat cards closed
+- [283](https://github.com/Rughalt/D35E/issues/283) - Same dice roll used for multiple attacks when they should be new rolls for each closed
+- [277](https://github.com/Rughalt/D35E/issues/277) - Hide from players the DC level closed
+- [276](https://github.com/Rughalt/D35E/issues/276) - Attack dialog add -4 for firing into combat without precise shot (or add in a generic -4) closed
+- [272](https://github.com/Rughalt/D35E/issues/272) - Closing a spell folder stops spells from appearing in spell like abilities closed
+- [271](https://github.com/Rughalt/D35E/issues/271) - No shaken condition present closed
+- [270](https://github.com/Rughalt/D35E/issues/270) - Damage Reduction not clear on what is full immunity  closed
+- [268](https://github.com/Rughalt/D35E/issues/268) - Support for animated tokens closed
+- [267](https://github.com/Rughalt/D35E/issues/267) - Self Apply Button and self special action button closed
+- [266](https://github.com/Rughalt/D35E/issues/266) - Add an item that has all lighting effects and animations closed
+- [251](https://github.com/Rughalt/D35E/issues/251) - Haste not applying extra attack on full attack closed 
