@@ -937,10 +937,33 @@ D35E.conditions = {
   "fear": "D35E.CondFear",
   "sickened": "D35E.CondSickened",
   "stunned": "D35E.CondStunned",
-  "shaken": "D35E.CondSShaken",
+  "shaken": "D35E.CondShaken",
   "polymorphed": "D35E.CondPolymorphed",
   "wildshaped": "D35E.CondWildshaped",
 };
+
+D35E.conditionTextures = {
+  bleed: "systems/D35E/icons/conditions/bleeding.png",
+  blind: "systems/D35E/icons/conditions/blind.png",
+  confused: "systems/pf1/icons/conditions/confused.png",
+  dazzled: "systems/D35E/icons/conditions/dazzled.png",
+  deaf: "systems/D35E/icons/conditions/deaf.png",
+  entangled: "systems/pf1/icons/conditions/entangled.png",
+  fatigued: "systems/pf1/icons/conditions/fatigued.png",
+  exhausted: "systems/D35E/icons/conditions/exhausted.png",
+  grappled: "systems/pf1/icons/conditions/grappled.png",
+  helpless: "systems/pf1/icons/conditions/helpless.png",
+  incorporeal: "systems/pf1/icons/conditions/incorporeal.png",
+  invisible: "systems/pf1/icons/conditions/invisible.png",
+  paralyzed: "systems/pf1/icons/conditions/paralyzed.png",
+  pinned: "systems/pf1/icons/conditions/pinned.png",
+  prone: "systems/pf1/icons/conditions/prone.png",
+  fear: "systems/pf1/icons/conditions/fear.png",
+  sickened: "systems/pf1/icons/conditions/sickened.png",
+  shaken: "systems/pf1/icons/conditions/staggered.png",
+  stunned: "systems/pf1/icons/conditions/stunned.png",
+};
+
 
 D35E.buffTypes = {
   "temp": "D35E.Temporary",

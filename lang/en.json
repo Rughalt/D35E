@@ -1301,6 +1301,8 @@
   "D35E.NoLightOverride": "Do not override Token Light",
   "D35E.NoLightOverrideH": "This option disables overriding Token light settings from items. <span style='color: darkred'>This disables functionality of torches and magic items that shed light!</span> <em style='opacity: 0.7'>This setting will be in effect after next actor update after changing it.</em>",
 
+  "D35E.CondShaken": "Shaken",
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
@@ -1330,5 +1332,10 @@
   "SETTINGS.D35ERepeatAnimationsN": "Repeat webm Animations",
   "SETTINGS.D35ERepeatAnimationsL": "By default 3.5e SRD disables .webm repeat. This settings changes that so animated tokens can work better.",
   "SETTINGS.D35EDisableTokenLightsN": "Do not override Token Light",
-  "SETTINGS.D35EDisableTokenLightsL": "This option disables overriding Token light settings from items globally. WARNING: This disables functionality of torches and magic items that shed light! This setting will take effect after each actor/token update!"
+  "SETTINGS.D35EDisableTokenLightsL": "This option disables overriding Token light settings from items globally. WARNING: This disables functionality of torches and magic items that shed light! This setting will take effect after each actor/token update!",
+  "SETTINGS.D35EHideTokenConditionsN": "Hide Token Buffs",
+  "SETTINGS.D35EHideTokenConditionsH": "Whether buffs should hide their icons from token status effects",
+  "SETTINGS.D35ECoreEffectsN": "Default Token Conditions",
+  "SETTINGS.D35ECoreEffectsH": "Displays only 3.5e conditions on tokens (unchecked) or core icons as well (checked)"
+
 }

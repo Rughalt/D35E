@@ -3554,10 +3554,16 @@ export class ActorPF extends Actor {
         let classHP = new Map()
         // Iterate over all levl ups
         if (data1.details.levelUpData && data1.details.levelUpProgression) {
-            data.forEach(lud => {
+            levelUpData.forEach(lud => {
                 if (lud.classId === null || lud.classId === "") return;
-                let _class = this.actor.items.find(cls => cls._id === lud.classId)
-                if (_class === undefined) return;
+                let _class = this.items.find(cls => cls._id === lud.classId)
+                if (_class == null) {
+                    lud.classId = null;
+                    lud.classImage = null;
+                    lud.skills = {};
+                    lud.class = null;
+                    return;
+                }
                 if (!classLevels.has(_class._id))
                     classLevels.set(_class._id,0)
                 classLevels.set(_class._id,classLevels.get(_class._id)+1)
@@ -3573,10 +3579,10 @@ export class ActorPF extends Actor {
                     }
                 })
             })
-            Object.keys(data[0].skills).forEach(s => {
+            Object.keys(levelUpData[0]?.skills || {}).forEach(s => {
                 updateData[`data.skills.${s}.rank`] = Math.floor(updateData[`data.skills.${s}.rank`] || 0);
-                if (data[0].skills[s].subskills) {
-                    Object.keys(data[0].skills[s].subskills).forEach(sb => {
+                if (levelUpData[0].skills[s].subskills) {
+                    Object.keys(levelUpData[0].skills[s].subskills).forEach(sb => {
                         updateData[`data.skills.${s}.subSkills.${sb}.rank`] = Math.floor(updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
                     })
                 }
