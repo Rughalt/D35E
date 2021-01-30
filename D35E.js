@@ -316,6 +316,9 @@ Hooks.on("updateToken", (scene, token, data, options, user) => {
       actor.getItemResourcesUpdate(i, itemResourcesData);
     }
     actor.refreshWithData(itemResourcesData, options)
+  } else if (actor != null && user === game.userId) {
+
+    actor.toggleConditionStatusIcons();
   }
 });
 
@@ -339,7 +342,7 @@ Hooks.on("createToken", async (scene, token, options, userId) => {
   actor.toggleConditionStatusIcons();
 
   // Update changes and generate sourceDetails to ensure valid actor data
-  if (actor != null) updateChanges.call(actor);
+  if (actor != null) actor.refresh();
 });
 
 
