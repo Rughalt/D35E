@@ -8,7 +8,7 @@
 import { D35E } from "./module/config.js";
 import { registerSystemSettings } from "./module/settings.js";
 import { preloadHandlebarsTemplates } from "./module/templates.js";
-import { measureDistances, measureDistance } from "./module/canvas.js";
+import {measureDistances, measureDistance, getConditions} from "./module/canvas.js";
 import { ActorPF } from "./module/actor/entity.js";
 import { ActorSheetPFCharacter } from "./module/actor/sheets/character.js";
 import { ActorSheetPFNPC } from "./module/actor/sheets/npc.js";
@@ -88,8 +88,12 @@ Hooks.once("init", async function() {
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.entityClass = ChatMessagePF;
 
+
+
   // Register System Settings
   registerSystemSettings();
+
+  CONFIG.statusEffects = getConditions();
 
   D35ELayer.registerLayer();
   // Preload Handlebars Templates
@@ -299,12 +303,12 @@ Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
   if (item == null) return;
   actor.updateItemResources(item);
 });
-Hooks.on("updateToken", (scene, sceneId, data, options, user) => {
+Hooks.on("updateToken", (scene, token, data, options, user) => {
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  const actor = game.actors.tokens[data._id];
+  const actor = game.actors.tokens[data._id] ?? game.actors.get(token.actorId);
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
     let itemResourcesData = {}
@@ -327,6 +331,17 @@ Hooks.on("renderTokenConfig", async (app, html) => {
   });
   html.find('.tab[data-tab="vision"] > *:nth-child(2)').after(newHTML2);
 });
+
+Hooks.on("createToken", async (scene, token, options, userId) => {
+  if (userId !== game.user._id) return;
+
+  const actor = game.actors.tokens[token._id] ?? game.actors.get(token.actorId);
+  actor.toggleConditionStatusIcons();
+
+  // Update changes and generate sourceDetails to ensure valid actor data
+  if (actor != null) updateChanges.call(actor);
+});
+
 
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {

@@ -70,7 +70,7 @@
                             <div class="item-detail item-active">
                                 {{#if item.canToggleShapechange}}
                                 <label>
-                                <input type="checkbox" class="stylized" {{checked item.data.active}} data-dtype="Boolean"/>
+                                <input type="checkbox" class="stylized" {{checked item.data.active}}/>
                                 <span class="checkmark"></span>
                                 </label>
                                 {{/if}}
@@ -157,7 +157,7 @@
                     </div>
 
                     <div class="item-detail item-active">
-                        <input type="checkbox" {{checked item.data.active}} data-dtype="Boolean"/>
+                        <input type="checkbox" {{checked item.data.active}}/>
                     </div>
 
                     {{#if ../../owner}}

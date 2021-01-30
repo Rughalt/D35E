@@ -3258,6 +3258,9 @@ export class ActorPF extends Actor {
             await super.update(diff,updateOptions);
 
         }
+
+        await this.toggleConditionStatusIcons();
+
         this._updateMinions(options);
         //return false;
         return this;
@@ -6003,4 +6006,51 @@ export class ActorPF extends Actor {
             await createCustomChatMessage("systems/D35E/templates/chat/fastheal-roll.html", templateData, chatData, {});
         }
     }
+
+    async toggleConditionStatusIcons() {
+        const isLinkedToken = getProperty(this.data, "token.actorLink");
+        const tokens = isLinkedToken ? this.getActiveTokens() : [this.token].filter((o) => o != null);
+        const buffTextures = this._calcBuffTextures();
+
+        let promises = [];
+        const fx = [...this.effects];
+        let existingIds = new Set()
+        for (let [id, obj] of Object.entries(buffTextures)) {
+            if (obj.active) {
+                await obj.item.toEffect();
+                existingIds.add(id)
+            }
+            else await fx.find((f) => f.data.origin === id)?.delete();
+        }
+        for (let _fx of fx) {
+            if (_fx?.data?.origin && !existingIds.has(_fx?.data?.origin)) {
+                await _fx.delete()
+            }
+        }
+
+        for (let token of tokens) {
+            CONFIG.statusEffects.forEach((con) => {
+                const idx = fx.findIndex((e) => e.getFlag("core", "statusId") === con.id);
+                if (CONFIG.D35E.conditions[con.id] && (idx !== -1) != this.data.data.attributes.conditions[con.id])
+                    promises.push(token.toggleEffect(con, { midUpdate: true }));
+            });
+        }
+        return Promise.all(promises);
+    }
+
+    // @Object { id: { title: String, type: buff/string, img: imgPath, active: true/false }, ... }
+    _calcBuffTextures() {
+        const buffs = this.items.filter((o) => o.type === "buff");
+        return buffs.reduce((acc, cur) => {
+            const id = cur.uuid;
+            if (cur.data.data.hideFromToken) return acc;
+
+            if (!acc[id]) acc[id] = { id: cur.id, label: cur.name, icon: cur.data.img, item: cur };
+            if (cur.data.data.active) acc[id].active = true;
+            else acc[id].active = false;
+            return acc;
+        }, {});
+    }
+
+
 }

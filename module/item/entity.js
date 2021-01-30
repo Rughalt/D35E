@@ -3598,4 +3598,20 @@ export class ItemPF extends Item {
 
         return totalPrice;
     }
+
+    async toEffect() {
+        if (!this.actor || this.type !== "buff") return;
+
+        const existing = this.actor.effects.find((e) => e.data.origin == this.uuid);
+        if (existing) return existing;
+
+        // Add a new effect
+        const createData = { label: this.name, icon: this.img, origin: this.uuid, disabled: !this.data.data.active };
+        createData["flags.D35E.show"] = !this.data.data.hideFromToken && !game.settings.get("D35E", "hideTokenConditions");
+        const effect = ActiveEffect.create(createData, this.actor);
+        await effect.create();
+
+        return effect;
+    }
+
 }

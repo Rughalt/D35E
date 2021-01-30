@@ -113,3 +113,137 @@ TokenHUD.prototype._onAttributeUpdate = function(event) {
   // Otherwise update the Token
   else this.object.update({[input.name]: value});
 };
+
+/**
+ * Condition/ status effects section
+ */
+export const getConditions = function () {
+  var core = CONFIG.statusEffects,
+      sys = Object.keys(CONFIG.D35E.conditions).filter(c => c !== 'wildshaped' && c !== 'polymorphed').map((c) => {
+        return { id: c, label: CONFIG.D35E.conditions[c], icon: CONFIG.D35E.conditionTextures[c] };
+      });
+  if (game.settings.get("D35E", "coreEffects")) sys.push(...core);
+  else sys = [core[0]].concat(sys);
+  return sys;
+};
+
+const _TokenHUD_getStatusEffectChoices = TokenHUD.prototype._getStatusEffectChoices;
+TokenHUD.prototype._getStatusEffectChoices = function () {
+  let core = _TokenHUD_getStatusEffectChoices.call(this),
+      buffs = {};
+  Object.entries(this.object.actor._calcBuffTextures()).forEach((obj) => {
+    let [idx, buff] = obj;
+    if (buffs[buff.icon] && buff.label) buffs[buff.icon].title = buff.label;
+    else {
+      buffs[buff.icon] = {
+        id: buff.id,
+        title: buff.label,
+        src: idx,
+        isActive: buff.active,
+        isOverlay: false,
+        cssClass: buff.active ? "active" : "",
+      };
+    }
+  });
+  return Object.assign({}, core, buffs);
+};
+
+//const TokenHUD__onToggleEffect = TokenHUD.prototype._onToggleEffect;
+TokenHUD.prototype._onToggleEffect = function (event, { overlay = false } = {}) {
+  event.preventDefault();
+  let img = event.currentTarget;
+  const effect =
+      img.dataset.statusId && this.object.actor
+          ? CONFIG.statusEffects.find((e) => e.id === img.dataset.statusId) ?? img.dataset.statusId
+          : img.getAttribute("src");
+  return this.object.toggleEffect(effect, { overlay });
+};
+
+const Token_toggleEffect = Token.prototype.toggleEffect;
+Token.prototype.toggleEffect = async function (effect, { active, overlay = false, midUpdate } = {}) {
+  let call;
+  if (typeof effect == "string") {
+    let buffItem = this.actor.items.get(effect);
+    if (buffItem) {
+      call = await buffItem.update({ "data.active": !buffItem.data.data.active });
+    } else call = Token_toggleEffect.call(this, effect, { active, overlay });
+  } else if (!midUpdate && Object.keys(CONFIG.D35E.conditions).includes(effect.id)) {
+    const updates = {};
+    updates["data.attributes.conditions." + effect.id] = !this.actor.data.data.attributes.conditions[effect.id];
+    call = this.actor.update(updates);
+  } else {
+    call = Token_toggleEffect.call(this, effect, { active, overlay });
+  }
+  if (this.hasActiveHUD) canvas.tokens.hud.refreshStatusIcons();
+  return call;
+};
+
+TokenHUD.prototype._onAttributeUpdate = function (event) {
+  event.preventDefault();
+
+  // Determine new bar value
+  let input = event.currentTarget,
+      strVal = input.value.trim(),
+      operator,
+      value,
+      isDelta = false;
+  if (strVal.match(/(=?[+-]-?)([0-9.]+)/)) {
+    operator = RegExp.$1;
+    value = parseFloat(RegExp.$2);
+    isDelta = ["-", "+"].includes(operator);
+    operator = operator?.replace("=", "");
+  } else if (strVal.match(/=?([0-9.]+)/)) {
+    value = parseFloat(RegExp.$1);
+  } else return;
+
+  let bar = input.dataset.bar;
+
+  // For attribute bar values, update the associated Actor
+  // TODO: Switch to Actor#modifyTokenAttribute
+  if (bar) {
+    const actor = this.object?.actor;
+    if (!actor) return;
+    const data = this.object.getBarAttribute(bar);
+    const current = getProperty(actor.data.data, data.attribute);
+    const updateData = {};
+
+    // Set to specified negative value
+    if (operator === "--" || (!isDelta && operator == "-")) {
+      updateData[`data.${data.attribute}.value`] = -value;
+    }
+
+    // Add relative value
+    else {
+      let dt = value;
+      if (data.attribute === "attributes.hp" && actor.data.data.attributes.hp.temp > 0 && operator === "-") {
+        dt = Math.min(0, actor.data.data.attributes.hp.temp - value);
+        updateData["data.attributes.hp.temp"] = Math.max(0, actor.data.data.attributes.hp.temp - value);
+        value = actor.data.data.attributes.hp.value + dt;
+      } else if (operator === "-") {
+        if (data.attribute === "attributes.hp") value = Math.min(current.value - dt, current.max);
+        else value = Math.clamped(current.min || 0, current.value - dt, current.max);
+      } else if (operator === "+") {
+        if (data.attribute === "attributes.hp") value = Math.min(current.value + dt, current.max);
+        else value = Math.clamped(current.min || 0, current.value + dt, current.max);
+      }
+      updateData[`data.${data.attribute}.value`] = value;
+    }
+
+    actor.update(updateData);
+  }
+
+  // Otherwise update the Token
+  else {
+    if (operator === "--" || (!isDelta && operator == "-")) value = -value;
+    else if (isDelta) {
+      const current = getProperty(this.object.data, input.name);
+      if (operator === "-") value = current - value;
+      else if (operator === "+") value = current + value;
+    }
+    this.object.update({ [input.name]: value });
+  }
+
+  // Clear the HUD
+  this.clear();
+};
+

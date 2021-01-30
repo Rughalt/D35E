@@ -994,3 +994,19 @@ const _migrateWeaponProperties = function(item, updateData) {
     updateData["data.properties.-=value"] = null;
   }
 };
+
+const migrateTokenStatuses = function (token, updateData) {
+  if (!token.actor) return;
+
+  if (token.data.effects.length) {
+    var effects = token.data.effects;
+    effects = effects.filter((e) => {
+      const [key, tex] = Object.entries(CONFIG.D35E.conditionTextures).find((t) => e === t[1]) ?? [];
+      if (key && token.actor.data.data.attributes.conditions[key]) return false;
+      if (token.actor.items.find((i) => i.type === "buff" && i.data.data.active && i.img === e)) return false;
+      return true;
+    });
+  }
+  setProperty(updateData, "effects", effects);
+};
+

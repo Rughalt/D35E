@@ -1005,6 +1005,7 @@ export class ActorSheetPF extends ActorSheet {
 
   async _setItemActive(event) {
     event.preventDefault();
+    event.stopPropagation()
     this.showWorkingOverlay();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
@@ -1018,7 +1019,6 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     this.hideWorkingOverlay();
-
   }
 
   hideWorkingOverlay() {
@@ -1768,6 +1768,14 @@ export class ActorSheetPF extends ActorSheet {
       buffSections[s].items.push(b);
       data.allbuffs.push(b);
     }
+
+    data.otherItems = {}
+    data.items.filter(obj => { return obj.type === "other"; }).forEach(d => {
+      if (!data.otherItems[d.data.group]) {
+        data.otherItems[d.data.group] = []
+      }
+      data.otherItems[d.data.group].push(d)
+    })
 
 
     // Attacks

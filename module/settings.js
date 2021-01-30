@@ -368,6 +368,46 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  /**
+   * Hide token conditions
+   */
+  game.settings.register("D35E", "hideTokenConditions", {
+    name: "SETTINGS.D35EHideTokenConditionsN",
+    hint: "SETTINGS.D35EHideTokenConditionsH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      let promises = [];
+      const actors = [
+        ...Array.from(game.actors.entities.filter((o) => getProperty(o.data, "token.actorLink"))),
+        ...Object.values(game.actors.tokens),
+      ];
+      for (let actor of actors) {
+        promises.push(actor.toggleConditionStatusIcons());
+      }
+      return Promise.all(promises);
+    },
+  });
+
+  /**
+   * Display default token conditions alongside system ones
+   */
+  game.settings.register("D35E", "coreEffects", {
+    name: "SETTINGS.D35ECoreEffectsN",
+    hint: "SETTINGS.D35ECoreEffectsH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      window.location.reload();
+    },
+  });
+
+
+
   // game.settings.register("D35E", 'displayItemsInContainers', {
   //   name: `SETTINGS.D35EDisplayItemsInContainersN`,
   //   hint: 'SETTINGS.D35EDisplayItemsInContainersH',
