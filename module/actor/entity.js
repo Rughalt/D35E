@@ -5533,7 +5533,7 @@ export class ActorPF extends Actor {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
                     let updateObject = {}
-                    updateObject[`${field}`] = value
+                    updateObject[`${field}`] = new Roll(cleanParam(value), this.getRollData()).roll().total
                     await this.update(updateObject)
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
