@@ -83,10 +83,10 @@
     </div>
     {{#each defenseFeatsOptional as |feat|}}
     <div class="form-group">
-        <label>{{feat.data.name}}</label>
+        <label style="{{#unless feat.hasUseableChange}}opacity: 0.8{{/unless}}">{{feat.data.name}} {{#if feat.isCharged}}({{feat.charges}} charges){{/if}}</label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-            <input type="checkbox" class="stylized" data-feat-optional="{{feat.id}}" name="optional-{{feat.id}}"
-                   data-type="optional"/>
+            <input type="checkbox" {{#unless feat.hasUseableChange}}disabled name="optional-{{feat.id}}"{{/unless}} class="stylized" data-feat-optional="{{feat.id}}"
+            data-type="optional"/>
             <span class="checkmark"></span>
         </label>
     </div>

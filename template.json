@@ -5,6 +5,8 @@
       "common": {
         "shapechangeImg": "icons/svg/mystery-man.svg",
         "tokenImg": "icons/svg/mystery-man.svg",
+        "companionUuid": "",
+        "companionAutosync": false,
         "abilities": {
           "str": {
             "total": 10,
@@ -154,7 +156,9 @@
           "attack": {
             "general": 0,
             "melee": 0,
-            "ranged": 0
+            "ranged": 0,
+            "sunder": 0,
+            "bullrush": 0
           },
           "damage": {
             "general": 0,
@@ -1218,6 +1222,11 @@
           "allowMultipleUses": false,
           "chargesPerUse": 1,
           "maxFormula": ""
+        },
+        "linkedChargeItem": {
+          "id": null,
+          "img": null,
+          "name": null
         }
       },
       "action": {

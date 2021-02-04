@@ -211,7 +211,7 @@
     {{#unless ../spellbook.isSpellLike }}
     <li class="flexrow inventory-header spellbook-header scrolling-header">
         <div class="item-name inventory-toggleable-header flexrow">
-            <h3><i class="fas fa-folder-open toggle-open"></i><i class="fas fa-folder toggle-close" style="display: none"></i>{{section.label}}</h3>
+            <h3><i class="fas fa-folder-open toggle-open"></i><i class="fas fa-folder toggle-close" style="display: none"></i>{{section.label}} {{#if section.maxKnown}}<span  style="{{#if section.knownOverLimit}}color: darkred{{/if}}">({{section.known}}/{{section.maxKnown}} known){{/if}}</span></h3>
         </div>
 
         <div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>

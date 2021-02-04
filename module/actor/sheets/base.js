@@ -93,6 +93,8 @@ export class ActorSheetPF extends ActorSheet {
       i.data.containerId = getProperty(i.data, "data.containerId");
       i.data.hasDamage = i.hasDamage;
       i.data.hasEffect = i.hasEffect;
+      i.data.charges = i.charges;
+      i.data.maxCharges = i.maxCharges;
       i.data.container = getProperty(i.data, "data.container");
       i.data.hasAction = i.hasAction || i.isCharged;
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
@@ -341,6 +343,7 @@ export class ActorSheetPF extends ActorSheet {
             && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max != null) ? data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max : [],
         uses: book.spells === undefined ? 0 : book?.spells["spell"+a]?.value || 0,
         baseSlots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.base || 0,
+        maxKnown: book.spells === undefined ? 0 : book?.spells["spell"+a]?.maxKnown || 0,
         slots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
         specialSlotPrepared: false,
@@ -369,6 +372,8 @@ export class ActorSheetPF extends ActorSheet {
 
     for (let a = 0; a < 10; a++) {
       spellbook[a].slotsLeft = spellbook[a].spells.map(item => (item.data.specialPrepared ? 0 : item.data.preparation.maxAmount) || 0).reduce((prev, next) => prev + next, 0) < spellbook[a].slots
+      spellbook[a].known = spellbook[a].spells.length
+      spellbook[a].knownOverLimit = spellbook[a].maxKnown > 0 && spellbook[a].known > spellbook[a].maxKnown;
     }
 
 
@@ -738,7 +743,26 @@ export class ActorSheetPF extends ActorSheet {
 
 
     })
-
+    {
+      $(`.sync-to-companion`).unbind( "mouseup" );
+      $(`.sync-to-companion`).mouseup(ev => {
+        this.actor.syncToCompendium()
+      });
+      $(`.backup-to-companion`).unbind( "mouseup" );
+      $(`.backup-to-companion`).mouseup(async ev => {
+        $.ajax({
+          url: 'http://localhost:5000/api/backup/da26937f-7ede-4c91-8087-e2c39c18e475',
+          type: 'PUT',
+          crossDomain: true,
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(await this.actor.exportToJSON()),
+          success: function(data) {
+            //play with data
+          }
+        });
+      });
+    }
     {
       let parsedDrawerState = JSON.parse(localStorage.getItem(`D35E-drawer-state-${this.actor.id}`) || 'null');
       let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
@@ -2223,6 +2247,8 @@ export class ActorSheetPF extends ActorSheet {
         $(this).toggle($(this).text().toLowerCase().indexOf(filter) > -1)
       });
     }
+
+
   }
 
   _closeInlineData(ev) {

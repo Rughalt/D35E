@@ -1258,10 +1258,10 @@ export class ActorPF extends Actor {
     }
 
     isChangeAllowed(item, change, fullConditions) {
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ac" && change[2] === "natural") return false;
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ability" && change[2] === "str") return false;
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ability" && change[2] === "dex") return false;
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "speed") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "ac" && change[2] === "natural") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "ability" && change[2] === "str") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "ability" && change[2] === "dex") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "speed") return false;
         return true;
     }
 
@@ -1654,7 +1654,7 @@ export class ActorPF extends Actor {
         }
         // Add current hit points
 
-        if (fullConditions.wildshaped || fullConditions.polymorphed) {
+        if (fullConditions.wildshaped || fullConditions.polymorph) {
             linkData(srcData1, updateData, "data.attributes.hp.value", Math.min(prevValues.mhp, srcData1.data.attributes.hp.value));
         } else {
             if (updateData["data.attributes.hp.max"]) {
@@ -1757,7 +1757,7 @@ export class ActorPF extends Actor {
                 }
             }
         }
-        if (fullConditions.wildshaped || fullConditions.polymorphed) //This retains max HP
+        if (fullConditions.wildshaped || fullConditions.polymorph) //This retains max HP
             linkData(srcData1, updateData, "data.attributes.hp.max", prevValues.mhp);
 
 
@@ -1911,8 +1911,8 @@ export class ActorPF extends Actor {
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
         //linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
 
-
-        linkData(data, updateData, "data.details.totalCr", Math.floor(data1.details.cr || 0));
+        let cr = data1.details.cr || 0
+        linkData(data, updateData, "data.details.totalCr", cr < 1 ? cr : Math.floor(cr));
 
 
 
@@ -2709,8 +2709,14 @@ export class ActorPF extends Actor {
                     alt: classType === "base" ? cls.data.fc.alt.value : 0,
                 },
             };
+            data.classes[tag].spellsKnownPerLevel = []
+            data.classes[tag].powersKnown = []
+            data.classes[tag].powersMaxLevel = []
             for (let _level = 1; _level < cls.data.maxLevel + 1; _level++) {
                 data.classes[tag][`spellPerLevel${_level}`] = cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none" ? cls.data.spellsPerLevel[_level - 1] : undefined
+                if (cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none") data.classes[tag].spellsKnownPerLevel.push(cls.data.spellsKnownPerLevel[_level - 1])
+                if (cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none") data.classes[tag].powersKnown.push(cls.data.powersKnown[_level - 1])
+                if (cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none") data.classes[tag].powersMaxLevel.push(cls.data.powersMaxLevel[_level - 1])
             }
             for (let k of Object.keys(data.classes[tag].savingThrows)) {
                 let formula = CONFIG.D35E.classSavingThrowFormulas[classType][cls.data.savingThrows[k].value];
@@ -2894,11 +2900,14 @@ export class ActorPF extends Actor {
             spellbook.hasPrestigeCl = spellbook.maxPrestigeCl > 0
             spellbook.canAddPrestigeCl = spellbook.availablePrestigeCl > 0
             spellbook.canRemovePrestigeCl = spellbook.bonusPrestigeCl > 0
+            spellbook.powersKnown = data.classes[spellbook.class]?.powersKnown ? data.classes[spellbook.class]?.powersKnown[`${data.classes[spellbook.class].level}`] || 0 : 0
+            spellbook.powersMaxLevel = data.classes[spellbook.class]?.powersMaxLevel ? data.classes[spellbook.class]?.powersMaxLevel[`${data.classes[spellbook.class].level}`] || 0 : 0
             spellbook.cl.total += spellbook.bonusPrestigeCl === undefined ? 0 : spellbook.bonusPrestigeCl;
             // Add spell slots
             spellbook.spells = spellbook.spells || {};
             for (let a = 0; a < 10; a++) {
-                spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null };
+                spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null, known: 0 };
+                spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level] ? data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level][a+1] || 0 : 0) : 0
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
@@ -4246,9 +4255,11 @@ export class ActorPF extends Actor {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                     rollModifiers.push(`${i.name}`)
-                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                }
+                if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
                     rollModifiers.push(`${i.name}`)
+                    i.addCharges(-1);
                 }
             })
 
@@ -4743,8 +4754,10 @@ export class ActorPF extends Actor {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                     rollModifiers.push(`${i.name}`)
-                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                }
+                if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    i.addCharges(-1);
                     rollModifiers.push(`${i.name}`)
                 }
             })
@@ -4827,7 +4840,62 @@ export class ActorPF extends Actor {
         return finalAc || {ac: -1, applyHalf: false, noCritical: false};
     }
 
-    /**
+    static async applyAbilityDamage(damage, ability, actor = null) {
+        let tokensList = [];
+        const promises = [];
+        if (actor === null) {
+            if (game.user.targets.size > 0)
+                tokensList = Array.from(game.user.targets);
+            else
+                tokensList = canvas.tokens.controlled;
+            if (!tokensList.length) {
+                ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+                return
+            }
+        } else {
+            tokensList.push({actor: actor})
+        }
+
+        for (let t of tokensList) {
+            let a = t.actor,
+                abilityField = `data.abilities.${ability}.damage`,
+                abilityDamage = a.data.data.abilities[ability].damage || 0,
+                updateData = {}
+                updateData[abilityField] = abilityDamage + damage
+                promises.push(t.actor.update(updateData));
+        }
+        return Promise.all(promises);
+    }
+
+    static async applyAbilityDrain(damage, ability, actor = null) {
+        let tokensList = [];
+        const promises = [];
+        if (actor === null) {
+            if (game.user.targets.size > 0)
+                tokensList = Array.from(game.user.targets);
+            else
+                tokensList = canvas.tokens.controlled;
+            if (!tokensList.length) {
+                ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+                return
+            }
+        } else {
+            tokensList.push({actor: actor})
+        }
+
+        for (let t of tokensList) {
+            let a = t.actor,
+                abilityField = `data.abilities.${ability}.drain`,
+                abilityDrain = a.data.data.abilities[ability].drain || 0,
+                updateData = {}
+            updateData[abilityField] = abilityDrain + damage
+            promises.push(t.actor.update(updateData));
+        }
+        return Promise.all(promises);
+    }
+
+
+        /**
      * Apply rolled dice damage to the token or tokens which are currently controlled.
      * This allows for damage to be scaled by a multiplier to account for healing, critical hits, or resistance
      *
@@ -5457,7 +5525,11 @@ export class ActorPF extends Actor {
                         if (action.parameters[4] === 'true' || action.parameters[4] === 'false') {
                             updateObject[action.parameters[2]] = action.parameters[4] === 'true';
                         } else {
-                            updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+                            if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[4])) {
+                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+                            } else {
+                                updateObject[action.parameters[2]] = action.parameters[4]
+                            }
                         }
                         await this.updateOwnedItem(updateObject, { stopUpdates: true })
                         await this.update({})
@@ -5486,7 +5558,11 @@ export class ActorPF extends Actor {
                                 if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
                                     updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                                 } else {
-                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                    if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[5])) {
+                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                    } else {
+                                        updateObject[action.parameters[3]] = action.parameters[5]
+                                    }
                                 }
                                 itemUpdates.push(updateObject)
                             }
@@ -5499,7 +5575,11 @@ export class ActorPF extends Actor {
                             if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
                                 updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                             } else {
-                                updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[5])) {
+                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                } else {
+                                    updateObject[action.parameters[3]] = action.parameters[5]
+                                }
                             }
                             await this.updateOwnedItem(updateObject, { stopUpdates: true })
                             await this.update({})
@@ -5533,7 +5613,12 @@ export class ActorPF extends Actor {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
                     let updateObject = {}
-                    updateObject[`${field}`] = new Roll(cleanParam(value), this.getRollData()).roll().total
+
+                    if (/^(.*?[0-9]d[0-9]+.*?)$/.test(value)) {
+                        updateObject[`${field}`]= new Roll(cleanParam(value), this.getRollData()).roll().total
+                    } else {
+                        updateObject[`${field}`]= value
+                    }
                     await this.update(updateObject)
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5569,6 +5654,24 @@ export class ActorPF extends Actor {
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
 
+            case "AbilityDamage":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 2) {
+                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
+            case "AbilityDrain":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 2) {
+                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
             case "Regenerate":
                 // Rolls arbitrary attack
                 console.log(action)
@@ -6052,5 +6155,46 @@ export class ActorPF extends Actor {
         }, {});
     }
 
+    async syncToCompendium() {
+        if (!this.data.data.companionUuid) return;
+        $.ajax({
+            url: `http://localhost:5000/api/character/${this.data.data.companionUuid}`,
+            type: 'PUT',
+            crossDomain: true,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(this.data),
+            success: function(data) {
+                //play with data
+            }
+        });
+    }
+
+    getChargesFromItemById(id) {
+        let _item = this.items.find(item => item._id === id || item.data.data.uniqueId === id)
+        if (_item != null) {
+            return _item.data?.data?.uses?.value || 0
+        } else {
+            return 0;
+        }
+    }
+
+    getMaxChargesFromItemById(id) {
+        let _item = this.items.find(item => item._id === id || item.data.data.uniqueId === id)
+        if (_item != null) {
+            return _item.data?.data?.uses?.max || 0
+        } else {
+            return 0;
+        }
+    }
+
+    getItemByUidOrId(id) {
+        let _item = this.items.find(item => item._id === id || item.data.data.uniqueId === id)
+        if (_item != null) {
+            return _item
+        } else {
+            return null;
+        }
+    }
 
 }

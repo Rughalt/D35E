@@ -59,9 +59,31 @@ export class ItemPF extends Item {
     }
 
     get charges() {
-        if (getProperty(this.data, "data.uses.per") === "single") return getProperty(this.data, "data.quantity");
-        if (this.type === "spell") return this.getSpellUses();
-        return getProperty(this.data, "data.uses.value") || 0;
+        return ItemPF.getCharges(this)
+    }
+
+    static getCharges(item) {
+        if (item.data.data?.linkedChargeItem?.id) {
+            return item.actor.getChargesFromItemById(item.data.data?.linkedChargeItem?.id)
+        } else {
+            if (getProperty(item.data, "data.uses.per") === "single") return getProperty(item.data, "data.quantity");
+            if (item.type === "spell") return item.getSpellUses();
+            return getProperty(item.data, "data.uses.value") || 0;
+        }
+    }
+
+    get maxCharges() {
+        return ItemPF.getMaxCharges(this)
+    }
+
+    static getMaxCharges(item) {
+        if (item.data.data?.linkedChargeItem?.id) {
+            return item.actor.getMaxChargesFromItemById(item.data.data?.linkedChargeItem?.id)
+        } else {
+            if (getProperty(item.data, "data.uses.per") === "single") return getProperty(item.data, "data.quantity");
+            if (item.type === "spell") return item.getSpellUses();
+            return getProperty(item.data, "data.uses.max") || 0;
+        }
     }
 
     get chargeCost() {
@@ -143,22 +165,30 @@ export class ItemPF extends Item {
      * @returns {Promise}
      */
     async addCharges(value, data = null) {
-        if (getProperty(this.data, "data.uses.per") === "single"
-            && getProperty(this.data, "data.quantity") == null) return;
+        let chargeItem = this;
+        let isChargeLinked = false;
+        if (this.data.data?.linkedChargeItem?.id) {
+            isChargeLinked = true;
+            chargeItem = this.actor.getItemByUidOrId(this.data.data?.linkedChargeItem?.id)
+            if (!chargeItem) return;
+        }
+        if (getProperty(chargeItem.data, "data.uses.per") === "single"
+            && getProperty(chargeItem.data, "data.quantity") == null) return;
 
         if (this.type === "spell") return this.addSpellUses(value, data);
 
-        let prevValue = this.isSingleUse ? getProperty(this.data, "data.quantity") : getProperty(this.data, "data.uses.value");
+        let prevValue = this.isSingleUse ? getProperty(chargeItem.data, "data.quantity") : getProperty(chargeItem.data, "data.uses.value");
         if (data != null && this.isSingleUse && data["data.quantity"] != null) prevValue = data["data.quantity"];
         else if (data != null && !this.isSingleUse && data["data.uses.value"] != null) prevValue = data["data.uses.value"];
 
-        if (data != null) {
+        if (data != null && !isChargeLinked) {
             if (this.isSingleUse) data["data.quantity"] = prevValue + value;
             else data["data.uses.value"] = prevValue + value;
         } else {
-            if (this.isSingleUse) await this.update({"data.quantity": prevValue + value});
-            else await this.update({"data.uses.value": prevValue + value});
+            if (this.isSingleUse) await chargeItem.update({"data.quantity": prevValue + value}, {stopUpdates: true});
+            else await chargeItem.update({"data.uses.value": prevValue + value}, {stopUpdates: true});
         }
+        
     }
 
     /* -------------------------------------------- */
@@ -1392,8 +1422,10 @@ export class ItemPF extends Item {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                     rollModifiers.push(`${i.name}`)
-                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                }
+                if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    i.addCharges(-1);
                     rollModifiers.push(`${i.name}`)
                 }
             })
@@ -1560,7 +1592,10 @@ export class ItemPF extends Item {
             };
 
             // Post message
-            if (this.data.type === "spell" || this.data.data.isFromSpell) await this.roll({rollMode: rollMode});
+            if (this.data.type === "spell" || this.data.data.isFromSpell) {
+                if (!game.settings.get("D35E", "hideSpellDescriptionsIfHasAction"))
+                    await this.roll({rollMode: rollMode});
+            }
             if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
 
                 console.log(`D35E | Generating chat message.`)
@@ -1631,6 +1666,7 @@ export class ItemPF extends Item {
         let extraAttacksCount = game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" ? Math.ceil((actor.data.data.attributes.bab.total)/5.0) : (getProperty(this.data, "data.attackParts") || []).length + 1;
         let dialogData = {
             data: rollData,
+            id: this.id,
             item: this.data.data,
             rollMode: game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
@@ -1818,6 +1854,7 @@ export class ItemPF extends Item {
     }
 
     getPossibleCombatChanges(itemType, rollData) {
+        if (itemType.endsWith('Optional') && this.isCharged && !this.charges) return [];
         let combatChanges = getProperty(this.data,"data.combatChanges") || [];
         let attackType = getProperty(rollData,"item.actionType") || ""
         let combatChangesRollData = duplicate(rollData);
@@ -1830,7 +1867,11 @@ export class ItemPF extends Item {
             }
             return c;
         });
+    }
 
+    get hasUseableChange() {
+        if (this.isCharged && !this.charges) return false;
+        return true;
     }
 
     /**

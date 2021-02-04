@@ -76,9 +76,13 @@
     <label>{{localize "D35E.LimitedUses"}}</label>
     <div class="form-fields">
       {{#if isCharged}}
-      <input type="text" name="data.uses.value" value="{{data.uses.value}}" data-dtype="Number"/>
+      {{#unless data.linkedChargeItem.id}}
+      <input type="text" name="data.uses.value" value="{{charges}}" data-dtype="Number"/>
+      {{else}}
+      <input type="text" disabled value="{{charges}}" data-dtype="Number"/>
+      {{/unless}}
       <span class="sep"> / </span>
-      <input type="text" value="{{data.uses.max}}" disabled data-dtype="Number"/>
+      <input type="text" value="{{maxCharges}}" disabled data-dtype="Number"/>
       {{/if}}
       <select name="data.uses.per">
         {{#select data.uses.per}}
@@ -90,11 +94,30 @@
       </select>
     </div>
   </div>
+  {{#unless data.linkedChargeItem.id}}
   {{#if isCharged}}
   <div class="form-group uses-per">
     <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
   </div>
   {{/if}}
+  {{/unless}}
+  <div class="charge-link flexcol">
+    {{#unless data.linkedChargeItem.id}}
+      <div style="width: 100%; text-align: center; padding: 12px">
+        {{localize "D35E.DropChargeLinkItem"}}
+      </div>
+    {{else}}
+      <h4>{{localize "D35E.LinkedCharge"}} {{data.linkedChargeItem.id}}<a style="float: right" class="colorized-link remove-charge-link">{{localize "D35E.UnlinkCharge"}}</a></h4>
+      <div class="form-group">
+      <img src="{{data.linkedChargeItem.img}}">
+      <label>{{data.linkedChargeItem.name}}</label>
+
+
+
+      </div>
+      {{/unless}}
+    <em style="align-self: flex-end;">{{localize "D35E.LinkedChargeDescription"}}</em>
+  </div>
 
   <div class="form-group stacked">
     <label class="checkbox">

@@ -172,10 +172,19 @@
             <div class="flexrow">
             {{#unless item.showUnidentifiedData}}
             {{#if item.isCharged}}
+              {{#unless item.data.linkedChargeItem.id}}
             <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
+              {{else}}
+              <input type="text" value="{{item.charges}}" disabled data-dtype="Number"/>
+              {{/unless}}
             <span class="sep"> of </span>
-            <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
-            <span class="tooltipcontent">
+              {{#unless item.data.linkedChargeItem.id}}
+            <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number"/>
+              {{else}}
+              <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number"/>
+
+              {{/unless}}
+              <span class="tooltipcontent">
               @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
               @resources.{{item.tag}}.max : {{item.data.uses.max}}
             </span>

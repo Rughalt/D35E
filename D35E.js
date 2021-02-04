@@ -40,6 +40,7 @@ import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
+import {applyConfigModifications} from "./module/config-tools.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -95,10 +96,11 @@ Hooks.once("init", async function() {
 
   CONFIG.statusEffects = getConditions();
 
+
   D35ELayer.registerLayer();
   // Preload Handlebars Templates
   await preloadHandlebarsTemplates();
-
+  applyConfigModifications();
   // Patch Core Functions
   PatchCore();
 
@@ -430,6 +432,10 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
+  } else {
+    if (actor.data.data.companionAutosync) {
+      actor.syncToCompendium()
+    }
   }
 });
 

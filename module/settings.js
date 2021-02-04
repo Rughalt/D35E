@@ -196,6 +196,19 @@ export const registerSystemSettings = function() {
     }
   });
 
+
+  game.settings.register("D35E", "hideSpellDescriptionsIfHasAction", {
+    name: "SETTINGS.D35EHideSpellDescriptionsIfHasActionN",
+    hint: "SETTINGS.D35EHideSpellDescriptionsIfHasActionL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+    onChange: () => {
+      ui.chat.render();
+    }
+  });
+
   game.settings.register("D35E", "showPartyHud", {
     name: "SETTINGS.D35EShowPartyHudN",
     hint: "SETTINGS.D35EShowPartyHudL",
@@ -406,7 +419,20 @@ export const registerSystemSettings = function() {
     },
   });
 
-
+  /**
+   * Display default token conditions alongside system ones
+   */
+  game.settings.register("D35E", "currencyNames", {
+    name: "SETTINGS.D35ECurrencyNamesN",
+    hint: "SETTINGS.D35ECurrencyNamesH",
+    scope: "world",
+    config: true,
+    default: "",
+    type: String,
+    onChange: () => {
+      window.location.reload();
+    },
+  });
 
   // game.settings.register("D35E", 'displayItemsInContainers', {
   //   name: `SETTINGS.D35EDisplayItemsInContainersN`,
