@@ -5457,7 +5457,11 @@ export class ActorPF extends Actor {
                         if (action.parameters[4] === 'true' || action.parameters[4] === 'false') {
                             updateObject[action.parameters[2]] = action.parameters[4] === 'true';
                         } else {
-                            updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+                            if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[4])) {
+                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+                            } else {
+                                updateObject[action.parameters[2]] = action.parameters[4]
+                            }
                         }
                         await this.updateOwnedItem(updateObject, { stopUpdates: true })
                         await this.update({})
@@ -5486,7 +5490,11 @@ export class ActorPF extends Actor {
                                 if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
                                     updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                                 } else {
-                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                    if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[5])) {
+                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                    } else {
+                                        updateObject[action.parameters[3]] = action.parameters[5]
+                                    }
                                 }
                                 itemUpdates.push(updateObject)
                             }
@@ -5499,7 +5507,11 @@ export class ActorPF extends Actor {
                             if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
                                 updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                             } else {
-                                updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[5])) {
+                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                } else {
+                                    updateObject[action.parameters[3]] = action.parameters[5]
+                                }
                             }
                             await this.updateOwnedItem(updateObject, { stopUpdates: true })
                             await this.update({})
@@ -5533,7 +5545,12 @@ export class ActorPF extends Actor {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
                     let updateObject = {}
-                    updateObject[`${field}`] = new Roll(cleanParam(value), this.getRollData()).roll().total
+
+                    if (/^(.*?[0-9]d[0-9]+.*?)$/.test(value)) {
+                        updateObject[`${field}`]= new Roll(cleanParam(value), this.getRollData()).roll().total
+                    } else {
+                        updateObject[`${field}`]= value
+                    }
                     await this.update(updateObject)
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
