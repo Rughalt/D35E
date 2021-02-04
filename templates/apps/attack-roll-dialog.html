@@ -1,13 +1,13 @@
 <form class="attack-form">
     {{#if hasAttack}}
     <div class="form-group">
-        <label>{{localize "D35E.AttackRollBonus"}}</label>
+        <label>{{localize "D35E.AttackRollBonus"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <input type="text" name="attack-bonus" value="" class="auto-save" placeholder="e.g. +1d4"/>
     </div>
     {{/if}}
     {{#if hasDamage}}
     <div class="form-group">
-        <label>{{localize "D35E.DamageBonus"}}</label>
+        <label>{{localize "D35E.DamageBonus"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <input type="text" name="damage-bonus" value="" class="auto-save" placeholder="e.g. +1d4"/>
     </div>
     {{/if}}
@@ -15,7 +15,7 @@
     {{#if hasDamage}}
 
     <div class="form-group">
-    <label>{{localize "D35E.WeaponPropNonLethal"}}</label>
+    <label>{{localize "D35E.WeaponPropNonLethal"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
     <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
         <input type="checkbox" class="stylized auto-save" name="nonLethal" {{#if nonLethal}}checked{{/if}}/>
         <span class="checkmark"></span>
@@ -27,7 +27,7 @@
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="flanking"/>
+                <input type="checkbox" class="stylized" name="flanking"/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.Flanking"}} (+2)</label>
@@ -35,7 +35,7 @@
         {{#unless isRangedWeapon}}
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="charge"/>
+                <input type="checkbox" class="stylized" name="charge"/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.Charge"}} (+2)</label>
@@ -43,7 +43,7 @@
         {{else}}
         <div class="form-group" >
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="ccshot"/>
+                <input type="checkbox" class="stylized" name="ccshot"/>
                 <span class="checkmark"></span>
             </label>
             <label>
@@ -60,14 +60,14 @@
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="defensive"/>
+                <input type="checkbox" class="stylized" name="defensive"/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.DefensiveFighting"}} (-4)</label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="highground"/>
+                <input type="checkbox" class="stylized" name="highground"/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.HighGround"}} (+1)</label>
@@ -76,14 +76,14 @@
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="squeezing"/>
+                <input type="checkbox" class="stylized" name="squeezing"/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.Squeezing"}} (-4)</label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="prone"/>
+                <input type="checkbox" class="stylized" name="prone"/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.Prone"}} (-4)</label>
@@ -95,7 +95,7 @@
     {{#unless isRangedWeapon}}
     <div class="form-group">
         {{#if canPowerAttack}}
-        <label class="slider">Power Attack
+        <label class="slider">Power Attack <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i>
         </label>
         <input type="range" name="pa" min="0" max="{{maxPowerAttackValue}}" value="0" class="slider auto-save" style="flex: 1"
                onchange="this.nextElementSibling.value=this.value">
@@ -212,7 +212,7 @@
     {{#if hasAttack}}{{#if hasDamage}}
     {{#unless isRangedWeapon}}
     <div class="form-group">
-        <label>{{localize "D35E.WeaponFightingMode"}}</label>
+        <label>{{localize "D35E.WeaponFightingMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <select name="twf-attack-mode" onchange="changeTWF(this)" value="{{attackType}}" class="auto-save">
             {{#select attackType}}
             {{#each twoWeaponAttackTypes as |label mode|}}
@@ -248,7 +248,7 @@
     {{/if}}{{/if}}
     {{#if hasDamage}}{{#if hasDamageAbility}}{{#unless isNaturalAttack}}
     <div class="form-group select">
-        <label>{{localize "D35E.DamageAbility"}}</label>
+        <label>{{localize "D35E.DamageAbility"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <select name="damage-ability-multiplier" data-type="dmg-mult"  class="auto-save">
             {{#select data.item.ability.damageMult}}
             <option value="0.5">x0.5</option>
@@ -262,7 +262,7 @@
 
     {{#if isRangedWeapon}}
     <div class="form-group select">
-        <label>{{localize "D35E.LootTypeAmmo"}}</label>
+        <label>{{localize "D35E.LootTypeAmmo"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <select name="ammunition-id" onchange="enableDisableFullAttack(this)" class="auto-save">
             {{#select ammo}}
             <option value="none" data-ammo-count="9999" data-dmg-formula="">None</option>
@@ -357,7 +357,7 @@
 
 
     <div class="form-group">
-        <label>{{localize "D35E.RollMode"}}</label>
+        <label>{{localize "D35E.RollMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <select name="rollMode" class="auto-save">
             {{#select rollMode}}
             {{#each rollModes as |label mode|}}
@@ -374,9 +374,15 @@
         $('.attack-form').closest("section").find("button[data-button='normal']").bind( "click", function() {
             $( this ).prop('disabled', true);
         });
-        $('.auto-save').savy('load',function(){
-            console.log("All data from savy are loaded");
-        },'{{id}}');
+        if (game.settings.get("D35E", "saveAttackWindow")) {
+            $('.auto-save').savy('load',function(){
+                console.log("All data from savy are loaded");
+            },'{{id}}');
+            }
+        else {
+            $('.fa-history').hide()
+        }
+
 
     </script>
 </form>

@@ -1265,7 +1265,8 @@
         },
         "effectNotes": "",
         "attackNotes": "",
-        "specialActions": []
+        "specialActions": [],
+        "favorite": false
       },
       "links": {
         "links": {
@@ -1732,6 +1733,7 @@
       "originalWeaponImg": "",
       "originalWeaponProperties": {},
       "conditionals": [],
+      "favorite": true,
       "alignment": {
         "good": false,
         "evil": false,

@@ -1351,7 +1351,7 @@ export class ItemPF extends Item {
             }
 
             let isHasted = (this.actor?.items || []).filter(o => o.type === "buff" && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
-            if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted) {
+            if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted && (getProperty(this.data, "data.attackType") === "weapon" || getProperty(this.data, "data.attackType") === "natural")) {
                 allAttacks.push({
                     bonus: 0,
                     label: `Haste`

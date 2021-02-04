@@ -1618,6 +1618,8 @@ export class ActorSheetPF extends ActorSheet {
     let containerItemsWeight = new Map()
     let containerList = []
 
+
+    data.useableAttacks = []
     data.totalInventoryValue = 0;
     // Partition items by category
     let [items, spells, feats, classes, attacks] = data.items.reduce((arr, item) => {
@@ -1635,7 +1637,9 @@ export class ActorSheetPF extends ActorSheet {
       if ( item.type === "spell" ) arr[1].push(item);
       else if ( item.type === "feat" ) arr[2].push(item);
       else if ( item.type === "class" ) arr[3].push(item);
-      else if (item.type === "attack") arr[4].push(item);
+      else if (item.type === "attack") {
+        arr[4].push(item);
+      }
       else if (item.type === "full-attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
         //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
@@ -1804,8 +1808,6 @@ export class ActorSheetPF extends ActorSheet {
 
     // Attacks
 
-    data.useableAttacks = []
-
     const attackSections = {
       all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, initial: true, showTypes: true, dataset: { type: "attack" } },
       weapon: { label: game.i18n.localize("D35E.AttackTypeWeaponPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "weapon" } },
@@ -1819,10 +1821,17 @@ export class ActorSheetPF extends ActorSheet {
     for (let a of attacks) {
       let s = a.data.attackType;
       a.disabled = !this._isAttackUseable(a,equippedWeapons);
-      if (this._isAttackUseable(a,equippedWeapons)) data.useableAttacks.push(a)
       if (!attackSections[s]) continue;
       attackSections[s].items.push(a);
       attackSections.all.items.push(a);
+    }
+
+    for (let item of data.items) {
+      if (item.type === "attack") {
+        if (this._isAttackUseable(item,equippedWeapons)) data.useableAttacks.push(item)
+      } else {
+        if (!this._isMelded(item) && item.data.favorite) data.useableAttacks.push(item)
+      }
     }
 
     attackSections.full.items.forEach(fullAttackItem => {
@@ -1857,6 +1866,10 @@ export class ActorSheetPF extends ActorSheet {
     if (a.data.melded) return false;
     if (a.data.originalWeaponId && !equippedWeapons.has(a.data.originalWeaponId)) return false;
     return true;
+  }
+
+  _isMelded(a) {
+    if (a.data.melded) return true;
   }
 
   /**

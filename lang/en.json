@@ -1306,6 +1306,9 @@
   "D35E.UnlinkCharge": "Unlink",
   "D35E.DropChargeLinkItem": "Drop Item with charges to link charges/uses.",
   "D35E.LinkedChargeDescription": "If linked with another item, this item will use charges from that item.",
+  "D35E.ValuePersisted": "This value will be persisted between rolls done with this item",
+  "D35E.Favorite": "Display on Summary Page",
+  "D35E.Actions": "Actions",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1344,6 +1347,8 @@
   "SETTINGS.D35ECurrencyNamesN": "Currency Names",
   "SETTINGS.D35ECurrencyNamesH": "Currency names, from Platinium to Copper, divided by comma. Enter any text, leave empty to use default.",
   "SETTINGS.D35EHideSpellDescriptionsIfHasActionN": "Hide Spell Description chat card",
-  "SETTINGS.D35EHideSpellDescriptionsIfHasActionL": "Hides Spell Description chat card if spell has Action"
+  "SETTINGS.D35EHideSpellDescriptionsIfHasActionL": "Hides Spell Description chat card if spell has Action",
+  "SETTINGS.D35ESaveAttackWindowN": "Save Attack Window form",
+  "SETTINGS.D35ESaveAttackWindowL": "Enabling this will save per-item attack window values (wield mode, selected ammo, attack bonus etc)."
 
 }

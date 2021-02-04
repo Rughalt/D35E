@@ -15,6 +15,15 @@
 </div>
 {{#if data.activation.type}}
 
+{{#unless isAttack}}
+<div class="form-group">
+  <label>{{localize "D35E.Favorite"}}</label>
+  <label class="checkbox" style="position: relative; flex: 0 20px">
+    <input type="checkbox" class="stylized" name="data.favorite" {{checked data.favorite}}/>
+    <span class="checkmark"></span>
+  </label>
+</div>
+{{/unless}}
 
 {{!-- Ability Target --}}
 <div class="form-group input-select-select">
@@ -119,11 +128,12 @@
     <em style="align-self: flex-end;">{{localize "D35E.LinkedChargeDescription"}}</em>
   </div>
 
-  <div class="form-group stacked">
-    <label class="checkbox">
-      <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
+  <div class="form-group">
+    <label>{{localize "D35E.AutoDeductCharges"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/>
+      <span class="checkmark"></span>
     </label>
-
 
   </div>
 
@@ -132,9 +142,11 @@
     <input style="width: 40px" type="text" value="{{data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
   </div>
 
-  <div class="form-group stacked">
-    <label class="checkbox">
-      <input type="checkbox" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/> {{localize "D35E.AllowMultipleUses"}}
+  <div class="form-group">
+    <label>{{localize "D35E.AllowMultipleUses"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/>
+      <span class="checkmark"></span>
     </label>
   </div>
 {{/unless}}

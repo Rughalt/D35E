@@ -265,6 +265,15 @@ export const registerSystemSettings = function() {
   });
 
 
+  game.settings.register("D35E", "saveAttackWindow", {
+    name: "SETTINGS.D35ESaveAttackWindowN",
+    hint: "SETTINGS.D35ESaveAttackWindowL",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   game.settings.register("D35E", "hidePlayersList", {
     name: "SETTINGS.D35ENoPlayersListN",
     hint: "SETTINGS.D35ENoPlayersListL",
