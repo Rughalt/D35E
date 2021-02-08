@@ -1797,6 +1797,7 @@ export class ItemPF extends Item {
                 spellDC.type = data.save.type;
                 spellDC.ability = data.save.ability;
                 spellDC.isHalf = data.save.type.indexOf('half') !== -1;
+                spellDC.isPartial = data.save.type.indexOf('partial') !== -1;
                 spellDC.description = `${CONFIG.D35E.savingThrowTypes[data.save.type]}`;
                 if (data.save.ability) spellDC.description += ` (${CONFIG.D35E.abilitiesShort[data.save.ability]})`;
             }
@@ -1818,6 +1819,9 @@ export class ItemPF extends Item {
                 }
                 if (saveDesc.toLowerCase().indexOf('negates') !== -1) {
                     spellDC.type += 'negates';
+                } if (saveDesc.toLowerCase().indexOf('partial') !== -1) {
+                    spellDC.type += 'partial';
+                    spellDC.isPartial = true;
                 } else if (saveDesc.toLowerCase().indexOf('half') !== -1) {
                     spellDC.type += 'half';
                     spellDC.isHalf = true;

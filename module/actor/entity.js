@@ -111,6 +111,7 @@ export class ActorPF extends Actor {
                 result.abilities.str = null;
                 result.skills = null;
                 result.attributes.savingThrows = null;
+                break;
             case "con":
                 result.abilities.con = null;
                 result.attributes.hp = null;
@@ -2664,6 +2665,7 @@ export class ActorPF extends Actor {
         let totalNonRacialLevels = 0;
         data.classes = {};
         data.totalNonEclLevels = 0;
+        data.damage = { nonlethal : {value: data.attributes.hp.nonlethal || 0, max: data.attributes.hp.max || 0}}
         actorData.items.filter(obj => {
             return obj.type === "class";
         }).forEach(cls => {
@@ -4306,17 +4308,17 @@ export class ActorPF extends Actor {
         let savingThrowId = "";
         let savingThrowAbility = ability;
         let savingThrowBaseAbility = savingThrowAbility;
-        if (_savingThrow === "willnegates" || _savingThrow === "willhalf") {
+        if (_savingThrow === "willnegates" || _savingThrow === "willhalf" || _savingThrow === "willpartial") {
             savingThrowId = "will";
             savingThrowBaseAbility = "wis"
             if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "wis"
             if (savingThrowAbility === "") savingThrowAbility = "wis"
-        } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf") {
+        } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf" || _savingThrow === "reflexpartial") {
             savingThrowId = "ref";
             savingThrowBaseAbility = "dex"
             if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "dex"
             if (savingThrowAbility === "") savingThrowAbility = "dex"
-        } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf") {
+        } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf" || _savingThrow === "fortitudepartial") {
             savingThrowId = "fort";
             savingThrowBaseAbility = "con"
             if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "con"

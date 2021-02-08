@@ -487,7 +487,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "blc": {
             "value": 0,
@@ -497,7 +498,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "blf": {
             "value": 0,
@@ -507,7 +509,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "clm": {
             "value": 0,
@@ -517,7 +520,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "coc": {
             "value": 0,
@@ -527,7 +531,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "crf": {
             "value": 0,
@@ -537,7 +542,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "dsc": {
             "value": 0,
@@ -547,7 +553,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "dip": {
             "value": 0,
@@ -557,7 +564,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "dev": {
             "value": 0,
@@ -567,7 +575,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "dis": {
             "value": 0,
@@ -577,7 +586,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "esc": {
             "value": 0,
@@ -587,7 +597,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "fog": {
             "value": 0,
@@ -597,7 +608,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "gif": {
             "value": 0,
@@ -607,7 +619,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "han": {
             "value": 0,
@@ -617,7 +630,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "hea": {
             "value": 0,
@@ -627,7 +641,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "hid": {
             "value": 0,
@@ -637,7 +652,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "int": {
             "value": 0,
@@ -647,7 +663,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "jmp": {
             "value": 0,
@@ -657,7 +674,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kar": {
             "value": 0,
@@ -667,7 +685,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kdu": {
             "value": 0,
@@ -677,7 +696,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "ken": {
             "value": 0,
@@ -687,7 +707,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kge": {
             "value": 0,
@@ -697,7 +718,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "khi": {
             "value": 0,
@@ -707,7 +729,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "klo": {
             "value": 0,
@@ -717,7 +740,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kna": {
             "value": 0,
@@ -727,7 +751,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kno": {
             "value": 0,
@@ -747,7 +772,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kre": {
             "value": 0,
@@ -757,7 +783,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "lis": {
             "value": 0,
@@ -767,7 +794,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "mos": {
             "value": 0,
@@ -777,7 +805,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "opl": {
             "value": 0,
@@ -787,7 +816,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "prf": {
             "value": 0,
@@ -797,7 +827,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "pro": {
             "value": 0,
@@ -807,7 +838,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "rid": {
             "value": 0,
@@ -817,7 +849,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "src": {
             "value": 0,
@@ -827,7 +860,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "sen": {
             "value": 0,
@@ -837,7 +871,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "slt": {
             "value": 0,
@@ -847,7 +882,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "spl": {
             "value": 0,
@@ -857,7 +893,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "spt": {
             "value": 0,
@@ -867,7 +904,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "sur": {
             "value": 0,
@@ -877,7 +915,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "swm": {
             "value": 0,
@@ -887,7 +926,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "tmb": {
             "value": 0,
@@ -897,7 +937,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "umd": {
             "value": 0,
@@ -907,7 +948,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "uro": {
             "value": 0,
@@ -917,7 +959,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "kps": {
             "value": 0,
@@ -927,7 +970,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "aut": {
             "value": 0,
@@ -937,7 +981,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "psi": {
             "value": 0,
@@ -947,7 +992,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           },
           "upd": {
             "value": 0,
@@ -957,7 +1003,8 @@
             "rank": 0,
             "notes": "",
             "mod": 0,
-            "background": false
+            "background": false,
+"visibility":"default"
           }
         },
         "customSkills": {},
@@ -1001,7 +1048,8 @@
           "cp": 0
         },
         "noLightOverride": false,
-        "noTokenOverride": false
+        "noTokenOverride": false,
+        "lockEditingByPlayers": false
       }
     },
     "character": {

@@ -1,5 +1,6 @@
 <div class="flexcol">
 
+    <h2>General Settings</h2>
     <div class="form-group">
         <label>{{ localize 'D35E.PartyMember' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
@@ -9,15 +10,6 @@
     </div>
     <span style="flex: 0">{{ localize 'D35E.PartyMemberH' }}</span>
     <div class="form-group">
-        <label>{{ localize 'D35E.DisplayNonRTSkills' }}</label>
-        <label class="checkbox" style="position: relative; flex: 0 20px">
-            <input type="checkbox" class="stylized" name="data.displayNonRTSkills" {{checked data.displayNonRTSkills}}/>
-            <span class="checkmark"></span>
-        </label>
-    </div>
-    <span style="flex: 0">{{ localize 'D35E.DisplayNonRTSkillsH' }}</span>
-
-    <div class="form-group">
         <label>{{ localize 'D35E.NoTokenOverride' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
             <input type="checkbox" class="stylized" name="data.noTokenOverride" {{checked data.noTokenOverride}}/>
@@ -25,6 +17,16 @@
         </label>
     </div>
     <span style="flex: 0">{{{ localize 'D35E.NoTokenOverrideH' }}}</span>
+
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.LockEditingByPlayers' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.lockEditingByPlayers" {{checked data.lockEditingByPlayers}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <span style="flex: 0">{{{ localize 'D35E.LockEditingByPlayers' }}}</span>
 
     <div class="form-group">
         <label>{{ localize 'D35E.NoLightOverride' }}</label>
@@ -34,6 +36,33 @@
         </label>
     </div>
     <span style="flex: 0">{{{ localize 'D35E.NoLightOverrideH' }}}</span>
+    <h2>Skills visibility</h2>
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.DisplayNonRTSkills' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.displayNonRTSkills" {{checked data.displayNonRTSkills}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <span style="flex: 0">{{ localize 'D35E.DisplayNonRTSkillsH' }}</span>
+
+    <strong style="opacity: 0.8">Specific visibility</strong>
+    <div class="flexrow" style="">
+    {{#each skillsets.all.skills as |skill s|}}
+        <div class="form-group" style="flex: 300px; margin: 0; padding-left: 4px; padding-right: 4px">
+            <label>{{skill.label}}</label>
+            <select name="data.skills.{{s}}.visibility">
+                {{#select skill.visibility}}
+                <option value="default">{{localize "D35E.Default"}}</option>
+                <option value="always">{{localize "D35E.SkillAlways"}}</option>
+                <option value="never">{{localize "D35E.SkillNever"}}</option>
+                {{/select}}
+            </select>
+        </div>
+    {{/each}}
+    </div>
+
     <h2 class="block-header">Legacies of the Dragon Companion</h2>
     <div class="form-group">
         <label>{{ localize 'D35E.CompanionUUID' }}</label>
