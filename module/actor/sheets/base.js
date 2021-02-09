@@ -2077,6 +2077,9 @@ export class ActorSheetPF extends ActorSheet {
   }
 
   async importItem(itemData, dataType) {
+    if (itemData.type === "spell" && this.actor.data.type === "trap") {
+      return this.actor.createAttackSpell(itemData);
+    }
     if (itemData.type === "spell" && !itemData.data.isPower && this.currentPrimaryTab === "inventory") {
       return this.actor._createConsumableSpellDialog(itemData);
     }

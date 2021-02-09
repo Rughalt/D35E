@@ -1314,6 +1314,8 @@
   "D35E.Actions": "Actions",
   "D35E.SkillNever": "Never on Summary",
   "D35E.SkillAlways": "Always on Summary",
+  "D35E.AdditionalPowerPointsSpend": "Additional Power Points",
+  "D35E.AdditionalPowerPointsSpendLimit": "If you select more power points than you are allowed to use at cast time, amount of used powerpoints will be limited to maximum allowed value",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

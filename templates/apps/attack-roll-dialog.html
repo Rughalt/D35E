@@ -355,6 +355,20 @@
         {{/if}}
     </div>
 
+    <div class="form-group">
+        {{#if isPower}}
+        <label class="slider">{{localize "D35E.AdditionalPowerPointsSpend"}} <i class="fas fa-info-circle tooltip">
+            <span class="tooltipcontent"><strong>{{localize "D35E.AdditionalPowerPointsSpend"}}</strong><br>{{localize "D35E.AdditionalPowerPointsSpendLimit"}}</span>
+
+        </i>
+        </label>
+        <input type="range" name="use" min="0" max="{{bonusPowerPointsMax}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="useAmount" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+    </div>
+
+
 
     <div class="form-group">
         <label>{{localize "D35E.RollMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>

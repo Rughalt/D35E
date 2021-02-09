@@ -3733,8 +3733,9 @@ export class ActorPF extends Actor {
         // Invoke the Item roll
         if (usedItem.hasAction)
         {
-            await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
-            await item.addSpellUses(-1);
+            let attackResult = await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
+            let roll = await attackResult.roll;
+            await item.addSpellUses(-1+(-1*roll?.rollData?.useAmount || 0));
             return ;
         }
 
@@ -5730,6 +5731,9 @@ export class ActorPF extends Actor {
     }
 
     //
+
+
+
     _createConsumableSpellDialog(itemData) {
         new Dialog({
             title: game.i18n.localize("D35E.CreateItemForSpell").format(itemData.name),
@@ -5828,6 +5832,13 @@ export class ActorPF extends Actor {
             };
             this.update(masterData);
         }
+    }
+
+    async createAttackSpell(itemData, type) {
+        let data = await ItemPF.toAttack(itemData);
+
+        if (data._id) delete data._id;
+        await this.createEmbeddedEntity("OwnedItem", data);
     }
 
     async createConsumableSpell(itemData, type) {
