@@ -5465,11 +5465,11 @@ export class ActorPF extends Actor {
 
         function isActionRollable(_action) {
             return /^(.*?[0-9]d[0-9]+.*?)$/.test(_action)
-                || _action.parameters.indexOf("max") !== -1
-                || _action.parameters.indexOf("min") !== -1
-                || _action.parameters.indexOf("+") !== -1
-                || _action.parameters.indexOf(",") !== -1
-                || _action.parameters.indexOf("@") !== -1;
+                || _action.indexOf("max") !== -1
+                || _action.indexOf("min") !== -1
+                || _action.indexOf("+") !== -1
+                || _action.indexOf(",") !== -1
+                || _action.indexOf("@") !== -1;
         }
 
         switch (action.action) {
