@@ -5461,7 +5461,16 @@ export class ActorPF extends Actor {
 
         if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actor.getRollData()).roll().result))
             return;
-        //console.log(action.parameters)
+
+        function isActionRollable(_action) {
+            return /^(.*?[0-9]d[0-9]+.*?)$/.test(_action)
+                || _action.parameters.indexOf("max") !== -1
+                || _action.parameters.indexOf("min") !== -1
+                || _action.parameters.indexOf("+") !== -1
+                || _action.parameters.indexOf(",") !== -1
+                || _action.parameters.indexOf("@") !== -1;
+        }
+
         switch (action.action) {
             case "TurnUndead":
                 await this.rollTurnUndead(cleanParam(action.parameters[0]))
@@ -5527,7 +5536,7 @@ export class ActorPF extends Actor {
                         if (action.parameters[4] === 'true' || action.parameters[4] === 'false') {
                             updateObject[action.parameters[2]] = action.parameters[4] === 'true';
                         } else {
-                            if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[4])) {
+                            if (isActionRollable(action.parameters[4])) {
                                 updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
                             } else {
                                 updateObject[action.parameters[2]] = action.parameters[4]
@@ -5560,7 +5569,7 @@ export class ActorPF extends Actor {
                                 if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
                                     updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                                 } else {
-                                    if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[5])) {
+                                    if (isActionRollable(action.parameters[5])) {
                                         updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
                                     } else {
                                         updateObject[action.parameters[3]] = action.parameters[5]
@@ -5577,7 +5586,7 @@ export class ActorPF extends Actor {
                             if (action.parameters[5] === 'true' || action.parameters[5] === 'false') {
                                 updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                             } else {
-                                if (/^(.*?[0-9]d[0-9]+.*?)$/.test(action.parameters[5])) {
+                                if (isActionRollable(action.parameters[5])) {
                                     updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
                                 } else {
                                     updateObject[action.parameters[3]] = action.parameters[5]
@@ -5616,7 +5625,7 @@ export class ActorPF extends Actor {
                     let value = cleanParam(action.parameters[3])
                     let updateObject = {}
 
-                    if (/^(.*?[0-9]d[0-9]+.*?)$/.test(value)) {
+                    if (isActionRollable(value)) {
                         updateObject[`${field}`]= new Roll(cleanParam(value), this.getRollData()).roll().total
                     } else {
                         updateObject[`${field}`]= value
