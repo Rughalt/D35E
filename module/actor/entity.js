@@ -111,6 +111,7 @@ export class ActorPF extends Actor {
                 result.abilities.str = null;
                 result.skills = null;
                 result.attributes.savingThrows = null;
+                break;
             case "con":
                 result.abilities.con = null;
                 result.attributes.hp = null;
@@ -691,15 +692,13 @@ export class ActorPF extends Actor {
             // Push base armor
             if (item.data.armor.value) {
                 changes.push({
-                    raw: [item.data.armor.value.toString(), "ac", armorTarget, "base", 0],
+                    raw: [`${item.data.armor.value + (item.data.armor.enh || 0)}`, "ac", armorTarget, "base", 0],
                     source: {
                         type: item.type,
                         name: item.name
                     }
                 });
-            }
-            // Push enhancement bonus to armor
-            if (item.data.armor.enh && item.data.equipmentType !== "misc") {
+            } else if (item.data.armor.enh && item.data.equipmentType !== "misc") {
                 changes.push({
                     raw: [item.data.armor.enh.toString(), "ac", armorTarget, "enh", 0],
                     source: {
@@ -1258,10 +1257,10 @@ export class ActorPF extends Actor {
     }
 
     isChangeAllowed(item, change, fullConditions) {
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ac" && change[2] === "natural") return false;
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ability" && change[2] === "str") return false;
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "ability" && change[2] === "dex") return false;
-        if ((fullConditions.wildshaped || fullConditions.polymorphed) && item.type === "race" && change[1] === "speed") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "ac" && change[2] === "natural") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "ability" && change[2] === "str") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "ability" && change[2] === "dex") return false;
+        if ((fullConditions.wildshaped || fullConditions.polymorph) && item.type === "race" && change[1] === "speed") return false;
         return true;
     }
 
@@ -1654,7 +1653,7 @@ export class ActorPF extends Actor {
         }
         // Add current hit points
 
-        if (fullConditions.wildshaped || fullConditions.polymorphed) {
+        if (fullConditions.wildshaped || fullConditions.polymorph) {
             linkData(srcData1, updateData, "data.attributes.hp.value", Math.min(prevValues.mhp, srcData1.data.attributes.hp.value));
         } else {
             if (updateData["data.attributes.hp.max"]) {
@@ -1757,7 +1756,7 @@ export class ActorPF extends Actor {
                 }
             }
         }
-        if (fullConditions.wildshaped || fullConditions.polymorphed) //This retains max HP
+        if (fullConditions.wildshaped || fullConditions.polymorph) //This retains max HP
             linkData(srcData1, updateData, "data.attributes.hp.max", prevValues.mhp);
 
 
@@ -1911,8 +1910,8 @@ export class ActorPF extends Actor {
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
         //linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
 
-
-        linkData(data, updateData, "data.details.totalCr", Math.floor(data1.details.cr || 0));
+        let cr = data1.details.cr || 0
+        linkData(data, updateData, "data.details.totalCr", cr < 1 ? cr : Math.floor(cr));
 
 
 
@@ -2664,6 +2663,7 @@ export class ActorPF extends Actor {
         let totalNonRacialLevels = 0;
         data.classes = {};
         data.totalNonEclLevels = 0;
+        data.damage = { nonlethal : {value: data.attributes.hp.nonlethal || 0, max: data.attributes.hp.max || 0}}
         actorData.items.filter(obj => {
             return obj.type === "class";
         }).forEach(cls => {
@@ -2709,8 +2709,14 @@ export class ActorPF extends Actor {
                     alt: classType === "base" ? cls.data.fc.alt.value : 0,
                 },
             };
+            data.classes[tag].spellsKnownPerLevel = []
+            data.classes[tag].powersKnown = []
+            data.classes[tag].powersMaxLevel = []
             for (let _level = 1; _level < cls.data.maxLevel + 1; _level++) {
                 data.classes[tag][`spellPerLevel${_level}`] = cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none" ? cls.data.spellsPerLevel[_level - 1] : undefined
+                if (cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none") data.classes[tag].spellsKnownPerLevel.push(cls.data.spellsKnownPerLevel[_level - 1])
+                if (cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none") data.classes[tag].powersKnown.push(cls.data.powersKnown[_level - 1])
+                if (cls.data.spellcastingType !== null && cls.data.spellcastingType !== "none") data.classes[tag].powersMaxLevel.push(cls.data.powersMaxLevel[_level - 1])
             }
             for (let k of Object.keys(data.classes[tag].savingThrows)) {
                 let formula = CONFIG.D35E.classSavingThrowFormulas[classType][cls.data.savingThrows[k].value];
@@ -2894,11 +2900,14 @@ export class ActorPF extends Actor {
             spellbook.hasPrestigeCl = spellbook.maxPrestigeCl > 0
             spellbook.canAddPrestigeCl = spellbook.availablePrestigeCl > 0
             spellbook.canRemovePrestigeCl = spellbook.bonusPrestigeCl > 0
+            spellbook.powersKnown = data.classes[spellbook.class]?.powersKnown ? data.classes[spellbook.class]?.powersKnown[`${data.classes[spellbook.class].level}`] || 0 : 0
+            spellbook.powersMaxLevel = data.classes[spellbook.class]?.powersMaxLevel ? data.classes[spellbook.class]?.powersMaxLevel[`${data.classes[spellbook.class].level}`] || 0 : 0
             spellbook.cl.total += spellbook.bonusPrestigeCl === undefined ? 0 : spellbook.bonusPrestigeCl;
             // Add spell slots
             spellbook.spells = spellbook.spells || {};
             for (let a = 0; a < 10; a++) {
-                spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null };
+                spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null, known: 0 };
+                spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level] ? data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level][a+1] || 0 : 0) : 0
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
@@ -3722,8 +3731,9 @@ export class ActorPF extends Actor {
         // Invoke the Item roll
         if (usedItem.hasAction)
         {
-            await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
-            await item.addSpellUses(-1);
+            let attackResult = await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
+            let roll = await attackResult.roll;
+            await item.addSpellUses(-1+(-1*roll?.rollData?.useAmount || 0));
             return ;
         }
 
@@ -4073,46 +4083,7 @@ export class ActorPF extends Actor {
     }
 
     rollCMB(options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
-
-        // Add contextual notes
-        let notes = [];
-        const rollData = duplicate(this.data.data);
-        const noteObjects = this.getContextNotes("misc.cmb");
-        for (let noteObj of noteObjects) {
-            rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
-
-            for (let note of noteObj.notes) {
-                if (!isMinimumCoreVersion("0.5.2")) {
-                    let noteStr = "";
-                    if (note.length > 0) {
-                        noteStr = DicePF.messageRoll({
-                            data: rollData,
-                            msgStr: note
-                        });
-                    }
-                    if (noteStr.length > 0) notes.push(...noteStr.split(/[\n\r]+/));
-                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o, rollData), { rollData: rollData })));
-            }
-        }
-        // Add grapple note
-        if (this.data.data.attributes.conditions.grappled) {
-            notes.push("+2 to Grapple");
-        }
-
-        let props = [];
-        if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
-        return DicePF.d20Roll({
-            event: options.event,
-            parts: ["@mod - @drain"],
-            data: { mod: this.data.data.attributes.cmb.total, drain: this.data.data.attributes.energyDrain || 0 },
-            title: game.i18n.localize("D35E.CMB"),
-            speaker: ChatMessage.getSpeaker({ actor: this }),
-            takeTwenty: false,
-            chatTemplate: "systems/D35E/templates/chat/roll-ext.html",
-            chatTemplateData: { hasProperties: props.length > 0, properties: props }
-        });
+        this.rollGrapple(null, options)
     }
 
     getDefenseHeaders() {
@@ -4246,9 +4217,11 @@ export class ActorPF extends Actor {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                     rollModifiers.push(`${i.name}`)
-                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                }
+                if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
                     rollModifiers.push(`${i.name}`)
+                    i.addCharges(-1);
                 }
             })
 
@@ -4285,7 +4258,7 @@ export class ActorPF extends Actor {
                 tooltip: $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML,
                 success: target && roll.total >= target,
                 properties: props,
-                hasProperties: props.length > 0,
+                hasProperties: props.length > 0
             }, {inplace: false});
             // Create message
 
@@ -4295,17 +4268,17 @@ export class ActorPF extends Actor {
         let savingThrowId = "";
         let savingThrowAbility = ability;
         let savingThrowBaseAbility = savingThrowAbility;
-        if (_savingThrow === "willnegates" || _savingThrow === "willhalf") {
+        if (_savingThrow === "willnegates" || _savingThrow === "willhalf" || _savingThrow === "willpartial") {
             savingThrowId = "will";
             savingThrowBaseAbility = "wis"
             if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "wis"
             if (savingThrowAbility === "") savingThrowAbility = "wis"
-        } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf") {
+        } else if (_savingThrow === "reflexnegates" || _savingThrow === "reflexhalf" || _savingThrow === "reflexpartial") {
             savingThrowId = "ref";
             savingThrowBaseAbility = "dex"
             if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "dex"
             if (savingThrowAbility === "") savingThrowAbility = "dex"
-        } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf") {
+        } else if (_savingThrow === "fortitudenegates" || _savingThrow === "fortitudehalf" || _savingThrow === "fortitudepartial") {
             savingThrowId = "fort";
             savingThrowBaseAbility = "con"
             if (!savingThrowAbility || savingThrowAbility?.event) savingThrowAbility = "con"
@@ -4363,6 +4336,176 @@ export class ActorPF extends Actor {
         await new Promise(resolve => {
             new Dialog({
                 title: `${game.i18n.localize("D35E.STRollSavingThrow")}`,
+                content: html,
+                buttons: buttons,
+                classes: ['custom-dialog','wide'],
+                default: "normal",
+                close: html => {
+                    return resolve(roll);
+                }
+            }).render(true);
+        });
+    };
+
+    /**
+     * Make a grapple roll, with optional versus check
+     * @param target target saving throw dc
+     * @param options options
+     * @returns {Promise<unknown>|void}
+     */
+    async rollGrapple(target, options = {}) {
+        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        const _roll = async function (target, form,props) {
+            let grappleModTotal = this.data.data.attributes.cmb.total - (this.data.data.attributes.energyDrain || 0),
+                optionalFeatIds = [],
+                rollMode = null;
+            let grappleManualBonus = 0;
+            // Get data from roll form
+            if (form) {
+                grappleManualBonus = form.find('[name="gr-bonus"]').val() || 0;
+
+                rollMode = form.find('[name="rollMode"]').val();
+
+                $(form).find('[data-type="optional"]').each(function () {
+                    if ($(this).prop("checked"))
+                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                })
+            }
+
+            // Parse combat changes
+            let allCombatChanges = []
+            let rollModifiers = []
+            let attackType = 'grapple';
+            this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
+                if (i.hasCombatChange(attackType,rollData)) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
+                    rollModifiers.push(`${i.name}`)
+                }
+                if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    rollModifiers.push(`${i.name}`)
+                    i.addCharges(-1);
+                }
+            })
+
+            if (rollModifiers.length > 0) props.push({
+                header: game.i18n.localize("D35E.RollModifiers"),
+                value: rollModifiers
+            });
+
+            this._addCombatChangesToRollData(allCombatChanges, rollData);
+            rollData.featGrappleBonus = rollData.featGrappleBonus || 0;
+            rollData.grappleModTotal = grappleModTotal;
+            rollData.grappleManualBonus = grappleManualBonus
+
+
+            let roll = new Roll("1d20 + @grappleModTotal + @grappleManualBonus + @featGrappleBonus", rollData).roll();
+
+
+            let actions = []
+            if (!target) {
+                actions.push({
+                    label: `${game.i18n.localize("D35E.CMB")} ${game.i18n.localize("D35E.Check")}`,
+                    value: `Grapple ${roll.total} on target;`,
+                    isTargeted: false,
+                    action: "customAction",
+                    img: "",
+                    hasImg: false
+                });
+            } else if (target && roll.total < target) {
+                actions.push({
+                    label: `${game.i18n.localize("D35E.Begin")} ${game.i18n.localize("D35E.CMB")}`,
+                    value: `Condition set grappled to true on target;`,
+                    isTargeted: false,
+                    action: "customAction",
+                    img: "",
+                    hasImg: false
+                });
+            }
+
+            const token = this ? this.token : null;
+
+            // Set chat data
+            let chatData = {
+                speaker: ChatMessage.getSpeaker({actor: this.data}),
+                rollMode: rollMode || "gmroll",
+                sound: CONFIG.sounds.dice,
+                "flags.D35E.noRollRender": true
+            };
+            let chatTemplateData = {
+                name: this.name,
+                type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                rollMode: rollMode || "gmroll",
+                tokenId: token ? `${token.scene._id}.${token.id}` : null,
+                actor: this
+            };
+            const templateData = mergeObject(chatTemplateData, {
+                img: this.img,
+                roll: roll,
+                total: roll.total,
+                result: roll.result,
+                target: target,
+                tooltip: $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML,
+                success: target && roll.total >= target,
+                properties: props,
+                hasProperties: props.length > 0,
+                actions: actions
+            }, {inplace: false});
+            // Create message
+
+            await createCustomChatMessage("systems/D35E/templates/chat/grapple.html", templateData, chatData, {rolls: [roll]});
+        }
+
+        // Add contextual notes
+        let notes = [];
+        const rollData = duplicate(this.getRollData());
+        const noteObjects = this.getContextNotes(`"misc.cmb"`);
+        for (let noteObj of noteObjects) {
+            rollData.item = {};
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+
+            for (let note of noteObj.notes) {
+                if (!isMinimumCoreVersion("0.5.2")) {
+                    let noteStr = "";
+                    if (note.length > 0) {
+                        noteStr = DicePF.messageRoll({
+                            data: rollData,
+                            msgStr: note
+                        });
+                    }
+                    if (noteStr.length > 0) notes.push(...noteStr.split(/[\n\r]+/));
+                } else notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o, rollData), { rollData: rollData })));
+            }
+        }
+        let props = this.getDefenseHeaders();
+        if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
+        const label = game.i18n.localize("D35E.CMB");
+
+
+        let template = "systems/D35E/templates/apps/grapple-roll-dialog.html";
+        let dialogData = {
+            data: rollData,
+            rollMode: game.settings.get("core", "rollMode"),
+            rollModes: CONFIG.Dice.rollModes,
+            grFeats: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange('grapple',rollData)),
+            grFeatsOptional: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`grappleOptional`,rollData)),
+            label: label,
+        };
+        const html = await renderTemplate(template, dialogData);
+        let roll;
+        const buttons = {};
+        let wasRolled = false;
+        buttons.normal = {
+            label: game.i18n.localize("D35E.Roll"),
+            callback: html => {
+                wasRolled = true;
+                roll = _roll.call(this,target,html,props)
+            }
+        };
+        await new Promise(resolve => {
+            new Dialog({
+                title: `${game.i18n.localize("D35E.GRRollGrapple")}`,
                 content: html,
                 buttons: buttons,
                 classes: ['custom-dialog','wide'],
@@ -4686,6 +4829,8 @@ export class ActorPF extends Actor {
                 applyHalf = false,
                 noCritical = false,
                 applyPrecision = false,
+                conceal = false,
+                fullConceal = false,
                 rollMode = "gmroll";
             // Get form data
             if (form) {
@@ -4727,13 +4872,21 @@ export class ActorPF extends Actor {
                     ac += new Roll("+4").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.TotalDefense")}`)
                 }
-                if (form.find('[name="covered"]').prop("covered")) {
+                if (form.find('[name="covered"]').prop("checked")) {
                     ac += new Roll("+4").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Covered")}`)
                 }
-                if (form.find('[name="charged"]').prop("charged")) {
+                if (form.find('[name="charged"]').prop("checked")) {
                     ac += new Roll("-2").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Charged")}`)
+                }
+
+                if (form.find('[name="conceal"]').prop("checked")) {
+                    conceal = true;
+                }
+
+                if (form.find('[name="fullconceal"]').prop("checked")) {
+                    fullConceal = true;
                 }
             }
 
@@ -4743,8 +4896,10 @@ export class ActorPF extends Actor {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                     rollModifiers.push(`${i.name}`)
-                } else if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
+                }
+                if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    i.addCharges(-1);
                     rollModifiers.push(`${i.name}`)
                 }
             })
@@ -4763,7 +4918,7 @@ export class ActorPF extends Actor {
             ac += rollData.featAC || 0;
 
             console.log('D35E | Final roll AC', ac)
-            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision, rollModifiers: rollModifiers};
+            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision, rollModifiers: rollModifiers, conceal: conceal, fullConceal: fullConceal};
         }
         let rollData = this.getRollData();
         // Render modal dialog
@@ -4827,7 +4982,62 @@ export class ActorPF extends Actor {
         return finalAc || {ac: -1, applyHalf: false, noCritical: false};
     }
 
-    /**
+    static async applyAbilityDamage(damage, ability, actor = null) {
+        let tokensList = [];
+        const promises = [];
+        if (actor === null) {
+            if (game.user.targets.size > 0)
+                tokensList = Array.from(game.user.targets);
+            else
+                tokensList = canvas.tokens.controlled;
+            if (!tokensList.length) {
+                ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+                return
+            }
+        } else {
+            tokensList.push({actor: actor})
+        }
+
+        for (let t of tokensList) {
+            let a = t.actor,
+                abilityField = `data.abilities.${ability}.damage`,
+                abilityDamage = a.data.data.abilities[ability].damage || 0,
+                updateData = {}
+                updateData[abilityField] = abilityDamage + damage
+                promises.push(t.actor.update(updateData));
+        }
+        return Promise.all(promises);
+    }
+
+    static async applyAbilityDrain(damage, ability, actor = null) {
+        let tokensList = [];
+        const promises = [];
+        if (actor === null) {
+            if (game.user.targets.size > 0)
+                tokensList = Array.from(game.user.targets);
+            else
+                tokensList = canvas.tokens.controlled;
+            if (!tokensList.length) {
+                ui.notifications.warn(game.i18n.localize("D35E.NoTokensSelected"));
+                return
+            }
+        } else {
+            tokensList.push({actor: actor})
+        }
+
+        for (let t of tokensList) {
+            let a = t.actor,
+                abilityField = `data.abilities.${ability}.drain`,
+                abilityDrain = a.data.data.abilities[ability].drain || 0,
+                updateData = {}
+            updateData[abilityField] = abilityDrain + damage
+            promises.push(t.actor.update(updateData));
+        }
+        return Promise.all(promises);
+    }
+
+
+        /**
      * Apply rolled dice damage to the token or tokens which are currently controlled.
      * This allows for damage to be scaled by a multiplier to account for healing, critical hits, or resistance
      *
@@ -4861,8 +5071,7 @@ export class ActorPF extends Actor {
                 nonLethal = 0,
                 tmp = parseInt(hp.temp) || 0,
                 hit = false,
-                crit = false,
-                dt = value > 0 ? Math.min(tmp, value) : 0;
+                crit = false;
 
             if (!a.hasPerm(game.user, "OWNER")) {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
@@ -4888,7 +5097,24 @@ export class ActorPF extends Actor {
                         finalAc.applyHalf = ev.applyHalf === true;
                     }
                 }
-                hit = roll >= finalAc.ac || roll === -1337 || natural20 || finalAc.noCheck // This is for spells and natural 20
+                let concealMiss = false;
+                let concealRoll = 0;
+                let concealTarget = 0;
+                let concealRolled = false;
+                if (finalAc.conceal || finalAc.fullConceal) {
+                    concealRolled = true;
+                    concealRoll = new Roll("1d100").roll().total;
+                    if (finalAc.fullConceal) concealTarget = 50
+                    if (finalAc.conceal) concealTarget = 20
+                    if (concealRoll <= 50 && finalAc.fullConceal) {
+                        concealTarget = 50;
+                        concealMiss = true;
+                    } else if (concealRoll <= 20 && finalAc.conceal) {
+                        concealTarget = 20;
+                        concealMiss = true;
+                    }
+                }
+                hit = ((roll >= finalAc.ac || roll === -1337 || natural20) && !concealMiss) || finalAc.noCheck // This is for spells and natural 20
                 crit = (critroll >= finalAc.ac || (critroll && finalAc.noCheck) || natural20Crit)
                     && !finalAc.noCritical
                     && !fumble20Crit
@@ -4920,10 +5146,10 @@ export class ActorPF extends Actor {
                 }
                 value = damageData.damage;
                 if (finalAc.applyHalf)
-                    value = Math.floor(value/2);
+                    value = Math.max(Math.floor(value/2),1);
                 nonLethal += damageData.nonLethalDamage;
                 if (finalAc.applyHalf)
-                    nonLethal = Math.floor(nonLethal/2);
+                    nonLethal =  Math.max(Math.floor(nonLethal/2),1);
 
                 damageData.nonLethalDamage = nonLethal
                 damageData.displayDamage = value
@@ -4952,6 +5178,10 @@ export class ActorPF extends Actor {
                     ac: finalAc,
                     hit: hit,
                     crit: crit,
+                    concealMiss: concealMiss,
+                    concealRoll: concealRoll,
+                    concealTarget: concealTarget,
+                    concealRolled: concealRolled,
                     isSpell: roll === -1337,
                     applyHalf: finalAc.applyHalf,
                     fortifyRolled: fortifyRolled,
@@ -4967,12 +5197,14 @@ export class ActorPF extends Actor {
             }
 
 
-            if (hit)
+            if (hit) {
+                let dt = value > 0 ? Math.min(tmp, value) : 0;
                 promises.push(t.actor.update({
                     "data.attributes.hp.nonlethal": _nonLethal + nonLethal,
                     "data.attributes.hp.temp": tmp - dt,
                     "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
                 }));
+            }
         }
         return Promise.all(promises);
     }
@@ -5595,6 +5827,31 @@ export class ActorPF extends Actor {
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
 
+            case "Grapple":
+                // Rolls arbitrary attack
+                if (action.parameters.length === 1) {
+                    this.rollGrapple(cleanParam(action.parameters[0]))
+                } else
+                    this.rollGrapple()
+                break;
+            case "AbilityDamage":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 2) {
+                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
+            case "AbilityDrain":
+                // Rolls arbitrary attack
+                console.log(action)
+                if (action.parameters.length === 2) {
+                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
             case "Regenerate":
                 // Rolls arbitrary attack
                 console.log(action)
@@ -5642,6 +5899,9 @@ export class ActorPF extends Actor {
     }
 
     //
+
+
+
     _createConsumableSpellDialog(itemData) {
         new Dialog({
             title: game.i18n.localize("D35E.CreateItemForSpell").format(itemData.name),
@@ -5740,6 +6000,13 @@ export class ActorPF extends Actor {
             };
             this.update(masterData);
         }
+    }
+
+    async createAttackSpell(itemData, type) {
+        let data = await ItemPF.toAttack(itemData);
+
+        if (data._id) delete data._id;
+        await this.createEmbeddedEntity("OwnedItem", data);
     }
 
     async createConsumableSpell(itemData, type) {
@@ -5916,11 +6183,23 @@ export class ActorPF extends Actor {
 
                 if (itemData.uses && itemData.uses.per === "day" && itemData.uses.value !== itemData.uses.max) {
                     hasItemUpdates = true;
-                    itemUpdate["data.uses.value"] = itemData.uses.max;
+                    if (itemData.uses.rechargeFormula) {
+                        itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
+                    }
+                    else
+                    {
+                        itemUpdate["data.uses.value"] = itemData.uses.max;
+                    }
                 }
                 if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.per === "day" && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
                     hasItemUpdates = true;
-                    itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+                    if (itemData.enhancements.uses.rechargeFormula) {
+                        itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
+                    }
+                    else
+                    {
+                        itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+                    }
                 }
                 else if (item.type === "spell") {
                     const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
@@ -5936,7 +6215,13 @@ export class ActorPF extends Actor {
                     let enhItems = duplicate(itemData.enhancements.items)
                     for (let _item of enhItems) {
                         if (_item.data.uses.per === "day" && _item.data.uses.value !== _item.data.uses.max) {
-                            _item.data.uses.value = _item.data.uses.max;
+                            if (_item.data.uses.rechargeFormula) {
+                                _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
+                            }
+                            else
+                            {
+                                _item.data.uses.value = _item.data.uses.max;
+                            }
                             hasItemUpdates = true;
                         }
                     }
@@ -6070,6 +6355,7 @@ export class ActorPF extends Actor {
         return buffs.reduce((acc, cur) => {
             const id = cur.uuid;
             if (cur.data.data.hideFromToken) return acc;
+            if (cur.data.data?.buffType === "shapechange") return acc;
 
             if (!acc[id]) acc[id] = { id: cur.id, label: cur.name, icon: cur.data.img, item: cur };
             if (cur.data.data.active) acc[id].active = true;
@@ -6078,5 +6364,74 @@ export class ActorPF extends Actor {
         }, {});
     }
 
+    async syncToCompendium() {
+        if (!this.data.data.companionUuid) return;
+        $.ajax({
+            url: `http://localhost:5000/api/character/${this.data.data.companionUuid}`,
+            type: 'PUT',
+            crossDomain: true,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(this.data),
+            success: function(data) {
+                //play with data
+            }
+        });
+    }
+
+    getChargesFromItemById(id) {
+        let _item = this.items.find(item => item._id === id || item.data.data.uniqueId === id)
+        if (_item != null) {
+            return _item.data?.data?.uses?.value || 0
+        } else {
+            return 0;
+        }
+    }
+
+    getMaxChargesFromItemById(id) {
+        let _item = this.items.find(item => item._id === id || item.data.data.uniqueId === id)
+        if (_item != null) {
+            return _item.data?.data?.uses?.max || 0
+        } else {
+            return 0;
+        }
+    }
+
+    getItemByUidOrId(id) {
+        let _item = this.items.find(item => item._id === id || item.data.data.uniqueId === id)
+        if (_item != null) {
+            return _item
+        } else {
+            return null;
+        }
+    }
+
+    async renderBuffEndChatCard(items) {
+        const chatTemplate = "systems/D35E/templates/chat/roll-ext.html";
+
+        // Create chat data
+        let chatData = {
+            user: game.user._id,
+            type: CONST.CHAT_MESSAGE_TYPES.CHAT,
+            sound: CONFIG.sounds.dice,
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            rollMode: game.settings.get("core", "rollMode"),
+        };
+        // Handle different roll modes
+        switch (chatData.rollMode) {
+            case "gmroll":
+                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                break;
+            case "selfroll":
+                chatData["whisper"] = [game.user._id];
+                break;
+            case "blindroll":
+                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                chatData["blind"] = true;
+        }
+
+        // Send message
+        await createCustomChatMessage("systems/D35E/templates/chat/deactivate-buff.html", {items: items, actor: this}, chatData,  {rolls: []})
+    }
 
 }

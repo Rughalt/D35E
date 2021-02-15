@@ -64,7 +64,7 @@ export class DicePF {
         // Convert the roll to a chat message
         if (chatTemplate) {
           // Create roll template data
-          const d20 = roll.parts[0];
+          const d20 = roll.terms[0];
           const rollData = mergeObject({
             user: game.user._id,
             formula: roll.formula,

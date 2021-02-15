@@ -93,11 +93,13 @@ export class ActorSheetPF extends ActorSheet {
       i.data.containerId = getProperty(i.data, "data.containerId");
       i.data.hasDamage = i.hasDamage;
       i.data.hasEffect = i.hasEffect;
+      i.data.charges = i.charges;
+      i.data.maxCharges = i.maxCharges;
       i.data.container = getProperty(i.data, "data.container");
       i.data.hasAction = i.hasAction || i.isCharged;
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
       i.data.showUnidentifiedData = i.showUnidentifiedData;
-      if (i.showUnidentifiedData) i.data.name = getProperty(i.data, "data.unidentified.name") || getProperty(i.data, "data.identifiedName") || i.data.name;
+      if (i.showUnidentifiedData) i.data.name = getProperty(i.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
       else i.data.name = getProperty(i.data, "data.identifiedName") || i.data.name;
       return i.data;
     });
@@ -341,6 +343,7 @@ export class ActorSheetPF extends ActorSheet {
             && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max != null) ? data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType].max : [],
         uses: book.spells === undefined ? 0 : book?.spells["spell"+a]?.value || 0,
         baseSlots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.base || 0,
+        maxKnown: book.spells === undefined ? 0 : book?.spells["spell"+a]?.maxKnown || 0,
         slots: book.spells === undefined ? 0 : book?.spells["spell"+a]?.max || 0,
         dataset: { type: "spell", level: a, spellbook: bookKey },
         specialSlotPrepared: false,
@@ -369,6 +372,8 @@ export class ActorSheetPF extends ActorSheet {
 
     for (let a = 0; a < 10; a++) {
       spellbook[a].slotsLeft = spellbook[a].spells.map(item => (item.data.specialPrepared ? 0 : item.data.preparation.maxAmount) || 0).reduce((prev, next) => prev + next, 0) < spellbook[a].slots
+      spellbook[a].known = spellbook[a].spells.length
+      spellbook[a].knownOverLimit = spellbook[a].maxKnown > 0 && spellbook[a].known > spellbook[a].maxKnown;
     }
 
 
@@ -397,8 +402,8 @@ export class ActorSheetPF extends ActorSheet {
     keys.forEach( a => {
       let skl = skillset[a]
       result.all.skills[a] = skl;
-      if (skl.rank > 0 || (!skl.rt && this.actor.data.data.displayNonRTSkills)) result.known.skills[a] = skl;
-      else if (skl.subSkills !== undefined) {
+      if ((skl.rank > 0 || (!skl.rt && this.actor.data.data.displayNonRTSkills) || (skl.visibility === "always")) && (skl.visibility !== "never")) result.known.skills[a] = skl;
+      else if (skl.subSkills !== undefined && (skl.visibility !== "never")) {
         result.known.skills[a] = skl;
       }
       if (skl.background) result.background.skills[a] = skl;
@@ -738,7 +743,26 @@ export class ActorSheetPF extends ActorSheet {
 
 
     })
-
+    {
+      $(`.sync-to-companion`).unbind( "mouseup" );
+      $(`.sync-to-companion`).mouseup(ev => {
+        this.actor.syncToCompendium()
+      });
+      $(`.backup-to-companion`).unbind( "mouseup" );
+      $(`.backup-to-companion`).mouseup(async ev => {
+        $.ajax({
+          url: 'http://localhost:5000/api/backup/da26937f-7ede-4c91-8087-e2c39c18e475',
+          type: 'PUT',
+          crossDomain: true,
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(await this.actor.exportToJSON()),
+          success: function(data) {
+            //play with data
+          }
+        });
+      });
+    }
     {
       let parsedDrawerState = JSON.parse(localStorage.getItem(`D35E-drawer-state-${this.actor.id}`) || 'null');
       let drawerState = !jQuery.isEmptyObject(parsedDrawerState) ? new Set(parsedDrawerState) : new Set();
@@ -1394,9 +1418,9 @@ export class ActorSheetPF extends ActorSheet {
     const li = event.currentTarget.closest(".item");
 
     button.disabled = true;
-    const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
+    const msg = `<p>${game.i18n.localize("D35E.RechargeItemConfirmation")}</p>`;
     Dialog.confirm({
-      title: game.i18n.localize("D35E.DeleteItem"),
+      title: game.i18n.localize("D35E.RechargeItem"),
       content: msg,
       yes: () => {
         let itemId = li.dataset.itemId;
@@ -1405,10 +1429,23 @@ export class ActorSheetPF extends ActorSheet {
         const itemData = item.data.data;
         itemUpdate['_id'] = itemId
         if (itemData.uses && itemData.uses.value !== itemData.uses.max) {
-          itemUpdate["data.uses.value"] = itemData.uses.max;
+          if (itemData.uses.rechargeFormula) {
+            itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
+          }
+          else
+          {
+            itemUpdate["data.uses.value"] = itemData.uses.max;
+          }
         }
+
         if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
-          itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+          if (itemData.enhancements.uses.rechargeFormula) {
+            itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
+          }
+          else
+          {
+            itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+          }
         }
         else if (item.type === "spell") {
           const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
@@ -1422,7 +1459,11 @@ export class ActorSheetPF extends ActorSheet {
         if (itemData.enhancements && itemData.enhancements && itemData.enhancements.items) {
           let enhItems = duplicate(itemData.enhancements.items)
           for (let _item of enhItems) {
-            if (_item.data.uses.value !== _item.data.uses.max) {
+            if (_item.data.uses.rechargeFormula) {
+              _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
+            }
+            else
+            {
               _item.data.uses.value = _item.data.uses.max;
             }
           }
@@ -1523,7 +1564,7 @@ export class ActorSheetPF extends ActorSheet {
 
   _onRollCMB(event) {
     event.preventDefault();
-    this.actor.rollCMB({event: event});
+    this.actor.rollGrapple(null, {event: event});
   }
 
   _onRollInitiative(event) {
@@ -1594,6 +1635,8 @@ export class ActorSheetPF extends ActorSheet {
     let containerItemsWeight = new Map()
     let containerList = []
 
+
+    data.useableAttacks = []
     data.totalInventoryValue = 0;
     // Partition items by category
     let [items, spells, feats, classes, attacks] = data.items.reduce((arr, item) => {
@@ -1611,7 +1654,9 @@ export class ActorSheetPF extends ActorSheet {
       if ( item.type === "spell" ) arr[1].push(item);
       else if ( item.type === "feat" ) arr[2].push(item);
       else if ( item.type === "class" ) arr[3].push(item);
-      else if (item.type === "attack") arr[4].push(item);
+      else if (item.type === "attack") {
+        arr[4].push(item);
+      }
       else if (item.type === "full-attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
         //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
@@ -1696,6 +1741,7 @@ export class ActorSheetPF extends ActorSheet {
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
       if (i?.data?.subType === 'container') {
+        i.convertedCapacity = Math.round(i.data.capacity * weightConversion * 10) / 10
         containerList.push({id: i.id, name: i.name})
         containersMap.set(i.id,i)
       }
@@ -1780,8 +1826,6 @@ export class ActorSheetPF extends ActorSheet {
 
     // Attacks
 
-    data.useableAttacks = []
-
     const attackSections = {
       all: { label: game.i18n.localize("D35E.All"), items: [], canCreate: false, initial: true, showTypes: true, dataset: { type: "attack" } },
       weapon: { label: game.i18n.localize("D35E.AttackTypeWeaponPlural"), items: [], canCreate: true, initial: false, showTypes: false, dataset: { type: "attack", "attack-type": "weapon" } },
@@ -1795,10 +1839,17 @@ export class ActorSheetPF extends ActorSheet {
     for (let a of attacks) {
       let s = a.data.attackType;
       a.disabled = !this._isAttackUseable(a,equippedWeapons);
-      if (this._isAttackUseable(a,equippedWeapons)) data.useableAttacks.push(a)
       if (!attackSections[s]) continue;
       attackSections[s].items.push(a);
       attackSections.all.items.push(a);
+    }
+
+    for (let item of data.items) {
+      if (item.type === "attack") {
+        if (this._isAttackUseable(item,equippedWeapons)) data.useableAttacks.push(item)
+      } else {
+        if (!this._isMelded(item) && item.data.favorite) data.useableAttacks.push(item)
+      }
     }
 
     attackSections.full.items.forEach(fullAttackItem => {
@@ -1833,6 +1884,10 @@ export class ActorSheetPF extends ActorSheet {
     if (a.data.melded) return false;
     if (a.data.originalWeaponId && !equippedWeapons.has(a.data.originalWeaponId)) return false;
     return true;
+  }
+
+  _isMelded(a) {
+    if (a.data.melded) return true;
   }
 
   /**
@@ -2040,6 +2095,9 @@ export class ActorSheetPF extends ActorSheet {
   }
 
   async importItem(itemData, dataType) {
+    if (itemData.type === "spell" && this.actor.data.type === "trap") {
+      return this.actor.createAttackSpell(itemData);
+    }
     if (itemData.type === "spell" && !itemData.data.isPower && this.currentPrimaryTab === "inventory") {
       return this.actor._createConsumableSpellDialog(itemData);
     }
@@ -2223,6 +2281,8 @@ export class ActorSheetPF extends ActorSheet {
         $(this).toggle($(this).text().toLowerCase().indexOf(filter) > -1)
       });
     }
+
+
   }
 
   _closeInlineData(ev) {

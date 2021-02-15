@@ -1,0 +1,54 @@
+### Features
+- Psionic powers additional points
+    - Psionic powers can use additional Power Points. You can reference this value using `@useAmount` variable in rolls
+    - Rules regarding Power Point usage are not enforced on selection, but when using attack.
+- Ability damage/Restoration
+    - Special action syntax `AbilityDamage str 1d6 on target`
+- Grapple rolls, with counter rolls and applying "Grappled" state
+- Buffs End of Effect announcement
+
+### Quality of Life Changes
+- Spells can be dragged to Trap actors creating attacks
+- Ability to set per-skill visibility on Summary screen
+- Partial spell saves
+- Nonlethal damage on Token bars
+
+### All changes
+- [346](https://github.com/Rughalt/D35E/issues/346) - Weapon size on large monsters is still medium closed 
+- [345](https://github.com/Rughalt/D35E/issues/345) - Shapechange Condition icon is repeated closed 
+- [344](https://github.com/Rughalt/D35E/issues/344) - Add a condfig option to disable tutorial closed 
+- [343](https://github.com/Rughalt/D35E/issues/343) - Buff with special actions gets toggled twice on activation closed 
+- [342](https://github.com/Rughalt/D35E/issues/342) - Ride skill have armor check penalty, it should not closed 
+- [340](https://github.com/Rughalt/D35E/issues/340) - Apply half damage should have a minimum of 1 closed 
+- [339](https://github.com/Rughalt/D35E/issues/339) - Custom Class skills are not bold closed 
+- [338](https://github.com/Rughalt/D35E/issues/338) - Deprecated terms used to roll dice closed 
+- [337](https://github.com/Rughalt/D35E/issues/337) - Orcs and orcas mixed up in stats/sizes/icons closed 
+- [336](https://github.com/Rughalt/D35E/issues/336) - No images show for prismatic dragons closed 
+- [335](https://github.com/Rughalt/D35E/issues/335) - Armor enhancement is adding the incorrect type of enhancement closed 
+- [334](https://github.com/Rughalt/D35E/issues/334) - Concealment on defence dialog doesnt work closed 
+- [333](https://github.com/Rughalt/D35E/issues/333) - Incorrect intelligence on Adder familiar closed 
+- [332](https://github.com/Rughalt/D35E/issues/332) - Lights from characters are throwing up an error message on start up closed 
+- [330](https://github.com/Rughalt/D35E/issues/330) - Buffs activated from chat apply to actor master sheets, not their unlinked tokens closed 
+- [328](https://github.com/Rughalt/D35E/issues/328) - Buffs on NPC sheets behave incorrectly closed 
+- [326](https://github.com/Rughalt/D35E/issues/326) - Add nonlethal damage and temporary HP as options for token display bars closed 
+- [324](https://github.com/Rughalt/D35E/issues/324) - Haste is affecting spells which it shouldnt closed 
+- [322](https://github.com/Rughalt/D35E/issues/322) - Moving the party list opens character sheet closed 
+- [321](https://github.com/Rughalt/D35E/issues/321) - Companions can't be added to the party list closed 
+- [319](https://github.com/Rughalt/D35E/issues/319) - Unidentified Item Default Name closed 
+- [315](https://github.com/Rughalt/D35E/issues/315) - Bard Inspire courage maths calculation incorrect closed 
+- [313](https://github.com/Rughalt/D35E/issues/313) - Haste not removing extra attack when haste has is not active closed 
+- [306](https://github.com/Rughalt/D35E/issues/306) - Tiefling not set as Outsider closed 
+- [305](https://github.com/Rughalt/D35E/issues/305) - Rogue lvl 10 missing special ability closed 
+- [303](https://github.com/Rughalt/D35E/issues/303) - Add the ability to add spells to trap attacks closed 
+- [302](https://github.com/Rughalt/D35E/issues/302) - Polymorph Does Not Override Racial Traits closed 
+- [301](https://github.com/Rughalt/D35E/issues/301) - Toggle spell description cards from appearing in chat closed 
+- [294](https://github.com/Rughalt/D35E/issues/294) - Magic Item Charges recharge closed 
+- [290](https://github.com/Rughalt/D35E/issues/290) - Activated Spells/Abilities on Summary closed 
+- [289](https://github.com/Rughalt/D35E/issues/289) - Item usage linking closed 
+- [281](https://github.com/Rughalt/D35E/issues/281) - End Effect announce and debuff capability closed 
+- [274](https://github.com/Rughalt/D35E/issues/274) - Request: Allow the attack dialog to save attack options selected or persist them closed 
+- [262](https://github.com/Rughalt/D35E/issues/262) - Limiting Spells Known closed 
+- [247](https://github.com/Rughalt/D35E/issues/247) - Ability Damage/Restoration closed 
+- [246](https://github.com/Rughalt/D35E/issues/246) - Per Skill visibility setting closed 
+- [238](https://github.com/Rughalt/D35E/issues/238) - Spell saves with partial closed 
+- [236](https://github.com/Rughalt/D35E/issues/236) - Make the Grapple roll complete closed 

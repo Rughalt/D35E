@@ -1245,6 +1245,8 @@ D35E.combatChangeType = {
   'defenseOptional': 'D35E.DefenseOptional',
   'savingThrow': 'D35E.SavingThrow',
   'savingThrowOptional': 'D35E.SavingThrowOptional',
+  'grapple': 'D35E.CMB',
+  'grappleOptional': 'D35E.CMBOptional',
 };
 
 CONFIG.Combat.initiative.decimals = 2;
@@ -1275,10 +1277,13 @@ D35E.damageTypes = {
 D35E.savingThrowTypes = {
   'willhalf': 'D35E.STWillHalf',
   'willnegates': 'D35E.STWillNegates',
+  'willpartial': 'D35E.STWillPartial',
   'reflexhalf': 'D35E.STReflexHalf',
   'reflexnegates': 'D35E.STReflexNegates',
+  'reflexpartial': 'D35E.STReflexPartial',
   'fortitudehalf': 'D35E.STFortitudeHalf',
   'fortitudenegates': 'D35E.STFortitudeNegates',
+  'fortitudepartial': 'D35E.STFortitudePartial',
 };
 
 

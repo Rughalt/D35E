@@ -40,6 +40,7 @@ import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
+import {applyConfigModifications} from "./module/config-tools.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -95,10 +96,11 @@ Hooks.once("init", async function() {
 
   CONFIG.statusEffects = getConditions();
 
+
   D35ELayer.registerLayer();
   // Preload Handlebars Templates
   await preloadHandlebarsTemplates();
-
+  applyConfigModifications();
   // Patch Core Functions
   PatchCore();
 
@@ -183,8 +185,8 @@ Hooks.once("ready", async function() {
 
   await cache.buildCache();
   console.log("D35E | Cache is ", CACHE)
-  game.actors.entities.forEach(obj => { obj._updateChanges({ sourceOnly: true }); });
-  
+  game.actors.entities.forEach(obj => { obj._updateChanges({sourceOnly: true}, {skipToken: true}); });
+
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Attacks(app, html, data) });
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Buffs(app, html, data) });
 
@@ -200,6 +202,7 @@ Hooks.once("ready", async function() {
     ).default();
     return;
   }
+
 
   // Edit next line to match module.
   const system = game.system;
@@ -367,12 +370,15 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
   if (actor != null) {
     actor.refresh();
     let itemUpdateData = []
+    let itemsEnding = []
     let itemResourcesData = {}
     if (actor.items !== undefined && actor.items.size > 0) {
       // Update items
       for (let i of actor.items) {
         actor.getItemResourcesUpdate(i, itemResourcesData);
         let _data = i.getElapsedTimeUpdateData(1)
+        if (_data && _data["data.active"] === false)
+          itemsEnding.push(i)
         if (_data && !_data.delete) itemUpdateData.push(_data);
         else if (_data && _data.delete === true) {
           actor.deleteOwnedItem(_data._id, { stopUpdates: true })
@@ -383,7 +389,8 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
 
     if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
     if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
-
+    if (itemsEnding.length)
+      actor.renderBuffEndChatCard(itemsEnding)
     actor.renderFastHealingRegenerationChatCard();
   }
 });
@@ -430,6 +437,10 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
+  } else {
+    // if (actor.data.data.companionAutosync) {
+    //   actor.syncToCompendium()
+    // }
   }
 });
 

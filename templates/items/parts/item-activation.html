@@ -15,6 +15,15 @@
 </div>
 {{#if data.activation.type}}
 
+{{#unless isAttack}}
+<div class="form-group">
+  <label>{{localize "D35E.Favorite"}}</label>
+  <label class="checkbox" style="position: relative; flex: 0 20px">
+    <input type="checkbox" class="stylized" name="data.favorite" {{checked data.favorite}}/>
+    <span class="checkmark"></span>
+  </label>
+</div>
+{{/unless}}
 
 {{!-- Ability Target --}}
 <div class="form-group input-select-select">
@@ -76,9 +85,13 @@
     <label>{{localize "D35E.LimitedUses"}}</label>
     <div class="form-fields">
       {{#if isCharged}}
-      <input type="text" name="data.uses.value" value="{{data.uses.value}}" data-dtype="Number"/>
+      {{#unless data.linkedChargeItem.id}}
+      <input type="text" name="data.uses.value" value="{{charges}}" data-dtype="Number"/>
+      {{else}}
+      <input type="text" disabled value="{{charges}}" data-dtype="Number"/>
+      {{/unless}}
       <span class="sep"> / </span>
-      <input type="text" value="{{data.uses.max}}" disabled data-dtype="Number"/>
+      <input type="text" value="{{maxCharges}}" disabled data-dtype="Number"/>
       {{/if}}
       <select name="data.uses.per">
         {{#select data.uses.per}}
@@ -90,17 +103,45 @@
       </select>
     </div>
   </div>
+  {{#unless data.linkedChargeItem.id}}
   {{#if isCharged}}
   <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumUsesFormula"}}</label>
     <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
   </div>
+
+  <div class="form-group uses-recharge-formula">
+    <label>{{localize "D35E.RechargeFormula"}} <i class="fas fa-info-circle tooltip">
+      <div class="tooltipcontent"><strong>{{localize "D35E.RechargeFormula"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.RechargeFormulaInfo"}}</p></div>
+    </i></label>
+    <input type="text" name="data.uses.rechargeFormula" value="{{data.uses.rechargeFormula}}" placeholder="{{localize "D35E.RechargeFormula"}}"/>
+  </div>
   {{/if}}
+  {{/unless}}
+  <div class="charge-link flexcol">
+    {{#unless data.linkedChargeItem.id}}
+      <div style="width: 100%; text-align: center; padding: 12px">
+        {{localize "D35E.DropChargeLinkItem"}}
+      </div>
+    {{else}}
+      <h4>{{localize "D35E.LinkedCharge"}} {{data.linkedChargeItem.id}}<a style="float: right" class="colorized-link remove-charge-link">{{localize "D35E.UnlinkCharge"}}</a></h4>
+      <div class="form-group">
+      <img src="{{data.linkedChargeItem.img}}">
+      <label>{{data.linkedChargeItem.name}}</label>
 
-  <div class="form-group stacked">
-    <label class="checkbox">
-      <input type="checkbox" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
+
+
+      </div>
+      {{/unless}}
+    <em style="align-self: flex-end;">{{localize "D35E.LinkedChargeDescription"}}</em>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "D35E.AutoDeductCharges"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/>
+      <span class="checkmark"></span>
     </label>
-
 
   </div>
 
@@ -109,9 +150,11 @@
     <input style="width: 40px" type="text" value="{{data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
   </div>
 
-  <div class="form-group stacked">
-    <label class="checkbox">
-      <input type="checkbox" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/> {{localize "D35E.AllowMultipleUses"}}
+  <div class="form-group">
+    <label>{{localize "D35E.AllowMultipleUses"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/>
+      <span class="checkmark"></span>
     </label>
   </div>
 {{/unless}}

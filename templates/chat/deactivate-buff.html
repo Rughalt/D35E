@@ -1,0 +1,20 @@
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+<header class="card-header flexrow">
+    <img src="{{actor.img}}" title="{{actor.name}}" width="36" height="36"/>
+    <h3 class="item-name">{{actor.name}}</h3>
+</header>
+
+<div class="card-content">
+    <strong style="padding: 0px 2px; margin-bottom: -4px; margin-top: 4px; display: block;">{{localize "D35E.Deactivated"}} {{localize "D35E.Buffs"}}</strong>
+    {{#each items as |item|}}
+    <header class="card-header flexrow">
+        <img src="{{item.img}}" title="{{item.name}}" width="24" height="24" style="flex: 0 0 24px;"/>
+        <h3 class="item-name" style="font-size: 16px; line-height: 24px;">{{item.name}}</h3>
+    </header>
+    {{/each}}
+</div>
+{{#if hasExtraText}}
+<div class="extra-text gm-sensitive">{{{extraText}}}</div>
+{{/if}}
+
+</div>

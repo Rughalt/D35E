@@ -1,23 +1,23 @@
 <form class="attack-form">
     {{#if hasAttack}}
     <div class="form-group">
-        <label>{{localize "D35E.AttackRollBonus"}}</label>
-        <input type="text" name="attack-bonus" value="" placeholder="e.g. +1d4"/>
+        <label>{{localize "D35E.AttackRollBonus"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <input type="text" name="attack-bonus" value="" class="auto-save" placeholder="e.g. +1d4"/>
     </div>
     {{/if}}
     {{#if hasDamage}}
     <div class="form-group">
-        <label>{{localize "D35E.DamageBonus"}}</label>
-        <input type="text" name="damage-bonus" value="" placeholder="e.g. +1d4"/>
+        <label>{{localize "D35E.DamageBonus"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <input type="text" name="damage-bonus" value="" class="auto-save" placeholder="e.g. +1d4"/>
     </div>
     {{/if}}
     {{#if hasAttack}}
     {{#if hasDamage}}
 
     <div class="form-group">
-    <label>{{localize "D35E.WeaponPropNonLethal"}}</label>
+    <label>{{localize "D35E.WeaponPropNonLethal"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
     <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-        <input type="checkbox" class="stylized" name="nonLethal" {{#if nonLethal}}checked{{/if}}/>
+        <input type="checkbox" class="stylized auto-save" name="nonLethal" {{#if nonLethal}}checked{{/if}}/>
         <span class="checkmark"></span>
     </label>
     </div>
@@ -95,11 +95,11 @@
     {{#unless isRangedWeapon}}
     <div class="form-group">
         {{#if canPowerAttack}}
-        <label class="slider">Power Attack
+        <label class="slider">Power Attack <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i>
         </label>
-        <input type="range" name="pa" min="0" max="{{maxPowerAttackValue}}" value="0" class="slider" style="flex: 1"
+        <input type="range" name="pa" min="0" max="{{maxPowerAttackValue}}" value="0" class="slider auto-save" style="flex: 1"
                onchange="this.nextElementSibling.value=this.value">
-        <input type="text" name="power-attack" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        <input type="text" class="auto-save" name="power-attack" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
         {{/if}}
     </div>
     {{/unless}}
@@ -184,9 +184,9 @@
 
     {{#each weaponFeatsOptional as |feat|}}
     <div class="form-group">
-        <label>{{feat.data.name}}</label>
+        <label style="{{#unless feat.hasUseableChange}}opacity: 0.8{{/unless}}">{{feat.data.name}} {{#if feat.isCharged}}({{feat.charges}} charges){{/if}}</label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-            <input type="checkbox" class="stylized" data-feat-optional="{{feat.id}}" name="optional-{{feat.id}}"
+            <input type="checkbox" {{#unless feat.hasUseableChange}}disabled name="optional-{{feat.id}}"{{/unless}} class="stylized" data-feat-optional="{{feat.id}}"
                    data-type="optional"/>
             <span class="checkmark"></span>
         </label>
@@ -212,8 +212,8 @@
     {{#if hasAttack}}{{#if hasDamage}}
     {{#unless isRangedWeapon}}
     <div class="form-group">
-        <label>{{localize "D35E.WeaponFightingMode"}}</label>
-        <select name="twf-attack-mode" onchange="changeTWF(this)" value="{{attackType}}">
+        <label>{{localize "D35E.WeaponFightingMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <select name="twf-attack-mode" onchange="changeTWF(this)" value="{{attackType}}" class="auto-save">
             {{#select attackType}}
             {{#each twoWeaponAttackTypes as |label mode|}}
             <option value="{{mode}}">{{localize label}}</option>
@@ -248,8 +248,8 @@
     {{/if}}{{/if}}
     {{#if hasDamage}}{{#if hasDamageAbility}}{{#unless isNaturalAttack}}
     <div class="form-group select">
-        <label>{{localize "D35E.DamageAbility"}}</label>
-        <select name="damage-ability-multiplier" data-type="dmg-mult">
+        <label>{{localize "D35E.DamageAbility"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <select name="damage-ability-multiplier" data-type="dmg-mult"  class="auto-save">
             {{#select data.item.ability.damageMult}}
             <option value="0.5">x0.5</option>
             <option value="1">x1</option>
@@ -262,8 +262,8 @@
 
     {{#if isRangedWeapon}}
     <div class="form-group select">
-        <label>{{localize "D35E.LootTypeAmmo"}}</label>
-        <select name="ammunition-id" onchange="enableDisableFullAttack(this)">
+        <label>{{localize "D35E.LootTypeAmmo"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <select name="ammunition-id" onchange="enableDisableFullAttack(this)" class="auto-save">
             {{#select ammo}}
             <option value="none" data-ammo-count="9999" data-dmg-formula="">None</option>
             {{#each ammunition as |item iid|}}
@@ -355,10 +355,24 @@
         {{/if}}
     </div>
 
+    <div class="form-group">
+        {{#if isPower}}
+        <label class="slider">{{localize "D35E.AdditionalPowerPointsSpend"}} <i class="fas fa-info-circle tooltip">
+            <span class="tooltipcontent"><strong>{{localize "D35E.AdditionalPowerPointsSpend"}}</strong><br>{{localize "D35E.AdditionalPowerPointsSpendLimit"}}</span>
+
+        </i>
+        </label>
+        <input type="range" name="use" min="0" max="{{bonusPowerPointsMax}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="useAmount" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+    </div>
+
+
 
     <div class="form-group">
-        <label>{{localize "D35E.RollMode"}}</label>
-        <select name="rollMode">
+        <label>{{localize "D35E.RollMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <select name="rollMode" class="auto-save">
             {{#select rollMode}}
             {{#each rollModes as |label mode|}}
             <option value="{{mode}}">{{localize label}}</option>
@@ -374,5 +388,15 @@
         $('.attack-form').closest("section").find("button[data-button='normal']").bind( "click", function() {
             $( this ).prop('disabled', true);
         });
+        if (game.settings.get("D35E", "saveAttackWindow")) {
+            $('.auto-save').savy('load',function(){
+                console.log("All data from savy are loaded");
+            },'{{id}}');
+            }
+        else {
+            $('.fa-history').hide()
+        }
+
+
     </script>
 </form>

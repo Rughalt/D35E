@@ -86,7 +86,7 @@ export class ItemSheetPF extends ItemSheet {
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
         data.isAttack = this.item.type === "attack";
-        data.isShapechangeBuff = this.item.type === "buff" && this.item.subType === "shapechange";
+        data.isShapechangeBuff = this.item.type === "buff" && this.item?.data?.data?.buffType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";
         data.isContainer = this.item.data.data.subType === "container";
@@ -101,7 +101,7 @@ export class ItemSheetPF extends ItemSheet {
 
         // Unidentified data
         if (this.item.showUnidentifiedData) {
-            data.itemName = getProperty(this.item.data, "data.unidentified.name") || getProperty(this.item.data, "data.identifiedName") || this.item.name;
+            data.itemName = getProperty(this.item.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
         } else {
             data.itemName = getProperty(this.item.data, "data.identifiedName") || this.item.name;
         }
@@ -121,6 +121,9 @@ export class ItemSheetPF extends ItemSheet {
         if (data.item.data.duration != null) {
             data.canInputDuration = !(["", "inst", "perm", "seeText"].includes(data.item.data.duration.units));
         }
+
+        data.charges = this.item.charges
+        data.maxCharges = this.item.maxCharges
 
         // Prepare feat specific stuff
         if (data.item.type === "feat") {
@@ -1001,6 +1004,8 @@ export class ItemSheetPF extends ItemSheet {
 
         html.find('.spell').on("drop", this._onDropSpell.bind(this));
         html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
+        html.find('.charge-link').on("drop", this._onDropChargeLink.bind(this));
+        html.find('.remove-charge-link').click(event => this._onRemoveChargeLink(event));
         html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
 
         html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
@@ -1518,6 +1523,40 @@ export class ItemSheetPF extends ItemSheet {
             updateData[`data.attacks.${attackId}.count`] = 1;
             updateData[`data.attacks.${attackId}.primary`] = data.data.data.attackType === "natural" && data.data.data.primaryAttack;
             updateData[`data.attacks.${attackId}.isWeapon`] = data.data.data.attackType === "weapon";
+            this.item.update(updateData)
+        }
+    }
+
+    async _onRemoveChargeLink(event) {
+
+        let updateData = {}
+
+        updateData[`data.linkedChargeItem.id`] = null;
+        updateData[`data.linkedChargeItem.name`] = null;
+        updateData[`data.linkedChargeItem.img`] = null;
+        this.item.update(updateData)
+    }
+
+    async _onDropChargeLink(event) {
+        event.preventDefault();
+        let data;
+
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+
+        if (!data.actorId) {
+            return ui.notifications.warn(game.i18n.localize("D35E.ResourceNeedDropFromActor"));
+        }
+        if (data.type === "Item" && data?.data?.data?.uses?.max) {
+            let updateData = {}
+
+            updateData[`data.linkedChargeItem.id`] = data.data.data.uniqueId ? data.data.data.uniqueId : data.data._id;
+            updateData[`data.linkedChargeItem.name`] = data.data.name;
+            updateData[`data.linkedChargeItem.img`] = data.data.img;
             this.item.update(updateData)
         }
     }

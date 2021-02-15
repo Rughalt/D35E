@@ -1,21 +1,22 @@
 <div class="flexrow">
-  {{!-- Ability Scores --}}
-  <div class="flexcol" style="flex: 0 420px">
-    <div class="flexrow">
-      <div class="ability-scores-simple flexcol">
-        <h4 class="ability-box-name">
-          {{ localize 'D35E.Abilities' }}
-        </h4>
-        <div class="ability-simple-header flexrow" data-ability="{{id}}">
-          <span></span>
-          <span style="text-align: center">{{ localize 'D35E.Base' }}</span>
-          <span  style="text-align: center">{{ localize 'D35E.Total' }}</span>
-        </div>
-        {{#each data.abilities as |ability id|}}
-          <div class="ability-simple flexrow" data-ability="{{id}}">
-            <h4 class="ability-name rollable">{{ability.label}}</h4>
-            <input class="ability-base-simple" name="data.abilities.{{id}}.tempvalue" type="text" value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
-            <div class="flexrow">
+    {{!-- Ability Scores --}}
+    <div class="flexcol" style="flex: 0 420px">
+        <div class="flexrow" style="flex: 0">
+            <div class="ability-scores-simple flexcol">
+                <h4 class="ability-box-name">
+                    {{ localize 'D35E.Abilities' }}
+                </h4>
+                <div class="ability-simple-header flexrow" data-ability="{{id}}">
+                    <span></span>
+                    <span style="text-align: center">{{ localize 'D35E.Base' }}</span>
+                    <span style="text-align: center">{{ localize 'D35E.Total' }}</span>
+                </div>
+                {{#each data.abilities as |ability id|}}
+                <div class="ability-simple flexrow" data-ability="{{id}}">
+                    <h4 class="ability-name rollable">{{ability.label}}</h4>
+                    <input class="ability-base-simple" name="data.abilities.{{id}}.tempvalue" type="text"
+                           value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
+                    <div class="flexrow">
               <span class="ability-score tooltip">
                 <h4 class="ability-value-text">{{numberFormat ability.total decimals=0 sign=false}}</h4>
                 <span class="tooltipcontent">
@@ -32,246 +33,259 @@
                   {{/if}}
                 </span>
               </span>
-              <h4 class="ability-mod-text">{{numberFormat ability.mod decimals=0 sign=true}}</h4>
+                        <h4 class="ability-mod-text">{{numberFormat ability.mod decimals=0 sign=true}}</h4>
+                    </div>
+
+                </div>
+                {{/each}}
             </div>
+            <ul class="attributes nomargin">
+                <li>
+                    <a class="btn rest  blue-button" onkeydown="e.preventDefault();">{{ localize 'D35E.Rest' }}</a>
+                </li>
+                <li class="attribute health">
+                    {{#if healthConfig.variants.pc.useWoundsAndVigor}}
+                    <h4 class="attribute-name box-title tooltip high">
+                        {{ localize 'D35E.Vigor' }}
+                        <div class="tooltipcontent">
+                            @attributes.vigor.min : {{data.attributes.vigor.min}}<br/>
+                            @attributes.vigor.value : {{data.attributes.vigor.value}}<br/>
+                            @attributes.vigor.max : {{data.attributes.vigor.max}}<br/>
+                            @attributes.vigor.temp : {{data.attributes.vigor.temp}}
 
-          </div>
-        {{/each}}
-      </div>
-      <ul class="attributes nomargin">
-        <li>
-          <a class="btn rest  blue-button" onkeydown="e.preventDefault();">{{ localize 'D35E.Rest' }}</a>
-        </li>
-        <li class="attribute health">
-          {{#if healthConfig.variants.pc.useWoundsAndVigor}}
-            <h4 class="attribute-name box-title tooltip high">
-              {{ localize 'D35E.Vigor' }}
-              <div class="tooltipcontent">
-                @attributes.vigor.min : {{data.attributes.vigor.min}}<br/>
-                @attributes.vigor.value : {{data.attributes.vigor.value}}<br/>
-                @attributes.vigor.max : {{data.attributes.vigor.max}}<br/>
-                @attributes.vigor.temp : {{data.attributes.vigor.temp}}
+                            {{#if sourceDetails.data.attributes.vigor.max.length}}
+                            <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                            {{#each sourceDetails.data.attributes.vigor.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                            {{/if}}
+                        </div>
+                    </h4>
+                    <div class="attribute-value multiple">
+                        <input name="data.attributes.vigor.value" type="text" value="{{data.attributes.vigor.value}}"
+                               data-dtype="Number" placeholder="0"/>
+                        <span class="sep"> / </span>
+                        <div class="attribute">{{data.attributes.vigor.max}}</div>
+                    </div>
+                    <footer class="attribute-footer">
+                        <input name="data.attributes.vigor.temp" type="text" class="temphp"
+                               placeholder="{{ localize 'D35E.Temporary' }}"
+                               value="{{#if data.attributes.vigor.temp}}{{data.attributes.vigor.temp}}{{/if}}"
+                               data-dtype="Number"/>
+                    </footer>
 
-                {{#if sourceDetails.data.attributes.vigor.max.length}}
-                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                  {{#each sourceDetails.data.attributes.vigor.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                {{/if}}
-              </div>
-            </h4>
-            <div class="attribute-value multiple">
-              <input name="data.attributes.vigor.value" type="text" value="{{data.attributes.vigor.value}}" data-dtype="Number" placeholder="0"/>
-              <span class="sep"> / </span>
-              <div class="attribute">{{data.attributes.vigor.max}}</div>
-            </div>
-            <footer class="attribute-footer">
-              <input name="data.attributes.vigor.temp" type="text" class="temphp" placeholder="{{ localize 'D35E.Temporary' }}" value="{{#if data.attributes.vigor.temp}}{{data.attributes.vigor.temp}}{{/if}}" data-dtype="Number"/>
-            </footer>
+                    <h4 class="attribute-name box-title tooltip">
+                        {{ localize 'D35E.Wounds' }}
+                        <div class="tooltipcontent">
+                            @attributes.wounds.min : {{data.attributes.wounds.min}}<br/>
+                            @attributes.wounds.value : {{data.attributes.wounds.value}}<br/>
+                            @attributes.wounds.max : {{data.attributes.wounds.max}}<br/>
 
-            <h4 class="attribute-name box-title tooltip">
-              {{ localize 'D35E.Wounds' }}
-              <div class="tooltipcontent">
-                @attributes.wounds.min : {{data.attributes.wounds.min}}<br/>
-                @attributes.wounds.value : {{data.attributes.wounds.value}}<br/>
-                @attributes.wounds.max : {{data.attributes.wounds.max}}<br/>
+                            {{#if sourceDetails.data.attributes.wounds.max.length}}
+                            <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                            {{#each sourceDetails.data.attributes.wounds.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                            {{/if}}
+                        </div>
+                    </h4>
+                    <div class="attribute-value multiple">
+                        <input name="data.attributes.wounds.value" type="text" value="{{data.attributes.wounds.value}}"
+                               data-dtype="Number" placeholder="0"/>
+                        <span class="sep"> / </span>
+                        <div class="attribute">{{data.attributes.wounds.max}}</div>
+                    </div>
+                    {{else}}
+                    <h4 class="attribute-name box-title tooltip high">
+                        {{ localize 'D35E.Health' }}
+                        <div class="tooltipcontent">
+                            @attributes.hp.value : {{data.attributes.hp.value}}<br/>
+                            @attributes.hp.max : {{data.attributes.hp.max}}<br/>
+                            @attributes.hp.temp : {{data.attributes.hp.temp}}<br/>
+                            @attributes.hp.nonlethal : {{data.attributes.hp.nonlethal}}
 
-                {{#if sourceDetails.data.attributes.wounds.max.length}}
-                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                  {{#each sourceDetails.data.attributes.wounds.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                {{/if}}
-              </div>
-            </h4>
-            <div class="attribute-value multiple">
-              <input name="data.attributes.wounds.value" type="text" value="{{data.attributes.wounds.value}}" data-dtype="Number" placeholder="0"/>
-              <span class="sep"> / </span>
-              <div class="attribute">{{data.attributes.wounds.max}}</div>
-            </div>
-          {{else}}
-            <h4 class="attribute-name box-title tooltip high">
-              {{ localize 'D35E.Health' }}
-              <div class="tooltipcontent">
-                @attributes.hp.value : {{data.attributes.hp.value}}<br/>
-                @attributes.hp.max : {{data.attributes.hp.max}}<br/>
-                @attributes.hp.temp : {{data.attributes.hp.temp}}<br/>
-                @attributes.hp.nonlethal : {{data.attributes.hp.nonlethal}}
+                            {{#if sourceDetails.data.attributes.hp.max.length}}
+                            <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                            {{#each sourceDetails.data.attributes.hp.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+                            {{/if}}
+                        </div>
+                    </h4>
+                    <div class="attribute-value multiple">
+                        <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}"
+                               data-dtype="Number" placeholder="10"/>
+                        <span class="sep"> / </span>
+                        <div class="attribute">{{data.attributes.hp.max}}</div>
+                    </div>
+                    <footer class="attribute-footer">
+                        <input name="data.attributes.hp.temp" type="text" class="temphp"
+                               placeholder="+{{ localize 'D35E.TempShort' }}"
+                               value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}"
+                               data-dtype="Number" title="{{ localize 'D35E.TempHP' }}"/>
+                        <input name="data.attributes.hp.nonlethal" type="text" class="temphp"
+                               placeholder="{{ localize 'D35E.Nonlethal' }}"
+                               value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}"
+                               data-dtype="Number" title="{{ localize 'D35E.Nonlethal' }}"/>
+                    </footer>
+                    {{/if}}
+                </li>
 
-                {{#if sourceDetails.data.attributes.hp.max.length}}
-                  <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                  {{#each sourceDetails.data.attributes.hp.max as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
-                {{/if}}
-              </div>
-            </h4>
-            <div class="attribute-value multiple">
-              <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}" data-dtype="Number" placeholder="10"/>
-              <span class="sep"> / </span>
-              <div class="attribute">{{data.attributes.hp.max}}</div>
-            </div>
-            <footer class="attribute-footer">
-              <input name="data.attributes.hp.temp" type="text" class="temphp" placeholder="+{{ localize 'D35E.TempShort' }}"
-                value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}" data-dtype="Number" title="{{ localize 'D35E.TempHP' }}"/>
-              <input name="data.attributes.hp.nonlethal" type="text" class="temphp" placeholder="{{ localize 'D35E.Nonlethal' }}"
-                value="{{#if data.attributes.hp.nonlethal}}{{data.attributes.hp.nonlethal}}{{/if}}" data-dtype="Number" title="{{ localize 'D35E.Nonlethal' }}"/>
-            </footer>
-          {{/if}}
-        </li>
+                <li>
+                    <ul class="attributes armor-class  flexrow">
+                        <li class="attribute initiative" style="height: 50px" data-attribute="init">
 
-        <li>
-          <ul class="attributes armor-class  flexrow">
-  <li class="attribute initiative" style="height: 50px" data-attribute="init">
-
-    <h4 class="attribute-name box-title rollable">{{ localize 'D35E.Initiative' }}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.init.total}}</span>
-      <span class="tooltipcontent">
+                            <h4 class="attribute-name box-title rollable">{{ localize 'D35E.Initiative' }}</h4>
+                            <div class="attribute-value tooltip">
+                                <span>{{data.attributes.init.total}}</span>
+                                <span class="tooltipcontent">
                 @attributes.init.total : {{data.attributes.init.total}}
                 {{#if sourceDetails.data.attributes.init.total.length}}
                   <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
                   {{#each sourceDetails.data.attributes.init.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
-    </div>
-  </li>
+                            </div>
+                        </li>
 
 
-  <li class="attribute bab" style="height: 50px" data-attribute="bab">
+                        <li class="attribute bab" style="height: 50px" data-attribute="bab">
 
-    <h4 class="attribute-name box-title rollable">{{ localize 'D35E.BABAbbr' }}</h4>
-    <div class="attribute-value tooltip">
-      <span>{{data.attributes.bab.total}}</span>
-      <span class="tooltipcontent">
+                            <h4 class="attribute-name box-title rollable">{{ localize 'D35E.BABAbbr' }}</h4>
+                            <div class="attribute-value tooltip">
+                                <span>{{data.attributes.bab.total}}</span>
+                                <span class="tooltipcontent">
                 @attributes.bab.total : {{data.attributes.bab.total}}
                 {{#if sourceDetails.data.attributes.bab.total.length}}
                   <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
                   {{#each sourceDetails.data.attributes.bab.total as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
                 {{/if}}
               </span>
-    </div>
-  </li>
-          </ul>
-        </li>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
 
-        <li>
-          <ul class="attributes armor-class  flexrow">
-            {{#each data.attributes.ac as |ac id|}}
-              <li class="attribute armor-class ac-details tooltip" data-armorclass="{{id}}">
-                <div class="tooltipcontent">
-                  @attributes.ac.{{id}}.total : {{ac.total}}
-                  {{#if ac.sourceDetails.length}}
-                    <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                    {{#each ac.sourceDetails as |src|}}
-                      {{src.name}}: {{src.value}}<br/>
-                    {{/each}}
-                  {{/if}}
-                </div>
-                <h4 class="attribute-name box-title">{{ localize ac.labelShort }}</h4>
-                <div class="attribute-value">
-                  <span>{{numberFormat ac.total decimals=0 sign=false}}</span>
-                </div>
-              </li>
-            {{/each}}
-          </ul>
-        </li>
+                <li>
+                    <ul class="attributes armor-class  flexrow">
+                        {{#each data.attributes.ac as |ac id|}}
+                        <li class="attribute armor-class ac-details tooltip" data-armorclass="{{id}}">
+                            <div class="tooltipcontent">
+                                @attributes.ac.{{id}}.total : {{ac.total}}
+                                {{#if ac.sourceDetails.length}}
+                                <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                                {{#each ac.sourceDetails as |src|}}
+                                {{src.name}}: {{src.value}}<br/>
+                                {{/each}}
+                                {{/if}}
+                            </div>
+                            <h4 class="attribute-name box-title">{{ localize ac.labelShort }}</h4>
+                            <div class="attribute-value">
+                                <span>{{numberFormat ac.total decimals=0 sign=false}}</span>
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </li>
 
-        <li>
-          <ul class="attributes saving-throws flexrow">
-            {{#each data.attributes.savingThrows as |savingThrow id|}}
-              <li class="attribute saving-throw st-details tooltip" data-savingthrow="{{id}}">
-                <div class="tooltipcontent">
-                  @attributes.savingThrows.{{id}}.total : {{savingThrow.total}}
-                  {{#if savingThrow.sourceDetails.length}}
-                    <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
-                    {{#each savingThrow.sourceDetails as |src|}}
-                      {{src.name}}: {{src.value}}<br/>
-                    {{/each}}
-                  {{/if}}
-                </div>
-                <h4 class="attribute-name box-title rollable">{{savingThrow.label}}</h4>
-                <div class="attribute-value">
-                  <span>{{savingThrow.total}}</span>
-                </div>
-              </li>
-            {{/each}}
-          </ul>
-        </li>
-        <li></li>
-        
+                <li>
+                    <ul class="attributes saving-throws flexrow">
+                        {{#each data.attributes.savingThrows as |savingThrow id|}}
+                        <li class="attribute saving-throw st-details tooltip" data-savingthrow="{{id}}">
+                            <div class="tooltipcontent">
+                                @attributes.savingThrows.{{id}}.total : {{savingThrow.total}}
+                                {{#if savingThrow.sourceDetails.length}}
+                                <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                                {{#each savingThrow.sourceDetails as |src|}}
+                                {{src.name}}: {{src.value}}<br/>
+                                {{/each}}
+                                {{/if}}
+                            </div>
+                            <h4 class="attribute-name box-title rollable">{{savingThrow.label}}</h4>
+                            <div class="attribute-value">
+                                <span>{{savingThrow.total}}</span>
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </li>
+                <li></li>
 
-      </ul>
-    </div>
-    <div class="details-attack-simple  inventory-group flexcol" data-group="attacks" data-tab="all">
 
-      <h4 class="box-name">
-        {{ localize 'D35E.Attacks' }}
-      </h4>
-      <ol class="inventory-list borderless sub-scroll scroll-attacks" style="max-width: 420px">
-        <li class="inventory-header flexrow">
-          <h3 class="item-name flexrow"></h3>
-          <div class="item-detail item-actions">
-            <span>{{ localize 'D35E.ActionPlural' }}</span></div>
+            </ul>
+        </div>
+        <div class="details-attack-simple  inventory-group flexcol" data-group="attacks" data-tab="all">
 
-          <div class="item-detail item-uses">
-            <span>{{ localize 'D35E.ChargePlural' }}</span></div>
-        </li>
+            <h4 class="box-name">
+                {{ localize 'D35E.Actions' }}
+            </h4>
+            <ol class="inventory-list borderless sub-scroll scroll-attacks" style="max-width: 420px">
+                <li class="inventory-header flexrow">
+                    <h3 class="item-name flexrow"></h3>
+                    <div class="item-detail item-actions">
+                        <span>{{ localize 'D35E.ActionPlural' }}</span></div>
 
-        <ol class="item-list">
-          {{#each useableAttacks as |item iid|}}
-            <li class="item flexrow" data-item-id="{{item._id}}">
-              <div class="item-name flexrow rollable">
-                <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                <h4>
-                  {{item.name~}}
-                </h4>
-              </div>
+                    <div class="item-detail item-uses">
+                        <span>{{ localize 'D35E.ChargePlural' }}</span></div>
+                </li>
 
-              <div class="item-detail item-actions">
-                <div class="item-attack">
-                  {{#if item.hasAction}}
-                    <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
-                  {{/if}}
-                  {{#if item.isFullAttack}}
-                  <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
-                  {{/if}}
-                </div>
-              </div>
+                <ol class="item-list">
+                    {{#each useableAttacks as |item iid|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <div class="item-name flexrow rollable">
+                            <div class="item-image" style="background-image: url('{{item.img}}')"></div>
+                            <h4>
+                                {{item.name~}}
+                            </h4>
+                        </div>
 
-              <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
-                {{#if item.isCharged}}
-                  <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
-                  <span class="sep"> {{ localize 'D35E._Of' }} </span>
-                  <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
-                  <span class="tooltipcontent">
+                        <div class="item-detail item-actions">
+                            <div class="item-attack">
+                                {{#if item.hasAction}}
+                                <a class="item-control item-attack"><img class="icon"
+                                                                         src="systems/D35E/icons/actions/gladius.svg"></a>
+                                {{/if}}
+                                {{#if item.isFullAttack}}
+                                <a class="item-control item-attack"><img class="icon"
+                                                                         src="systems/D35E/icons/actions/gladius.svg"></a>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                            {{#if item.isCharged}}
+                            <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
+                            <span class="sep"> {{ localize 'D35E._Of' }} </span>
+                            <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
+                            <span class="tooltipcontent">
                     @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
                     @resources.{{item.tag}}.max : {{item.data.uses.max}}
                   </span>
-                {{/if}}
-              </div>
-            </li>
-          {{/each}}
-        </ol>
-    </ol>
-  </div>
+                            {{/if}}
+                        </div>
+                    </li>
+                    {{/each}}
+                </ol>
+            </ol>
+        </div>
 
-</div>
+    </div>
 
-<div class="flexcol details-skills-list" data-group="skillsets" data-tab="known">
+    <div class="flexcol details-skills-list" data-group="skillsets" data-tab="known">
 
-  <h4 class="box-name">
-    {{ localize 'D35E.Skills' }}
-  </h4>
+        <h4 class="box-name">
+            {{ localize 'D35E.Skills' }}
+        </h4>
 
-  <div class="skill-header flexrow">
-    <h3 class="skill-name flexrow" ></h3>
-    <div class="item-detail item-type">
-      <span>{{ localize 'D35E.Rank' }}</span></div>
+        <div class="skill-header flexrow">
+            <h3 class="skill-name flexrow"></h3>
+            <div class="item-detail item-type">
+                <span>{{ localize 'D35E.Rank' }}</span></div>
 
-    <div class="item-detail item-actions">
-      <span>{{ localize 'D35E.Total' }}</span></div>
-  </div>
-  <ul class="noborder skills-list sub-scroll scroll-skillset" style="box-shadow: none; overflow: hidden" data-background="{{isBackgroundSkills}}">
-    {{#each skillsets.known.skills as |skill s|}}
-      {{#if skill.arbitrary}}
-        {{#each skill.subSkills as |subSkill b|}}
-          <li class="sub-skill flexrow" data-skill="{{b}}" data-main-skill="{{s}}">
-            <div class="skill-name tooltip">
+            <div class="item-detail item-actions">
+                <span>{{ localize 'D35E.Total' }}</span></div>
+        </div>
+        <ul class="noborder skills-list sub-scroll scroll-skillset" style="box-shadow: none; overflow: hidden"
+            data-background="{{isBackgroundSkills}}">
+            {{#each skillsets.known.skills as |skill s|}}
+            {{#if skill.arbitrary}}
+            {{#each skill.subSkills as |subSkill b|}}
+            <li class="sub-skill flexrow" data-skill="{{b}}" data-main-skill="{{s}}">
+                <div class="skill-name tooltip">
               <span class="tooltipcontent">
                 @skills.{{s}}.subSkills.{{b}}.mod : {{subSkill.mod}}<br>
                 @skills.{{s}}.subSkills.{{b}}.rank : {{subSkill.rank}}<br>
@@ -282,19 +296,19 @@
                   {{/each}}
                 {{/if}}
               </span>
-              <div class="rollable image-d20 sub-skill skill-roll"></div>
-              <h4 style>{{skill.label}} ({{subSkill.name}})
-                {{#if skill.rt}}■{{/if}}
-                {{#if skill.cs}}*{{/if}}
-              </h4>
-            </div>
-            <h4 style="text-align: center">{{subSkill.rank}}</h4>
-            <h4 style="text-align: center; font-weight: 800">{{numberFormat subSkill.mod decimals=0 sign=true}}</h4>
-          </li>
-        {{/each}}
-      {{else}}
-        <li class="skill flexrow" data-skill="{{s}}">
-          <div class="skill-name tooltip">
+                    <div class="rollable image-d20 sub-skill skill-roll"></div>
+                    <h4 style>{{skill.label}} ({{subSkill.name}})
+                        {{#if skill.rt}}■{{/if}}
+                        {{#if skill.cs}}*{{/if}}
+                    </h4>
+                </div>
+                <h4 style="text-align: center">{{subSkill.rank}}</h4>
+                <h4 style="text-align: center; font-weight: 800">{{numberFormat subSkill.mod decimals=0 sign=true}}</h4>
+            </li>
+            {{/each}}
+            {{else}}
+            <li class="skill flexrow" data-skill="{{s}}">
+                <div class="skill-name tooltip">
             <span class="tooltipcontent">
               @skills.{{s}}.mod : {{skill.mod}}<br>
               @skills.{{s}}.rank : {{skill.rank}}<br>
@@ -305,25 +319,25 @@
                 {{/each}}
               {{/if}}
             </span>
-            <div class="rollable image-d20 skill skill-roll"></div>
-            {{#if skill.custom}}
-              <h4>{{skill.name}}
-                {{#if skill.rt}}■{{/if}}
-                {{#if skill.cs}}*{{/if}}
-              </h4>
-            {{else}}
-              <h4>{{skill.label}}
-                {{#if skill.rt}}■{{/if}}
-                {{#if skill.cs}}*{{/if}}
-              </h4>
-            {{/if}}
-          </div>
+                    <div class="rollable image-d20 skill skill-roll"></div>
+                    {{#if skill.custom}}
+                    <h4>{{skill.name}}
+                        {{#if skill.rt}}■{{/if}}
+                        {{#if skill.cs}}*{{/if}}
+                    </h4>
+                    {{else}}
+                    <h4>{{skill.label}}
+                        {{#if skill.rt}}■{{/if}}
+                        {{#if skill.cs}}*{{/if}}
+                    </h4>
+                    {{/if}}
+                </div>
 
-          <h4 style="text-align: center">{{skill.rank}}</h4>
-          <h4 style="text-align: center; font-weight: 800">{{numberFormat skill.mod decimals=0 sign=true}}</h4>
-        </li>
-      {{/if}}
-    {{/each}}
-  </ul>
-</div>
+                <h4 style="text-align: center">{{skill.rank}}</h4>
+                <h4 style="text-align: center; font-weight: 800">{{numberFormat skill.mod decimals=0 sign=true}}</h4>
+            </li>
+            {{/if}}
+            {{/each}}
+        </ul>
+    </div>
 </div>

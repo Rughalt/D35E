@@ -308,7 +308,7 @@
   .D35E.sheet.item, .D35E.sheet.actor {
     .form-group {
       :not(button) {
-        i.fas {
+        i.fas:not(.tooltip) {
           color: #2C606D !important;
 
           &:hover {
@@ -334,7 +334,7 @@
   }
 
   .D35E.sheet.item {
-    .spell, .full-attack {
+    .spell, .full-attack, .charge-link {
       border-radius: 2px;
       border: none !important;
       background: rgba(255,255,255,0.2);
@@ -1259,6 +1259,15 @@
     }
 
     a.open-compendium-pack:not(.open-add-items) {
+
+      color: #2C606D!important;
+      &:hover {
+        text-shadow: 0 0 10px #2C606D !important;
+        color: #2C606D !important;
+      }
+    }
+
+    a.colorized-link {
 
       color: #2C606D!important;
       &:hover {
