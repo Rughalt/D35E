@@ -101,7 +101,7 @@ export class ItemSheetPF extends ItemSheet {
 
         // Unidentified data
         if (this.item.showUnidentifiedData) {
-            data.itemName = getProperty(this.item.data, "data.unidentified.name") || getProperty(this.item.data, "data.identifiedName") || this.item.name;
+            data.itemName = getProperty(this.item.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
         } else {
             data.itemName = getProperty(this.item.data, "data.identifiedName") || this.item.name;
         }

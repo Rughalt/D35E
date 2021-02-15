@@ -99,7 +99,7 @@ export class ActorSheetPF extends ActorSheet {
       i.data.hasAction = i.hasAction || i.isCharged;
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
       i.data.showUnidentifiedData = i.showUnidentifiedData;
-      if (i.showUnidentifiedData) i.data.name = getProperty(i.data, "data.unidentified.name") || getProperty(i.data, "data.identifiedName") || i.data.name;
+      if (i.showUnidentifiedData) i.data.name = getProperty(i.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
       else i.data.name = getProperty(i.data, "data.identifiedName") || i.data.name;
       return i.data;
     });
