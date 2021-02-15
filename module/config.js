@@ -1245,6 +1245,8 @@ D35E.combatChangeType = {
   'defenseOptional': 'D35E.DefenseOptional',
   'savingThrow': 'D35E.SavingThrow',
   'savingThrowOptional': 'D35E.SavingThrowOptional',
+  'grapple': 'D35E.CMB',
+  'grappleOptional': 'D35E.CMBOptional',
 };
 
 CONFIG.Combat.initiative.decimals = 2;

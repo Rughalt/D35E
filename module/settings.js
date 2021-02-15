@@ -349,6 +349,17 @@ export const registerSystemSettings = function() {
     scope: 'client',
   });
 
+  game.settings.register("D35E", '__onboardingHidden', {
+    name: `SETTINGS.D35EDisableTutorialN`,
+    hint: 'SETTINGS.D35EDisableTutorialL',
+    default: false,
+    type: Boolean,
+    config: true,
+    scope: 'world',
+  });
+
+
+
   game.settings.register("D35E", 'hideSpells', {
     name: `SETTINGS.D35EHideSpellDescriptionsN`,
     hint: 'SETTINGS.D35EHideSpellDescriptionsH',

@@ -13,7 +13,7 @@ export default function renderOnboardingScreen() {
         config: true,
         scope: 'client',
     });
-    const onboarding = game.settings.get(title, "__onboarding");
+    const onboarding = game.settings.get(title, "__onboarding") || game.settings.get(title, "__onboardingHidden");
 
     if (onboarding)
         return;

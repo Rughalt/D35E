@@ -61,7 +61,7 @@
             <li class="skill flexrow" data-skill="{{s}}">
 
                 {{#if skill.custom}}
-                <span>{{skill.name}}{{#if skill.rt}}■{{/if}}</span>
+                <span data-class-skillid="{{s}}">{{skill.name}}{{#if skill.rt}}■{{/if}}</span>
                 {{else}}
                 <span data-class-skillid="{{s}}">{{skill.label}}{{#if skill.rt}}■{{/if}}</span>
                 {{/if}}

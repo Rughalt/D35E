@@ -3779,4 +3779,33 @@ export class ItemPF extends Item {
         return effect;
     }
 
+    async renderBuffEndChatCard() {
+        const chatTemplate = "systems/D35E/templates/chat/roll-ext.html";
+
+        // Create chat data
+        let chatData = {
+            user: game.user._id,
+            type: CONST.CHAT_MESSAGE_TYPES.CHAT,
+            sound: CONFIG.sounds.dice,
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            rollMode: game.settings.get("core", "rollMode"),
+            content: await renderTemplate(chatTemplate, {item: this, actor: this.actor}),
+        };
+        // Handle different roll modes
+        switch (chatData.rollMode) {
+            case "gmroll":
+                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                break;
+            case "selfroll":
+                chatData["whisper"] = [game.user._id];
+                break;
+            case "blindroll":
+                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                chatData["blind"] = true;
+        }
+
+        // Send message
+        await createCustomChatMessage("systems/D35E/templates/chat/deactivate-buff.html", {items: [this], actor: this.actor}, chatData,  {rolls: []})
+    }
+
 }

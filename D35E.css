@@ -641,6 +641,16 @@
   line-height: 64px;
   font-family: nodesto;
 }
+#portrait-bar-handle {
+  position: relative;
+  height: 20px;
+  width: 100px;
+  pointer-events: initial;
+  opacity: 0.4;
+}
+#portrait-bar-handle:hover {
+  opacity: 1;
+}
 .D35E.sheet.actor {
   /* ----------------------------------------- */
   /*  Sheet Header                             */
@@ -4818,12 +4828,12 @@ tr.introjs-showElement > th {
   color: #2C606D;
   font-size: 19px;
 }
-.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas,
-.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas {
+.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas:not(.tooltip),
+.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas:not(.tooltip) {
   color: #2C606D !important;
 }
-.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas:hover,
-.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas:hover {
+.d35ecustom .D35E.sheet.item .form-group :not(button) i.fas:not(.tooltip):hover,
+.d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas:not(.tooltip):hover {
   text-shadow: 0 0 10px #2C606D !important;
   color: #2C606D !important;
 }

@@ -130,7 +130,7 @@
           <div class="item-actions">
             <div class="capacity">
               <span class="capacity-bar" style="width:{{#if item.data.capacity}}{{item.itemsWeightPercentage}}%{{/if}}"></span>
-              <span class="capacity-label">{{item.itemsWeight}}{{#if item.data.capacity}}/{{item.data.capacity}}{{/if}} {{ item.units }}</span>
+              <span class="capacity-label">{{item.itemsWeight}}{{#if item.convertedCapacity}}/{{item.convertedCapacity}}{{/if}} {{ item.units }}</span>
             </div>
           </div>
           {{/if}}

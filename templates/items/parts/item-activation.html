@@ -106,7 +106,15 @@
   {{#unless data.linkedChargeItem.id}}
   {{#if isCharged}}
   <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumUsesFormula"}}</label>
     <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
+  </div>
+
+  <div class="form-group uses-recharge-formula">
+    <label>{{localize "D35E.RechargeFormula"}} <i class="fas fa-info-circle tooltip">
+      <div class="tooltipcontent"><strong>{{localize "D35E.RechargeFormula"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.RechargeFormulaInfo"}}</p></div>
+    </i></label>
+    <input type="text" name="data.uses.rechargeFormula" value="{{data.uses.rechargeFormula}}" placeholder="{{localize "D35E.RechargeFormula"}}"/>
   </div>
   {{/if}}
   {{/unless}}

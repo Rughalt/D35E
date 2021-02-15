@@ -83,7 +83,7 @@ export class ChatAttack {
             primaryAttack: primaryAttack
         });
         this.rolls.push(roll)
-        let d20 = roll.parts[0];
+        let d20 = roll.terms[0];
         let critType = 0;
         if ((d20.total >= this.critRange && !critical) || (d20.total === 20 && critical)) critType = 1;
         else if (d20.total === 1) critType = 2;

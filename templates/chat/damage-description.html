@@ -143,6 +143,28 @@
             </div>
         </div>
         {{/if}}
+        {{#if concealRolled}}
+        <div class="chat-attack">
+            <div class="dice-roll attack-roll flexcol">
+                <div class="dice-flavor">{{localize "D35E.Concealment"}}</div>
+                <div class="flexrow">
+                    <div class="flexcol">
+                        <div class="dice-result ">
+                            <h4 class="rolled-roll dice-total {{#unless concealMiss}}success{{/unless}}{{#if concealMiss}} failure{{/if}}">
+                                {{concealRoll}}</h4>
+                        </div>
+                    </div>
+                    <div class="flexcol">
+                        <div class="dice-result">
+                            <h4 class="rolled-fortify-value dice-total">
+
+                                {{concealTarget}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
         {{/unless}}
 
         {{#if hit}}

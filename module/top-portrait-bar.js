@@ -16,22 +16,27 @@ export class TopPortraitBar {
     if (portraitBar.length === 0) {
       var $portraitBarDiv = $( "<div id='portrait-bar' class='portrait-bar flexcol'></div>" )
       $('#navigation').append($portraitBarDiv)
-      $($portraitBarDiv).on({
+      var $portraitBarHandle = $("<div id='portrait-bar-handle'><a><i class='fas fa-arrows-alt'></i></a></div>")
+      $portraitBarDiv.append($portraitBarHandle)
+      console.log($portraitBarHandle)
+      $portraitBarHandle.on({
         mousedown:function(e)
         {
+          console.log('S')
           dragging = true;
-          dragX = e.clientX - $(this).position().left;
-          dragY = e.clientY - $(this).position().top;
+          dragX = e.clientX - $(this).parent().position().left;
+          dragY = e.clientY - $(this).parent().position().top;
         },
         mouseup:function(e){
           dragging = false;
-          localStorage.setItem("D35E-portraitbar-y-location",$(this).position().top)
-          localStorage.setItem("D35E-portraitbar-x-location",$(this).position().left)
+          localStorage.setItem("D35E-portraitbar-y-location",$(this).parent().position().top)
+          localStorage.setItem("D35E-portraitbar-x-location",$(this).parent().position().left)
           },
         mousemove:function(e)
         {
+          console.log('D')
           if(dragging)
-            $(this).offset({top:e.clientY-dragY,left:e.clientX-dragX});
+            $(this).parent().offset({top:e.clientY-dragY,left:e.clientX-dragX});
 
         }
       })
@@ -41,11 +46,11 @@ export class TopPortraitBar {
     // console.log('Bar', portraitBar, actor)
     if (actor == null)
       return;
-    if (actor.data.type !== "character")
-      return;
+    // if (actor.data.type !== "character")
+    //   return;
     if (!actor.data.data.isPartyMember)
       return;
-    if (!actor.hasPerm(game.user, "OBSERVER")) // Player cannot see
+    if (!actor.hasPerm(game.user, "LIMITED")) // Player cannot see
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
@@ -69,15 +74,21 @@ export class TopPortraitBar {
     let damage = portraitDiv.find('.damage');
     let life = portraitDiv.find('.life');
     let pixelDamage = (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 100
-    if (actor.data.data.attributes.hp.value <= 0) {
-      pixelDamage = 0;
-      portraitDiv.addClass('dead');
-      life.text(`Dead`)
-    } else {
-      portraitDiv.removeClass('dead');
-      life.text(`${actor.data.data.attributes.hp.value} / ${actor.data.data.attributes.hp.max}`)
-    }
-    damage.css("width",`${pixelDamage}%`)
+
+      if (actor.data.data.attributes.hp.value <= 0) {
+        pixelDamage = 0;
+        portraitDiv.addClass('dead');
+        life.text(`Dead`)
+      } else {
+        portraitDiv.removeClass('dead');
+        if (actor.hasPerm(game.user, "OBSERVER")) {
+          life.text(`${actor.data.data.attributes.hp.value} / ${actor.data.data.attributes.hp.max}`)
+        } else {
+          life.text(``)
+        }
+      }
+      damage.css("width", `${pixelDamage}%`)
+
     //damage.css("top",`calc(100px - ${pixelDamage}px)`)
     //<div class="item-image tooltip" style="background-image: url('systems/D35E/icons/buffs/bark-skin.png')">
     //              <span class="tooltipcontent">

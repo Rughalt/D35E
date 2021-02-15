@@ -53,7 +53,7 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
   if (game.dice3d) {
     let promises = []
     for (let roll of rolls) {
-      promises.push(game.dice3d.showForRoll(roll, game.user, false, chatData.whisper, chatData.blind));
+      promises.push(game.dice3d.showForRoll(roll, game.user, true, chatData.whisper, chatData.blind));
     }
     await Promise.all(promises)
     chatData.sound = null;

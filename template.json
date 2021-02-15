@@ -845,12 +845,12 @@
             "value": 0,
             "ability": "dex",
             "rt": false,
-            "acp": true,
+            "acp": false,
             "rank": 0,
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility":"default"
           },
           "src": {
             "value": 0,
@@ -1194,6 +1194,7 @@
             "value": 0,
             "max": 0,
             "per": null,
+            "rechargeFormula": null,
             "autoDeductCharges": true,
             "allowMultipleUses": false,
             "commonPool": false
@@ -1269,7 +1270,8 @@
           "autoDeductCharges": true,
           "allowMultipleUses": false,
           "chargesPerUse": 1,
-          "maxFormula": ""
+          "maxFormula": "",
+          "rechargeFormula": null
         },
         "linkedChargeItem": {
           "id": null,
@@ -1475,7 +1477,8 @@
         "type": "polymorph"
       },
       "activateActions": [],
-      "deactivateActions": []
+      "deactivateActions": [],
+      "hideFromToken": false
     },
     "consumable": {
       "templates": ["itemDescription", "physicalItem", "activatedEffect", "action"],

@@ -1418,9 +1418,9 @@ export class ActorSheetPF extends ActorSheet {
     const li = event.currentTarget.closest(".item");
 
     button.disabled = true;
-    const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
+    const msg = `<p>${game.i18n.localize("D35E.RechargeItemConfirmation")}</p>`;
     Dialog.confirm({
-      title: game.i18n.localize("D35E.DeleteItem"),
+      title: game.i18n.localize("D35E.RechargeItem"),
       content: msg,
       yes: () => {
         let itemId = li.dataset.itemId;
@@ -1429,10 +1429,23 @@ export class ActorSheetPF extends ActorSheet {
         const itemData = item.data.data;
         itemUpdate['_id'] = itemId
         if (itemData.uses && itemData.uses.value !== itemData.uses.max) {
-          itemUpdate["data.uses.value"] = itemData.uses.max;
+          if (itemData.uses.rechargeFormula) {
+            itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
+          }
+          else
+          {
+            itemUpdate["data.uses.value"] = itemData.uses.max;
+          }
         }
+
         if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
-          itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+          if (itemData.enhancements.uses.rechargeFormula) {
+            itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
+          }
+          else
+          {
+            itemUpdate["data.enhancements.uses.value"] = itemData.enhancements.uses.max;
+          }
         }
         else if (item.type === "spell") {
           const spellbook = getProperty(actorData, `attributes.spells.spellbooks.${itemData.spellbook}`),
@@ -1446,7 +1459,11 @@ export class ActorSheetPF extends ActorSheet {
         if (itemData.enhancements && itemData.enhancements && itemData.enhancements.items) {
           let enhItems = duplicate(itemData.enhancements.items)
           for (let _item of enhItems) {
-            if (_item.data.uses.value !== _item.data.uses.max) {
+            if (_item.data.uses.rechargeFormula) {
+              _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
+            }
+            else
+            {
               _item.data.uses.value = _item.data.uses.max;
             }
           }
@@ -1547,7 +1564,7 @@ export class ActorSheetPF extends ActorSheet {
 
   _onRollCMB(event) {
     event.preventDefault();
-    this.actor.rollCMB({event: event});
+    this.actor.rollGrapple(null, {event: event});
   }
 
   _onRollInitiative(event) {
@@ -1724,6 +1741,7 @@ export class ActorSheetPF extends ActorSheet {
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
       if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
       if (i?.data?.subType === 'container') {
+        i.convertedCapacity = Math.round(i.data.capacity * weightConversion * 10) / 10
         containerList.push({id: i.id, name: i.name})
         containersMap.set(i.id,i)
       }

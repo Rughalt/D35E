@@ -119,7 +119,15 @@
           {{/select}}
         </select>
       </div>
-
+      {{#unless isShapechangeBuff}}
+      <div class="form-group">
+        <label>{{localize "D35E.HideBuffFromToken"}}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+          <input type="checkbox" class="stylized" name="data.hideFromToken" {{checked data.hideFromToken}}/>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      {{/unless}}
       {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
       {{> "systems/D35E/templates/items/parts/item-notes.html"}}

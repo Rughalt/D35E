@@ -1316,6 +1316,17 @@
   "D35E.SkillAlways": "Always on Summary",
   "D35E.AdditionalPowerPointsSpend": "Additional Power Points",
   "D35E.AdditionalPowerPointsSpendLimit": "If you select more power points than you are allowed to use at cast time, amount of used powerpoints will be limited to maximum allowed value",
+  "D35E.HideBuffFromToken": "Hide Buff from Token",
+  "D35E.Deactivated": "Deactivated",
+  "D35E.RechargeFormula": "Recharge Formula",
+  "D35E.RechargeFormulaInfo": "This formula is used when resting to recharge random amount of charges on item. To make item recharge to max, leave it empty.",
+  "D35E.RechargeItem": "Recharge Item",
+  "D35E.RechargeItemConfirmation": "This item will be recharged as if character has rested with Recharge Items option enabled. Do you want to proceed?",
+  "D35E.Check": "Check",
+  "D35E.Begin": "Begin",
+  "D35E.GRRollGrapple": "Roll Grapple",
+  "D35E.GRBonus": "Situational Grapple Bonus",
+  "D35E.GRDialogModifiers": "Grapple Modifiers",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1356,6 +1367,8 @@
   "SETTINGS.D35EHideSpellDescriptionsIfHasActionN": "Hide Spell Description chat card",
   "SETTINGS.D35EHideSpellDescriptionsIfHasActionL": "Hides Spell Description chat card if spell has Action",
   "SETTINGS.D35ESaveAttackWindowN": "Save Attack Window form",
-  "SETTINGS.D35ESaveAttackWindowL": "Enabling this will save per-item attack window values (wield mode, selected ammo, attack bonus etc)."
+  "SETTINGS.D35ESaveAttackWindowL": "Enabling this will save per-item attack window values (wield mode, selected ammo, attack bonus etc).",
+  "SETTINGS.D35EDisableTutorialN": "Disable tutorial for all players",
+  "SETTINGS.D35EDisableTutorialL": "Disables tutorial for all players in this world"
 
 }
