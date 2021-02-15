@@ -438,9 +438,9 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   } else {
-    if (actor.data.data.companionAutosync) {
-      actor.syncToCompendium()
-    }
+    // if (actor.data.data.companionAutosync) {
+    //   actor.syncToCompendium()
+    // }
   }
 });
 
