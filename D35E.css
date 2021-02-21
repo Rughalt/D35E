@@ -643,13 +643,18 @@
 }
 #portrait-bar-handle {
   position: relative;
-  height: 20px;
-  width: 100px;
+  height: 40px;
+  width: 150px;
   pointer-events: initial;
   opacity: 0.4;
+  margin-left: -50px;
+  padding: 10px;
 }
 #portrait-bar-handle:hover {
   opacity: 1;
+}
+#portrait-bar-handle a {
+  margin-left: 50px;
 }
 .D35E.sheet.actor {
   /* ----------------------------------------- */

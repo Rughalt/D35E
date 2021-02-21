@@ -194,6 +194,12 @@ Hooks.once("ready", async function() {
     TopPortraitBar.render(game.actors.get(key))
   }
 
+  const interval = setInterval(function() {
+    game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid).forEach(a => {
+      a.getQueuedActions();
+    });
+  }, 500);
+
   if (!game.user.isGM) {
     (await import(
             /* webpackChunkName: "welcome-screen" */
@@ -438,9 +444,9 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   } else {
-    // if (actor.data.data.companionAutosync) {
-    //   actor.syncToCompendium()
-    // }
+    if (actor.data.data.companionAutosync) {
+      actor.syncToCompendium()
+    }
   }
 });
 

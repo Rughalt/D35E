@@ -6,6 +6,7 @@
         "shapechangeImg": "icons/svg/mystery-man.svg",
         "tokenImg": "icons/svg/mystery-man.svg",
         "companionUuid": "",
+        "companionUsePersonalKey": false,
         "companionAutosync": false,
         "abilities": {
           "str": {

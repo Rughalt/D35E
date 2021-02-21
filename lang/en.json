@@ -1327,6 +1327,18 @@
   "D35E.GRRollGrapple": "Roll Grapple",
   "D35E.GRBonus": "Situational Grapple Bonus",
   "D35E.GRDialogModifiers": "Grapple Modifiers",
+  "D35E.CompanionPersonalKey": "Use your personal API Key",
+  "D35E.CompanionUUID": "Companion UUID",
+  "D35E.AutosyncCompanion": "Automatically sync to Player's Companion",
+  "D35E.CompanionGMLockChanges": "Lock Changes from Players",
+
+  "D35E.ChargesToDeduct": "Charges per use",
+  "D35E.Image": "Image",
+  "D35E.RaceSuptypePlural": "Suptypes",
+  "D35E.Value": "Value",
+  "D35E.VsTouchAc": "Against Touch AC",
+  "D35E.SpellAttackCountExample": "ex. floor(@cl/2)",
+  "D35E.LockEditingByPlayers": "Lock Editing by non-GM Users",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1369,6 +1381,12 @@
   "SETTINGS.D35ESaveAttackWindowN": "Save Attack Window form",
   "SETTINGS.D35ESaveAttackWindowL": "Enabling this will save per-item attack window values (wield mode, selected ammo, attack bonus etc).",
   "SETTINGS.D35EDisableTutorialN": "Disable tutorial for all players",
-  "SETTINGS.D35EDisableTutorialL": "Disables tutorial for all players in this world"
+  "SETTINGS.D35EDisableTutorialL": "Disables tutorial for all players in this world",
+  "SETTINGS.D35EApiKeyPersonalN": "Personal Player's Companion API Key",
+  "SETTINGS.D35EApiKeyPersonalH": "Your personal Players's Companion API Key - use it if you keep you character on your account",
+  "SETTINGS.D35EApiKeyWorldN": "World Player's Companion API Key",
+  "SETTINGS.D35EApiKeyWorldH": "Player's Companion API Key used by default for all characters in this world.",
+  "SETTINGS.D35EAllowNoAmmoN": "Allow no Ammo for ranged weapons",
+  "SETTINGS.D35EAllowNoAmmoH": "Allows players to use ranged weapons without ammunition"
 
 }

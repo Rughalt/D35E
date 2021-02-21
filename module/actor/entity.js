@@ -11,8 +11,8 @@ import {D35E} from "../config.js";
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
  */
 export class ActorPF extends Actor {
-
     /* -------------------------------------------- */
+    API_URI = 'https://companion.legaciesofthedragon.com/';
 
     static chatListeners(html) {
         html.on('click', 'button[data-action]', this._onChatCardButtonAction.bind(this));
@@ -5148,7 +5148,7 @@ export class ActorPF extends Actor {
                 if (finalAc.applyHalf)
                     value = Math.max(Math.floor(value/2),1);
                 nonLethal += damageData.nonLethalDamage;
-                if (finalAc.applyHalf)
+                if (finalAc.applyHalf && nonLethal)
                     nonLethal =  Math.max(Math.floor(nonLethal/2),1);
 
                 damageData.nonLethalDamage = nonLethal
@@ -5614,14 +5614,20 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    async applyActionOnSelf(action, actor) {
+    async applyActionOnSelf(action, actor, buff = null) {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         function cleanParam(parameter) {
             return parameter.replace(/"/gi, "");
         }
 
-        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actor.getRollData()).roll().result))
+        let actionRollData = actor.getRollData() //This is roll data of actor that *rolled* the roll
+        actionRollData.self = this.getRollData() //This is roll data of actor that *clicked* the roll
+        if (buff) {
+            actionRollData.buff = buff.getRollData() //This is roll data of optional buff item
+        }
+
+        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actionRollData).roll().result))
             return;
 
         function isActionRollable(_action) {
@@ -5699,7 +5705,7 @@ export class ActorPF extends Actor {
                             updateObject[action.parameters[2]] = action.parameters[4] === 'true';
                         } else {
                             if (isActionRollable(action.parameters[4])) {
-                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actionRollData).roll().total
                             } else {
                                 updateObject[action.parameters[2]] = action.parameters[4]
                             }
@@ -5732,7 +5738,7 @@ export class ActorPF extends Actor {
                                     updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                                 } else {
                                     if (isActionRollable(action.parameters[5])) {
-                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actionRollData).roll().total
                                     } else {
                                         updateObject[action.parameters[3]] = action.parameters[5]
                                     }
@@ -5749,7 +5755,7 @@ export class ActorPF extends Actor {
                                 updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                             } else {
                                 if (isActionRollable(action.parameters[5])) {
-                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actionRollData).roll().total
                                 } else {
                                     updateObject[action.parameters[3]] = action.parameters[5]
                                 }
@@ -5788,7 +5794,7 @@ export class ActorPF extends Actor {
                     let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= new Roll(cleanParam(value), this.getRollData()).roll().total
+                        updateObject[`${field}`]= new Roll(cleanParam(value), actionRollData).roll().total
                     } else {
                         updateObject[`${field}`]= value
                     }
@@ -5800,7 +5806,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll()
+                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll()
                     let name = action.name;
                     let chatTemplateData = {
                         name: this.name,
@@ -5821,7 +5827,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5838,7 +5844,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5847,7 +5853,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5856,7 +5862,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyRegeneration(damage,actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -6366,9 +6372,13 @@ export class ActorPF extends Actor {
 
     async syncToCompendium() {
         if (!this.data.data.companionUuid) return;
+        let apiKey = game.settings.get("D35E", "apiKeyWorld")
+        if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
+        if (!apiKey) return;
         $.ajax({
-            url: `http://localhost:5000/api/character/${this.data.data.companionUuid}`,
+            url: `${this.API_URI}/api/character/${this.data.data.companionUuid}`,
             type: 'PUT',
+            headers: {'API-KEY': apiKey},
             crossDomain: true,
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
@@ -6377,6 +6387,41 @@ export class ActorPF extends Actor {
                 //play with data
             }
         });
+    }
+
+    async getQueuedActions() {
+        if (!this.data.data.companionUuid) return;
+        let that = this;
+
+        let apiKey = game.settings.get("D35E", "apiKeyWorld")
+        if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
+        if (!apiKey) return;
+        $.ajax({
+            url: `${this.API_URI}/api/character/actions/${this.data.data.companionUuid}`,
+            type: 'GET',
+            headers: {'API-KEY': apiKey},
+            crossDomain: true,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+                //console.log('LOTDCOMPANION | ', data)
+                that.executeRemoteAction(data)
+            }
+        });
+    }
+
+    async executeRemoteAction(remoteAction) {
+        switch (remoteAction.action) {
+            case 'ability':
+                this.rollAbility(remoteAction.params)
+                break;
+            case 'save':
+                this.rollSave(remoteAction.params)
+                break;
+            case 'useItem':
+                this.items.find(i => i._id === remoteAction.params).use({ })
+                break;
+        }
     }
 
     getChargesFromItemById(id) {

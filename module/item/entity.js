@@ -479,15 +479,16 @@ export class ItemPF extends Item {
                     if (actionData.target === "self") {
                         if (!this.actor) continue;
                         if (this.actor.token !== null) {
-                            await this.actor.token.actor.applyActionOnSelf(actionData, this.actor.token.actor)
+                            await this.actor.token.actor.applyActionOnSelf(actionData, this.actor.token.actor, this)
                         } else {
-                            await this.actor.applyActionOnSelf(actionData, this.actor)
+                            await this.actor.applyActionOnSelf(actionData, this.actor, this)
                         }
                     }
                 }
             }
             if (this.data.data.buffType === "shapechange") {
                 if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
+                    let itemsToCreate = []
                     for (const i of this.data.data.shapechange.source.items) {
                         if (i.type === "attack" && i.data.attackType === "natural") {
                             //console.log('add polymorph attack')
@@ -495,30 +496,34 @@ export class ItemPF extends Item {
                             let data = duplicate(i);
                             data.name = i.name + ` (Polymorhped ${this.data.data.shapechange.source.name})`
                             delete data._id;
-                            if (this.actor.token !== null) {
-                                await this.actor.token.actor.createOwnedItem(data,{stopUpdates: true})
-                            } else {
-                                await this.actor.createOwnedItem(data,{stopUpdates: true})
-                            }
+                            itemsToCreate.push(data)
                         }
+                    }
+
+                    if (this.actor.token !== null) {
+                        await this.actor.token.actor.createOwnedItem(itemsToCreate,{stopUpdates: true})
+                    } else {
+                        await this.actor.createOwnedItem(itemsToCreate,{stopUpdates: true})
                     }
                 }
             }
         } else if (this.data.data.active && (data["data.active"] === undefined || !data["data.active"])) {
             if (this.data.data.buffType === "shapechange") {
                 if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
+                    let itemsToDelete = []
                     if (this.actor) {
                         for (const i of this.actor.items) {
 
                             if (i.data.type === "attack" && i.data.data.attackType === "natural" && !i.data.data.melded) {
                                 //console.log('remove polymorph attack',i,this.actor,this.actor.token)
-                                if (this.actor.token !== null) {
-                                    await this.actor.token.actor.deleteOwnedItem(i._id,{stopUpdates: true})
-                                } else {
-                                    await this.actor.deleteOwnedItem(i._id,{stopUpdates: true})
-                                }
+                                itemsToDelete.push(i._id)
                             }
                         }
+                    }
+                    if (this.actor.token !== null) {
+                        await this.actor.token.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
+                    } else {
+                        await this.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
                     }
                 }
             }
@@ -529,9 +534,9 @@ export class ItemPF extends Item {
                     if (actionData.target === "self") {
                         if (!this.actor) continue;
                         if (this.actor.token !== null) {
-                            await this.actor.token.actor.applyActionOnSelf(actionData, this.actor.token.actor)
+                            await this.actor.token.actor.applyActionOnSelf(actionData, this.actor.token.actor, this)
                         } else {
-                            await this.actor.applyActionOnSelf(actionData, this.actor)
+                            await this.actor.applyActionOnSelf(actionData, this.actor, this)
                         }
                     }
                 }
@@ -1121,6 +1126,7 @@ export class ItemPF extends Item {
                 useAmmoAttack = "",
                 useAmmoDamageType = "",
                 useAmmoNote = "",
+                useAmmoName = "",
                 rapidShot = false,
                 manyshot = false,
                 nonLethal = false,
@@ -1166,12 +1172,14 @@ export class ItemPF extends Item {
                     useAmmoDamageType = form.find('[name="ammo-dmg-type"]').val()
                     useAmmoAttack = form.find('[name="ammo-attack"]').val()
                     useAmmoNote = form.find('[name="ammo-note"]').val()
+                    useAmmoName = form.find('[name="ammo-name"]').val()
                     if (useAmmoDamage !== '') {
                         damageExtraParts.push([useAmmoDamage,useAmmoDamageType]);
                     }
                     if (useAmmoAttack !== '') {
                         attackExtraParts.push(useAmmoAttack);
                     }
+                    rollModifiers.push(`${useAmmoName}`)
                     console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
                 }
 
@@ -1659,6 +1667,7 @@ export class ItemPF extends Item {
                     actor: actor.data,
                     tokenId: token ? `${token.scene._id}.${token.id}` : null,
                     hasBoxInfo: hasBoxInfo,
+                    useAmmoName: useAmmoName,
                     dc: dc,
                     nonLethal: nonLethal
                 }, {inplace: false});
@@ -1694,6 +1703,7 @@ export class ItemPF extends Item {
             attackType: attackType ? attackType : "primary",
             hasAttack: this.hasAttack,
             hasDamage: this.hasDamage,
+            allowNoAmmo: game.settings.get("D35E", "allowNoAmmo"),
             nonLethal: getProperty(this.data, "data.nonLethal") || false,
             allowMultipleUses: this.data.data.uses.allowMultipleUses,
             multipleUsesMax: Math.floor(this.charges/this.chargeCost),
@@ -2837,7 +2847,12 @@ export class ItemPF extends Item {
         data.data.shapechange = {source: origData, type:type}
         data.data.buffType = "shapechange";
         data.data.sizeOverride = origData.data.traits.size;
+
+
         data.data.changes = []
+        data.data.changes.push(
+            ...(origData.items.find(i => i.type === "class")?.data?.changes || [])
+        )
         if (type === "polymorph" || type === "wildshape") {
             data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.abilities.str.total")}`, "ability", "str", "replace", getProperty(origData, "data.abilities.str.total")]]) // Strength
             data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.abilities.dex.total")}`, "ability", "dex", "replace", getProperty(origData, "data.abilities.dex.total")]]) // Dexterity
