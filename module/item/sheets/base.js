@@ -124,6 +124,7 @@ export class ItemSheetPF extends ItemSheet {
 
         data.charges = this.item.charges
         data.maxCharges = this.item.maxCharges
+        data.unmetRequirements = this.item.unmetRequirements
 
         // Prepare feat specific stuff
         if (data.item.type === "feat") {
@@ -348,6 +349,7 @@ export class ItemSheetPF extends ItemSheet {
         if (data.item.type === "feat") {
             data.isFeat = data.item.data.featType === "feat"
             data.hasCombatChanges = true;
+            data.hasRequirements = true;
             data.featCounters = []
             if (this.item.actor) {
                 for (let [a, s] of Object.entries(this.item.actor.data.data.counters.feat || [])) {
@@ -434,25 +436,31 @@ export class ItemSheetPF extends ItemSheet {
 
                 for (let ability of this.item.data.data.addedAbilities || []) {
                     let e = CACHE.AllAbilities.get(ability.uid);
-                    let _e = {
-                        item:e,
-                        level:ability.level,
-                        pack:e.pack,
-                    }
-                        data.children.addedAbilities.push(_e);
-                    if (!data.childItemLevels.has(ability.level)) {
-                        data.childItemLevels.set(ability.level, [])
-                    }
-                    data.childItemLevels.get(ability.level).push(_e);
-                    if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
-                    if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
-                        data.abilitiesDescription.push({
+                    let _e = {}
+                    if (e) {
+                        _e = {
+                            item: e,
                             level: ability.level,
-                            name: e.name,
-                            description: TextEditor.enrichHTML(e.data.data.description.value)
-                        })
-                        alreadyAddedDescriptions.add(e._id)
+                            pack: e.pack,
+                        }
+                        data.children.addedAbilities.push(_e);
+                        if (!data.childItemLevels.has(ability.level)) {
+                            data.childItemLevels.set(ability.level, [])
+                        }
+                        data.childItemLevels.get(ability.level).push(_e);
+                        if (e.data.data.uniqueId.indexOf("*") === -1) alreadyAddedAbilities.add(e.data.data.uniqueId)
+                        if (e.data.data.description.value !== "" && !alreadyAddedDescriptions.has(e._id)) {
+                            data.abilitiesDescription.push({
+                                level: ability.level,
+                                name: e.name,
+                                description: TextEditor.enrichHTML(e.data.data.description.value)
+                            })
+                            alreadyAddedDescriptions.add(e._id)
+                        }
+                    } else {
+                        console.warn('D35E | Missing', ability)
                     }
+
                 }
 
             }
@@ -826,6 +834,15 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+
+        let requirements = Object.entries(formData).filter(e => e[0].startsWith("data.requirements"));
+        formData["data.requirements"] = requirements.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         let resistances = Object.entries(formData).filter(e => e[0].startsWith("data.resistances"));
         formData["data.resistances"] = resistances.reduce((arr, entry) => {
             let [i, j] = entry[0].split(".").slice(2);
@@ -957,6 +974,7 @@ export class ItemSheetPF extends ItemSheet {
         // Modify buff changes
         html.find(".change-control").click(this._onChangeControl.bind(this));
         html.find(".combat-change-control").click(this._onCombatChangeControl.bind(this));
+        html.find(".requirement-control").click(this._onRequirementsControl.bind(this));
         html.find(".resistance-control").click(this._onResistanceControl.bind(this));
         html.find(".dr-control").click(this._onDRControl.bind(this));
 
@@ -1252,6 +1270,28 @@ export class ItemSheetPF extends ItemSheet {
             const changes = duplicate(this.item.data.data.combatChanges);
             changes.splice(Number(li.dataset.change), 1);
             return this.item.update({"data.combatChanges": changes});
+        }
+    }
+
+    async _onRequirementsControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = this.item.data.data.requirements || [];
+            // Combat Changes are
+            return this.item.update({"data.requirements": changes.concat([["", "", ""]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.requirements);
+            changes.splice(Number(li.dataset.change), 1);
+            return this.item.update({"data.requirements": changes});
         }
     }
 
@@ -1648,10 +1688,8 @@ export class ItemSheetPF extends ItemSheet {
             this._createEnhancementSpellDialog(itemData)
         }
         if (itemData.type === 'buff') {
-            await this.createEnhBuff(itemData)
+            await this.item.createEnhBuff(itemData)
         }
-
-
     }
 
 

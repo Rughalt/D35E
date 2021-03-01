@@ -1340,6 +1340,17 @@
   "D35E.SpellAttackCountExample": "ex. floor(@cl/2)",
   "D35E.LockEditingByPlayers": "Lock Editing by non-GM Users",
 
+  "D35E.CasterLevelShort": "CL",
+  "D35E.Aura": "Aura",
+  "D35E.Traits": "Traits",
+  "D35E.AdditionalData": "Misc Data",
+  "D35E.NaturalArmorShort": "Nat. Armor",
+  "D35E.LockEditingByPlayersDesc": "Locks this character sheet from being edited by non-GM users. This setting can be changed only by GM.",
+  "D35E.SortInventory": "Cleanup inventory by grouping items with the same name in each category.",
+  "D35E.HasUnmetRequirements": "This item has unmet requirements!",
+  "D35E.RequirementGeneric": "Generic Requirement",
+
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",

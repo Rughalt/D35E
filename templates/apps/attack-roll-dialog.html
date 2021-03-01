@@ -185,6 +185,12 @@
     {{#each weaponFeatsOptional as |feat|}}
     <div class="form-group">
         <label style="{{#unless feat.hasUseableChange}}opacity: 0.8{{/unless}}">{{feat.data.name}} {{#if feat.isCharged}}({{feat.charges}} charges){{/if}}</label>
+
+        {{#if feat.data.data.combatChangesRange.max}}
+        <input type="range" name="optional-range-base-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesRange.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
             <input type="checkbox" {{#unless feat.hasUseableChange}}disabled name="optional-{{feat.id}}"{{/unless}} class="stylized" data-feat-optional="{{feat.id}}"
                    data-type="optional"/>
@@ -212,8 +218,8 @@
     {{#if hasAttack}}{{#if hasDamage}}
     {{#unless isRangedWeapon}}
     <div class="form-group">
-        <label>{{localize "D35E.WeaponFightingMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
-        <select name="twf-attack-mode" onchange="changeTWF(this)" value="{{attackType}}" class="auto-save">
+        <label>{{localize "D35E.WeaponFightingMode"}} {{#unless attackTypeSet}}<i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i>{{/unless}}</label>
+        <select name="twf-attack-mode" onchange="changeTWF(this)" {{#unless attackTypeSet}}class="auto-save"{{/unless}}>
             {{#select attackType}}
             {{#each twoWeaponAttackTypes as |label mode|}}
             <option value="{{mode}}">{{localize label}}</option>
@@ -266,7 +272,7 @@
         <select name="ammunition-id" onchange="enableDisableFullAttack(this)" class="auto-save">
             {{#select ammo}}
                 {{#if allowNoAmmo}}
-                <option value="none" data-ammo-count="9999" data-dmg-formula="">None</option>
+                <option value="none" data-ammo-count="9999" data-dmg-formula="">Default Unlimited Ammo</option>
                 {{/if}}
                 {{#each ammunition as |item iid|}}
                 <option value="{{item._id}}" data-attack="{{item.data.data.bonusAmmoAttack}}"
@@ -339,6 +345,8 @@
                 $('option:selected', select).closest("section").find("input[name='ammo-note']").val(attackNote)
                 $('option:selected', select).closest("section").find("input[name='ammo-name']").val(attackName)
                 $('option:selected', select).closest("section").find("button[data-button='multi']").prop("disabled", baseExtraAttacks > arrowsCount);
+                $('option:selected', select).closest("section").find("button[data-button='normal']").prop("disabled", true);
+                console.log('D35E | Attack | Arrows Count ' + arrowsCount)
                 $('option:selected', select).closest("section").find("button[data-button='normal']").prop("disabled", arrowsCount === 0);
             }
         </script>
@@ -400,13 +408,17 @@
         });
         if (game.settings.get("D35E", "saveAttackWindow")) {
             $('.auto-save').savy('load',function(){
-                console.log("All data from savy are loaded");
+                console.log("All fields from save are loaded");
+                $('.attack-form input').trigger('change')
             },'{{id}}');
             }
         else {
             $('.fa-history').hide()
         }
+        {{#if isRangedWeapon}}
+        $('.attack-form').closest("section").find("button[data-button='normal']").prop('disabled', true);
         enableDisableFullAttack($('select[name="ammunition-id"]'))
+        {{/if}}
 
 
     </script>

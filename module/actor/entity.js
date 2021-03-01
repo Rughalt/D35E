@@ -43,13 +43,13 @@ export class ActorPF extends Actor {
     /* -------------------------------------------- */
 
     get spellFailure() {
-        if (this.items == null) return 0;
+        if (this.items == null) return this.data.data.attributes.arcaneSpellFailure || 0;
         return this.items.filter(o => {
             return o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded;
         }).reduce((cur, o) => {
             if (typeof o.data.data.spellFailure === "number") return cur + o.data.data.spellFailure;
             return cur;
-        }, 0);
+        }, this.data.data.attributes.arcaneSpellFailure || 0);
     }
 
     get race() {
@@ -348,7 +348,7 @@ export class ActorPF extends Actor {
             case "sac":
                 return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
             case "nac":
-                return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
+                return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total", "data.attributes.naturalACTotal"];
             case "tch":
                 return ["data.attributes.ac.touch.total"];
             case "pac":
@@ -568,6 +568,8 @@ export class ActorPF extends Actor {
                 return "data.details.totalCr";
             case "fortification":
                 return "data.attributes.fortification.total";
+            case "asf":
+                return "data.attributes.arcaneSpellFailure";
         }
 
         if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -1949,8 +1951,10 @@ export class ActorPF extends Actor {
         linkData(data, updateData, "data.attributes.damage.spell", 0);
 
 
+        linkData(data, updateData, "data.attributes.naturalACTotal", data1.attributes.naturalAC || 0);
         linkData(data, updateData, "data.attributes.turnUndeadUsesTotal", 0);
         linkData(data, updateData, "data.attributes.powerPointsTotal", 0);
+        linkData(data, updateData, "data.attributes.arcaneSpellFailure", 0);
 
         let levelUpData = duplicate(data1.details.levelUpData) || []
         if (levelUpData.length !== data1.details.level.available) {
@@ -4193,6 +4197,7 @@ export class ActorPF extends Actor {
         const _roll = async function (saveType, ability, baseAbility, target, form,props) {
             let savingThrowBonus = getProperty(this.data,`data.attributes.savingThrows.${saveType}.total`) || 0,
                 optionalFeatIds = [],
+                optionalFeatRanges = new Map(),
                 rollMode = null;
             savingThrowBonus -= getProperty(this.data,`data.abilities.${baseAbility}.mod`) || 0
             savingThrowBonus += getProperty(this.data,`data.abilities.${ability}.mod`) || 0
@@ -4204,8 +4209,12 @@ export class ActorPF extends Actor {
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
-                    if ($(this).prop("checked"))
-                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                    if ($(this).prop("checked")) {
+                        let featId = $(this).attr('data-feat-optional');
+                        optionalFeatIds.push(featId);
+                        if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
+                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                    }
                 })
             }
 
@@ -4220,7 +4229,10 @@ export class ActorPF extends Actor {
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
-                    rollModifiers.push(`${i.name}`)
+                    if (optionalFeatRanges.get(i._id))
+                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    else
+                        rollModifiers.push(`${i.name}`)
                     i.addCharges(-1);
                 }
             })
@@ -4359,6 +4371,7 @@ export class ActorPF extends Actor {
         const _roll = async function (target, form,props) {
             let grappleModTotal = this.data.data.attributes.cmb.total - (this.data.data.attributes.energyDrain || 0),
                 optionalFeatIds = [],
+                optionalFeatRanges = new Map(),
                 rollMode = null;
             let grappleManualBonus = 0;
             // Get data from roll form
@@ -4368,8 +4381,12 @@ export class ActorPF extends Actor {
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
-                    if ($(this).prop("checked"))
-                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                    if ($(this).prop("checked")) {
+                        let featId = $(this).attr('data-feat-optional');
+                        optionalFeatIds.push(featId);
+                        if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
+                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                    }
                 })
             }
 
@@ -4384,7 +4401,11 @@ export class ActorPF extends Actor {
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
-                    rollModifiers.push(`${i.name}`)
+
+                    if (optionalFeatRanges.get(i._id))
+                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    else
+                        rollModifiers.push(`${i.name}`)
                     i.addCharges(-1);
                 }
             })
@@ -4826,6 +4847,7 @@ export class ActorPF extends Actor {
             let rollModifiers = []
             let ac = getProperty(this.data,`data.attributes.ac.${acType}.total`) || 0,
                 optionalFeatIds = [],
+                optionalFeatRanges = new Map(),
                 applyHalf = false,
                 noCritical = false,
                 applyPrecision = false,
@@ -4842,8 +4864,12 @@ export class ActorPF extends Actor {
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
-                    if ($(this).prop("checked"))
-                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                    if ($(this).prop("checked")) {
+                        let featId = $(this).attr('data-feat-optional');
+                        optionalFeatIds.push(featId);
+                        if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
+                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                    }
                 })
 
                 if (form.find('[name="applyHalf"]').prop("checked")) {
@@ -4900,7 +4926,10 @@ export class ActorPF extends Actor {
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
                     i.addCharges(-1);
-                    rollModifiers.push(`${i.name}`)
+                    if (optionalFeatRanges.get(i._id))
+                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    else
+                        rollModifiers.push(`${i.name}`)
                 }
             })
 
@@ -5461,6 +5490,8 @@ export class ActorPF extends Actor {
 
             }
         }
+        //this.createEmbeddedDocuments
+        //return this.createOwnedItem((noArray ? createData[0] : createData), options);
         return super.createEmbeddedEntity(embeddedName, (noArray ? createData[0] : createData), options);
     }
 
@@ -5600,6 +5631,11 @@ export class ActorPF extends Actor {
         return result;
     }
 
+    async autoApplyActionsOnSelf(action) {
+        for (let _action of ItemPF.parseAction(action))
+            if (_action.target === "self")
+                await this.applyActionOnSelf(_action, this, null)
+    }
 
     static applyAction(action, actor) {
         const promises = [];
@@ -6479,4 +6515,39 @@ export class ActorPF extends Actor {
         await createCustomChatMessage("systems/D35E/templates/chat/deactivate-buff.html", {items: items, actor: this}, chatData,  {rolls: []})
     }
 
+
+    async groupItems() {
+        let itemsToDelete = new Set()
+        let itemQuantities = new Map()
+        for (let type of ['equpiment','loot','weapon']) {
+            let itemNames = new Set()
+            let itemNamesToId = new Map()
+            let equipment = this.items.filter(o => {
+                return o.type === type
+            })
+            for (let _item of equipment) {
+                let _name = `${_item.name}-${_item.data.data.carried}-${_item.data.data.equipped}`
+                if (itemNames.has(_name)) {
+                    itemQuantities.set(itemNamesToId.get(_name), itemQuantities.get(itemNamesToId.get(_name)) + _item.data.data.quantity)
+                    itemsToDelete.add(_item.id)
+                }
+                else {
+                    itemNames.add(_name)
+                    itemQuantities.set(_item.id, _item.data.data.quantity)
+                    itemNamesToId.set(_name, _item.id)
+                }
+            }
+
+        }
+        if (Array.from(itemsToDelete).length)
+            await this.deleteEmbeddedEntity("OwnedItem", Array.from(itemsToDelete), {stopUpdates: true});
+
+        let itemsToUpdate = []
+        for (const [key, value] of itemQuantities.entries()) {
+            itemsToUpdate.push({'_id':key,'data.quantity':value})
+        }
+
+        if (itemsToUpdate.length)
+            await this.updateEmbeddedEntity("OwnedItem", itemsToUpdate, {stopUpdates: true, ignoreSpellbookAndLevel: true});
+    }
 }

@@ -1066,6 +1066,7 @@ D35E.buffTargets = {
     "spellResistance": "D35E.SpellResistance",
     "cr": "D35E.CR",
     "fortification": "D35E.Fortification",
+    "asf": "D35E.ArcaneSpellFailure"
   },
   "prestigeCl": {
     "_label": "D35E.PrestigeCl",
@@ -1285,6 +1286,17 @@ D35E.savingThrowTypes = {
   'fortitudenegates': 'D35E.STFortitudeNegates',
   'fortitudepartial': 'D35E.STFortitudePartial',
 };
+
+D35E.requirements = {
+  'generic': 'D35E.RequirementGeneric',
+  'bab': 'D35E.BAB',
+  "str": "D35E.AbilityStr",
+  "dex": "D35E.AbilityDex",
+  "con": "D35E.AbilityCon",
+  "int": "D35E.AbilityInt",
+  "wis": "D35E.AbilityWis",
+  "cha": "D35E.AbilityCha"
+}
 
 
 
