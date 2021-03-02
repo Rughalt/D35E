@@ -5821,6 +5821,29 @@ export class ActorPF extends Actor {
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
+            case "Trait":
+                // Condition set *name* to *value*
+                if (action.parameters.length === 5 && action.parameters[0] === "set" && action.parameters[3] === "to") {
+                    let traitGroup = cleanParam(action.parameters[1])
+                    let name = cleanParam(action.parameters[2])
+                    let value = cleanParam(action.parameters[4])
+                    let currentTraits = duplicate(actionRollData.self.traits[traitGroup].value)
+                    if (value === 'true') {
+                        if (currentTraits.indexOf(name) === -1) {
+                            currentTraits.push(name)
+                        }
+                    } else {
+                        var index = currentTraits.indexOf(name);
+                        if (index !== -1) {
+                            currentTraits.splice(index, 1);
+                        }
+                    }
+                    let updateObject = {}
+                    updateObject[`data.traits.${traitGroup}.value`] = currentTraits
+                    await this.update(updateObject)
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
 
             case "Update":
                 // Update set *field* to *value*
@@ -5833,6 +5856,28 @@ export class ActorPF extends Actor {
                         updateObject[`${field}`]= new Roll(cleanParam(value), actionRollData).roll().total
                     } else {
                         updateObject[`${field}`]= value
+                    }
+                    await this.update(updateObject)
+                } else if (action.parameters.length === 4 && action.parameters[0] === "add" && action.parameters[2] === "value") {
+                    let field = cleanParam(action.parameters[1])
+                    let value = cleanParam(action.parameters[3])
+                    let updateObject = {}
+
+                    if (isActionRollable(value)) {
+                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + new Roll(cleanParam(value), actionRollData).roll().total
+                    } else {
+                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + parseInt(value)
+                    }
+                    await this.update(updateObject)
+                } else if (action.parameters.length === 4 && action.parameters[0] === "substract" && action.parameters[2] === "value") {
+                    let field = cleanParam(action.parameters[1])
+                    let value = cleanParam(action.parameters[3])
+                    let updateObject = {}
+
+                    if (isActionRollable(value)) {
+                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - new Roll(cleanParam(value), actionRollData).roll().total
+                    } else {
+                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - value
                     }
                     await this.update(updateObject)
                 } else
