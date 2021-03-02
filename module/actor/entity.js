@@ -5430,6 +5430,12 @@ export class ActorPF extends Actor {
             // Don't auto-equip transferred items
             if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
                 obj.data.equipped = false;
+
+            }
+            if (["weapon", "equipment", "loot"].includes(obj.type)) {
+                if (obj.data.identifiedName !== obj.name) {
+                    obj.data.identifiedName = obj.name
+                }
             }
             if (["spell"].includes(obj.type)) {
                 if (options.ignoreSpellbookAndLevel) {
