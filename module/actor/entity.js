@@ -4023,7 +4023,7 @@ export class ActorPF extends Actor {
         let props = [];
         if (notes.length > 0) props.push({ header: "Notes", value: notes });
         return DicePF.d20Roll({
-            event: options.event,
+            event: options.event || {},
             fastForward: options.skipDialog === true,
             staticRoll: options.staticRoll,
             parts: ["@mod"],
@@ -6493,9 +6493,14 @@ export class ActorPF extends Actor {
     async getQueuedActions() {
         if (!this.data.data.companionUuid) return;
         let that = this;
-
         let apiKey = game.settings.get("D35E", "apiKeyWorld")
         if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
+
+        let userWithCharacterIsActive = game.users.players.some(u => u.active && u.data.character === this.id)
+        let isMyCharacter = game.users.current.data.character === this.id;
+        // It is not ours character and user that has this character is active - so better direct commands to his/her account
+        if (!isMyCharacter && userWithCharacterIsActive) return;
+
         if (!apiKey) return;
         $.ajax({
             url: `${this.API_URI}/api/character/actions/${this.data.data.companionUuid}`,
@@ -6518,6 +6523,9 @@ export class ActorPF extends Actor {
                 break;
             case 'save':
                 this.rollSave(remoteAction.params)
+                break;
+            case 'rollSkill':
+                this.rollSkill(remoteAction.params)
                 break;
             case 'useItem':
                 this.items.find(i => i._id === remoteAction.params).use({ })
