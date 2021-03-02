@@ -5885,6 +5885,20 @@ export class ActorPF extends Actor {
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
+            case "RunMacro":
+				// Executes a macro defined on MacroDirectory
+                console.log(action)
+                if (action.parameters.length === 1) {
+					let macroToRun = MacroDirectory.collection.find(x => x.data.name === cleanParam(action.parameters[0]));
+					if (!macroToRun)
+					{
+						ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+						return;
+					}
+					await macroToRun.execute();
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+				break;
             default:
                 break;
         }
