@@ -75,10 +75,16 @@ export class TopPortraitBar {
     let life = portraitDiv.find('.life');
     let pixelDamage = (actor.data.data.attributes.hp.value / actor.data.data.attributes.hp.max) * 100
 
-      if (actor.data.data.attributes.hp.value <= 0) {
+      if (actor.data.data.attributes.hp.value <= -10) {
         pixelDamage = 0;
         portraitDiv.addClass('dead');
         life.text(`Dead`)
+      } 
+      //Dead is at -10 Hit Points or Lower
+      else if (actor.data.data.attributes.hp.value < 0) {
+        pixelDamage = 0;
+        portraitDiv.addClass('dead');
+        life.text(`Dying`)
       } else {
         portraitDiv.removeClass('dead');
         if (actor.hasPerm(game.user, "OBSERVER")) {
