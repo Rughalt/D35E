@@ -10,6 +10,8 @@
     - Ability to have sliders/ranges in Combat Change, to allow use implementing effects such as Combat Expertise
 - Ammunition changes
     - Forcing all ranged weapons to use/select ammo instead of using "generic umlimited" ammunition
+- Inventory cleanup functionality
+- Basic Feat requirements function
 
 ### Quality of Life Changes
 - Encounter Generator fix
@@ -17,6 +19,9 @@
 - Saving values in Defense Dialog and Saving Throw dialog
 
 ### All changes
+- [398](https://github.com/Rughalt/D35E/issues/398) - Allow ammo recovery to be turned off closed 
+- [396](https://github.com/Rughalt/D35E/issues/396) - Critical Damage Doesn't have the Bracket showing the damage types closed 
+- [394](https://github.com/Rughalt/D35E/issues/394) - Math for Even Number Ability Score Penalties  closed 
 - [388](https://github.com/Rughalt/D35E/issues/388) - Backpack Description Copy Paste Error closed 
 - [387](https://github.com/Rughalt/D35E/issues/387) - Full attack wield modes not translating into the attack dialog closed 
 - [384](https://github.com/Rughalt/D35E/issues/384) - Healing items say damage in the chat card closed 
@@ -33,6 +38,7 @@
 - [369](https://github.com/Rughalt/D35E/issues/369) - Missing localization: Spell/Ability Attack Count field closed 
 - [368](https://github.com/Rughalt/D35E/issues/368) - Missing localization: D35E.VsTouchAc closed 
 - [366](https://github.com/Rughalt/D35E/issues/366) - Encounter Generator not loading closed 
+- [365](https://github.com/Rughalt/D35E/issues/365) - Request Automatic ammunition recovery closed 
 - [364](https://github.com/Rughalt/D35E/issues/364) - Ammunition Detail closed 
 - [362](https://github.com/Rughalt/D35E/issues/362) - Request Combat Changes can add special actions closed 
 - [360](https://github.com/Rughalt/D35E/issues/360) - [Request] Special actions to modify / toggle arrays closed 

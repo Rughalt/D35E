@@ -3828,7 +3828,7 @@ export class ItemPF extends Item {
 
         // Add a new effect
         //const durationData = {rounds: this.data.data.timeline.total - this.data.data.timeline.elapsed, combat: game.combats.entities[0]._id, startRound: game.combats.entities[0].current.round || 0, startTurn: game.combats.entities[0].current.turn || 0}
-        const createData = { label: this.name, icon: this.img, origin: this.uuid, disabled: !this.data.data.active, duration: durationData || {} };
+        const createData = { label: this.name, icon: this.img, origin: this.uuid, disabled: !this.data.data.active };
         createData["flags.D35E.show"] = !this.data.data.hideFromToken && !game.settings.get("D35E", "hideTokenConditions");
         const effect = ActiveEffect.create(createData, this.actor);
         await effect.create();

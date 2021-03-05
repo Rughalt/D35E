@@ -5190,8 +5190,8 @@ export class ActorPF extends Actor {
                     header: game.i18n.localize("D35E.RollModifiers"),
                     value: finalAc.rollModifiers
                 });
+                let ammoRecovered = false
                 if (game.settings.get("D35E", "useAutoAmmoRecovery")) {
-                    let ammoRecovered = false
                     if (ammoId && attackerId && !hit) {
 
                         let recoveryRoll = new Roll("1d100").roll().total;
