@@ -369,7 +369,7 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
   }
 });
 
-Hooks.on("updateCombat", (combat, combatant, info, data) => {
+Hooks.on("updateCombat", async (combat, combatant, info, data) => {
   if (!game.user.isGM)
     return;
   const actor = combat.combatant.actor;
@@ -378,6 +378,7 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
     let itemUpdateData = []
     let itemsEnding = []
     let itemResourcesData = {}
+    let deletedOrChanged = false;
     if (actor.items !== undefined && actor.items.size > 0) {
       // Update items
       for (let i of actor.items) {
@@ -385,16 +386,20 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
         let _data = i.getElapsedTimeUpdateData(1)
         if (_data && _data["data.active"] === false)
           itemsEnding.push(i)
-        if (_data && !_data.delete) itemUpdateData.push(_data);
+        if (_data && !_data.delete) {
+          itemUpdateData.push(_data);
+          deletedOrChanged = true;
+        }
         else if (_data && _data.delete === true) {
-          actor.deleteOwnedItem(_data._id, { stopUpdates: true })
+          await actor.deleteOwnedItem(_data._id, { stopUpdates: true })
+          deletedOrChanged = true;
         }
       }
 
     }
 
-    if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
-    if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+    if (itemUpdateData.length > 0) await actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+    if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await actor.update(itemResourcesData);
     if (itemsEnding.length)
       actor.renderBuffEndChatCard(itemsEnding)
     actor.renderFastHealingRegenerationChatCard();

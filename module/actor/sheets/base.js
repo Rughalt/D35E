@@ -271,7 +271,7 @@ export class ActorSheetPF extends ActorSheet {
       }
     }
     data.skillRanks = skillRanks;
-    let sizeMod = CONFIG.D35E.sizeMods[this.actor.data.data.traits.size] || 0
+    let sizeMod = CONFIG.D35E.sizeMods[this.actor.data.data.traits.actualSize] || 0
     data.attackBonuses = { sizeMod: sizeMod, melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.melee, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.ranged}
 
     // Fetch the game settings relevant to sheet rendering.

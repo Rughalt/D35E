@@ -605,7 +605,7 @@ export class ActorPF extends Actor {
     }
 
 
-    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}) {
+    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}, updateData) {
         // Class hit points
         const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
             return a.sort - b.sort;
@@ -756,6 +756,7 @@ export class ActorPF extends Actor {
         if (tokenSizeKey === "actor") {
             tokenSizeKey = sizeKey;
         }
+        linkData(data, updateData, "data.traits.actualSize", sizeKey);
         if (sizeKey !== "med") {
             // AC
             changes.push({
@@ -1401,6 +1402,7 @@ export class ActorPF extends Actor {
 
             if (obj.data.sizeOverride !== undefined && obj.data.sizeOverride !== null && obj.data.sizeOverride !== "") {
                 sizeOverride = obj.data.sizeOverride;
+
             }
             if (!obj.data.changeFlags) continue;
             for (let [flagKey, flagValue] of Object.entries(obj.data.changeFlags)) {
@@ -1499,7 +1501,7 @@ export class ActorPF extends Actor {
 
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
-        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options);
+        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options, updateData);
 
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
@@ -2371,7 +2373,8 @@ export class ActorPF extends Actor {
                             continue;
                         }
                         if (uniqueId.endsWith("*")) {
-                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithStarUIDRace").format(e.data.name));
+                            continue;
                         }
                         let canAdd = !addedAbilities.has(uniqueId)
                         if (canAdd) {
@@ -2532,10 +2535,10 @@ export class ActorPF extends Actor {
             }
             if (changes[`data.abilities.${a}.total`]) delete changes[`data.abilities.${a}.total`]; // Remove used mods to prevent doubling
             if (changes[`data.abilities.${a}.replace`]) delete changes[`data.abilities.${a}.replace`]; // Remove used mods to prevent doubling
-            linkData(data, updateData, `data.abilities.${a}.mod`, Math.floor((updateData[`data.abilities.${a}.total`] - 10) / 2));
-            linkData(data, updateData, `data.abilities.${a}.mod`, Math.max(-5, updateData[`data.abilities.${a}.mod`] - Math.floor(updateData[`data.abilities.${a}.damage`] / 2) - Math.floor(ablPenalty / 2)));
-            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.floor((updateData[`data.abilities.${a}.origTotal`] - 10) / 2));
-            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.max(-5, updateData[`data.abilities.${a}.origMod`] - Math.floor(updateData[`data.abilities.${a}.damage`] / 2) - Math.floor(ablPenalty / 2)));
+            linkData(data, updateData, `data.abilities.${a}.mod`, Math.floor((updateData[`data.abilities.${a}.total`] - updateData[`data.abilities.${a}.damage`] - ablPenalty - 10) / 2));
+            linkData(data, updateData, `data.abilities.${a}.mod`, Math.max(-5, updateData[`data.abilities.${a}.mod`]));
+            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.floor((updateData[`data.abilities.${a}.origTotal`] - updateData[`data.abilities.${a}.damage`] - ablPenalty - 10) / 2));
+            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.max(-5, updateData[`data.abilities.${a}.origMod`]));
             linkData(data, updateData, `data.abilities.${a}.drain`, updateData[`data.abilities.${a}.drain`] + (changes[`data.abilities.${a}.drain`] || 0));
             modDiffs[a] = updateData[`data.abilities.${a}.mod`] - prevMods[a];
         }
@@ -4066,7 +4069,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
-            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.actualSize] || 0 },
             title: game.i18n.localize("D35E.Melee"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -4079,7 +4082,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
-            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.actualSize] || 0 },
             title: game.i18n.localize("D35E.Ranged"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -5073,7 +5076,7 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false, actor = null) {
+    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false, actor = null, attackerId = null, attackerTokenId = null, ammoId = null) {
 
         let value = 0;
 
@@ -5187,7 +5190,18 @@ export class ActorPF extends Actor {
                     header: game.i18n.localize("D35E.RollModifiers"),
                     value: finalAc.rollModifiers
                 });
+                if (game.settings.get("D35E", "useAutoAmmoRecovery")) {
+                    let ammoRecovered = false
+                    if (ammoId && attackerId && !hit) {
 
+                        let recoveryRoll = new Roll("1d100").roll().total;
+                        if (recoveryRoll < 50) {
+                            let _attacker = game.actors.get(attackerId);
+                            ammoRecovered = true;
+                            _attacker.quickChangeItemQuantity(ammoId, 1)
+                        }
+                    }
+                }
                 // Set chat data
                 let chatData = {
                     speaker: ChatMessage.getSpeaker({actor: a.data}),
@@ -5213,6 +5227,7 @@ export class ActorPF extends Actor {
                     concealRolled: concealRolled,
                     isSpell: roll === -1337,
                     applyHalf: finalAc.applyHalf,
+                    ammoRecovered: ammoRecovered,
                     fortifyRolled: fortifyRolled,
                     fortifyValue: Math.min(fortifyValue,100),
                     fortifyRoll: fortifyRoll,
@@ -5531,7 +5546,7 @@ export class ActorPF extends Actor {
         // Determine carrying capacity
         const carryStr = (srcData.data.abilities.str.total - srcData.data.abilities.str.damage) + srcData.data.abilities.str.carryBonus;
         let carryMultiplier = srcData.data.abilities.str.carryMultiplier;
-        const size = srcData.data.traits.size;
+        const size = srcData.data.traits.actualSize;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
         else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
         let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr > 0 ? carryStr : 0 }).roll().total;

@@ -1349,7 +1349,12 @@
   "D35E.SortInventory": "Cleanup inventory by grouping items with the same name in each category.",
   "D35E.HasUnmetRequirements": "This item has unmet requirements!",
   "D35E.RequirementGeneric": "Generic Requirement",
-
+  "D35E.CombatChangesRange": "Combat Changes Range (Slider)",
+  "D35E.MaximumRange": "Maximum Range Value",
+  "D35E.MaximumRangeFormula": "Maximum Range Value Formula",
+  "D35E.RangeSliderAbout": "Range Slider can be used as (@range) in Combat Changes.",
+  "D35E.AmmoRecovered": "Ammo recovered",
+  "D35E.NotAddingAbilityWithStarUIDRace": "Racial ability {0} was not automatically added to actor because its UID ends with *. Make a copy of this ability and change its uid to use with Race.",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1398,6 +1403,8 @@
   "SETTINGS.D35EApiKeyWorldN": "World Player's Companion API Key",
   "SETTINGS.D35EApiKeyWorldH": "Player's Companion API Key used by default for all characters in this world.",
   "SETTINGS.D35EAllowNoAmmoN": "Allow no Ammo for ranged weapons",
-  "SETTINGS.D35EAllowNoAmmoH": "Allows players to use ranged weapons without ammunition"
+  "SETTINGS.D35EAllowNoAmmoH": "Allows players to use ranged weapons without ammunition",
+  "SETTINGS.D35EAutoAmmoRecoveryN": "Use Automatic Ammo recovery",
+  "SETTINGS.D35EAutoAmmoRecoveryH": "Allows automatic ammo recovery feature"
 
 }

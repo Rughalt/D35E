@@ -190,6 +190,15 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "useAutoAmmoRecovery", {
+    name: "SETTINGS.D35EAutoAmmoRecoveryN",
+    hint: "SETTINGS.D35EAutoAmmoRecoveryH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   /**
    * Option to automatically collapse Item Card descriptions
    */

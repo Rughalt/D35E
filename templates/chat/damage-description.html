@@ -2,22 +2,30 @@
      tokenId}}data-token-id="{{tokenId}}" {{/if}}>
 <header class="card-header flexrow">
     <img src="{{img}}" title="{{name}}" width="36" height="36"/>
-    <h3>{{#if name}}{{name}}{{/if}}
 
-    {{#unless isSpell}}
-        {{#if name}}
-        -{{/if}}
-    {{#if hit}}
-    {{#if crit}}
-    <div class="dice-flavor" style="display: inline">{{localize "D35E.Crit"}}</div>
-    {{else}}
-    <div class="dice-flavor" style="display: inline">{{localize "D35E.Hit"}}</div>
+    {{#if ammoRecovered}}
+        <div class="flexcol"><h3 style="line-height: 20px">{{name}}
+            <div class="dice-flavor" style="display: inline">{{localize "D35E.Miss"}}</div></h3>
+            <h4 style='line-height: 16px; font-family: "Nodesto", "Signika", "Palatino Linotype", serif; font-size: 18px; opacity: 0.6;'>{{localize "D35E.AmmoRecovered"}}</h4></div>
     {{/if}}
-    {{else}}
-    <div class="dice-flavor" style="display: inline">{{localize "D35E.Miss"}}</div>
-    {{/if}}
+    {{#unless ammoRecovered}}
+        <h3>{{#if name}}{{name}}{{/if}}
+
+        {{#unless isSpell}}
+            {{#if name}}
+            -{{/if}}
+        {{#if hit}}
+        {{#if crit}}
+        <div class="dice-flavor" style="display: inline">{{localize "D35E.Crit"}}</div>
+        {{else}}
+        <div class="dice-flavor" style="display: inline">{{localize "D35E.Hit"}}</div>
+        {{/if}}
+        {{else}}
+        <div class="dice-flavor" style="display: inline">{{localize "D35E.Miss"}}</div>
+        {{/if}}
+        {{/unless}}
+        </h3>
     {{/unless}}
-    </h3>
 </header>
 
 <div class="card-content">

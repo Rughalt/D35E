@@ -1690,7 +1690,8 @@ export class ItemPF extends Item {
                     hasBoxInfo: hasBoxInfo,
                     useAmmoName: useAmmoName,
                     dc: dc,
-                    nonLethal: nonLethal
+                    nonLethal: nonLethal,
+                    useAmmoId: useAmmoId
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
@@ -1932,6 +1933,7 @@ export class ItemPF extends Item {
         return combatChanges.filter(change => {
             return (change[0] === 'all' || change[0] === itemType) && (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
         }).map(c => {
+            c[4] = c[4].replace(/@range/g, combatChangesRollData.range)
             if (c[3].indexOf('$') === -1 && c[3].indexOf('&') === -1) {
                 c[4] = new Roll(`${c[4]}`,combatChangesRollData).roll().total
             }
@@ -1969,7 +1971,7 @@ export class ItemPF extends Item {
             rollData.cl = cl;
         }
         // Determine size bonus
-        rollData.sizeBonus = CONFIG.D35E.sizeMods[rollData.traits.size];
+        rollData.sizeBonus = CONFIG.D35E.sizeMods[rollData.traits.actualSize];
         // Add misc bonuses/penalties
         rollData.item.proficiencyPenalty = -4;
 
@@ -2421,8 +2423,11 @@ export class ItemPF extends Item {
             const natural20Crit = button.dataset.naturalcrit === "true";
             const fumble = button.dataset.fumble === "true";
             const fumbleCrit = button.dataset.fumblecrit === "true";
+            const attackerToken = button.dataset.attackertoken;
+            const attacker = button.dataset.attacker;
+            const ammoId = button.dataset.ammoid;
             event.applyHalf = action === "applyDamageHalf";
-            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage);
+            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage,null,attacker,attackerToken,ammoId);
         } else if (action === "applyHealing") {
             const value = button.dataset.value;
             ActorPF.applyDamage(event,roll,null,null,null,null,null,value,null,null,null,null,false,true);
