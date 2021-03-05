@@ -1,3 +1,5 @@
+import {ItemPF} from "../item/entity.js";
+
 export class ChatAttack {
     constructor(item, label = "", actor = null) {
         this.setItem(item, actor);
@@ -235,7 +237,7 @@ export class ChatAttack {
 
 
 
-        data.flavor = damageTypes.length > 0 ? `${flavor} (${damageTypes.join(", ")})` : flavor;
+        data.flavor = flavor;
         data.tooltip = tooltips;
         if (!critical)
             data.shortTooltip = "(" + shortTooltips.join("") + ")";
@@ -311,15 +313,45 @@ export class ChatAttack {
                     continue;
                 }
             }
+            let actionData = action.action.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`);
 
+            // If this is self action, run it on the actor on the time of render
+            _actor.autoApplyActionsOnSelf(actionData)
             this.special.push({
                 label: action.name,
-                value: action.action.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`),
+                value: actionData,
                 isTargeted: action.action.endsWith("target") || action.action.endsWith("target;"),
                 action: "customAction",
                 img: action.img,
                 hasImg: action.img !== undefined && action.img !== null && action.img !== ""
             });
         }
+    }
+
+    async addCommandAsSpecial(name, img, actionData, actor = null, useAmount = 1, cl = null, range = 0) {
+        let _actor = this.item.actor;
+        if (actor != null)
+            _actor = actor
+
+        if (cl === null) {
+            if (this.item.data.type === "spell") {
+                const spellbookIndex = this.item.data.data.spellbook;
+                const spellbook = _actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+                cl = spellbook.cl.total + (this.item.data.data.clOffset || 0);
+            }
+        }
+
+        let _actionData = actionData.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@range\)/g, `${range}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`);
+
+        // If this is self action, run it on the actor on the time of render
+        _actor.autoApplyActionsOnSelf(_actionData)
+        this.special.push({
+            label: name,
+            value: _actionData,
+            isTargeted: _actionData.endsWith("target") || _actionData.endsWith("target;"),
+            action: "customAction",
+            img: img,
+            hasImg: img !== undefined && img !== null && img !== ""
+        });
     }
 }

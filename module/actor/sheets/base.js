@@ -74,6 +74,7 @@ export class ActorSheetPF extends ActorSheet {
       editable: this.isEditable,
       cssClass: isOwner ? "editable" : "locked",
       isCharacter: this.entity.data.type === "character",
+      isPlayerEditLocked: (this.entity.data.data.lockEditingByPlayers || false) && !game.user.isGM,
       hasRace: false,
       config: CONFIG.D35E,
       useBGSkills: this.entity.data.type === "character" && game.settings.get("D35E", "allowBackgroundSkills"),
@@ -270,7 +271,7 @@ export class ActorSheetPF extends ActorSheet {
       }
     }
     data.skillRanks = skillRanks;
-    let sizeMod = CONFIG.D35E.sizeMods[this.actor.data.data.traits.size] || 0
+    let sizeMod = CONFIG.D35E.sizeMods[this.actor.data.data.traits.actualSize] || 0
     data.attackBonuses = { sizeMod: sizeMod, melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.melee, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.ranged}
 
     // Fetch the game settings relevant to sheet rendering.
@@ -613,6 +614,8 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".note-editor").click(this._onNoteEditor.bind(this));
     html.find(".configure-spellbook").click(this._onSpellbookEditor.bind(this));
     html.find(".configure-level-up-data").click(this._onLevelDataUp.bind(this));
+
+    html.find(".group-inventory").click(this._onGroupInventory.bind(this));
     /* -------------------------------------------- */
     /*  Inventory
     /* -------------------------------------------- */
@@ -874,6 +877,11 @@ export class ActorSheetPF extends ActorSheet {
   _onLevelUp(event) {
     event.preventDefault();
     new LevelUpDialog(this.actor).render(true);
+  }
+
+  _onGroupInventory(event) {
+    event.preventDefault();
+    this.actor.groupItems();
   }
 
 
@@ -1677,6 +1685,7 @@ export class ActorSheetPF extends ActorSheet {
       return arr;
     }, [[], [], [], [], []]);
 
+    data.totalInventoryValue = data.totalInventoryValue.toFixed(2)
 
     items.forEach(c => {
       c['containerItems'] = containerItems.get(c.id) || []
@@ -1871,7 +1880,7 @@ export class ActorSheetPF extends ActorSheet {
     data.attacks = attackSections;
     data.counters = this.actor.data.data.counters;
     data.featCounters = []
-    for (let [a, s] of Object.entries(data.actor.data.counters.feat || [])) {
+    for (let [a, s] of Object.entries(data.actor.data?.counters?.feat || [])) {
         if (a === "base") continue;
         data.featCounters.push({name: a.charAt(0).toUpperCase() + a.substr(1).toLowerCase(), val: a})
     }
@@ -2020,7 +2029,10 @@ export class ActorSheetPF extends ActorSheet {
    */
   async _onDrop(event) {
     event.preventDefault();
-
+    if (this.actor.data.data.lockEditingByPlayers && !game.user.isGM) {
+        ui.notifications.error(game.i18n.localize("D35E.GMLockedCharacterSheet"));
+        return;
+    }
     // Try to extract the data
     let data;
     try {

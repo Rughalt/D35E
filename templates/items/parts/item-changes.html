@@ -117,6 +117,18 @@
 {{#if hasCombatChanges}}
   {{!-- Changes --}}
   <h4 class="change-header">
+    {{localize "D35E.CombatChangesRange"}}
+  </h4>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRange"}}</label>
+    <input type="text" value="{{data.combatChangesRange.max}}" disabled data-dtype="Number"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRangeFormula"}}</label>
+    <input type="text" name="data.combatChangesRange.maxFormula" value="{{data.combatChangesRange.maxFormula}}" placeholder="{{localize "D35E.MaximumRangeFormula"}}"/>
+  </div>
+  <em>{{localize "D35E.RangeSliderAbout"}}</em>
+  <h4 class="change-header">
     {{localize "D35E.CombatChanges"}}
     <a class="combat-change-control add-change"><i class="fas fa-plus"></i></a>
   </h4>
@@ -167,6 +179,13 @@
       placeholder="{{localize "D35E.ModificationFormula"}} {{localize "D35E.Formula"}}" />
       </div>
 
+
+      <div class="form-group" style="width: 100%; margin: 0">
+        <label>{{localize "D35E.SpecialAction"}}</label>
+        <input class="bordered" type="text" name="data.combatChanges.{{a}}.5" value="{{lookup this "5"}}"
+        placeholder="{{localize "D35E.SpecialAction"}}" />
+      </div>
+
       <div class="form-group" style="width: 100%; margin: 0">
       <a style="flex: 1" class="combat-change-control delete-change">Remove <i class="fas fa-minus"></i></a>
       </div>
@@ -175,6 +194,39 @@
     {{#unless data.combatChanges}}
     <li class="change flexrow">
       <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.CombatChanges"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
+    </li>
+    {{/unless}}
+  </ol>
+  {{/if}}
+</div>
+<div>
+  {{#if hasRequirements}}
+  {{!-- Requirements --}}
+  <h4 class="change-header">
+    {{localize "D35E.Requirements"}}
+    <a class="requirement-control add-change"><i class="fas fa-plus"></i></a>
+  </h4>
+  <ol class="changes form-group">
+    {{#each data.requirements as |change a|}}
+    <li class="change flexrow" data-change="{{a}}">
+      <input type="text" name="data.requirements.{{a}}.0" value="{{lookup this "0"}}"
+      placeholder="{{localize "D35E.Name"}}" />
+      <input type="text" name="data.requirements.{{a}}.1" value="{{lookup this "1"}}"
+      placeholder="{{localize "D35E.Formula"}}" />
+      <select name="data.requirements.{{a}}.2">
+        {{#select (lookup this "2") }}
+        <option value="">{{localize "D35E.None"}}</option>
+        {{#each ../config.requirements as |requirement type|}}
+        <option value="{{type}}">{{requirement}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
+      <a class="requirement-control delete-change"><i class="fas fa-minus"></i></a>
+    </li>
+    {{/each}}
+    {{#unless data.requirements}}
+    <li class="change flexrow">
+      <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.Requirements"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
     </li>
     {{/unless}}
   </ol>

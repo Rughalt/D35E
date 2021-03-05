@@ -643,13 +643,18 @@
 }
 #portrait-bar-handle {
   position: relative;
-  height: 20px;
-  width: 100px;
+  height: 40px;
+  width: 150px;
   pointer-events: initial;
   opacity: 0.4;
+  margin-left: -50px;
+  padding: 10px;
 }
 #portrait-bar-handle:hover {
   opacity: 1;
+}
+#portrait-bar-handle a {
+  margin-left: 50px;
 }
 .D35E.sheet.actor {
   /* ----------------------------------------- */
@@ -2729,6 +2734,7 @@
 .D35E.sheet.item .attack-control,
 .D35E.sheet.item .change-control,
 .D35E.sheet.item .resistance-control,
+.D35E.sheet.item .requirement-control,
 .D35E.sheet.item .dr-control,
 .D35E.sheet.item .combat-change-control,
 .D35E.sheet.item .context-note-control,
@@ -3445,6 +3451,17 @@
 #chat-log .message div.defense table th {
   text-align: center;
 }
+#chat-log .message .special-action-info {
+  line-height: 24px;
+}
+#chat-log .message .special-action-sublabel {
+  display: block;
+  border: none;
+  font-family: "Signika";
+  font-size: 10px;
+  line-height: 10px;
+  margin-top: -2px;
+}
 .chat-card.defense-card .saving-throws {
   margin-top: 4px;
 }
@@ -3902,6 +3919,11 @@ span.bold {
 }
 .custom-dialog.wide {
   width: 600px !important;
+}
+.disabled-action {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 #token-hud .col.actions {
   height: calc(100% + 150px);

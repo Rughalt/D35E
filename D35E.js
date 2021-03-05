@@ -137,7 +137,7 @@ Hooks.once("setup", function() {
     "spellPreparationModes", "weaponTypes", "weaponProperties", "spellComponents", "spellSchools", "spellLevels", "conditionTypes",
     "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "actorTokenSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
     "limitedUsePeriods", "equipmentTypes", "equipmentSlots", "consumableTypes", "attackTypes", "buffTypes", "buffTargets", "contextNoteTargets",
-    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets","savingThrowTypes"
+    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets","savingThrowTypes","requirements"
   ];
 
   const doLocalize = function(obj) {
@@ -193,6 +193,12 @@ Hooks.once("ready", async function() {
   for (let key of game.actors.keys()) {
     TopPortraitBar.render(game.actors.get(key))
   }
+
+  const interval = setInterval(function() {
+    game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid).forEach(a => {
+      a.getQueuedActions();
+    });
+  }, 500);
 
   if (!game.user.isGM) {
     (await import(
@@ -363,7 +369,7 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
   }
 });
 
-Hooks.on("updateCombat", (combat, combatant, info, data) => {
+Hooks.on("updateCombat", async (combat, combatant, info, data) => {
   if (!game.user.isGM)
     return;
   const actor = combat.combatant.actor;
@@ -372,6 +378,7 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
     let itemUpdateData = []
     let itemsEnding = []
     let itemResourcesData = {}
+    let deletedOrChanged = false;
     if (actor.items !== undefined && actor.items.size > 0) {
       // Update items
       for (let i of actor.items) {
@@ -379,16 +386,20 @@ Hooks.on("updateCombat", (combat, combatant, info, data) => {
         let _data = i.getElapsedTimeUpdateData(1)
         if (_data && _data["data.active"] === false)
           itemsEnding.push(i)
-        if (_data && !_data.delete) itemUpdateData.push(_data);
+        if (_data && !_data.delete) {
+          itemUpdateData.push(_data);
+          deletedOrChanged = true;
+        }
         else if (_data && _data.delete === true) {
-          actor.deleteOwnedItem(_data._id, { stopUpdates: true })
+          await actor.deleteOwnedItem(_data._id, { stopUpdates: true })
+          deletedOrChanged = true;
         }
       }
 
     }
 
-    if (Object.keys(itemResourcesData).length > 0) actor.update(itemResourcesData);
-    if (itemUpdateData.length > 0) actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+    if (itemUpdateData.length > 0) await actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+    if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await actor.update(itemResourcesData);
     if (itemsEnding.length)
       actor.renderBuffEndChatCard(itemsEnding)
     actor.renderFastHealingRegenerationChatCard();
@@ -438,9 +449,9 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   } else {
-    // if (actor.data.data.companionAutosync) {
-    //   actor.syncToCompendium()
-    // }
+    if (actor.data.data.companionAutosync) {
+      actor.syncToCompendium()
+    }
   }
 });
 

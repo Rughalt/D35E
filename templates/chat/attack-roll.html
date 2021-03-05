@@ -1,8 +1,11 @@
 <div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
-     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+     tokenId}}data-token-id="{{tokenId}}" {{/if}} >
 <header class="card-header flexrow">
     <img src="{{item.img}}" title="{{item.name}}" width="36" height="36"/>
-    {{#if name}}<h3>{{name}}</h3>{{/if}}
+    {{#if name}}
+    {{#if useAmmoName}}<div class="flexcol"><h3 style="line-height: 20px">{{name}}</h3><h4 style='line-height: 16px; font-family: "Nodesto", "Signika", "Palatino Linotype", serif; font-size: 18px; opacity: 0.6;'>{{useAmmoName}}</h4></div>{{/if}}
+    {{#unless useAmmoName}}<h3>{{name}}</h3>{{/unless}}
+    {{/if}}
 </header>
 
 <div class="card-content">
@@ -14,7 +17,7 @@
 
                     <div class="flexrow">
                         {{#if atk.hasAttack}}
-                        <div class="dice-roll damage-roll" style="flex: 0 50px">
+                        <div class="dice-roll damage-roll" style="{{#if atk.hasDamage}}flex: 0 50px{{/if}}">
                             <div class="dice-flavor">{{localize "D35E.Attack"}} {{#if ../item.data.ability.vsTouchAc}} <i class="fas fa-hand"></i>{{/if}}</div>
                             <div class="dice-result">
                                 <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
@@ -25,7 +28,7 @@
                         {{/if}}
                         {{#if atk.hasDamage}}
                         <div class="dice-roll damage-roll">
-                            <div class="dice-flavor">{{localize "D35E.Damage"}}{{#if ../nonLethal}}<i class="fas fa-tint-slash"></i>{{/if}}</div>
+                            <div class="dice-flavor">{{atk.damage.flavor}}{{#if ../nonLethal}}<i class="fas fa-tint-slash"></i>{{/if}}</div>
                             <div class="dice-result">
                                 <h4 class="dice-total">
                                     {{atk.damage.total}}
@@ -57,12 +60,12 @@
                     {{#each atk.cards as |card|}}
                     <div style="flex: 0;" class="flexrow">
                     <button style="height: 26px; line-height: 26px; font-size: 16px; margin-top: 20px;overflow: hidden; flex: 0 45px" data-action="{{card.action}}" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
-                            data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}">
+                            data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}}  {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
                         {{card.label}}
                     </button>
                     {{#if ../../dc.isHalf}}
                     <button style="height: 26px; line-height: 26px; font-size: 16px; margin-top: 20px;overflow: hidden; flex: 0 45px" data-action="{{card.action}}Half" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
-                            data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}">
+                            data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}} {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
                         {{card.label}} ½
                     </button>
                     {{/if}}
@@ -109,7 +112,7 @@
                         <div class="dice-result">
                             <h4 class="dice-total">
                                 {{atk.critDamage.total}}
-                                {{{atk.critDamage.shortTooltip}}}
+                                {{{atk.critDamage.critShortTooltip}}}
                             </h4>
                         </div>
                     </div>
@@ -149,10 +152,11 @@
         <strong style="padding: 0px 2px; margin-bottom: -4px; margin-top: 4px; display: block;">Special actions</strong>
         <div class="flexcol card-buttons">
             {{#each atk.special as |card|}}
-            <button class="{{#if card.isTargeted}}special-action-button{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
+            <button class="{{#if card.isTargeted}}special-action-button{{else}}special-action-info{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
                 card.hasImg}}<img src="{{card.img}}">{{/if}}{{#if card.isTargeted}}<img class="target"
                                                                                         src="systems/D35E/icons/actions/reticule.svg">{{/if}}{{#unless
-                card.isTargeted}}<img class="target" src="systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}
+                card.isTargeted}}<img class="target" src="systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}<br>{{#unless
+                card.isTargeted}}<span class="special-action-sublabel">(Auto-applied)</span>{{/unless}}
             </button>
             {{/each}}
         </div>

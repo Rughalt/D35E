@@ -181,6 +181,24 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "allowNoAmmo", {
+    name: "SETTINGS.D35EAllowNoAmmoN",
+    hint: "SETTINGS.D35EAllowNoAmmoH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
+  game.settings.register("D35E", "useAutoAmmoRecovery", {
+    name: "SETTINGS.D35EAutoAmmoRecoveryN",
+    hint: "SETTINGS.D35EAutoAmmoRecoveryH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   /**
    * Option to automatically collapse Item Card descriptions
    */
@@ -452,6 +470,24 @@ export const registerSystemSettings = function() {
     onChange: () => {
       window.location.reload();
     },
+  });
+
+  game.settings.register("D35E", 'apiKeyWorld', {
+    name: "SETTINGS.D35EApiKeyWorldN",
+    hint: "SETTINGS.D35EApiKeyWorldH",
+    default: "",
+    type: String,
+    config: true,
+    scope: 'world',
+  });
+
+  game.settings.register("D35E", 'apiKeyPersonal', {
+    name: "SETTINGS.D35EApiKeyPersonalN",
+    hint: "SETTINGS.D35EApiKeyPersonalH",
+    default: "",
+    type: String,
+    config: true,
+    scope: 'client',
   });
 
   // game.settings.register("D35E", 'displayItemsInContainers', {

@@ -172,11 +172,15 @@
     </ul>
     <ul class="attributes misc-base flexrow">
       <li class="attribute sr high tooltip" data-attribute="sr">
-        <h4 class="attribute-name box-title">{{ localize 'D35E.BuffTarACNatural' }}</h4>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.NaturalArmorShort' }}</h4>
+
         <div class="attribute-value">
+          <span>{{data.attributes.naturalACTotal}}</span>
+        </div>
+        <footer class="attribute-footer">
           <input name="data.attributes.naturalAC" type="text" placeholder="0"
                  value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}" data-dtype="Number"/>
-        </div>
+        </footer>
       </li>
       <li class="attribute sr high tooltip" data-attribute="sr">
         <div class="tooltipcontent">

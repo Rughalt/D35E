@@ -22,11 +22,11 @@
     <div class="form-group">
         <label>{{ localize 'D35E.LockEditingByPlayers' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
-            <input type="checkbox" class="stylized" name="data.lockEditingByPlayers" {{checked data.lockEditingByPlayers}}/>
+            <input type="checkbox" class="stylized" name="data.lockEditingByPlayers" {{checked data.lockEditingByPlayers}} {{#unless isGM}}disabled{{/unless}}/>
             <span class="checkmark"></span>
         </label>
     </div>
-    <span style="flex: 0">{{{ localize 'D35E.LockEditingByPlayers' }}}</span>
+    <span style="flex: 0">{{{ localize 'D35E.LockEditingByPlayersDesc' }}}</span>
 
     <div class="form-group">
         <label>{{ localize 'D35E.NoLightOverride' }}</label>
@@ -63,19 +63,26 @@
     {{/each}}
     </div>
 
-<!--    <h2 class="block-header">Legacies of the Dragon Companion</h2>-->
-<!--    <div class="form-group">-->
-<!--        <label>{{ localize 'D35E.CompanionUUID' }}</label>-->
-<!--        <label class="checkbox" style="position: relative; flex: 0 220px">-->
-<!--            <input type="text" name="data.companionUuid" value="{{data.companionUuid}}" placeholder="Companion UUID"/>-->
-<!--        </label>-->
-<!--    </div>-->
-<!--    <div class="form-group">-->
-<!--        <label>{{ localize 'D35E.AutosyncCompanion' }}</label>-->
-<!--        <label class="checkbox" style="position: relative; flex: 0 20px">-->
-<!--            <input type="checkbox" class="stylized" name="data.companionAutosync" {{checked data.companionAutosync}}/>-->
-<!--            <span class="checkmark"></span>-->
-<!--        </label>-->
-<!--    </div>-->
-<!--    <a class="blue-button sync-to-companion" style="text-align: center; flex: 0 20px">Sync to Companion</a>-->
+    <h2 class="block-header">Legacies of the Dragon Player's Companion</h2>
+    <div class="form-group">
+        <label>{{ localize 'D35E.CompanionUUID' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 220px">
+            <input type="text" name="data.companionUuid" value="{{data.companionUuid}}" placeholder="Companion UUID"/>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>{{ localize 'D35E.CompanionPersonalKey' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.companionUsePersonalKey" {{checked data.companionUsePersonalKey}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>{{ localize 'D35E.AutosyncCompanion' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.companionAutosync" {{checked data.companionAutosync}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <a class="blue-button sync-to-companion" style="text-align: center; flex: 0 20px">Sync to Companion</a>
 </div>

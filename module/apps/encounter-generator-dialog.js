@@ -36,7 +36,7 @@ export class EncounterGeneratorDialog extends FormApplication {
             const table = await pack.getEntity(idTable._id);
             return table;
         }
-        compendium = await compendiums[22].getIndex()
+        compendium = await compendiums.find(c => c.metadata.name === 'roll-tables').getIndex()
         for(const item of compendium){
             grabbedTable = await compendiumTables(item.name)
             grabbedTables.push(grabbedTable)

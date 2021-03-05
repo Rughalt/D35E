@@ -16,6 +16,11 @@
     {{#each grFeatsOptional as |feat|}}
     <div class="form-group">
         <label style="{{#unless feat.hasUseableChange}}opacity: 0.8{{/unless}}">{{feat.data.name}} {{#if feat.isCharged}}({{feat.charges}} charges){{/if}}</label>
+        {{#if feat.data.data.combatChangesRange.max}}
+        <input type="range" name="optional-range-base-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesRange.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
             <input type="checkbox" {{#unless feat.hasUseableChange}}disabled name="optional-{{feat.id}}"{{/unless}} class="stylized" data-feat-optional="{{feat.id}}"
             data-type="optional"/>

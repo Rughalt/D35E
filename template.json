@@ -1,11 +1,16 @@
 {
   "Actor": {
-    "types": ["character", "npc", "trap"],
+    "types": [
+      "character",
+      "npc",
+      "trap"
+    ],
     "templates": {
       "common": {
         "shapechangeImg": "icons/svg/mystery-man.svg",
         "tokenImg": "icons/svg/mystery-man.svg",
         "companionUuid": "",
+        "companionUsePersonalKey": false,
         "companionAutosync": false,
         "abilities": {
           "str": {
@@ -112,6 +117,7 @@
             }
           },
           "naturalAC": 0,
+          "naturalACTotal": 0,
           "fortification": {
             "value": 0,
             "total": 0
@@ -221,6 +227,7 @@
           "minionDistance": {},
           "spellPointsTotal": [],
           "powerPointsTotal": 0,
+          "arcaneSpellFailure": 0,
           "wounds": {
             "min": 0,
             "value": 0
@@ -478,7 +485,6 @@
           "bonusSkillRankFormula": ""
         },
         "skills": {
-
           "apr": {
             "value": 0,
             "ability": "int",
@@ -488,7 +494,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "blc": {
             "value": 0,
@@ -499,7 +505,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "blf": {
             "value": 0,
@@ -510,7 +516,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "clm": {
             "value": 0,
@@ -521,7 +527,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "coc": {
             "value": 0,
@@ -532,7 +538,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "crf": {
             "value": 0,
@@ -543,7 +549,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "dsc": {
             "value": 0,
@@ -554,7 +560,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "dip": {
             "value": 0,
@@ -565,7 +571,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "dev": {
             "value": 0,
@@ -576,7 +582,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "dis": {
             "value": 0,
@@ -587,7 +593,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "esc": {
             "value": 0,
@@ -598,7 +604,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "fog": {
             "value": 0,
@@ -609,7 +615,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "gif": {
             "value": 0,
@@ -620,7 +626,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "han": {
             "value": 0,
@@ -631,7 +637,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "hea": {
             "value": 0,
@@ -642,7 +648,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "hid": {
             "value": 0,
@@ -653,7 +659,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "int": {
             "value": 0,
@@ -664,7 +670,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "jmp": {
             "value": 0,
@@ -675,7 +681,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kar": {
             "value": 0,
@@ -686,7 +692,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kdu": {
             "value": 0,
@@ -697,7 +703,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "ken": {
             "value": 0,
@@ -708,7 +714,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kge": {
             "value": 0,
@@ -719,7 +725,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "khi": {
             "value": 0,
@@ -730,7 +736,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "klo": {
             "value": 0,
@@ -741,7 +747,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kna": {
             "value": 0,
@@ -752,7 +758,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kno": {
             "value": 0,
@@ -773,7 +779,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kre": {
             "value": 0,
@@ -784,7 +790,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "lis": {
             "value": 0,
@@ -795,7 +801,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "mos": {
             "value": 0,
@@ -806,7 +812,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "opl": {
             "value": 0,
@@ -817,7 +823,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "prf": {
             "value": 0,
@@ -828,7 +834,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "pro": {
             "value": 0,
@@ -839,7 +845,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "rid": {
             "value": 0,
@@ -850,7 +856,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-            "visibility":"default"
+            "visibility": "default"
           },
           "src": {
             "value": 0,
@@ -861,7 +867,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "sen": {
             "value": 0,
@@ -872,7 +878,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "slt": {
             "value": 0,
@@ -883,7 +889,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "spl": {
             "value": 0,
@@ -894,7 +900,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "spt": {
             "value": 0,
@@ -905,7 +911,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "sur": {
             "value": 0,
@@ -916,7 +922,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "swm": {
             "value": 0,
@@ -927,7 +933,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "tmb": {
             "value": 0,
@@ -938,7 +944,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "umd": {
             "value": 0,
@@ -949,7 +955,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "uro": {
             "value": 0,
@@ -960,7 +966,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "kps": {
             "value": 0,
@@ -971,7 +977,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "aut": {
             "value": 0,
@@ -982,7 +988,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "psi": {
             "value": 0,
@@ -993,7 +999,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           },
           "upd": {
             "value": 0,
@@ -1004,7 +1010,7 @@
             "notes": "",
             "mod": 0,
             "background": false,
-"visibility":"default"
+            "visibility": "default"
           }
         },
         "customSkills": {},
@@ -1053,7 +1059,9 @@
       }
     },
     "character": {
-      "templates": ["common"],
+      "templates": [
+        "common"
+      ],
       "isPartyMember": false,
       "displayNonRTSkills": false,
       "details": {
@@ -1081,7 +1089,9 @@
       }
     },
     "npc": {
-      "templates": ["common"],
+      "templates": [
+        "common"
+      ],
       "attributes": {
         "spellLevel": 0,
         "hp": {
@@ -1108,7 +1118,9 @@
       }
     },
     "trap": {
-      "templates": ["common"],
+      "templates": [
+        "common"
+      ],
       "attributes": {
         "spellLevel": 0,
         "hp": {
@@ -1128,7 +1140,6 @@
         "findDC": 1,
         "disarmDC": 1
       },
-
       "traits": {
         "tokensize": "none"
       },
@@ -1142,7 +1153,23 @@
     }
   },
   "Item": {
-    "types": ["weapon", "equipment", "consumable", "loot", "class", "character", "spell", "feat", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"],
+    "types": [
+      "weapon",
+      "equipment",
+      "consumable",
+      "loot",
+      "class",
+      "character",
+      "spell",
+      "feat",
+      "buff",
+      "attack",
+      "race",
+      "enhancement",
+      "damage-type",
+      "material",
+      "full-attack"
+    ],
     "templates": {
       "changes": {
         "changes": [],
@@ -1167,10 +1194,15 @@
           "polymorphed": false
         },
         "combatChanges": [],
+        "combatChangesRange": {
+          "maxFormula": "",
+          "max": 0
+        },
         "sizeOverride": "",
         "counterName": "",
         "resistances": [],
-        "damageReduction": []
+        "damageReduction": [],
+        "requirements": []
       },
       "contextNotes": {
         "contextNotes": []
@@ -1225,7 +1257,9 @@
         "classSource": "",
         "userNonRemovable": false,
         "customAttributes": {},
-        "customAttributesLocked": false
+        "customAttributesLocked": false,
+        "customReferenceId": "",
+        "createdBy": ""
       },
       "physicalItem": {
         "quantity": 1,
@@ -1325,7 +1359,10 @@
       }
     },
     "class": {
-      "templates": ["itemDescription", "changes"],
+      "templates": [
+        "itemDescription",
+        "changes"
+      ],
       "classType": "base",
       "levels": 1,
       "maxLevel": 20,
@@ -1353,93 +1390,93 @@
       "spellcastingAbility": "int",
       "spellPointBonusFormula": "0",
       "spellPointTable": {
-        "1":0,
-        "2":0,
-        "3":0,
-        "4":0,
-        "5":0,
-        "6":0,
-        "7":0,
-        "8":0,
-        "9":0,
-        "10":0,
-        "11":0,
-        "12":0,
-        "13":0,
-        "14":0,
-        "15":0,
-        "16":0,
-        "17":0,
-        "18":0,
-        "19":0,
-        "20":0
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0
       },
       "powerPointBonusBaseAbility": "0",
       "powerPointTable": {
-        "1":0,
-        "2":0,
-        "3":0,
-        "4":0,
-        "5":0,
-        "6":0,
-        "7":0,
-        "8":0,
-        "9":0,
-        "10":0,
-        "11":0,
-        "12":0,
-        "13":0,
-        "14":0,
-        "15":0,
-        "16":0,
-        "17":0,
-        "18":0,
-        "19":0,
-        "20":0
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0
       },
       "powersKnown": {
-        "1":0,
-        "2":0,
-        "3":0,
-        "4":0,
-        "5":0,
-        "6":0,
-        "7":0,
-        "8":0,
-        "9":0,
-        "10":0,
-        "11":0,
-        "12":0,
-        "13":0,
-        "14":0,
-        "15":0,
-        "16":0,
-        "17":0,
-        "18":0,
-        "19":0,
-        "20":0
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0
       },
       "powersMaxLevel": {
-        "1":0,
-        "2":0,
-        "3":0,
-        "4":0,
-        "5":0,
-        "6":0,
-        "7":0,
-        "8":0,
-        "9":0,
-        "10":0,
-        "11":0,
-        "12":0,
-        "13":0,
-        "14":0,
-        "15":0,
-        "16":0,
-        "17":0,
-        "18":0,
-        "19":0,
-        "20":0
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0
       },
       "hd": 8,
       "hp": 8,
@@ -1448,20 +1485,37 @@
       "allSpellsKnown": false,
       "creatureType": "humanoid",
       "savingThrows": {
-        "fort": { "value": "low" },
-        "ref": { "value": "low" },
-        "will": { "value": "low" }
+        "fort": {
+          "value": "low"
+        },
+        "ref": {
+          "value": "low"
+        },
+        "will": {
+          "value": "low"
+        }
       },
       "fc": {
-        "hp": { "value": 0 },
-        "skill": { "value": 0 },
-        "alt": { "value": 0 }
+        "hp": {
+          "value": 0
+        },
+        "skill": {
+          "value": 0
+        },
+        "alt": {
+          "value": 0
+        }
       },
       "classSkills": {},
       "nonActiveClassAbilities": []
     },
     "buff": {
-      "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect"],
+      "templates": [
+        "itemDescription",
+        "changes",
+        "contextNotes",
+        "activatedEffect"
+      ],
       "buffType": "temp",
       "active": false,
       "level": 0,
@@ -1481,7 +1535,12 @@
       "hideFromToken": false
     },
     "consumable": {
-      "templates": ["itemDescription", "physicalItem", "activatedEffect", "action"],
+      "templates": [
+        "itemDescription",
+        "physicalItem",
+        "activatedEffect",
+        "action"
+      ],
       "consumableType": "potion",
       "uses": {
         "value": 0,
@@ -1508,7 +1567,16 @@
       }
     },
     "equipment": {
-      "templates": ["itemDescription", "physicalItem", "changes", "action", "contextNotes", "enhancements", "light","physicalMaterial"],
+      "templates": [
+        "itemDescription",
+        "physicalItem",
+        "changes",
+        "action",
+        "contextNotes",
+        "enhancements",
+        "light",
+        "physicalMaterial"
+      ],
       "equipped": true,
       "equipmentType": "armor",
       "equipmentSubtype": "lightArmor",
@@ -1528,7 +1596,13 @@
       "slot": "slotless"
     },
     "feat": {
-      "templates": ["itemDescription", "activatedEffect", "action", "changes", "contextNotes"],
+      "templates": [
+        "itemDescription",
+        "activatedEffect",
+        "action",
+        "changes",
+        "contextNotes"
+      ],
       "featType": "feat",
       "associations": {
         "classes": []
@@ -1536,7 +1610,7 @@
       "crOffset": "",
       "spellSpecializationName": "",
       "spellSpecializationForbiddenNames": "",
-      "spellSpecialization" : {
+      "spellSpecialization": {
         "isDomain": false,
         "spells": {
           "level1": {
@@ -1615,7 +1689,10 @@
       }
     },
     "loot": {
-      "templates": ["itemDescription", "physicalItem"],
+      "templates": [
+        "itemDescription",
+        "physicalItem"
+      ],
       "subType": "misc",
       "bonusAmmoAttack": "",
       "bonusAmmoDamage": "",
@@ -1625,7 +1702,11 @@
       "capacity": 0
     },
     "spell": {
-      "templates": ["itemDescription", "activatedEffect", "action"],
+      "templates": [
+        "itemDescription",
+        "activatedEffect",
+        "action"
+      ],
       "learnedAt": {
         "class": [],
         "domain": [],
@@ -1683,10 +1764,17 @@
       "specialPrepared": false,
       "isDomainSpell": false,
       "specialId": null
-
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "changes", "contextNotes", "enhancements", "light","physicalMaterial"],
+      "templates": [
+        "itemDescription",
+        "physicalItem",
+        "changes",
+        "contextNotes",
+        "enhancements",
+        "light",
+        "physicalMaterial"
+      ],
       "equipped": true,
       "masterwork": false,
       "weaponType": "simple",
@@ -1730,7 +1818,13 @@
       }
     },
     "enhancement": {
-      "templates": ["itemDescription", "changes", "contextNotes", "activatedEffect", "action"],
+      "templates": [
+        "itemDescription",
+        "changes",
+        "contextNotes",
+        "activatedEffect",
+        "action"
+      ],
       "enhancementType": "weapon",
       "properties": {},
       "nameExtension": {
@@ -1763,7 +1857,12 @@
       "allowedTypes": []
     },
     "attack": {
-      "templates": ["itemDescription", "activatedEffect", "action","physicalMaterial"],
+      "templates": [
+        "itemDescription",
+        "activatedEffect",
+        "action",
+        "physicalMaterial"
+      ],
       "associations": {
         "classes": []
       },
@@ -1793,8 +1892,10 @@
       }
     },
     "full-attack": {
-      "templates": ["itemDescription"],
-      "attacks" : {
+      "templates": [
+        "itemDescription"
+      ],
+      "attacks": {
         "attack1": {
           "_id": 1,
           "name": "",
@@ -1849,7 +1950,12 @@
       "attackType": "full"
     },
     "race": {
-      "templates": ["itemDescription", "changes", "contextNotes", "links"],
+      "templates": [
+        "itemDescription",
+        "changes",
+        "contextNotes",
+        "links"
+      ],
       "creatureType": "humanoid",
       "la": 0,
       "subTypes": [],
@@ -1866,7 +1972,9 @@
       "isPiercing": false,
       "isBludgeoning": false,
       "isSlashing": false,
-      "identifiers": []
+      "identifiers": [],
+      "customReferenceId": "",
+      "createdBy": ""
     },
     "material": {
       "description": {
@@ -1878,7 +1986,9 @@
       "isAlchemicalSilverEquivalent": false,
       "isAdamantineEquivalent": false,
       "isColdIronEquivalent": false,
-      "identifiers": []
+      "identifiers": [],
+      "customReferenceId": "",
+      "createdBy": ""
     }
   }
 }

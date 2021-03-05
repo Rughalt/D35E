@@ -11,8 +11,8 @@ import {D35E} from "../config.js";
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
  */
 export class ActorPF extends Actor {
-
     /* -------------------------------------------- */
+    API_URI = 'https://companion.legaciesofthedragon.com/';
 
     static chatListeners(html) {
         html.on('click', 'button[data-action]', this._onChatCardButtonAction.bind(this));
@@ -43,13 +43,13 @@ export class ActorPF extends Actor {
     /* -------------------------------------------- */
 
     get spellFailure() {
-        if (this.items == null) return 0;
+        if (this.items == null) return this.data.data.attributes.arcaneSpellFailure || 0;
         return this.items.filter(o => {
             return o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded;
         }).reduce((cur, o) => {
             if (typeof o.data.data.spellFailure === "number") return cur + o.data.data.spellFailure;
             return cur;
-        }, 0);
+        }, this.data.data.attributes.arcaneSpellFailure || 0);
     }
 
     get race() {
@@ -348,7 +348,7 @@ export class ActorPF extends Actor {
             case "sac":
                 return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
             case "nac":
-                return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total"];
+                return ["data.attributes.ac.normal.total", "data.attributes.ac.flatFooted.total", "data.attributes.naturalACTotal"];
             case "tch":
                 return ["data.attributes.ac.touch.total"];
             case "pac":
@@ -568,6 +568,8 @@ export class ActorPF extends Actor {
                 return "data.details.totalCr";
             case "fortification":
                 return "data.attributes.fortification.total";
+            case "asf":
+                return "data.attributes.arcaneSpellFailure";
         }
 
         if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -603,7 +605,7 @@ export class ActorPF extends Actor {
     }
 
 
-    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}) {
+    async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}, updateData) {
         // Class hit points
         const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
             return a.sort - b.sort;
@@ -754,6 +756,7 @@ export class ActorPF extends Actor {
         if (tokenSizeKey === "actor") {
             tokenSizeKey = sizeKey;
         }
+        linkData(data, updateData, "data.traits.actualSize", sizeKey);
         if (sizeKey !== "med") {
             // AC
             changes.push({
@@ -1399,6 +1402,7 @@ export class ActorPF extends Actor {
 
             if (obj.data.sizeOverride !== undefined && obj.data.sizeOverride !== null && obj.data.sizeOverride !== "") {
                 sizeOverride = obj.data.sizeOverride;
+
             }
             if (!obj.data.changeFlags) continue;
             for (let [flagKey, flagValue] of Object.entries(obj.data.changeFlags)) {
@@ -1497,7 +1501,7 @@ export class ActorPF extends Actor {
 
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
-        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options);
+        await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options, updateData);
 
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
@@ -1949,8 +1953,10 @@ export class ActorPF extends Actor {
         linkData(data, updateData, "data.attributes.damage.spell", 0);
 
 
+        linkData(data, updateData, "data.attributes.naturalACTotal", data1.attributes.naturalAC || 0);
         linkData(data, updateData, "data.attributes.turnUndeadUsesTotal", 0);
         linkData(data, updateData, "data.attributes.powerPointsTotal", 0);
+        linkData(data, updateData, "data.attributes.arcaneSpellFailure", 0);
 
         let levelUpData = duplicate(data1.details.levelUpData) || []
         if (levelUpData.length !== data1.details.level.available) {
@@ -2367,7 +2373,8 @@ export class ActorPF extends Actor {
                             continue;
                         }
                         if (uniqueId.endsWith("*")) {
-                            uniqueId = uniqueId.replace("*", `${classInfo[0]}-${level}`)
+                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithStarUIDRace").format(e.data.name));
+                            continue;
                         }
                         let canAdd = !addedAbilities.has(uniqueId)
                         if (canAdd) {
@@ -2528,10 +2535,10 @@ export class ActorPF extends Actor {
             }
             if (changes[`data.abilities.${a}.total`]) delete changes[`data.abilities.${a}.total`]; // Remove used mods to prevent doubling
             if (changes[`data.abilities.${a}.replace`]) delete changes[`data.abilities.${a}.replace`]; // Remove used mods to prevent doubling
-            linkData(data, updateData, `data.abilities.${a}.mod`, Math.floor((updateData[`data.abilities.${a}.total`] - 10) / 2));
-            linkData(data, updateData, `data.abilities.${a}.mod`, Math.max(-5, updateData[`data.abilities.${a}.mod`] - Math.floor(updateData[`data.abilities.${a}.damage`] / 2) - Math.floor(ablPenalty / 2)));
-            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.floor((updateData[`data.abilities.${a}.origTotal`] - 10) / 2));
-            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.max(-5, updateData[`data.abilities.${a}.origMod`] - Math.floor(updateData[`data.abilities.${a}.damage`] / 2) - Math.floor(ablPenalty / 2)));
+            linkData(data, updateData, `data.abilities.${a}.mod`, Math.floor((updateData[`data.abilities.${a}.total`] - updateData[`data.abilities.${a}.damage`] - ablPenalty - 10) / 2));
+            linkData(data, updateData, `data.abilities.${a}.mod`, Math.max(-5, updateData[`data.abilities.${a}.mod`]));
+            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.floor((updateData[`data.abilities.${a}.origTotal`] - updateData[`data.abilities.${a}.damage`] - ablPenalty - 10) / 2));
+            linkData(data, updateData, `data.abilities.${a}.origMod`, Math.max(-5, updateData[`data.abilities.${a}.origMod`]));
             linkData(data, updateData, `data.abilities.${a}.drain`, updateData[`data.abilities.${a}.drain`] + (changes[`data.abilities.${a}.drain`] || 0));
             modDiffs[a] = updateData[`data.abilities.${a}.mod`] - prevMods[a];
         }
@@ -4019,7 +4026,7 @@ export class ActorPF extends Actor {
         let props = [];
         if (notes.length > 0) props.push({ header: "Notes", value: notes });
         return DicePF.d20Roll({
-            event: options.event,
+            event: options.event || {},
             fastForward: options.skipDialog === true,
             staticRoll: options.staticRoll,
             parts: ["@mod"],
@@ -4062,7 +4069,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
-            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.actualSize] || 0 },
             title: game.i18n.localize("D35E.Melee"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -4075,7 +4082,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
-            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.size] || 0 },
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.dex.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.actualSize] || 0 },
             title: game.i18n.localize("D35E.Ranged"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -4193,6 +4200,7 @@ export class ActorPF extends Actor {
         const _roll = async function (saveType, ability, baseAbility, target, form,props) {
             let savingThrowBonus = getProperty(this.data,`data.attributes.savingThrows.${saveType}.total`) || 0,
                 optionalFeatIds = [],
+                optionalFeatRanges = new Map(),
                 rollMode = null;
             savingThrowBonus -= getProperty(this.data,`data.abilities.${baseAbility}.mod`) || 0
             savingThrowBonus += getProperty(this.data,`data.abilities.${ability}.mod`) || 0
@@ -4204,8 +4212,12 @@ export class ActorPF extends Actor {
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
-                    if ($(this).prop("checked"))
-                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                    if ($(this).prop("checked")) {
+                        let featId = $(this).attr('data-feat-optional');
+                        optionalFeatIds.push(featId);
+                        if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
+                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                    }
                 })
             }
 
@@ -4220,7 +4232,10 @@ export class ActorPF extends Actor {
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
-                    rollModifiers.push(`${i.name}`)
+                    if (optionalFeatRanges.get(i._id))
+                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    else
+                        rollModifiers.push(`${i.name}`)
                     i.addCharges(-1);
                 }
             })
@@ -4359,6 +4374,7 @@ export class ActorPF extends Actor {
         const _roll = async function (target, form,props) {
             let grappleModTotal = this.data.data.attributes.cmb.total - (this.data.data.attributes.energyDrain || 0),
                 optionalFeatIds = [],
+                optionalFeatRanges = new Map(),
                 rollMode = null;
             let grappleManualBonus = 0;
             // Get data from roll form
@@ -4368,8 +4384,12 @@ export class ActorPF extends Actor {
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
-                    if ($(this).prop("checked"))
-                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                    if ($(this).prop("checked")) {
+                        let featId = $(this).attr('data-feat-optional');
+                        optionalFeatIds.push(featId);
+                        if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
+                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                    }
                 })
             }
 
@@ -4384,7 +4404,11 @@ export class ActorPF extends Actor {
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
-                    rollModifiers.push(`${i.name}`)
+
+                    if (optionalFeatRanges.get(i._id))
+                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    else
+                        rollModifiers.push(`${i.name}`)
                     i.addCharges(-1);
                 }
             })
@@ -4826,6 +4850,7 @@ export class ActorPF extends Actor {
             let rollModifiers = []
             let ac = getProperty(this.data,`data.attributes.ac.${acType}.total`) || 0,
                 optionalFeatIds = [],
+                optionalFeatRanges = new Map(),
                 applyHalf = false,
                 noCritical = false,
                 applyPrecision = false,
@@ -4842,8 +4867,12 @@ export class ActorPF extends Actor {
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
-                    if ($(this).prop("checked"))
-                        optionalFeatIds.push($(this).attr('data-feat-optional'));
+                    if ($(this).prop("checked")) {
+                        let featId = $(this).attr('data-feat-optional');
+                        optionalFeatIds.push(featId);
+                        if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
+                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                    }
                 })
 
                 if (form.find('[name="applyHalf"]').prop("checked")) {
@@ -4900,7 +4929,10 @@ export class ActorPF extends Actor {
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
                     i.addCharges(-1);
-                    rollModifiers.push(`${i.name}`)
+                    if (optionalFeatRanges.get(i._id))
+                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    else
+                        rollModifiers.push(`${i.name}`)
                 }
             })
 
@@ -5044,7 +5076,7 @@ export class ActorPF extends Actor {
      * @param {Number} value   The amount of damage to deal.
      * @return {Promise}
      */
-    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false, actor = null) {
+    static async applyDamage(ev,roll,critroll,natural20,natural20Crit,fubmle,fumble20Crit,damage,normalDamage,material,alignment,enh, nonLethalDamage, simpleDamage = false, actor = null, attackerId = null, attackerTokenId = null, ammoId = null) {
 
         let value = 0;
 
@@ -5148,7 +5180,7 @@ export class ActorPF extends Actor {
                 if (finalAc.applyHalf)
                     value = Math.max(Math.floor(value/2),1);
                 nonLethal += damageData.nonLethalDamage;
-                if (finalAc.applyHalf)
+                if (finalAc.applyHalf && nonLethal)
                     nonLethal =  Math.max(Math.floor(nonLethal/2),1);
 
                 damageData.nonLethalDamage = nonLethal
@@ -5158,7 +5190,18 @@ export class ActorPF extends Actor {
                     header: game.i18n.localize("D35E.RollModifiers"),
                     value: finalAc.rollModifiers
                 });
+                let ammoRecovered = false
+                if (game.settings.get("D35E", "useAutoAmmoRecovery")) {
+                    if (ammoId && attackerId && !hit) {
 
+                        let recoveryRoll = new Roll("1d100").roll().total;
+                        if (recoveryRoll < 50) {
+                            let _attacker = game.actors.get(attackerId);
+                            ammoRecovered = true;
+                            _attacker.quickChangeItemQuantity(ammoId, 1)
+                        }
+                    }
+                }
                 // Set chat data
                 let chatData = {
                     speaker: ChatMessage.getSpeaker({actor: a.data}),
@@ -5184,6 +5227,7 @@ export class ActorPF extends Actor {
                     concealRolled: concealRolled,
                     isSpell: roll === -1337,
                     applyHalf: finalAc.applyHalf,
+                    ammoRecovered: ammoRecovered,
                     fortifyRolled: fortifyRolled,
                     fortifyValue: Math.min(fortifyValue,100),
                     fortifyRoll: fortifyRoll,
@@ -5401,6 +5445,12 @@ export class ActorPF extends Actor {
             // Don't auto-equip transferred items
             if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
                 obj.data.equipped = false;
+
+            }
+            if (["weapon", "equipment", "loot"].includes(obj.type)) {
+                if (obj.data.identifiedName !== obj.name) {
+                    obj.data.identifiedName = obj.name
+                }
             }
             if (["spell"].includes(obj.type)) {
                 if (options.ignoreSpellbookAndLevel) {
@@ -5461,6 +5511,8 @@ export class ActorPF extends Actor {
 
             }
         }
+        //this.createEmbeddedDocuments
+        //return this.createOwnedItem((noArray ? createData[0] : createData), options);
         return super.createEmbeddedEntity(embeddedName, (noArray ? createData[0] : createData), options);
     }
 
@@ -5494,7 +5546,7 @@ export class ActorPF extends Actor {
         // Determine carrying capacity
         const carryStr = (srcData.data.abilities.str.total - srcData.data.abilities.str.damage) + srcData.data.abilities.str.carryBonus;
         let carryMultiplier = srcData.data.abilities.str.carryMultiplier;
-        const size = srcData.data.traits.size;
+        const size = srcData.data.traits.actualSize;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
         else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
         let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr > 0 ? carryStr : 0 }).roll().total;
@@ -5600,6 +5652,11 @@ export class ActorPF extends Actor {
         return result;
     }
 
+    async autoApplyActionsOnSelf(action) {
+        for (let _action of ItemPF.parseAction(action))
+            if (_action.target === "self")
+                await this.applyActionOnSelf(_action, this, null)
+    }
 
     static applyAction(action, actor) {
         const promises = [];
@@ -5614,14 +5671,20 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    async applyActionOnSelf(action, actor) {
+    async applyActionOnSelf(action, actor, buff = null) {
         if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         function cleanParam(parameter) {
             return parameter.replace(/"/gi, "");
         }
 
-        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actor.getRollData()).roll().result))
+        let actionRollData = actor.getRollData() //This is roll data of actor that *rolled* the roll
+        actionRollData.self = this.getRollData() //This is roll data of actor that *clicked* the roll
+        if (buff) {
+            actionRollData.buff = buff.getRollData() //This is roll data of optional buff item
+        }
+
+        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actionRollData).roll().result))
             return;
 
         function isActionRollable(_action) {
@@ -5699,7 +5762,7 @@ export class ActorPF extends Actor {
                             updateObject[action.parameters[2]] = action.parameters[4] === 'true';
                         } else {
                             if (isActionRollable(action.parameters[4])) {
-                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actor.getRollData()).roll().total
+                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actionRollData).roll().total
                             } else {
                                 updateObject[action.parameters[2]] = action.parameters[4]
                             }
@@ -5732,7 +5795,7 @@ export class ActorPF extends Actor {
                                     updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                                 } else {
                                     if (isActionRollable(action.parameters[5])) {
-                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actionRollData).roll().total
                                     } else {
                                         updateObject[action.parameters[3]] = action.parameters[5]
                                     }
@@ -5749,7 +5812,7 @@ export class ActorPF extends Actor {
                                 updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                             } else {
                                 if (isActionRollable(action.parameters[5])) {
-                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actor.getRollData()).roll().total
+                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actionRollData).roll().total
                                 } else {
                                     updateObject[action.parameters[3]] = action.parameters[5]
                                 }
@@ -5779,6 +5842,29 @@ export class ActorPF extends Actor {
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
+            case "Trait":
+                // Condition set *name* to *value*
+                if (action.parameters.length === 5 && action.parameters[0] === "set" && action.parameters[3] === "to") {
+                    let traitGroup = cleanParam(action.parameters[1])
+                    let name = cleanParam(action.parameters[2])
+                    let value = cleanParam(action.parameters[4])
+                    let currentTraits = duplicate(actionRollData.self.traits[traitGroup].value)
+                    if (value === 'true') {
+                        if (currentTraits.indexOf(name) === -1) {
+                            currentTraits.push(name)
+                        }
+                    } else {
+                        var index = currentTraits.indexOf(name);
+                        if (index !== -1) {
+                            currentTraits.splice(index, 1);
+                        }
+                    }
+                    let updateObject = {}
+                    updateObject[`data.traits.${traitGroup}.value`] = currentTraits
+                    await this.update(updateObject)
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
 
             case "Update":
                 // Update set *field* to *value*
@@ -5788,9 +5874,31 @@ export class ActorPF extends Actor {
                     let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= new Roll(cleanParam(value), this.getRollData()).roll().total
+                        updateObject[`${field}`]= new Roll(cleanParam(value), actionRollData).roll().total
                     } else {
                         updateObject[`${field}`]= value
+                    }
+                    await this.update(updateObject)
+                } else if (action.parameters.length === 4 && action.parameters[0] === "add" && action.parameters[2] === "value") {
+                    let field = cleanParam(action.parameters[1])
+                    let value = cleanParam(action.parameters[3])
+                    let updateObject = {}
+
+                    if (isActionRollable(value)) {
+                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + new Roll(cleanParam(value), actionRollData).roll().total
+                    } else {
+                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + parseInt(value)
+                    }
+                    await this.update(updateObject)
+                } else if (action.parameters.length === 4 && action.parameters[0] === "substract" && action.parameters[2] === "value") {
+                    let field = cleanParam(action.parameters[1])
+                    let value = cleanParam(action.parameters[3])
+                    let updateObject = {}
+
+                    if (isActionRollable(value)) {
+                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - new Roll(cleanParam(value), actionRollData).roll().total
+                    } else {
+                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - value
                     }
                     await this.update(updateObject)
                 } else
@@ -5800,7 +5908,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll()
+                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll()
                     let name = action.name;
                     let chatTemplateData = {
                         name: this.name,
@@ -5821,7 +5929,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5838,7 +5946,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5847,7 +5955,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll(cleanParam(action.parameters[1]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -5856,7 +5964,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), this.getRollData()).roll().total
+                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyRegeneration(damage,actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -6380,9 +6488,13 @@ export class ActorPF extends Actor {
 
     async syncToCompendium() {
         if (!this.data.data.companionUuid) return;
+        let apiKey = game.settings.get("D35E", "apiKeyWorld")
+        if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
+        if (!apiKey) return;
         $.ajax({
-            url: `http://localhost:5000/api/character/${this.data.data.companionUuid}`,
+            url: `${this.API_URI}/api/character/${this.data.data.companionUuid}`,
             type: 'PUT',
+            headers: {'API-KEY': apiKey},
             crossDomain: true,
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
@@ -6391,6 +6503,49 @@ export class ActorPF extends Actor {
                 //play with data
             }
         });
+    }
+
+    async getQueuedActions() {
+        if (!this.data.data.companionUuid) return;
+        let that = this;
+        let apiKey = game.settings.get("D35E", "apiKeyWorld")
+        if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
+
+        let userWithCharacterIsActive = game.users.players.some(u => u.active && u.data.character === this.id)
+        let isMyCharacter = game.users.current.data.character === this.id;
+        // It is not ours character and user that has this character is active - so better direct commands to his/her account
+        if (!isMyCharacter && userWithCharacterIsActive) return;
+
+        if (!apiKey) return;
+        $.ajax({
+            url: `${this.API_URI}/api/character/actions/${this.data.data.companionUuid}`,
+            type: 'GET',
+            headers: {'API-KEY': apiKey},
+            crossDomain: true,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+                //console.log('LOTDCOMPANION | ', data)
+                that.executeRemoteAction(data)
+            }
+        });
+    }
+
+    async executeRemoteAction(remoteAction) {
+        switch (remoteAction.action) {
+            case 'ability':
+                this.rollAbility(remoteAction.params)
+                break;
+            case 'save':
+                this.rollSave(remoteAction.params)
+                break;
+            case 'rollSkill':
+                this.rollSkill(remoteAction.params)
+                break;
+            case 'useItem':
+                this.items.find(i => i._id === remoteAction.params).use({ })
+                break;
+        }
     }
 
     getChargesFromItemById(id) {
@@ -6448,4 +6603,40 @@ export class ActorPF extends Actor {
         await createCustomChatMessage("systems/D35E/templates/chat/deactivate-buff.html", {items: items, actor: this}, chatData,  {rolls: []})
     }
 
+
+    async groupItems() {
+        let itemsToDelete = new Set()
+        let itemQuantities = new Map()
+        for (let type of ['equpiment','loot','weapon']) {
+            let itemNames = new Set()
+            let itemNamesToId = new Map()
+            let equipment = this.items.filter(o => {
+                return o.type === type
+            })
+            for (let _item of equipment) {
+
+                let _name = `${_item.name}-${_item.data.data.carried}-${_item.data.data.equipped}-${_item.data.data.containerId}-${_item.data.data.subType}`
+                if (itemNames.has(_name)) {
+                    itemQuantities.set(itemNamesToId.get(_name), itemQuantities.get(itemNamesToId.get(_name)) + _item.data.data.quantity)
+                    itemsToDelete.add(_item.id)
+                }
+                else {
+                    itemNames.add(_name)
+                    itemQuantities.set(_item.id, _item.data.data.quantity)
+                    itemNamesToId.set(_name, _item.id)
+                }
+            }
+
+        }
+        if (Array.from(itemsToDelete).length)
+            await this.deleteEmbeddedEntity("OwnedItem", Array.from(itemsToDelete), {stopUpdates: true});
+
+        let itemsToUpdate = []
+        for (const [key, value] of itemQuantities.entries()) {
+            itemsToUpdate.push({'_id':key,'data.quantity':value})
+        }
+
+        if (itemsToUpdate.length)
+            await this.updateEmbeddedEntity("OwnedItem", itemsToUpdate, {stopUpdates: true, ignoreSpellbookAndLevel: true});
+    }
 }

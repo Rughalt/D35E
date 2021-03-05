@@ -1,11 +1,23 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
+    <span class="uid-warning flexrow">
   {{#if data.uniqueId}}
-    <span class="uid-warning tooltip">
-      <i class="fas fa-exclamation-triangle"></i>
+      <div class="tooltip">
+      <i class="fas fa-anchor"></i>
       <div class="tooltipcontent">{{{ localize 'D35E.ItemHasUID' }}}</div>
-<!--       {{ localize 'D35E.ItemHasUID' }}-->
+    </div>
+    {{/if}}
+    {{#if unmetRequirements}}
+    <div class="tooltip" style="margin-left: 4px">
+        <i class="fas fa-tasks"></i>
+        <div class="tooltipcontent">{{{ localize 'D35E.HasUnmetRequirements' }}}
+
+            {{#each unmetRequirements as |req|}}
+            <p>{{req}}</p>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
     </span>
-  {{/if}}
   {{!-- Item Sheet Header --}}
   <header class="sheet-header flexrow">
     <div class="sheet-header-profile">

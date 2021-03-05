@@ -58,9 +58,13 @@
   </div>
 </div>
 
-<label class="checkbox">
-  <input type="checkbox" name="data.ability.vsTouchAc" {{checked data.ability.vsTouchAc}}/> {{localize "D35E.VsTouchAc"}}
-</label>
+<div class="form-group">
+  <label>{{localize "D35E.VsTouchAc"}}</label>
+  <label class="checkbox" style="position: relative; flex: 0 20px">
+    <input type="checkbox" class="stylized" name="data.ability.vsTouchAc" {{checked data.ability.vsTouchAc}}/>
+    <span class="checkmark"></span>
+  </label>
+</div>
 {{!-- Attack Ability --}}
 <div class="form-group select">
   <label>{{localize "D35E.AttackAbility"}}</label>
