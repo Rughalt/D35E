@@ -6614,7 +6614,8 @@ export class ActorPF extends Actor {
                 return o.type === type
             })
             for (let _item of equipment) {
-                let _name = `${_item.name}-${_item.data.data.carried}-${_item.data.data.equipped}`
+
+                let _name = `${_item.name}-${_item.data.data.carried}-${_item.data.data.equipped}-${_item.data.data.containerId}-${_item.data.data.subType}`
                 if (itemNames.has(_name)) {
                     itemQuantities.set(itemNamesToId.get(_name), itemQuantities.get(itemNamesToId.get(_name)) + _item.data.data.quantity)
                     itemsToDelete.add(_item.id)
