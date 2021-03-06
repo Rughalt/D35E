@@ -1,7 +1,7 @@
 <form>
     <div class="form-group">
-        <label>{{localize "D35E.ACBonus"}}</label>
-        <input type="text" name="ac-bonus" value="" placeholder="e.g. +1d4"/>
+        <label>{{localize "D35E.ACBonus"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <input type="text" name="ac-bonus" value="" class="auto-save" placeholder="e.g. +1d4"/>
     </div>
     <div class="form-group stacked">
         <label class="block-header">{{localize "D35E.CombatStatus"}}</label>
@@ -9,66 +9,66 @@
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="conceal"/>
+                <input type="checkbox" class="stylized auto-save" name="conceal"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.Concealment"}} (20%)</label>
+            <label>{{localize "D35E.Concealment"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="fullconceal"/>
+                <input type="checkbox" class="stylized auto-save" name="fullconceal"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.FullConcealment"}} (50%)</label>
-        </div>
-    </div>
-    <div class="flexrow">
-        <div class="form-group">
-            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="charged"/>
-                <span class="checkmark"></span>
-            </label>
-            <label>{{localize "D35E.Charged"}} (-2)</label>
-        </div>
-        <div class="form-group">
-            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="covered"/>
-                <span class="checkmark"></span>
-            </label>
-            <label>{{localize "D35E.BehindCover"}} (+4)</label>
+            <label>{{localize "D35E.FullConcealment"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
     </div>
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="squeezing"/>
+                <input type="checkbox" class="stylized auto-save" name="charged"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.Squeezing"}} (-4)</label>
+            <label>{{localize "D35E.Charged"}} (-2) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="prone"/>
+                <input type="checkbox" class="stylized auto-save" name="covered"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.Prone"}} (-4/+4)</label>
+            <label>{{localize "D35E.BehindCover"}} (+4) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        </div>
+    </div>
+    <div class="flexrow">
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized auto-save" name="squeezing"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.Squeezing"}} (-4) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        </div>
+        <div class="form-group">
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized auto-save" name="prone"/>
+                <span class="checkmark"></span>
+            </label>
+            <label>{{localize "D35E.Prone"}} (-4/+4) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
     </div>
 
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="totaldefense"/>
+                <input type="checkbox" class="stylized auto-save" name="totaldefense"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.TotalDefense"}} (+4)</label>
+            <label>{{localize "D35E.TotalDefense"}} (+4) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized" name="defense"/>
+                <input type="checkbox" class="stylized auto-save" name="defense"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.DefensiveFighting"}} (+2)</label>
+            <label>{{localize "D35E.DefensiveFighting"}} (+2) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
     </div>
     <div class="form-group stacked">
@@ -101,32 +101,32 @@
     </div>
 
     <div class="form-group">
-        <label>{{localize "D35E.ACDialogHalfDamage"}}</label>
+        <label>{{localize "D35E.ACDialogHalfDamage"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-            <input type="checkbox" class="stylized" name="applyHalf"
+            <input type="checkbox" class="stylized auto-save" name="applyHalf"
                    data-type="optional"/>
             <span class="checkmark"></span>
         </label>
     </div>
     <div class="form-group">
-        <label>{{localize "D35E.ACDialogNoCritical"}}</label>
+        <label>{{localize "D35E.ACDialogNoCritical"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-            <input type="checkbox" class="stylized" name="noCritical"
+            <input type="checkbox" class="stylized auto-save" name="noCritical"
                    data-type="optional"/>
             <span class="checkmark"></span>
         </label>
     </div>
     <div class="form-group">
-        <label>{{localize "D35E.ACApplyPrecision"}}</label>
+        <label>{{localize "D35E.ACApplyPrecision"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-            <input type="checkbox" class="stylized" name="applyPrecision"
+            <input type="checkbox" class="stylized auto-save" name="applyPrecision"
                    data-type="optional"/>
             <span class="checkmark"></span>
         </label>
     </div>
     <div class="form-group">
-        <label>{{localize "D35E.RollMode"}}</label>
-        <select name="rollMode">
+        <label>{{localize "D35E.RollMode"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+        <select name="rollMode"  class="auto-save">
             {{#select rollMode}}
             {{#each rollModes as |label mode|}}
             <option value="{{mode}}">{{localize label}}</option>
@@ -134,4 +134,16 @@
             {{/select}}
         </select>
     </div>
+
+    <script>
+        if (game.settings.get("D35E", "saveAttackWindow")) {
+            $('.auto-save').savy('load',function(){
+                console.log("All fields from save are loaded");
+                $('.attack-form input').trigger('change')
+            },'{{id}}');
+        }
+        else {
+            $('.fa-history').hide()
+        }
+    </script>
 </form>

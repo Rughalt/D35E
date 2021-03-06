@@ -4231,7 +4231,7 @@ export class ActorPF extends Actor {
                     rollModifiers.push(`${i.name}`)
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
-                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData, optionalFeatRanges.get(i._id)))
                     if (optionalFeatRanges.get(i._id))
                         rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
                     else
@@ -4331,6 +4331,7 @@ export class ActorPF extends Actor {
         let dialogData = {
             data: rollData,
             savingThrow: savingThrow,
+            id: `${this.id}-${_savingThrow}`,
             rollMode: game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
             stFeats: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange('savingThrow',rollData)),
@@ -4403,7 +4404,7 @@ export class ActorPF extends Actor {
                     rollModifiers.push(`${i.name}`)
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
-                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData, optionalFeatRanges.get(i._id)))
 
                     if (optionalFeatRanges.get(i._id))
                         rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
@@ -4927,7 +4928,7 @@ export class ActorPF extends Actor {
                     rollModifiers.push(`${i.name}`)
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
-                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData))
+                    allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData, optionalFeatRanges.get(i._id)))
                     i.addCharges(-1);
                     if (optionalFeatRanges.get(i._id))
                         rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
@@ -4938,15 +4939,9 @@ export class ActorPF extends Actor {
 
 
 
-            for (const change of allCombatChanges) {
-                console.log('D35E | Change', change[4])
-                if (change[3].indexOf('$') !== -1 && change[3].indexOf('&') !== -1) {
-                    setProperty(rollData,change[3].substr(1), ItemPF._fillTemplate(change[4],rollData))
-                } else {
-                    setProperty(rollData,change[3],(getProperty(rollData,change[3]) || 0) + (change[4] || 0))
-                }
 
-            }
+            this._addCombatChangesToRollData(allCombatChanges, rollData);
+
             ac += rollData.featAC || 0;
 
             console.log('D35E | Final roll AC', ac)
@@ -4958,6 +4953,7 @@ export class ActorPF extends Actor {
         let dialogData = {
             data: rollData,
             item: this.data.data,
+            id: `${this.id}-defensedialog`,
             rollMode: "gmroll",
             rollModes: CONFIG.Dice.rollModes,
             defenseFeats: this.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange('defense',rollData)),

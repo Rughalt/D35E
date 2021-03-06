@@ -1355,6 +1355,7 @@
   "D35E.RangeSliderAbout": "Range Slider can be used as (@range) in Combat Changes.",
   "D35E.AmmoRecovered": "Ammo recovered",
   "D35E.NotAddingAbilityWithStarUIDRace": "Racial ability {0} was not automatically added to actor because its UID ends with *. Make a copy of this ability and change its uid to use with Race.",
+  "D35E.CMBOptional": "Grapple (Optional)",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
