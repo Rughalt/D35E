@@ -182,6 +182,13 @@ Hooks.once("ready", async function() {
   if (needMigration && game.user.isGM) {
     await migrations.migrateWorld();
   }
+  let isDemo = game.settings.get("D35E", "demoWorld")
+  if (isDemo) {
+
+    $('#chat-message').val('Chat is disabled in Demo Mode. This world resets every 2 hours!')
+    $('#chat-message').prop('disabled',true)
+  }
+
 
   await cache.buildCache();
   console.log("D35E | Cache is ", CACHE)
