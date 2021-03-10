@@ -1356,6 +1356,9 @@
   "D35E.AmmoRecovered": "Ammo recovered",
   "D35E.NotAddingAbilityWithStarUIDRace": "Racial ability {0} was not automatically added to actor because its UID ends with *. Make a copy of this ability and change its uid to use with Race.",
   "D35E.CMBOptional": "Grapple (Optional)",
+  "D35E.CompanionLockGM": "Lock Companion setup changes from Players",
+  "D35E.CompanionLockGMInfo": "Character Companion Sync was set up by GM. ",
+  "D35E.CompanionLockGMInfoGM": "Turn off Lock Companion setup setting to make changes.",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

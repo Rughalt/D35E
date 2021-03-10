@@ -64,25 +64,46 @@
     </div>
 
     <h2 class="block-header">Legacies of the Dragon Player's Companion</h2>
-    <div class="form-group">
+
+    {{#unless data.companionLockGM}}
+    <div class="form-group" style="margin: 0 0.25rem;">
         <label>{{ localize 'D35E.CompanionUUID' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 220px">
             <input type="text" name="data.companionUuid" value="{{data.companionUuid}}" placeholder="Companion UUID"/>
         </label>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="margin: 0 0.25rem;">
         <label>{{ localize 'D35E.CompanionPersonalKey' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
             <input type="checkbox" class="stylized" name="data.companionUsePersonalKey" {{checked data.companionUsePersonalKey}}/>
             <span class="checkmark"></span>
         </label>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="margin: 0 0.25rem;">
         <label>{{ localize 'D35E.AutosyncCompanion' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
             <input type="checkbox" class="stylized" name="data.companionAutosync" {{checked data.companionAutosync}}/>
             <span class="checkmark"></span>
         </label>
     </div>
+    {{else}}
+    <p style="margin: 0 0.25rem;">
+        {{ localize 'D35E.CompanionLockGMInfo' }}
+        {{#if isGM}}
+        <em>{{ localize 'D35E.CompanionLockGMInfoGM' }}</em>
+        {{/if}}
+    </p>
+    {{/unless}}
+    {{#if data.companionUuid}}
+    {{#if isGM}}
+    <div class="form-group" style="margin: 0 0.25rem;">
+        <label>{{ localize 'D35E.CompanionLockGM' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.companionLockGM" {{checked data.companionLockGM}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    {{/if}}
     <a class="blue-button sync-to-companion" style="text-align: center; flex: 0 20px">Sync to Companion</a>
+    {{/if}}
 </div>

@@ -490,6 +490,16 @@ export const registerSystemSettings = function() {
     scope: 'client',
   });
 
+  game.settings.register("D35E", "demoWorld", {
+    name: "Demo Mode",
+    hint: "This setting enables features related to Demo Mode. Do not set it in live games.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
+
   // game.settings.register("D35E", 'displayItemsInContainers', {
   //   name: `SETTINGS.D35EDisplayItemsInContainersN`,
   //   hint: 'SETTINGS.D35EDisplayItemsInContainersH',

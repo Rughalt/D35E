@@ -1933,7 +1933,8 @@ export class ItemPF extends Item {
         return combatChanges.filter(change => {
             return (change[0] === 'all' || change[0] === itemType) && (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
         }).map(c => {
-            c[4] = c[4].replace(/@range/g, combatChangesRollData.range)
+            if (typeof c[4] === "string")
+                c[4] = c[4].replace(/@range/g, combatChangesRollData.range)
             if (c[3].indexOf('$') === -1 && c[3].indexOf('&') === -1) {
                 c[4] = new Roll(`${c[4]}`,combatChangesRollData).roll().total
             }

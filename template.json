@@ -12,6 +12,7 @@
         "companionUuid": "",
         "companionUsePersonalKey": false,
         "companionAutosync": false,
+        "companionLockGM": false,
         "abilities": {
           "str": {
             "total": 10,

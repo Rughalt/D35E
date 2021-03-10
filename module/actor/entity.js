@@ -5875,7 +5875,7 @@ export class ActorPF extends Actor {
                         updateObject[`${field}`]= value
                     }
                     await this.update(updateObject)
-                } else if (action.parameters.length === 4 && action.parameters[0] === "add" && action.parameters[2] === "value") {
+                } else if (action.parameters.length === 4 && action.parameters[0] === "add" && action.parameters[2] === "to") {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
                     let updateObject = {}
@@ -5886,7 +5886,7 @@ export class ActorPF extends Actor {
                         updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + parseInt(value)
                     }
                     await this.update(updateObject)
-                } else if (action.parameters.length === 4 && action.parameters[0] === "substract" && action.parameters[2] === "value") {
+                } else if (action.parameters.length === 4 && action.parameters[0] === "subtract" && action.parameters[2] === "to") {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
                     let updateObject = {}
