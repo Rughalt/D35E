@@ -18,23 +18,20 @@ export const buildCache = async function() {
     if (game.packs.has(packName)) {
         itemPack = game.packs.get(packName);
         items = [];
-        await itemPack.getIndex().then(index => items = index);
-        for (let entry of items) {
-            await itemPack.getEntity(entry._id).then(e => {
-                    e.pack = packName;
-                    if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined) {
-                        e.data.data.associations.classes.forEach(cl => {
-                            if (!CACHE.ClassFeatures.has(cl[0]))
-                                CACHE.ClassFeatures.set(cl[0], [])
-                            CACHE.ClassFeatures.get(cl[0]).push(e)
-                        })
-                    }
-                    if (e.data.data.uniqueId) {
-                        CACHE.AllAbilities.set(e.data.data.uniqueId, e)
-                        CACHE.AllClassFeatures.push(e);
-                    }
-                }
-            )
+        const entities = await itemPack.getContent();
+        for (let e of entities) {
+            e.pack = packName;
+            if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined) {
+                e.data.data.associations.classes.forEach(cl => {
+                    if (!CACHE.ClassFeatures.has(cl[0]))
+                        CACHE.ClassFeatures.set(cl[0], [])
+                    CACHE.ClassFeatures.get(cl[0]).push(e)
+                })
+            }
+            if (e.data.data.uniqueId) {
+                CACHE.AllAbilities.set(e.data.data.uniqueId, e)
+                CACHE.AllClassFeatures.push(e);
+            }
         }
     }
 
@@ -42,23 +39,20 @@ export const buildCache = async function() {
         if (game.packs.has(packName)) {
             itemPack = game.packs.get(packName);
             items = [];
-            await itemPack.getIndex().then(index => items = index);
-            for (let entry of items) {
-                await itemPack.getEntity(entry._id).then(e => {
-                    e.pack = packName;
-                        if (e.data.data.tags !== undefined) {
-                            e.data.data.tags.forEach(cl => {
-                                if (!CACHE.RacialFeatures.has(cl[0]))
-                                    CACHE.RacialFeatures.set(cl[0], [])
-                                CACHE.RacialFeatures.get(cl[0]).push(e)
-                            })
-                        }
-                    if (e.data.data.uniqueId) {
-                        CACHE.AllAbilities.set(e.data.data.uniqueId, e)
-                        CACHE.AllRacialFeatures.push(e);
+            const entities = await itemPack.getContent();
+            for (let e of entities) {
+                e.pack = packName;
+                    if (e.data.data.tags !== undefined) {
+                        e.data.data.tags.forEach(cl => {
+                            if (!CACHE.RacialFeatures.has(cl[0]))
+                                CACHE.RacialFeatures.set(cl[0], [])
+                            CACHE.RacialFeatures.get(cl[0]).push(e)
+                        })
                     }
-                    }
-                )
+                if (e.data.data.uniqueId) {
+                    CACHE.AllAbilities.set(e.data.data.uniqueId, e)
+                    CACHE.AllRacialFeatures.push(e);
+                }
             }
         }
 
@@ -66,23 +60,20 @@ export const buildCache = async function() {
         if (game.packs.has(packName)) {
             itemPack = game.packs.get(packName);
             items = [];
-            await itemPack.getIndex().then(index => items = index);
-            for (let entry of items) {
-                await itemPack.getEntity(entry._id).then(e => {
-                        e.pack = packName;
-                        if (e.data.data.tags !== undefined) {
-                            e.data.data.tags.forEach(cl => {
-                                if (!CACHE.RacialFeatures.has(cl[0]))
-                                    CACHE.RacialFeatures.set(cl[0], [])
-                                CACHE.RacialFeatures.get(cl[0]).push(e)
-                            })
-                        }
-                        if (e.data.data.uniqueId) {
-                            CACHE.AllAbilities.set(e.data.data.uniqueId, e)
-                            CACHE.AllRacialFeatures.push(e);
-                        }
-                    }
-                )
+            const entities = await itemPack.getContent();
+            for (let e of entities) {
+                e.pack = packName;
+                if (e.data.data.tags !== undefined) {
+                    e.data.data.tags.forEach(cl => {
+                        if (!CACHE.RacialFeatures.has(cl[0]))
+                            CACHE.RacialFeatures.set(cl[0], [])
+                        CACHE.RacialFeatures.get(cl[0]).push(e)
+                    })
+                }
+                if (e.data.data.uniqueId) {
+                    CACHE.AllAbilities.set(e.data.data.uniqueId, e)
+                    CACHE.AllRacialFeatures.push(e);
+                }
             }
         }
 
@@ -91,30 +82,24 @@ export const buildCache = async function() {
         if (game.packs.has(packName)) {
             itemPack = game.packs.get(packName);
             items = [];
-            await itemPack.getIndex().then(index => items = index);
-            for (let entry of items) {
-                await itemPack.getEntity(entry._id).then(e => {
-                        e.pack = packName;
-                        if (e.data.data.uniqueId) {
-                            CACHE.Materials.set(e.data.data.uniqueId, e)
-                        }
-                    }
-                )
+            const entities = await itemPack.getContent();
+            for (let e of entities) {
+                e.pack = packName;
+                if (e.data.data.uniqueId) {
+                    CACHE.Materials.set(e.data.data.uniqueId, e)
+                }
             }
         }
     for (let packName of ["world.damage-types","LOTD.damage-types","D35E.damage-types"])
         if (game.packs.has(packName)) {
             itemPack = game.packs.get(packName);
             items = [];
-            await itemPack.getIndex().then(index => items = index);
-            for (let entry of items) {
-                await itemPack.getEntity(entry._id).then(e => {
-                        e.pack = packName;
-                        if (e.data.data.uniqueId) {
-                            CACHE.DamageTypes.set(e.data.data.uniqueId, e)
-                        }
-                    }
-                )
+            const entities = await itemPack.getContent();
+            for (let e of entities) {
+                e.pack = packName;
+                if (e.data.data.uniqueId) {
+                    CACHE.DamageTypes.set(e.data.data.uniqueId, e)
+                }
             }
         }
 
