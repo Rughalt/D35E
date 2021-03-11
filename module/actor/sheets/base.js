@@ -793,6 +793,24 @@ export class ActorSheetPF extends ActorSheet {
       }
     }
 
+    if (this.actor.data.data.companionPublicId) {
+      const toggleString = "<a style='color: white; text-decoration: none' href='https://companion.legaciesofthedragon.com/character/public/"+this.actor.data.data.companionPublicId+"' class='header-button companion-view-button' title='" + game.i18n.localize("D35E.DisplayInCompanion") + "'><i class='fa fa-user'></i>"+game.i18n.localize("D35E.DisplayInCompanion")+"</a>";
+      const toggleButton = $(toggleString);
+      html.closest('.app').find('.companion-view-button').remove();
+      const titleElement = html.closest('.app').find('.window-title');
+      toggleButton.insertAfter(titleElement);
+    } else if (this.actor.data.data.companionUuid) {
+        const toggleString = "<a style='color: white; text-decoration: none' href='https://companion.legaciesofthedragon.com/character/"+this.actor.data.data.companionUuid+"' class='header-button companion-view-button' title='" + game.i18n.localize("D35E.DisplayInCompanion") + "'><i class='fa fa-user'></i>"+game.i18n.localize("D35E.DisplayInCompanion")+"</a>";
+        const toggleButton = $(toggleString);
+        html.closest('.app').find('.companion-view-button').remove();
+        const titleElement = html.closest('.app').find('.window-title');
+        toggleButton.insertAfter(titleElement);
+      } else {
+
+      html.closest('.app').find('.companion-view-button').remove();
+    }
+
+
   }
 
 

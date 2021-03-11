@@ -10,6 +10,7 @@
         "shapechangeImg": "icons/svg/mystery-man.svg",
         "tokenImg": "icons/svg/mystery-man.svg",
         "companionUuid": "",
+        "companionPublicId": "",
         "companionUsePersonalKey": false,
         "companionAutosync": false,
         "companionLockGM": false,

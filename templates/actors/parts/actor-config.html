@@ -73,6 +73,12 @@
         </label>
     </div>
     <div class="form-group" style="margin: 0 0.25rem;">
+        <label>{{ localize 'D35E.CompanionPublicUUID' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 220px">
+            <input type="text" name="data.companionPublicId" value="{{data.companionPublicId}}" placeholder="Companion Public Id"/>
+        </label>
+    </div>
+    <div class="form-group" style="margin: 0 0.25rem;">
         <label>{{ localize 'D35E.CompanionPersonalKey' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
             <input type="checkbox" class="stylized" name="data.companionUsePersonalKey" {{checked data.companionUsePersonalKey}}/>

@@ -1359,6 +1359,8 @@
   "D35E.CompanionLockGM": "Lock Companion setup changes from Players",
   "D35E.CompanionLockGMInfo": "Character Companion Sync was set up by GM. ",
   "D35E.CompanionLockGMInfoGM": "Turn off Lock Companion setup setting to make changes.",
+  "D35E.CompanionPublicUUID": "Public Companion Id",
+  "D35E.DisplayInCompanion": "View in Player's Companion",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

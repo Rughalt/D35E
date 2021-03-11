@@ -1,0 +1,248 @@
+<style>
+    .welcome-screen .window-content {
+        background: url(systems/D35E/ui/parchment-dark.jpg) repeat !important;
+        color: white;
+    }
+
+    .social-button {
+        flex: 0 140px;
+        text-align: center;
+        max-height: 26px;
+        margin-top: 3px;
+        margin-left: 4px;
+    }
+
+    .welcome-screen a.patreon {
+        background-color: #F96854;
+        padding: 4px 10px;
+        color: white;
+        border-radius: 16px;
+        text-decoration: none;
+        border: 1px #f38374 solid;
+    }
+
+    .welcome-screen a.discord {
+        flex: 0 100px;
+        background-color: #7289DA;
+        padding: 4px 10px;
+        color: white;
+        border-radius: 16px;
+        text-decoration: none;
+        border: 1px #9eacde solid;
+    }
+
+    .welcome-screen a.github {
+        flex: 0 100px;
+        background-color: #333;
+        padding: 4px 10px;
+        color: white;
+        border-radius: 16px;
+        text-decoration: none;
+        border: 1px #6a6969 solid;
+    }
+
+    .welcome-screen .window-content > * {
+        flex: 0;
+    }
+
+    .welcome-screen h1 {
+        margin: 0 !important;
+    }
+
+    .welcome-screen h3 {
+        margin: 0 !important;
+    }
+
+    .welcome-screen a.btn {
+        background: url(systems/D35E/icons/ui/long-button.png);
+        background-size: 100% 100%;
+        border: none;
+        color: white;
+        line-height: 32px;
+        padding: 0;
+        border-radius: 0;
+        height: 24px;
+        text-align: center;
+        margin: 0 0.7rem;
+        max-height: 32px;
+        text-decoration: none;
+    }
+
+    .welcome-screen a.btn.bottom {
+        margin-top: auto;
+        margin-bottom: 4px;
+    }
+
+    .welcome-screen a.btn.mid {
+        margin-top: 4px;
+        margin-bottom: 16px;
+    }
+
+    .welcome-tabs {
+        border: 1px #782e22 solid;
+        border-radius: 4px;
+        padding: 2px;
+    }
+
+    .welcome-tabs a.item {
+        line-height: 26px;
+        padding: 4px 4px 5px;
+        border-radius: 2px;
+    }
+
+    .welcome-tabs a.item.active {
+        background-color: #782e22;
+    }
+
+    .welcome-content h2.news {
+        font-family: "Nodesto", sans-serif;
+        text-align: center;
+        border: none;
+        flex: 0;
+        font-size: 28px;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);
+    }
+
+    .portrait-img::after {
+        content: '';
+        background: url(systems/D35E/icons/ui/large-item-frame-empty.png);
+        background-size: contain;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        pointer-events: none;
+    }
+
+    .demo-icon {
+        flex: 0;
+        font-size: 52px;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);
+        flex: 0 54px;
+    }
+
+    .demo-header {
+        font-family: "Nodesto", sans-serif;
+        border: none;
+        flex: 0;
+        font-size: 20px;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);
+    }
+
+</style>
+
+<h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png"
+                                    style="height: 64px; border: none; float: left">
+    <span style='font-family: "Nodesto", sans-serif;
+        text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>3.5e SRD - Demo World</span>
+    <br><span style="font-size: 14px">Demo World 3.5 SRD implementation for Foundry VTT</span></h1>
+<div class="flexrow" style="display: none">
+    <nav class="welcome-tabs">
+        <a class="item" data-tab="welcome">{{ localize "D35E.Welcome" }}</a>
+    </nav>
+</div>
+
+<section class="welcome-content">
+    <div class="tab" data-tab="welcome">
+
+        <p>Welcome to 3.5E SRD implementation for Foundry VTT! This demo world is designed as safe playground where you test how system looks and feels!</p>
+
+
+        <p style="font-weight: bold; text-align: right;">Happy testing,<br>Rughalt</p>
+        <h2>About the demo</h2>
+        <div class="flexrow">
+
+            <div class="flexcol" style="max-height: 410px">
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Demo Functionality</h2>
+
+                <div class="flexrow">
+                    <div class="flexcol" style="padding-left: 0.5rem">
+                        <div class="flexrow">
+                            <i class="fas fa-hat-wizard demo-icon"></i>
+                            <div class="flexcol">
+                                <h3 style="flex: 0" class="demo-header">Characters</h3>
+                                <p style="margin: 0">You can see how character is set up and can tinker with them!</p>
+                            </div>
+                        </div>
+                        <div class="flexrow" style="margin-top: 10px">
+                            <i class="fas fa-paw demo-icon"></i>
+                            <div class="flexcol">
+                                <h3 style="flex: 0" class="demo-header">NPC and Monster</h3>
+                                <p style="margin: 0">You get to access to an editable Monster and you can browse Bestiary</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flexcol">
+                        <div class="flexrow">
+                            <i class="fas fa-flask demo-icon"></i>
+                            <div class="flexcol">
+                                <h3 style="flex: 0" class="demo-header">Items and Spells</h3>
+                                <p style="margin: 0">You can look and browse compendiums full of Items and Spells</p>
+                            </div>
+                        </div>
+                        <div class="flexrow" style="margin-top: 10px">
+                            <i class="fas fa-fist-raised demo-icon"></i>
+                            <div class="flexcol">
+                                <h3 style="flex: 0" class="demo-header">Combat</h3>
+                                <p style="margin: 0">You can see how combat works - rolling attacks, applying damage and more!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="news" style=" padding: 0 0.7rem; flex: 0">Help and docs</h2>
+                <p style="padding: 0 0.7rem; flex: 0">
+                    Links in this section will take you to documentation and help for both Foundry and System. If you are unsure and want more help, hop on 3.5e SRD Discord server - using Discord button in the footer of this window.
+                </p>
+                <a class="btn mid" style="min-height: 32px; margin-bottom: 4px" href="https://foundryvtt.com/article/player-orientation/">Foundry VTT - Player Orientation</a>
+                <a class="btn mid" style="min-height: 32px"  href="https://docs.legaciesofthedragon.com">3.5e SRD - Documentation</a>
+            </div>
+                        <div class="flexcol" style="max-height: 410px">
+
+                            <h2 class="news" style="padding: 0 0.7rem; flex: 0">Your Hero: {{user.charname}}</h2>
+                            <div class="flexrow" style="padding: 0 0.7rem; flex: 0">
+                            <div class="portrait-img" style="flex: 0 0 100px;  width: 100px;  margin-right: 6px;   position: relative;">
+                                <img  src="{{character.img}}" style="flex: 0 64px; width: 100px">
+                            </div>
+                            <p style="padding: 0 0.4rem; margin: 0">
+                                You can find your hero in the sidebar by navigating to Actors list.
+                                To open character sheet, just click on the character name on the list and play around!
+                                You also get access to one zombie, so you can see how Monsters work!
+                            </p>
+                            </div>
+<!--                            <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/gm/onboarding">Read more-->
+<!--                                about Onboarding</a>-->
+                            <div class="flexcol" style="background: url(systems/D35E/icons/ui/parchment-2.png) repeat;
+                                                        border-radius: 4px;
+                                                        border: none;
+                                                        max-height: 410px;
+                                                        margin: 0 0.7rem;">
+
+                                <img src="systems/D35E/ui/logo-35e-companion.png"
+                                     style="padding: 0 0.7rem; flex: 0; width: 280px; margin: 0 auto">
+                            <p style="padding: 0 0.7rem; flex: 0; color: black">
+                                <strong>Offline Character Sheet</strong> allows you to view your character sheet anywhere you are - and does not
+                                require Foundry server to be running! When your Foundry instance is up, you can make rolls from the
+                                Player's Companion - so no need to go to Foundry to use a weapon or roll that skill check!
+                            </p>
+                                <p style="padding: 0 0.7rem; flex: 0; color: black">
+                                    <em style="opacity: 0.9">Full version of Player's Companion is Patron only feature!</em>
+                                </p>
+                            <a class="btn mid" href="https://docs.legaciesofthedragon.com/en/documentation/gm/onboarding">Open Player's Companion for your Hero</a>
+                            </div>
+                        </div>
+        </div>
+
+
+
+        <div class="flexrow" style="margin-top: 6px">
+            <a href="https://discord.gg/wDyUaZH" class="discord social-button" style="float: right">Discord</a><a
+                class="github social-button" style="float: right"
+                href="https://www.github.com/Rughalt/D35E">GitHub</a><a class="patreon social-button"
+                                                                        style="float: right"
+                                                                        href="https://www.patreon.com/Rughalt">Become a
+            Patron</a>
+        </div>
+    </div>
+
+</section>

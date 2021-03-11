@@ -5,28 +5,26 @@ export default function renderWelcomeScreen() {
     const moduleId = system.id;
     const title = system.data.title;
     const moduleVersion = system.data.version;
-    game.settings.register(title, 'version', {
-        name: `${title} Version`,
-        default: "0.0.0",
-        type: String,
-        scope: 'world',
-    });
-    const oldVersion = game.settings.get(title, "version");
 
-    if (!isNewerVersion(moduleVersion, oldVersion))
-        return;
-
-    class WelcomeScreen extends Application {
+    class DemoScreen extends Application {
         static get defaultOptions() {
             const options = super.defaultOptions;
             options.template = `systems/D35E/templates/demo-screen.html`;
             options.resizable = true;
             options.width = 920;
-            options.height = 730;
+            options.height = 680;
             options.classes = ["welcome-screen"];
             options.title = `${title} - Demo`;
 
             return options;
+        }
+
+        getData() {
+
+            return {
+                user: game.user,
+                character: game.user.character,
+            };
         }
 
         activateListeners(html) {
@@ -40,5 +38,5 @@ export default function renderWelcomeScreen() {
         }
     }
 
-    (new WelcomeScreen()).render(true);
+    (new DemoScreen()).render(true);
 }
