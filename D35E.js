@@ -187,6 +187,7 @@ Hooks.once("ready", async function() {
 
     $('#chat-message').val('Chat is disabled in Demo Mode. This world resets every 2 hours!')
     $('#chat-message').prop('disabled',true)
+    if (game.paused) game.togglePause();
   }
 
 
