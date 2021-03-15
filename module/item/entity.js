@@ -1137,6 +1137,7 @@ export class ItemPF extends Item {
                 useAmmoNote = "",
                 useAmmoName = "",
                 rapidShot = false,
+                flurryOfBlows = false,
                 manyshot = false,
                 nonLethal = false,
                 manyshotCount = 0,
@@ -1270,6 +1271,9 @@ export class ItemPF extends Item {
                 if (form.find('[name="rapid-shot"]').prop("checked")) {
                     rapidShot = true;
                 }
+                if (form.find('[name="flurry-of-blows"]').prop("checked")) {
+                    flurryOfBlows = true;
+                }
                 // Primary Attack (for natural attacks)
                 let html = form.find('[name="primary-attack"]');
                 if (typeof html.prop("checked") === "boolean") {
@@ -1374,6 +1378,31 @@ export class ItemPF extends Item {
                 })
                 rollData.rapidShotPenalty = -2;
                 attackExtraParts.push("@rapidShotPenalty");
+            }
+
+            if (flurryOfBlows) {
+                allAttacks.push({
+                    bonus: 0,
+                    label: `Flurry of Blows`
+                })
+                let monkClass = (this.actor?.items || []).filter(o => o.type === "class" && o.name === "Monk")[0];
+                //1-4 = -2
+                if(monkClass.data.data.levels < 5) {
+                    rollData.flurryOfBlowsPenalty = -2;
+                    attackExtraParts.push("@flurryOfBlowsPenalty");
+                }
+                //5-8 = -1
+                else if(monkClass.data.data.levels < 9) {
+                    rollData.flurryOfBlowsPenalty = -1;
+                    attackExtraParts.push("@flurryOfBlowsPenalty");
+                //9+ = 0
+                //11+ = 2nd extra attack
+                } else if(monkClass.data.data.levels > 10) {
+                    allAttacks.push({
+                        bonus: 0,
+                        label: `Flurry of Blows 2`
+                    })
+                }
             }
 
             let isHasted = (this.actor?.items || []).filter(o => o.type === "buff" && o.data.data.active && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
@@ -1746,6 +1775,7 @@ export class ItemPF extends Item {
             maxManyshotValue: 2 + Math.floor((getProperty(actor.data, "data.attributes.bab.total") - 6) / 5),
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
+            canFlurryOfBlows: actor.items.filter(o => o.type === "feat" && o.name === "Flurry of Blows").length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
             weaponFeats: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(this.type,rollData)),
             weaponFeatsOptional: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`${this.type}Optional`,rollData)),
