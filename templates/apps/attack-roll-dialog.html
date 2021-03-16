@@ -101,6 +101,16 @@
                onchange="this.nextElementSibling.value=this.value">
         <input type="text" class="auto-save" name="power-attack" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
         {{/if}}
+        
+        {{#if canFlurryOfBlows}}
+        <div class="form-group">
+            <label>{{localize "D35E.FeatFlurryOfBlows"}}</label>
+            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                <input type="checkbox" class="stylized" data-feat="flurry-of-blows" name="flurry-of-blows"/>
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        {{/if}}
     </div>
     {{/unless}}
 
@@ -338,7 +348,7 @@
                     if (isGreaterManyshot)
                         baseExtraAttacks = baseExtraAttacks * greaterManyshotCount;
                 }
-                console.log('Attacks', baseExtraAttacks, isRapidShot)
+                console.log('Attacks', baseExtraAttacks, isRapidShot, isFlurryOfBlows)
                 $('option:selected', select).closest("section").find("input[name='ammo-dmg-formula']").val(damage)
                 $('option:selected', select).closest("section").find("input[name='ammo-dmg-type']").val(type)
                 $('option:selected', select).closest("section").find("input[name='ammo-attack']").val(attack)
