@@ -1,0 +1,11 @@
+#Compendium changes
+- [413](https://github.com/Rughalt/D35E/issues/413) - Bard (possibly others) Spells known is offset by +1 level closed 
+- [412](https://github.com/Rughalt/D35E/issues/412) - Chimera breath weapon closed 
+- [410](https://github.com/Rughalt/D35E/issues/410) - Griffon - wrong dmg formula closed 
+- [390](https://github.com/Rughalt/D35E/issues/390) - Rock Gnome & Forest Gnome Issues closed 
+- [347](https://github.com/Rughalt/D35E/issues/347) - Improved Natural Weapon closed 
+- [323](https://github.com/Rughalt/D35E/issues/323) - Some monster abilities are missing closed 
+- [311](https://github.com/Rughalt/D35E/issues/311) - Missing Sorcerer class in various Spells closed 
+- [265](https://github.com/Rughalt/D35E/issues/265) - Spell points are missing closed 
+- [230](https://github.com/Rughalt/D35E/issues/230) - Missing Spells closed 
+- [226](https://github.com/Rughalt/D35E/issues/226) - Undead Fixes closed 

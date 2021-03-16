@@ -57,6 +57,11 @@ export class ActorPF extends Actor {
         return this.items.filter(o => o.type === "race")[0];
     }
 
+    get racialHD() {
+        if (this.items == null) return null;
+        return this.items.find(o => o.type === "class" && getProperty(o.data, "classType") === "racial")[0];
+    }
+
     static _translateSourceInfo(type, subtype, name) {
         let result = "";
         if (type === "size") result = "Size";
@@ -2914,7 +2919,7 @@ export class ActorPF extends Actor {
             spellbook.spells = spellbook.spells || {};
             for (let a = 0; a < 10; a++) {
                 spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null, known: 0 };
-                spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level] ? data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level][a+1] || 0 : 0) : 0
+                spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level - 1] ? data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level - 1][a+1] || 0 : 0) : 0
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
@@ -5497,6 +5502,7 @@ export class ActorPF extends Actor {
                         obj.data.learnedAt.class.forEach(learnedAtObj => {
                             if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
                                 obj.data.level = learnedAtObj[1]
+                                obj.data.powerPointsCost = Math.max((parseInt(learnedAtObj[1])*2)-1,0)
                                 foundLevel = true;
                             }
                         })

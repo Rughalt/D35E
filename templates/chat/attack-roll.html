@@ -18,7 +18,7 @@
                     <div class="flexrow">
                         {{#if atk.hasAttack}}
                         <div class="dice-roll damage-roll" style="{{#if atk.hasDamage}}flex: 0 50px{{/if}}">
-                            <div class="dice-flavor">{{localize "D35E.Attack"}} {{#if ../item.data.ability.vsTouchAc}} <i class="fas fa-hand"></i>{{/if}}</div>
+                            <div class="dice-flavor">{{localize "D35E.Attack"}} {{#if ../item.data.ability.vsTouchAc}}<i class="fas fa-hand-paper"></i>{{/if}}</div>
                             <div class="dice-result">
                                 <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
                                     {{atk.attack.total}}</h4>
