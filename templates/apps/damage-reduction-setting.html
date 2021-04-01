@@ -62,6 +62,12 @@
                           </span>
                         <i class="fas fa-shield-alt"></i>
                     </div>
+                    <div style="position: relative; flex: 0 20px; text-align: center" class="resistance tooltip">
+                        <span class="tooltipcontent">
+                            {{localize "D35E.ERHalfDamage"}}
+                          </span>
+                        ½
+                    </div>
 
                     <div style="position: relative; flex: 0 20px; text-align: center" class="vulnerability tooltip">
                         <span class="tooltipcontent">
@@ -87,6 +93,10 @@
 
                     <label class="checkbox" style="position: relative; flex: 0 20px">
                         <input type="checkbox" class="stylized" name="er-immunity-{{dr.uid}}" {{checked dr.immunity}}/>
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox" style="position: relative; flex: 0 20px">
+                        <input type="checkbox" class="stylized" name="er-half-{{dr.uid}}" {{checked dr.half}}/>
                         <span class="checkmark"></span>
                     </label>
 

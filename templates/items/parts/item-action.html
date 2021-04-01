@@ -21,10 +21,52 @@
 </div>
 {{/if}}
 {{#unless isAttack}}
+<div class="flexrow">
+  <div class="form-group" style="flex: 1">
+    <div class="toggle" style="width: 125px">
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.good" type="checkbox" name="data.metamagicFeats.maximized" {{checked data.metamagicFeats.maximized}}/>
+      <label style="width: 125px" for="{{randomUuid}}-data.spellData.metamagicFeats.good">{{#if data.metamagicFeats.maximized}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.MetamagicMaximized"}}</label>
+    </div>
+  </div>
+  <div class="form-group" style="flex: 1">
+    <div class="toggle" style="width: 125px">
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.evil" type="checkbox" name="data.metamagicFeats.empowered" {{checked data.metamagicFeats.empowered}}/>
+      <label style="width: 125px" for="{{randomUuid}}-data.spellData.metamagicFeats.evil">{{#if data.metamagicFeats.empowered}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.MetamagicEmpowered"}}</label>
+    </div>
+  </div>
+  <div class="form-group" style="flex: 1">
+    <div class="toggle" style="width: 125px">
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.chaotic" type="checkbox" name="data.metamagicFeats.enlarged" {{checked data.metamagicFeats.enlarged}}/>
+      <label style="width: 125px" for="{{randomUuid}}-data.spellData.metamagicFeats.chaotic">{{#if data.metamagicFeats.enlarged}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.MetamagicEnlarged"}}</label>
+    </div>
+  </div>
+  <div class="form-group" style="flex: 1">
+    <div class="toggle">
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.lawful" type="checkbox" name="data.metamagicFeats.intensified" {{checked data.metamagicFeats.intensified}}/>
+      <label style="width: 125px" for="{{randomUuid}}-data.spellData.metamagicFeats.lawful">{{#if data.metamagicFeats.intensified}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.MetamagicIntensified"}}</label>
+    </div>
+  </div>
+</div>
+
 <div class="form-group">
   <label>{{localize "D35E.SpellAttackCount"}}</label>
   <div class="form-fields">
     <input type="text" name="data.attackCountFormula" value="{{data.attackCountFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
+  </div>
+</div>
+{{/unless}}
+
+{{#unless isAttack}}
+<div class="form-group">
+  <label class="tooltip">{{localize "D35E.MaxDamageDice"}}
+    <span class="tooltipcontent">
+      @item.maxDamageDice
+    </span>
+  </label>
+  <div class="form-fields">
+    <input type="text" name="data.maxDamageDiceFormula" value="{{data.maxDamageDiceFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
+    <span style="flex: 0; margin-left: 8px">Total:</span>
+    <input type="text" disabled value="{{data.maxDamageDice}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
   </div>
 </div>
 {{/unless}}

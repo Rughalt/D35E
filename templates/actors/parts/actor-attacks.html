@@ -219,8 +219,10 @@
     <ol class="inventory-list sub-scroll scroll-attacks">
       <li class="inventory-header flexrow">
         <h3 class="item-name flexrow"></h3>
-
-        {{#if section.showTypes}}<div class="item-detail item-type"><span>{{ localize 'D35E.Type' }}</span></div>{{/if}}
+        <div class="item-detail item-type" style="flex: 0 0 48px;"><span>{{ localize 'D35E.AttackBonus' }}</span></div>
+        <div class="item-detail item-type" style="flex: 0 0 112px;"><span>{{ localize 'D35E.Damage' }}</span></div>
+        <div class="item-detail item-type"><span>{{ localize 'D35E.Range' }}</span></div>
+        {{#if section.showTypes}}<div class="item-detail item-type" style="flex: 0 0 48px;"><span>{{ localize 'D35E.Type' }}</span></div>{{/if}}
         
         <div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>
         
@@ -247,9 +249,21 @@
             </h4>
           </div>
 
-          {{#if section.showTypes}}
+          {{#unless item.isFullAttack}}
+          <div class="item-detail item-type" style="flex: 0 0 48px;">
+            <span>{{item.attackDescription}}</span>
+          </div>
+          <div class="item-detail item-type" style="flex: 0 0 112px;">
+            <span>{{item.damageDescription}}</span>
+          </div>
           <div class="item-detail item-type">
-            <span>{{lookup ../../config.attackTypes item.data.attackType}}</span>
+            <span>{{item.range}}</span>
+          </div>
+          {{/unless}}
+
+          {{#if section.showTypes}}
+          <div class="item-detail item-type" style="flex: 0 0 48px;">
+            <span>{{lookup ../../config.attackTypesShort item.data.attackType}}</span>
           </div>
           {{/if}}
           

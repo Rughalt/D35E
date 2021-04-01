@@ -124,7 +124,7 @@ export class ItemSheetPF extends ItemSheet {
 
         data.charges = this.item.charges
         data.maxCharges = this.item.maxCharges
-        data.unmetRequirements = this.item.unmetRequirements
+        data.unmetRequirements = this.item.hasUnmetRequirements()
 
         // Prepare feat specific stuff
         if (data.item.type === "feat") {
@@ -1050,6 +1050,7 @@ export class ItemSheetPF extends ItemSheet {
         // Conditional Dropping
         html.find('div[data-tab="conditionals"]').on("drop", this._onConditionalDrop.bind(this));
 
+
     }
 
     /* -------------------------------------------- */
@@ -1260,7 +1261,7 @@ export class ItemSheetPF extends ItemSheet {
             //await this._onSubmit(event);  // Submit any unsaved changes
             const changes = this.item.data.data.combatChanges || [];
             // Combat Changes are
-            return this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", 0]])});
+            return this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", ""]])});
         }
 
         // Remove a change
@@ -1304,7 +1305,7 @@ export class ItemSheetPF extends ItemSheet {
             //await this._onSubmit(event);  // Submit any unsaved changes
             const changes = this.item.data.data.resistances || [];
             // Combat Changes are
-            return this.item.update({"data.resistances": changes.concat([["", "", false, false]])});
+            return this.item.update({"data.resistances": changes.concat([["", "", false, false, false]])});
         }
 
         // Remove a change

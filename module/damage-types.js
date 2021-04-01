@@ -140,6 +140,7 @@ export class DamageTypes {
             type.vulnerable = t.vulnerable;
             type.immunity = t.immunity;
             type.lethal = t.lethal;
+            type.half = t.half;
         })
         return damageTypes;
     }
@@ -160,6 +161,8 @@ export class DamageTypes {
                 erParts.push(`${e.name} ${game.i18n.localize("D35E.Vulnerability")}`)
             } else if (e?.immunity) {
                 erParts.push(`${e.name} ${game.i18n.localize("D35E.Immunity")}`)
+            } else if (e?.half) {
+                erParts.push(`${e.name} ${game.i18n.localize("D35E.Half")}`)
             } else if (e?.lethal) {
                 erParts.push(`${game.i18n.localize("D35E.LethalDamageFrom")} ${e.name}`)
             } else if (e.value > 0) {
@@ -279,6 +282,9 @@ export class DamageTypes {
                     else if (erValue?.vulnerable) {
                         damageAfterEr = Math.ceil(d.roll.total * 1.5)
                         value = game.i18n.localize("D35E.Vulnerability")
+                    } else if (erValue?.half) {
+                        damageAfterEr = Math.ceil(damageAfterEr * 0.5)
+                        value = game.i18n.localize("D35E.Half")
                     } else if (damageAfterEr === d.roll.total) {
                         value = game.i18n.localize("D35E.NoER")
                     }

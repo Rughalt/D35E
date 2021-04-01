@@ -144,6 +144,21 @@
                 </label>
               </div>
 
+            <div class="form-group">
+              <label>{{localize "D35E.Metamagic"}}</label>
+              <label class="checkbox" style="position: relative; flex: 0 20px">
+                <input type="checkbox" class="stylized" name="data.metamagic.enabled" {{checked data.metamagic.enabled}}/>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            {{#if data.metamagic.enabled}}
+              <div class="form-group">
+                <label>{{localize "D35E.ShortDescription"}}</label>
+                <input type="text" name="data.metamagic.shortDesc" value="{{data.metamagic.shortDesc}}" data-dtype="String"/>
+              </div>
+              <textarea class="metamagic-editor" style="font-family: monospace; min-height: 120px" name="data.metamagic.code">{{data.metamagic.code}}</textarea>
+            {{/if}}
 
               {{#if isSpellSpecialization}}
               <h3 class="form-header">{{localize "D35E.FeatTypeSpellSpecialization"}}</h3>

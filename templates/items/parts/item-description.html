@@ -26,6 +26,15 @@
         {{/if}}
       </div>
 
+      <div class="form-group">
+        <label>{{localize "D35E.EquippedWeightless"}}</label>
+
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+          <input type="checkbox" class="stylized" name="data.equippedWeightless" {{checked data.equippedWeightless}}/>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
       {{!-- Price --}}
       {{#if showIdentifyDescription}}
       <div class="form-group">
@@ -68,7 +77,10 @@
       {{!-- Carried Flag --}}
       <div class="form-group">
         <label>{{localize "D35E.Carried"}}</label>
-        <input type="checkbox" name="data.carried" {{checked data.carried}}/>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+          <input type="checkbox" class="stylized" name="data.carried" {{checked data.carried}}/>
+          <span class="checkmark"></span>
+        </label>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.Container"}}</label>
@@ -87,7 +99,11 @@
       {{#if canMeld}}
       <div class="form-group">
         <label>{{localize "D35E.Melded"}}</label>
-        <input type="checkbox" name="data.melded" {{checked data.melded}}/>
+
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+          <input type="checkbox" class="stylized" name="data.melded" {{checked data.melded}}/>
+          <span class="checkmark"></span>
+        </label>
       </div>
       {{/if}}
 
@@ -116,7 +132,6 @@
         </select>
       </div>
       {{/if}}
-
 
       {{#if isGM}}
       <div class="form-group">

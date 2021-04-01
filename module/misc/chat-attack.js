@@ -70,7 +70,7 @@ export class ChatAttack {
         this.rollData.item = duplicate(this.item.data.data);
     }
 
-    async addAttack({bonus = null, extraParts = [], primaryAttack = true, critical = false} = {}) {
+    async addAttack({bonus = null, extraParts = [], primaryAttack = true, critical = false, critConfirmBonus = 0} = {}) {
         if (!this.item) return;
 
         this.hasAttack = true;
@@ -109,16 +109,13 @@ export class ChatAttack {
         // Add crit confirm
         if (!critical && d20.total >= this.critRange) {
             this.hasCritConfirm = true;
-            await this.addAttack({bonus: bonus || 0, extraParts: extraParts, primaryAttack: primaryAttack, critical: true});
+            await this.addAttack({bonus: (parseInt(bonus) || 0) + parseInt(critConfirmBonus), extraParts: extraParts, primaryAttack: primaryAttack, critical: true});
         }
     }
 
-    getShortToolTip(damageText) {
-        var match = damageText.match(/([0-9]+) \((.*?)\)/)
-        if (match === null) return `<img src="systems/D35E/icons/damage-type/unknown.svg" title="Part" class="dmg-type-icon" />${damageText}`
-        let dmgVal = match[1];
-        let dmgName = match[2];
-        let dmgIconBase = match[2].toLowerCase();
+    getShortToolTip(dmgVal, dmgName) {
+        if (dmgName === null) return `<img src="systems/D35E/icons/damage-type/unknown.svg" title="Part" class="dmg-type-icon" />${dmgVal}`
+        let dmgIconBase = dmgName.toLowerCase();
         let dmgIcon = "unknown"
         switch (dmgIconBase) {
             case "fire":
@@ -164,7 +161,7 @@ export class ChatAttack {
         return `<img src="systems/D35E/icons/damage-type/${dmgIcon}.svg" title="${dmgName}" class="dmg-type-icon" />${dmgVal}`
     }
 
-    async addDamage({extraParts = [], primaryAttack = true, critical = false, multiattack = 0} = {}) {
+    async addDamage({extraParts = [], primaryAttack = true, critical = false, multiattack = 0, modifiers = {}} = {}) {
         if (!this.item) return;
 
         let isMultiattack = multiattack > 0;
@@ -181,7 +178,8 @@ export class ChatAttack {
             data: this.rollData,
             extraParts: extraParts,
             primaryAttack: primaryAttack,
-            critical: critical
+            critical: critical,
+            modifiers: modifiers
         });
         rolls.forEach(r => {
             this.rolls.push(r.roll || r)
@@ -191,6 +189,7 @@ export class ChatAttack {
         let totalDamage = 0;
         let shortTooltips = []
         let critShortTooltips = []
+        let damageTypeTotal = new Map();
         for (let roll of rolls) {
             let tooltip = $(await roll.roll.getTooltip());
 
@@ -207,12 +206,19 @@ export class ChatAttack {
             let tooltipHtml = $(tooltip);
             totalDamage += roll.roll.total;
             tooltip = tooltipHtml[0].outerHTML;
-            if (!critical)
-                shortTooltips.push(this.getShortToolTip(totalText))
-            else
-                critShortTooltips.push(this.getShortToolTip(totalText))
+            if (!damageTypeTotal.has(roll.damageTypeUid))
+                damageTypeTotal.set(roll.damageTypeUid,{name: roll.damageType, value: 0})
+            let _dtt = damageTypeTotal.get(roll.damageTypeUid);
+            _dtt.value += roll.roll.total
+
             tooltips += tooltip;
         }
+        damageTypeTotal.forEach((value, key) => {
+            if (!critical)
+                shortTooltips.push(this.getShortToolTip(value.value,value.name))
+            else
+                critShortTooltips.push(this.getShortToolTip(value.value,value.name))
+        })
         // Add normal data
         let flavor;
         if (isMultiattack) flavor = game.i18n.localize("D35E.Damage") + ` (${game.i18n.localize("D35E.SubAttack")} ${multiattack})`;
@@ -288,7 +294,7 @@ export class ChatAttack {
     async addEffect({primaryAttack = true, actor = null, useAmount = 1, cl = null} = {}) {
         if (!this.item) return;
         this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor, this.rollData);
-        this.addSpecial(actor, useAmount, cl);
+        await this.addSpecial(actor, useAmount, cl);
     }
 
     async addSpecial(actor = null, useAmount = 1, cl = null) {
@@ -316,7 +322,7 @@ export class ChatAttack {
             let actionData = action.action.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`);
 
             // If this is self action, run it on the actor on the time of render
-            _actor.autoApplyActionsOnSelf(actionData)
+            await _actor.autoApplyActionsOnSelf(actionData)
             this.special.push({
                 label: action.name,
                 value: actionData,
@@ -344,7 +350,7 @@ export class ChatAttack {
         let _actionData = actionData.replace(/\(@cl\)/g, `${cl}`).replace(/\(@useAmount\)/g, `${useAmount}`).replace(/\(@range\)/g, `${range}`).replace(/\(@attack\)/g, `${this.attack.total}`).replace(/\(@damage\)/g, `${this.damage.total}`);
 
         // If this is self action, run it on the actor on the time of render
-        _actor.autoApplyActionsOnSelf(_actionData)
+        await _actor.autoApplyActionsOnSelf(_actionData)
         this.special.push({
             label: name,
             value: _actionData,

@@ -1,19 +1,19 @@
 <form>
     <div class="form-group">
-        <label>{{localize "D35E.GRBonus"}}</label>
-        <input type="text" name="gr-bonus" value="" placeholder="e.g. +1d4"/>
+        <label>{{localize "D35E.SKBonus"}}</label>
+        <input type="text" name="sk-bonus" value="" placeholder="e.g. +1d4"/>
     </div>
     <div class="form-group stacked">
-        <label class="block-header">{{localize "D35E.GRDialogModifiers"}}</label>
+        <label class="block-header">{{localize "D35E.SKDialogModifiers"}}</label>
     </div>
     <div class="form-group">
         <div class="flexcol">
-            {{#each grFeats as |feat|}}
+            {{#each skFeats as |feat|}}
             <span>{{feat.data.name}}</span>
             {{/each}}
         </div>
     </div>
-    {{#each grFeatsOptional as |feat|}}
+    {{#each skFeatsOptional as |feat|}}
     <div class="form-group">
         <label style="{{#unless feat.hasUseableChange}}opacity: 0.8{{/unless}}">{{feat.data.name}} {{#if feat.isCharged}}({{feat.charges}} charges){{/if}}</label>
         {{#if feat.data.data.combatChangesRange.max}}

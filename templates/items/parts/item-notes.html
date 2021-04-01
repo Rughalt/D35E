@@ -1,9 +1,9 @@
 <div>
   {{!-- Notes --}}
-  <h4 class="context-notes-header">
+  <h3 class="form-header">
     {{localize "D35E.ContextNotes"}}
-    <a class="context-note-control add-note"><i class="fas fa-plus"></i></a>
-  </h4>
+    <a class="context-note-control add-note" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
+  </h3>
   <ol class="context-notes form-group">
     {{#each data.contextNotes as |note a|}}
     <li class="context-note flexrow" data-note="{{a}}">

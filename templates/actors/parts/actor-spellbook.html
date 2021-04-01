@@ -215,7 +215,7 @@
         </div>
 
         <div class="item-detail item-actions"><span>{{ localize 'D35E.ActionPlural' }}</span></div>
-
+        {{#unless section.isEpic}}
         <div class="spell-uses">
             {{#if section.usePowerPoints}}
             <input type="text" disabled value="{{section.powerPoints}}" placeholder="0" data-dtype="Number"/>
@@ -242,6 +242,11 @@
             {{/unless}}
             {{/if}}
         </div>
+        {{else}}
+
+        <div class="spell-uses">
+        </div>
+        {{/unless}}
 
         <!--        <div class="spell-school">{{localize "D35E.SpellSchool"}}</div>-->
 
@@ -266,6 +271,10 @@
             <div class="item-name flexrow rollable {{#if item.isSpecialized}}item-specialized{{/if}}{{#if item.isBanned}}item-banned{{/if}}">
                 <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                 <h4>{{item.name}}
+
+                    {{#if item.epic}}
+                    (level {{item.epicLevel}})
+                    {{/if}}
                     {{#if item.data.specialPrepared}}
                     <i class="fas fa-hand-sparkles tooltip">
                         <span class="tooltipcontent" style="z-index: 999">{{localize "D35E.SpecialSlotPrepared"}}</span>
@@ -319,8 +328,7 @@
                 {{#if section.usePowerPoints}}
                 <input type="text" value="{{item.data.powerPointsCost}}" disabled data-type="max" data-dtype="Number"/>
                 {{ else }}
-                {{#unless ../../spellbook.orig.spontaneous}}
-                <!--            <span>{{localize "D35E.Uses"}}</span>-->
+                {{#unless section.spontaneous}}
                 <input type="text" value="{{item.data.preparation.preparedAmount}}" data-type="amount"
                        data-dtype="Number"/>
                 <span class="sep"> / </span>
@@ -334,6 +342,9 @@
                     {{/unless}}
                     {{else}}
                     {{#if section.slotsLeft}}
+                    <i class="fas fa-plus"></i>
+                    {{/if}}
+                    {{#if item.epic}}
                     <i class="fas fa-plus"></i>
                     {{/if}}
                     {{/if}}
@@ -364,7 +375,18 @@
                 {{else}}
                 <div style="flex: 0 16px;"></div>
                 {{/if}}
-                {{#if 0}}
+                {{#if 1}}
+                <a class="item-control spell-add-metamagic" title="{{ localize 'D35E.PrepareMetamagicSpell' }}">
+                    <i class="fas fa-arrow-circle-up"></i>
+                </a>
+                {{else}}
+                <div style="flex: 0 16px;"></div>
+                {{/if}}
+                {{else}}
+
+                <div style="flex: 0 16px;"></div>
+                <div style="flex: 0 16px;"></div>
+                {{#if 1}}
                 <a class="item-control spell-add-metamagic" title="{{ localize 'D35E.PrepareMetamagicSpell' }}">
                     <i class="fas fa-arrow-circle-up"></i>
                 </a>

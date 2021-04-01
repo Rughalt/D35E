@@ -142,7 +142,6 @@
       <input type="checkbox" class="stylized" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/>
       <span class="checkmark"></span>
     </label>
-
   </div>
 
   <div class="form-group input">
@@ -157,5 +156,14 @@
       <span class="checkmark"></span>
     </label>
   </div>
+  {{#if data.uses.allowMultipleUses}}
+  <div class="form-group input">
+    <label>{{localize "D35E.MaxChargesPerUse"}}</label>
+    <input style="flex: 0 140px; margin-right: 1rem" type="text" value="{{data.uses.maxPerUseFormula}}" name="data.uses.maxPerUseFormula"  data-dtype="String"/>
+
+    <span class="sep"> Total:  </span>
+    <input style="flex: 0 40px" type="text" value="{{data.uses.maxPerUse}}" disabled  data-dtype="Number"/>
+  </div>
+  {{/if}}
 {{/unless}}
 {{/if}}

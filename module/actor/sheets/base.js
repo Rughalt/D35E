@@ -86,6 +86,7 @@ export class ActorSheetPF extends ActorSheet {
     };
     // The Actor and its Items
     data.actor = duplicate(this.actor.data);
+    let featRollData = this.actor.getRollData()
     data.items = this.actor.items.map(i => {
       i.data.labels = i.labels;
       i.data.id = i._id;
@@ -98,8 +99,12 @@ export class ActorSheetPF extends ActorSheet {
       i.data.maxCharges = i.maxCharges;
       i.data.container = getProperty(i.data, "data.container");
       i.data.hasAction = i.hasAction || i.isCharged;
+      i.data.attackDescription = i.type === "attack" ? i.attackDescription : "";
+      i.data.damageDescription = i.type === "attack" ? i.damageDescription : "";
+      i.data.range = i.type === "attack" ? i.range : "";
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
       i.data.showUnidentifiedData = i.showUnidentifiedData;
+      i.data.unmetRequirements = i.hasUnmetRequirements(featRollData);
       if (i.showUnidentifiedData) i.data.name = getProperty(i.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
       else i.data.name = getProperty(i.data, "data.identifiedName") || i.data.name;
       return i.data;
@@ -328,16 +333,17 @@ export class ActorSheetPF extends ActorSheet {
 
     // Reduce spells to the nested spellbook structure
     let spellbook = {};
-    for (let a = 0; a < 10; a++) {
+    for (let a = 0; a < 11; a++) {
       spellbook[a] = {
         level: a,
         usesSlots: true,
-        spontaneous: book.spontaneous,
+        spontaneous: book.spontaneous && a !== 10,
         usePowerPoints: book.usePowerPoints,
         powerPoints: book.powerPoints,
         canCreate: owner === true,
         canPrepare: (data.actor.type === "character"),
-        label: CONFIG.D35E.spellLevels[a],
+        label: a === 10 ?  game.i18n.localize("D35E.SpellLevel10") : CONFIG.D35E.spellLevels[a],
+        isEpic: a === 10,
         slotsLeft: false,
         spells: [],
         maxPrestigeClSources: (data.sourceDetails !== null && data.sourceDetails.data.attributes.prestigeCl !== undefined && data.sourceDetails.data.attributes.prestigeCl[book.spellcastingType] !== undefined
@@ -352,7 +358,9 @@ export class ActorSheetPF extends ActorSheet {
       };
     }
     spells.forEach(spell => {
-      const lvl = spell.data.level || 0;
+      const lvl = (spell.data.level || 0) > 9 ? 10 : (spell.data.level || 0);
+      spell.epicLevel = spell.data.level || 0;
+      spell.epic = spell.epicLevel > 9;
       if (bannedSpellSpecialization.has(spell.data.school))
         spell.isBanned = true;
       if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(spell.name)) {
@@ -371,7 +379,7 @@ export class ActorSheetPF extends ActorSheet {
     });
 
 
-    for (let a = 0; a < 10; a++) {
+    for (let a = 0; a < 11; a++) {
       spellbook[a].slotsLeft = spellbook[a].spells.map(item => (item.data.specialPrepared ? 0 : item.data.preparation.maxAmount) || 0).reduce((prev, next) => prev + next, 0) < spellbook[a].slots
       spellbook[a].known = spellbook[a].spells.length
       spellbook[a].knownOverLimit = spellbook[a].maxKnown > 0 && spellbook[a].known > spellbook[a].maxKnown;
@@ -1123,11 +1131,12 @@ export class ActorSheetPF extends ActorSheet {
       let subElements = $(`<ul class="item-enh-list"></ul>`);
       let props = $(`<div class="item-properties"></div>`);
       chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
-      console.log('D35E | Enchancement item data',getProperty(item.data, `data.enhancements.items`) || [] );
-      (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
-        let enh = new ItemPF(_enh, {owner: this.owner})
-        if (enh.hasAction || enh.isCharged) {
-          let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
+      if (!item.showUnidentifiedData) {
+        console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
+        (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
+          let enh = new ItemPF(_enh, {owner: this.owner})
+          if (enh.hasAction || enh.isCharged) {
+            let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
@@ -1140,8 +1149,8 @@ export class ActorSheetPF extends ActorSheet {
                                                                      src="systems/D35E/icons/actions/gladius.svg"></a>
                         </div>
                     </div>` +
-              (item.data.data.enhancements.uses.commonPool ? (
-                  `
+                (item.data.data.enhancements.uses.commonPool ? (
+                    `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
                         <input type="text" class="uses" disabled value="${item.data.data.enhancements.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
@@ -1152,7 +1161,7 @@ export class ActorSheetPF extends ActorSheet {
                     </div>
 
                 </li>`
-              ) : (enh.isCharged ? `
+                ) : (enh.isCharged ? `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
                         <input type="text" class="uses" disabled value="${enh.data.data.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
@@ -1163,10 +1172,11 @@ export class ActorSheetPF extends ActorSheet {
                     </div>
 
                 </li>` : `</li>`))
-          subElements.append(enhString)
-        }
-      })
-      div.append(subElements);
+            subElements.append(enhString)
+          }
+        })
+        div.append(subElements);
+      }
       div.append(props);
 
       div.find(".item-enh-attack").mouseup(ev => this._quickItemEnhActionControl(ev));
@@ -1558,7 +1568,65 @@ export class ActorSheetPF extends ActorSheet {
     this.hideWorkingOverlay();
   }
 
-  _onSpellAddMetamagic(event) {
+  async _onSpellAddMetamagic(event) {
+    event.preventDefault();
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const newSpell = duplicate(this.actor.getOwnedItem(itemId).data);
+    delete newSpell._id
+
+    let metamagicFeats = this.actor.items.filter(o => (o.type === "feat" && o.data.data?.metamagic.enabled));
+
+
+    const _roll = async function (newSpell, form) {
+      let optionalFeatIds = []
+      if (form) {
+        $(form).find('[data-type="optional"]').each(function () {
+          if ($(this).prop("checked")) {
+            let featId = $(this).attr('data-feat-optional');
+            optionalFeatIds.push(featId);
+          }
+        })
+      }
+
+      for (const i of metamagicFeats) {
+        if (optionalFeatIds.indexOf(i._id) !== -1) {
+          await eval("(async () => {" + i.data.data.metamagic.code + "})()");
+        }
+      }
+
+      newSpell.data.description.value = await renderTemplate("systems/D35E/templates/internal/spell-description.html", new ItemPF(newSpell)._generateSpellDescription(newSpell))
+
+
+      let x = await this.actor.createEmbeddedEntity("OwnedItem", newSpell, {ignoreSpellbookAndLevel: true})
+    }
+
+    let template = "systems/D35E/templates/apps/apply-metamagic.html";
+    let dialogData = {
+      metamagicFeats: metamagicFeats,
+    };
+    const html = await renderTemplate(template, dialogData);
+    let roll;
+    const buttons = {};
+    let wasRolled = false;
+    buttons.normal = {
+      label: game.i18n.localize("D35E.CreateMetamagicSpell"),
+      callback: html => {
+        wasRolled = true;
+        roll = _roll.call(this,newSpell,html)
+      }
+    };
+    await new Promise(resolve => {
+      new Dialog({
+        title: `${game.i18n.localize("D35E.CreateMetamagicSpell")}`,
+        content: html,
+        buttons: buttons,
+        classes: ['custom-dialog','wide'],
+        default: "normal",
+        close: html => {
+          return resolve(roll);
+        }
+      }).render(true);
+    });
 
   }
 
@@ -1717,7 +1785,6 @@ export class ActorSheetPF extends ActorSheet {
     let availableSpellSpecialization = new Set()
     let domainSpellNames = new Set()
     let bannedSpellSpecialization = new Set()
-
     feats.forEach(feat => {
       (feat.data.spellSpecializationName || "").split(",").forEach(name => {
         if (name === "") return;
@@ -1910,6 +1977,7 @@ export class ActorSheetPF extends ActorSheet {
   _isAttackUseable(a,equippedWeapons) {
     if (a.data.melded) return false;
     if (a.data.originalWeaponId && !equippedWeapons.has(a.data.originalWeaponId)) return false;
+    if (a.data.originalWeaponId && this.actor.items.get(a.data.originalWeaponId).data.data.quantity < 1) return false;
     return true;
   }
 
@@ -2265,6 +2333,7 @@ export class ActorSheetPF extends ActorSheet {
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
                                 <span>${i.name}</span>
+                           
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
                         </li>`);
           li.find(".add-from-compendium").mouseup(ev => {

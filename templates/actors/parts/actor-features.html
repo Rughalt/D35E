@@ -142,7 +142,21 @@
           {{#unless section.isClass}}
           <div class="item-name flexrow rollable">
             <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-            <h4>{{item.name}}</h4>
+            <h4>
+              {{item.name}}
+
+              {{#if item.unmetRequirements}}
+                <i class="fas fa-tasks tooltip non-rollable" style="color: darkred">
+                  <div class="tooltipcontent">{{{ localize 'D35E.HasUnmetRequirements' }}}
+
+                    {{#each item.unmetRequirements as |req|}}
+                    <p>{{req}}</p>
+                    {{/each}}
+                  </div>
+                </i>
+              {{/if}}
+            </h4>
+
           </div>
           {{else}}
           <div class="item-name flexrow">

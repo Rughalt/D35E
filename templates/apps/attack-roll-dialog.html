@@ -197,6 +197,28 @@
             <span class="checkmark"></span>
         </label>
     </div>
+    {{#if feat.data.data.combatChangesAdditionalRanges.hasAdditionalRanges}}
+    <div class="form-group">
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider1.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider1.name}}</span>
+        <input type="range" name="optional-range-base-1-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider1.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-1-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider2.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider2.name}}</span>
+        <input type="range" name="optional-range-base-2-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider2.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-2-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider3.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider3.name}}</span>
+        <input type="range" name="optional-range-base-3-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider3.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-3-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+    </div>
+    {{/if}}
     {{/each}}
 
     <div class="form-group stacked">
@@ -254,8 +276,8 @@
     {{/if}}{{/if}}
     {{#if hasDamage}}{{#if hasDamageAbility}}{{#unless isNaturalAttack}}
     <div class="form-group select">
-        <label>{{localize "D35E.DamageAbility"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
-        <select name="damage-ability-multiplier" data-type="dmg-mult"  class="auto-save">
+        <label>{{localize "D35E.DamageAbility"}} <i class="fas fa-level-down-alt tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValueDependsOnTWF"}}</span></i></label>
+        <select name="damage-ability-multiplier" data-type="dmg-mult" >
             {{#select data.item.ability.damageMult}}
             <option value="0.5">x0.5</option>
             <option value="1">x1</option>
@@ -417,6 +439,7 @@
         }
         {{#if isRangedWeapon}}
         $('.attack-form').closest("section").find("button[data-button='normal']").prop('disabled', true);
+        $('.attack-form').closest("section").find("button[data-button='multi']").prop('disabled', true);
         enableDisableFullAttack($('select[name="ammunition-id"]'))
         {{/if}}
 

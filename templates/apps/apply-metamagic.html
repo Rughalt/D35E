@@ -1,0 +1,19 @@
+<form>
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.AvailableMetamagicFeats"}}</label>
+    </div>
+    {{#each metamagicFeats as |feat|}}
+    <div class="form-group">
+        <div class="flexcol">
+        <label>{{feat.data.name}}</label>
+            <span style="opacity: 0.8; margin-left: 0.25rem">{{feat.data.data.metamagic.shortDesc}}</span></div>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" name="optional-{{feat.id}}" class="stylized" data-feat-optional="{{feat.id}}"
+            data-type="optional"/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <hr style="    opacity: 0.2;
+    border-bottom: none;">
+    {{/each}}
+</form>

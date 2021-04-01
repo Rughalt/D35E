@@ -468,6 +468,8 @@ export class ItemPF extends Item {
             data["data.-=material"] = null;
         }
 
+
+
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
             //Buff or item was activated
             data["data.timeline.elapsed"] = 0
@@ -562,30 +564,27 @@ export class ItemPF extends Item {
                     data["data.timeline.total"] = 0;
                 }
             }
-        }
 
-        {
-            let rollData = {};
-            if (this.actor != null) rollData = this.actor.getRollData();
             rollData.enhancement = data["data.enh"] !== undefined ? data["data.enh"] : getProperty(this.data, "data.enh");
-            let rollFormula = getProperty(this.data, "data.enhIncreaseFormula");
+            rollFormula = getProperty(this.data, "data.enhIncreaseFormula");
             if (data["data.enhIncreaseFormula"] != null && data["data.enhIncreaseFormula"] !== getProperty(this.data, "data.enhIncreaseFormula"))
                 rollFormula = data["data.enhIncreaseFormula"]
             if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "") {
                 data["data.enhIncrease"] = new Roll(rollFormula, rollData).roll().total;
             }
-        }
-        {
-            let rollData = {};
-            if (this.actor != null) rollData = this.actor.getRollData();
-
             rollData.enhancement = data["data.enh"] !== undefined ? data["data.enh"] : getProperty(this.data, "data.enh");
             rollData.enhIncrease = data["data.enhIncrease"] !== undefined ? data["data.enhIncrease"] : getProperty(this.data, "data.enhIncrease");
-            let rollFormula = getProperty(this.data, "data.priceFormula");
+            rollFormula = getProperty(this.data, "data.priceFormula");
             if (data["data.priceFormula"] != null && data["data.priceFormula"] !== getProperty(this.data, "data.priceFormula"))
                 rollFormula = data["data.priceFormula"]
             if (rollFormula !== undefined && rollFormula !== null && rollFormula !== "") {
                 data["data.price"] = new Roll(rollFormula, rollData).roll().total;
+            }
+
+
+            if (data["data.maxDamageDiceFormula"] != null && data["data.maxDamageDiceFormula"] !== getProperty(this.data, "data.maxDamageDiceFormula")) {
+                let roll = new Roll(data["data.maxDamageDiceFormula"], rollData).roll();
+                data["data.maxDamageDice"] = roll.total;
             }
         }
 
@@ -713,6 +712,15 @@ export class ItemPF extends Item {
             }
         }
 
+
+        if (hasProperty(srcData, "data.uses.maxPerUseFormula")) {
+            if (getProperty(srcData, "data.uses.maxPerUseFormula") !== "") {
+                let roll = new Roll(getProperty(srcData, "data.uses.maxPerUseFormula"), rollData).roll();
+                if (doLinkData) linkData(srcData, data, "data.uses.maxPerUse", roll.total);
+                else data["data.uses.maxPerUse"] = roll.total;
+            }
+        }
+
         if (hasProperty(srcData, "data.enhancements.uses.maxFormula")) {
             if (getProperty(srcData, "data.enhancements.uses.maxFormula") !== "") {
                 let roll = new Roll(getProperty(srcData, "data.enhancements.uses.maxFormula"), rollData).roll();
@@ -728,6 +736,14 @@ export class ItemPF extends Item {
                 else data["data.combatChangesRange.max"] = roll.total;
             }
         }
+        for (let i = 1; i <= 3; i++)
+            if (hasProperty(srcData, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`)) {
+                if (getProperty(srcData, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`) !== "") {
+                    let roll = new Roll(getProperty(srcData, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`), rollData).roll();
+                    if (doLinkData) linkData(srcData, data, `data.combatChangesAdditionalRanges.slider${i}.max`, roll.total);
+                    else data[`data.combatChangesAdditionalRanges.slider${i}.max`] = roll.total;
+                }
+            }
     }
 
     static setMaxUses(data, rollData) {
@@ -735,6 +751,15 @@ export class ItemPF extends Item {
             if (getProperty(data, "data.uses.maxFormula") !== "") {
                 let roll = new Roll(getProperty(data, "data.uses.maxFormula"), rollData).roll();
                 data.data.uses.max = roll.total;
+            }
+        }
+
+
+
+        if (hasProperty(data, "data.uses.maxPerUseFormula")) {
+            if (getProperty(data, "data.uses.maxPerUseFormula") !== "") {
+                let roll = new Roll(getProperty(data, "data.uses.maxPerUseFormula"), rollData).roll();
+                data.data.uses.maxPerUse = roll.total;
             }
         }
         
@@ -872,11 +897,12 @@ export class ItemPF extends Item {
             const dynamicLabels = {};
             dynamicLabels.range = labels.range || "";
             dynamicLabels.level = labels.sl || "";
+            let rangeModifier = rollData.spellEnlarged ? 2 : 1
             // Range
             if (data.range != null) {
-                if (data.range.units === "close") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(25 + Math.floor(cl / 2) * 5);
-                else if (data.range.units === "medium") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(100 + cl * 10);
-                else if (data.range.units === "long") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(400 + cl * 40);
+                if (data.range.units === "close") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(rangeModifier * 25 +rangeModifier *  Math.floor(cl / 2) * 5);
+                else if (data.range.units === "medium") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(rangeModifier * 100 + rangeModifier * cl * 10);
+                else if (data.range.units === "long") dynamicLabels.range = game.i18n.localize("D35E.RangeNote").format(rangeModifier * 400 + rangeModifier * cl * 40);
                 else if (["ft", "mi", "spec"].includes(data.range.units) && typeof data.range.value === "string") {
                     let range = new Roll(data.range.value.length > 0 ? data.range.value : "0", rollData).roll().total;
                     dynamicLabels.range = [range > 0 ? "Range:" : null, range, CONFIG.D35E.distanceUnits[data.range.units]].filterJoin(" ");
@@ -1097,7 +1123,7 @@ export class ItemPF extends Item {
                 if (this.isSingleUse) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoQuantity"));
                 return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
             }
-            this.addCharges(-1*this.chargeCost);
+            await this.addCharges(-1*this.chargeCost);
         }
         return this.roll();
     }
@@ -1154,14 +1180,25 @@ export class ItemPF extends Item {
                 props = [],
                 rollModifiers = [],
                 extraText = "";
+
+            let damageModifiers = {
+                maximize: false,
+                multiplier: 1,
+            }
             // Get form data
             if (form) {
 
 
                 rollData.attackBonus = form.find('[name="attack-bonus"]').val();
-                if (rollData.attackBonus) attackExtraParts.push("@attackBonus");
+                if (rollData.attackBonus) {
+                    attackExtraParts.push("@attackBonus");
+                    rollModifiers.push(`${game.i18n.localize("D35E.AttackRollBonus")} ${rollData.attackBonus}`)
+                }
                 rollData.damageBonus = form.find('[name="damage-bonus"]').val();
-                if (rollData.damageBonus) damageExtraParts.push("@damageBonus");
+                if (rollData.damageBonus) {
+                    damageExtraParts.push(["@damageBonus",game.i18n.localize("D35E.DamageBonus"),"base"]);
+                    rollModifiers.push(`${game.i18n.localize("D35E.DamageBonus")} ${rollData.damageBonus}`)
+                }
                 rollMode = form.find('[name="rollMode"]').val();
 
                 rollData.useAmount = form.find('[name="use"]').val();
@@ -1199,7 +1236,7 @@ export class ItemPF extends Item {
                 if (rollData.powerAttackBonus !== undefined) {
                     rollData.powerAttackBonus = parseInt(form.find('[name="power-attack"]').val())
                     rollData.weaponHands = 1
-                    damageExtraParts.push("floor(@powerAttackBonus * @weaponHands) * @critMult");
+                    damageExtraParts.push(["floor(@powerAttackBonus * @weaponHands) * @critMult",game.i18n.localize("D35E.PowerAttack"),"base"]);
                     rollData.powerAttackPenalty = -rollData.powerAttackBonus;
                     attackExtraParts.push("@powerAttackPenalty");
                     if (rollData.powerAttackBonus > 0)
@@ -1334,7 +1371,14 @@ export class ItemPF extends Item {
                         let featId = $(this).attr('data-feat-optional');
                         optionalFeatIds.push(featId);
                         if ($(form).find(`[name="optional-range-${featId}"]`).val() !== undefined)
-                            optionalFeatRanges.set(featId,$(form).find(`[name="optional-range-${featId}"]`).val())
+                            optionalFeatRanges.set(featId,
+                                {
+                                    "base": $(form).find(`[name="optional-range-${featId}"]`)?.val() || 0,
+                                    "slider1": $(form).find(`[name="optional-range-1-${featId}"]`)?.val() || 0,
+                                    "slider2": $(form).find(`[name="optional-range-2-${featId}"]`)?.val() || 0,
+                                    "slider3": $(form).find(`[name="optional-range-3-${featId}"]`)?.val() || 0
+                                }
+                            )
                     }
                 })
                 $(form).find('[data-type="conditional"]').each(function() {
@@ -1451,9 +1495,15 @@ export class ItemPF extends Item {
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData, optionalFeatRanges.get(i._id)))
-                    i.addCharges(-1);
-                    if (optionalFeatRanges.get(i._id))
-                        rollModifiers.push(`${i.name} (${optionalFeatRanges.get(i._id)})`)
+                    i.addCharges(-1 * (i.data.data.combatChangesUsesCost === 'chargesPerUse' ? i.data.data?.uses?.chargesPerUse || 1 : optionalFeatRanges.get(i._id).base));
+                    if (optionalFeatRanges.get(i._id)) {
+                        let ranges = []
+                        if (optionalFeatRanges.get(i._id).base) ranges.push(optionalFeatRanges.get(i._id).base)
+                        if (optionalFeatRanges.get(i._id).slider1) ranges.push(optionalFeatRanges.get(i._id).slider1)
+                        if (optionalFeatRanges.get(i._id).slider2) ranges.push(optionalFeatRanges.get(i._id).slider2)
+                        if (optionalFeatRanges.get(i._id).slider3) ranges.push(optionalFeatRanges.get(i._id).slider3)
+                        rollModifiers.push(`${i.name} (${ranges.join(", ")})`)
+                    }
                     else
                         rollModifiers.push(`${i.name}`)
                 }
@@ -1468,7 +1518,7 @@ export class ItemPF extends Item {
             }
 
             if (rollData.featDamageBonus) {
-                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*(${this.featDamageBonus})",'Feats']);
+                if (rollData.featDamageBonus !== 0) damageExtraParts.push(["@critMult*(${this.featDamageBonus})",'Feats','base']);
             }
             if (rollData.featDamagePrecision) {
                 damageExtraParts.push(["(${this.featDamagePrecision})",'Precision']);
@@ -1480,13 +1530,30 @@ export class ItemPF extends Item {
                 }
             }
 
+
             let dc = this._getSpellDC(rollData)
+            if (this.data.data?.metamagicFeats?.maximized) {
+                damageModifiers.maximize = true;
+                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicMaximized")}`)
+            }
+            if (this.data.data?.metamagicFeats?.empowered) {
+                damageModifiers.multiplier = 1.5
+                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicEmpowered")}`)
+            }
+            if (this.data.data?.metamagicFeats?.intensified) {
+                damageModifiers.maximize = true;
+                damageModifiers.multiplier = 2
+                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicIntensified")}`)
+            }
+            if (this.data.data?.metamagicFeats?.enlarged) {
+                rollData.spellEnlarged = true;
+                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicEnlarged")}`)
+            }
 
             // Lock useAmount for powers to max value
             if (this.type === "spell" && getProperty(this.data, "data.isPower")) {
                 rollData.useAmount = Math.min(rollData.useAmount, rollData.cl - (getProperty(this.data, "data.powerPointsCost") || 0))
             }
-
             let attacks = [];
             if (this.hasAttack) {
                 let attackId = 0;
@@ -1516,21 +1583,24 @@ export class ItemPF extends Item {
                         bonus: atk.bonus || 0,
                         extraParts: localAttackExtraParts,
                         primaryAttack: primaryAttack,
-                        actor: actor
+                        actor: actor,
+                        critConfirmBonus: this.data.data.critConfirmBonus || 0,
                     });
                     if (this.hasDamage) {
                         await attack.addDamage({
                             extraParts: localDamageExtraParts,
                             primaryAttack: primaryAttack,
                             critical: false,
-                            actor: actor
+                            actor: actor,
+                            modifiers: damageModifiers
                         });
                         if (attack.hasCritConfirm) {
                             await attack.addDamage({
                                 extraParts: localDamageExtraParts,
                                 primaryAttack: primaryAttack,
                                 critical: true,
-                                actor: actor
+                                actor: actor,
+                                modifiers: damageModifiers
                             });
                         }
                         if (manyshot) {
@@ -1540,14 +1610,15 @@ export class ItemPF extends Item {
                                     primaryAttack: primaryAttack,
                                     critical: false,
                                     actor: actor,
-                                    multiattack: i
+                                    multiattack: i,
+                                    modifiers: damageModifiers
                                 });
                             }
 
                         }
                     }
                     await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
-                    await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges);
+                    await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, attackId);
                     // Add to list
                     attacks.push(attack);
                     attackId++;
@@ -1561,10 +1632,15 @@ export class ItemPF extends Item {
                 for (let i = 0; i < attackCount; i++) {
                     let attack = new ChatAttack(this,"",actor);
                     attack.rollData = rollData;
-                    await attack.addDamage({extraParts: damageExtraParts, primaryAttack: primaryAttack, critical: false});
+                    await attack.addDamage({
+                        extraParts: damageExtraParts,
+                        primaryAttack: primaryAttack,
+                        critical: false,
+                        modifiers: damageModifiers
+                    });
                     await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
 
-                    await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges);
+                    await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, 0);
 
                     attacks.push(attack);
                 }
@@ -1574,14 +1650,14 @@ export class ItemPF extends Item {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
                 await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
-                await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges);
+                await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, 0);
                 // Add to list
                 attacks.push(attack);
             } else if (getProperty(this.data, "data.actionType") === "special") {
                 let attack = new ChatAttack(this,"",actor);
                 attack.rollData = rollData;
                 await attack.addSpecial(actor,rollData.useAmount || 1,rollData.cl);
-                await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges);
+                await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, 0);
                 // Add to list
                 attacks.push(attack);
             }
@@ -1612,15 +1688,15 @@ export class ItemPF extends Item {
             if (this.autoDeductCharges && !skipChargeCheck) {
                 console.log(`D35E | Deducting ${this.chargeCost} charges.`)
                 if (rollData.useAmount === undefined)
-                    this.addCharges(-1*this.chargeCost, itemUpdateData);
+                    await this.addCharges(-1*this.chargeCost, itemUpdateData);
                 else
-                    this.addCharges(-1 * parseFloat(rollData.useAmount)*this.chargeCost, itemUpdateData);
+                    await this.addCharges(-1 * parseFloat(rollData.useAmount)*this.chargeCost, itemUpdateData);
             }
             if (useAmmoId !== "none" && actor !== null) {
-                actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length * (1 + Math.max(0,manyshotCount - 1)))
+                await actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length * (1 + Math.max(0,manyshotCount - 1)))
             }
             // Update item
-            this.update(itemUpdateData);
+            await this.update(itemUpdateData);
 
             // Set chat data
             let chatData = {
@@ -1726,10 +1802,10 @@ export class ItemPF extends Item {
             attackTypeSet: isFullAttack,
             hasAttack: this.hasAttack,
             hasDamage: this.hasDamage,
-            allowNoAmmo: game.settings.get("D35E", "allowNoAmmo"),
+            allowNoAmmo: game.settings.get("D35E", "allowNoAmmo") || this.actor.type === "npc",
             nonLethal: getProperty(this.data, "data.nonLethal") || false,
             allowMultipleUses: this.data.data.uses.allowMultipleUses,
-            multipleUsesMax: Math.floor(this.charges/this.chargeCost),
+            multipleUsesMax: this.data.data.uses.maxPerUse ? Math.min(Math.floor(this.charges/this.chargeCost),this.data.data.uses.maxPerUse) : Math.floor(this.charges/this.chargeCost),
             bonusPowerPointsMax: bonusMaxPowerPoints,
             isSpell: this.type === "spell" && !getProperty(this.data, "data.isPower"),
             isPower: this.type === "spell" && getProperty(this.data, "data.isPower"),
@@ -1737,7 +1813,7 @@ export class ItemPF extends Item {
             isNaturalAttack: getProperty(this.data, "data.attackType") === "natural",
             isWeaponAttack: getProperty(this.data, "data.attackType") === "weapon",
             isRangedWeapon: getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.actionType") === "rwak",
-            ammunition: actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
+            ammunition: this.data.data.thrown ? actor.items.filter(o => o._id === this.data.data.originalWeaponId) : actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
             extraAttacksCount: extraAttacksCount,
             hasTemplate: this.hasTemplate,
             canPowerAttack: actor.items.filter(o => o.type === "feat" && o.name === "Power Attack").length > 0,
@@ -1799,9 +1875,10 @@ export class ItemPF extends Item {
         return {wasRolled: wasRolled, roll: roll};
     }
 
-    async _addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges) {
+    async _addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, attackId) {
         for (const c of allCombatChanges) {
-            if (c[5]) {
+            if (c[5] && c[5] !== "0") {
+                if (c[9] && attackId !== 0) continue;
                 await attack.addCommandAsSpecial(c[7], c[8], c[5], actor, rollData.useAmount || 1, rollData.cl, optionalFeatRanges.get(c[6]) || 0);
             }
         }
@@ -1923,18 +2000,25 @@ export class ItemPF extends Item {
         });
     }
 
-    getPossibleCombatChanges(itemType, rollData, range = 0) {
+    getPossibleCombatChanges(itemType, rollData, range = {base: 0, slider1: 0, slider2: 0, slider3: 0}) {
         if (itemType.endsWith('Optional') && this.isCharged && !this.charges) return [];
         let combatChanges = getProperty(this.data,"data.combatChanges") || [];
         let attackType = getProperty(rollData,"item.actionType") || ""
         let combatChangesRollData = duplicate(rollData);
         combatChangesRollData.self =  mergeObject(this.data.data, this.getRollData(), {inplace: false})
-        combatChangesRollData.range = range
+        combatChangesRollData.range = range.base || 0
+        combatChangesRollData.range1 = range.slider1 || 0
+        combatChangesRollData.range2 = range.slider2 || 0
+        combatChangesRollData.range3 = range.slider3 || 0
         return combatChanges.filter(change => {
             return (change[0] === 'all' || change[0] === itemType) && (change[1] === '' || attackType === change[1]) && (change[2] === '' || new Roll(change[2], combatChangesRollData).roll().total === true)
         }).map(c => {
-            if (typeof c[4] === "string")
+            if (typeof c[4] === "string") {
+                c[4] = c[4].replace(/@range1/g, combatChangesRollData.range1)
+                c[4] = c[4].replace(/@range2/g, combatChangesRollData.range2)
+                c[4] = c[4].replace(/@range3/g, combatChangesRollData.range3)
                 c[4] = c[4].replace(/@range/g, combatChangesRollData.range)
+            }
             if (c[3].indexOf('$') === -1 && c[3].indexOf('&') === -1) {
                 c[4] = new Roll(`${c[4]}`,combatChangesRollData).roll().total
             }
@@ -1942,6 +2026,7 @@ export class ItemPF extends Item {
                 c.push(this.id)
                 c.push(this.name)
                 c.push(this.img)
+                c.push(this.data.data.combatChangesApplySpecialActionsOnce)
             }
             return c;
         });
@@ -2114,9 +2199,10 @@ export class ItemPF extends Item {
      * Place a damage roll using an item (weapon, feat, spell, or equipment)
      * Rely upon the DicePF.damageRoll logic for the core implementation
      */
-    rollDamage({data = null, critical = false, extraParts = [], primaryAttack = true} = {}) {
+    rollDamage({data = null, critical = false, extraParts = [], primaryAttack = true, modifiers = {}} = {}) {
         const itemData = this.data.data;
         let rollData = null;
+        let baseModifiers = [];
         if (!data) {
             rollData = this.actor.getRollData();
             rollData.item = duplicate(itemData);
@@ -2164,31 +2250,33 @@ export class ItemPF extends Item {
         if (typeof abl === "string" && abl !== "") {
             rollData.ablDamage = Math.floor(rollData.abilities[abl].mod * rollData.ablMult);
             if (rollData.abilities[abl].mod < 0) rollData.ablDamage = rollData.abilities[abl].mod;
-            if (rollData.ablDamage < 0) parts[0].extra.push("@ablDamage");
-            else if (rollData.critMult !== 1) parts[0].extra.push("@ablDamage * @critMult");
-            else if (rollData.ablDamage !== 0) parts[0].extra.push("@ablDamage");
+            if (rollData.ablDamage < 0) parts.push({base: "@ablDamage", extra: [], damageType: "Ability", damageTypeUid: parts[0].damageTypeUid});
+            else if (rollData.critMult !== 1) parts.push({base: "@ablDamage * @critMult", extra: [], damageType: "Ability", damageTypeUid: parts[0].damageTypeUid});
+            else if (rollData.ablDamage !== 0) parts.push({base: "@ablDamage", extra: [], damageType: "Ability", damageTypeUid: parts[0].damageTypeUid});
         }
         // Add enhancement bonus
         if (rollData.item.enh != null && rollData.item.enh !== 0 && rollData.item.enh != null) {
-            if (rollData.critMult !== 1) parts[0].extra.push("@item.enh * @critMult");
-            else parts[0].extra.push("@item.enh");
+            if (rollData.critMult !== 1) parts.push({base: "@item.enh * @critMult", extra: [], damageType: "Enhancement", damageTypeUid: parts[0].damageTypeUid});
+            else parts.push({base: "@item.enh", extra: [], damageType: "Enhancement", damageTypeUid: parts[0].damageTypeUid});;
         }
 
         // Add general damage
         if (rollData.attributes.damage.general !== 0) {
-            if (rollData.critMult !== 1) parts[0].extra.push("@attributes.damage.general * @critMult");
-            else parts[0].extra.push("@attributes.damage.general");
+            if (rollData.critMult !== 1) parts.push({base: "@attributes.damage.general * @critMult", extra: [], damageType: "General", damageTypeUid: parts[0].damageTypeUid});
+            else parts.push({base: "@attributes.damage.general", extra: [], damageType: "General", damageTypeUid: parts[0].damageTypeUid});
         }
         // Add melee or spell damage
         if (rollData.attributes.damage.weapon !== 0 && ["mwak", "rwak"].includes(itemData.actionType)) {
-            if (rollData.critMult !== 1) parts[0].extra.push("@attributes.damage.weapon * @critMult");
-            else parts[0].extra.push("@attributes.damage.weapon");
+            if (rollData.critMult !== 1) parts.push({base: "@attributes.damage.weapon * @critMult", extra: [], damageType: "Weapon", damageTypeUid: parts[0].damageTypeUid});
+            else parts.push({base: "@attributes.damage.weapon", extra: [], damageType: "Weapon", damageTypeUid: parts[0].damageTypeUid});
         } else if (rollData.attributes.damage.spell !== 0 && ["msak", "rsak", "spellsave"].includes(itemData.actionType)) {
-            if (rollData.critMult !== 1) parts[0].extra.push("@attributes.damage.spell * @critMult");
-            else parts[0].extra.push("@attributes.damage.spell");
+            if (rollData.critMult !== 1) parts.push({base: "@attributes.damage.spell * @critMult", extra: [], damageType: "Spell", damageTypeUid: parts[0].damageTypeUid});
+            else parts.push({base: "@attributes.damage.spell", extra: [], damageType: "Spell", damageTypeUid: parts[0].damageTypeUid});
         }
         let simpleExtraParts = extraParts.filter(p => !Array.isArray(p));
         parts = parts.concat(extraParts.filter(p => Array.isArray(p)).map(p => {
+            if (p[2] === "base")
+                return {base: p[0], extra: [], damageType: p[1], damageTypeUid: parts[0].damageTypeUid}
             if (p[2])
                 p[1] = CACHE.DamageTypes.get(p[2]).data.name
             else if (p[1]) {
@@ -2206,21 +2294,25 @@ export class ItemPF extends Item {
             const part = parts[a];
             let roll = {}
             if (a === 0) {
+                let rollString = `${modifiers.multiplier ? modifiers.multiplier+'*' : ''}((${[part.base, ...part.extra, ...simpleExtraParts].join("+")}))`;
+                if (modifiers.maximize) rollString = rollString.replace(/d([1-9]+)/g,"*\$1")
                 roll = {
-                    roll: new Roll([part.base, ...part.extra, ...simpleExtraParts].join("+"), rollData).roll(),
+                    roll: new Roll(rollString, rollData).roll(),
                     damageType: part.damageType,
                     damageTypeUid: part.damageTypeUid
                 };
             } else {
+                let rollString = `${modifiers.multiplier ? modifiers.multiplier+'*' : ''}*((${[part.base, ...part.extra].join("+")}))`;
+                if (modifiers.maximize) rollString = rollString.replace(/d([1-9]+)/g,"*\$1")
                 roll = {
-                    roll: new Roll([part.base, ...part.extra].join("+"), rollData).roll(),
+                    roll: new Roll(rollString, rollData).roll(),
                     damageType: part.damageType,
                     damageTypeUid: part.damageTypeUid
                 };
             }
             rolls.push(roll);
         }
-
+        console.log(rolls);
         return rolls;
     }
 
@@ -2343,7 +2435,7 @@ export class ItemPF extends Item {
      * @returns {Object} An object with data to be used in rolls in relation to this item.
      */
     getRollData() {
-        const result = {};
+        const result = this.data.data;
 
         if (this.type === "buff") result.level = this.data.data.level;
         if (this.type === "enhancement") result.enhancement = this.data.data.enh;
@@ -2482,6 +2574,7 @@ export class ItemPF extends Item {
                     action: actionParts[1],
                     condition: condition,
                     parameters: actionParts[2].match(/(?:[^\s"]+|"[^"]*")+/g),
+                    body: actionParts[2],
                     target: actionParts[3]
                 })
         }
@@ -2626,6 +2719,12 @@ export class ItemPF extends Item {
      * Updates the spell's description.
      */
     async _updateSpellDescription(updateData, srcData) {
+        const data = this._generateSpellDescription(srcData);
+
+        linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/D35E/templates/internal/spell-description.html", data));
+    }
+
+    _generateSpellDescription(srcData) {
         const reSplit = CONFIG.D35E.re.traitSeparator;
 
         const label = {
@@ -2767,8 +2866,7 @@ export class ItemPF extends Item {
         if (getProperty(srcData, "data.powerPointsCost") > 0)
             label.powerPointsCost = getProperty(srcData, "data.powerPointsCost");
         label.display = getProperty(srcData, "data.display");
-
-        linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/D35E/templates/internal/spell-description.html", data));
+        return data;
     }
 
     /* -------------------------------------------- */
@@ -2831,9 +2929,9 @@ export class ItemPF extends Item {
         if (this.data.data.atWill) return Number.POSITIVE_INFINITY;
 
         const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
-            isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
+            isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints, isEpic = this.data.data.level > 9,
             spellLevel = getProperty(this.data, "data.level");
-        return usePowerPoints ? (getProperty(spellbook, `powerPoints`) - getProperty(this.data, "data.powerPointsCost") >= 0 || 0) : isSpontaneous
+        return usePowerPoints ? (getProperty(spellbook, `powerPoints`) - getProperty(this.data, "data.powerPointsCost") >= 0 || 0) : (isSpontaneous && !isEpic)
             ? (getProperty(spellbook, `spells.spell${spellLevel}.value`) || 0)
             : (getProperty(this.data, "data.preparation.preparedAmount") || 0);
     }
@@ -3866,24 +3964,96 @@ export class ItemPF extends Item {
         await createCustomChatMessage("systems/D35E/templates/chat/deactivate-buff.html", {items: [this], actor: this.actor}, chatData,  {rolls: []})
     }
 
-    get unmetRequirements() {
-        if (!this.actor) return []; //There are no requirements when item has no actor!
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    hasUnmetRequirements(rollData) {
+        if (!rollData) {
+            if (!this.actor) return []; //There are no requirements when item has no actor!
+            rollData = this.actor.getRollData();
+        }
         let unmetRequirements = []
-        let rollData = this.actor.getRollData();
-        rollData.item = duplicate(this.getRollData());
+        rollData.item = this.getRollData();
         for (const _requirement of this.data.data.requirements || []) {
             if (_requirement[2] === "generic") {
                 if (!(new Roll(_requirement[1], rollData).roll().total)){
                     unmetRequirements.push(_requirement[0])
                 }
+            } else if (_requirement[2] === "feat") {
+                if (!this.actor.getItemByTag(_requirement[1])) {
+                    unmetRequirements.push(_requirement[0])
+                }
             } else if (_requirement[2] === "bab") {
                 if (rollData.attributes.bab.total < parseInt(_requirement[1])) {
 
-                    unmetRequirements.push(_requirement[0] || game.i18n.localize("D35E.BAB"))
+                    unmetRequirements.push(_requirement[0] || (game.i18n.localize("D35E.BAB") + " " + _requirement[1]))
+                }
+            } else {
+                if (rollData.abilities[_requirement[2]].value < parseInt(_requirement[1])) {
+
+                    unmetRequirements.push(_requirement[0] || (game.i18n.localize(`D35E.Ability${capitalizeFirstLetter(_requirement[2])}`) + " " + _requirement[1]))
                 }
             }
         }
         return unmetRequirements;
+    }
+
+    get attackDescription() {
+        console.log('D35E | AB ', this.hasAttack)
+        if (this.hasAttack) {
+            let bab = 0;
+            let attackBonus = ((this.data.data.enh || 0) ? parseInt(this.data.data.enh) : (this.data.data.masterwork ? 1 : 0)) + parseInt(this.data.data.attackBonus || "0");
+            let abilityBonus = 0;
+            if (this.actor) {
+                bab = parseInt(this.actor.data.data.attributes.bab.total);
+                if (this.data.data.ability.attack)
+                    abilityBonus = parseInt(this.actor.data.data.abilities[this.data.data.ability.attack].mod)
+            }
+            let totalBonus = bab + attackBonus + abilityBonus;
+            console.log('D35E | AB ', `${totalBonus >= 0 ? '+'+totalBonus : totalBonus}`)
+            return `${totalBonus >= 0 ? '+'+totalBonus : totalBonus}`
+
+        }
+        return "";
+    }
+
+    get damageDescription() {
+        console.log('D35E | DD ', this.hasDamage)
+        let rollData = this.actor.getRollData();
+        rollData.critMult = 1;
+        rollData.item = duplicate(this.getRollData())
+        let abilityBonus = 0;
+        let results = []
+        if (this.hasDamage) {
+            this.data.data.damage.parts.forEach(d => {
+                let roll = new Roll(d[0], rollData).roll();
+                results.push(roll.formula)
+            })
+        }
+        if (this.data.data.ability.damage)
+            abilityBonus = parseInt(this.actor.data.data.abilities[this.data.data.ability.damage].mod)*this.data.data.ability.damageMult
+        if (abilityBonus) results.push(abilityBonus)
+        return results.join(" + ");
+    }
+
+    get range() {
+
+        let rng = this.data.data.range || {};
+        if (!["ft", "mi", "spec"].includes(rng.units)) {
+            rng.value = null;
+            rng.long = null;
+        }
+        if (rng.units === 'ft')
+            if (this.data.data.thrown) {
+                rng.long = rng.value*5;
+            } else {
+                if (this.data.data.actionType === "rwak")
+                    rng.long = rng.value*10;
+            }
+        let range = [rng.value, rng.long ? `/ ${rng.long}` : null, CONFIG.D35E.distanceUnitsShort[rng.units]].filterJoin(" ");
+        if (range.length > 0) return [range].join(" ");
+        return "";
     }
 
 }

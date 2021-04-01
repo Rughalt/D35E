@@ -61,14 +61,14 @@
                 <input type="checkbox" class="stylized auto-save" name="totaldefense"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.TotalDefense"}} (+4) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+            <label>{{localize "D35E.TotalDefense"}} ({{totalBonus}}) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
                 <input type="checkbox" class="stylized auto-save" name="defense"/>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.DefensiveFighting"}} (+2) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+            <label>{{localize "D35E.DefensiveFighting"}} ({{defenseBonus}}) <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
     </div>
     <div class="form-group stacked">
@@ -95,6 +95,28 @@
             <span class="checkmark"></span>
         </label>
     </div>
+    {{#if feat.data.data.combatChangesAdditionalRanges.hasAdditionalRanges}}
+    <div class="form-group">
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider1.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider1.name}}</span>
+        <input type="range" name="optional-range-base-1-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider1.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-1-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider2.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider2.name}}</span>
+        <input type="range" name="optional-range-base-2-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider2.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-2-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider3.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider3.name}}</span>
+        <input type="range" name="optional-range-base-3-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider3.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-3-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+    </div>
+    {{/if}}
     {{/each}}
     <div class="form-group stacked">
         <label class="block-header">{{localize "D35E.ACDialogOptions"}}</label>
@@ -103,7 +125,7 @@
     <div class="form-group">
         <label>{{localize "D35E.ACDialogHalfDamage"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-            <input type="checkbox" class="stylized auto-save" name="applyHalf"
+            <input type="checkbox" class="stylized auto-save" name="applyHalf" {{#if applyHalf}}checked{{/if}}
                    data-type="optional"/>
             <span class="checkmark"></span>
         </label>

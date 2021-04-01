@@ -1066,6 +1066,7 @@
       ],
       "isPartyMember": false,
       "displayNonRTSkills": false,
+      "jumpSkillAdjust": true,
       "details": {
         "xp": {
           "value": 0,
@@ -1094,6 +1095,7 @@
       "templates": [
         "common"
       ],
+      "jumpSkillAdjust": false,
       "attributes": {
         "spellLevel": 0,
         "hp": {
@@ -1200,6 +1202,26 @@
           "maxFormula": "",
           "max": 0
         },
+        "combatChangesAdditionalRanges": {
+          "hasAdditionalRanges": false,
+          "slider1": {
+            "maxFormula": "",
+            "max": 0,
+            "name": ""
+          },
+          "slider2": {
+            "maxFormula": "",
+            "max": 0,
+            "name": ""
+          },
+          "slider3": {
+            "maxFormula": "",
+            "max": 0,
+            "name": ""
+          }
+        },
+        "combatChangesUsesCost": "chargesPerUse",
+        "combatChangesApplySpecialActionsOnce": true,
         "sizeOverride": "",
         "counterName": "",
         "resistances": [],
@@ -1215,6 +1237,7 @@
           "radius": 0,
           "opacity": 0,
           "alpha": 0.5,
+          "lightAngle": 360,
           "type": "",
           "animationSpeed": "",
           "animationIntensity": "",
@@ -1260,7 +1283,7 @@
         "userNonRemovable": false,
         "customAttributes": {},
         "customAttributesLocked": false,
-        "customReferenceId": "",
+        "customTag": "",
         "createdBy": ""
       },
       "physicalItem": {
@@ -1281,7 +1304,8 @@
         "identifiedName": "",
         "container": "",
         "containerId": "",
-        "containerWeightless": false
+        "containerWeightless": false,
+        "equippedWeightless": false
       },
       "activatedEffect": {
         "activation": {
@@ -1306,6 +1330,8 @@
           "autoDeductCharges": true,
           "allowMultipleUses": false,
           "chargesPerUse": 1,
+          "maxPerUse": null,
+          "maxPerUseFormula": "",
           "maxFormula": "",
           "rechargeFormula": null
         },
@@ -1334,6 +1360,8 @@
         "autoscaleAttackParts": "",
         "formula": "",
         "attackCountFormula": "",
+        "maxDamageDice": 0,
+        "maxDamageDiceFormula": "",
         "ability": {
           "attack": null,
           "damage": null,
@@ -1348,6 +1376,15 @@
           "description": "",
           "ability": "",
           "type": ""
+        },
+        "metamagicFeats": {
+          "maximized": false,
+          "empowered": false,
+          "enlarged": false,
+          "intensified": false,
+          "enhanced": false,
+          "enhancedHalf": false,
+          "widened": false
         },
         "effectNotes": "",
         "attackNotes": "",
@@ -1612,6 +1649,11 @@
       "crOffset": "",
       "spellSpecializationName": "",
       "spellSpecializationForbiddenNames": "",
+      "metamagic": {
+        "enabled": false,
+        "shortDesc": "",
+        "code": ""
+      },
       "spellSpecialization": {
         "isDomain": false,
         "spells": {
@@ -1886,6 +1928,7 @@
       "originalWeaponProperties": {},
       "conditionals": [],
       "favorite": true,
+      "thrown": false,
       "alignment": {
         "good": false,
         "evil": false,
@@ -1979,11 +2022,15 @@
       "createdBy": ""
     },
     "material": {
+      "templates": [
+        "changes"
+      ],
       "description": {
         "value": ""
       },
       "uniqueId": "",
       "slug": "damage",
+      "priceDifference": 0,
       "magicEquivalent": 0,
       "isAlchemicalSilverEquivalent": false,
       "isAdamantineEquivalent": false,

@@ -131,6 +131,13 @@
       {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
       {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+      {{#if isGM}}
+      <h3 class="form-header">System Properties</h3>
+      <div class="form-group">
+        <label>UID</label>
+        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+      </div>
+      {{/if}}
     </div>
   </section>
   </section>

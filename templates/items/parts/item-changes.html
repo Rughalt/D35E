@@ -71,10 +71,10 @@
 
 <div>
   {{!-- Changes --}}
-  <h4 class="change-header">
+  <h3 class="form-header">
     {{localize "D35E.Changes"}}
-    <a class="change-control add-change"><i class="fas fa-plus"></i></a>
-  </h4>
+    <a class="change-control add-change" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
+  </h3>
   <ol class="changes form-group">
     {{#each data.changes as |change a|}}
     <li class="change flexrow" data-change="{{a}}">
@@ -116,9 +116,9 @@
 <div>
 {{#if hasCombatChanges}}
   {{!-- Changes --}}
-  <h4 class="change-header">
-    {{localize "D35E.CombatChangesRange"}}
-  </h4>
+  <h3 class="form-header">
+    {{localize "D35E.CombatChangesSettings"}}
+  </h3>
   <div class="form-group uses-per">
     <label>{{localize "D35E.MaximumRange"}}</label>
     <input type="text" value="{{data.combatChangesRange.max}}" disabled data-dtype="Number"/>
@@ -128,6 +128,76 @@
     <input type="text" name="data.combatChangesRange.maxFormula" value="{{data.combatChangesRange.maxFormula}}" placeholder="{{localize "D35E.MaximumRangeFormula"}}"/>
   </div>
   <em>{{localize "D35E.RangeSliderAbout"}}</em>
+
+  <div class="form-group">
+    <label>{{localize "D35E.AdditionalSliders"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.combatChangesAdditionalRanges.hasAdditionalRanges" {{checked data.combatChangesAdditionalRanges.hasAdditionalRanges}}/>
+      <span class="checkmark"></span>
+    </label>
+  </div>
+
+  {{#if data.combatChangesAdditionalRanges.hasAdditionalRanges}}
+
+  <strong>{{localize "D35E.Slider"}} 1</strong>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.Name"}} <em style="opacity: 0.9; font-weight: 500">({{localize "D35E.RangeSliderAccessWith"}}1)</em></label>
+    <input type="text" name="data.combatChangesAdditionalRanges.slider1.name" value="{{data.combatChangesAdditionalRanges.slider1.name}}" />
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRange"}}</label>
+    <input type="text" value="{{data.combatChangesAdditionalRanges.slider1.max}}" disabled data-dtype="Number"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRangeFormula"}}</label>
+    <input type="text" name="data.combatChangesAdditionalRanges.slider1.maxFormula" value="{{data.combatChangesAdditionalRanges.slider1.maxFormula}}" placeholder="{{localize "D35E.MaximumRangeFormula"}}"/>
+  </div>
+  <strong>{{localize "D35E.Slider"}}2</strong>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.Name"}} <em style="opacity: 0.9; font-weight: 500">({{localize "D35E.RangeSliderAccessWith"}}2)</em></label>
+    <input type="text" name="data.combatChangesAdditionalRanges.slider2.name" value="{{data.combatChangesAdditionalRanges.slider2.name}}"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRange"}}</label>
+    <input type="text" value="{{data.combatChangesAdditionalRanges.slider2.max}}" disabled data-dtype="Number"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRangeFormula"}}</label>
+    <input type="text" name="data.combatChangesAdditionalRanges.slider2.maxFormula" value="{{data.combatChangesAdditionalRanges.slider2.maxFormula}}" placeholder="{{localize "D35E.MaximumRangeFormula"}}"/>
+  </div>
+  <strong>{{localize "D35E.Slider"}} 3</strong>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.Name"}} <em style="opacity: 0.9; font-weight: 500">({{localize "D35E.RangeSliderAccessWith"}}3)</em></label>
+    <input type="text" name="data.combatChangesAdditionalRanges.slider3.name" value="{{data.combatChangesAdditionalRanges.slider3.name}}"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRange"}}</label>
+    <input type="text" value="{{data.combatChangesAdditionalRanges.slider3.max}}" disabled data-dtype="Number"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.MaximumRangeFormula"}}</label>
+    <input type="text" name="data.combatChangesAdditionalRanges.slider3.maxFormula" value="{{data.combatChangesAdditionalRanges.slider3.maxFormula}}" placeholder="{{localize "D35E.MaximumRangeFormula"}}"/>
+  </div>
+  {{/if}}
+
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.ChargesToDeduct"}}</label>
+    <select name="data.combatChangesUsesCost">
+      {{#select data.combatChangesUsesCost }}
+      <option value="chargesPerUse">{{localize "D35E.ChargesToDeduct"}}</option>
+      <option value="range">{{localize "D35E.CombatChangesRange"}}</option>
+      {{/select}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "D35E.ApplySpecialActionsOnce"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.combatChangesApplySpecialActionsOnce" {{checked data.combatChangesApplySpecialActionsOnce}}/>
+      <span class="checkmark"></span>
+    </label>
+  </div>
+
   <h4 class="change-header">
     {{localize "D35E.CombatChanges"}}
     <a class="combat-change-control add-change"><i class="fas fa-plus"></i></a>
@@ -202,10 +272,10 @@
 <div>
   {{#if hasRequirements}}
   {{!-- Requirements --}}
-  <h4 class="change-header">
+  <h3 class="form-header">
     {{localize "D35E.Requirements"}}
-    <a class="requirement-control add-change"><i class="fas fa-plus"></i></a>
-  </h4>
+    <a class="requirement-control add-change" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
+  </h3>
   <ol class="changes form-group">
     {{#each data.requirements as |change a|}}
     <li class="change flexrow" data-change="{{a}}">
@@ -234,10 +304,10 @@
 </div>
 <div>
   {{!-- Changes --}}
-  <h4 class="change-header">
+  <h3 class="form-header">
     {{localize "D35E.Resistances"}}
-    <a class="resistance-control add-change"><i class="fas fa-plus"></i></a>
-  </h4>
+    <a class="resistance-control add-change" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
+  </h3>
   <ol class="changes form-group">
     {{#each data.resistances as |change a|}}
     <li class="change flexrow" data-change="{{a}}">
@@ -257,6 +327,9 @@
       <label class="checkbox">
         <input type="checkbox" name="data.resistances.{{a}}.3" {{checked (lookup this "3")}}/> {{ localize "D35E.Vulnerability" }}
       </label>
+      <label class="checkbox">
+        <input type="checkbox" name="data.resistances.{{a}}.4" {{checked (lookup this "4")}}/> {{ localize "D35E.Half" }}
+      </label>
       <a class="resistance-control delete-change"><i class="fas fa-minus"></i></a>
     </li>
     {{/each}}
@@ -269,10 +342,10 @@
 </div>
 <div>
   {{!-- Changes --}}
-  <h4 class="change-header">
+  <h3 class="form-header">
     {{localize "D35E.DR"}}
-    <a class="dr-control add-change"><i class="fas fa-plus"></i></a>
-  </h4>
+    <a class="dr-control add-change" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
+  </h3>
   <ol class="changes form-group">
     {{#each data.damageReduction as |change a|}}
     <li class="change flexrow" data-change="{{a}}">
@@ -295,4 +368,14 @@
     </li>
     {{/unless}}
   </ol>
+</div>
+
+<div>
+  <h3 class="form-header">
+    {{localize "D35E.Other"}}
+  </h3>
+  <div class="form-group">
+    <label>Custom Tag</label>
+    <input type="text" name="data.customTag" value="{{data.customTag}}" data-dtype="String"/>
+  </div>
 </div>

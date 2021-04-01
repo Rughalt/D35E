@@ -66,9 +66,11 @@ export class ActorSheetPFNPC extends ActorSheetPF {
   async _updateObject(event, formData) {
 
     // Format NPC Challenge Rating
+
     let crv = "data.details.cr";
     let cr = formData[crv];
-    formData[crv] = CR.fromString(cr);
+    if (cr)
+      formData[crv] = CR.fromString(cr);
 
     // Parent ActorSheet update steps
     super._updateObject(event, formData);

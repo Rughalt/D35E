@@ -541,6 +541,14 @@ D35E.attackTypes = {
   "misc": "D35E.Misc",
 };
 
+D35E.attackTypesShort = {
+  "weapon": "D35E.AttackTypeWeaponShort",
+  "natural": "D35E.AttackTypeNaturalShort",
+  "ability": "D35E.AttackTypeAbilityShort",
+  "racialAbility": "D35E.AttackTypeRacialShort",
+  "misc": "D35E.Misc",
+};
+
 D35E.featTypes = {
   "feat": "D35E.FeatTypeFeat",
   "classFeat": "D35E.FeatTypeClassFeat",
@@ -621,6 +629,20 @@ D35E.distanceUnits = {
   "long": "D35E.DistLong",
   "ft": "D35E.DistFt",
   "mi": "D35E.DistMi",
+  "spec": "D35E.Special",
+  "seeText": "D35E.SeeText",
+  "unlimited": "D35E.Unlimited",
+};
+
+D35E.distanceUnitsShort = {
+  "none": "D35E.None",
+  "personal": "D35E.DistPersonal",
+  "touch": "D35E.DistTouch",
+  "close": "D35E.DistClose",
+  "medium": "D35E.DistMedium",
+  "long": "D35E.DistLong",
+  "ft": "D35E.DistFtShort",
+  "mi": "D35E.DistMiShort",
   "spec": "D35E.Special",
   "seeText": "D35E.SeeText",
   "unlimited": "D35E.Unlimited",
@@ -1063,6 +1085,8 @@ D35E.buffTargets = {
     "sneakAttack": "D35E.SneakAttackBonusDice",
     "turnUndead": "D35E.TurnUndeadUses",
     "turnUndeadDiceTotal": "D35E.TurnUndeadDiceTotal",
+    "regen": "D35E.Regeneration",
+    "fastHeal": "D35E.FastHealing",
     "spellResistance": "D35E.SpellResistance",
     "cr": "D35E.CR",
     "fortification": "D35E.Fortification",
@@ -1248,6 +1272,8 @@ D35E.combatChangeType = {
   'savingThrowOptional': 'D35E.SavingThrowOptional',
   'grapple': 'D35E.CMB',
   'grappleOptional': 'D35E.CMBOptional',
+  'skill': 'D35E.Skills',
+  'skillOptional': 'D35E.SkillsOptional',
 };
 
 CONFIG.Combat.initiative.decimals = 2;
@@ -1290,6 +1316,7 @@ D35E.savingThrowTypes = {
 D35E.requirements = {
   'generic': 'D35E.RequirementGeneric',
   'bab': 'D35E.BAB',
+  'feat': 'D35E.Feat',
   "str": "D35E.AbilityStr",
   "dex": "D35E.AbilityDex",
   "con": "D35E.AbilityCon",
