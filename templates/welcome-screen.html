@@ -176,13 +176,11 @@
 
             </div>
             <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Monsters</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.87-monsters.png"
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Metamagic</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-magic.png"
                      style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    Starting with release of 0.87.12, you find reimported monsters from SRD in the monster compendium!
-                    While some of the creatures may still be a little broken, they should be in much better shape than
-                    ever before!<br><br>
+                    Spice up your spells with Metamagic Feat support, available from version 0.92! You can now easily create metamagic spells and effects using Metamagic feats! Enlarge, Widen and Maximize your Magic!<br><br><span style="opacity: 0.8">Available for Metamagic feats added after 0.92 release.</span>
                 </p>
             </div>
             <!--            <div class="flexcol" style="max-height: 410px">-->
@@ -225,6 +223,56 @@
         </div>
     </div>
     <div class="tab" data-tab="changelog" style="overflow-y: scroll; height: 570px;">
+        <h2>v0.92</h2>
+        <h3>Features</h3>
+        <ul>
+            <li>Metamagic Feats Support - support for metamagic feat is in! You can mak spell as being maximized, enhanced or widened with ease!<ul>
+                <li>Metamagic feats allow for easy creation of spells in most instances</li>
+                <li>Epic level spell support</li>
+                <li>Most of Metamagic spell changes - Maximized, Widened, Enhanced, Enlarged etc... work out of the box with implemented spells</li>
+            </ul>
+            </li>
+            <li>Custom Item Tags: Custom tags are used when generating resource names, class names for roll data. </li>
+            <li>Skill &quot;Combat Changes&quot;<ul>
+                <li>Skills are the latest art of the system to get Combat Change support</li>
+                <li>All standard Combat Chances features are available</li>
+                <li>You can limit skills using condition <code>&#39;@skillId&#39; === &#39;&lt;skillShortId&gt;&#39;</code>. <code>featSkillBonus</code> is used to set value added to skill roll.</li>
+            </ul>
+            </li>
+            <li>Approximate damage, range and attack display on character sheet near the weapons</li>
+            <li>Improved Feat requirements system<ul>
+                <li>Feats can now require other feats (using Custom Item Tags as reference)</li>
+            </ul>
+            </li>
+            <li>Thrown weapons do not require ammunition - they require having enough quantity to be used</li>
+            <li>Special Action <code>eval</code> that evaluates <em>one line</em> javascript code. <strong>Use with care, we are not responsible for breaking things</strong></li>
+        </ul>
+        <h3>Changes</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/447">447</a> - Etherealness enchantment bug </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/446">446</a> - natural armor bug </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/441">441</a> - Tumble and Total Defense </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/439">439</a> - Jump and High Speed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/432">432</a> - Allow taking half damage from particular energy types </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/431">431</a> - unidentified magic item reveals spell-like properties in player&#39;s sheet </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/429">429</a> - Damage Ability choice not remembered in Attack dialog </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/428">428</a> - Apply half damage with no check is applying Full Damage </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/426">426</a> - Unarmed strike not usable from Unarmed strike &#39;item&#39; </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/424">424</a> - Bard feature &#39;Bardic Knowledge&#39; </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/421">421</a> - Add &quot;Emission Angle&quot; to item light sources </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/418">418</a> - Darts are ranged weapons without ammunitions </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/417">417</a> - Fast Healing, Regeneration for Changes Mechanic </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/408">408</a> - Allow embedded expressions in object references in special actions </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/406">406</a> - Critical Confirmation Bonus </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/405">405</a> - Request Extend the slider mechanic to have multiple </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/404">404</a> - Add optional &quot;combat&quot; changes for skill checks </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/403">403</a> - Allow for special actions on attacks to be applied only once during a full attack </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/402">402</a> - Limited Uses always subtracts by 1 regardless of other values. </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/399">399</a> - Familiar Hit Points </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/392">392</a> - Request Have the ability to set a cap in multi use abilities </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/389">389</a> - Clothing and Weight </li>
+        </ul>
+
         <h2>v0.90</h2>
         <h3>Features</h3>
         <ul>
