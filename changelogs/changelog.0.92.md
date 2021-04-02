@@ -11,6 +11,7 @@
 - Approximate damage, range and attack display on character sheet near the weapons
 - Improved Feat requirements system
     - Feats can now require other feats (using Custom Item Tags as reference)
+- Ability to add rolling from Roll Table as a part of action. Drag and drop Roll Table from compendium to item and it will be rolled according to formula or randomly. Added `@attack<n>` field to Roll Table formula data to reference possible attack roll.
 - Thrown weapons do not require ammunition - they require having enough quantity to be used
 - Special Action `eval` that evaluates *one line* javascript code. **Use with care, we are not responsible for breaking things**
 
