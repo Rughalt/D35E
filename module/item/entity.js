@@ -1826,9 +1826,9 @@ export class ItemPF extends Item {
                 let rollTable = await game.packs.get(this.data.data.rollTableDraw.pack).getEntity(this.data.data.rollTableDraw.id)
                 if (this.data.data.rollTableDraw.formula) {
                     var roll = new Roll(this.data.data.rollTableDraw.formula, rollData);
-                    await rollTable.draw({roll});
+                    await rollTable.draw({roll:roll, rollMode:rollMode});
                 } else {
-                    await rollTable.draw();
+                    await rollTable.draw({rollMode:rollMode});
                 }
             }
             return {rolled: rolled, rollData: rollData};
@@ -4051,7 +4051,7 @@ export class ItemPF extends Item {
             } else {
                 if (rollData.abilities[_requirement[2]].value < parseInt(_requirement[1])) {
 
-                    unmetRequirements.push(_requirement[0] || (game.i18n.localize(`D35E.Ability${capitalizeFirstLetter(_requirement[2])}`) + " " + _requirement[1]))
+                    unmetRequirements.push(_requirement[0] || (game.i18n.localize(`D35E.Ability${this.capitalizeFirstLetter(_requirement[2])}`) + " " + _requirement[1]))
                 }
             }
         }
