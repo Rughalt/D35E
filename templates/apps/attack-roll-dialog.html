@@ -352,10 +352,17 @@
                 var manyshotCount = 0;
                 var baseExtraAttacks = {{extraAttacksCount}};
                 var isRapidShot = false;
+                var isFlurryOfBlows = false;
                 if ($("input[data-feat='rapid-shot']").length) {
                     isRapidShot = $("input[data-feat='rapid-shot']").is(":checked");
                 }
+                if ($("input[data-feat='flurry-of-blows']").length) {
+                    isFlurryOfBlows = $("input[data-feat='flurry-of-blowst']").is(":checked");
+                }
                 if (isRapidShot) {
+                    baseExtraAttacks = baseExtraAttacks + 1;
+                }
+                if (isFlurryOfBlows) {
                     baseExtraAttacks = baseExtraAttacks + 1;
                 }
                 if ($("input[data-feat='manyshot']").length) {
