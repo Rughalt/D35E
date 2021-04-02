@@ -270,6 +270,7 @@ export const sizeDie = function(origCount, origSides, targetSize="M", crit=1) {
 export const sizeMonkDamageDie = function(level, targetSize="M", crit=1) {
   let monkLevelDamageDies =
       [
+          [1,6],
         [1,6],
         [1,6],
         [1,6],

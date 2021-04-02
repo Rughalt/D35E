@@ -26,6 +26,11 @@ export class ItemPF extends Item {
         return ["mwak", "rwak", "msak", "rsak"].includes(this.data.data.actionType);
     }
 
+
+    get hasRolltableDraw() {
+        return this.data.data?.rollTableDraw?.id || false;
+    }
+
     get hasMultiAttack() {
         return this.hasAttack && this.data.data.attackParts != null && this.data.data.attackParts.length > 0;
     }
@@ -37,10 +42,16 @@ export class ItemPF extends Item {
     }
 
     get hasAction() {
+        console.log(this.name, this.hasAttack
+            || this.hasDamage
+            || this.hasEffect
+            || this.hasRolltableDraw
+            || this.hasTemplate || (getProperty(this.data, "data.actionType") === "special"))
         return this.hasAttack
             || this.hasDamage
             || this.hasEffect
-            || this.hasTemplate || getProperty(this.data, "data.actionType") === "special";
+            || this.hasRolltableDraw
+            || this.hasTemplate || (getProperty(this.data, "data.actionType") === "special");
     }
 
     get isSingleUse() {
@@ -212,7 +223,7 @@ export class ItemPF extends Item {
     }
 
     get hasEffect() {
-        return this.hasDamage || (this.data.data.effectNotes && this.data.data.effectNotes.length > 0) || this.data.data.specialActions;
+        return this.hasDamage || (this.data.data.effectNotes && this.data.data.effectNotes.length > 0) || (this.data.data.specialActions && this.data.data.specialActions.length > 0);
     }
 
     /* -------------------------------------------- */
@@ -1429,7 +1440,7 @@ export class ItemPF extends Item {
                     bonus: 0,
                     label: `Flurry of Blows`
                 })
-                let monkClass = (this.actor?.items || []).filter(o => o.type === "class" && o.name === "Monk")[0];
+                let monkClass = (this.actor?.items || []).filter(o => o.type === "class" && (o.name === "Monk"  || o.data.data.customTag === "monk"))[0];
                 //1-4 = -2
                 if(monkClass.data.data.levels < 5) {
                     rollData.flurryOfBlowsPenalty = -2;
@@ -1563,20 +1574,28 @@ export class ItemPF extends Item {
             let dc = this._getSpellDC(rollData)
             if (this.data.data?.metamagicFeats?.maximized) {
                 damageModifiers.maximize = true;
-                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicMaximized")}`)
+                rollModifiers.push(`${game.i18n.localize("D35E.SpellMaximized")}`)
             }
             if (this.data.data?.metamagicFeats?.empowered) {
                 damageModifiers.multiplier = 1.5
-                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicEmpowered")}`)
+                rollModifiers.push(`${game.i18n.localize("D35E.SpellEmpowered")}`)
             }
             if (this.data.data?.metamagicFeats?.intensified) {
                 damageModifiers.maximize = true;
                 damageModifiers.multiplier = 2
-                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicIntensified")}`)
+                rollModifiers.push(`${game.i18n.localize("D35E.SpellIntensified")}`)
             }
             if (this.data.data?.metamagicFeats?.enlarged) {
                 rollData.spellEnlarged = true;
-                rollModifiers.push(`${game.i18n.localize("D35E.MetamagicEnlarged")}`)
+                rollModifiers.push(`${game.i18n.localize("D35E.SpellEnlarged")}`)
+            }
+            if (this.data.data?.metamagicFeats?.widened) {
+                rollData.spellWidened = true;
+                rollModifiers.push(`${game.i18n.localize("D35E.SpellWidened")}`)
+            }
+            if (this.data.data?.metamagicFeats?.enhanced) {
+                rollData.maxDamageDice += 10;
+                rollModifiers.push(`${game.i18n.localize("D35E.SpellEnhanced")}`)
             }
 
             // Lock useAmount for powers to max value
@@ -1701,7 +1720,7 @@ export class ItemPF extends Item {
 
                 console.log(`D35E | Creating measure template.`)
                 // Create template
-                const template = AbilityTemplate.fromItem(this);
+                const template = AbilityTemplate.fromItem(this, rollData.spellWidened ? 2 : 1);
                 if (template) {
                     if (getProperty(this, "actor.sheet.rendered")) actor.sheet.minimize();
                     const success = await template.drawPreview(ev);
@@ -1740,6 +1759,7 @@ export class ItemPF extends Item {
                 if (!game.settings.get("D35E", "hideSpellDescriptionsIfHasAction"))
                     await this.roll({rollMode: rollMode});
             }
+            let rolled = false;
             if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
 
                 console.log(`D35E | Generating chat message.`)
@@ -1800,9 +1820,18 @@ export class ItemPF extends Item {
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
-                return {rolled: true, rollData: rollData};
+                rolled = true;
             }
-            return {rolled: false, rollData: rollData};
+            if (this.hasRolltableDraw) {
+                let rollTable = await game.packs.get(this.data.data.rollTableDraw.pack).getEntity(this.data.data.rollTableDraw.id)
+                if (this.data.data.rollTableDraw.formula) {
+                    var roll = new Roll(this.data.data.rollTableDraw.formula, rollData);
+                    await rollTable.draw({roll});
+                } else {
+                    await rollTable.draw();
+                }
+            }
+            return {rolled: rolled, rollData: rollData};
         };
 
         // Handle fast-forwarding
@@ -1851,7 +1880,7 @@ export class ItemPF extends Item {
             maxManyshotValue: 2 + Math.floor((getProperty(actor.data, "data.attributes.bab.total") - 6) / 5),
             canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
-            canFlurryOfBlows: actor.items.filter(o => o.type === "feat" && o.name === "Flurry of Blows").length > 0,
+            canFlurryOfBlows: actor.items.filter(o => o.type === "feat" && (o.name === "Flurry of Blows" || o.data.data.customTag === "flurryOfBlows")).length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
             weaponFeats: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(this.type,rollData)),
             weaponFeatsOptional: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`${this.type}Optional`,rollData)),
@@ -4057,7 +4086,7 @@ export class ItemPF extends Item {
         let results = []
         if (this.hasDamage) {
             this.data.data.damage.parts.forEach(d => {
-                let roll = new Roll(d[0], rollData).roll();
+                let roll = new Roll(d[0].replace('@useAmount',1), rollData).roll();
                 results.push(roll.formula)
             })
         }

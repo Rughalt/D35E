@@ -11,7 +11,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
    * @param {ItemPF1} item               The Item object for which to construct the template
    * @return {AbilityTemplate|null}     The template object, or null if the item does not produce a template
    */
-  static fromItem(item) {
+  static fromItem(item, multiplier = 1) {
     const target = getProperty(item.data, "data.measureTemplate") || {};
     const templateShape = D35E.areaTargetTypes[target.type];
     if ( !templateShape ) return null;
@@ -20,7 +20,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
     const templateData = {
       t: templateShape,
       user: game.user._id,
-      distance: target.size || 5,
+      distance: target.size*multiplier || 5,
       direction: 0,
       x: 0,
       y: 0,
@@ -37,7 +37,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
         templateData.angle = 53.13;
         break;
       case "rect": // 5e rectangular AoEs are always cubes
-        templateData.distance = Math.hypot(target.size, target.size);
+        templateData.distance = Math.hypot(target.size*multiplier, target.size*multiplier);
         templateData.width = target.value;
         templateData.direction = 45;
         break;

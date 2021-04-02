@@ -2631,8 +2631,6 @@
   border-top: 1px solid #c9c7b8;
 }
 .D35E.sheet.item h4.damage-header,
-.D35E.sheet.item h4.change-header,
-.D35E.sheet.item h4.context-notes-header,
 .D35E.sheet.item h4.attack-header {
   margin: 0;
   padding: 0;
@@ -2640,6 +2638,19 @@
   line-height: 24px;
   color: #4b4a44;
   flex: 0;
+}
+.D35E.sheet.item h4.in-header,
+.D35E.sheet.item h4.change-header,
+.D35E.sheet.item h4.context-notes-header {
+  padding: 0;
+  font-weight: bold;
+  line-height: 24px;
+  flex: 0;
+  color: #193f48;
+  /* text-align: end; */
+  border-bottom: 2px solid #193f48;
+  border-top: none;
+  margin: 8px 0;
 }
 .D35E.sheet.item .damage-parts,
 .D35E.sheet.item .attack-parts,
@@ -3189,25 +3200,29 @@
 }
 .D35E.sheet.item .spell,
 .D35E.sheet.item .full-attack,
-.D35E.sheet.item .charge-link {
+.D35E.sheet.item .charge-link,
+.D35E.sheet.item .rolltable-link {
   padding: 4px;
   border: 2px groove #eeede0;
   border-radius: 2px;
 }
 .D35E.sheet.item .spell img,
 .D35E.sheet.item .full-attack img,
-.D35E.sheet.item .charge-link img {
+.D35E.sheet.item .charge-link img,
+.D35E.sheet.item .rolltable-link img {
   flex: 0 24px;
   height: 24px;
 }
 .D35E.sheet.item .spell label,
 .D35E.sheet.item .full-attack label,
-.D35E.sheet.item .charge-link label {
+.D35E.sheet.item .charge-link label,
+.D35E.sheet.item .rolltable-link label {
   margin-left: 4px;
 }
 .D35E.sheet.item .spell input,
 .D35E.sheet.item .full-attack input,
-.D35E.sheet.item .charge-link input {
+.D35E.sheet.item .charge-link input,
+.D35E.sheet.item .rolltable-link input {
   flex: 0 80px;
 }
 .D35E.sheet.item .inventory-list {
@@ -4870,7 +4885,8 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .D35E.sheet.item .spell,
 .d35ecustom .D35E.sheet.item .full-attack,
-.d35ecustom .D35E.sheet.item .charge-link {
+.d35ecustom .D35E.sheet.item .charge-link,
+.d35ecustom .D35E.sheet.item .rolltable-link {
   border-radius: 2px;
   border: none !important;
   background: rgba(255, 255, 255, 0.2);

@@ -86,6 +86,7 @@ export class ItemSheetPF extends ItemSheet {
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
         data.isAttack = this.item.type === "attack";
+        data.isWeaponAttack = this.item?.data?.data?.actopn === "rwak" || this.item?.data?.data?.actopn === "mwak";
         data.isShapechangeBuff = this.item.type === "buff" && this.item?.data?.data?.buffType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";
@@ -1024,6 +1025,8 @@ export class ItemSheetPF extends ItemSheet {
         html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
         html.find('.charge-link').on("drop", this._onDropChargeLink.bind(this));
         html.find('.remove-charge-link').click(event => this._onRemoveChargeLink(event));
+        html.find('.rolltable-link').on("drop", this._onDropRolltableLink.bind(this));
+        html.find('.remove-rolltable-link').click(event => this._onRemoveRolltableLink(event));
         html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
 
         html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
@@ -1578,6 +1581,15 @@ export class ItemSheetPF extends ItemSheet {
         this.item.update(updateData)
     }
 
+    async _onRemoveRolltableLink(event) {
+        let updateData = {}
+        updateData[`data.rollTableDraw.id`] = null;
+        updateData[`data.rollTableDraw.name`] = null;
+        updateData[`data.rollTableDraw.pack`] = null;
+        this.item.update(updateData)
+    }
+
+
     async _onDropChargeLink(event) {
         event.preventDefault();
         let data;
@@ -1598,6 +1610,30 @@ export class ItemSheetPF extends ItemSheet {
             updateData[`data.linkedChargeItem.id`] = data.data.data.uniqueId ? data.data.data.uniqueId : data.data._id;
             updateData[`data.linkedChargeItem.name`] = data.data.name;
             updateData[`data.linkedChargeItem.img`] = data.data.img;
+            this.item.update(updateData)
+        }
+    }
+
+    async _onDropRolltableLink(event) {
+        event.preventDefault();
+        let data;
+
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "RollTable") return;
+        } catch (err) {
+            return false;
+        }
+
+        if (!data.pack) {
+            return ui.notifications.warn(game.i18n.localize("D35E.ResourceNeedDropFromCompendium"));
+        }
+        if (data.type === "RollTable") {
+            let updateData = {}
+            let rt = await game.packs.get(data.pack).getEntity(data.id)
+            updateData[`data.rollTableDraw.id`] = data.id;
+            updateData[`data.rollTableDraw.pack`] = data.pack;
+            updateData[`data.rollTableDraw.name`] = rt.data.name;
             this.item.update(updateData)
         }
     }

@@ -382,7 +382,7 @@
   /*  Item Actions                             */
   /* ----------------------------------------- */
 
-  h4.damage-header, h4.change-header, h4.context-notes-header, h4.attack-header {
+  h4.damage-header, h4.attack-header {
     margin: 0;
     padding: 0;
     font-weight: bold;
@@ -390,6 +390,21 @@
     color: @colorOlive;
     flex: 0;
   }
+
+  h4.in-header, h4.change-header, h4.context-notes-header {
+
+    padding: 0;
+    font-weight: bold;
+    line-height: 24px;
+    flex: 0;
+
+    color: #193f48;
+    /* text-align: end; */
+    border-bottom: 2px solid #193f48;
+    border-top: none;
+    margin: 8px 0;
+  }
+
 
   .damage-parts, .attack-parts, .special-parts {
     list-style: none;
@@ -924,7 +939,7 @@
     }
   }
 
-  .spell, .full-attack, .charge-link {
+  .spell, .full-attack, .charge-link, .rolltable-link {
     img {
       flex: 0 24px;
       height: 24px;

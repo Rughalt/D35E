@@ -1389,7 +1389,13 @@
         "effectNotes": "",
         "attackNotes": "",
         "specialActions": [],
-        "favorite": false
+        "favorite": false,
+        "rollTableDraw": {
+          "formula": "",
+          "name": "",
+          "pack": "",
+          "id": ""
+        }
       },
       "links": {
         "links": {

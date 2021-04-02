@@ -96,6 +96,8 @@ export class ChatAttack {
         data.tooltip = tooltip;
         data.total = roll.total;
         data.isCrit = critType === 1;
+        if (!isCrit)
+            this.rollData[`attack${this.rolls.length}`] = roll.total;
         data.isNatural20 = (d20.total === 20 && !critical);
         data.isFumble = critType === 2;
         if (!critical) {

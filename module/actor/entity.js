@@ -2372,7 +2372,7 @@ export class ActorPF extends Actor {
                         const level = parseInt(feature.level)
                         let uniqueId = e?.data?.data?.uniqueId;
                         if (!uniqueId) {
-                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithNoUID"));
+                            ui.notifications.warn(game.i18n.localize("D35E.NotAddingAbilityWithNoUID").replace("{0}",feature.uid));
                             continue;
                         }
                         if (uniqueId.endsWith("*")) {

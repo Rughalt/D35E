@@ -1407,6 +1407,12 @@
   "D35E.SpellLevel10": "Epic Spells",
   "D35E.CreateMetamagicSpell": "Create Metamagic Spell",
   "D35E.AvailableMetamagicFeats": "Available Metamagic Feats",
+  "D35E.RollTableDraw": "Roll Table Draw",
+  "D35E.RollTableDrawFormula": "Roll Table Draw (empty for default)",
+  "D35E.UnlinkRolltable": "Unlink Roll Table",
+  "D35E.LinkedRolltable": "Linked Roll Table",
+  "D35E.DropRolltable": "Drop Roll Table",
+  "D35E.ResourceNeedDropFromCompendium": "Dropped item must come from Compendium",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
