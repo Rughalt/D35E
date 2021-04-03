@@ -276,18 +276,18 @@
   </section>
   {{#if isPlayerEditLocked}}
   <script>
-    $( "input[type='text']" ).prop( "disabled", true ); //Disable
-    $( "input[type='checkbox']:not('.buff-toggle')" ).prop( "disabled", true ); //Disable
-    $( "textarea" ).prop( "disabled", true ); //Disable
-    $( "a.item-edit" ).addClass( "disabled-action" ); //Disable
-    $( "a.item-control:not(.item-attack):not(.item-attack-convert):not(.item-delete):not(.item-carry):not(.item-equip)" ).addClass( "disabled-action" ); //Disable
-    $( ".traits a" ).addClass( "disabled-action" ); //Disable
-    $( ".open-compendium-pack" ).addClass( "disabled-action" ); //Disable
-    $( ".open-compendium-browser" ).addClass( "disabled-action" ); //Disable
-    $( ".level-class-image" ).addClass( "disabled-action" ); //Disable
-    $( ".configure-spellbook" ).addClass( "disabled-action" ); //Disable
-    $( ".point-buy" ).addClass( "disabled-action" ); //Disable
-    $( ".note-editor" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}} input[type='text']" ).prop( "disabled", true ); //Disable
+    $( "#actor-{{actorId}}  input[type='checkbox']:not('.buff-toggle')" ).prop( "disabled", true ); //Disable
+    $( "#actor-{{actorId}}  textarea" ).prop( "disabled", true ); //Disable
+    $( "#actor-{{actorId}}  a.item-edit" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  a.item-control:not(.item-attack):not(.item-attack-convert):not(.item-buy):not(.item-loot):not(.item-delete):not(.item-carry):not(.item-equip)" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .traits a" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .open-compendium-pack" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .open-compendium-browser" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .level-class-image" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .configure-spellbook" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .point-buy" ).addClass( "disabled-action" ); //Disable
+    $( "#actor-{{actorId}}  .note-editor" ).addClass( "disabled-action" ); //Disable
   </script>
   {{/if}}
 </form>

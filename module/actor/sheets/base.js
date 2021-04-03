@@ -73,6 +73,7 @@ export class ActorSheetPF extends ActorSheet {
       options: this.options,
       editable: this.isEditable,
       cssClass: isOwner ? "editable" : "locked",
+      actorId: this.actor.id || this.actor._id,
       isCharacter: this.entity.data.type === "character",
       isPlayerEditLocked: (this.entity.data.data.lockEditingByPlayers || false) && !game.user.isGM,
       hasRace: false,

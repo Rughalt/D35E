@@ -6883,7 +6883,7 @@ export class ActorPF extends Actor {
     async groupItems() {
         let itemsToDelete = new Set()
         let itemQuantities = new Map()
-        for (let type of ['equpiment','loot','weapon']) {
+        for (let type of ['equipment','loot','weapon']) {
             let itemNames = new Set()
             let itemNamesToId = new Map()
             let equipment = this.items.filter(o => {
