@@ -42,11 +42,6 @@ export class ItemPF extends Item {
     }
 
     get hasAction() {
-        console.log(this.name, this.hasAttack
-            || this.hasDamage
-            || this.hasEffect
-            || this.hasRolltableDraw
-            || this.hasTemplate || (getProperty(this.data, "data.actionType") === "special"))
         return this.hasAttack
             || this.hasDamage
             || this.hasEffect
@@ -963,8 +958,8 @@ export class ItemPF extends Item {
                     props.push(saveType);
                 }
 
-
-                console.log('D35E | Calculated spell DC for props', saveDC)
+                //
+                // console.log('D35E | Calculated spell DC for props', saveDC)
             }
         }
 
@@ -1239,7 +1234,7 @@ export class ItemPF extends Item {
                         attackExtraParts.push(useAmmoAttack);
                     }
                     rollModifiers.push(`${useAmmoName}`)
-                    console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
+                    // console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
                 }
 
 
@@ -1493,7 +1488,7 @@ export class ItemPF extends Item {
                 })
             }
 
-            console.log('D35E | Enabled conditionals', enabledConditionals)
+            // console.log('D35E | Enabled conditionals', enabledConditionals)
             let attackEnhancementMap = new Map();
             let damageEnhancementMap = new Map();
             for (let enabledConditional of enabledConditionals) {
@@ -1565,7 +1560,7 @@ export class ItemPF extends Item {
             }
             if (rollData.featDamage) {
                 for (let dmg of Object.keys(rollData.featDamage)) {
-                    console.log('Bonus damage!', dmg, rollData.featDamage[dmg])
+                    // console.log('Bonus damage!', dmg, rollData.featDamage[dmg])
                     damageExtraParts.push(["(${this.featDamage."+dmg+"})",dmg]);
                 }
             }
@@ -1718,7 +1713,7 @@ export class ItemPF extends Item {
             // Prompt measure template
             if (useMeasureTemplate) {
 
-                console.log(`D35E | Creating measure template.`)
+                // console.log(`D35E | Creating measure template.`)
                 // Create template
                 const template = AbilityTemplate.fromItem(this, rollData.spellWidened ? 2 : 1);
                 if (template) {
@@ -1731,10 +1726,10 @@ export class ItemPF extends Item {
                 }
             }
 
-            console.log(`D35E | Updating item on attack.`)
+            // console.log(`D35E | Updating item on attack.`)
             // Deduct charge
             if (this.autoDeductCharges && !skipChargeCheck) {
-                console.log(`D35E | Deducting ${this.chargeCost} charges.`)
+                // console.log(`D35E | Deducting ${this.chargeCost} charges.`)
                 if (rollData.useAmount === undefined)
                     await this.addCharges(-1*this.chargeCost, itemUpdateData);
                 else
@@ -1762,7 +1757,7 @@ export class ItemPF extends Item {
             let rolled = false;
             if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
 
-                console.log(`D35E | Generating chat message.`)
+                // console.log(`D35E | Generating chat message.`)
                 // Get extra text and properties
                 let hasBoxInfo = this.hasAttack || this.hasDamage || this.hasEffect;
                 let attackNotes = []
@@ -1887,7 +1882,7 @@ export class ItemPF extends Item {
             conditionals: this.data.data.conditionals,
         };
         const html = await renderTemplate(template, dialogData);
-        console.log(dialogData)
+        // console.log(dialogData)
         let roll;
         const buttons = {};
         let wasRolled = false;
@@ -2045,7 +2040,7 @@ export class ItemPF extends Item {
                 spellDC.description = saveDesc;
             }
         }
-        console.log('D35E | Calculated spell DC', spellDC)
+        // console.log('D35E | Calculated spell DC', spellDC)
         return spellDC;
     }
 
@@ -2371,7 +2366,7 @@ export class ItemPF extends Item {
             }
             rolls.push(roll);
         }
-        console.log(rolls);
+        // console.log(rolls);
         return rolls;
     }
 
@@ -4059,7 +4054,7 @@ export class ItemPF extends Item {
     }
 
     get attackDescription() {
-        console.log('D35E | AB ', this.hasAttack)
+        // console.log('D35E | AB ', this.hasAttack)
         if (this.hasAttack) {
             let bab = 0;
             let attackBonus = ((this.data.data.enh || 0) ? parseInt(this.data.data.enh) : (this.data.data.masterwork ? 1 : 0)) + parseInt(this.data.data.attackBonus || "0");
@@ -4070,7 +4065,6 @@ export class ItemPF extends Item {
                     abilityBonus = parseInt(this.actor.data.data.abilities[this.data.data.ability.attack].mod)
             }
             let totalBonus = bab + attackBonus + abilityBonus;
-            console.log('D35E | AB ', `${totalBonus >= 0 ? '+'+totalBonus : totalBonus}`)
             return `${totalBonus >= 0 ? '+'+totalBonus : totalBonus}`
 
         }
@@ -4078,7 +4072,7 @@ export class ItemPF extends Item {
     }
 
     get damageDescription() {
-        console.log('D35E | DD ', this.hasDamage)
+        // console.log('D35E | DD ', this.hasDamage)
         let rollData = this.actor.getRollData();
         rollData.critMult = 1;
         rollData.item = duplicate(this.getRollData())
@@ -4086,8 +4080,14 @@ export class ItemPF extends Item {
         let results = []
         if (this.hasDamage) {
             this.data.data.damage.parts.forEach(d => {
-                let roll = new Roll(d[0].replace('@useAmount',1), rollData).roll();
-                results.push(roll.formula)
+                if (d) {
+                    try {
+                        let roll = new Roll(d[0].replace('@useAmount', 1), rollData).roll();
+                        results.push(roll.formula)
+                    } catch (e) {
+
+                    }
+                }
             })
         }
         if (this.data.data.ability.damage)
