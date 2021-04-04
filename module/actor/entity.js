@@ -1555,11 +1555,10 @@ export class ActorPF extends Actor {
             if (changeData[changeTarget] == null) return;
             if (currentChangeTarget !== changeTarget) {
                 currentChangeTarget = changeTarget;
-                console.log('D35E | Applying Changes, blacklisting roll data, starting change type', changeTarget)
+
                 // Cleaning up roll data from blacklisted stuff for this type of change
                 changeRollData = this.constructor._blacklistChangeData(this.getRollData(srcData1.data), changeTarget);
             }
-            console.log('D35E | Applying Changes, change', change.raw)
 
 
             changeRollData.item = {};
@@ -1578,7 +1577,6 @@ export class ActorPF extends Actor {
             temp.push(changeData[changeTarget]);
 
             if (allChanges.length <= a + 1 || allChanges[a + 1].raw[2] !== changeTarget) {
-                console.log('D35E | Applying Changes, change target is different, finished change type', changeTarget)
                 const newData = this._applyChanges(changeTarget, temp, srcData1);
                 this._addDynamicData(updateData, newData, flags, Object.keys(this.data.data.abilities), srcData1, false, changeTarget);
                 temp = [];
@@ -1944,7 +1942,6 @@ export class ActorPF extends Actor {
             linkData(data, updateData, "data.attributes.creatureType", getProperty(templateHD[0].data, "creatureType") || "humanoid");
         }
 
-        console.log(`D35E | Setting attributes hd total | ${data1.details.level.value}`)
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
         //linkData(data, updateData, "data.attributes.hd.racialClass", data1.details.level.value - raceLA);
 

@@ -20,7 +20,7 @@ export default function renderWelcomeScreen() {
         static get defaultOptions() {
             const options = super.defaultOptions;
             options.template = `systems/D35E/templates/welcome-screen.html`;
-            options.resizable = true;
+            options.resizable = false;
             options.width = 920;
             options.height = 730;
             options.classes = ["welcome-screen"];

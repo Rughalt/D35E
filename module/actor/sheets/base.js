@@ -1848,7 +1848,7 @@ export class ActorSheetPF extends ActorSheet {
         if (i.data.containerId)
           containerItemsWeight.set(i.data.containerId,(containerItemsWeight.get(i.data.containerId) || 0) + Math.round(i.data.quantity * i.data.weight * weightConversion * 10) / 10)
       }
-      containersMap.get(containerItem.id).itemsWeight = containerItemsWeight.get(containerItem.id) || 0
+      containersMap.get(containerItem.id).itemsWeight = Math.round((containerItemsWeight.get(containerItem.id) || 0) * 10) / 10
       containersMap.get(containerItem.id).itemsWeightPercentage = Math.min(98,Math.floor(containerItemsWeight.get(containerItem.id) / containersMap.get(containerItem.id).data.capacity * 100.0))
     }
 
