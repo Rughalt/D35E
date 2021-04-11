@@ -60,12 +60,12 @@
                     {{#each atk.cards as |card|}}
                     <div style="flex: 0;" class="flexrow">
                     <button style="height: 26px; line-height: 26px; font-size: 16px; margin-top: 20px;overflow: hidden; flex: 0 45px" data-action="{{card.action}}" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
-                            data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}}  {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
+                            data-material="{{card.material}}" data-incorporeal="{{card.incorporeal}}"  data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}}  {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
                         {{card.label}}
                     </button>
                     {{#if ../../dc.isHalf}}
                     <button style="height: 26px; line-height: 26px; font-size: 16px; margin-top: 20px;overflow: hidden; flex: 0 45px" data-action="{{card.action}}Half" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
-                            data-material="{{card.material}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}} {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
+                            data-material="{{card.material}}" data-incorporeal="{{card.incorporeal}}" data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}} {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
                         {{card.label}} ½
                     </button>
                     {{/if}}

@@ -15,19 +15,20 @@ export class DamageTypes {
 
     static getBaseDRDamageTypes() {
         let damageTypes = [
-            {uid: 'any', name: game.i18n.localize("D35E.DRNonPenetrable"), value: 0},
-            {uid: 'good', name: game.i18n.localize("D35E.AlignmentGood"), value: 0, or: false, lethal: false},
-            {uid: 'evil', name: game.i18n.localize("D35E.AlignmentEvil"), value: 0, or: false, lethal: false},
-            {uid: 'chaotic', name: game.i18n.localize("D35E.AlignmentChaotic"), value: 0, or: false, lethal: false},
-            {uid: 'lawful', name: game.i18n.localize("D35E.AlignmentLawful"), value: 0, or: false, lethal: false},
-            {uid: 'slashing', name: game.i18n.localize("D35E.DRSlashing"), value: 0, or: false, lethal: false},
-            {uid: 'bludgeoning', name: game.i18n.localize("D35E.DRBludgeoning"), value: 0, or: false, lethal: false},
-            {uid: 'piercing', name: game.i18n.localize("D35E.DRPiercing"), value: 0, or: false, lethal: false},
-            {uid: 'epic', name: game.i18n.localize("D35E.DREpic"), value: 0, or: false, lethal: false},
-            {uid: 'magic', name: game.i18n.localize("D35E.DRMagic"), value: 0, or: false, lethal: false},
-            {uid: 'silver', name: game.i18n.localize("D35E.DRSilver"), value: 0, or: false, lethal: false},
-            {uid: 'adamantine', name: game.i18n.localize("D35E.DRAdamantine"), value: 0, or: false, lethal: false},
-            {uid: 'coldiron', name: game.i18n.localize("D35E.DRColdIron"), value: 0, or: false, lethal: false}]
+            {uid: 'any', name: game.i18n.localize("D35E.DRNonPenetrable"), value: 0, immunity: false},
+            {uid: 'good', name: game.i18n.localize("D35E.AlignmentGood"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'evil', name: game.i18n.localize("D35E.AlignmentEvil"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'chaotic', name: game.i18n.localize("D35E.AlignmentChaotic"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'lawful', name: game.i18n.localize("D35E.AlignmentLawful"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'slashing', name: game.i18n.localize("D35E.DRSlashing"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'bludgeoning', name: game.i18n.localize("D35E.DRBludgeoning"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'piercing', name: game.i18n.localize("D35E.DRPiercing"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'epic', name: game.i18n.localize("D35E.DREpic"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'magic', name: game.i18n.localize("D35E.DRMagic"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'silver', name: game.i18n.localize("D35E.DRSilver"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'adamantine', name: game.i18n.localize("D35E.DRAdamantine"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'coldiron', name: game.i18n.localize("D35E.DRColdIron"), value: 0, or: false, lethal: false, immunity: false},
+            {uid: 'incorporeal', name: game.i18n.localize("D35E.Incorporeal"), value: 0, or: false, lethal: false, immunity: false}]
         return damageTypes;
     }
 
@@ -47,6 +48,7 @@ export class DamageTypes {
             type.value = t.value;
             type.or = t.or;
             type.lethal = t.lethal;
+            type.immunity = t.immunity;
         })
         return damageTypes;
     }
@@ -72,6 +74,7 @@ export class DamageTypes {
         let and = game.i18n.localize("D35E.and")
         let DR = game.i18n.localize("D35E.DR")
         let lethal = game.i18n.localize("D35E.LethalDamageFrom")
+        let immune = game.i18n.localize("D35E.Immunity")
         let drParts = [];
         let drOrParts = [];
         let orValue = 0;
@@ -81,7 +84,15 @@ export class DamageTypes {
         dr.forEach(t => {
             if (t.uid === "any") return;
             let drType = DamageTypes.getDamageTypeForUID(dr,t.uid)
-            if (drType.value > 0) {
+            if (drType.immunity) {
+                if (drType.or) {
+                    drOrParts.push(`${drType.name}`)
+                    orValue = immune;
+                } else {
+                    drParts.push(`${DR} ${immune}/${drType.name}`)
+                }
+            }
+            else if (drType.value > 0) {
                 if (drType.or) {
                     drOrParts.push(`${drType.name}`)
                     orValue = drType.value
@@ -175,9 +186,9 @@ export class DamageTypes {
     /**
      * Damage Calculation
      */
-    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal,noPrecision) {
+    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal,noPrecision,incorporeal) {
         let er = DamageTypes.getERForActor(actor).filter(d => d.value > 0 || d.vulnerable || d.immunity || d.lethal);
-        let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0 || d.lethal);
+        let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0 || d.lethal || d.immunity);
         let hasRegeneration = !!actor.data.data.traits.regen;
         let nonLethalDamage = 0;
         let bypassedDr = new Set()
@@ -193,6 +204,8 @@ export class DamageTypes {
             bypassedDr.add("lawful");
         if (alignment?.chaotic)
             bypassedDr.add("chaotic");
+        if (incorporeal)
+            bypassedDr.add("incorporeal");
         if (material?.data?.isAdamantineEquivalent)
             bypassedDr.add("adamantine");
         if (material?.data?.isAlchemicalSilverEquivalent)
@@ -241,8 +254,8 @@ export class DamageTypes {
         }
         let highestDr = 0;
         let appliedDr = null
-        finalDr.forEach(d => {if (d.value > highestDr) {
-            highestDr = d.value;
+        finalDr.forEach(d => {if (d.immunity || d.value > highestDr) {
+            highestDr = d.immunity ? 65536 : d.value ;
             appliedDr = d;
         }});
         let damageAfterDr = Math.max(damageBeforeDr - highestDr,0);

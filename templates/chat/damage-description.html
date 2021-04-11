@@ -247,7 +247,7 @@
                     <h4 style="flex:100px;line-height:26px;margin:0;border: unset;text-align: unset;background: unset;box-shadow: unset;font-size: unset;font-weight: unset;"
                         class="dice-total">
                         {{#if damageData.appliedDR.name}}
-                        {{localize "D35E.DR"}} {{damageData.appliedDR.value}}/{{damageData.appliedDR.name}}
+                        {{localize "D35E.DR"}} {{#if damageData.appliedDR.value}}{{damageData.appliedDR.value}}{{else}}{{localize "D35E.Immunity"}}{{/if}}/{{damageData.appliedDR.name}}
                         {{else}}
                         {{localize "D35E.NoDR"}}
                         {{/if}}

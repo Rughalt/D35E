@@ -1414,6 +1414,14 @@
   "D35E.DropRolltable": "Drop Roll Table",
   "D35E.ResourceNeedDropFromCompendium": "Dropped item must come from Compendium",
 
+  "D35E.Incorporeal": "Incorporeal",
+  "D35E.SpellslotAbility": "Bonus Spell Slot Ability",
+  "D35E.Thrown": "Thrown",
+  "D35E.Returning": "Returning",
+  "D35E.WeaponTreatAsMagic": "Treat as Magic for purpose of DR",
+  "D35E.WeaponTreatAsEpic": "Treat as Epic for purpose of DR",
+  "D35E.ClassHasUnmetRequirements": "This class has unmet requirements",
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",

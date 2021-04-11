@@ -1,29 +1,37 @@
-{{#if formula}}
-<div class="dice-roll">
-  {{#if flavor}}
-  <div class="dice-flavor">{{flavor}}</div>
-  {{/if}}
-  <div class="dice-result">
-      <div class="dice-formula">{{formula}}</div>
-      {{{tooltip}}}
-      <h4 class="dice-total{{#if isCrit}} success{{/if}}{{#if isFumble}} failure{{/if}}">{{total}}</h4>
-  </div>
-</div>
-{{/if}}
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+    {{#if title}}
+    <header class="card-header flexrow">
+        <h3 class="item-name">{{title}}</h3>
+    </header>
+    {{/if}}
+    {{#if formula}}
+    <div class="dice-roll">
+      {{#if flavor}}
+      <div class="dice-flavor">{{flavor}}</div>
+      {{/if}}
+      <div class="dice-result">
+          <div class="dice-formula">{{formula}}</div>
+          {{{tooltip}}}
+          <h4 class="dice-total{{#if isCrit}} success{{/if}}{{#if isFumble}} failure{{/if}}">{{total}}</h4>
+      </div>
+    </div>
+    {{/if}}
 
-{{#if hasExtraText}}
-<div class="extra-text gm-sensitive">{{{extraText}}}</div>
-{{/if}}
+    {{#if hasExtraText}}
+    <div class="extra-text gm-sensitive">{{{extraText}}}</div>
+    {{/if}}
 
-{{#if hasProperties}}
-{{#each properties as |prop|}}
-<div class="flexcol property-group gm-sensitive">
-  <label>{{prop.header}}</label>
-  <div class="flexrow">
-    {{#each prop.value as |v|}}
-    <span class="tag">{{{v}}}</span>
+    {{#if hasProperties}}
+    {{#each properties as |prop|}}
+    <div class="flexcol property-group gm-sensitive">
+      <label>{{prop.header}}</label>
+      <div class="flexrow">
+        {{#each prop.value as |v|}}
+        <span class="tag">{{{v}}}</span>
+        {{/each}}
+      </div>
+    </div>
     {{/each}}
-  </div>
+    {{/if}}
 </div>
-{{/each}}
-{{/if}}

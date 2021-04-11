@@ -207,7 +207,7 @@
                 </h4>
                 <div class="attribute-value multiple">
                   <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}"
-                         data-dtype="Number" placeholder="10"/>
+                         data-dtype="String" placeholder="10"/>
                   <span class="sep"> / </span>
                   <div class="attribute">{{data.attributes.hp.max}}</div>
                 </div>
@@ -469,6 +469,16 @@
             <span style="flex: 0 80px; text-align: end">{{ localize 'D35E.Total' }}: </span>
             <input style="flex: 0 30px" disabled type="text"
                    value="{{data.attributes.fortification.total}}"/>
+          </div>
+        </div>
+        <div class="traits">
+          <div class="form-group">
+            <label>{{ localize 'D35E.Concealment' }}</label>
+            <input style="width: calc(100% - 60px);" name="data.attributes.concealment.value" type="text" placeholder="{{ localize 'D35E.Value' }}"  data-dtype="Number"
+                   value="{{#if data.attributes.concealment.value}}{{data.attributes.concealment.value}}{{/if}}"/>
+            <span style="flex: 0 80px; text-align: end">{{ localize 'D35E.Total' }}: </span>
+            <input style="flex: 0 30px" disabled type="text"
+                   value="{{data.attributes.concealment.total}}"/>
           </div>
         </div>
           <div class="traits">

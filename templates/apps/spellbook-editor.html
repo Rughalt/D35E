@@ -48,6 +48,18 @@
                 {{/select}}
             </select>
         </div>
+
+        <div class="form-group spellslot-ability flexrow">
+            <label><span>{{localize "D35E.SpellslotAbility"}}</span></label>
+            <select name="spellslotAbility" data-dtype="String">
+                {{#select spellbook.spellslotAbility}}
+                <option value="">{{localize "D35E.SpellcastingAbility"}}</option>
+                {{#each config.abilities as |abl a|}}
+                <option value="{{a}}">{{abl}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
             <div class="flexrow formulas form-group">
             <label><span>{{localize "D35E.BaseDCFormula"}}</span></label>
             <input type="text" name="baseDCFormula"
@@ -96,6 +108,18 @@
             <select name="ability" data-dtype="String" disabled>
                 {{#select spellbook.ability}}
                 <option value="">{{localize "D35E.None"}}</option>
+                {{#each config.abilities as |abl a|}}
+                <option value="{{a}}">{{abl}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+
+        <div class="form-group spellslot-ability flexrow">
+            <label><span>{{localize "D35E.SpellslotAbility"}}</span></label>
+            <select name="spellslotAbility" data-dtype="String" disabled>
+                {{#select spellbook.spellslotAbility}}
+                <option value="">{{localize "D35E.SpellcastingAbility"}}</option>
                 {{#each config.abilities as |abl a|}}
                 <option value="{{a}}">{{abl}}</option>
                 {{/each}}

@@ -519,7 +519,17 @@
                                 {{/select}}
                             </select>
                         </div>
-
+                        <div class="form-group spellcasting-ability flexrow">
+                            <label><span>{{localize "D35E.SpellslotAbility"}}</span></label>
+                            <select name="data.spellslotAbility" data-dtype="String">
+                                {{#select data.spellslotAbility}}
+                                <option value="">{{localize "D35E.SpellcastingAbility"}}</option>
+                                {{#each config.abilities as |abl a|}}
+                                <option value="{{a}}">{{abl}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
                         <div class="data-selector">
                             <div class="form-group">
                                 <label>{{localize "D35E.SpellsPerLevel"}}</label><a class="entry-selector" for="data.spellsPerLevel"

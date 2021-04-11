@@ -302,6 +302,11 @@ export class ItemPF extends Item {
             labels.components = Object.entries(data.components).map(c => {
                 c[1] === true ? c[0].titleCase().slice(0, 1) : null
             }).filterJoin(",");
+            if (this.actor) {
+                let spellbook  = this.actor?.data?.data?.attributes?.spells.spellbooks[data.spellbook]
+                if (spellbook)
+                    data.spellbookData = {class: spellbook.class,name: spellbook.name}
+            }
         }
 
         // Feat Items
@@ -851,7 +856,7 @@ export class ItemPF extends Item {
             if (this.actor) {
                 let allCombatChanges = []
                 let attackType = this.type;
-                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
+                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.batChange(attackType, rollData)).forEach(i => {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                 })
 
@@ -1523,7 +1528,7 @@ export class ItemPF extends Item {
             // Getting all combat changes from items
             let allCombatChanges = []
             let attackType = this.type;
-            actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active))).forEach(i => {
+            actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                     rollModifiers.push(`${i.name}`)
@@ -1735,7 +1740,7 @@ export class ItemPF extends Item {
                 else
                     await this.addCharges(-1 * parseFloat(rollData.useAmount)*this.chargeCost, itemUpdateData);
             }
-            if (useAmmoId !== "none" && actor !== null) {
+            if (useAmmoId !== "none" && actor !== null && !this.data.data.returning) {
                 await actor.quickChangeItemQuantity(useAmmoId, -1 * attacks.length * (1 + Math.max(0,manyshotCount - 1)))
             }
             // Update item
@@ -1877,8 +1882,8 @@ export class ItemPF extends Item {
             canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
             canFlurryOfBlows: actor.items.filter(o => o.type === "feat" && (o.name === "Flurry of Blows" || o.data.data.customTag === "flurryOfBlows")).length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
-            weaponFeats: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(this.type,rollData)),
-            weaponFeatsOptional: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active)) && o.hasCombatChange(`${this.type}Optional`,rollData)),
+            weaponFeats: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.hasCombatChange(this.type,rollData)),
+            weaponFeatsOptional: actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.hasCombatChange(`${this.type}Optional`,rollData)),
             conditionals: this.data.data.conditionals,
         };
         const html = await renderTemplate(template, dialogData);
@@ -1933,7 +1938,7 @@ export class ItemPF extends Item {
         for (const c of allCombatChanges) {
             if (c[5] && c[5] !== "0") {
                 if (c[9] && attackId !== 0) continue;
-                await attack.addCommandAsSpecial(c[7], c[8], c[5], actor, rollData.useAmount || 1, rollData.cl, optionalFeatRanges.get(c[6]) || 0);
+                await attack.addCommandAsSpecial(c[7], c[8], c[5], actor, rollData.useAmount || 1, rollData.cl, optionalFeatRanges.get(c[6])?.base || 0);
             }
         }
     }
@@ -1948,7 +1953,7 @@ export class ItemPF extends Item {
             if (this.actor) {
                 let allCombatChanges = []
                 let attackType = this.type;
-                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
+                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                 })
 
@@ -2573,8 +2578,9 @@ export class ItemPF extends Item {
             const attackerToken = button.dataset.attackertoken;
             const attacker = button.dataset.attacker;
             const ammoId = button.dataset.ammoid;
+            const incorporeal = button.dataset.incorporeal;
             event.applyHalf = action === "applyDamageHalf";
-            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage,null,attacker,attackerToken,ammoId);
+            ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage,null,attacker,attackerToken,ammoId,incorporeal);
         } else if (action === "applyHealing") {
             const value = button.dataset.value;
             ActorPF.applyDamage(event,roll,null,null,null,null,null,value,null,null,null,null,false,true);
@@ -4044,7 +4050,7 @@ export class ItemPF extends Item {
                     unmetRequirements.push(_requirement[0] || (game.i18n.localize("D35E.BAB") + " " + _requirement[1]))
                 }
             } else {
-                if (rollData.abilities[_requirement[2]].value < parseInt(_requirement[1])) {
+                if (_requirement[2] && rollData.abilities[_requirement[2]].value < parseInt(_requirement[1])) {
 
                     unmetRequirements.push(_requirement[0] || (game.i18n.localize(`D35E.Ability${this.capitalizeFirstLetter(_requirement[2])}`) + " " + _requirement[1]))
                 }

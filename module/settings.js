@@ -1,5 +1,6 @@
 import { HealthConfig } from "./config/health.js";
 import { isMinimumCoreVersion } from "./lib.js";
+import {CurrencyConfig} from "./config/currency.js";
 
 export const registerSystemSettings = function() {
   /**
@@ -25,6 +26,18 @@ export const registerSystemSettings = function() {
     }
   );
 
+
+  game.settings.registerMenu(isMinimumCoreVersion("0.5.6") ? "D35E" : "system",
+      "currencyConfig", {
+        name: "SETTINGS.D35ECurrencyConfigName",
+        label: "SETTINGS.D35ECurrencyConfigLabel",
+        hint: "SETTINGS.D35ECurrencyConfigHint",
+        icon: "fas fa-coins",
+        type: CurrencyConfig,
+        restricted: true
+      }
+  );
+
   game.settings.register("D35E", "healthConfig", {
     name: "SETTINGS.D35EHealthConfigName",
     scope: "world",
@@ -37,6 +50,17 @@ export const registerSystemSettings = function() {
     }
   });
 
+  game.settings.register("D35E", "currencyConfig", {
+    name: "SETTINGS.D35ECurrencyConfigName",
+    scope: "world",
+    default: CurrencyConfig.defaultSettings,
+    type: Object,
+    config: false,
+    onChange: () => {
+      game.actors.entities.forEach(o => { o.update({}); });
+      Object.values(game.actors.tokens).forEach(o => { o.update({}); });
+    }
+  });
 
 
   game.settings.register("D35E", "autosizeWeapons", {

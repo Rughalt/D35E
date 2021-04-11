@@ -359,6 +359,9 @@
         {{/each}}
         {{/select}}
       </select>
+      <label class="checkbox">
+        <input type="checkbox" name="data.resistances.{{a}}.2" {{checked (lookup this "2")}}/> {{ localize "D35E.Immunity" }}
+      </label>
       <a class="dr-control delete-change"><i class="fas fa-minus"></i></a>
     </li>
     {{/each}}

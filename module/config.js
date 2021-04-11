@@ -853,6 +853,7 @@ D35E.weaponProperties = {
   "nnl": "D35E.WeaponPropNonLethal",
   "prf": "D35E.WeaponPropPerformance",
   "rch": "D35E.WeaponPropReach",
+  "ret": "D35E.Returning",
   "snd": "D35E.WeaponPropSunder",
   "thr": "D35E.WeaponPropThrown",
   "trp": "D35E.WeaponPropTrip",
@@ -1090,7 +1091,8 @@ D35E.buffTargets = {
     "spellResistance": "D35E.SpellResistance",
     "cr": "D35E.CR",
     "fortification": "D35E.Fortification",
-    "asf": "D35E.ArcaneSpellFailure"
+    "asf": "D35E.ArcaneSpellFailure",
+    "concealment": "D35E.Concealment"
   },
   "prestigeCl": {
     "_label": "D35E.PrestigeCl",

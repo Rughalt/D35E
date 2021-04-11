@@ -25,6 +25,19 @@
         {{/each}}
     </ol>
     {{/if}}
+    {{#each currencyGroups as |c k|}}
+    <ol class="currency flexrow">
+        <h3>
+            {{ k }}
+            <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
+        </h3>
+        {{#each c as |curr|}}
+        <label class="denomination {{k}}">{{ lookup curr 1 }}</label>
+        <input type="text" name="data.customCurrency.{{lookup curr 0}}" value="{{lookup ../../data.customCurrency (lookup curr 0)}}" data-dtype="Number"/>
+        {{/each}}
+    </ol>
+    {{/each}}
+
 </div>
 <div class="flexrow" style="flex: 0"><h2 class="block-header" style="flex: 1">{{ localize
     'D35E.Items'}}</h2><a

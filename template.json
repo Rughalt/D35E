@@ -138,6 +138,10 @@
               "total": 10
             }
           },
+          "concealment": {
+            "value": 0,
+            "total": 0
+          },
           "bab": {
             "value": 0,
             "total": 0,
@@ -307,6 +311,7 @@
                 "concentrationNotes": "",
                 "clNotes": "",
                 "ability": "int",
+                "spellslotAbility": "",
                 "autoSpellLevels": true,
                 "usePowerPoints": false,
                 "autoSetup": true,
@@ -577,9 +582,9 @@
           },
           "dev": {
             "value": 0,
-            "ability": "dex",
+            "ability": "int",
             "rt": true,
-            "acp": true,
+            "acp": false,
             "rank": 0,
             "notes": "",
             "mod": 0,
@@ -1055,6 +1060,7 @@
           "sp": 0,
           "cp": 0
         },
+        "customCurrency": {},
         "noLightOverride": false,
         "noTokenOverride": false,
         "lockEditingByPlayers": false
@@ -1433,6 +1439,7 @@
       "hasSpecialSlot": false,
       "spellPointGroup": "wizard",
       "spellcastingAbility": "int",
+      "spellslotAbility": "",
       "spellPointBonusFormula": "0",
       "spellPointTable": {
         "1": 0,
@@ -1921,6 +1928,7 @@
       "threatRangeExtended": false,
       "finesseable": false,
       "enh": null,
+      "incorporeal": false,
       "proficient": true,
       "primaryAttack": true,
       "showInQuickbar": true,
@@ -1935,6 +1943,9 @@
       "conditionals": [],
       "favorite": true,
       "thrown": false,
+      "returning": false,
+      "magic": false,
+      "epic": false,
       "alignment": {
         "good": false,
         "evil": false,

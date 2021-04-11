@@ -105,7 +105,7 @@ export class ActorSheetPF extends ActorSheet {
       i.data.range = i.type === "attack" ? i.range : "";
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
       i.data.showUnidentifiedData = i.showUnidentifiedData;
-      i.data.unmetRequirements = i.hasUnmetRequirements(featRollData);
+      i.data.unmetRequirements = (i.type === "feat" || i.type === "class") ? i.hasUnmetRequirements(featRollData) : false;
       if (i.showUnidentifiedData) i.data.name = getProperty(i.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
       else i.data.name = getProperty(i.data, "data.identifiedName") || i.data.name;
       return i.data;
@@ -282,6 +282,14 @@ export class ActorSheetPF extends ActorSheet {
 
     // Fetch the game settings relevant to sheet rendering.
     data.healthConfig =  game.settings.get("D35E", "healthConfig");
+    data.currencyConfig =  game.settings.get("D35E", "currencyConfig");
+    data.currencyGroups = {}
+    data.currencyConfig.currency.forEach(c => {
+        if (!data.currencyGroups[c[4]]) {
+          data.currencyGroups[c[4]] = []
+        }
+       data.currencyGroups[c[4]].push(c);
+    })
 
     // Return data to the sheet
     return data
@@ -1120,24 +1128,26 @@ export class ActorSheetPF extends ActorSheet {
   _onItemSummary(event) {
     event.preventDefault();
     let li = $(event.currentTarget).closest(".item"),
-        item = this.actor.getOwnedItem(li.attr("data-item-id")),
-        chatData = item.getChatData({secrets: this.actor.owner});
+        item = this.actor.getOwnedItem(li.attr("data-item-id"))
 
     // Toggle summary
     if ( li.hasClass("expanded") ) {
       let summary = li.children(".item-summary");
       summary.slideUp(200, () => summary.remove());
     } else {
-      let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
-      let subElements = $(`<ul class="item-enh-list"></ul>`);
-      let props = $(`<div class="item-properties"></div>`);
-      chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
-      if (!item.showUnidentifiedData) {
-        console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
-        (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
-          let enh = new ItemPF(_enh, {owner: this.owner})
-          if (enh.hasAction || enh.isCharged) {
-            let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
+      let summary = li.children(".item-summary");
+      if (!summary.length && item) {
+        let chatData = item.getChatData({secrets: this.actor.owner});
+        let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
+        let subElements = $(`<ul class="item-enh-list"></ul>`);
+        let props = $(`<div class="item-properties"></div>`);
+        chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
+        if (!item.showUnidentifiedData) {
+          console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
+          (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
+            let enh = new ItemPF(_enh, {owner: this.owner})
+            if (enh.hasAction || enh.isCharged) {
+              let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
@@ -1150,8 +1160,8 @@ export class ActorSheetPF extends ActorSheet {
                                                                      src="systems/D35E/icons/actions/gladius.svg"></a>
                         </div>
                     </div>` +
-                (item.data.data.enhancements.uses.commonPool ? (
-                    `
+                  (item.data.data.enhancements.uses.commonPool ? (
+                      `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
                         <input type="text" class="uses" disabled value="${item.data.data.enhancements.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
@@ -1162,7 +1172,7 @@ export class ActorSheetPF extends ActorSheet {
                     </div>
 
                 </li>`
-                ) : (enh.isCharged ? `
+                  ) : (enh.isCharged ? `
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
                         <input type="text" class="uses" disabled value="${enh.data.data.uses.value}" data-dtype="Number"/>
                         <span class="sep"> of </span>
@@ -1173,17 +1183,21 @@ export class ActorSheetPF extends ActorSheet {
                     </div>
 
                 </li>` : `</li>`))
-            subElements.append(enhString)
-          }
-        })
-        div.append(subElements);
-      }
-      div.append(props);
+              subElements.append(enhString)
+            }
+          })
+          div.append(subElements);
+        }
+        div.append(props);
 
-      div.find(".item-enh-attack").mouseup(ev => this._quickItemEnhActionControl(ev));
-      div.find(".item-enh-image").mouseup(ev => this._onEnhRoll(ev));
-      li.append(div.hide());
-      div.slideDown(200);
+        div.find(".item-enh-attack").mouseup(ev => this._quickItemEnhActionControl(ev));
+        div.find(".item-enh-image").mouseup(ev => this._onEnhRoll(ev));
+        li.append(div.hide());
+        div.slideDown(200);
+      } else {
+        summary.slideDown(200);
+      }
+
 
     }
     li.toggleClass("expanded");
@@ -1771,7 +1785,7 @@ export class ActorSheetPF extends ActorSheet {
 
       return arr;
     }, [[], [], [], [], []]);
-
+    data.totalInventoryValue += this.actor.mergeCurrency();
     data.totalInventoryValue = data.totalInventoryValue.toFixed(2)
 
     items.forEach(c => {
@@ -1889,6 +1903,7 @@ export class ActorSheetPF extends ActorSheet {
     features.classes.items = classes;
     classes.forEach(c => {
       c['classFeatures'] = classFeaturesMap.get(c.name) || []
+      c['passiveClassFeatures'] = c.data.nonActiveClassAbilities.filter(a => parseInt(a[0]) <= parseInt(c.levels || "0")).map(a => {return {level: a[0], name: a[1], description: a[2]};})
     })
     // Buffs
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });

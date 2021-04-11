@@ -154,6 +154,19 @@
     </ul>
 
     <ul class="attributes misc-base flexrow">
+    <li class="attribute sr high tooltip" data-attribute="sr">
+      <h4 class="attribute-name box-title">{{ localize 'D35E.NaturalArmor' }}</h4>
+
+      <div class="attribute-value">
+        <span>{{data.attributes.naturalACTotal}}</span>
+      </div>
+      <footer class="attribute-footer">
+        <input name="data.attributes.naturalAC" type="text" placeholder="0"
+               value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}" data-dtype="Number"/>
+      </footer>
+    </li>
+    </ul>
+    <ul class="attributes misc-base flexrow">
       <li class="attribute sr high tooltip" data-attribute="sr">
         <h4 class="attribute-name box-title">{{ localize 'D35E.FastHealing' }}</h4>
         <div class="attribute-value">
@@ -178,17 +191,6 @@
     </ul>
     <ul class="attributes misc-base flexrow">
       <li class="attribute sr high tooltip" data-attribute="sr">
-        <h4 class="attribute-name box-title">{{ localize 'D35E.NaturalArmorShort' }}</h4>
-
-        <div class="attribute-value">
-          <span>{{data.attributes.naturalACTotal}}</span>
-        </div>
-        <footer class="attribute-footer">
-          <input name="data.attributes.naturalAC" type="text" placeholder="0"
-                 value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}" data-dtype="Number"/>
-        </footer>
-      </li>
-      <li class="attribute sr high tooltip" data-attribute="sr">
         <div class="tooltipcontent">
           @attributes.fortification.total : {{data.attributes.fortification.total}}
         </div>
@@ -199,6 +201,19 @@
         <footer class="attribute-footer">
           <input name="data.attributes.fortification.value" type="text" placeholder="{{ localize 'D35E.Value' }}"
                  value="{{#if data.attributes.fortification.value}}{{data.attributes.fortification.value}}{{/if}}" data-dtype="Number"/>
+        </footer>
+      </li>
+      <li class="attribute sr high tooltip" data-attribute="mc">
+        <div class="tooltipcontent">
+          @attributes.concealment.total : {{data.attributes.concealment.total}}
+        </div>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.Concealment' }}</h4>
+        <div class="attribute-value">
+          <span>{{data.attributes.concealment.total}}</span>
+        </div>
+        <footer class="attribute-footer">
+          <input name="data.attributes.concealment.value" type="text" placeholder="{{ localize 'D35E.Value' }}"
+                 value="{{#if data.attributes.concealment.value}}{{data.attributes.concealment.value}}{{/if}}" data-dtype="Number"/>
         </footer>
       </li>
     </ul>

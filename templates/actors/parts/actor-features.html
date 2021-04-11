@@ -162,11 +162,24 @@
           <div class="item-name flexrow">
             <div class="item-image class-icon rollable" style="background-image: url('{{item.img}}')"></div>
             <div class="flexcol">
-              <h2 class="block-header" style="margin: 0; font-size: 2rem;">{{item.name}}</h2>
+              <h2 class="block-header" style="margin: 0; font-size: 2rem;">
+                {{item.name}}
+              </h2>
               <div class="flexrow">
                 <span style="flex: none; margin-right: 10px"><strong>{{ localize 'D35E.HD' }}:</strong> {{item.data.hd}}</span>
                 <span style="flex: none; margin-right: 10px"><strong>{{ localize 'D35E.SkillPointsPerLevel' }}:</strong> {{item.data.skillsPerLevel}}</span>
                 <span style="flex: none; margin-right: 10px"><strong>{{ localize 'D35E.BABAbbr' }}:</strong> {{item.data.bab}}</span>
+
+                {{#if item.unmetRequirements}}
+                <span class="tooltip" style="flex: none; margin-right: 10px; color: darkred"><strong>{{ localize 'D35E.ClassHasUnmetRequirements' }}</strong>
+                  <div class="tooltipcontent">{{{ localize 'D35E.ClassHasUnmetRequirements' }}}
+
+                    {{#each item.unmetRequirements as |req|}}
+                    <p>{{req}}</p>
+                    {{/each}}
+                  </div>
+                </span>
+                {{/if}}
               </div>
               <p></p>
             </div>
@@ -287,6 +300,37 @@
               </li>
               {{else}}
               <h3  class="sublist-empty">{{ localize 'D35E.ClassNoFeatures' }}</h3>
+              {{/each}}
+            </ol>
+          </div>
+          <div class="item-summary" style="border-top: none; border-bottom: 1px solid #c9c7b8;">
+            <h3 class="block-header" onclick="$('.item-list-class-passive-{{iid}}').slideToggle(); $('.item-list-h-passive-{{iid}}').toggle(); $('.item-list-s-passive-{{iid}}').toggle();">
+              {{ localize 'D35E.NonActiveClassAbilities' }}
+              <span class="item-list-s-passive-{{iid}}" style="margin-left: 4px; opacity: 0.7"><i class="fas fa-angle-double-down"></i></span>
+              <span class="item-list-h-passive-{{iid}}" style="margin-left: 4px;display: none; opacity: 0.7"><i class="fas fa-angle-double-up"></i></span></h3>
+            <ol class="item-list item-list-class-passive-{{iid}}">
+              {{#each item.passiveClassFeatures as |iitem|}}
+              <li class="item flexrow" data-item-id="{{iitem._id}}">
+                <div class="item-name flexrow">
+                  <div class="item-image non-rollable" style="background-image: url('systems/D35E/icons/special-abilities/imported.png')"></div>
+                  <h4>{{iitem.name}}</h4>
+                </div>
+
+                <div class="item-detail item-actions">
+                  <div class="item-attack">
+                  </div>
+                </div>
+
+                <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                </div>
+                <div class="item-detail item-usage">
+                  <em style="opacity: 0.8">{{localize 'D35E.Level'}} {{iitem.level}}</em>
+                </div>
+                <div class="item-summary" style="display: none">{{{iitem.description}}}</div>
+              </li>
+
+              {{else}}
+              <h3  class="sublist-empty">{{localize 'D35E.No'}} {{ localize 'D35E.NonActiveClassAbilities' }}</h3>
               {{/each}}
             </ol>
           </div>

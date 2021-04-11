@@ -191,6 +191,24 @@
             else {
                 $('#hp-input').val(getRandomInt(1, hd))
             }
+            createChatDataForHPRoll()
+        }
+
+        async function createChatDataForHPRoll() {
+            const chatTemplate = "systems/D35E/templates/chat/roll-ext.html";
+
+            let hd = parseInt($('#hd').val() || 0)
+            let hp = $('#hp-input').val() || 0
+            let chatData = {
+                user: game.user._id,
+                type: CONST.CHAT_MESSAGE_TYPES.CHAT,
+                sound: CONFIG.sounds.dice,
+                speaker: ChatMessage.getSpeaker({actor: game.actors.get("{{actor.id}}")}),
+                rollMode: "gmroll",
+            };
+            let chatTemplateData = {flavor: 'HP Roll', formula: `1d${hd}`, total: hp, title: '{{actor.name}} rolls for HP'}
+            chatData.content = await renderTemplate(chatTemplate, chatTemplateData);
+            ChatMessage.create(chatData)
         }
 
         {

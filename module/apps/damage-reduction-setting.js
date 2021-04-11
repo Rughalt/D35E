@@ -82,6 +82,9 @@ export class DamageReductionSetting extends FormApplication {
         } else if (key.startsWith("dr-lethal-")) {
             let dr = key.replace("dr-lethal-", "")
             DamageTypes.getDamageTypeForUID(this.damageReduction, dr).lethal = data;
+        } else if (key.startsWith("dr-immunity-")) {
+            let dr = key.replace("dr-immunity-", "")
+            DamageTypes.getDamageTypeForUID(this.damageReduction, dr).immunity = data;
         } else if (key.startsWith("er-value-")) {
             let dr = key.replace("er-value-", "")
             DamageTypes.getDamageTypeForUID(this.energyResistance, dr).value = parseInt(data);

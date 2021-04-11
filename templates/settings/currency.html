@@ -1,0 +1,25 @@
+<form autocomplete="off" onsubmit="event.preventDefault();">
+
+    <table>
+        <thead>
+        {{#each fields as |v|}}
+        <th>{{v}}</th>
+        {{/each}}
+        <th class="entry-control"><a class="entry-control add-entry"><i class="fas fa-plus"></i></a></th>
+        </thead>
+        <tbody>
+        {{#each entries as |entry index|}}
+        <tr class="entry" data-index="{{index}}">
+            {{#each entry as |v k|}}
+            {{#with v}}
+            <td><input type="text" data-index="{{k}}" value="{{0}}" data-dtype="{{1}}" name="{{index}}-{{k}}" /></td>
+            {{/with}}
+            {{/each}}
+            <td class="entry-control"><a class="entry-control delete-entry"><i class="fas fa-minus"></i></a></td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.UpdateItem"}}</button>
+</form>

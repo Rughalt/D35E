@@ -207,6 +207,7 @@ export class ItemSheetPF extends ItemSheet {
 
         // Prepare equipment specific stuff
         if (data.item.type === "equipment") {
+            data.hasCombatChanges = true;
             // Prepare categories for equipment
             data.equipmentCategories = {types: {}, subTypes: {}};
             for (let [k, v] of Object.entries(CONFIG.D35E.equipmentTypes)) {
@@ -383,6 +384,7 @@ export class ItemSheetPF extends ItemSheet {
                 data.abilities[a] = {}
                 data.abilities[a].label = s;
             }
+            data.hasRequirements = true;
             data.hasMaxLevel = data.data.maxLevel !== undefined && data.data.maxLevel !== null && data.data.maxLevel !== "" && data.data.maxLevel !== 0;
             data.isBaseClass = data.data.classType === "base";
             data.isRacialHD = data.data.classType === "racial";
@@ -1330,7 +1332,7 @@ export class ItemSheetPF extends ItemSheet {
             //await this._onSubmit(event);  // Submit any unsaved changes
             const changes = this.item.data.data.damageReduction || [];
             // Combat Changes are
-            return this.item.update({"data.damageReduction": changes.concat([["", ""]])});
+            return this.item.update({"data.damageReduction": changes.concat([["", "", false]])});
         }
 
         // Remove a change
@@ -1998,6 +2000,7 @@ export class ItemSheetPF extends ItemSheet {
             return this.item.update({ "data.conditionals": conditionals });
         }
     }
+
 
 
 }

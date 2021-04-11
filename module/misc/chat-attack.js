@@ -268,12 +268,13 @@ export class ChatAttack {
             data: JSON.stringify(rolls),
             alignment: JSON.stringify(this.item.data.data.alignment),
             material: JSON.stringify(this.item.data.data.material),
-            enh: this.item.data.data.enh,
+            enh: this.item.data.data.epic ? 10 : this.item.data.data.magic ? 1 : this.item.data.data.enh,
             action: "applyDamage",
             natural20: this.natural20,
             fumble: this.fumble,
             natural20Crit: this.natural20Crit,
-            fumbleCrit: this.fumbleCrit
+            fumbleCrit: this.fumbleCrit,
+            incorporeal: this.item.data.data.incorporeal
         };
     }
 
@@ -284,12 +285,13 @@ export class ChatAttack {
             data: JSON.stringify(rolls),
             alignment: JSON.stringify(this.item.data.data.alignment),
             material: JSON.stringify(this.item.data.data.material),
-            enh: this.item.data.data.enh,
+            enh: this.item.data.data.epic ? 10 : this.item.data.data.magic ? 1 : this.item.data.data.enh,
             action: "applyDamage",
             natural20: this.natural20,
             fumble: this.fumble,
             natural20Crit: this.natural20Crit,
-            fumbleCrit: this.fumbleCrit
+            fumbleCrit: this.fumbleCrit,
+            incorporeal: this.item.data.data.incorporeal
         };
     }
 
