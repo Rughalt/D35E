@@ -1421,6 +1421,10 @@
   "D35E.WeaponTreatAsMagic": "Treat as Magic for purpose of DR",
   "D35E.WeaponTreatAsEpic": "Treat as Epic for purpose of DR",
   "D35E.ClassHasUnmetRequirements": "This class has unmet requirements",
+  "D35E.Junk": "Junk Item (Unusable Item Types)",
+  "D35E.FixContainers": "Fix Containers in Containers",
+  "D35E.FixContainersDesc": "This action fixes containers that have been put inside a containers in cyclic fashion by removing all container in container associations.",
+  "D35E.Fix": "Fix",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1456,8 +1460,8 @@
   "SETTINGS.D35EHideTokenConditionsH": "Whether buffs should hide their icons from token status effects",
   "SETTINGS.D35ECoreEffectsN": "Default Token Conditions",
   "SETTINGS.D35ECoreEffectsH": "Displays only 3.5e conditions on tokens (unchecked) or core icons as well (checked)",
-  "SETTINGS.D35ECurrencyNamesN": "Currency Names",
-  "SETTINGS.D35ECurrencyNamesH": "Currency names, from Platinium to Copper, divided by comma. Enter any text, leave empty to use default.",
+  "SETTINGS.D35ECurrencyNamesN": "Coin Names",
+  "SETTINGS.D35ECurrencyNamesH": "Coin names, from Platinium to Copper, divided by comma. Enter any text, leave empty to use default.",
   "SETTINGS.D35EHideSpellDescriptionsIfHasActionN": "Hide Spell Description chat card",
   "SETTINGS.D35EHideSpellDescriptionsIfHasActionL": "Hides Spell Description chat card if spell has Action",
   "SETTINGS.D35ESaveAttackWindowN": "Save Attack Window form",
@@ -1471,6 +1475,10 @@
   "SETTINGS.D35EAllowNoAmmoN": "Allow no Ammo for ranged weapons",
   "SETTINGS.D35EAllowNoAmmoH": "Allows players to use ranged weapons without ammunition",
   "SETTINGS.D35EAutoAmmoRecoveryN": "Use Automatic Ammo recovery",
-  "SETTINGS.D35EAutoAmmoRecoveryH": "Allows automatic ammo recovery feature"
+  "SETTINGS.D35EAutoAmmoRecoveryH": "Allows automatic ammo recovery feature",
+  "SETTINGS.D35ECurrencyConfigLabel": "Configure Custom Coins",
+  "SETTINGS.D35ECurrencyConfigName": "Custom Coins",
+  "SETTINGS.D35ECurrencyConfigUpdate": "Save Custom Coins",
+  "SETTINGS.D35ECurrencyConfigHint": "Allows you to define custom Coins and group them into Currencies"
 
 }

@@ -644,6 +644,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.item-recharge').click(this._onItemRestoreUses.bind(this));
 
     html.find(".item .container-selector").change(ev => { this._onItemChangeContainer(ev) });
+    html.find(".fix-containers").click(ev => this._onCharacterClearContainers(ev));
 
 
     html.find('.spell-add-uses').click(ev => this._onSpellAddUses(ev));
@@ -1346,12 +1347,21 @@ export class ActorSheetPF extends ActorSheet {
     item.update({ "data.classSource": newSource });
   }
 
-  async _onItemChangeContainer(event) {
-    event.preventDefault();
+    async _onItemChangeContainer(event) {
+      event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
     const newSource = $(event.currentTarget).val();
     item.update({ "data.containerId": newSource });
+  }
+
+  async _onCharacterClearContainers(event) {
+    event.preventDefault();
+    let itemUpdates = []
+    this.actor.items.filter(i => getProperty(i.data, "data.subType") === "container").forEach(item => {
+      itemUpdates.push({_id: item._id, "data.containerId": "none"})
+    })
+    await this.actor.updateOwnedItem(itemUpdates, {stopUpdates: true})
   }
 
   async _quickChangeItemQuantity(event, add=1) {
@@ -1737,7 +1747,7 @@ export class ActorSheetPF extends ActorSheet {
       misc: { label: CONFIG.D35E.lootTypes["misc"], hasPack: true, pack: `inline:items:loot:misc:${CONFIG.D35E.lootTypes["misc"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
       container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" }, isContainer: true },
       tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], hasPack: true, pack: `inline:items:loot:tradeGoods:-:${CONFIG.D35E.lootTypes["tradeGoods"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
-
+      junk: { label: game.i18n.localize("D35E.Junk"), hasPack: false, canCreate: false, hasActions: false, items: [], canEquip: false }
     };
 
     let containerItems = new Map()
@@ -1765,6 +1775,9 @@ export class ActorSheetPF extends ActorSheet {
       else if ( item.type === "class" ) arr[3].push(item);
       else if (item.type === "attack") {
         arr[4].push(item);
+      }
+      else if (item.type === "enhancement" || item.type === "material") {
+        inventory.junk.items.push(item)
       }
       else if (item.type === "full-attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {

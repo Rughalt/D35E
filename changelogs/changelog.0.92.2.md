@@ -10,6 +10,8 @@
 - Ability to add/remove HP on actor by typing +10 or -20 in the HP attribute field.
 - Ability to add combat changes to Equipement
 - Ability to set requirements for Classes
+- Ability to remove unusable items from characters (like Enhancements or Materials)
+- Added buton to fix containers lot because cyclic dependency
 
 ### All changes
 - [462](https://github.com/Rughalt/D35E/issues/462) - Add class information to spell rolls 

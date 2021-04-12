@@ -1,7 +1,7 @@
 export class CurrencyConfig extends FormApplication {
 
   get currencyOptions() {
-    return {fields: 'Id;Name;Weight;Value in gp;Group Name', dtypes: 'String;String;Number;Number;String'}
+    return {fields: 'Id;Name;Weight;Value in gp;Group (Currency) Name', dtypes: 'String;String;Number;Number;String'}
   }
 
   constructor(object, options) {

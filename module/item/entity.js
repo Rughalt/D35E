@@ -856,7 +856,7 @@ export class ItemPF extends Item {
             if (this.actor) {
                 let allCombatChanges = []
                 let attackType = this.type;
-                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.batChange(attackType, rollData)).forEach(i => {
+                this.actor.items.filter(o => (o.type === "feat" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.hasCombatChange(attackType, rollData)).forEach(i => {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
                 })
 
