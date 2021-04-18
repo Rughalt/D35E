@@ -5920,6 +5920,11 @@ tr.introjs-showElement > th {
   border-bottom: 1px solid #ff6400;
   box-shadow: 0 0 10px #ff6400;
 }
+.d35ecustom #token-action-hud .active button {
+  border: 1px solid #a80000;
+  border-bottom: 1px solid #9c3c00;
+  box-shadow: 0 0 10px #9c3c00;
+}
 .secret {
   display: none;
 }

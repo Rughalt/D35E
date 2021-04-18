@@ -2305,7 +2305,7 @@ export class ItemPF extends Item {
         parts[0].base = alterRoll(parts[0].base, 0, rollData.critMult);
 
         // Determine ability score modifier
-        let abl = itemData.ability.damage;
+        let abl = rollData.item.ability.damage;
         if (typeof abl === "string" && abl !== "") {
             rollData.ablDamage = Math.floor(rollData.abilities[abl].mod * rollData.ablMult);
             if (rollData.abilities[abl].mod < 0) rollData.ablDamage = rollData.abilities[abl].mod;
