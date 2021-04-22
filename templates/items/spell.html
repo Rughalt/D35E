@@ -1,5 +1,5 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
-  {{#if data.uniqueId}}
+  {{#if data.data.uniqueId}}
   <span class="uid-warning tooltip">
       <i class="fas fa-exclamation-triangle"></i>
       <div class="tooltipcontent">{{{ localize 'D35E.ItemHasUID' }}}</div>
@@ -58,7 +58,7 @@
       <div class="form-group">
         <label>{{localize "D35E.SpellBook"}}</label>
         <select name="data.spellbook">
-          {{#select data.spellbook}}
+          {{#select data.data.spellbook}}
           {{#each spellbooks as |spellbook a|}}
           <option value="{{a}}">{{spellbook.name}}</option>
           {{/each}}
@@ -73,7 +73,7 @@
       <div class="form-group">
         <label>{{localize "D35E.SpellLevel"}}</label>
         <select name="data.level" data-dtype="Number">
-          {{#select data.level}}
+          {{#select data.data.level}}
           {{#each config.spellLevels as |name lvl|}}
           <option value="{{lvl}}">{{name}}</option>
           {{/each}}
@@ -109,7 +109,7 @@
       <div class="form-group">
         <label>{{localize "D35E.SpellSchool"}}</label>
         <select name="data.school">
-          {{#select data.school}}
+          {{#select data.data.school}}
           {{#each config.spellSchools as |name sch|}}
           <option value="{{sch}}">{{name}}</option>
           {{/each}}
@@ -120,15 +120,15 @@
       {{!-- Subschool and type --}}
       <div class="form-group flexrow">
         <label>{{localize "D35E.SubSchool"}}</label>
-        <input type="text" name="data.subschool" value="{{data.subschool}}" Placeholder="{{localize "D35E.SubSchoolExample"}}"/>
+        <input type="text" name="data.subschool" value="{{data.data.subschool}}" Placeholder="{{localize "D35E.SubSchoolExample"}}"/>
         <label>{{localize "D35E.TypePlural"}}</label>
-        <input type="text" name="data.types" value="{{data.types}}" Placeholder="{{localize "D35E.SpellTypesExample"}}"/>
+        <input type="text" name="data.types" value="{{data.data.types}}" Placeholder="{{localize "D35E.SpellTypesExample"}}"/>
       </div>
 
 
       <div class="form-group flexrow">
         <label>{{localize "D35E.PowerDisplay"}}</label>
-        <input type="text" name="data.display" value="{{data.display}}" Placeholder="{{localize "D35E.PowerDisplayExample"}}"/>
+        <input type="text" name="data.display" value="{{data.data.display}}" Placeholder="{{localize "D35E.PowerDisplayExample"}}"/>
       </div>
 
       {{!-- Misc --}}
@@ -138,28 +138,28 @@
       </div>
       <div class="flexrow">
         <div class="toggle" style="width: 175px">
-          <input id="{{randomUuid}}-data.isSpellSpontaneousReplacement" type="checkbox" name="data.isSpellSpontaneousReplacement" {{checked data.isSpellSpontaneousReplacement}}/>
-          <label style="width: 175px" for="{{randomUuid}}-data.isSpellSpontaneousReplacement">{{#if data.isSpellSpontaneousReplacement}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.IsSpontanousReplacemet"}}</label>
+          <input id="{{randomUuid}}-data.isSpellSpontaneousReplacement" type="checkbox" name="data.isSpellSpontaneousReplacement" {{checked data.data.isSpellSpontaneousReplacement}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.isSpellSpontaneousReplacement">{{#if data.data.isSpellSpontaneousReplacement}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.IsSpontanousReplacemet"}}</label>
         </div>
         <div class="toggle" style="width: 175px">
-          <input id="{{randomUuid}}-data.sr" type="checkbox" name="data.sr" {{checked data.sr}}/>
-          <label style="width: 175px" for="{{randomUuid}}-data.sr">{{#if data.sr}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellResistance"}}</label>
+          <input id="{{randomUuid}}-data.sr" type="checkbox" name="data.sr" {{checked data.data.sr}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.sr">{{#if data.data.sr}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellResistance"}}</label>
         </div>
         <div class="toggle" style="width: 175px">
-          <input id="{{randomUuid}}-data.pr" type="checkbox" name="data.pr" {{checked data.pr}}/>
-          <label style="width: 175px" for="{{randomUuid}}-data.pr">{{#if data.pr}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.PowerResistance"}}</label>
+          <input id="{{randomUuid}}-data.pr" type="checkbox" name="data.pr" {{checked data.data.pr}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.pr">{{#if data.data.pr}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.PowerResistance"}}</label>
         </div>
         <div class="toggle" style="width: 175px">
-          <input id="{{randomUuid}}-data.atWill" type="checkbox" name="data.atWill" {{checked data.atWill}}/>
-          <label style="width: 175px" for="{{randomUuid}}-data.atWill">{{#if data.atWill}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellPrepAtWill"}}</label>
+          <input id="{{randomUuid}}-data.atWill" type="checkbox" name="data.atWill" {{checked data.data.atWill}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.atWill">{{#if data.data.atWill}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellPrepAtWill"}}</label>
         </div>
         <div class="toggle" style="width: 175px">
-          <input id="{{randomUuid}}-data.showInQuickbar" type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/>
-          <label style="width: 175px" for="{{randomUuid}}-data.showInQuickbar">{{#if data.showInQuickbar}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.ShowInQuickbar"}}</label>
+          <input id="{{randomUuid}}-data.showInQuickbar" type="checkbox" name="data.showInQuickbar" {{checked data.data.showInQuickbar}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.showInQuickbar">{{#if data.data.showInQuickbar}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.ShowInQuickbar"}}</label>
         </div>
         <div class="toggle" style="width: 175px">
-          <input id="{{randomUuid}}-data.isPower" type="checkbox" name="data.isPower" {{checked data.isPower}}/>
-          <label style="width: 175px" for="{{randomUuid}}-data.isPower">{{#if data.isPower}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.IsPower"}}</label>
+          <input id="{{randomUuid}}-data.isPower" type="checkbox" name="data.isPower" {{checked data.data.isPower}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.isPower">{{#if data.data.isPower}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.IsPower"}}</label>
         </div>
 
 
@@ -175,20 +175,20 @@
 
       <div class="flexrow">
         <div class="toggle" style="width: 125px">
-          <input id="{{randomUuid}}-data.components.verbal" type="checkbox" name="data.components.verbal" {{checked data.components.verbal}}/>
-          <label style="width: 125px" for="{{randomUuid}}-data.components.verbal">{{#if data.components.verbal}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentVerbal"}}</label>
+          <input id="{{randomUuid}}-data.components.verbal" type="checkbox" name="data.components.verbal" {{checked data.data.components.verbal}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.verbal">{{#if data.data.components.verbal}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentVerbal"}}</label>
         </div>
         <div class="toggle" style="width: 125px">
-          <input id="{{randomUuid}}-data.components.somatic" type="checkbox" name="data.components.somatic" {{checked data.components.somatic}}/>
-          <label style="width: 125px" for="{{randomUuid}}-data.components.somatic">{{#if data.components.somatic}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentSomatic"}}</label>
+          <input id="{{randomUuid}}-data.components.somatic" type="checkbox" name="data.components.somatic" {{checked data.data.components.somatic}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.somatic">{{#if data.data.components.somatic}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentSomatic"}}</label>
         </div>
         <div class="toggle" style="width: 125px">
-          <input id="{{randomUuid}}-data.components.material" type="checkbox" name="data.components.material" {{checked data.components.material}}/>
-          <label style="width: 125px" for="{{randomUuid}}-data.components.material">{{#if data.components.material}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentMaterial"}}</label>
+          <input id="{{randomUuid}}-data.components.material" type="checkbox" name="data.components.material" {{checked data.data.components.material}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.material">{{#if data.data.components.material}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentMaterial"}}</label>
         </div>
         <div class="toggle" style="width: 125px">
-          <input id="{{randomUuid}}-data.components.focus" type="checkbox" name="data.components.focus" {{checked data.components.focus}}/>
-          <label style="width: 125px" for="{{randomUuid}}-data.components.focus">{{#if data.components.focus}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentFocus"}}</label>
+          <input id="{{randomUuid}}-data.components.focus" type="checkbox" name="data.components.focus" {{checked data.data.components.focus}}/>
+          <label style="width: 125px" for="{{randomUuid}}-data.components.focus">{{#if data.data.components.focus}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellComponentFocus"}}</label>
         </div>
       </div>
 
@@ -196,7 +196,7 @@
       <div class="divine-focus form-group stacked">
         <label>{{localize "D35E.SpellComponentDivineFocus"}}</label>
         <select name="data.components.divineFocus" data-dtype="Number">
-          {{#select data.components.divineFocus}}
+          {{#select data.data.components.divineFocus}}
           {{#each config.divineFocus as |name value|}}
           <option value="{{value}}">{{name}}</option>
           {{/each}}
@@ -207,21 +207,21 @@
       {{!-- Misc Components --}}
       <div class="misc-components form-group stacked">
         <label>{{localize "D35E.SpellComponentsMisc"}}</label>
-        <input type="text" name="data.components.value" value="{{data.components.value}}"/>
+        <input type="text" name="data.components.value" value="{{data.data.components.value}}"/>
       </div>
 
       {{!-- Material Components --}}
-      {{#if data.components.material}}
+      {{#if data.data.components.material}}
       <div class="form-group stacked">
         <label>{{localize "D35E.SpellcastingMaterials"}}</label>
-        <input class="materials" type="text" name="data.materials.value" value="{{data.materials.value}}"/>
+        <input class="materials" type="text" name="data.materials.value" value="{{data.data.materials.value}}"/>
       </div>
       {{/if}}
 
-      {{#if data.components.focus}}
+      {{#if data.data.components.focus}}
       <div class="form-group stacked">
         <label>{{localize "D35E.SpellcastingFocus"}}</label>
-        <input class="focus" type="text" name="data.materials.focus" value="{{data.materials.focus}}"/>
+        <input class="focus" type="text" name="data.materials.focus" value="{{data.data.materials.focus}}"/>
       </div>
       {{/if}}
 
@@ -231,13 +231,13 @@
         <div class="form-fields">
           <label>{{localize "D35E.CastsLeft"}}</label>
           <div class="form-fields">
-            <input type="text" name="data.preparation.preparedAmount" value="{{data.preparation.preparedAmount}}" data-dtype="Number"/>
+            <input type="text" name="data.preparation.preparedAmount" value="{{data.data.preparation.preparedAmount}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="form-fields">
           <label>{{localize "D35E.SpellPrepPrepared"}}</label>
           <div class="form-fields">
-            <input type="text" name="data.preparation.maxAmount" value="{{data.preparation.maxAmount}}" data-dtype="Number"/>
+            <input type="text" name="data.preparation.maxAmount" value="{{data.data.preparation.maxAmount}}" data-dtype="Number"/>
           </div>
         </div>
       </div>
@@ -247,7 +247,7 @@
         <div class="form-fields">
           <label>{{localize "D35E.PowerPointsCost"}}</label>
           <div class="form-fields">
-            <input type="text" name="data.powerPointsCost" value="{{data.powerPointsCost}}" data-dtype="Number"/>
+            <input type="text" name="data.powerPointsCost" value="{{data.data.powerPointsCost}}" data-dtype="Number"/>
           </div>
         </div>
       </div>
@@ -255,7 +255,7 @@
       {{#unless isAtWill}}
       <div class="spell-misc form-group stacked">
         <label class="checkbox">
-          <input type="checkbox" name="data.preparation.autoDeductCharges" {{checked data.preparation.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
+          <input type="checkbox" name="data.preparation.autoDeductCharges" {{checked data.data.preparation.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
         </label>
       </div>
       {{/unless}}
@@ -265,7 +265,7 @@
         <div class="form-fields">
           <label>{{localize "D35E.CasterLevelOffset"}}</label>
           <div class="form-fields">
-            <input type="text" name="data.clOffset" value="{{data.clOffset}}" data-dtype="Number"/>
+            <input type="text" name="data.clOffset" value="{{data.data.clOffset}}" data-dtype="Number"/>
           </div>
         </div>
       </div>
@@ -275,7 +275,7 @@
         <div class="form-fields">
           <label>{{localize "D35E.SpellLevelOffset"}}</label>
           <div class="form-fields">
-            <input type="text" name="data.slOffset" value="{{data.slOffset}}" data-dtype="Number"/>
+            <input type="text" name="data.slOffset" value="{{data.data.slOffset}}" data-dtype="Number"/>
           </div>
         </div>
       </div>
@@ -301,14 +301,14 @@
 
       <div class="form-group">
         <label>Snippet</label>
-        <input type="text" name="data.snip" value="{{data.snip}}" data-dtype="String"/>
+        <input type="text" name="data.snip" value="{{data.data.snip}}" data-dtype="String"/>
       </div>
       {{editor content=data.shortDescription target="data.shortDescription" button=true owner=owner editable=editable}}
       {{#if isGM}}
       <h3 class="form-header">System Properties</h3>
       <div class="form-group">
         <label>UID</label>
-        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
+        <input type="text" name="data.uniqueId" value="{{data.data.uniqueId}}" data-dtype="String"/>
       </div>
       {{/if}}
     </div>

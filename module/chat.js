@@ -82,7 +82,7 @@ export const hideGMSensitiveInfo = function(app, html, data) {
   let speaker = app.data.speaker,
     actor = speaker != null ? (speaker.actor ? game.actors.get(speaker.actor) : game.actors.tokens[speaker.token]) : null;
   console.log('D35E | Message | Cleaning ', actor, app, html)
-  if (!actor || (actor && actor.hasPerm(game.user, "LIMITED"))) return;
+  if (!actor || (actor && actor.testUserPermission(game.user, "LIMITED"))) return;
 
   // Hide info
   html.find(".gm-sensitive").remove();

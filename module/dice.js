@@ -1,5 +1,7 @@
 import { ChatMessagePF } from "./sidebar/chat-message.js";
 
+import {Roll35e} from "./roll.js"
+
 export class DicePF {
 
   /**
@@ -59,7 +61,7 @@ export class DicePF {
         }
 
         // Execute the roll
-        let roll = new Roll(curParts.join(" + "), data).roll();
+        let roll = new Roll35e(curParts.join(" + "), data).roll();
 
         // Convert the roll to a chat message
         if (chatTemplate) {
@@ -203,7 +205,7 @@ export class DicePF {
         data["ablMult"] = data.item.ability.damageMult;
       }
 
-      let roll = new Roll(parts.join("+"), data);
+      let roll = new Roll35e(parts.join("+"), data);
       if ( crit === true ) {
         let mult = data.item.ability.critMult || 2;
 
@@ -310,7 +312,7 @@ export class DicePF {
   static messageRoll({data, msgStr}) {
     let re = /\[\[(.+)\]\]/g;
     return msgStr.replace(re, (_, p1) => {
-      const roll = new Roll(p1, data).roll();
+      const roll = new Roll35e(p1, data).roll();
       return roll.total.toString();
     });
 
@@ -361,7 +363,7 @@ export const _preProcessDiceFormula = function(formula, data={}) {
             cur.push(...s.split(/\s*,\s*/));
             return cur;
           }, []).map(o => {
-            return new Roll(o, data).roll().total;
+            return new Roll35e(o, data).roll().total;
           }).filter(o => o !== "" && o != null);
           if (fn in Math) {
             arr.push(Math[fn](...fnParams).toString());

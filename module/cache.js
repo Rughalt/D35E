@@ -20,7 +20,7 @@ export const buildCache = async function() {
         items = [];
         const entities = await itemPack.getContent();
         for (let e of entities) {
-            e.pack = packName;
+            //e.pack = packName;
             if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined) {
                 e.data.data.associations.classes.forEach(cl => {
                     if (!CACHE.ClassFeatures.has(cl[0]))
@@ -41,7 +41,7 @@ export const buildCache = async function() {
             items = [];
             const entities = await itemPack.getContent();
             for (let e of entities) {
-                e.pack = packName;
+                //e.pack = packName;
                     if (e.data.data.tags !== undefined) {
                         e.data.data.tags.forEach(cl => {
                             if (!CACHE.RacialFeatures.has(cl[0]))
@@ -62,7 +62,7 @@ export const buildCache = async function() {
             items = [];
             const entities = await itemPack.getContent();
             for (let e of entities) {
-                e.pack = packName;
+                //e.pack = packName;
                 if (e.data.data.tags !== undefined) {
                     e.data.data.tags.forEach(cl => {
                         if (!CACHE.RacialFeatures.has(cl[0]))
@@ -84,7 +84,7 @@ export const buildCache = async function() {
             items = [];
             const entities = await itemPack.getContent();
             for (let e of entities) {
-                e.pack = packName;
+                //e.pack = packName;
                 if (e.data.data.uniqueId) {
                     CACHE.Materials.set(e.data.data.uniqueId, e)
                 }
@@ -96,7 +96,7 @@ export const buildCache = async function() {
             items = [];
             const entities = await itemPack.getContent();
             for (let e of entities) {
-                e.pack = packName;
+                //e.pack = packName;
                 if (e.data.data.uniqueId) {
                     CACHE.DamageTypes.set(e.data.data.uniqueId, e)
                 }

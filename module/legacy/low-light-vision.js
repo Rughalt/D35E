@@ -1,5 +1,7 @@
 import { hasTokenVision } from "./misc/vision-permission.js";
 
+import {Roll35e} from "../roll.js"
+
 // Patch Token's sheet template
 Object.defineProperties(Token.prototype, {
   actorVision: {
@@ -13,7 +15,7 @@ Object.defineProperties(Token.prototype, {
 
 SightLayer.prototype.hasLowLight = function() {
   const relevantTokens = canvas.tokens.placeables.filter(o => {
-    return o.actor && o.actor.hasPerm(game.user, "OBSERVER");
+    return o.actor && o.actor.testUserPermission(game.user, "OBSERVER");
   });
   const lowLightTokens = relevantTokens.filter(o => getProperty(o, "actorVision.lowLight"));
   if (game.user.isGM) {

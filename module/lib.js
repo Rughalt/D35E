@@ -2,6 +2,10 @@
  * Creates a tag from a string.
  * For example, if you input the string "Wizard of Oz 2", you will get "wizardOfOz2"
  */
+
+
+import {Roll35e} from "./roll.js"
+
 export const createTag = function(str) {
   if (str.length === 0) str = "tag";
   return str.replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/).map((s, a) => {
@@ -333,19 +337,19 @@ export const normalDie = function(origCount, origSides, crit=1) {
  * @param {string|number} [targetSize="M"] - The target size to change the die to.
  *   Can be a string of values "F", "D", "T", "S", "M", "L", "H", "G" or "C" for the different sizes.
  *   Can also be a number in the range of -4 to 4, where 0 is Medium.
- * @returns {number} The result of the new roll.
+ * @returns {number} The result of the new Roll35e.
  */
 export const sizeRoll = function(origCount, origSides, targetSize="M", crit=1) {
-  return new Roll(sizeDie(origCount, origSides, targetSize, crit)).roll().total;
+  return new Roll35e(sizeDie(origCount, origSides, targetSize, crit)).roll().total;
 };
 
 export const sizeNaturalRoll = function(block, targetSize="M", crit=1) {
-  return new Roll(sizeNaturalDie(block, targetSize, crit)).roll().total;
+  return new Roll35e(sizeNaturalDie(block, targetSize, crit)).roll().total;
 };
 
 
 export const sizeMonkDamageRoll = function(level, targetSize="M", crit=1) {
-  return new Roll(sizeMonkDamageDie(level, targetSize, crit)).roll().total;
+  return new Roll35e(sizeMonkDamageDie(level, targetSize, crit)).roll().total;
 };
 
 

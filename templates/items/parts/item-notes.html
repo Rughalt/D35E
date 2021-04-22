@@ -5,7 +5,7 @@
     <a class="context-note-control add-note" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
   </h3>
   <ol class="context-notes form-group">
-    {{#each data.contextNotes as |note a|}}
+    {{#each data.data.contextNotes as |note a|}}
     <li class="context-note flexrow" data-note="{{a}}">
       <textarea name="data.contextNotes.{{a}}.0" placeholder="{{localize "D35E.Notes"}}">{{lookup this "0"}}</textarea>
       <select name="data.contextNotes.{{a}}.1">

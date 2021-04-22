@@ -50,7 +50,7 @@ export class TopPortraitBar {
     //   return;
     if (!actor.data.data.isPartyMember)
       return;
-    if (!actor.hasPerm(game.user, "LIMITED")) // Player cannot see
+    if (!actor.testUserPermission(game.user, "LIMITED")) // Player cannot see
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
@@ -87,7 +87,7 @@ export class TopPortraitBar {
         life.text(`Dying`)
       } else {
         portraitDiv.removeClass('dead');
-        if (actor.hasPerm(game.user, "OBSERVER")) {
+        if (actor.testUserPermission(game.user, "OBSERVER")) {
           life.text(`${actor.data.data.attributes.hp.value} / ${actor.data.data.attributes.hp.max}`)
         } else {
           life.text(``)
@@ -115,7 +115,7 @@ export class TopPortraitBar {
     //html.find('.col.middle').after(quickActions + '</div></div>');
 
     portraitDiv.click(function(event) {
-      if (!actor.hasPerm(game.user, "OBSERVER")) // Player cannot see
+      if (!actor.testUserPermission(game.user, "OBSERVER")) // Player cannot see
         return;
       actor.sheet.render(true);
     });

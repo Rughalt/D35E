@@ -6,6 +6,7 @@ import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
 import {DamageTypes} from "../damage-types.js";
 import {D35E} from "../config.js";
+import {Roll35e} from "../roll.js"
 
 /**
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
@@ -837,7 +838,7 @@ export class ActorPF extends Actor {
             let dimLight = 0;
             let brightLight = 0;
             let alpha = 0.0;
-            let color = "black"
+            let color = '#000000'
             let animationIntensity = 5
             let lightAngle = 360
             let animationSpeed = 5
@@ -847,7 +848,7 @@ export class ActorPF extends Actor {
                 if (i.data.data.equipped && !i.data.data.melded && i.data.data.light.emitLight) {
                     dimLight = i.data.data.light.dimRadius ? i.data.data.light.dimRadius : Math.floor(2 * i.data.data.light.radius);
                     brightLight = Math.floor(i.data.data.light.radius);
-                    color = i.data.data.light.color;
+                    color = i.data.data.light.color || '#000';
                     type = i.data.data.light.type;
                     alpha = i.data.data.light.alpha;
                     animationIntensity = i.data.data.light.animationIntensity;
@@ -871,7 +872,7 @@ export class ActorPF extends Actor {
                         o.update({
                             dimLight: dimLight,
                             brightLight: brightLight,
-                            lightColor: color,
+                            lightColor: color || '#000',
                             lightAlpha: alpha,
                             lightAngle: lightAngle,
                             lightAnimation: { type: type, intensity: animationIntensity, speed: animationSpeed }
@@ -890,7 +891,7 @@ export class ActorPF extends Actor {
                         o.update({
                             dimLight: dimLight,
                             brightLight: brightLight,
-                            lightColor: color,
+                            lightColor: color || '#000',
                             lightAlpha: alpha,
                             lightAngle: lightAngle,
                             lightAnimation: { type: type, intensity: animationIntensity, animationSpeed: animationSpeed }
@@ -898,7 +899,7 @@ export class ActorPF extends Actor {
                 });
                 data[`token.dimLight`] = dimLight;
                 data[`token.brightLight`] = brightLight;
-                data[`token.lightColor`] = color;
+                data[`token.lightColor`] = color || '#000';
                 data[`token.lightAnimation.type`] = type;
                 data[`token.lightAlpha`] = alpha;
             }
@@ -1295,12 +1296,14 @@ export class ActorPF extends Actor {
     async _updateChanges({data = null} = {}, options = {}) {
         let updateData = {};
         let srcData1 = mergeObject(this.data, expandObject(data || {}), { inplace: false });
-        srcData1.items = this.items.reduce((cur, i) => {
-            const otherItem = srcData1.items.filter(o => o._id === i._id)[0];
-            if (otherItem) cur.push(mergeObject(i.data, otherItem, { inplace: false }));
-            else cur.push(i.data);
-            return cur;
-        }, []);
+        srcData1.items = this.items;
+
+        // srcData1.items = this.items.reduce((cur, i) => {
+        //     const otherItem = srcData1.items.filter(o => o._id === i._id)[0];
+        //     if (otherItem) cur.push(mergeObject(i.data, otherItem, { inplace: false }));
+        //     else cur.push(i.data);
+        //     return cur;
+        // }, []);
 
         // const allChangeObjects = srcData1.items.filter(obj => {
         //     return obj.data.changes != null;
@@ -1317,10 +1320,11 @@ export class ActorPF extends Actor {
         let fullConditions = srcData1.data.attributes.conditions || {}
 
         const changeObjects = srcData1.items.filter(obj => {
-            return obj.data.changes != null;
+            return obj.data.data.changes != null;
         }).filter(obj => {
-            if (obj.type === "buff") return obj.data.active;
-            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.equipped && !obj.data.melded);
+            let z = obj.type;
+            if (obj.type === "buff") return obj.data.data.active;
+            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.data.equipped && !obj.data.data.melded);
             return true;
         });
 
@@ -1380,10 +1384,10 @@ export class ActorPF extends Actor {
 
         // Create an array of changes
         let allChanges = [];
-        changeObjects.forEach(item => {
+        for (const item of changeObjects) {
             // Get changes from base item
-            item.data.changes.forEach(change => {
-                if (!this.isChangeAllowed(item, change, fullConditions)) return;
+            for (const change of item.data.data.changes) {
+                if (!this.isChangeAllowed(item, change, fullConditions)) continue;
                 allChanges.push({
                     raw: change,
                     source: {
@@ -1392,17 +1396,17 @@ export class ActorPF extends Actor {
                         subtype: this.constructor._getChangeItemSubtype(item),
                         name: item.name,
                         item: item,
-                        itemRollData: new ItemPF(item, { owner: this.owner }).getRollData()
+                        itemRollData: item.getRollData()
                     }
-                });
-            });
+                })
+            }
 
             // Get changes from all enhancement
             if (item.type === "weapon" || item.type === "equipment") {
-                if (item.data.enhancements !== undefined) {
-                    item.data.enhancements.items.forEach(enhancementItem =>
-                        enhancementItem.data.changes.forEach(change => {
-                            if (!this.isChangeAllowed(item, change, fullConditions)) return;
+                if (item.data.data.enhancements !== undefined) {
+                    for (const enhancementItem of item.data.data.enhancements.items) {
+                        for (const change of enhancementItem.data.changes) {
+                            if (!this.isChangeAllowed(item, change, fullConditions)) continue;
                             change[0] = change[0].replace(/@enhancement/gi, enhancementItem.data.enh)
                             allChanges.push({
                                 raw: change,
@@ -1412,13 +1416,14 @@ export class ActorPF extends Actor {
                                     subtype: this.constructor._getChangeItemSubtype(item),
                                     name: item.name,
                                     item: item,
-                                    itemRollData: new ItemPF(item, { owner: this.owner }).getRollData()
+                                    itemRollData: new ItemPF(item.data, {temporary: true}).getRollData()
                                 }
                             });
-                        }));
+                        }
+                    }
                 }
             }
-        });
+        }
 
         // Add more changes
         let flags = {},
@@ -1568,7 +1573,7 @@ export class ActorPF extends Actor {
                 changeRollData.item = change.source.itemRollData;
             }
 
-            const roll = new Roll(formula, changeRollData);
+            const roll = new Roll35e(formula, changeRollData);
 
             try {
                 change.raw[4] = roll.roll().total;
@@ -1824,7 +1829,7 @@ export class ActorPF extends Actor {
             let chaMod = getProperty(srcData1, `data.abilities.cha.mod`)
             //console.log(updateData)
             if (getProperty(srcData1, `data.attributes.turnUndeadHdTotal`) > 0) {
-                linkData(srcData1, updateData, k, new Roll("3+@chaMod", { chaMod: chaMod }).roll().total + updateData[k]);
+                linkData(srcData1, updateData, k, new Roll35e("3+@chaMod", { chaMod: chaMod }).roll().total + updateData[k]);
 
                 sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
                 sourceInfo[k].positive.push({ name: "Base", value: 3 });
@@ -1846,7 +1851,7 @@ export class ActorPF extends Actor {
                     let ablMod = 0;
                     if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
                         ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`) || 0;
-                    const v = new Roll("ceil(0.5*@level*@ablMod)", {
+                    const v = new Roll35e("ceil(0.5*@level*@ablMod)", {
                         level: obj.data.levels,
                         ablMod: ablMod
                     }).roll().total + obj.data.powerPointTable[obj.data.levels];
@@ -2097,7 +2102,7 @@ export class ActorPF extends Actor {
                                 totalLevel = totalLevel + classLevel
                             }
                         }
-                        const v = Math.floor(new Roll(formula, { level: classLevel }).roll().total);
+                        const v = Math.floor(new Roll35e(formula, { level: classLevel }).roll().total);
 
                         if (v !== 0) {
                             sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
@@ -2108,7 +2113,7 @@ export class ActorPF extends Actor {
                     }, 0) - data1.attributes.energyDrain
 
                     if (epicLevels > 0) {
-                        epicST = new Roll('floor(@level/2)', { level: epicLevels }).roll().total;
+                        epicST = new Roll35e('floor(@level/2)', { level: epicLevels }).roll().total;
                         sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
                         sourceInfo[k].positive.push({ name: 'Epic Levels', value: epicST });
                     }
@@ -2188,7 +2193,7 @@ export class ActorPF extends Actor {
                             totalLevel = totalLevel + classLevel
                         }
                     }
-                    const v = new Roll(formula, { level: classLevel }).roll().total;
+                    const v = new Roll35e(formula, { level: classLevel }).roll().total;
 
                     if (v !== 0) {
                         sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
@@ -2198,7 +2203,7 @@ export class ActorPF extends Actor {
                     return cur + v;
                 }, 0)
                 if (epicLevels > 0) {
-                    epicBab = new Roll('ceil(@level/2)', { level: epicLevels }).roll().total;
+                    epicBab = new Roll35e('ceil(@level/2)', { level: epicLevels }).roll().total;
                     sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
                     sourceInfo[k].positive.push({ name: 'Epic Levels', value: epicBab });
                 }
@@ -2212,7 +2217,7 @@ export class ActorPF extends Actor {
             const k = "data.attributes.turnUndeadHdTotal";
             linkData(data, updateData, k, classes.reduce((cur, obj) => {
                 try {
-                    const v = new Roll(obj.data.turnUndeadLevelFormula, { level: obj.data.levels }).roll().total;
+                    const v = new Roll35e(obj.data.turnUndeadLevelFormula, { level: obj.data.levels }).roll().total;
 
                     if (v !== 0) {
                         sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
@@ -2230,7 +2235,7 @@ export class ActorPF extends Actor {
             const k = "data.attributes.sr.total";
             // Set spell resistance
             if (getProperty(data, `data.attributes.sr.formula`).length > 0) {
-                let roll = new Roll(getProperty(data, `data.attributes.sr.formula`), data.data).roll();
+                let roll = new Roll35e(getProperty(data, `data.attributes.sr.formula`), data.data).roll();
                 linkData(data, updateData, k, roll.total);
             } else {
 
@@ -2260,7 +2265,7 @@ export class ActorPF extends Actor {
                 }
             })
             for (var key of groupLevels.keys()) {
-                const v = new Roll(groupFormulas.get(key), { level: groupLevels.get(key) }).roll().total;
+                const v = new Roll35e(groupFormulas.get(key), { level: groupLevels.get(key) }).roll().total;
 
                 if (v !== 0) {
                     sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
@@ -2297,7 +2302,7 @@ export class ActorPF extends Actor {
                 }
             })
             for (var key of groupLevels.keys()) {
-                const v = new Roll(groupFormulas.get(key), {level: groupLevels.get(key)}).roll().total;
+                const v = new Roll35e(groupFormulas.get(key), {level: groupLevels.get(key)}).roll().total;
                 minionLevels[key.toLowerCase()] = v
             }
             linkData(data, updateData, k, minionLevels);
@@ -2513,9 +2518,9 @@ export class ActorPF extends Actor {
                 idsToRemove.push(itemsWithUid.get(entry))
             }
             if (idsToRemove.length)
-                await this.deleteEmbeddedEntity("OwnedItem", idsToRemove, {stopUpdates: true});
+                await this.deleteEmbeddedEntity("Item", idsToRemove, {stopUpdates: true});
             if (itemsToAdd.length)
-                await this.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true, ignoreSpellbookAndLevel: true});
+                await this.createEmbeddedEntity("Item", itemsToAdd, {stopUpdates: true, ignoreSpellbookAndLevel: true});
 
         }
 
@@ -2806,7 +2811,7 @@ export class ActorPF extends Actor {
             for (let k of Object.keys(data.classes[tag].savingThrows)) {
                 let formula = CONFIG.D35E.classSavingThrowFormulas[classType][cls.data.savingThrows[k].value];
                 if (formula == null) formula = "0";
-                data.classes[tag].savingThrows[k] = new Roll(formula, { level: cls.data.levels }).roll().total;
+                data.classes[tag].savingThrows[k] = new Roll35e(formula, { level: cls.data.levels }).roll().total;
             }
             if (cls.data.classType !== "racial")
                 totalNonRacialLevels = Math.min(totalNonRacialLevels + cls.data.levels, 20)
@@ -2844,7 +2849,7 @@ export class ActorPF extends Actor {
                         _resistance.uid = resistance[1]
                         data.combinedResistances.push(_resistance)
                     }
-                    _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", _obj.getRollData()).roll().total)
+                    _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", _obj.getRollData()).roll().total)
                     _resistance.immunity = _resistance.immunity || resistance[2];
                     _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                     _resistance.half = _resistance.half || resistance[4];
@@ -2863,10 +2868,10 @@ export class ActorPF extends Actor {
                             _dr.uid = dr[1];
                             data.combinedDR.types.push(_dr)
                         }
-                        _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", _obj.getRollData()).roll().total)
+                        _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
                         _dr.immunity = _dr.immunity || dr[2];
                     } else {
-                        data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll(dr[0] || "0", _obj.getRollData()).roll().total)
+                        data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
                     }
                 })
             }
@@ -2883,7 +2888,7 @@ export class ActorPF extends Actor {
                                 _resistance.uid = resistance[1]
                                 data.combinedResistances.push(_resistance)
                             }
-                            _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", enhancementItem.data).roll().total)
+                            _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", enhancementItem.data).roll().total)
                             _resistance.immunity = _resistance.immunity || resistance[2];
                             _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                         })
@@ -2900,9 +2905,9 @@ export class ActorPF extends Actor {
                                         _dr.uid = dr[1];
                                         data.combinedDR.types.push(_dr)
                                     }
-                                    _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", enhancementItem.data).roll().total)
+                                    _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
                                 } else {
-                                    data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll(dr[0] || "0", enhancementItem.data).roll().total)
+                                    data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
                                 }
                             })
                         }
@@ -2965,7 +2970,7 @@ export class ActorPF extends Actor {
             spellbook.maxPrestigeCl = 0
             spellbook.allSpellsKnown = false
             try {
-                let roll = new Roll(spellbook.cl.formula, data).roll();
+                let roll = new Roll35e(spellbook.cl.formula, data).roll();
                 spellbook.cl.total = roll.total || 0;
             } catch (e) {
                 spellbook.cl.total = 0;
@@ -3173,13 +3178,13 @@ export class ActorPF extends Actor {
     }
 
     async refresh(options = {}) {
-        if (this.hasPerm(game.user, "OWNER") && options.stopUpdates !== true) {
+        if (this.testUserPermission(game.user, "OWNER") && options.stopUpdates !== true) {
             return this.update({});
         }
     }
 
     async refreshWithData(data, options = {}) {
-        if (this.hasPerm(game.user, "OWNER") && options.stopUpdates !== true) {
+        if (this.testUserPermission(game.user, "OWNER") && options.stopUpdates !== true) {
             return this.update(data);
         }
     }
@@ -3735,7 +3740,7 @@ export class ActorPF extends Actor {
 
     updateItemResources(item) {
         if (!(item instanceof Item)) return;
-        if (!this.hasPerm(game.user, "OWNER")) return;
+        if (!this.testUserPermission(game.user, "OWNER")) return;
 
         if (item.data.data.uses != null && item.data.data.activation != null && item.data.data.activation.type !== "") {
             const itemTag = createTag(item.data.name);
@@ -3783,7 +3788,7 @@ export class ActorPF extends Actor {
 
     getItemResourcesUpdate(item, updateData) {
         if (!(item instanceof Item)) return;
-        if (!this.hasPerm(game.user, "OWNER")) return;
+        if (!this.testUserPermission(game.user, "OWNER")) return;
 
         if (item.data.data.uses != null && item.data.data.activation != null && item.data.data.activation.type !== "") {
             const itemTag = createTag(item.data.name);
@@ -3828,7 +3833,7 @@ export class ActorPF extends Actor {
         }
         mergeObject(itemData, initial);
 
-        return super.createOwnedItem(itemData, options);
+        return this.createEmbeddedEntity("Item", itemData, options);
     }
 
     /* -------------------------------------------- */
@@ -3843,7 +3848,7 @@ export class ActorPF extends Actor {
      */
     async useSpell(item, ev, { skipDialog = false, replacement = false, replacementItem = null } = {}, actor = null) {
         let usedItem = replacementItem ? replacementItem : item;
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (item.data.type !== "spell") throw new Error("Wrong Item type");
 
         if (getProperty(item.data, "data.preparation.mode") !== "atwill" && item.getSpellUses() <= 0) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoSpellsLeft"));
@@ -3862,7 +3867,7 @@ export class ActorPF extends Actor {
     }
 
     async addSpellsToSpellbook(item) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         if (item.data.type !== "feat") throw new Error("Wrong Item type");
         let spellsToAdd = []
@@ -3877,11 +3882,11 @@ export class ActorPF extends Actor {
                 spellsToAdd.push(itemData)
             }
         }
-        await this.createEmbeddedEntity("OwnedItem", spellsToAdd, {nameUnique: true, domainSpells: true})
+        await this.createEmbeddedEntity("Item", spellsToAdd, {nameUnique: true, domainSpells: true})
     }
 
     async addSpellsToSpellbookForClass(_spellbookKey, level) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         let spellsToAdd = []
         for (let p of game.packs.values()) {
@@ -3910,11 +3915,11 @@ export class ActorPF extends Actor {
                 spellsToAdd.push(obj.data)
             }
         }
-        await this.createEmbeddedEntity("OwnedItem", spellsToAdd, {stopUpdates: true, nameUnique: true, ignoreSpellbookAndLevel: true})
+        await this.createEmbeddedEntity("Item", spellsToAdd, {stopUpdates: true, nameUnique: true, ignoreSpellbookAndLevel: true})
     }
 
     async createAttackFromWeapon(item) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (item.type)  {
             item = duplicate(item);
             item.data = duplicate(item);
@@ -4114,7 +4119,7 @@ export class ActorPF extends Actor {
     }
 
     rollBAB(options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         return DicePF.d20Roll({
             event: options.event,
@@ -4127,7 +4132,7 @@ export class ActorPF extends Actor {
     }
 
     rollMelee(options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         return DicePF.d20Roll({
             event: options.event,
@@ -4140,7 +4145,7 @@ export class ActorPF extends Actor {
     }
 
     rollRanged(options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         return DicePF.d20Roll({
             event: options.event,
@@ -4255,7 +4260,7 @@ export class ActorPF extends Actor {
      * @returns {Promise<unknown>|void}
      */
     async rollSavingThrow(_savingThrow,ability, target, options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (_savingThrow === "fort") _savingThrow = "fortitudenegates"
         if (_savingThrow === "ref") _savingThrow = "reflexnegates"
         if (_savingThrow === "will") _savingThrow = "willnegates"
@@ -4271,7 +4276,7 @@ export class ActorPF extends Actor {
            // Get data from roll form
             if (form) {
                 rollData.savingThrowBonus = form.find('[name="st-bonus"]').val();
-                if (rollData.savingThrowBonus) savingThrowManualBonus += new Roll(rollData.savingThrowBonus).roll().total;
+                if (rollData.savingThrowBonus) savingThrowManualBonus += new Roll35e(rollData.savingThrowBonus).roll().total;
                 rollMode = form.find('[name="rollMode"]').val();
 
                 $(form).find('[data-type="optional"]').each(function () {
@@ -4307,7 +4312,7 @@ export class ActorPF extends Actor {
             rollData.savingThrowBonus = savingThrowBonus;
             rollData.savingThrowManualBonus = savingThrowManualBonus
 
-            let roll = new Roll("1d20 + @savingThrowBonus + @savingThrowManualBonus + @featSavingThrow", rollData).roll();
+            let roll = new Roll35e("1d20 + @savingThrowBonus + @savingThrowManualBonus + @featSavingThrow", rollData).roll();
             // Set chat data
             let chatData = {
                 speaker: ChatMessage.getSpeaker({actor: this.data}),
@@ -4431,7 +4436,7 @@ export class ActorPF extends Actor {
      * @param {Object} options      Options which configure how the skill check is rolled
      */
     async rollSkill(skillId, options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         const _roll = async function (target, form, props, sklName, skillRollFormula) {
             let optionalFeatIds = [],
@@ -4478,7 +4483,7 @@ export class ActorPF extends Actor {
             rollData.skillModTotal = skillModTotal;
             rollData.skillManualBonus = skillManualBonus
 
-            let roll = new Roll(skillRollFormula + " + @skillModTotal + @skillManualBonus + @featSkillBonus", rollData).roll();
+            let roll = new Roll35e(skillRollFormula + " + @skillModTotal + @skillManualBonus + @featSkillBonus", rollData).roll();
 
             const token = this ? this.token : null;
 
@@ -4631,7 +4636,7 @@ export class ActorPF extends Actor {
      * @returns {Promise<unknown>|void}
      */
     async rollGrapple(target, options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         const _roll = async function (target, form,props) {
             let grappleModTotal = this.data.data.attributes.cmb.total - (this.data.data.attributes.energyDrain || 0),
@@ -4679,7 +4684,7 @@ export class ActorPF extends Actor {
             rollData.grappleManualBonus = grappleManualBonus
 
 
-            let roll = new Roll("1d20 + @grappleModTotal + @grappleManualBonus + @featGrappleBonus", rollData).roll();
+            let roll = new Roll35e("1d20 + @grappleModTotal + @grappleManualBonus + @featGrappleBonus", rollData).roll();
 
 
             let actions = []
@@ -4717,7 +4722,7 @@ export class ActorPF extends Actor {
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                 rollMode: rollMode || "gmroll",
                 tokenId: token ? `${token.scene._id}.${token.id}` : null,
-                actor: this
+                actorId: this.id
             };
             const templateData = mergeObject(chatTemplateData, {
                 img: this.img,
@@ -4730,8 +4735,9 @@ export class ActorPF extends Actor {
                 properties: props,
                 hasProperties: props.length > 0,
                 actions: actions
-            }, {inplace: false});
+            }, {inplace: true});
             // Create message
+
 
             await createCustomChatMessage("systems/D35E/templates/chat/grapple.html", templateData, chatData, {rolls: [roll]});
         }
@@ -4819,7 +4825,7 @@ export class ActorPF extends Actor {
      * @param {Object} options      Options which configure how ability tests are rolled
      */
     rollAbilityTest(abilityId, options = {}) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         // Add contextual notes
         let notes = [];
@@ -4860,7 +4866,7 @@ export class ActorPF extends Actor {
 
 
     async rollTurnUndead(name = "Undead") {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         const rollData = duplicate(this.data.data);
         let turnUndeadHdTotal = this.data.data.attributes.turnUndeadHdTotal
         let turnUndeadUses = this.data.data.attributes.turnUndeadUses
@@ -4873,7 +4879,7 @@ export class ActorPF extends Actor {
         let rolls = []
         let knowledgeMod = this.data.data.skills.kre.rank > 5 ? 2 : 0
         let chaMod = this.data.data.abilities.cha.mod
-        let maxHdResult = new Roll("1d20 + @chaMod + @kMod", { kMod: knowledgeMod, chaMod: chaMod }).roll()
+        let maxHdResult = new Roll35e("1d20 + @chaMod + @kMod", { kMod: knowledgeMod, chaMod: chaMod }).roll()
         rolls.push(maxHdResult);
         let data = {}
         data.actor = this
@@ -4920,7 +4926,7 @@ export class ActorPF extends Actor {
 
         }
 
-        let damageHD = new Roll("2d6 + @chaMod + @level", { level: turnUndeadHdTotal, chaMod: chaMod }).roll()
+        let damageHD = new Roll35e("2d6 + @chaMod + @level", { level: turnUndeadHdTotal, chaMod: chaMod }).roll()
         rolls.push(damageHD)
         data.damageHD = damageHD
         data.undeadName = name;
@@ -4953,7 +4959,7 @@ export class ActorPF extends Actor {
      * Display defenses in chat.
      */
     displayDefenses() {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         const rollData = duplicate(this.data.data);
 
         // Add contextual AC notes
@@ -5116,7 +5122,7 @@ export class ActorPF extends Actor {
             if (form) {
 
                 rollData.acBonus = form.find('[name="ac-bonus"]').val();
-                if (rollData.acBonus) ac += new Roll(rollData.acBonus).roll().total;
+                if (rollData.acBonus) ac += new Roll35e(rollData.acBonus).roll().total;
 
 
                 rollMode = form.find('[name="rollMode"]').val();
@@ -5148,44 +5154,44 @@ export class ActorPF extends Actor {
                     applyPrecision = true;
                 }
                 if (form.find('[name="prone"]').prop("checked")) {
-                    ac += new Roll("-4").roll().total;
+                    ac += new Roll35e("-4").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Prone")}`)
                 }
                 if (form.find('[name="squeezing"]').prop("checked")) {
-                    ac += new Roll("-4").roll().total;
+                    ac += new Roll35e("-4").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Squeezing")}`)
                 }
                 if (form.find('[name="defense"]').prop("checked")) {
 
                     if ((this.data.data.skills?.tmb?.rank || 0) >= 25) {
-                        ac += new Roll(`4+${Math.floor((this.data.data.skills?.tmb?.rank - 25) / 10)}`).roll().total;
+                        ac += new Roll35e(`4+${Math.floor((this.data.data.skills?.tmb?.rank - 25) / 10)}`).roll().total;
                         rollModifiers.push(`${game.i18n.localize("D35E.Defense")} (Epic ${game.i18n.localize("D35E.SkillTmb")})`)
                     } else if ((this.data.data.skills?.tmb?.rank || 0) >= 5) {
-                        ac += new Roll("+3").roll().total;
+                        ac += new Roll35e("+3").roll().total;
                         rollModifiers.push(`${game.i18n.localize("D35E.Defense")} (${game.i18n.localize("D35E.SkillTmb")})`)
                     } else {
-                        ac += new Roll("+2").roll().total;
+                        ac += new Roll35e("+2").roll().total;
                         rollModifiers.push(`${game.i18n.localize("D35E.Defense")}`)
                     }
                 }
                 if (form.find('[name="totaldefense"]').prop("checked")) {
                     if ((this.data.data.skills?.tmb?.rank || 0) >= 25) {
-                        ac += new Roll(`8+${2*Math.floor((this.data.data.skills?.tmb?.rank - 25) / 10)}`).roll().total;
+                        ac += new Roll35e(`8+${2*Math.floor((this.data.data.skills?.tmb?.rank - 25) / 10)}`).roll().total;
                         rollModifiers.push(`${game.i18n.localize("D35E.TotalDefense")} (Epic ${game.i18n.localize("D35E.SkillTmb")})`)
                     } else if ((this.data.data.skills?.tmb?.rank || 0) >= 5) {
-                        ac += new Roll("+6").roll().total;
+                        ac += new Roll35e("+6").roll().total;
                         rollModifiers.push(`${game.i18n.localize("D35E.TotalDefense")} (${game.i18n.localize("D35E.SkillTmb")})`)
                     } else {
-                        ac += new Roll("+4").roll().total;
+                        ac += new Roll35e("+4").roll().total;
                         rollModifiers.push(`${game.i18n.localize("D35E.TotalDefense")}`)
                     }
                 }
                 if (form.find('[name="covered"]').prop("checked")) {
-                    ac += new Roll("+4").roll().total;
+                    ac += new Roll35e("+4").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Covered")}`)
                 }
                 if (form.find('[name="charged"]').prop("checked")) {
-                    ac += new Roll("-2").roll().total;
+                    ac += new Roll35e("-2").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Charged")}`)
                 }
 
@@ -5378,7 +5384,7 @@ export class ActorPF extends Actor {
                 hit = false,
                 crit = false;
 
-            if (!a.hasPerm(game.user, "OWNER")) {
+            if (!a.testUserPermission(game.user, "OWNER")) {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
                 continue;
             }
@@ -5408,7 +5414,7 @@ export class ActorPF extends Actor {
                 let concealRolled = false;
                 if (finalAc.conceal || finalAc.fullConceal || a.data.data.attributes?.concealment?.total) {
                     concealRolled = true;
-                    concealRoll = new Roll("1d100").roll().total;
+                    concealRoll = new Roll35e("1d100").roll().total;
                     if (finalAc.fullConceal) concealTarget = 50
                     if (finalAc.conceal) concealTarget = 20
                     concealTarget = Math.max(a.data.data.attributes?.concealment?.total || 0, concealTarget)
@@ -5430,7 +5436,7 @@ export class ActorPF extends Actor {
                 if (hit && a.data.data.attributes.fortification?.total) {
                     fortifyRolled = true
                     fortifyValue = a.data.data.attributes.fortification?.total;
-                    fortifyRoll = new Roll("1d100").roll().total;
+                    fortifyRoll = new Roll35e("1d100").roll().total;
                     if (fortifyRoll <= fortifyValue) {
                         fortifySuccessfull = true;
                         crit = false;
@@ -5464,7 +5470,7 @@ export class ActorPF extends Actor {
                 if (game.settings.get("D35E", "useAutoAmmoRecovery")) {
                     if (ammoId && attackerId && !hit) {
 
-                        let recoveryRoll = new Roll("1d100").roll().total;
+                        let recoveryRoll = new Roll35e("1d100").roll().total;
                         if (recoveryRoll < 50) {
                             let _attacker = game.actors.get(attackerId);
                             ammoRecovered = true;
@@ -5572,7 +5578,7 @@ export class ActorPF extends Actor {
         for (let t of tokensList) {
             if (t.actor == null) continue
             let a = t.actor
-            if (!a.hasPerm(game.user, "OWNER")) {
+            if (!a.testUserPermission(game.user, "OWNER")) {
                 ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
                 continue;
             }
@@ -5786,7 +5792,7 @@ export class ActorPF extends Actor {
         }
         //this.createEmbeddedDocuments
         //return this.createOwnedItem((noArray ? createData[0] : createData), options);
-        return super.createEmbeddedEntity(embeddedName, (noArray ? createData[0] : createData), options);
+        return super.createEmbeddedDocuments(embeddedName, [(noArray ? createData[0] : createData)], options);
     }
 
     _computeEncumbrance(updateData, srcData) {
@@ -5831,7 +5837,7 @@ export class ActorPF extends Actor {
         const size = srcData.data.traits.actualSize;
         if (srcData.data.attributes.quadruped) carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.quadruped[size];
         else carryMultiplier *= CONFIG.D35E.encumbranceMultipliers.normal[size];
-        let heavy = carryMultiplier * new Roll(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr > 0 ? carryStr : 0 }).roll().total;
+        let heavy = carryMultiplier * new Roll35e(CONFIG.D35E.carryingCapacityFormula, { "str": carryStr > 0 ? carryStr : 0 }).roll().total;
 
         // 1 kg = 0.5 lb
         // if (game.settings.get("D35E", "units") === "metric") {
@@ -5917,7 +5923,7 @@ export class ActorPF extends Actor {
         if (pack.metadata.entity !== "Item") return;
         await pack.getIndex();
         const entry = pack.index.find(e => e.name === name)
-        return pack.getEntity(entry._id).then(ent => {
+        return pack.getDocument(entry._id).then(ent => {
             if (unique) {
                 if (this.items.filter(o => o.name === name && o.type === ent.type).length > 0)
                     return;
@@ -5929,7 +5935,7 @@ export class ActorPF extends Actor {
                 data = mergeObject(data, this.sheet.getDropData(data));
             }
             delete data._id;
-            return this.createOwnedItem(data);
+            return this.createEmbeddedEntity("Item",data);
         });
     }
 
@@ -5962,7 +5968,7 @@ export class ActorPF extends Actor {
     }
 
     async applyActionOnSelf(action, actor, buff = null) {
-        if (!this.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         function cleanParam(parameter) {
             return parameter.replace(/"/gi, "");
@@ -5974,7 +5980,7 @@ export class ActorPF extends Actor {
             actionRollData.buff = buff.getRollData() //This is roll data of optional buff item
         }
 
-        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll(action.condition, actionRollData).roll().result))
+        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll35e(action.condition, actionRollData).roll().result))
             return;
 
         function isActionRollable(_action) {
@@ -6052,7 +6058,7 @@ export class ActorPF extends Actor {
                             updateObject[action.parameters[2]] = action.parameters[4] === 'true';
                         } else {
                             if (isActionRollable(action.parameters[4])) {
-                                updateObject[action.parameters[2]] = new Roll(action.parameters[4], actionRollData).roll().total
+                                updateObject[action.parameters[2]] = new Roll35e(action.parameters[4], actionRollData).roll().total
                             } else {
                                 updateObject[action.parameters[2]] = action.parameters[4]
                             }
@@ -6085,7 +6091,7 @@ export class ActorPF extends Actor {
                                     updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                                 } else {
                                     if (isActionRollable(action.parameters[5])) {
-                                        updateObject[action.parameters[3]] = new Roll(action.parameters[5], actionRollData).roll().total
+                                        updateObject[action.parameters[3]] = new Roll35e(action.parameters[5], actionRollData).roll().total
                                     } else {
                                         updateObject[action.parameters[3]] = action.parameters[5]
                                     }
@@ -6428,49 +6434,49 @@ export class ActorPF extends Actor {
         let data = await ItemPF.toAttack(itemData);
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async createConsumableSpell(itemData, type) {
         let data = await ItemPF.toConsumable(itemData, type);
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async createTrait(itemData, type) {
         let data = await ItemPF.toTrait(itemData, type);
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async createWildShapeBuff(itemData) {
         let data = await ItemPF.toPolymorphBuff(itemData, "wildshape");
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async createPolymorphBuff(itemData, type) {
         let data = await ItemPF.toPolymorphBuff(itemData, "polymorph");
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async createAlterSelfBuff(itemData, type) {
         let data = await ItemPF.toPolymorphBuff(itemData, "alter-self");
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async createLycantrophyBuff(itemData, type) {
         let data = await ItemPF.toPolymorphBuff(itemData, "lycantrophy");
 
         if (data._id) delete data._id;
-        await this.createEmbeddedEntity("OwnedItem", data);
+        await this.createEmbeddedEntity("Item", data);
     }
 
     async _updateMinions(options) {
@@ -6505,7 +6511,7 @@ export class ActorPF extends Actor {
 
     async _calculateMinionDistance() {
         if (this == null) return;
-        if (!this.hasPerm(game.user, "OWNER")) return;
+        if (!this.testUserPermission(game.user, "OWNER")) return;
         if (this.data.type === "npc") {
             let myToken = this.getActiveTokens()[0];
             let masterId = this.data.data?.master?.id;
@@ -6954,7 +6960,7 @@ export class ActorPF extends Actor {
 
         }
         if (Array.from(itemsToDelete).length)
-            await this.deleteEmbeddedEntity("OwnedItem", Array.from(itemsToDelete), {stopUpdates: true});
+            await this.deleteEmbeddedEntity("Item", Array.from(itemsToDelete), {stopUpdates: true});
 
         let itemsToUpdate = []
         for (const [key, value] of itemQuantities.entries()) {
@@ -6962,6 +6968,6 @@ export class ActorPF extends Actor {
         }
 
         if (itemsToUpdate.length)
-            await this.updateEmbeddedEntity("OwnedItem", itemsToUpdate, {stopUpdates: true, ignoreSpellbookAndLevel: true});
+            await this.updateEmbeddedEntity("Item", itemsToUpdate, {stopUpdates: true, ignoreSpellbookAndLevel: true});
     }
 }

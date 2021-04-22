@@ -63,7 +63,7 @@ export class VisionPermissionSheet extends FormApplication {
 
 export const hasTokenVision = function(token) {
     if (!token.actor) return false;
-    if (token.actor.hasPerm(game.user, "OWNER")) return true;
+    if (token.actor.testUserPermission(game.user, "OWNER")) return true;
 
     const visionFlag = token.actor.getFlag("D35E", "visionPermission");
     if (!visionFlag || !visionFlag.users[game.user._id]) return false;

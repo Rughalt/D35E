@@ -1,4 +1,5 @@
 import {ItemPF} from "../item/entity.js";
+import {Roll35e} from "../roll.js"
 
 export class ChatAttack {
     constructor(item, label = "", actor = null) {
@@ -319,7 +320,7 @@ export class ChatAttack {
 
             if (action.condition !== undefined && action.condition !== null && action.condition !== "") {
                 // console.log('Condition', action.condition, this.rollData)
-                if (!(new Roll(action.condition, this.rollData).roll().total)) {
+                if (!(new Roll35e(action.condition, this.rollData).roll().total)) {
                     continue;
                 }
             }

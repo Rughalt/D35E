@@ -41,6 +41,7 @@ import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
 import {applyConfigModifications} from "./module/config-tools.js";
+import {Roll35e} from "./module/roll.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -97,7 +98,7 @@ Hooks.once("init", async function() {
   CONFIG.statusEffects = getConditions();
 
 
-  D35ELayer.registerLayer();
+  //D35ELayer.registerLayer();
   // Preload Handlebars Templates
   await preloadHandlebarsTemplates();
   applyConfigModifications();
@@ -203,7 +204,7 @@ Hooks.once("ready", async function() {
   }
 
   const interval = setInterval(function() {
-    game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid).forEach(a => {
+    game.actors.entities.filter(obj => obj.testUserPermission(game.user, "OWNER") && obj.data.data.companionUuid).forEach(a => {
       a.getQueuedActions();
     });
   }, 500);

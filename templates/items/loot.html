@@ -13,7 +13,7 @@
       </h3>
 
       <h3 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{data.data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
       </h3>
       {{else}}
       {{#if showUnidentifiedData}}
@@ -61,7 +61,7 @@
       <div class="form-group">
         <label>Item Type</label>
         <select name="data.subType">
-          {{#select data.subType}}
+          {{#select data.data.subType}}
           {{#each config.lootTypes as |name type|}}
           <option value="{{type}}">{{name}}</option>
           {{/each}}
@@ -73,7 +73,7 @@
       <div class="form-group">
         <label>{{localize "D35E.BagOfHoldingLike"}}</label>
         <label class="checkbox">
-          <input type="checkbox" name="data.bagOfHoldingLike" {{checked data.bagOfHoldingLike}}/>
+          <input type="checkbox" name="data.bagOfHoldingLike" {{checked data.data.bagOfHoldingLike}}/>
         </label>
       </div>
 
@@ -91,26 +91,26 @@
       {{#if isAmmo}}
       <div class="form-group ammo-formula">
         <label>{{localize "D35E.BonusAmmoDamage"}}</label>
-        <input type="text" name="data.bonusAmmoDamage" value="{{data.bonusAmmoDamage}}" placeholder="{{localize "D35E.BonusAmmoDamageFormula"}}"/>
+        <input type="text" name="data.bonusAmmoDamage" value="{{data.data.bonusAmmoDamage}}" placeholder="{{localize "D35E.BonusAmmoDamageFormula"}}"/>
       </div>
       <div class="form-group ammo-formula">
         <label>{{localize "D35E.BonusAmmoDamageType"}}</label>
-        <input type="text" name="data.bonusAmmoDamageType" value="{{data.bonusAmmoDamageType}}" placeholder="{{localize "D35E.BonusAmmoDamageTypePlaceholder"}}"/>
+        <input type="text" name="data.bonusAmmoDamageType" value="{{data.data.bonusAmmoDamageType}}" placeholder="{{localize "D35E.BonusAmmoDamageTypePlaceholder"}}"/>
       </div>
       <div class="form-group ammo-formula">
         <label>{{localize "D35E.BonusAmmoAttack"}}</label>
-        <input type="text" name="data.bonusAmmoAttack" value="{{data.bonusAmmoAttack}}" placeholder="{{localize "D35E.BonusAmmoAttackPlaceholder"}}"/>
+        <input type="text" name="data.bonusAmmoAttack" value="{{data.data.bonusAmmoAttack}}" placeholder="{{localize "D35E.BonusAmmoAttackPlaceholder"}}"/>
       </div>
 
       <div class="form-group stacked">
         <label>{{localize "D35E.AttackNotes"}}</label>
-        <textarea type="text" name="data.bonusAmmoAttackNote">{{data.bonusAmmoAttackNote}}</textarea>
+        <textarea type="text" name="data.bonusAmmoAttackNote">{{data.databonusAmmoAttackNote}}</textarea>
       </div>
       {{/if}}
 
       {{#if isGM}}
       <label class="checkbox">
-        <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}
+        <input type="checkbox" name="data.identified" {{checked data.data.identified}}/> {{localize "D35E.Identified"}}
       </label>
       {{/if}}
 

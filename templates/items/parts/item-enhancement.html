@@ -8,19 +8,19 @@
             <div class="form-group stacked">
                 <label class="checkbox">
                     <input type="checkbox" name="data.enhancements.uses.commonPool" {{checked
-                           data.enhancements.uses.commonPool}}/> {{localize "D35E.CommonUsesPool"}}
+                           data.data.enhancements.uses.commonPool}}/> {{localize "D35E.CommonUsesPool"}}
                 </label>
             </div>
-            {{#if data.enhancements.uses.commonPool}}
+            {{#if data.data.enhancements.uses.commonPool}}
             <div class="form-group uses-per">
                 <label>{{localize "D35E.LimitedUses"}}</label>
                 <div class="form-fields">
-                    <input type="text" name="data.enhancements.uses.value" value="{{data.enhancements.uses.value}}"
+                    <input type="text" name="data.enhancements.uses.value" value="{{data.data.enhancements.uses.value}}"
                            data-dtype="Number"/>
                     <span class="sep"> / </span>
-                    <input type="text" value="{{data.enhancements.uses.max}}" disabled data-dtype="Number"/>
+                    <input type="text" value="{{data.data.enhancements.uses.max}}" disabled data-dtype="Number"/>
                     <select name="data.enhancements.uses.per">
-                        {{#select data.enhancements.uses.per}}
+                        {{#select data.data.enhancements.uses.per}}
                         <option value=""></option>
                         {{#each config.limitedUsePeriods as |name key|}}
                         <option value="{{key}}">{{name}}</option>
@@ -32,18 +32,18 @@
             <div class="form-group uses-per">
                 <label>{{localize "D35E.MaximumUsesFormula"}}</label>
                 <input type="text" name="data.enhancements.uses.maxFormula"
-                       value="{{data.enhancements.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
+                       value="{{data.data.enhancements.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
             </div>
             <div class="form-group uses-recharge-formula">
                 <label>{{localize "D35E.RechargeFormula"}} <i class="fas fa-info-circle tooltip">
                     <div class="tooltipcontent"><strong>{{localize "D35E.RechargeFormula"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.RechargeFormulaInfo"}}</p></div>
                 </i></label>
-                <input type="text" name="data.enhancements.uses.rechargeFormula" value="{{data.enhancements.uses.rechargeFormula}}" placeholder="{{localize "D35E.RechargeFormula"}}"/>
+                <input type="text" name="data.enhancements.uses.rechargeFormula" value="{{data.data.enhancements.uses.rechargeFormula}}" placeholder="{{localize "D35E.RechargeFormula"}}"/>
             </div>
             <div class="form-group stacked">
                 <label class="checkbox">
                     <input type="checkbox" name="data.enhancements.uses.autoDeductCharges" {{checked
-                           data.enhancements.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
+                           data.data.enhancements.uses.autoDeductCharges}}/> {{localize "D35E.AutoDeductCharges"}}
                 </label>
             </div>
             {{/if}}
@@ -57,11 +57,11 @@
             <div class="form-group stacked">
                 <label class="checkbox">
                     <input type="checkbox" name="data.enhancements.automation.updateName" {{checked
-                           data.enhancements.automation.updateName}}/> {{localize "D35E.MagicItemUpdateName"}}
+                           data.data.enhancements.automation.updateName}}/> {{localize "D35E.MagicItemUpdateName"}}
                 </label>
                 <label class="checkbox">
                     <input type="checkbox" name="data.enhancements.automation.updatePrice" {{checked
-                           data.enhancements.automation.updatePrice}}/> {{localize "D35E.MagicItemUpdatePrice"}}
+                           data.data.enhancements.automation.updatePrice}}/> {{localize "D35E.MagicItemUpdatePrice"}}
                 </label>
             </div>
         </div>
@@ -83,7 +83,7 @@
             </li>
             <ol class="item-list" data-pack="D35E.enhancement">
                 {{#each enhancementsBase as |item iid|}}
-                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                <li class="item item-box flexrow" data-item-id="{{item.tag}}">
                     <div class="item-name enh-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
@@ -112,7 +112,7 @@
                     </div>
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
 
-                        {{#unless data.enhancements.uses.commonPool}}
+                        {{#unless data.data.enhancements.uses.commonPool}}
                             {{#if item.isCharged}}
                             {{#unless item.incorrect}}
                             <input type="text" class="uses" value="{{item.data.uses.value}}" data-dtype="Number"/>
@@ -125,7 +125,7 @@
 
                     <div class="item-detail item-per-use flexrow {{#if item.isCharged}}tooltip{{/if}}"  style="flex: 0 48px">
 
-                        {{#unless data.enhancements.uses.commonPool}}
+                        {{#unless data.data.enhancements.uses.commonPool}}
                         {{#if item.isCharged}}
                         {{#unless item.incorrect}}
                         <input type="text" value="{{item.data.uses.chargesPerUse}}" data-dtype="Number"/>
@@ -223,7 +223,7 @@
                     </div>
                     <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
 
-                        {{#unless data.enhancements.uses.commonPool}}
+                        {{#unless data.data.enhancements.uses.commonPool}}
                         {{#if item.isCharged}}
                         {{#unless item.incorrect}}
                         <input type="text" class="uses" value="{{item.data.uses.value}}" data-dtype="Number"/>

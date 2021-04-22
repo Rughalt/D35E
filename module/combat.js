@@ -1,6 +1,6 @@
 import { ActorPF } from "./actor/entity.js";
 import { isMinimumCoreVersion } from "./lib.js";
-
+import {Roll35e} from "./roll.js"
 /* -------------------------------------------- */
 
 /**
@@ -93,7 +93,7 @@ export const _rollInitiative = async function (ids, { formula = null, updateTurn
                 : messageOptions.rollMode || c.token.hidden || c.hidden
                 ? "gmroll"
                 : "roll";
-        const roll = new Roll(formula, actorData).roll();
+        const roll = new Roll35e(formula, actorData).roll();
         updates.push({ _id: id, initiative: roll.total });
 
         //let [notes, notesHTML] = c.actor.getInitiativeContextNotes();

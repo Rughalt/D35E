@@ -32,13 +32,13 @@
 
             <div class="form-group">
                 <label>{{localize "D35E.LA"}}</label>
-                <input type="text" name="data.la" value="{{data.la}}" data-dtype="Number" />
+                <input type="text" name="data.la" value="{{data.data.la}}" data-dtype="Number" />
             </div>
             {{!-- Racial Type --}}
             <div class="form-group">
                 <label>{{localize "D35E.CreatureType"}}</label>
                 <select name="data.creatureType">
-                    {{#select data.creatureType}}
+                    {{#select data.data.creatureType}}
                     {{#each config.creatureTypes as |name type|}}
                     <option value="{{type}}">{{name}}</option>
                     {{/each}}

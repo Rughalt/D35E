@@ -13,6 +13,7 @@ import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
 import {ItemPF} from "../../item/entity.js";
 import {CompendiumDirectoryPF} from "../../sidebar/compendium.js";
 import {DamageTypes} from "../../damage-types.js";
+import {Roll35e} from "../../roll.js"
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -262,7 +263,7 @@ export class ActorSheetPF extends ActorSheet {
       if (data.useBGSkills) skillRanks.bgAllowed = this.actor.data.data.details.level.value * 2;
     });
     if (this.actor.data.data.details.bonusSkillRankFormula !== "") {
-      let roll = new Roll(
+      let roll = new Roll35e(
         this.actor.data.data.details.bonusSkillRankFormula,
         duplicate(this.actor.data.data)
       ).roll();
@@ -997,7 +998,7 @@ export class ActorSheetPF extends ActorSheet {
     if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
     let formulaRoll = {}
     try {
-      formulaRoll = new Roll(spellbook.concentrationFormula, rollData).roll();
+      formulaRoll = new Roll35e(spellbook.concentrationFormula, rollData).roll();
     } catch (e) {
       formulaRoll = {total: 0}
     }
@@ -1081,7 +1082,7 @@ export class ActorSheetPF extends ActorSheet {
     const value = $(event.currentTarget).prop("checked");
     const updateData = {};
     updateData["data.active"] = value;
-    if (item.hasPerm(game.user, "OWNER"))
+    if (item.testUserPermission(game.user, "OWNER"))
     {
       await item.update(updateData);
     }
@@ -1146,9 +1147,10 @@ export class ActorSheetPF extends ActorSheet {
         if (!item.showUnidentifiedData) {
           console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
           (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
+
             let enh = new ItemPF(_enh, {owner: this.owner})
             if (enh.hasAction || enh.isCharged) {
-              let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
+              let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh.tag}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
@@ -1213,17 +1215,17 @@ export class ActorSheetPF extends ActorSheet {
 
     // Quick Attack
     if (a.classList.contains("item-enh-attack")) {
-      item.useEnhancementItem(item.getEnhancementItem(enhId));
+      await item.useEnhancementItem(await item.getEnhancementItem(enhId));
     }
   }
 
 
-  _onEnhRoll(event) {
+  async _onEnhRoll(event) {
     event.preventDefault();
     const itemId = $(event.currentTarget).parents(".enh-item").attr("data-item-id");
     const enhId = $(event.currentTarget).parents(".enh-item").attr("data-enh-id");
     const item = this.actor.getOwnedItem(itemId);
-    let enh = item.getEnhancementItem(enhId);
+    let enh = await item.getEnhancementItem(enhId);
     return enh.roll({}, this.actor);
   }
 
@@ -1261,7 +1263,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.${skillId}.subSkills.${tag}`] = skillData;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   _onSkillCreate(event) {
@@ -1289,7 +1291,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.${tag}`] = skillData;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   _onArbitrarySkillDelete(event) {
@@ -1299,7 +1301,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.${mainSkillId}.subSkills.-=${subSkillId}`] = null;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   _onSkillDelete(event) {
@@ -1308,7 +1310,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.-=${skillId}`] = null;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   async _quickItemActionControl(event) {
@@ -1491,7 +1493,7 @@ export class ActorSheetPF extends ActorSheet {
         itemUpdate['_id'] = itemId
         if (itemData.uses && itemData.uses.value !== itemData.uses.max) {
           if (itemData.uses.rechargeFormula) {
-            itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
+            itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll35e(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
           }
           else
           {
@@ -1501,7 +1503,7 @@ export class ActorSheetPF extends ActorSheet {
 
         if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
           if (itemData.enhancements.uses.rechargeFormula) {
-            itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
+            itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll35e(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
           }
           else
           {
@@ -1521,7 +1523,7 @@ export class ActorSheetPF extends ActorSheet {
           let enhItems = duplicate(itemData.enhancements.items)
           for (let _item of enhItems) {
             if (_item.data.uses.rechargeFormula) {
-              _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
+              _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll35e(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
             }
             else
             {
@@ -1782,7 +1784,7 @@ export class ActorSheetPF extends ActorSheet {
       else if (item.type === "full-attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
         //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
-        if (item.data.containerId !== "none") {
+        if (item.data.containerId && item.data.containerId !== "none") {
           if (!containerItems.has(item.data.containerId)) {
             containerItems.set(item.data.containerId,[])
             containerItemsWeight.set(item.data.containerId,0)
@@ -2133,10 +2135,10 @@ export class ActorSheetPF extends ActorSheet {
       if (item == null) continue;
 
       delete data._id;
-      if (item.hasPerm(game.user, "OWNER")) promises.push(item.update(data));
+      if (item.testUserPermission(game.user, "OWNER")) promises.push(item.update(data));
     }
-
-    await Promise.all(promises);
+    if (promises)
+      await Promise.all(promises);
   }
 
   /**
@@ -2164,7 +2166,7 @@ export class ActorSheetPF extends ActorSheet {
       if (data.pack) {
         dataType = "compendium";
         const pack = game.packs.find(p => p.collection === data.pack);
-        const packItem = await pack.getEntity(data.id);
+        const packItem = await pack.getDocument(data.id);
         if (packItem != null) itemData = packItem.data;
       }
 
@@ -2184,7 +2186,8 @@ export class ActorSheetPF extends ActorSheet {
         itemData = game.items.get(data.id).data;
       }
 
-      return this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+      this.enrichDropData(itemData);
+      return this.importItem(itemData, dataType);
     } else if (data.type === "Actor") {
       let actorData = {};
       // Case 1 - Import from a Compendium pack
@@ -2211,7 +2214,8 @@ export class ActorSheetPF extends ActorSheet {
         actorData = game.actors.get(data.id).data;
       }
 
-      return this.importActor(mergeObject(actorData, this.getDropData(actorData), {inplace: false}), dataType);
+      this.enrichDropData(actorData);
+      return this.importActor(actorData, dataType);
     }
   }
 
@@ -2241,7 +2245,7 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     if (itemData._id) delete itemData._id;
-    return this.actor.createEmbeddedEntity("OwnedItem", itemData);
+    return this.actor.createEmbeddedEntity("Item", itemData);
   }
   async importActor(itemData, dataType) {
     if (itemData.type === "npc") {
@@ -2255,14 +2259,9 @@ export class ActorSheetPF extends ActorSheet {
 
 
 
-  getDropData(origData) {
-    let result = {};
-
-    // Set spellbook for spell
-    console.log(this.currentPrimaryTab)
+  enrichDropData(origData) {
     if (getProperty(origData, "type") === "spell") setProperty(result, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
 
-    return result;
   }
 
 
@@ -2427,7 +2426,8 @@ export class ActorSheetPF extends ActorSheet {
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
     if (packItem != null) itemData = packItem.data;
-    await this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+    this.enrichDropData(itemData);
+    await this.importItem(itemData, dataType);
     $(ev.target).prop('disabled',false)
   }
 

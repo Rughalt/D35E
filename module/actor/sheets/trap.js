@@ -1,5 +1,6 @@
 import { ActorSheetPF } from "../sheets/base.js";
 import { CR } from "../../lib.js";
+import {Roll35e} from "../../roll.js"
 
 /**
  * An Actor sheet for NPC type characters in the D&D5E system.
@@ -99,7 +100,7 @@ export class ActorSheetTrap extends ActorSheetPF {
     event.preventDefault();
     const formula = this.actor.data.data.attributes.hp.formula;
     if ( !formula ) return;
-    const hp = new Roll(formula).roll().total;
+    const hp = new Roll35e(formula).roll().total;
     AudioHelper.play({src: CONFIG.sounds.dice});
     this.actor.update({"data.attributes.hp.value": hp, "data.attributes.hp.max": hp});
   }
