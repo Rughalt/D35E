@@ -41,6 +41,7 @@ import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
 import {applyConfigModifications} from "./module/config-tools.js";
+import {addLowLightVisionToLightConfig} from "./module/low-light-vision.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -191,6 +192,8 @@ Hooks.once("ready", async function() {
   }
 
 
+
+
   await cache.buildCache();
   console.log("D35E | Cache is ", CACHE)
   game.actors.entities.forEach(obj => { obj._updateChanges({sourceOnly: true}, {skipToken: true}); });
@@ -251,6 +254,36 @@ Hooks.once("ready", async function() {
           './module/welcome-screen.js'
           )
   ).default();
+
+});
+
+Hooks.on("renderSettings", (app, html) => {
+  let lotdSection = $(`<h2 id="d35e-help-section" data-action="d35e-help">3.5e SRD Help</h2>`);
+  html.find('#settings-game').after(lotdSection);
+  let lotdDiv = $(`<div id="d352-help"></div>`);
+  lotdSection.after(lotdDiv);
+  let helpButton = $(`<button id="d35e-help-btn" data-action="d35e-help"><i class="fas fa-question-circle"></i> Documentation</button>`);
+  lotdDiv.append(helpButton);
+  helpButton.on('click', ev => {
+    ev.preventDefault();
+    window.open('https://docs.legaciesofthedragon.com', 'lotdHelp', 'width=1032,height=900');
+  });
+
+
+  let dicordButton = $(`<button id="d35e-discord" data-action="d35e-discord"><i class="fab fa-discord"></i> Community Discord</button>`);
+  lotdDiv.append(dicordButton);
+  dicordButton.on('click', ev => {
+    ev.preventDefault();
+    window.open('https://discord.gg/wDyUaZH', '_blank');
+  });
+
+
+  let patreonButton = $(`<button id="d35e-discord" data-action="d35e-discord"><i class="fab fa-patreon"></i> Support on Patreon</button>`);
+  lotdDiv.append(patreonButton);
+  patreonButton.on('click', ev => {
+    ev.preventDefault();
+    window.open('https://patreon.com/rughalt', '_blank');
+  });
 
 });
 
@@ -360,6 +393,11 @@ Hooks.on("renderTokenConfig", async (app, html) => {
   });
   html.find('.tab[data-tab="vision"] > *:nth-child(2)').after(newHTML2);
 });
+
+Hooks.on("renderLightConfig", (app, html) => {
+  addLowLightVisionToLightConfig(app, html);
+});
+
 
 Hooks.on("createToken", async (scene, token, options, userId) => {
   if (userId !== game.user._id) return;

@@ -50,6 +50,7 @@ export class DamageReductionSetting extends FormApplication {
         let value = $(event.target).val()
         this._updateDRERDataFromForm(key, value)
         $('input[name="computed-dr"]').val(DamageTypes.computeDRString(this.damageReduction))
+        $('input[name="computed-er"]').val(DamageTypes.computeERString(this.energyResistance))
     }
     async _onChecboxChange(event) {
         let key = $(event.target).attr('name')

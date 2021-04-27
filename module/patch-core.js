@@ -172,12 +172,7 @@ export async function PatchCore() {
   Combat.prototype.rollInitiative = _rollInitiative;
   window.getTemplate = D35E_getTemplate;
 
-  if (isMinimumCoreVersion("0.7.2")) {
-    await import("./low-light-vision.js");
-  }
-  else {
-    await import("./legacy/low-light-vision.js");
-  }
+    patchLowLightVision();
 
   import("./lib/intro.js")
 
@@ -189,3 +184,4 @@ export async function PatchCore() {
 import { isMinimumCoreVersion } from "./lib.js";
 
 import "./measure.js";
+import {patchLowLightVision} from "./low-light-vision.js";
