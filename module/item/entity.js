@@ -4103,6 +4103,7 @@ export class ItemPF extends Item {
         if (this.data.data.ability.damage)
             abilityBonus = parseInt(this.actor.data.data.abilities[this.data.data.ability.damage].mod)*this.data.data.ability.damageMult
         if (abilityBonus) results.push(abilityBonus)
+        if (this.data.data.enh) results.push(this.data.data.enh)
         return results.join(" + ");
     }
 
