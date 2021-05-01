@@ -2832,6 +2832,7 @@ export class ActorPF extends Actor {
 
         data.combinedResistances = data.energyResistance ? duplicate(data.energyResistance) : [];
         data.combinedDR = data.damageReduction ? duplicate(data.damageReduction) : [];
+        let erDrRollData = this.getRollData();
 
         data.shieldType = "none";
         this.items.filter(obj => {
@@ -2849,7 +2850,11 @@ export class ActorPF extends Actor {
                         _resistance.uid = resistance[1]
                         data.combinedResistances.push(_resistance)
                     }
-                    _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", _obj.getRollData()).roll().total)
+                    // Fix up existing objects so they work
+                    erDrRollData.level = _obj.data.levels || 0
+                    erDrRollData.levels= _obj.data.levels || 0
+
+                    _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", erDrRollData).roll().total)
                     _resistance.immunity = _resistance.immunity || resistance[2];
                     _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                     _resistance.half = _resistance.half || resistance[4];
@@ -2868,7 +2873,9 @@ export class ActorPF extends Actor {
                             _dr.uid = dr[1];
                             data.combinedDR.types.push(_dr)
                         }
-                        _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
+                        erDrRollData.level = obj.data.levels || 0
+                        erDrRollData.levels= obj.data.levels || 0
+                        _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", erDrRollData).roll().total)
                         _dr.immunity = _dr.immunity || dr[2];
                     } else {
                         data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
@@ -2888,7 +2895,10 @@ export class ActorPF extends Actor {
                                 _resistance.uid = resistance[1]
                                 data.combinedResistances.push(_resistance)
                             }
-                            _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", enhancementItem.data).roll().total)
+                            erDrRollData.level = enhancementItem.data.levels || 0
+                            erDrRollData.levels= enhancementItem.data.levels || 0
+                            erDrRollData.enh = enhancementItem.data.enh || 0
+                            _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", erDrRollData).roll().total)
                             _resistance.immunity = _resistance.immunity || resistance[2];
                             _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                         })
@@ -2905,7 +2915,10 @@ export class ActorPF extends Actor {
                                         _dr.uid = dr[1];
                                         data.combinedDR.types.push(_dr)
                                     }
-                                    _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
+                                    erDrRollData.level = enhancementItem.data.levels || 0
+                                    erDrRollData.levels= enhancementItem.data.levels || 0
+                                    erDrRollData.enh = enhancementItem.data.enh || 0
+                                    _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", erDrRollData).roll().total)
                                 } else {
                                     data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
                                 }
@@ -6795,6 +6808,7 @@ export class ActorPF extends Actor {
 
     // @Object { id: { title: String, type: buff/string, img: imgPath, active: true/false }, ... }
     _calcBuffTextures() {
+        if (this.data.data.noBuffDisplay) return [];
         const buffs = this.items.filter((o) => o.type === "buff");
         return buffs.reduce((acc, cur) => {
             const id = cur.uuid;

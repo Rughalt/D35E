@@ -1426,6 +1426,9 @@
   "D35E.FixContainersDesc": "This action fixes containers that have been put inside a containers in cyclic fashion by removing all container in container associations.",
   "D35E.Fix": "Fix",
 
+  "D35E.NoBuffDisplay": "No Buff Icons on Actor Token",
+  "D35E.NoBuffDisplayH": "Do not display buff icons on token for this actor for people other then OWNER and GM",
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",

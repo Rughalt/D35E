@@ -1066,6 +1066,7 @@
         "customCurrency": {},
         "noLightOverride": false,
         "noTokenOverride": false,
+        "noBuffDisplay": false,
         "lockEditingByPlayers": false
       }
     },
