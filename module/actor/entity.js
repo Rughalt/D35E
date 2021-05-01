@@ -2854,7 +2854,7 @@ export class ActorPF extends Actor {
                     erDrRollData.level = _obj.data.levels || 0
                     erDrRollData.levels= _obj.data.levels || 0
 
-                    _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", erDrRollData).roll().total)
+                    _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", erDrRollData).roll().total)
                     _resistance.immunity = _resistance.immunity || resistance[2];
                     _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                     _resistance.half = _resistance.half || resistance[4];
@@ -2875,7 +2875,7 @@ export class ActorPF extends Actor {
                         }
                         erDrRollData.level = obj.data.levels || 0
                         erDrRollData.levels= obj.data.levels || 0
-                        _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", erDrRollData).roll().total)
+                        _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
                         _dr.immunity = _dr.immunity || dr[2];
                     } else {
                         data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
@@ -2898,7 +2898,7 @@ export class ActorPF extends Actor {
                             erDrRollData.level = enhancementItem.data.levels || 0
                             erDrRollData.levels= enhancementItem.data.levels || 0
                             erDrRollData.enh = enhancementItem.data.enh || 0
-                            _resistance.value = Math.max(_resistance.value, new Roll(resistance[0] || "0", erDrRollData).roll().total)
+                            _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", erDrRollData).roll().total)
                             _resistance.immunity = _resistance.immunity || resistance[2];
                             _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                         })
@@ -2918,7 +2918,7 @@ export class ActorPF extends Actor {
                                     erDrRollData.level = enhancementItem.data.levels || 0
                                     erDrRollData.levels= enhancementItem.data.levels || 0
                                     erDrRollData.enh = enhancementItem.data.enh || 0
-                                    _dr.value = Math.max(_dr.value, new Roll(dr[0] || "0", erDrRollData).roll().total)
+                                    _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
                                 } else {
                                     data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
                                 }
@@ -6121,7 +6121,7 @@ export class ActorPF extends Actor {
                                 updateObject[action.parameters[3]] = action.parameters[5] === 'true';
                             } else {
                                 if (isActionRollable(action.parameters[5])) {
-                                    updateObject[action.parameters[3]] = new Roll(action.parameters[5], actionRollData).roll().total
+                                    updateObject[action.parameters[3]] = new Roll35e(action.parameters[5], actionRollData).roll().total
                                 } else {
                                     updateObject[action.parameters[3]] = action.parameters[5]
                                 }
@@ -6183,7 +6183,7 @@ export class ActorPF extends Actor {
                     let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= new Roll(cleanParam(value), actionRollData).roll().total
+                        updateObject[`${field}`]= new Roll35e(cleanParam(value), actionRollData).roll().total
                     } else {
                         updateObject[`${field}`]= value
                     }
@@ -6194,7 +6194,7 @@ export class ActorPF extends Actor {
                     let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + new Roll(cleanParam(value), actionRollData).roll().total
+                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + new Roll35e(cleanParam(value), actionRollData).roll().total
                     } else {
                         updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + parseInt(value)
                     }
@@ -6205,7 +6205,7 @@ export class ActorPF extends Actor {
                     let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - new Roll(cleanParam(value), actionRollData).roll().total
+                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - new Roll35e(cleanParam(value), actionRollData).roll().total
                     } else {
                         updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - value
                     }
@@ -6217,7 +6217,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll()
+                    let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll()
                     let name = action.name;
                     let chatTemplateData = {
                         name: this.name,
@@ -6238,7 +6238,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll().total
+                    let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -6255,7 +6255,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll(cleanParam(action.parameters[1]), actionRollData).roll().total
+                    let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -6264,7 +6264,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll(cleanParam(action.parameters[1]), actionRollData).roll().total
+                    let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -6273,7 +6273,7 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 console.log(action)
                 if (action.parameters.length === 1) {
-                    let damage = new Roll(cleanParam(action.parameters[0]), actionRollData).roll().total
+                    let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyRegeneration(damage,actor);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -6626,7 +6626,7 @@ export class ActorPF extends Actor {
                 if (itemData.uses && itemData.uses.per === "day" && itemData.uses.value !== itemData.uses.max) {
                     hasItemUpdates = true;
                     if (itemData.uses.rechargeFormula) {
-                        itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
+                        itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll35e(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
                         rollData.item.uses.value = itemUpdate["data.uses.value"]
                     }
                     else
@@ -6637,21 +6637,21 @@ export class ActorPF extends Actor {
                 }
                 if (hasProperty(item, "data.combatChangesRange.maxFormula")) {
                     if (getProperty(item, "data.combatChangesRange.maxFormula") !== "") {
-                        let roll = new Roll(getProperty(item, "data.combatChangesRange.maxFormula"), rollData).roll();
+                        let roll = new Roll35e(getProperty(item, "data.combatChangesRange.maxFormula"), rollData).roll();
                         itemUpdate["data.combatChangesRange.max"] = roll.total;
                     }
                 }
                 for (let i = 1; i <= 3; i++)
                     if (hasProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`)) {
                         if (getProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`) !== "") {
-                            let roll = new Roll(getProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`), rollData).roll();
+                            let roll = new Roll35e(getProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`), rollData).roll();
                             itemUpdate[`data.combatChangesAdditionalRanges.slider${i}.max`] = roll.total;
                         }
                     }
                 if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.per === "day" && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
                     hasItemUpdates = true;
                     if (itemData.enhancements.uses.rechargeFormula) {
-                        itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
+                        itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll35e(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
                     }
                     else
                     {
@@ -6673,7 +6673,7 @@ export class ActorPF extends Actor {
                     for (let _item of enhItems) {
                         if (_item.data.uses.per === "day" && _item.data.uses.value !== _item.data.uses.max) {
                             if (_item.data.uses.rechargeFormula) {
-                                _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
+                                _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll35e(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
                             }
                             else
                             {
@@ -6701,7 +6701,7 @@ export class ActorPF extends Actor {
                     if (actorData == null && this.actor != null) rollData = this.getRollData();
                     else rollData = actorData;
                     try {
-                        updateData[`data.attributes.spells.spellbooks.${key}.powerPoints`] = new Roll(getProperty(actorData, `attributes.spells.spellbooks.${key}.dailyPowerPointsFormula`), rollData).roll().total;
+                        updateData[`data.attributes.spells.spellbooks.${key}.powerPoints`] = new Roll35e(getProperty(actorData, `attributes.spells.spellbooks.${key}.dailyPowerPointsFormula`), rollData).roll().total;
                     } catch (e) {
                         updateData[`data.attributes.spells.spellbooks.${key}.powerPoints`] = 0;
                     }
