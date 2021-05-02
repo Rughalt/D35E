@@ -248,7 +248,8 @@ export class ActorSheetPF extends ActorSheet {
     }
     // Count allowed skill ranks
     let firstOnList = true;
-    this.actor.data.items.filter(obj => { return obj.type === "class"; }).forEach(cls => {
+    this.actor.data.items.filter(obj => { return obj.type === "class"; }).forEach(_cls => {
+        let cls = _cls.data;
       const clsLevel = cls.data.levels;
       const clsSkillsPerLevel = cls.data.skillsPerLevel;
       const fcSkills = cls.data.fc.skill.value;

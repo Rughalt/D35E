@@ -479,23 +479,23 @@ Hooks.on("preCreateOwnedItem", (actor, item) => {
   }
 });
 
-Hooks.on("createOwnedItem", (actor, data, options, user) => {
-  if (!(actor instanceof Actor)) return;
+Hooks.on("createItem", (data, options, user) => {
+  if (!(data.parent instanceof Actor)) return;
 
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  actor.refresh(options);
+  data.parent.refresh(options);
 });
-Hooks.on("deleteOwnedItem", (actor, data, options, user) => {
-  if (!(actor instanceof Actor)) return;
+Hooks.on("deleteItem", (data, options, user) => {
+  if (!(data.parent instanceof Actor)) return;
 
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  actor.refresh(options);
+  data.parent.refresh(options);
 });
 
 Hooks.on("updateActor",  (actor, data, options, user) => {
@@ -570,7 +570,7 @@ async function createItemMacro(item, slot) {
  */
 function rollItemMacro(itemName, {itemId=null, itemType=null, actorId=null}={}) {
   let actor = getActorFromId(actorId);
-  if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+  if (actor && !actor.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
   const item = actor ? actor.items.find(i => {
     if (itemId != null && i._id !== itemId) return false;
     if (itemType != null && i.type !== itemType) return false;

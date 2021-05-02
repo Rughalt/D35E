@@ -55,7 +55,7 @@ export class ActorPF extends Actor {
 
     get race() {
         if (this.items == null) return null;
-        return this.items.filter(o => o.type === "race")[0];
+        return this.items.filter(o => o.data.type === "race")[0];
     }
 
     get racialHD() {
@@ -92,8 +92,8 @@ export class ActorPF extends Actor {
     }
 
     static _getChangeItemSubtype(item) {
-        if (item.type === "buff") return item.data.buffType;
-        if (item.type === "feat") return item.data.featType;
+        if (item.type === "buff") return item.data.data.buffType;
+        if (item.type === "feat") return item.data.data.featType;
         return "";
     }
 
@@ -664,10 +664,10 @@ export class ActorPF extends Actor {
             if (options.auto) {
                 let maximized = options.maximized;
                 for (const hd of health_sources) {
-                    auto_health(hd, options, maximized);
+                    auto_health(hd.data, options, maximized);
                     maximized = Math.max(0, maximized - hd.data.levels);
                 }
-            } else health_sources.forEach(race => manual_health(race));
+            } else health_sources.forEach(race => manual_health(race.data));
         }
 
         compute_health(racialHD, race_options);
@@ -1395,7 +1395,7 @@ export class ActorPF extends Actor {
                         type: item.type,
                         subtype: this.constructor._getChangeItemSubtype(item),
                         name: item.name,
-                        item: item,
+                        item: item.data,
                         itemRollData: item.getRollData()
                     }
                 })
@@ -1415,7 +1415,7 @@ export class ActorPF extends Actor {
                                     type: item.type,
                                     subtype: this.constructor._getChangeItemSubtype(item),
                                     name: item.name,
-                                    item: item,
+                                    item: item.data,
                                     itemRollData: new ItemPF(item.data, {temporary: true}).getRollData()
                                 }
                             });
@@ -1425,6 +1425,7 @@ export class ActorPF extends Actor {
             }
         }
 
+        console.log('D35E All Changes Before ', allChanges);
         // Add more changes
         let flags = {},
             sourceInfo = {};
@@ -1534,7 +1535,7 @@ export class ActorPF extends Actor {
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
         await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options, updateData);
-
+        console.log('D35E All Changes', allChanges);
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
         // Parse changes
@@ -1918,7 +1919,7 @@ export class ActorPF extends Actor {
         if (flags == null) flags = {};
         const items = data.items;
         const classes = items.filter(obj => {
-            return obj.type === "class";
+            return obj.data.type === "class";
         });
 
         const racialHD = classes.filter(o => getProperty(o.data, "classType") === "racial");
@@ -2086,7 +2087,8 @@ export class ActorPF extends Actor {
                     }
                 } else {
                     let epicST = 0;
-                    let baseST = classes.reduce((cur, obj) => {
+                    let baseST = classes.reduce((cur, _obj) => {
+                        let obj = _obj.data;
                         const classType = getProperty(obj.data, "classType") || "base";
                         let formula = CONFIG.D35E.classSavingThrowFormulas[classType][obj.data.savingThrows[a].value];
                         if (formula == null) formula = "0";
@@ -2129,9 +2131,11 @@ export class ActorPF extends Actor {
 
         linkData(data, updateData, "data.attributes.fortification.total", (data1.attributes.fortification?.value || 0));
         linkData(data, updateData, "data.attributes.concealment.total", (data1.attributes.concealment?.value || 0));
-        items.filter(obj => {
+        items.filter(_obj => {
+            let obj = _obj.data
             return obj.type === "equipment" && obj.data.equipped && !obj.data.melded;
-        }).forEach(obj => {
+        }).forEach(_obj => {
+            let obj = _obj.data
             let itemAcp = Math.abs(obj.data.armor.acp);
             if (obj.data.masterwork)
                 itemAcp = Math.max(0, itemAcp - 1)
@@ -2330,8 +2334,8 @@ export class ActorPF extends Actor {
         }
         {
             let level = classes.reduce((cur, o) => {
-                if (o.data.classType === "minion" || o.data.classType === "template") return cur;
-                return cur + o.data.levels;
+                if (o.data.data.classType === "minion" || o.data.data.classType === "template") return cur;
+                return cur + o.data.data.levels;
             }, 0);
 
             console.log(`D35E | Setting attributes hd total | ${level}`)
@@ -2340,7 +2344,8 @@ export class ActorPF extends Actor {
             linkData(data, updateData, "data.attributes.hd.racialClass", level);
 
             let templateClassesToUpdate = []
-            for (const templateClass of classes.filter(o => getProperty(o.data, "classType") === "template")) {
+            for (const _templateClass of classes.filter(o => getProperty(o.data.data, "classType") === "template")) {
+                const templateClass = templateClass;
                 if (!!templateClass) {
                     if (templateClass.data.levels === level) return
                     let updateObject = {}
@@ -2434,6 +2439,7 @@ export class ActorPF extends Actor {
                             if (!existingAbilities.has(uniqueId)) {
                                 let eItem = duplicate(e.data)
                                 ItemPF.setMaxUses(eItem, this.getRollData());
+                                delete eItem._id;
                                 eItem.data.uniqueId = uniqueId;
                                 eItem.data.source = `${raceObject.data.name}`
                                 eItem.data.userNonRemovable = true;
@@ -2534,6 +2540,7 @@ export class ActorPF extends Actor {
                     let eItem = duplicate(e.data)
                     ItemPF.setMaxUses(eItem, this.getRollData());
                     eItem.data.uniqueId = uniqueId;
+                    delete eItem._id;
                     eItem.data.source = `${classInfo[0]} ${level}`
                     eItem.data.userNonRemovable = true;
                     if (e.type === "spell") {
@@ -2752,7 +2759,8 @@ export class ActorPF extends Actor {
         data.damage = { nonlethal : {value: data.attributes.hp.nonlethal || 0, max: data.attributes.hp.max || 0}}
         actorData.items.filter(obj => {
             return obj.type === "class";
-        }).forEach(cls => {
+        }).forEach(_cls => {
+            let cls = _cls.data
             let tag = createTag(cls.data.customTag || cls.name);
             let nameTag = createTag(cls.name);
             let count = 1;
@@ -5805,6 +5813,7 @@ export class ActorPF extends Actor {
         }
         //this.createEmbeddedDocuments
         //return this.createOwnedItem((noArray ? createData[0] : createData), options);
+        console.log('D35E Data', embeddedName, createData)
         return super.createEmbeddedDocuments(embeddedName, [(noArray ? createData[0] : createData)], options);
     }
 
