@@ -468,7 +468,7 @@ export class ItemPF extends Item {
             data["data.weight"] = this.data.data.weight * weightChange;
         }
 
-
+        console.log("D35E Item Update", data)
         if (data["data.convertedWeight"]) {
             const conversion = game.settings.get("D35E", "units") === "metric" ? 2 : 1;
             data["data.weight"] = data["data.convertedWeight"] * conversion;
@@ -634,15 +634,18 @@ export class ItemPF extends Item {
 
         this._updateMaxUses(data, {srcData: srcData});
 
+        console.log("Item DATA", flattenObject(this.data), data)
         const diff = diffObject(flattenObject(this.data), data);
+        console.log("Item DIFF", diff, flattenObject(this.data), data)
+        let updatedItem = null;
         if (Object.keys(diff).length) {
-            await super.update(diff, options);
+            updatedItem = await super.update(diff, options);
         }
 
-        if (this.actor !== null)
-            this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
+        // if (this.actor !== null)
+        //     await this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
 
-        return false;
+        return Promise.resolve(updatedItem ? updatedItem : this);
     }
 
     _updateAlignmentEnhancement(data, enhancements, type, srcData) {

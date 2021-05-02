@@ -911,6 +911,8 @@ export class ItemSheetPF extends ItemSheet {
             formData['data.container'] = "None"
             formData['data.containerWeightless'] = false
         }
+
+        console.log("IM IN _UPDATE OBJECT FIXING THINGS", formData)
         return super._updateObject(event, formData);
     }
 
@@ -1247,8 +1249,8 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.changes || [];
-            return this.item.update({"data.changes": changes.concat([["", "", "", "", 0]])});
+            let _changes = duplicate(this.item.data.data.changes) || [];
+            return this.item.update({"data.changes": _changes.concat([["", "", "", "", 0]])});
         }
 
         // Remove a change
@@ -1268,7 +1270,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.combatChanges || [];
+            const changes = duplicate(this.item.data.data.combatChanges) || [];
             // Combat Changes are
             return this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", ""]])});
         }
@@ -1290,7 +1292,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.requirements || [];
+            const changes = duplicate(this.item.data.data.requirements) || [];
             // Combat Changes are
             return this.item.update({"data.requirements": changes.concat([["", "", ""]])});
         }
@@ -1312,7 +1314,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.resistances || [];
+            const changes = duplicate(this.item.data.data.resistances) || [];
             // Combat Changes are
             return this.item.update({"data.resistances": changes.concat([["", "", false, false, false]])});
         }
@@ -1334,7 +1336,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.damageReduction || [];
+            const changes = duplicate(this.item.data.data.damageReduction) || [];
             // Combat Changes are
             return this.item.update({"data.damageReduction": changes.concat([["", "", false]])});
         }
@@ -1356,7 +1358,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new note
         if (a.classList.contains("add-note")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const contextNotes = this.item.data.data.contextNotes || [];
+            const contextNotes = duplicate(this.item.data.data.contextNotes) || [];
             return this.item.update({"data.contextNotes": contextNotes.concat([["", "", "", 0]])});
         }
 
