@@ -200,7 +200,7 @@
       "name": "sample-chars",
       "label": "Sample Characters",
       "system": "D35E",
-      "path": "./packs/minions.db",
+      "path": "./packs/sample-chars.db",
       "entity": "Actor"
     },
     {

@@ -2511,7 +2511,7 @@ export class ActorPF extends Actor {
                     }
                 }
             }
-
+            console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
             for (let abilityUid of existingAbilities) {
                 if (!addedAbilities.has(abilityUid)) {
                     console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
@@ -2525,6 +2525,7 @@ export class ActorPF extends Actor {
             }
             if (idsToRemove.length)
                 await this.deleteEmbeddedEntity("Item", idsToRemove, {stopUpdates: true});
+            console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
             if (itemsToAdd.length)
                 await this.createEmbeddedEntity("Item", itemsToAdd, {stopUpdates: true, ignoreSpellbookAndLevel: true});
 
@@ -2564,6 +2565,7 @@ export class ActorPF extends Actor {
                 }
                 addedAbilities.add(uniqueId)
                 added = true;
+
             }
         }
     }
@@ -3351,10 +3353,10 @@ export class ActorPF extends Actor {
      * @return {Promise}        A Promise which resolves to the updated Entity
      */
     async update(data, options = {}) {
+        let origData = deepClone(data)
         if (options['recursive'] !== undefined && options['recursive'] === false) {
             console.log('D35E | Skipping update logic since it is not recursive')
-            await super.update(data, options);
-            return
+            return super.update(data, options);
         }
         // if (options['stopUpdates'] !== undefined && options['stopUpdates'] === true) {
         //     console.log('D35E | Got stop updates, exiting')
@@ -3367,6 +3369,7 @@ export class ActorPF extends Actor {
         if (options.updateChanges !== false) {
             const updateObj = await this._updateChanges({data: data}, options);
 
+            console.log('D35E Diff', updateObj)
             if (updateObj?.diff?.items) delete updateObj.diff.items;
             diff = mergeObject(diff, updateObj?.diff || {});
         }
@@ -3376,17 +3379,21 @@ export class ActorPF extends Actor {
             diff.token = diffObject(this.data.token, data.token);
         }
 
+        delete diff.effects;
+        console.log('D35E Diff', diff, origData)
+
+        let returnActor = null
         if (Object.keys(diff).length) {
             let updateOptions = mergeObject(options, { diff: true })
-            await super.update(diff,updateOptions);
+            returnActor = await super.update(diff,updateOptions);
 
         }
 
-        await this.toggleConditionStatusIcons();
+        //await this.toggleConditionStatusIcons();
 
         this._updateMinions(options);
         //return false;
-        return this;
+        return Promise.resolve(returnActor ? returnActor : this);
     }
 
     async prepareUpdateData(data) {
@@ -5737,6 +5744,7 @@ export class ActorPF extends Actor {
             createData = [createData];
             noArray = true;
         }
+        console.log('D35E Create Data', createData)
 
         for (let obj of createData) {
             // Don't auto-equip transferred items
@@ -5813,8 +5821,8 @@ export class ActorPF extends Actor {
         }
         //this.createEmbeddedDocuments
         //return this.createOwnedItem((noArray ? createData[0] : createData), options);
-        console.log('D35E Data', embeddedName, createData)
-        return super.createEmbeddedDocuments(embeddedName, [(noArray ? createData[0] : createData)], options);
+        console.log('D35E Items Create', duplicate(createData), noArray)
+        return super.createEmbeddedDocuments(embeddedName, createData, options);
     }
 
     _computeEncumbrance(updateData, srcData) {
