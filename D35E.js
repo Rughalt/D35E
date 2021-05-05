@@ -350,7 +350,7 @@ Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
 
-Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
+Hooks.on("updateItem", (actor, item, changedData, options, user) => {
   TopPortraitBar.render(actor)
   if (!(actor instanceof Actor)) return;
 
@@ -358,10 +358,7 @@ Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  //actor.updateContainerData(updateData)
-  const item = actor.getOwnedItem(changedData._id);
-  if (item == null) return;
-  actor.updateItemResources(item);
+  actor.refresh(options)
 });
 Hooks.on("updateToken", (scene, token, data, options, user) => {
   if (user !== game.userId) {

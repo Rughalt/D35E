@@ -634,18 +634,18 @@ export class ItemPF extends Item {
 
         this._updateMaxUses(data, {srcData: srcData});
 
-        console.log("Item DATA", flattenObject(this.data), data)
         const diff = diffObject(flattenObject(this.data), data);
-        console.log("Item DIFF", diff, flattenObject(this.data), data)
         let updatedItem = null;
-        if (Object.keys(diff).length) {
-            updatedItem = await super.update(diff, options);
-        }
+        // if (Object.keys(diff).length) {
+        //     updatedItem = await super.update(diff, options);
+        // }
+
+
 
         // if (this.actor !== null)
         //     await this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
 
-        return Promise.resolve(updatedItem ? updatedItem : this);
+        return super.update(data, options);
     }
 
     _updateAlignmentEnhancement(data, enhancements, type, srcData) {
@@ -4016,8 +4016,10 @@ export class ItemPF extends Item {
         //const durationData = {rounds: this.data.data.timeline.total - this.data.data.timeline.elapsed, combat: game.combats.entities[0]._id, startRound: game.combats.entities[0].current.round || 0, startTurn: game.combats.entities[0].current.turn || 0}
         const createData = { label: this.name, icon: this.img, origin: this.uuid, disabled: !this.data.data.active };
         createData["flags.D35E.show"] = !this.data.data.hideFromToken && !game.settings.get("D35E", "hideTokenConditions");
-        const effect = ActiveEffect.create(createData, this.actor);
-        await effect.create();
+        const effect = await this.actor.createEmbeddedDocuments("ActiveEffect", [createData])
+
+            // await ActiveEffect.create(createData, this.actor);
+        //await effect.create();
 
         return effect;
     }

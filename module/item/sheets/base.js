@@ -1248,6 +1248,7 @@ export class ItemSheetPF extends ItemSheet {
 
         // Add new change
         if (a.classList.contains("add-change")) {
+            console.log('AAAAAITEM', this.item);
             //await this._onSubmit(event);  // Submit any unsaved changes
             let _changes = duplicate(this.item.data.data.changes) || [];
             return this.item.update({"data.changes": _changes.concat([["", "", "", "", 0]])});
@@ -1270,9 +1271,9 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = duplicate(this.item.data.data.combatChanges) || [];
+            const changes =this.item.data.data.combatChanges || [];
             // Combat Changes are
-            return this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", ""]])});
+            await this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", ""]])});
         }
 
         // Remove a change
@@ -1281,7 +1282,7 @@ export class ItemSheetPF extends ItemSheet {
             const li = a.closest(".change");
             const changes = duplicate(this.item.data.data.combatChanges);
             changes.splice(Number(li.dataset.change), 1);
-            return this.item.update({"data.combatChanges": changes});
+            await this.item.update({"data.combatChanges": changes});
         }
     }
 

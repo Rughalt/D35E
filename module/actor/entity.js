@@ -596,9 +596,7 @@ export class ActorPF extends Actor {
             if (curData.skills[sklKey] != null && curData.skills[sklKey].subSkills[subSklKey] != null) {
                 return `data.skills.${sklKey}.subSkills.${subSklKey}.changeBonus`;
             }
-        }
-
-        if (changeTarget.match(/^resistance\.([a-zA-Z0-9\-]+)$/)) {
+        } else if (changeTarget.match(/^resistance\.([a-zA-Z0-9\-]+)$/)) {
             const resistanceKey = RegExp.$1;
             return `data.resistances.${resistanceKey}.changeBonus`;
         }
@@ -1425,7 +1423,7 @@ export class ActorPF extends Actor {
             }
         }
 
-        console.log('D35E All Changes Before ', allChanges);
+        console.log('D35E SRCDATA', srcData1);
         // Add more changes
         let flags = {},
             sourceInfo = {};
@@ -1535,11 +1533,12 @@ export class ActorPF extends Actor {
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
         await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options, updateData);
-        console.log('D35E All Changes', allChanges);
+        console.log('D35E | Sorting Changes');
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
         // Parse changes
         let temp = [];
+        console.log('D35E | Master Changes');
         const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, { inplace: false });
         updateData = flattenObject({ data: mergeObject(origData.data, expandObject(updateData).data, { inplace: false }) });
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
@@ -1552,7 +1551,7 @@ export class ActorPF extends Actor {
                 console.log('D35E | Minion has some changes removed |', _changesLength,allChanges.length);
             }
         }
-
+        console.log('D35E | Rolling Changes');
         let currentChangeTarget = null;
         let changeRollData = null;
         // All changes are sorted and lumped together
@@ -1583,15 +1582,15 @@ export class ActorPF extends Actor {
             }
             this._parseChange(change, changeData[changeTarget], flags);
             temp.push(changeData[changeTarget]);
-
             if (allChanges.length <= a + 1 || allChanges[a + 1].raw[2] !== changeTarget) {
-                const newData = this._applyChanges(changeTarget, temp, srcData1);
+                const newData = this._applyChanges(changeTarget, temp, srcData1, sourceInfo,change.source.name || change.source?.item?.name, change.source.type);
                 this._addDynamicData(updateData, newData, flags, Object.keys(this.data.data.abilities), srcData1, false, changeTarget);
                 temp = [];
             }
         });
 
 
+        console.log('D35E | Rolled Changes');
         for (let flagKey of Object.keys(flags)) {
             if (!flags[flagKey]) continue;
 
@@ -1627,6 +1626,8 @@ export class ActorPF extends Actor {
             }
         }
 
+
+        console.log('D35E | ACP and spell slots');
         // Reduce final speed under certain circumstances
         let armorItems = srcData1.items.filter(o => o.type === "equipment");
         if ((updateData["data.attributes.encumbrance.level"] >= 1 && !flags.noEncumbrance) ||
@@ -1783,27 +1784,28 @@ export class ActorPF extends Actor {
 
 
         // Refresh source info
-        for (let [bt, change] of Object.entries(changeData)) {
-            for (let [ct, values] of Object.entries(change)) {
-                let customBuffTargets = this._getChangeFlat(bt, ct, srcData1.data);
-                if (!(customBuffTargets instanceof Array)) customBuffTargets = [customBuffTargets];
-
-                // Replace certain targets
-                // Replace ability penalties
-                customBuffTargets = customBuffTargets.filter(t => {
-                    return t != null;
-                }).map(t => {
-                    return t.replace(/^data\.abilities\.([a-zA-Z0-9]+)\.penalty$/, "data.abilities.$1.total");
-                });
-
-                // Add sources
-                for (let ebt of Object.values(customBuffTargets)) {
-                    sourceInfo[ebt] = sourceInfo[ebt] || { positive: [], negative: [] };
-                    if (values.positive.value > 0) sourceInfo[ebt].positive.push(...values.positive.sources);
-                    if (values.negative.value < 0) sourceInfo[ebt].negative.push(...values.negative.sources);
-                }
-            }
-        }
+        console.log('D35E | Change Data', changeData)
+        // for (let [bt, change] of Object.entries(changeData)) {
+        //     for (let [ct, values] of Object.entries(change)) {
+        //         let customBuffTargets = this._getChangeFlat(bt, ct, srcData1.data);
+        //         if (!(customBuffTargets instanceof Array)) customBuffTargets = [customBuffTargets];
+        //
+        //         // Replace certain targets
+        //         // Replace ability penalties
+        //         customBuffTargets = customBuffTargets.filter(t => {
+        //             return t != null;
+        //         }).map(t => {
+        //             return t.replace(/^data\.abilities\.([a-zA-Z0-9]+)\.penalty$/, "data.abilities.$1.total");
+        //         });
+        //
+        //         // Add sources
+        //         for (let ebt of Object.values(customBuffTargets)) {
+        //             sourceInfo[ebt] = sourceInfo[ebt] || { positive: [], negative: [] };
+        //             if (values.positive.value > 0) sourceInfo[ebt].positive.push(...values.positive.sources);
+        //             if (values.negative.value < 0) sourceInfo[ebt].negative.push(...values.negative.sources);
+        //         }
+        //     }
+        // }
         if (fullConditions.wildshaped || fullConditions.polymorph) //This retains max HP
             linkData(srcData1, updateData, "data.attributes.hp.max", prevValues.mhp);
 
@@ -1811,10 +1813,12 @@ export class ActorPF extends Actor {
         this._updateAbilityRelatedFields(srcData1, updateData, sourceInfo);
 
 
+        console.log('D35E | Source Details');
         this._setSourceDetails(mergeObject(this.data, srcData1, { inplace: false }), sourceInfo, flags);
 
-        const diffData = diffObject(this.data, srcData1);
+        const diffData = (srcData1);
         // Apply changes
+        console.log('D35E | Apply Changes');
         if (this.collection != null && Object.keys(diffData).length > 0) {
             let newData = {};
             if (data != null) newData = flattenObject(mergeObject(data, flattenObject(diffData), { inplace: false }));
@@ -1871,7 +1875,7 @@ export class ActorPF extends Actor {
         }
     }
 
-    _applyChanges(buffTarget, changeData, rollData) {
+    _applyChanges(buffTarget, changeData, rollData, sourceInfo, sourceName, sourceType) {
         let consolidatedChanges = {};
         let changes = {};
         for (let change of changeData) {
@@ -1908,6 +1912,9 @@ export class ActorPF extends Actor {
                             consolidatedChanges[target] = round(consolidatedChanges[target])
                         }
                     }
+                    sourceInfo[target] = sourceInfo[target] || { positive: [], negative: [] };
+                    if (consolidatedChanges[target] < 0) sourceInfo[target].positive.push({name:sourceName, type: sourceType, value: consolidatedChanges[target]});
+                    if (consolidatedChanges[target] > 0) sourceInfo[target].negative.push({name:sourceName, type: sourceType, value: consolidatedChanges[target]});
                 }
             }
         }
@@ -2421,6 +2428,7 @@ export class ActorPF extends Actor {
             }
             {
                 // Racial items
+
                 let raceObject = this.items.filter(o => o.type === "race")[0];
                 if (raceObject) {
                     for (let feature of raceObject.data.data.addedAbilities || []) {
@@ -3362,6 +3370,7 @@ export class ActorPF extends Actor {
         //     console.log('D35E | Got stop updates, exiting')
         //     return
         // }
+        console.log('D35E | Running update')
         data = await this.prepareUpdateData(data);
 
         // Update changes
@@ -3375,9 +3384,9 @@ export class ActorPF extends Actor {
         }
 
         // Diff token data
-        if (data.token != null) {
-            diff.token = diffObject(this.data.token, data.token);
-        }
+        // if (data.token != null) {
+        //     diff.token = diffObject(this.data.token, data.token);
+        // }
 
         delete diff.effects;
         console.log('D35E Diff', diff, origData)
@@ -3389,7 +3398,7 @@ export class ActorPF extends Actor {
 
         }
 
-        //await this.toggleConditionStatusIcons();
+        await this.toggleConditionStatusIcons();
 
         this._updateMinions(options);
         //return false;
@@ -3602,10 +3611,12 @@ export class ActorPF extends Actor {
         return data;
     }
 
+
     _onUpdate(data, options, userId, context) {
         if (hasProperty(data, "data.attributes.vision.lowLight") || hasProperty(data, "data.attributes.vision.darkvision")) {
             canvas.sight.initializeTokens();
         }
+
 
         let actorRollData = mergeObject(this.getRollData(), data, {inplace: false})
         for (let i of this.items.values()) {
@@ -5747,6 +5758,7 @@ export class ActorPF extends Actor {
         console.log('D35E Create Data', createData)
 
         for (let obj of createData) {
+            delete obj.effects;
             // Don't auto-equip transferred items
             if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
                 obj.data.equipped = false;
@@ -6817,7 +6829,7 @@ export class ActorPF extends Actor {
             CONFIG.statusEffects.forEach((con) => {
                 const idx = fx.findIndex((e) => e.getFlag("core", "statusId") === con.id);
                 if (CONFIG.D35E.conditions[con.id] && (idx !== -1) != this.data.data.attributes.conditions[con.id])
-                    promises.push(token.toggleEffect(con, { midUpdate: true }));
+                    promises.push(token.object.toggleEffect(con, { midUpdate: true }));
             });
         }
         return Promise.all(promises);
@@ -7002,3 +7014,6 @@ export class ActorPF extends Actor {
             await this.updateEmbeddedEntity("Item", itemsToUpdate, {stopUpdates: true, ignoreSpellbookAndLevel: true});
     }
 }
+
+
+
