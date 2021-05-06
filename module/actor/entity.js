@@ -13,8 +13,8 @@ import {Roll35e} from "../roll.js"
  */
 export class ActorPF extends Actor {
     /* -------------------------------------------- */
-    //API_URI = 'https://companion.legaciesofthedragon.com/';
-    API_URI = 'http://localhost:5000';
+    API_URI = 'https://companion.legaciesofthedragon.com/';
+    //API_URI = 'http://localhost:5000';
 
     static chatListeners(html) {
         html.on('click', 'button[data-action]', this._onChatCardButtonAction.bind(this));
