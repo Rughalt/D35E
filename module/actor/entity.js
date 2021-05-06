@@ -12,7 +12,8 @@ import {D35E} from "../config.js";
  */
 export class ActorPF extends Actor {
     /* -------------------------------------------- */
-    API_URI = 'https://companion.legaciesofthedragon.com/';
+    //API_URI = 'https://companion.legaciesofthedragon.com/';
+    API_URI = 'http://localhost:5000';
 
     static chatListeners(html) {
         html.on('click', 'button[data-action]', this._onChatCardButtonAction.bind(this));
@@ -5991,6 +5992,7 @@ export class ActorPF extends Actor {
             return;
 
         function isActionRollable(_action) {
+            if (_action.indexOf("://")) return false;
             return /^(.*?[0-9]d[0-9]+.*?)$/.test(_action)
                 || _action.indexOf("max") !== -1
                 || _action.indexOf("min") !== -1
@@ -6816,11 +6818,12 @@ export class ActorPF extends Actor {
         }, {});
     }
 
-    async syncToCompendium() {
+    async syncToCompendium(manual = false) {
         if (!this.data.data.companionUuid) return;
         let apiKey = game.settings.get("D35E", "apiKeyWorld")
         if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
         if (!apiKey) return;
+        let that = this;
         $.ajax({
             url: `${this.API_URI}/api/character/${this.data.data.companionUuid}`,
             type: 'PUT',
@@ -6830,23 +6833,38 @@ export class ActorPF extends Actor {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(this.data),
             success: function(data) {
-                //play with data
+                if (manual) {
+                    ui.notifications.info(game.i18n.localize("D35E.NotificationSyncSuccessfull").format(that.data.name));
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus)
+                if (manual) {
+                    ui.notifications.error(game.i18n.localize("D35E.NotificationSyncError").format(that.data.name));
+                }
             }
         });
     }
 
-    async getQueuedActions() {
-        if (!this.data.data.companionUuid) return;
-        let that = this;
-        let apiKey = game.settings.get("D35E", "apiKeyWorld")
-        if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
+    get canAskForRequest() {
+        if (!this.data.data.companionUuid) return false;
 
         let userWithCharacterIsActive = game.users.players.some(u => u.active && u.data.character === this.id)
         let isMyCharacter = game.users.current.data.character === this.id;
         // It is not ours character and user that has this character is active - so better direct commands to his/her account
-        if (!isMyCharacter && userWithCharacterIsActive) return;
+        if (!isMyCharacter && userWithCharacterIsActive) return false;
 
+        return true;
+    }
+
+    async getQueuedActions() {
+        if (!this.canAskForRequest) return;
+
+        let that = this;
+        let apiKey = game.settings.get("D35E", "apiKeyWorld")
         if (!apiKey) return;
+
+        if (this.data.data.companionUsePersonalKey) apiKey = game.settings.get("D35E", "apiKeyPersonal")
         $.ajax({
             url: `${this.API_URI}/api/character/actions/${this.data.data.companionUuid}`,
             type: 'GET',

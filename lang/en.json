@@ -1429,6 +1429,9 @@
   "D35E.NoBuffDisplay": "No Buff Icons on Actor Token",
   "D35E.NoBuffDisplayH": "Do not display buff icons on token for this actor for people other then OWNER and GM",
 
+  "D35E.NotificationSyncSuccessfull": "Manual sync to LotD Players Companion for {0} was successful!",
+  "D35E.NotificationSyncError": "Manual sync to LotD Players Companion for {0} encountered an error! Check Companion setup for both World and Character!",
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
