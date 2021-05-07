@@ -1427,7 +1427,7 @@ export class ItemPF extends Item {
             }
 
             if ((fullAttack || actor.data.data.attributes.bab.total < 6) && rapidShot) {
-                allAttacks.push({
+                allAttacks.unshift({
                     bonus: 0,
                     label: `Rapid Shot`
                 })
@@ -1462,7 +1462,7 @@ export class ItemPF extends Item {
 
             let isHasted = (this.actor?.items || []).filter(o => o.type === "buff" && o.data.data.active && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
             if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted && (getProperty(this.data, "data.attackType") === "weapon" || getProperty(this.data, "data.attackType") === "natural")) {
-                allAttacks.push({
+                allAttacks.unshift({
                     bonus: 0,
                     label: `Haste`
                 })
@@ -4106,6 +4106,7 @@ export class ItemPF extends Item {
         if (this.data.data.ability.damage)
             abilityBonus = parseInt(this.actor.data.data.abilities[this.data.data.ability.damage].mod)*this.data.data.ability.damageMult
         if (abilityBonus) results.push(abilityBonus)
+        if (this.data.data.enh) results.push(this.data.data.enh)
         return results.join(" + ");
     }
 

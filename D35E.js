@@ -101,11 +101,11 @@ Hooks.once("init", async function() {
 
 
   D35ELayer.registerLayer();
+  // Patch Core Functions
+  PatchCore();
   // Preload Handlebars Templates
   await preloadHandlebarsTemplates();
   applyConfigModifications();
-  // Patch Core Functions
-  PatchCore();
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
@@ -207,10 +207,20 @@ Hooks.once("ready", async function() {
     TopPortraitBar.render(game.actors.get(key))
   }
 
+  let updateRequestArray = []
+
   const interval = setInterval(function() {
-    game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid).forEach(a => {
+    if (updateRequestArray.length === 0) {
+      game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
+        updateRequestArray.push(a);
+      });
+    }
+  }, 1000);
+
+  const actionRequestInterval = setInterval(function() {
+    let a = updateRequestArray.shift();
+    if (a)
       a.getQueuedActions();
-    });
   }, 500);
 
   if (!game.user.isGM) {
