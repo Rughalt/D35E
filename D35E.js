@@ -39,9 +39,11 @@ import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
+import {TreasureGeneratorDialog} from "./module/apps/treasure-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
 import {applyConfigModifications} from "./module/config-tools.js";
 import {addLowLightVisionToLightConfig} from "./module/low-light-vision.js";
+import {genTreasureFromToken} from "./module/treasure/treasure.js"
 
 // Add String.format
 if (!String.prototype.format) {
@@ -407,6 +409,26 @@ Hooks.on("createToken", async (scene, token, options, userId) => {
 
   // Update changes and generate sourceDetails to ensure valid actor data
   if (actor != null) actor.refresh();
+
+  if (game.settings.get("D35E", "randomizeHp")){
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
+      console.log(item)
+      let hd = item['data']['hd']
+      let hp = 0;
+      let levels = item['data']['levels'];
+      for (let i = 0; i < levels; i++) {
+        hp += getRandomInt(1,hd);
+      }
+      actor.items.get(item._id).update({data:{hp:hp}})
+    });
+  }
+
 });
 
 
@@ -620,7 +642,6 @@ function rollTurnUndead({actorName=null, actorId=null}={}) {
 
 
 Hooks.on("getSceneControlButtons", (controls) => {
-
   if (!game.user.isGM) return;
   controls.push({
     name: "d35e-gm-tools",
@@ -629,19 +650,47 @@ Hooks.on("getSceneControlButtons", (controls) => {
     layer: "D35ELayer",
     tools: [
       {
+        name: "select",
+        title: "CONTROLS.BasicSelect",
+        icon: "fas fa-expand",
+      },
+      {
         name: "d35e-gm-tools-encounter-generator",
         title: "D35E.EncounterGenerator",
         icon: "fas fa-dragon",
-        onClick: () => {new EncounterGeneratorDialog().render(true)
+        onClick: () => {
+          new EncounterGeneratorDialog().render(true);
           //QuestLog.render(true)
           // Place your code here - <app class name>.render()
           // Remember you must import file on the top - look at imports
         },
-        button: true
-      }
-    ]
+        button: true,
+      },
+      {
+        name: "d35e-gm-tools-treasure-generator",
+        title: "D35E.TreasureGenerator",
+        icon: "fas fa-gem",
+        onClick: async () => {
+          for (let token of canvas.tokens.controlled.filter(
+            (t) => game.actors.get(t.data.actorId).data.type === "npc"
+          ))
+            {await genTreasureFromToken(token);}
+            ui.notifications.info(`Treasure generation finished`);
+        },
+        button: true,
+      },
+      {
+        name: "d35e-gm-tools-custom-treasure-generator",
+        title: "D35E.CustomTreasureGenerator",
+        icon: "fas fa-store",
+        onClick: () => {
+          new TreasureGeneratorDialog().render(true);
+        },
+        button: true,
+      },
+    ],
+    activeTool: "select",
   });
 });
-
 
 

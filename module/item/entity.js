@@ -3813,13 +3813,12 @@ export class ItemPF extends Item {
      */
     async addEnhancementFromCompendium(packName, packId, enhValue) {
         let itemData = {}
-        const pack = game.packs.find(p => p.collection === packName);
-        const packItem = await pack.getEntity(packId);
+        const packItem = await game.packs.find(p => p.collection === packName).getEntity(packId);
         if (packItem != null) {
             itemData = packItem.data
-            itemData.data.enh = value;
+            itemData.data.enh = enhValue;
             ItemPF.setEnhItemPrice(itemData)
-            await this.addEnhancementFromData(itemData)
+            return await this.getEnhancementFromData(itemData)
         }
 
     }
@@ -3845,6 +3844,10 @@ export class ItemPF extends Item {
     }
 
     async addEnhancementFromData(itemData) {
+        return this.update(this.getEnhancementFromData(itemData))
+    }
+
+    async getEnhancementFromData(itemData) {
         const updateData = {};
         let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
         const enhancement = duplicate(itemData)
@@ -3853,7 +3856,7 @@ export class ItemPF extends Item {
         this.updateMagicItemName(updateData, _enhancements);
         this.updateMagicItemProperties(updateData, _enhancements);
         updateData[`data.enhancements.items`] = _enhancements;
-        return this.update(updateData)
+        return updateData
     }
 
     async createEnhSpell(itemData, type) {
@@ -3880,10 +3883,10 @@ export class ItemPF extends Item {
         await this.update(updateData);
     }
 
-    updateMagicItemName(updateData, _enhancements, force = false) {
+    updateMagicItemName(updateData, _enhancements, force = false, useIdentifiedName = false) {
         if ((this.data.data.enhancements !== undefined && this.data.data.enhancements.automation !== undefined && this.data.data.enhancements.automation !== null) || force) {
             if (this.data.data.enhancements.automation.updateName || force) {
-                let baseName = this.data.data.unidentified.name
+                let baseName = useIdentifiedName && this.data.data.identifiedName || this.data.data.unidentified.name 
                 if (this.data.data.unidentified.name === '') {
                     updateData[`data.unidentified.name`] = this.name;
                     baseName = this.name
