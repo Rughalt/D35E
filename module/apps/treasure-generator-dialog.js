@@ -235,15 +235,15 @@ export class TreasureGeneratorDialog extends FormApplication {
     // treasureGen.toChat();
 
     let ItemPfArr = treasureGen.toItemPfArr();
-
+    let actor = canvas.tokens.get(token.data._id).actor
     //TODO adding items to actor, verify 0.8 compatibility
     for await (let it of ItemPfArr) {
       if (it === null || it === undefined) continue;
       let item = await canvas.tokens
         .get(token.data._id)
         .actor.createEmbeddedEntity("OwnedItem", it, { stopUpdates: true });
-      // console.log("item: ", item);
-      item = await canvas.tokens.get(token.data._id).actor.items.get(item._id);
+      console.log("item: ", item);
+      item = await actor.items.get(item._id);
       if (item.type === "weapon" || item.type === "equipment") {
         const updateData = {};
         let _enhancements = duplicate(
@@ -255,7 +255,8 @@ export class TreasureGeneratorDialog extends FormApplication {
         await item.update(updateData, { stopUpdates: true });
       }
     }
-    canvas.tokens.get(token.data._id).actor.groupItems();
+    actor.groupItems();
+    actor.refresh();
     ui.notifications.info(`Treasure generation finished`);
   }
 
