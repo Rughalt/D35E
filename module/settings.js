@@ -523,6 +523,14 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "randomizeHp", {
+    name: "Randomize npc hp",
+    hint: "This setting randomizes npc hp on canvas drop.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
 
   // game.settings.register("D35E", 'displayItemsInContainers', {
   //   name: `SETTINGS.D35EDisplayItemsInContainersN`,

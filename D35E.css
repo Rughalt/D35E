@@ -564,6 +564,29 @@
 .dr-setting .item-list h4 {
   margin: 0;
 }
+
+/* ----------------------------------------- */
+/* Treasure Generator
+/* ----------------------------------------- */
+.delTreasure{
+  float: right;
+}
+#treasureAmount{
+  text-align: center;
+}
+
+.treasureRow{
+  display: inline-block;
+  width: 90%;
+  border: none;
+  background: url(icons/ui/parchment-2.png) repeat;
+  color: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
 /* ----------------------------------------- */
 /* Encounter Generator
 /* ----------------------------------------- */
