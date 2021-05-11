@@ -855,15 +855,17 @@ export class ActorSheetPF extends ActorSheet {
 
 
   _rollRandomHitDie(event) {
+    let itemUpdates = []
     this.actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
-      let hd = item['data']['hd']
+      let hd = item.data.data.hd;
       let hp = 0;
-      let levels = item['data']['levels'];
+      let levels = item.data.data.levels;
       for (let i = 0; i < levels; i++) {
         hp += this.getRandomInt(1,hd);
       }
-      this.setItemUpdate(item._id, "data.hp", hp);
+      itemUpdates.push({_id: item._id, "data.hp": hp});
     });
+    this.actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
   }
 
   getRandomInt(min, max) {
@@ -1455,6 +1457,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const li = event.currentTarget.closest(".item");
     if (keyboard.isDown("Shift")) {
+
       this.actor.deleteOwnedItem(li.dataset.itemId);
     }
     else {

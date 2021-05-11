@@ -212,7 +212,7 @@ Hooks.once("ready", async function() {
 
   const interval = setInterval(function() {
     if (updateRequestArray.length === 0) {
-      game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
+      game.actors.entities.filter(obj => obj.testUserPermission(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
         updateRequestArray.push(a);
       });
     }
@@ -362,15 +362,19 @@ Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
 
-Hooks.on("updateItem", (actor, item, changedData, options, user) => {
-  TopPortraitBar.render(actor)
-  if (!(actor instanceof Actor)) return;
+Hooks.on("updateItem", (item, changedData, options, user) => {
+  console.log('D35E | Updated Item', item,changedData,options,user,game.userId)
+  let actor = item.parent;
+  if (actor) {
+    TopPortraitBar.render(actor)
+    if (!(actor instanceof Actor)) return;
 
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
-    return
+    if (user !== game.userId) {
+      console.log("Not updating actor as action was started by other user")
+      return
+    }
+    actor.refresh(options)
   }
-  actor.refresh(options)
 });
 Hooks.on("updateToken", (scene, token, data, options, user) => {
   if (user !== game.userId) {
@@ -409,14 +413,14 @@ Hooks.on("renderLightConfig", (app, html) => {
 });
 
 
-Hooks.on("createToken", async (scene, token, options, userId) => {
+Hooks.on("createToken", async (token, options, userId) => {
   if (userId !== game.user._id) return;
 
-  const actor = game.actors.tokens[token._id] ?? game.actors.get(token.actorId);
+  const actor = game.actors.tokens[token._id] ?? game.actors.get(token.data.actorId);
   actor.toggleConditionStatusIcons();
 
   // Update changes and generate sourceDetails to ensure valid actor data
-  if (actor != null) actor.refresh();
+  if (actor != null) await actor.refresh();
 
   if (game.settings.get("D35E", "randomizeHp")){
     function getRandomInt(min, max) {
@@ -424,17 +428,17 @@ Hooks.on("createToken", async (scene, token, options, userId) => {
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-
+    let itemUpdates = []
     actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
-      console.log(item)
-      let hd = item['data']['hd']
+      let hd = item.data.data.hd
       let hp = 0;
-      let levels = item['data']['levels'];
+      let levels = item.data.data.levels;
       for (let i = 0; i < levels; i++) {
         hp += getRandomInt(1,hd);
       }
-      actor.items.get(item._id).update({data:{hp:hp}})
+      itemUpdates.push({_id: item._id, "data.hp": hp});
     });
+    actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
   }
 
 });

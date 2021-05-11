@@ -151,11 +151,11 @@
     {{#if showIdentifyDescription}}
     <section class="description-body">
       <div class="tab description-group flexcol" data-group="description" data-tab="identified">
-      {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
+      {{editor content=data.data.description.value target="data.description.value" button=true owner=owner editable=editable}}
       </div>
 
       <div class="tab description-group flexcol" data-group="description" data-tab="unidentified">
-      {{editor content=data.description.unidentified target="data.description.unidentified" button=true owner=owner editable=editable}}
+      {{editor content=data.data.description.unidentified target="data.description.unidentified" button=true owner=owner editable=editable}}
       </div>
     </section>
     {{else}}

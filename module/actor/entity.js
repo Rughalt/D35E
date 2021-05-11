@@ -3701,6 +3701,15 @@ export class ActorPF extends Actor {
         if (resetExp) data["data.details.xp.value"] = minExp;
     }
 
+    async deleteOwnedItem(itemId) {
+        const item = this.items.get(itemId);
+        return item.delete();
+    }
+
+    getOwnedItem(itemId) {
+        return this.items.get(itemId);
+    }
+
     async updateClassProgressionLevel(data, globalUpdateData, data1, levelUpData) {
 
         console.log('D35E | ActorPF | updateClassProgressionLevel | Starting update')

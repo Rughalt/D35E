@@ -367,34 +367,34 @@ export class ItemSheetPF extends ItemSheet {
 
         // Prepare class specific stuff
         if (this.item.data.type === "class") {
-            for (let [a, s] of Object.entries(data.data.savingThrows)) {
+            for (let [a, s] of Object.entries(data.data.data.savingThrows)) {
                 s.label = CONFIG.D35E.savingThrows[a];
             }
-            for (let [a, s] of Object.entries(data.data.fc)) {
+            for (let [a, s] of Object.entries(data.data.data.fc)) {
                 s.label = CONFIG.D35E.favouredClassBonuses[a];
             }
             data.powerPointLevels = {}
-            Object.keys(data.data.powerPointTable).forEach(key => {
+            Object.keys(data.data.data.powerPointTable).forEach(key => {
                 data.powerPointLevels[key] = {
-                    value: data.data.powerPointTable[key],
-                    known: data.data.powersKnown !== undefined ? data.data.powersKnown[key] || 0 : 0,
-                    maxLevel: data.data.powersMaxLevel !== undefined ? data.data.powersMaxLevel[key] || 0 : 0
+                    value: data.data.data.powerPointTable[key],
+                    known: data.data.data.powersKnown !== undefined ? data.data.data.powersKnown[key] || 0 : 0,
+                    maxLevel: data.data.data.powersMaxLevel !== undefined ? data.data.data.powersMaxLevel[key] || 0 : 0
                 }
             })
 
-            data.powerPointBonusBaseAbility = data.data.powerPointBonusBaseAbility
+            data.powerPointBonusBaseAbility = data.data.data.powerPointBonusBaseAbility
             data.abilities = {}
             for (let [a, s] of Object.entries(CONFIG.D35E.abilities)) {
                 data.abilities[a] = {}
                 data.abilities[a].label = s;
             }
             data.hasRequirements = true;
-            data.hasMaxLevel = data.data.maxLevel !== undefined && data.data.maxLevel !== null && data.data.maxLevel !== "" && data.data.maxLevel !== 0;
-            data.isBaseClass = data.data.classType === "base";
-            data.isRacialHD = data.data.classType === "racial";
-            data.isTemplate = data.data.classType === "template";
-            data.isPsionSpellcaster = data.data.spellcastingType === "psionic";
-            data.isSpellcaster = data.data.spellcastingType !== undefined && data.data.spellcastingType !== null && data.data.spellcastingType !== "none";
+            data.hasMaxLevel = data.data.data.maxLevel !== undefined && data.data.data.maxLevel !== null && data.data.data.maxLevel !== "" && data.data.data.maxLevel !== 0;
+            data.isBaseClass = data.data.data.classType === "base";
+            data.isRacialHD = data.data.data.classType === "racial";
+            data.isTemplate = data.data.data.classType === "template";
+            data.isPsionSpellcaster = data.data.data.spellcastingType === "psionic";
+            data.isSpellcaster = data.data.data.spellcastingType !== undefined && data.data.data.spellcastingType !== null && data.data.data.spellcastingType !== "none";
             data.isNonPsionSpellcaster = data.isSpellcaster && !data.isPsionSpellcaster
             data.progression = []
             data.spellProgression = []
@@ -479,7 +479,7 @@ export class ItemSheetPF extends ItemSheet {
             }
 
 
-            for (let level = 1; level < data.data.maxLevel + 1; level++) {
+            for (let level = 1; level < this.item.data.data.maxLevel + 1; level++) {
                 let progressionData = {}
                 let spellProgressionData = {}
                 let knownSpellProgressionData = {}
@@ -488,13 +488,13 @@ export class ItemSheetPF extends ItemSheet {
                 spellProgressionData.level = level
                 knownSpellProgressionData.level = level
                 for (let a of ['fort', 'ref', 'will']) {
-                    const classType = getProperty(data.data, "classType") || "base";
+                    const classType = getProperty(this.item.data.data, "classType") || "base";
 
-                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] != null ? CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] : "0";
+                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][this.item.data.data.savingThrows[a].value] != null ? CONFIG.D35E.classSavingThrowFormulas[classType][this.item.data.data.savingThrows[a].value] : "0";
                     progressionData[a] = Math.floor(new Roll35e(formula, {level: level}).roll().total);
                 }
                 {
-                    const formula = CONFIG.D35E.classBABFormulas[data.data.bab] != null ? CONFIG.D35E.classBABFormulas[data.data.bab] : "0";
+                    const formula = CONFIG.D35E.classBABFormulas[this.item.data.data.bab] != null ? CONFIG.D35E.classBABFormulas[this.item.data.data.bab] : "0";
                     let bab = Math.floor(new Roll35e(formula, {level: level}).roll().total);
                     let babModifiers = []
                     while (bab > 0) {
