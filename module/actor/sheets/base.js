@@ -769,7 +769,7 @@ export class ActorSheetPF extends ActorSheet {
     {
       $(`.sync-to-companion`).unbind( "mouseup" );
       $(`.sync-to-companion`).mouseup(ev => {
-        this.actor.syncToCompendium()
+        this.actor.syncToCompendium(true)
       });
       $(`.backup-to-companion`).unbind( "mouseup" );
       $(`.backup-to-companion`).mouseup(async ev => {

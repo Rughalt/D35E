@@ -1436,7 +1436,7 @@ export class ItemPF extends Item {
             }
 
             if ((fullAttack || actor.data.data.attributes.bab.total < 6) && rapidShot) {
-                allAttacks.push({
+                allAttacks.unshift({
                     bonus: 0,
                     label: `Rapid Shot`
                 })
@@ -1471,7 +1471,7 @@ export class ItemPF extends Item {
 
             let isHasted = (actor?.items || []).filter(o => o.type === "buff" && o.data.data.active && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
             if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted && (getProperty(this.data, "data.attackType") === "weapon" || getProperty(this.data, "data.attackType") === "natural")) {
-                allAttacks.push({
+                allAttacks.unshift({
                     bonus: 0,
                     label: `Haste`
                 })
@@ -3825,13 +3825,12 @@ export class ItemPF extends Item {
      */
     async addEnhancementFromCompendium(packName, packId, enhValue) {
         let itemData = {}
-        const pack = game.packs.find(p => p.collection === packName);
-        const packItem = await pack.getEntity(packId);
+        const packItem = await game.packs.find(p => p.collection === packName).getEntity(packId);
         if (packItem != null) {
             itemData = packItem.data
-            itemData.data.enh = value;
+            itemData.data.enh = enhValue;
             ItemPF.setEnhItemPrice(itemData)
-            await this.addEnhancementFromData(itemData)
+            return await this.getEnhancementFromData(itemData)
         }
 
     }
@@ -3858,7 +3857,10 @@ export class ItemPF extends Item {
 
     async addEnhancementFromData(itemData) {
         if (this.hasEnhancement(itemData.name)) return;
+        return this.update(this.getEnhancementFromData(itemData))
+    }
 
+    async getEnhancementFromData(itemData) {
         const updateData = {};
         let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
         const enhancement = duplicate(itemData)
@@ -3867,7 +3869,7 @@ export class ItemPF extends Item {
         this.updateMagicItemName(updateData, _enhancements);
         this.updateMagicItemProperties(updateData, _enhancements);
         updateData[`data.enhancements.items`] = _enhancements;
-        return this.update(updateData)
+        return updateData
     }
 
     hasEnhancement(name) {
@@ -3903,10 +3905,10 @@ export class ItemPF extends Item {
         await this.update(updateData);
     }
 
-    updateMagicItemName(updateData, _enhancements, force = false) {
+    updateMagicItemName(updateData, _enhancements, force = false, useIdentifiedName = false) {
         if ((this.data.data.enhancements !== undefined && this.data.data.enhancements.automation !== undefined && this.data.data.enhancements.automation !== null) || force) {
             if (this.data.data.enhancements.automation.updateName || force) {
-                let baseName = this.data.data.unidentified.name
+                let baseName = useIdentifiedName && this.data.data.identifiedName || this.data.data.unidentified.name 
                 if (this.data.data.unidentified.name === '') {
                     updateData[`data.unidentified.name`] = this.name;
                     baseName = this.name
