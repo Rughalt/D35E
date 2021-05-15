@@ -107,6 +107,23 @@
         </li>
         {{/each}}
       </ol>
+
+      <h4 class="attack-header">
+        {{localize "D35E.PerRound"}} {{localize "D35E.SpecialActions"}}
+        <a class="r-special-control add-special"><i class="fas fa-plus"></i></a>
+      </h4>
+      <ol class="special-parts form-group">
+        {{#each data.data.perRoundActions as |part a|}}
+        <li class="special-part flexcol" data-per-round-actions="{{a}}">
+          <div class="flexrow"><span>Name:</span><input type="text" name="data.perRoundActions.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "name"}}"/></div>
+          <div class="flexrow"><span>Action:</span><input type="text" name="data.perRoundActions.{{a}}.action" placeholder="{{localize "D35E.Action"}}" value="{{lookup this "action"}}"/></div>
+          <div class="flexrow"><span>Condition:</span><input type="text" name="data.perRoundActions.{{a}}.condition" placeholder="{{localize "D35E.Condition"}}" value="{{lookup this "condition"}}"/></div>
+          <div class="flexrow"><span>Icon path:</span><input type="text" name="data.perRoundActions.{{a}}.img" placeholder="{{localize "D35E.Image"}}" value="{{lookup this "img"}}"/></div>
+          <a class="r-special-control delete-special"><i class="fas fa-minus"></i>Remove</a>
+
+        </li>
+        {{/each}}
+      </ol>
     </div>
     <div class="tab flexcol" data-group="primary" data-tab="changes">
       <div class="form-group select">

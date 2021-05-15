@@ -1588,6 +1588,7 @@
       },
       "activateActions": [],
       "deactivateActions": [],
+      "perRoundActions": [],
       "hideFromToken": false
     },
     "consumable": {

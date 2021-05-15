@@ -902,6 +902,15 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        let perRoundActions = Object.entries(formData).filter(e => e[0].startsWith("data.perRoundActions"));
+        formData["data.perRoundActions"] = perRoundActions.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = {name: "", action: ""};
+
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         // Update the Item
 
         if (this.containerMap.has(formData['data.containerId'])) {
@@ -976,6 +985,7 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".special-control").click(this._onSpecialControl.bind(this));
         html.find(".a-special-control").click(this._onActivateSpecialControl.bind(this));
         html.find(".d-special-control").click(this._onDeactivateSpecialControl.bind(this));
+        html.find(".r-special-control").click(this._onPerRoundSpecialControl.bind(this));
 
         // Modify damage formula
         html.find(".damage-control").click(this._onDamageControl.bind(this));
@@ -1209,6 +1219,41 @@ export class ItemSheetPF extends ItemSheet {
             const activateActions = duplicate(this.item.data.data.activateActions);
             activateActions.splice(Number(li.dataset.activateActions), 1);
             return this.item.update({"data.activateActions": activateActions});
+        }
+    }
+
+    /**
+     * Adds or removes per round action from buffs.
+     * Available for item type: Buff
+     * @private
+     */
+    async _onPerRoundSpecialControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+        // Add new attack component
+        if (a.classList.contains("add-special")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            let perRoundActions = this.item.data.data.perRoundActions;
+            if (perRoundActions === undefined)
+                perRoundActions = []
+            return this.item.update({
+                "data.perRoundActions": perRoundActions.concat([[{
+                    name: "",
+                    action: "",
+                    range: "",
+                    img: "",
+                    condition: ""
+                }]])
+            });
+        }
+
+        // Remove an attack component
+        if (a.classList.contains("delete-special")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".special-part");
+            const perRoundActions = duplicate(this.item.data.data.perRoundActions);
+            perRoundActions.splice(Number(li.dataset.perRoundActions), 1);
+            return this.item.update({"data.perRoundActions": perRoundActions});
         }
     }
 
@@ -1782,7 +1827,7 @@ export class ItemSheetPF extends ItemSheet {
             const updateData = {};
             let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
             _enhancements = _enhancements.filter(function (obj) {
-                return obj._id !== li.dataset.itemId;
+                return createTag(obj.name) !== li.dataset.itemId;
             });
 
             this.item.updateMagicItemName(updateData, _enhancements);
@@ -1800,7 +1845,7 @@ export class ItemSheetPF extends ItemSheet {
                     const updateData = {};
                     let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
                     _enhancements = _enhancements.filter(function (obj) {
-                        return obj._id !== li.dataset.itemId;
+                        return createTag(obj.name) !== li.dataset.itemId;
                     });
 
                     this.item.updateMagicItemName(updateData, _enhancements);
@@ -1896,11 +1941,11 @@ export class ItemSheetPF extends ItemSheet {
      * Handle rolling of an item from the Actor sheet, obtaining the Item instance and dispatching to it's roll method
      * @private
      */
-    _onEnhRoll(event) {
+    async _onEnhRoll(event) {
         event.preventDefault();
         const itemId = event.currentTarget.closest(".item").dataset.itemId;
         //const item = this.actor.getOwnedItem(itemId);
-        let item = this.ehnancementItemMap.get(itemId);
+        let item = await this.item.getEnhancementItem(itemId);
         return item.roll({}, this.item.actor);
     }
 
@@ -1917,8 +1962,8 @@ export class ItemSheetPF extends ItemSheet {
     async _quickItemActionControl(event) {
         event.preventDefault();
         const a = event.currentTarget;
-        const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
-
+        const itemId = event.currentTarget.closest(".item").dataset.itemId;
+        //const item = this.actor.getOwnedItem(itemId);
         let item = await this.item.getEnhancementItem(itemId);
         // Quick Attack
         if (a.classList.contains("item-attack")) {

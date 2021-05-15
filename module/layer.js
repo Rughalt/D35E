@@ -2,7 +2,7 @@
  * This registers very simple layer that is used to properly render
  * left menu buttons.
  */
-export default class D35ELayer extends PlaceablesLayer {
+export default class D35ELayer extends CanvasLayer {
     constructor() {
         super();
     }
@@ -53,24 +53,22 @@ export default class D35ELayer extends PlaceablesLayer {
         canvas.tokens.controlled.forEach(token => token.release())
       }
 
+      activate(a, b, c) {
+            super.activate(a, b, c)
+          canvas.tokens.interactiveChildren = true;
+      }
+
+      deactivate(a, b, c) {
+          super.deactivate(a, b, c)
+          canvas.tokens.interactiveChildren = false;
+      }
+
     async draw() {
         super.draw();
     }
 
 
-    /**
-     * Registers a layer in Foundry canvas
-     */
-    static registerLayer() {
-        const layers = mergeObject(Canvas.layers, {
-            d35e: D35ELayer
-        });
-        Object.defineProperty(Canvas, 'layers', {
-            get: function () {
-                return layers
-            }
-        });
-    }
+
 
 }
 

@@ -1,0 +1,19 @@
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+<header class="card-header flexrow">
+    <img src="{{img}}" title="{{name}}" width="36" height="36"/>
+    {{#if name}}<h3>{{name}}</h3>{{/if}}
+</header>
+<div class="card-content">
+    <strong style="padding: 0px 2px; margin-bottom: -4px; margin-top: 4px; display: block;">Effects on round start</strong>
+    <div class="flexcol card-buttons">
+        {{#each actions as |card|}}
+        <button class="{{#if card.isTargeted}}special-action-button{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
+            card.hasImg}}<img src="{{card.img}}">{{/if}}{{#if card.isTargeted}}<img class="target"
+                                                                                    src="systems/D35E/icons/actions/reticule.svg">{{/if}}{{#unless
+            card.isTargeted}}<img class="target" src="systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}
+        </button>
+        {{/each}}
+    </div>
+</div>
+</div>

@@ -1166,7 +1166,7 @@ export class ItemPF extends Item {
         }
 
         const itemData = this.data.data;
-        const rollData = actor.getRollData();
+        const rollData = actor ? actor.getRollData() : {};
         rollData.item = duplicate(itemData);
         const itemUpdateData = {};
 
@@ -2540,6 +2540,7 @@ export class ItemPF extends Item {
         const button = event.currentTarget;
         button.disabled = true;
         const canBeUsedByEveryone = $(button).hasClass('everyone');
+        const singleUse = $(button).hasClass('single-use');
         const card = button.closest(".chat-card");
         const messageId = card.closest(".message").dataset.messageId;
         const message = game.messages.get(messageId);
@@ -2630,7 +2631,12 @@ export class ItemPF extends Item {
         }
 
         // Re-enable the button
-        button.disabled = false;
+        if (!singleUse)
+            button.disabled = false;
+        else {
+            await message.update({'content':message.data.content.replace(button.outerHTML,button.outerHTML.replace('class=','disabled="disabled" class='))})
+            console.log(message, button)
+        }
     }
 
     static parseAction(action) {
@@ -3878,7 +3884,7 @@ export class ItemPF extends Item {
     }
 
     async createEnhSpell(itemData, type) {
-        if (hasEnhancement(itemData.name)) return;
+        if (this.hasEnhancement(itemData.name)) return;
 
         const updateData = {};
         let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);
@@ -3892,7 +3898,7 @@ export class ItemPF extends Item {
     }
 
     async createEnhBuff(itemData) {
-        if (hasEnhancement(itemData.name)) return;
+        if (this.hasEnhancement(itemData.name)) return;
 
         const updateData = {};
         let _enhancements = duplicate(getProperty(this.data, `data.enhancements.items`) || []);

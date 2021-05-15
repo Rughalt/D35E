@@ -101,7 +101,8 @@ Hooks.once("init", async function() {
   CONFIG.statusEffects = getConditions();
 
 
-  //D35ELayer.registerLayer();
+  CONFIG.Canvas.layers["d35e"] = D35ELayer;
+
   // Patch Core Functions
   PatchCore();
   // Preload Handlebars Templates
@@ -461,11 +462,14 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
 Hooks.on("updateCombat", async (combat, combatant, info, data) => {
   if (!game.user.isGM)
     return;
+  if ((combat.current.turn <= combat.previous.turn && combat.current.round === combat.previous.round) || combat.current.round < combat.previous.round)
+    return; // We moved back in time
   const actor = combat.combatant.actor;
   if (actor != null) {
     actor.refresh();
     let itemUpdateData = []
     let itemsEnding = []
+    let itemsOnRound = []
     let itemResourcesData = {}
     let deletedOrChanged = false;
     if (actor.items !== undefined && actor.items.size > 0) {
@@ -475,6 +479,8 @@ Hooks.on("updateCombat", async (combat, combatant, info, data) => {
         let _data = i.getElapsedTimeUpdateData(1)
         if (_data && _data["data.active"] === false)
           itemsEnding.push(i)
+        if ((i.data.data.perRoundActions || []).length)
+          itemsOnRound.push(i)
         if (_data && !_data.delete) {
           itemUpdateData.push(_data);
           deletedOrChanged = true;
@@ -491,6 +497,8 @@ Hooks.on("updateCombat", async (combat, combatant, info, data) => {
     if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await actor.update(itemResourcesData);
     if (itemsEnding.length)
       actor.renderBuffEndChatCard(itemsEnding)
+    if (itemsOnRound.length)
+      actor.applyOnRoundBuffActions(itemsOnRound);
     actor.renderFastHealingRegenerationChatCard();
   }
 });
@@ -659,7 +667,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     name: "d35e-gm-tools",
     title: "D35E.GMTools",
     icon: "fas fa-dungeon",
-    layer: "D35ELayer",
+    layer: "d35e",
     tools: [
       {
         name: "select",

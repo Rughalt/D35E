@@ -2303,13 +2303,14 @@ export class ActorPF extends Actor {
                 try {
                     if (obj.data.minionGroup == null || obj.data.minionGroup === "")
                         return;
-                    if (!groupLevels.has(obj.data.minionGroup)) {
-                        groupLevels.set(obj.data.minionGroup, 0)
+                    let minionGroup = obj.data.minionGroup.toLowerCase()
+                    if (!groupLevels.has(minionGroup)) {
+                        groupLevels.set(minionGroup, 0)
                     }
-                    if (!groupFormulas.has(obj.data.minionGroup)) {
-                        groupFormulas.set(obj.data.minionGroup, obj.data.minionLevelFormula)
+                    if (!groupFormulas.has(minionGroup)) {
+                        groupFormulas.set(minionGroup, minionLevelFormula)
                     }
-                    groupLevels.set(obj.data.minionGroup, groupLevels.get(obj.data.minionGroup) + obj.data.levels)
+                    groupLevels.set(minionGroup, groupLevels.get(minionGroup) + obj.data.levels)
                 } catch (e) {
                 }
             })
@@ -3594,7 +3595,7 @@ export class ActorPF extends Actor {
                         if (barAttr.attribute === `resources.${tag}`) {
                             const tokenUpdateData = {};
                             tokenUpdateData[`${b}.attribute`] = null;
-                            token.update(token.scene._id, tokenUpdateData, { stopUpdates: true });
+                            token.update(token.parent._id, tokenUpdateData, { stopUpdates: true });
                         }
                     });
                 });
@@ -4019,7 +4020,7 @@ export class ActorPF extends Actor {
         attackData["data.actionType"] = ((item.data.data.weaponSubtype === "ranged" || item.data.data.properties.thr) ? "rwak" : "mwak");
         attackData["data.activation.type"] = "attack";
         attackData["data.duration.units"] = "inst";
-        attackData["data.finessable"] = false;
+        attackData["data.finessable"] = item.data.data.properties.fin || false;
         attackData["data.threatRangeExtended"] = isKeen;
         attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
         attackData["data.originalWeaponCreated"] = true;
@@ -4547,7 +4548,7 @@ export class ActorPF extends Actor {
                 name: this.name,
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                 rollMode: rollMode || "gmroll",
-                tokenId: token ? `${token.scene._id}.${token.id}` : null,
+                tokenId: token ? `${token.parent._id}.${token.id}` : null,
                 actor: this
             };
             const templateData = mergeObject(chatTemplateData, {
@@ -4770,7 +4771,7 @@ export class ActorPF extends Actor {
                 name: this.name,
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                 rollMode: rollMode || "gmroll",
-                tokenId: token ? `${token.scene._id}.${token.id}` : null,
+                tokenId: token ? `${token.parent._id}.${token.id}` : null,
                 actorId: this.id
             };
             const templateData = mergeObject(chatTemplateData, {
@@ -6776,7 +6777,7 @@ export class ActorPF extends Actor {
             img: this.img,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             rollMode: "selfroll",
-            tokenId: token ? `${token.scene._id}.${token.id}` : null,
+            tokenId: token ? `${token.parent._id}.${token.id}` : null,
             actor: this
         };
         let chatData = {
@@ -7002,6 +7003,43 @@ export class ActorPF extends Actor {
 
         // Send message
         await createCustomChatMessage("systems/D35E/templates/chat/deactivate-buff.html", {items: items, actor: this}, chatData,  {rolls: []})
+    }
+
+    async applyOnRoundBuffActions(items) {
+        const token = this ? this.token : null;
+        let chatTemplateData = {
+            name: this.name,
+            img: this.img,
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            rollMode: "selfroll",
+            tokenId: token ? `${token.parent._id}.${token.id}` : null,
+            actor: this
+        };
+        let chatData = {
+            speaker: ChatMessage.getSpeaker({actor: this}),
+            rollMode: "selfroll",
+            sound: CONFIG.sounds.dice,
+            "flags.D35E.noRollRender": true,
+        };
+        let actions = []
+        for (let i of items) {
+            for (let _action of i.data.data.perRoundActions)
+                actions.push({
+                    label: i.name,
+                    value: _action.value,
+                    isTargeted: false,
+                    action: "customAction",
+                    img: i.img,
+                    hasImg: true
+                });
+        }
+        if (actions.length) {
+            const templateData = mergeObject(chatTemplateData, {
+                actions: actions
+            }, {inplace: false});
+            // Create message
+            await createCustomChatMessage("systems/D35E/templates/chat/dot-roll.html", templateData, chatData, {});
+        }
     }
 
 

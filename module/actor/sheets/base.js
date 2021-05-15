@@ -1918,11 +1918,11 @@ export class ActorSheetPF extends ActorSheet {
       }
       features.all.items.push(f);
     }
-    classes.sort((a, b) => b.levels - a.levels);
+    classes.sort((a, b) => b.data.levels - a.data.levels);
     features.classes.items = classes;
     classes.forEach(c => {
       c['classFeatures'] = classFeaturesMap.get(c.name) || []
-      c['passiveClassFeatures'] = c.data.nonActiveClassAbilities.filter(a => parseInt(a[0]) <= parseInt(c.levels || "0")).map(a => {return {level: a[0], name: a[1], description: a[2]};})
+      c['passiveClassFeatures'] = c.data.nonActiveClassAbilities.filter(a => parseInt(a[0]) <= parseInt(c.data.levels || "0")).map(a => {return {level: a[0], name: a[1], description: a[2]};})
     })
     // Buffs
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });

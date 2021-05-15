@@ -1057,6 +1057,7 @@ export async function genTreasureFromToken(
 					.includes(item._id)
 		)
 		.map((it) => it._id)
+	console.log('D35E |  Layer TOKEN', token)
 	await token.actor.deleteEmbeddedEntity(
 		'OwnedItem',
 		Array.from(itemsToDelete),
