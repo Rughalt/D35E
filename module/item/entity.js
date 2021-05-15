@@ -1165,7 +1165,7 @@ export class ItemPF extends Item {
             return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
         }
 
-        const itemData = this.data.data;
+        const itemData = this.getRollData();
         const rollData = actor ? actor.getRollData() : {};
         rollData.item = duplicate(itemData);
         const itemUpdateData = {};
@@ -2513,6 +2513,7 @@ export class ItemPF extends Item {
         if (this.type === "buff") result.level = this.data.data.level;
         if (this.type === "enhancement") result.enhancement = this.data.data.enh;
         if (this.type === "enhancement") result.enhIncrease = this.data.data.enhIncrease;
+        if (this.type === "spell") result.name = this.name;
         result['custom'] = {}
         if (this.data.data.hasOwnProperty('customAttributes')) {
             for (let prop in this.data.data.customAttributes || {}) {
@@ -2634,7 +2635,7 @@ export class ItemPF extends Item {
         if (!singleUse)
             button.disabled = false;
         else {
-            await message.update({'content':message.data.content.replace(button.outerHTML,button.outerHTML.replace('class=','disabled="disabled" class='))})
+            await message.update({'content':message.data.content.replace(button.outerHTML,`<button disabled class="disabled-action-button">${button.innerText}</button>`)})
             console.log(message, button)
         }
     }

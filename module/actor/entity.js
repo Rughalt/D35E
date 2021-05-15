@@ -1667,6 +1667,9 @@ export class ActorPF extends Actor {
                 spellslotAbilityMod = getProperty(srcData1, `data.abilities.${autoSpellslotAbilityKey}.mod`)
             }
 
+            let powerPointsFormula = updateData[`data.attributes.spells.spellbooks.${spellbookKey}.dailyPowerPointsFormula`] || getProperty(srcData1, `attributes.spells.spellbooks.${spellbookKey}.dailyPowerPointsFormula`) || "0"
+            linkData(srcData1, updateData,`data.attributes.spells.spellbooks.${spellbookKey}.powerPointsTotal`,new Roll35e(powerPointsFormula, this.getRollData()).roll().total);
+
             for (let a = 0; a < 10; a++) {
                 const classBase = classProgression !== undefined ? parseInt(classProgression[a + 1]) : -1;
                 let base = parseInt(getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.base`));
