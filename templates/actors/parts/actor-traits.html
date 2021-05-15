@@ -33,10 +33,6 @@
     </select>
   </div>
 
-  <div class="form-group {{#unless data.traits.senses}}inactive{{/unless}}">
-    <label>{{ localize 'D35E.Senses' }}</label>
-    <input type="text" name="data.traits.senses" value="{{data.traits.senses}}" placeholder="{{ localize 'D35E.None-FrM' }}"/>
-  </div>
 
   <div class="form-group {{data.traits.di.cssClass}}">
     <label>{{ localize 'D35E.DamRed' }}</label>
@@ -66,6 +62,17 @@
     </ul>
     <a class="trait-selector" data-options="conditionTypes"><i class="fas fa-edit"></i></a>
   </div>
+
+  <div class="form-group">
+    <label for="data.senses">{{ localize 'D35E.Senses' }}</label>
+    <ul class="traits-list">
+      {{#each senses as |v k|}}
+      <li class="tag {{k}}">{{v}}</li>
+      {{/each}}
+    </ul>
+    <a class="sense-selector" data-options="senseType"><i class="fas fa-edit"></i></a>
+  </div>
+
 
   <div class="form-group {{data.traits.languages.cssClass}}">
     <label for="data.traits.languages">{{ localize 'D35E.Languages' }}</label>
@@ -147,5 +154,10 @@
       {{/each}}
     </ul>
     <a class="trait-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
+  </div>
+
+  <div class="form-group {{#unless data.traits.senses}}inactive{{/unless}}">
+    <label>{{ localize 'D35E.Senses' }}</label>
+    <input type="text" name="data.traits.senses" value="{{data.traits.senses}}" placeholder="{{ localize 'D35E.None-FrM' }}"/>
   </div>
 </div>

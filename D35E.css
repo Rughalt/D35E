@@ -1576,7 +1576,8 @@
   margin: 0 0 4px 0;
   justify-content: space-between;
 }
-.D35E.sheet.actor .traits .trait-selector {
+.D35E.sheet.actor .traits .trait-selector,
+.D35E.sheet.actor .traits .sense-selector {
   flex: 0 0 16px;
   padding: 2px 0;
   color: #999;

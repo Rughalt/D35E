@@ -103,9 +103,13 @@
             },
             "carriedWeight": 0
           },
-          "vision": {
+          "senses": {
+            "darkvision": 0,
+            "blindsight": 0,
+            "tremorsense": 0,
+            "truesight": 0,
             "lowLight": false,
-            "darkvision": 0
+            "special": ""
           },
           "hd": {
             "base": {
@@ -1247,6 +1251,15 @@
       },
       "contextNotes": {
         "contextNotes": []
+      },
+      "senses": {
+        "senses": {
+          "darkvision": 0,
+          "blindsight": 0,
+          "tremorsense": 0,
+          "truesight": 0,
+          "lowLight": false
+        }
       },
       "light": {
         "light": {

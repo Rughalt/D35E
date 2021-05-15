@@ -832,7 +832,7 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
-        if (!options.skipToken && this.data.type !== "trap" && !this.data.data.noLightOverride && !game.settings.get("D35E", "globalDisableTokenLight"))
+        if (!options.skipToken && this.data.type !== "trap")
         {
             let dimLight = 0;
             let brightLight = 0;
@@ -842,67 +842,115 @@ export class ActorPF extends Actor {
             let lightAngle = 360
             let animationSpeed = 5
             let type = ""
+
+            let lowLight = getProperty(data, "data.attributes.senses.lowLight") || getProperty(this.data, "data.attributes.senses.lowLight") || false;
+            let darkvision = getProperty(data, "data.attributes.senses.darkvision") || getProperty(this.data, "data.attributes.senses.darkvision") || 0;
+
             for (let i of this.items.values()) {
-                if (!i.data.data.hasOwnProperty("light")) continue;
-                if (i.data.data.equipped && !i.data.data.melded && i.data.data.light.emitLight) {
-                    dimLight = i.data.data.light.dimRadius ? i.data.data.light.dimRadius : Math.floor(2 * i.data.data.light.radius);
-                    brightLight = Math.floor(i.data.data.light.radius);
-                    color = i.data.data.light.color || '#000';
-                    type = i.data.data.light.type;
-                    alpha = i.data.data.light.alpha;
-                    animationIntensity = i.data.data.light.animationIntensity;
-                    lightAngle = i.data.data.light.lightAngle;
-                    animationSpeed = i.data.data.light.animationSpeed;
-                    break;
+                if (!i.data.data.hasOwnProperty("light") && !i.data.data.hasOwnProperty("senses")) continue;
+                if (i.data.data.equipped && !i.data.data.melded) {
+                    if (i.data.data.light?.emitLight) {
+                        dimLight = i.data.data.light.dimRadius ? i.data.data.light.dimRadius : Math.floor(2 * i.data.data.light.radius);
+                        brightLight = Math.floor(i.data.data.light.radius);
+                        color = i.data.data.light.color || '#000';
+                        type = i.data.data.light.type;
+                        alpha = i.data.data.light.alpha;
+                        animationIntensity = i.data.data.light.animationIntensity;
+                        lightAngle = i.data.data.light.lightAngle;
+                        animationSpeed = i.data.data.light.animationSpeed;
+                    }
+
+                    darkvision = Math.max(darkvision, i.data.data.senses?.darkvision || 0);
+                    lowLight = lowLight || (i.data.data.senses?.lowLight || false);
+                } else if (i.type === "race" || i.type === "class") {
+
+                    darkvision = Math.max(darkvision, i.data.data.senses?.darkvision || 0);
+                    lowLight = lowLight || (i.data.data.senses?.lowLight || false);
+                }
+
+            }
+            if (!this.data.data.noLightOverride && !game.settings.get("D35E", "globalDisableTokenLight")) {
+                if (this.isToken) {
+                    let tokens = []
+                    tokens.push(this.token);
+                    tokens.forEach(o => {
+                        if (dimLight !== o.data.dimLight ||
+                            brightLight !== o.data.brightLight ||
+                            color !== o.data.lightColor ||
+                            animationIntensity !== o.data.lightAnimation.intensity ||
+                            type !== o.data.lightAnimation.type ||
+                            animationSpeed !== o.data.lightAnimation.speed ||
+                            lightAngle !== o.data.lightAnimation.lightAngle
+                        )
+                            o.update({
+                                dimLight: dimLight,
+                                brightLight: brightLight,
+                                lightColor: color || '#000',
+                                lightAlpha: alpha,
+                                lightAngle: lightAngle,
+                                lightAnimation: {type: type, intensity: animationIntensity, speed: animationSpeed}
+                            }, {stopUpdates: true});
+                    });
+                }
+                if (!this.isToken) {
+                    let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
+                    tokens.forEach(o => {
+                        if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor ||
+                            animationIntensity !== o.data.lightAnimation.intensity ||
+                            type !== o.data.lightAnimation.type ||
+                            color !== o.data.lightColor ||
+                            lightAngle !== o.data.lightAnimation.lightAngle ||
+                            animationSpeed !== o.data.lightAnimation.speed)
+                            o.update({
+                                dimLight: dimLight,
+                                brightLight: brightLight,
+                                lightColor: color || '#000',
+                                lightAlpha: alpha,
+                                lightAngle: lightAngle,
+                                lightAnimation: {
+                                    type: type,
+                                    intensity: animationIntensity,
+                                    animationSpeed: animationSpeed
+                                }
+                            }, {stopUpdates: true});
+                    });
+                    data[`token.dimLight`] = dimLight;
+                    data[`token.brightLight`] = brightLight;
+                    data[`token.lightColor`] = color || '#000';
+                    data[`token.lightAnimation.type`] = type;
+                    data[`token.lightAlpha`] = alpha;
                 }
             }
-            if (this.isToken) {
-                let tokens = []
-                tokens.push(this.token);
-                tokens.forEach(o => {
-                    if (dimLight !== o.data.dimLight ||
-                        brightLight !== o.data.brightLight ||
-                        color !== o.data.lightColor ||
-                        animationIntensity !== o.data.lightAnimation.intensity ||
-                        type !== o.data.lightAnimation.type ||
-                        animationSpeed !== o.data.lightAnimation.speed ||
-                        lightAngle !== o.data.lightAnimation.lightAngle
-                    )
-                        o.update({
-                            dimLight: dimLight,
-                            brightLight: brightLight,
-                            lightColor: color || '#000',
-                            lightAlpha: alpha,
-                            lightAngle: lightAngle,
-                            lightAnimation: { type: type, intensity: animationIntensity, speed: animationSpeed }
-                        }, { stopUpdates: true });
-                });
-            }
-            if (!this.isToken) {
-                let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                tokens.forEach(o => {
-                    if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor ||
-                        animationIntensity !== o.data.lightAnimation.intensity ||
-                        type !== o.data.lightAnimation.type ||
-                        color !== o.data.lightColor ||
-                        lightAngle !== o.data.lightAnimation.lightAngle ||
-                        animationSpeed !== o.data.lightAnimation.speed)
-                        o.update({
-                            dimLight: dimLight,
-                            brightLight: brightLight,
-                            lightColor: color || '#000',
-                            lightAlpha: alpha,
-                            lightAngle: lightAngle,
-                            lightAnimation: { type: type, intensity: animationIntensity, animationSpeed: animationSpeed }
-                        }, { stopUpdates: true });
-                });
-                data[`token.dimLight`] = dimLight;
-                data[`token.brightLight`] = brightLight;
-                data[`token.lightColor`] = color || '#000';
-                data[`token.lightAnimation.type`] = type;
-                data[`token.lightAlpha`] = alpha;
+            if (!this.data.data.noVisionOverride && !game.settings.get("D35E", "globalDisableTokenVision"))
+            {
+                console.log('D35E | Changing Vision', darkvision, lowLight)
+                if (this.isToken) {
+                    let tokens = []
+                    tokens.push(this.token);
+                    tokens.forEach(o => {
+                        if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision"))
+                            o.update({
+                                brightSight: darkvision,
+                                flags: {D35E: {lowLightVision : lowLight}}
+                            }, { stopUpdates: true });
+                    });
+                }
+                if (!this.isToken) {
+                    let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
+                    tokens.forEach(o => {
+                        if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision"))
+                            o.update({
+                                brightSight: darkvision,
+                                flags: {D35E: {lowLightVision : lowLight}}
+                            }, { stopUpdates: true });
+                    });
+                    data[`token.brightSight`] = darkvision;
+                    data[`token.flags.D35E.lowLightVision`] = lowLight;
+                }
             }
         }
+
+
 
 
         for (let [con, v] of Object.entries(fullConditions)) {
@@ -2881,6 +2929,10 @@ export class ActorPF extends Actor {
                     _resistance.immunity = _resistance.immunity || resistance[2];
                     _resistance.vulnerable = _resistance.vulnerable || resistance[3];
                     _resistance.half = _resistance.half || resistance[4];
+                    _resistance.modified = true;
+                    if  (!_resistance.items)
+                        _resistance.items = []
+                    _resistance.items.push(obj.name)
                 })
             }
             if (obj.data.damageReduction) {
@@ -2900,6 +2952,7 @@ export class ActorPF extends Actor {
                         erDrRollData.levels= obj.data.levels || 0
                         _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
                         _dr.immunity = _dr.immunity || dr[2];
+                        _dr.modified = true;
                     } else {
                         data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
                     }
@@ -2924,6 +2977,10 @@ export class ActorPF extends Actor {
                             _resistance.value = Math.max(_resistance.value, new Roll35e(resistance[0] || "0", erDrRollData).roll().total)
                             _resistance.immunity = _resistance.immunity || resistance[2];
                             _resistance.vulnerable = _resistance.vulnerable || resistance[3];
+                            _resistance.modified = true;
+                            if  (!_resistance.items)
+                                _resistance.items = []
+                            _resistance.items.push(obj.name)
                         })
                         if (enhancementItem.data.damageReduction) {
                             (enhancementItem.data?.damageReduction || []).forEach(dr => {
@@ -2942,6 +2999,9 @@ export class ActorPF extends Actor {
                                     erDrRollData.levels= enhancementItem.data.levels || 0
                                     erDrRollData.enh = enhancementItem.data.enh || 0
                                     _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
+                                    _dr.immunity = _dr.immunity || dr[2];
+                                    _dr.modified = true;
+
                                 } else {
                                     data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
                                 }

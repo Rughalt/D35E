@@ -14,6 +14,7 @@ import {ItemPF} from "../../item/entity.js";
 import {CompendiumDirectoryPF} from "../../sidebar/compendium.js";
 import {DamageTypes} from "../../damage-types.js";
 import {Roll35e} from "../../roll.js"
+import ActorSensesConfig from "../../apps/senses-config.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -190,6 +191,8 @@ export class ActorSheetPF extends ActorSheet {
     .forEach(obj => {
       obj.isPrepared = obj.data.preparation.mode === "prepared";
     });
+
+    data.senses = this._getSenses(this.actor.data);
 
     data.isShapechanged = false;
     data.items.filter(obj => { return obj.type === "buff" && obj.data.buffType === "shapechange"; })
@@ -608,6 +611,9 @@ export class ActorSheetPF extends ActorSheet {
 
     // Trait Selector
     html.find('.trait-selector').click(this._onTraitSelector.bind(this));
+
+    // Sense Selector
+    html.find('.sense-selector').click(this._onSenseSelector.bind(this));
 
 
     // Trait Selector
@@ -2076,6 +2082,11 @@ export class ActorSheetPF extends ActorSheet {
     new ActorTraitSelector(this.actor, options).render(true)
   }
 
+  _onSenseSelector(event){
+
+    new ActorSensesConfig(this.actor).render(true)
+    event.preventDefault();
+  }
 
 
   _onDREREditor(event) {
@@ -2441,5 +2452,19 @@ export class ActorSheetPF extends ActorSheet {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   }
+
+  _getSenses(actorData) {
+    const senses = actorData.data.attributes.senses || {};
+    const tags = {};
+    for ( let [k, label] of Object.entries(CONFIG.D35E.senses) ) {
+      const v = senses[k] ?? 0
+      if ( v === 0 ) continue;
+      tags[k] = `${game.i18n.localize(label)} ${v} ${game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.DistMeterShort") : game.i18n.localize("D35E.DistFtShort")}`;
+    }
+    if ( !!senses.special ) tags["special"] = senses.special;
+    if ( !!senses.lowLight ) tags["lowLight"] = game.i18n.localize('D35E.VisionLowLight');
+    return tags;
+  }
+
 
 }

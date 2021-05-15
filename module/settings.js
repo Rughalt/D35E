@@ -443,6 +443,16 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "globalDisableTokenVision", {
+    name: "SETTINGS.D35EDisableTokenLightsN",
+    hint: "SETTINGS.D35EDisableTokenLightsL",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
+
   /**
    * Hide token conditions
    */

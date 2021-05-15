@@ -1328,5 +1328,13 @@ D35E.requirements = {
   "cha": "D35E.AbilityCha"
 }
 
+D35E.senses = {
+  "blindsight": "D35E.SenseBlindsight",
+  "darkvision": "D35E.SenseDarkvision",
+  "tremorsense": "D35E.SenseTremorsense",
+  "truesight": "D35E.SenseTruesight"
+};
+
+
 
 

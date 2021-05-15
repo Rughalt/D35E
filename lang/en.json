@@ -1432,6 +1432,20 @@
   "D35E.NotificationSyncSuccessfull": "Manual sync to LotD Players Companion for {0} was successful!",
   "D35E.NotificationSyncError": "Manual sync to LotD Players Companion for {0} encountered an error! Check Companion setup for both World and Character!",
 
+  "D35E.Senses": "Senses",
+  "D35E.SensesConfig": "Configure Senses",
+  "D35E.SensesConfigHint": "Configure any special sensory perception abilities that this actor possesses.",
+  "D35E.SenseDarkvision": "Darkvision",
+  "D35E.SenseBlindsight": "Blindsight",
+  "D35E.SenseTremorsense": "Tremorsense",
+  "D35E.SenseTruesight": "Truesight",
+  "D35E.SenseSpecial": "Special Senses",
+
+  "D35E.VisionLowLight": "Low-light Vision",
+
+  "D35E.DistMeterShort": "m",
+
+
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",
