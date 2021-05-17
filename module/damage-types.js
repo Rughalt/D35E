@@ -49,6 +49,8 @@ export class DamageTypes {
             type.or = t.or;
             type.lethal = t.lethal;
             type.immunity = t.immunity;
+            type.modified = t.modified;
+            type.items = t.items;
         })
         return damageTypes;
     }
@@ -106,7 +108,50 @@ export class DamageTypes {
         })
         if (drOrParts.length)
             drParts.push(`${DR} ${orValue}/${drOrParts.join(` ${or} `)}`)
+
         return drParts.join('; ')
+    }
+
+    static computeDRTags(dr) {
+        let or = game.i18n.localize("D35E.or")
+        let and = game.i18n.localize("D35E.and")
+        let DR = game.i18n.localize("D35E.DR")
+        let lethal = game.i18n.localize("D35E.LethalDamageFrom")
+        let immune = game.i18n.localize("D35E.Immunity")
+        let drParts = [];
+        drParts.push('<ul class="traits-list">')
+        let drOrParts = [];
+        let orValue = 0;
+        if (DamageTypes.getDamageTypeForUID(dr,'any').value > 0) {
+            drParts.push(`<li class="tag">${DR} ${DamageTypes.getDamageTypeForUID(dr,'any').value}/-</li>`)
+        }
+        dr.forEach(t => {
+            if (t.uid === "any") return;
+            let drType = DamageTypes.getDamageTypeForUID(dr,t.uid)
+            if (drType.immunity) {
+                if (drType.or) {
+                    drOrParts.push(`${drType.name}`)
+                    orValue = immune;
+                } else {
+                    drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${DR} ${immune}/${drType.name}</li>`)
+                }
+            }
+            else if (drType.value > 0) {
+                if (drType.or) {
+                    drOrParts.push(`${drType.name}`)
+                    orValue = drType.value
+                } else {
+                    drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${DR} ${drType.value}/${drType.name}</li>`)
+                }
+            }
+            if (drType.lethal) {
+                drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${lethal} ${drType.name}</li>`)
+            }
+        })
+        if (drOrParts.length)
+            drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${DR} ${orValue}/${drOrParts.join(` ${or} `)}</li>`)
+        drParts.push('</ul>')
+        return drParts.join('')
     }
 
     /**
@@ -152,6 +197,8 @@ export class DamageTypes {
             type.immunity = t.immunity;
             type.lethal = t.lethal;
             type.half = t.half;
+            type.modified = t.modified;
+            type.items = t.items;
         })
         return damageTypes;
     }
@@ -181,6 +228,26 @@ export class DamageTypes {
             }
         });
         return erParts.join('; ')
+    }
+
+    static computeERTags(er) {
+        let erParts = [];
+        erParts.push('<ul class="traits-list">')
+        er.forEach(e => {
+            if (e?.vulnerable) {
+                erParts.push(`<li class="tag ${e.modified ? 'modified' : ''}">${e.name} ${game.i18n.localize("D35E.Vulnerability")}</li>`)
+            } else if (e?.immunity) {
+                erParts.push(`<li class="tag ${e.modified ? 'modified' : ''}">${e.name} ${game.i18n.localize("D35E.Immunity")}</li>`)
+            } else if (e?.half) {
+                erParts.push(`<li class="tag ${e.modified ? 'modified' : ''}">${e.name} ${game.i18n.localize("D35E.Half")}</li>`)
+            } else if (e?.lethal) {
+                erParts.push(`<li class="tag ${e.modified ? 'modified' : ''}">${game.i18n.localize("D35E.LethalDamageFrom")} ${e.name}</li>`)
+            } else if (e.value > 0) {
+                erParts.push(`<li class="tag ${e.modified ? 'modified' : ''}">${e.name} ${e.value}</li>`)
+            }
+        });
+        erParts.push('</ul>')
+        return erParts.join('')
     }
 
     /**

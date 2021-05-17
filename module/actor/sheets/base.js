@@ -225,8 +225,8 @@ export class ActorSheetPF extends ActorSheet {
     // Prepare skillsets
     data.skillsets = this._prepareSkillsets(data.actor.data.skills);
 
-    data.energyResistance = DamageTypes.computeERString(DamageTypes.getERForActor(this.actor));
-    data.damageReduction = DamageTypes.computeDRString(DamageTypes.getDRForActor(this.actor));
+    data.energyResistance = DamageTypes.computeERTags(DamageTypes.getERForActor(this.actor));
+    data.damageReduction = DamageTypes.computeDRTags(DamageTypes.getDRForActor(this.actor));
 
     // Skill rank counting
     const skillRanks = { allowed: 0, used: 0, bgAllowed: 0, bgUsed: 0, sentToBG: 0 };
@@ -2454,15 +2454,15 @@ export class ActorSheetPF extends ActorSheet {
   }
 
   _getSenses(actorData) {
-    const senses = actorData.data.attributes.senses || {};
+    const senses = actorData.data.senses || {};
     const tags = {};
     for ( let [k, label] of Object.entries(CONFIG.D35E.senses) ) {
       const v = senses[k] ?? 0
       if ( v === 0 ) continue;
-      tags[k] = `${game.i18n.localize(label)} ${v} ${game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.DistMeterShort") : game.i18n.localize("D35E.DistFtShort")}`;
+      tags[k] = {name: `${game.i18n.localize(label)} ${v} ${game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.DistMeterShort") : game.i18n.localize("D35E.DistFtShort")}`, modified: senses.modified[k]};
     }
-    if ( !!senses.special ) tags["special"] = senses.special;
-    if ( !!senses.lowLight ) tags["lowLight"] = game.i18n.localize('D35E.VisionLowLight');
+    if ( !!senses.special ) tags["special"] = {name: senses.special, modified: false};
+    if ( !!senses.lowLight ) tags["lowLight"] = {name: game.i18n.localize('D35E.VisionLowLight'), modified: senses.modified["lowLight"]};
     return tags;
   }
 

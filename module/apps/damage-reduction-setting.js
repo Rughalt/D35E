@@ -6,7 +6,7 @@ export class DamageReductionSetting extends FormApplication {
     constructor(...args) {
         super(...args);
 
-        this.damageReduction = DamageTypes.getDRForActor(this.object)
+        this.damageReduction = DamageTypes.getDRForActor(this.object, true)
         this.energyResistance = DamageTypes.getERForActor(this.object, true)
     }
 

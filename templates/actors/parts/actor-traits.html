@@ -34,15 +34,15 @@
   </div>
 
 
-  <div class="form-group {{data.traits.di.cssClass}}">
+  <div class="form-group">
     <label>{{ localize 'D35E.DamRed' }}</label>
-    <input type="text" class="readonly" style="border: none" readonly value="{{damageReduction}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+    {{{damageReduction}}}
     <a style="flex: 0 20px;" class="drer-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
   </div>
 
-  <div class="form-group {{data.traits.di.cssClass}}">
+  <div class="form-group">
     <label>{{ localize 'D35E.EnRes' }}</label>
-    <input type="text" class="readonly" style="border: none" readonly value="{{energyResistance}}" placeholder="{{ localize 'D35E.None-FrF' }}"/>
+    {{{energyResistance}}}
     <a style="flex: 0 20px;" class="drer-selector" data-options="damageTypes"><i class="fas fa-edit"></i></a>
   </div>
 
@@ -67,7 +67,7 @@
     <label for="data.senses">{{ localize 'D35E.Senses' }}</label>
     <ul class="traits-list">
       {{#each senses as |v k|}}
-      <li class="tag {{k}}">{{v}}</li>
+      <li class="tag {{k}}  {{#if v.modified}}modified{{/if}}">{{v.name}}</li>
       {{/each}}
     </ul>
     <a class="sense-selector" data-options="senseType"><i class="fas fa-edit"></i></a>

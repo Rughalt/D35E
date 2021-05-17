@@ -160,8 +160,8 @@
       <div class="flexrow">
         {{#each config.weaponProperties as |name prop|}}
         <div class="toggle">
-          <input id="{{randomUuid}}-data.properties.{{prop}}" type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.properties prop)}}/>
-          <label for="{{randomUuid}}-data.properties.{{prop}}">{{#if (lookup ../data.properties prop)}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{ name }}</label>
+          <input id="{{randomUuid}}-data.properties.{{prop}}" type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.data.properties prop)}}/>
+          <label for="{{randomUuid}}-data.properties.{{prop}}">{{#if (lookup ../data.data.properties prop)}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{ name }}</label>
         </div>
         {{/each}}
       </div>

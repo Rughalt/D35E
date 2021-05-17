@@ -270,6 +270,10 @@
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.05);
 }
+.D35E .tag.modified {
+  border: 1px solid rgba(105, 204, 229, 0.76);
+  background: rgba(105, 204, 229, 0.43);
+}
 /* ----------------------------------------- */
 /*  Entity Sheets Specifically               */
 /* ----------------------------------------- */

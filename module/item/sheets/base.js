@@ -1427,12 +1427,12 @@ export class ItemSheetPF extends ItemSheet {
 
         await this._onSubmit(event);
 
-        await this.item.actor.createAttackFromWeapon(this.item);
+        return this.item.parent.createAttackFromWeapon(this.item);
     }
 
     async _addSpellsToSpellbook(event) {
         if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
-        await this.item.actor.addSpellsToSpellbook(this.item);
+        await this.item.parent.addSpellsToSpellbook(this.item);
 
     }
 

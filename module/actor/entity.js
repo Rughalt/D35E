@@ -862,7 +862,7 @@ export class ActorPF extends Actor {
 
                     darkvision = Math.max(darkvision, i.data.data.senses?.darkvision || 0);
                     lowLight = lowLight || (i.data.data.senses?.lowLight || false);
-                } else if (i.type === "race" || i.type === "class") {
+                } else if (i.type === "race" || i.type === "class" || (i.type === "buff" && i.data.data.active)) {
 
                     darkvision = Math.max(darkvision, i.data.data.senses?.darkvision || 0);
                     lowLight = lowLight || (i.data.data.senses?.lowLight || false);
@@ -2953,6 +2953,9 @@ export class ActorPF extends Actor {
                         _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
                         _dr.immunity = _dr.immunity || dr[2];
                         _dr.modified = true;
+                        if  (!_dr.items)
+                            _dr.items = []
+                        _dr.items.push(obj.name)
                     } else {
                         data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", _obj.getRollData()).roll().total)
                     }
@@ -3001,7 +3004,9 @@ export class ActorPF extends Actor {
                                     _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
                                     _dr.immunity = _dr.immunity || dr[2];
                                     _dr.modified = true;
-
+                                    if  (!_dr.items)
+                                        _dr.items = []
+                                    _dr.items.push(obj.name)
                                 } else {
                                     data.combinedDR.any = Math.max(data.combinedDR.any || 0,new Roll35e(dr[0] || "0", enhancementItem.data).roll().total)
                                 }
@@ -3058,6 +3063,26 @@ export class ActorPF extends Actor {
             if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
                 let spellcastingType = data.classes[spellbook.class].spellcastingType;
                 spellcastingBonusTotalUsed[spellcastingType] += spellbook.bonusPrestigeCl;
+            }
+        }
+
+        data.senses = duplicate(this.data.data.attributes.senses) || {}
+        if (!data.senses.modified)
+            data.senses.modified = {}
+        for (let i of this.items.values()) {
+            if (!i.data.data.hasOwnProperty("senses")) continue;
+            if ((i.data.data.equipped && !i.data.data.melded) || i.type === "race" || i.type === "class" || (i.type === "buff" && i.data.data.active)) {
+                for ( let [k, label] of Object.entries(CONFIG.D35E.senses) ) {
+                    if (data.senses[k] !== Math.max(data.senses[k], i.data.data.senses[k] || 0)) {
+                        data.senses[k] = Math.max(data.senses[k], i.data.data.senses[k] || 0);
+                        data.senses.modified[k] = true;
+                    }
+                }
+                data.senses.darkvision = Math.max(data.senses.darkvision, i.data.data.senses?.darkvision || 0);
+                if (data.senses.lowLight !== i.data.data.senses?.lowLight) {
+                    data.senses.lowLight = data.senses.lowLight || (i.data.data.senses?.lowLight || false);
+                    data.senses.modified["lowLight"] = true
+                }
             }
         }
 
@@ -4038,7 +4063,7 @@ export class ActorPF extends Actor {
             item.data = duplicate(item);
         }
         if (item.data.type !== "weapon") throw new Error("Wrong Item type");
-
+        console.log('D35E | Creating attack for', item)
 
         let isKeen = false;
         let isSpeed = false
@@ -4101,6 +4126,8 @@ export class ActorPF extends Actor {
         attackData["data.nonLethal"] = item.data.data.properties.nnl;
         attackData["data.thrown"] = item.data.data.properties.thr;
         attackData["data.returning"] = item.data.data.properties.ret;
+
+
 
 
         // Add additional attacks
@@ -4209,7 +4236,22 @@ export class ActorPF extends Actor {
         }
 
         if (hasProperty(attackData, "data.templates")) delete attackData["data.templates"];
-        let createdAttack = await this.createOwnedItem(expandObject(attackData));
+
+        let attacks = []
+        attacks.push(expandObject(attackData))
+        if (item.data.data.properties.thr) {
+
+            let meleeAttack = duplicate(attacks[0])
+            meleeAttack["data"]["actionType"] = "mwak";
+            meleeAttack["data"]["thrown"] = false;
+
+            attacks[0]['name'] = `${attacks[0]['name']} (Thrown)`
+            attacks.push(meleeAttack)
+        }
+        let createdAttack = await this.createEmbeddedEntity("Item", attacks, {})
+        //let createdAttack = await this.createOwnedItem(attacks);
+
+        console.log('D35E | Created attack for', item)
 
         ui.notifications.info(game.i18n.localize("D35E.NotificationCreatedAttack").format(item.data.name));
         return createdAttack;
@@ -5629,7 +5671,7 @@ export class ActorPF extends Actor {
                 await createCustomChatMessage("systems/D35E/templates/chat/damage-description.html", templateData, chatData);
             }
 
-
+            console.log('D35E | Damage Value ', value, damage)
             if (hit) {
                 let dt = value > 0 ? Math.min(tmp, value) : 0;
                 promises.push(t.actor.update({
@@ -5908,7 +5950,7 @@ export class ActorPF extends Actor {
         //this.createEmbeddedDocuments
         //return this.createOwnedItem((noArray ? createData[0] : createData), options);
         console.log('D35E Items Create', duplicate(createData), noArray)
-        return super.createEmbeddedDocuments(embeddedName, createData, options);
+        return this.createEmbeddedDocuments(embeddedName, createData, options);
     }
 
     _computeEncumbrance(updateData, srcData) {
@@ -6339,8 +6381,6 @@ export class ActorPF extends Actor {
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
             case "SelfDamage":
-                // Rolls arbitrary attack
-                console.log(action)
                 if (action.parameters.length === 1) {
                     let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, actor);
