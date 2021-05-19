@@ -811,22 +811,24 @@ export class ActorPF extends Actor {
         // Apply changes in Actor size to Token width/height
         if (!options.skipToken && tokenSizeKey !== 'none' && this.data.type !== "trap" && !this.data.data.noTokenOverride)
         {
+
             let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
             //console.log(size)
             if (this.isToken) {
                 let tokens = []
                 tokens.push(this.token);
-                tokens.forEach(o => {
+                for (const o of tokens) {
                     if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale)
-                        o.update({ width: size.w, height: size.h, scale: size.scale }, { stopUpdates: true });
-                });
+                        await o.update({ width: size.w, height: size.h, scale: size.scale }, { stopUpdates: true , tokenOnly: true});
+                }
             }
             if (!this.isToken) {
                 let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                tokens.forEach(o => {
-                    if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale)
-                        o.update({ width: size.w, height: size.h, scale: size.scale }, { stopUpdates: true });
-                });
+                for (const o of tokens) {
+                    if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale) {
+                        await o.update({width: size.w, height: size.h, scale: size.scale}, {stopUpdates: true, tokenOnly: true});
+                    }
+                }
                 data["token.width"] = size.w;
                 data["token.height"] = size.h;
                 data["token.scale"] = size.scale;
@@ -873,7 +875,7 @@ export class ActorPF extends Actor {
                 if (this.isToken) {
                     let tokens = []
                     tokens.push(this.token);
-                    tokens.forEach(o => {
+                    for (const o of tokens) {
                         if (dimLight !== o.data.dimLight ||
                             brightLight !== o.data.brightLight ||
                             color !== o.data.lightColor ||
@@ -882,26 +884,26 @@ export class ActorPF extends Actor {
                             animationSpeed !== o.data.lightAnimation.speed ||
                             lightAngle !== o.data.lightAnimation.lightAngle
                         )
-                            o.update({
+                            await o.update({
                                 dimLight: dimLight,
                                 brightLight: brightLight,
                                 lightColor: color || '#000',
                                 lightAlpha: alpha,
                                 lightAngle: lightAngle,
                                 lightAnimation: {type: type, intensity: animationIntensity, speed: animationSpeed}
-                            }, {stopUpdates: true});
-                    });
+                            }, {stopUpdates: true, tokenOnly: true});
+                    }
                 }
                 if (!this.isToken) {
                     let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                    tokens.forEach(o => {
+                    for (const o of tokens) {
                         if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor ||
                             animationIntensity !== o.data.lightAnimation.intensity ||
                             type !== o.data.lightAnimation.type ||
                             color !== o.data.lightColor ||
                             lightAngle !== o.data.lightAnimation.lightAngle ||
                             animationSpeed !== o.data.lightAnimation.speed)
-                            o.update({
+                            await o.update({
                                 dimLight: dimLight,
                                 brightLight: brightLight,
                                 lightColor: color || '#000',
@@ -912,8 +914,8 @@ export class ActorPF extends Actor {
                                     intensity: animationIntensity,
                                     animationSpeed: animationSpeed
                                 }
-                            }, {stopUpdates: true});
-                    });
+                            }, {stopUpdates: true, tokenOnly: true});
+                    }
                     data[`token.dimLight`] = dimLight;
                     data[`token.brightLight`] = brightLight;
                     data[`token.lightColor`] = color || '#000';
@@ -927,23 +929,23 @@ export class ActorPF extends Actor {
                 if (this.isToken) {
                     let tokens = []
                     tokens.push(this.token);
-                    tokens.forEach(o => {
+                    for (const o of tokens) {
                         if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision"))
-                            o.update({
+                            await o.update({
                                 brightSight: darkvision,
                                 flags: {D35E: {lowLightVision : lowLight}}
-                            }, { stopUpdates: true });
-                    });
+                            }, { stopUpdates: true, tokenOnly: true });
+                    }
                 }
                 if (!this.isToken) {
                     let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
-                    tokens.forEach(o => {
+                    for (const o of tokens) {
                         if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision"))
-                            o.update({
+                            await o.update({
                                 brightSight: darkvision,
                                 flags: {D35E: {lowLightVision : lowLight}}
-                            }, { stopUpdates: true });
-                    });
+                            }, { stopUpdates: true, tokenOnly: true });
+                    }
                     data[`token.brightSight`] = darkvision;
                     data[`token.flags.D35E.lowLightVision`] = lowLight;
                 }
@@ -3482,7 +3484,7 @@ export class ActorPF extends Actor {
         //     //console.log('D35E | Got stop updates, exiting')
         //     return
         // }
-        //console.log('D35E | Running update')
+        console.log('D35E | ACTOR UPDATE | Running update')
         data = await this.prepareUpdateData(data);
 
         // Update changes

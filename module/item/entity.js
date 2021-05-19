@@ -493,13 +493,11 @@ export class ItemPF extends Item {
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
             //Buff or item was activated
             data["data.timeline.elapsed"] = 0
-            for (let actionValue of this.data.data.activateActions || []) {
-                if (!this.actor) continue;
-                if (this.actor.token !== null) {
-                    await this.actor.token.actor.applyActionOnSelf(actionValue.action, this.actor.token.actor, this)
-                } else {
-                    await this.actor.applyActionOnSelf(actionValue.action, this.actor, this)
-                }
+            let actionValue = (this.data.data.activateActions || []).map(a => a.action).join(";")
+            if (this.actor && this.actor.token !== null) {
+                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this)
+            } else if (this.actor) {
+                await this.actor.applyActionOnSelf(actionValue, this.actor, this)
             }
             if (this.data.data.buffType === "shapechange") {
                 if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
@@ -537,20 +535,19 @@ export class ItemPF extends Item {
                     }
                     if (itemsToDelete.length)
                         if (this.actor.token !== null) {
-                            await this.actor.token.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
+                            await this.actor.token.actor.deleteEmbeddedDocuments("Item",itemsToDelete,{stopUpdates: true})
                         } else {
-                            await this.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
+                            await this.actor.deleteEmbeddedDocuments("Item",itemsToDelete,{stopUpdates: true})
                         }
                 }
             }
-            for (let actionValue of this.data.data.deactivateActions || []) {
-                if (!this.actor) continue;
-                if (this.actor.token !== null) {
-                    await this.actor.token.actor.applyActionOnSelf(actionValue.action, this.actor.token.actor, this)
-                } else {
-                    await this.actor.applyActionOnSelf(actionValue.action, this.actor, this)
-                }
+            let actionValue = (this.data.data.deactivateActions || []).map(a => a.action).join(";")
+            if (this.actor && this.actor.token !== null) {
+                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this)
+            } else if (this.actor) {
+                await this.actor.applyActionOnSelf(actionValue, this.actor, this)
             }
+
 
         }
 

@@ -386,6 +386,7 @@ Hooks.on("updateToken", (scene, token, data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   }
+  if (options.tokenOnly) return
   const actor = game.actors.tokens[data._id] ?? game.actors.get(token.actorId);
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
