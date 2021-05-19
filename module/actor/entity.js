@@ -923,7 +923,7 @@ export class ActorPF extends Actor {
             }
             if (!this.data.data.noVisionOverride && !game.settings.get("D35E", "globalDisableTokenVision"))
             {
-                console.log('D35E | Changing Vision', darkvision, lowLight)
+                //console.log('D35E | Changing Vision', darkvision, lowLight)
                 if (this.isToken) {
                     let tokens = []
                     tokens.push(this.token);
@@ -1161,14 +1161,14 @@ export class ActorPF extends Actor {
 
             switch (flagKey) {
                 case "noCon":
-                    changes.push({
-                        raw: ["(-(@abilities.con.origMod)) * @attributes.hd.total", "misc", "mhp", "untyped", 0],
-                        source: { name: "0 Con" }
-                    });
-                    changes.push({
-                        raw: ["5", "savingThrows", "fort", "untyped", 0],
-                        source: { name: "0 Con" }
-                    });
+                    // changes.push({
+                    //     raw: ["(-(@abilities.con.origMod)) * @attributes.hd.total", "misc", "mhp", "untyped", 0],
+                    //     source: { name: "0 Con" }
+                    // });
+                    // changes.push({
+                    //     raw: ["5", "savingThrows", "fort", "untyped", 0],
+                    //     source: { name: "0 Con" }
+                    // });
                     break;
             }
         }
@@ -1472,7 +1472,6 @@ export class ActorPF extends Actor {
             }
         }
 
-        console.log('D35E SRCDATA', srcData1);
         // Add more changes
         let flags = {},
             sourceInfo = {};
@@ -1480,12 +1479,12 @@ export class ActorPF extends Actor {
         // Check flags
         for (let obj of changeObjects) {
 
-            if (obj.data.sizeOverride !== undefined && obj.data.sizeOverride !== null && obj.data.sizeOverride !== "") {
-                sizeOverride = obj.data.sizeOverride;
+            if (obj.data.data.sizeOverride !== undefined && obj.data.data.sizeOverride !== null && obj.data.data.sizeOverride !== "") {
+                sizeOverride = obj.data.data.sizeOverride;
 
             }
-            if (!obj.data.changeFlags) continue;
-            for (let [flagKey, flagValue] of Object.entries(obj.data.changeFlags)) {
+            if (!obj.data.data.changeFlags) continue;
+            for (let [flagKey, flagValue] of Object.entries(obj.data.data.changeFlags)) {
                 if (flagValue === true) {
                     flags[flagKey] = true;
 
@@ -1582,12 +1581,12 @@ export class ActorPF extends Actor {
         // Initialize data
         await this._resetData(updateData, srcData1, flags, sourceInfo, allChanges, fullConditions);
         await this._addDefaultChanges(srcData1, allChanges, flags, sourceInfo, fullConditions, sizeOverride, options, updateData);
-        console.log('D35E | Sorting Changes');
+        //console.log('D35E | Sorting Changes');
         // Sort changes
         allChanges.sort(this._sortChanges.bind(this));
         // Parse changes
         let temp = [];
-        console.log('D35E | Master Changes');
+        //console.log('D35E | Master Changes');
         const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, { inplace: false });
         updateData = flattenObject({ data: mergeObject(origData.data, expandObject(updateData).data, { inplace: false }) });
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
@@ -1597,10 +1596,13 @@ export class ActorPF extends Actor {
             allChanges = allChanges.filter((c) => (c.raw[0] || "").indexOf('@master') === -1)
             if (_changesLength !== allChanges.length) {
                 return ui.notifications.warn(game.i18n.localize("D35E.FamiliarNoMaster"));
-                console.log('D35E | Minion has some changes removed |', _changesLength,allChanges.length);
+                //console.log('D35E | Minion has some changes removed |', _changesLength,allChanges.length);
             }
         }
-        console.log('D35E | Rolling Changes');
+
+
+
+        //console.log('D35E | Rolling Changes');
         let currentChangeTarget = null;
         let changeRollData = null;
         // All changes are sorted and lumped together
@@ -1627,7 +1629,7 @@ export class ActorPF extends Actor {
             try {
                 change.raw[4] = roll.roll().total;
             } catch (e) {
-                ui.notifications.error(game.i18n.localize("D35E.ErrorItemFormula").format(change.source.item.name, this.name));
+                ui.notifications.error(game.i18n.localize("D35E.ErrorItemFormula").format(change.source?.item?.name, this.name));
             }
             this._parseChange(change, changeData[changeTarget], flags);
             temp.push(changeData[changeTarget]);
@@ -1639,44 +1641,64 @@ export class ActorPF extends Actor {
         });
 
 
-        console.log('D35E | Rolled Changes');
         for (let flagKey of Object.keys(flags)) {
             if (!flags[flagKey]) continue;
 
             switch (flagKey) {
                 case "noDex":
-                    linkData(srcData1, updateData, "data.abilities.dex.total", 0);
-                    linkData(srcData1, updateData, "data.abilities.dex.mod", -5);
+                    linkData(srcData1, updateData, "data.abilities.dex.origTotal", 0);
+                    linkData(srcData1, updateData, "data.abilities.dex.origMod", 0);
+                    linkData(srcData1, updateData, "data.abilities.dex.mod", 0);
+                    linkData(srcData1, updateData, "data.abilities.dex.mod", 0);
+                    linkData(srcData1, updateData, `data.abilities.dex.drain`, 0);
                     break;
                 case "noStr":
+                    linkData(srcData1, updateData, "data.abilities.str.origTotal", 0);
+                    linkData(srcData1, updateData, "data.abilities.str.origMod", 0);
                     linkData(srcData1, updateData, "data.abilities.str.total", 0);
-                    linkData(srcData1, updateData, "data.abilities.str.mod", -5);
+                    linkData(srcData1, updateData, "data.abilities.str.mod", 0);
+                    linkData(srcData1, updateData, `data.abilities.str.drain`, 0);
                     break;
                 case "noCon":
+                    linkData(srcData1, updateData, "data.abilities.con.origTotal", 0);
+                    linkData(srcData1, updateData, "data.abilities.con.origMod", 0);
                     linkData(srcData1, updateData, "data.abilities.con.total", 0);
-                    linkData(srcData1, updateData, "data.abilities.con.mod", -5);
+                    linkData(srcData1, updateData, "data.abilities.con.mod", 0);
+                    linkData(srcData1, updateData, `data.abilities.con.drain`, 0);
                     break;
                 case "noInt":
+                    linkData(srcData1, updateData, "data.abilities.int.origTotal", 0);
+                    linkData(srcData1, updateData, "data.abilities.int.origMod", 0);
                     linkData(srcData1, updateData, "data.abilities.int.total", 0);
-                    linkData(srcData1, updateData, "data.abilities.int.mod", -5);
+                    linkData(srcData1, updateData, "data.abilities.int.mod", 0);
+                    linkData(srcData1, updateData, `data.abilities.int.drain`, 0);
                     break;
                 case "oneInt":
+                    linkData(srcData1, updateData, "data.abilities.int.origTotal", 1);
+                    linkData(srcData1, updateData, "data.abilities.int.origMod", -5);
                     linkData(srcData1, updateData, "data.abilities.int.total", 1);
                     linkData(srcData1, updateData, "data.abilities.int.mod", -5);
+                    linkData(srcData1, updateData, `data.abilities.int.drain`, 0);
                     break;
                 case "oneWis":
+                    linkData(srcData1, updateData, "data.abilities.wis.origTotal", 1);
+                    linkData(srcData1, updateData, "data.abilities.wis.origMod", -5);
                     linkData(srcData1, updateData, "data.abilities.wis.total", 1);
                     linkData(srcData1, updateData, "data.abilities.wis.mod", -5);
+                    linkData(srcData1, updateData, `data.abilities.wis.drain`, 0);
                     break;
                 case "oneCha":
+                    linkData(srcData1, updateData, "data.abilities.cha.origTotal", 1);
+                    linkData(srcData1, updateData, "data.abilities.cha.origMod", -5);
                     linkData(srcData1, updateData, "data.abilities.cha.total", 1);
                     linkData(srcData1, updateData, "data.abilities.cha.mod", -5);
+                    linkData(srcData1, updateData, `data.abilities.cha.drain`, 0);
                     break;
             }
         }
 
 
-        console.log('D35E | ACP and spell slots');
+        //console.log('D35E | ACP and spell slots');
         // Reduce final speed under certain circumstances
         let armorItems = srcData1.items.filter(o => o.type === "equipment");
         if ((updateData["data.attributes.encumbrance.level"] >= 1 && !flags.noEncumbrance) ||
@@ -1836,7 +1858,7 @@ export class ActorPF extends Actor {
 
 
         // Refresh source info
-        console.log('D35E | Change Data', changeData)
+        //console.log('D35E | Change Data', changeData)
         // for (let [bt, change] of Object.entries(changeData)) {
         //     for (let [ct, values] of Object.entries(change)) {
         //         let customBuffTargets = this._getChangeFlat(bt, ct, srcData1.data);
@@ -1865,12 +1887,12 @@ export class ActorPF extends Actor {
         this._updateAbilityRelatedFields(srcData1, updateData, sourceInfo);
 
 
-        console.log('D35E | Source Details');
+        //console.log('D35E | Source Details');
         this._setSourceDetails(mergeObject(this.data, srcData1, { inplace: false }), sourceInfo, flags);
 
         const diffData = (srcData1);
         // Apply changes
-        console.log('D35E | Apply Changes');
+        //console.log('D35E | Apply Changes');
         if (this.collection != null && Object.keys(diffData).length > 0) {
             let newData = {};
             if (data != null) newData = flattenObject(mergeObject(data, flattenObject(diffData), { inplace: false }));
@@ -2065,7 +2087,7 @@ export class ActorPF extends Actor {
         let levelUpData = duplicate(data1.details.levelUpData) || []
         if (levelUpData.length !== data1.details.level.available) {
 
-            console.log('D35E | ActorPF | Will update actor level')
+            //console.log('D35E | ActorPF | Will update actor level')
             while (levelUpData.length < data1.details.level.available) {
                 levelUpData.push({ 'level': levelUpData.length + 1, 'id': '_' + Math.random().toString(36).substr(2, 9), 'classId': null, 'class': null, 'classImage': null, 'skills': {}, 'hp': 0, hasFeat: (levelUpData.length + 1) % 3 === 0, hasAbility: (levelUpData.length + 1) % 4 === 0 })
             }
@@ -2073,7 +2095,7 @@ export class ActorPF extends Actor {
                 levelUpData.pop();
             }
             await this.updateClassProgressionLevel(data, updateData, data1, levelUpData);
-            console.log('D35E | LevelUpData | ', levelUpData)
+            //console.log('D35E | LevelUpData | ', levelUpData)
             linkData(data, updateData, "data.details.levelUpData", levelUpData);
         }
 
@@ -2398,7 +2420,7 @@ export class ActorPF extends Actor {
                 return cur + o.data.data.levels;
             }, 0);
 
-            console.log(`D35E | Setting attributes hd total | ${level}`)
+            //console.log(`D35E | Setting attributes hd total | ${level}`)
             linkData(data, updateData, "data.attributes.hd.total", level);
 
             linkData(data, updateData, "data.attributes.hd.racialClass", level);
@@ -2572,10 +2594,10 @@ export class ActorPF extends Actor {
                     }
                 }
             }
-            console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
+            //console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
             for (let abilityUid of existingAbilities) {
                 if (!addedAbilities.has(abilityUid)) {
-                    console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
+                    //console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
                     changes.splice(changes.findIndex(change => change.source.item.data.uniqueId === abilityUid), 1)
                     itemsToRemove.push(abilityUid)
                 }
@@ -2586,7 +2608,7 @@ export class ActorPF extends Actor {
             }
             if (idsToRemove.length)
                 await this.deleteEmbeddedEntity("Item", idsToRemove, {stopUpdates: true});
-            console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
+            //console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
             if (itemsToAdd.length)
                 await this.createEmbeddedEntity("Item", itemsToAdd, {stopUpdates: true, ignoreSpellbookAndLevel: true});
 
@@ -2646,7 +2668,7 @@ export class ActorPF extends Actor {
                 (a === "int" && flags.oneInt) ||
                 (a === "wis" && flags.oneWis) ||
                 (a === "cha" && flags.oneCha)) {
-                modDiffs[a] = forceModUpdate ? -5 : 0;
+                modDiffs[a] = forceModUpdate ? 0 : 0;
                 if (changes[`data.abilities.${a}.total`]) delete changes[`data.abilities.${a}.total`]; // Remove used mods to prevent doubling
                 continue;
             }
@@ -3453,14 +3475,14 @@ export class ActorPF extends Actor {
     async update(data, options = {}) {
         let origData = deepClone(data)
         if (options['recursive'] !== undefined && options['recursive'] === false) {
-            console.log('D35E | Skipping update logic since it is not recursive')
+            //console.log('D35E | Skipping update logic since it is not recursive')
             return super.update(data, options);
         }
         // if (options['stopUpdates'] !== undefined && options['stopUpdates'] === true) {
-        //     console.log('D35E | Got stop updates, exiting')
+        //     //console.log('D35E | Got stop updates, exiting')
         //     return
         // }
-        console.log('D35E | Running update')
+        //console.log('D35E | Running update')
         data = await this.prepareUpdateData(data);
 
         // Update changes
@@ -3468,7 +3490,7 @@ export class ActorPF extends Actor {
         if (options.updateChanges !== false) {
             const updateObj = await this._updateChanges({data: data}, options);
 
-            console.log('D35E Diff', updateObj)
+            //console.log('D35E Diff', updateObj)
             if (updateObj?.diff?.items) delete updateObj.diff.items;
             diff = mergeObject(diff, updateObj?.diff || {});
         }
@@ -3479,7 +3501,7 @@ export class ActorPF extends Actor {
         // }
 
         delete diff.effects;
-        console.log('D35E Diff', diff, origData)
+        //console.log('D35E Diff', diff, origData)
 
         let returnActor = null
         if (Object.keys(diff).length) {
@@ -3628,7 +3650,7 @@ export class ActorPF extends Actor {
             if (hasContainerChanged)
                 itemUpdates.push(itemUpdateData)
         }
-        // console.log('D35E | Item updates', itemUpdates)
+        // //console.log('D35E | Item updates', itemUpdates)
         if (itemUpdates.length > 0)
             await this.updateOwnedItem(itemUpdates, { stopUpdates: true });
         // Send resource updates to item
@@ -3759,9 +3781,9 @@ export class ActorPF extends Actor {
         if (this.data.type !== "character") return;
         if (data["data.details.levelUpProgression"] || this.data.data.details.levelUpProgression) {
             dataLevel = (data["data.details.level.available"] || this.data.data.details.level.available) + raceLA + racialHD
-            console.log('D35E | ActorPF | _updateExp | Update exp data from class level count', dataLevel)
+            //console.log('D35E | ActorPF | _updateExp | Update exp data from class level count', dataLevel)
         }
-        console.log('D35E | ActorPF | _updateExp | Race LA, racial HD, level', raceLA, racialHD,dataLevel)
+        //console.log('D35E | ActorPF | _updateExp | Race LA, racial HD, level', raceLA, racialHD,dataLevel)
         // Translate update exp value to number
         let newExp = data["data.details.xp.value"],
             resetExp = false;
@@ -3801,7 +3823,7 @@ export class ActorPF extends Actor {
 
     async updateClassProgressionLevel(data, globalUpdateData, data1, levelUpData) {
 
-        console.log('D35E | ActorPF | updateClassProgressionLevel | Starting update')
+        //console.log('D35E | ActorPF | updateClassProgressionLevel | Starting update')
         const classes = this.items.filter(o => o.type === "class" && getProperty(o.data.data, "classType") !== "racial").sort((a, b) => {
             return a.sort - b.sort;
         });
@@ -3851,7 +3873,7 @@ export class ActorPF extends Actor {
                 itemUpdateData["data.hp"] = classHP.get(_class._id) || 0;
                 await this.updateOwnedItem(itemUpdateData, { stopUpdates: true });
 
-                console.log(`D35E | ActorPF | updateClassProgressionLevel | Updated class item ${_class.name}`)
+                //console.log(`D35E | ActorPF | updateClassProgressionLevel | Updated class item ${_class.name}`)
             }
 
             for (let [k, s] of Object.entries(getProperty(data, "data.skills"))) {
@@ -3861,9 +3883,9 @@ export class ActorPF extends Actor {
                 }
             }
 
-            console.log('D35E | ActorPF | updateClassProgressionLevel | Update done')
+            //console.log('D35E | ActorPF | updateClassProgressionLevel | Update done')
         } else {
-            console.log('D35E | ActorPF | updateClassProgressionLevel | Update skipped, no levelUpData')
+            //console.log('D35E | ActorPF | updateClassProgressionLevel | Update skipped, no levelUpData')
         }
 
     }
@@ -4063,7 +4085,7 @@ export class ActorPF extends Actor {
             item.data = duplicate(item);
         }
         if (item.data.type !== "weapon") throw new Error("Wrong Item type");
-        console.log('D35E | Creating attack for', item)
+        //console.log('D35E | Creating attack for', item)
 
         let isKeen = false;
         let isSpeed = false
@@ -4251,7 +4273,7 @@ export class ActorPF extends Actor {
         let createdAttack = await this.createEmbeddedEntity("Item", attacks, {})
         //let createdAttack = await this.createOwnedItem(attacks);
 
-        console.log('D35E | Created attack for', item)
+        //console.log('D35E | Created attack for', item)
 
         ui.notifications.info(game.i18n.localize("D35E.NotificationCreatedAttack").format(item.data.name));
         return createdAttack;
@@ -4960,7 +4982,7 @@ export class ActorPF extends Actor {
 
     _addCombatChangesToRollData(allCombatChanges, rollData) {
         for (const change of allCombatChanges) {
-            console.log('D35E | Change', change[4])
+            //console.log('D35E | Change', change[4])
             if (change[3].indexOf('$') !== -1) {
                 setProperty(rollData, change[3].substr(1), ItemPF._fillTemplate(change[4], rollData))
             } else if (change[3].indexOf('&') !== -1) {
@@ -5370,7 +5392,7 @@ export class ActorPF extends Actor {
 
             ac += rollData.featAC || 0;
 
-            console.log('D35E | Final roll AC', ac)
+            //console.log('D35E | Final roll AC', ac)
             return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision, rollModifiers: rollModifiers, conceal: conceal, fullConceal: fullConceal};
         }
         let rollData = this.getRollData();
@@ -5444,7 +5466,7 @@ export class ActorPF extends Actor {
             }).render(true);
         });
 
-        console.log('D35E | Final dialog AC', finalAc)
+        //console.log('D35E | Final dialog AC', finalAc)
         return finalAc || {ac: -1, applyHalf: false, noCritical: false};
     }
 
@@ -5671,7 +5693,7 @@ export class ActorPF extends Actor {
                 await createCustomChatMessage("systems/D35E/templates/chat/damage-description.html", templateData, chatData);
             }
 
-            console.log('D35E | Damage Value ', value, damage)
+            //console.log('D35E | Damage Value ', value, damage)
             if (hit) {
                 let dt = value > 0 ? Math.min(tmp, value) : 0;
                 promises.push(t.actor.update({
@@ -5871,7 +5893,7 @@ export class ActorPF extends Actor {
             createData = [createData];
             noArray = true;
         }
-        console.log('D35E Create Data', createData)
+        //console.log('D35E Create Data', createData)
 
         for (let obj of createData) {
             delete obj.effects;
@@ -5949,7 +5971,7 @@ export class ActorPF extends Actor {
         }
         //this.createEmbeddedDocuments
         //return this.createOwnedItem((noArray ? createData[0] : createData), options);
-        console.log('D35E Items Create', duplicate(createData), noArray)
+        //console.log('D35E Items Create', duplicate(createData), noArray)
         return this.createEmbeddedDocuments(embeddedName, createData, options);
     }
 
@@ -6053,7 +6075,7 @@ export class ActorPF extends Actor {
         if (pack.metadata.entity !== "Item") return;
 
         return pack.getEntity(entryId).then(ent => {
-            console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
+            //console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
 
             let data = duplicate(ent.data);
             if (this.sheet != null && this.sheet.rendered) {
@@ -6084,16 +6106,13 @@ export class ActorPF extends Actor {
         return pack.getDocument(entry._id).then(ent => {
             if (unique) {
                 if (this.items.filter(o => o.name === name && o.type === ent.type).length > 0)
-                    return;
+                    return undefined;
             }
-            console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
+            //console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
 
             let data = duplicate(ent.data);
-            if (this.sheet != null && this.sheet.rendered) {
-                data = mergeObject(data, this.sheet.getDropData(data));
-            }
             delete data._id;
-            return this.createEmbeddedEntity("Item",data);
+            return data;
         });
     }
 
@@ -6106,13 +6125,11 @@ export class ActorPF extends Actor {
         return result;
     }
 
-    async autoApplyActionsOnSelf(action) {
-        for (let _action of ItemPF.parseAction(action))
-            if (_action.target === "self")
-                await this.applyActionOnSelf(_action, this, null)
+    async autoApplyActionsOnSelf(actions) {
+        await this.applyActionOnSelf(actions, this, null, "self")
     }
 
-    static applyAction(action, actor) {
+    static applyAction(actions, actor) {
         const promises = [];
         let tokensList;
         if (game.user.targets.size > 0)
@@ -6120,27 +6137,15 @@ export class ActorPF extends Actor {
         else
             tokensList = canvas.tokens.controlled;
         for (let t of tokensList) {
-            promises.push(t.actor.applyActionOnSelf(action, actor));
+            promises.push(t.actor.applyActionOnSelf(actions, actor, null, "target"));
         }
         return Promise.all(promises);
     }
 
-    async applyActionOnSelf(action, actor, buff = null) {
-        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
-
+    async applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData) {
         function cleanParam(parameter) {
             return parameter.replace(/"/gi, "");
         }
-
-        let actionRollData = actor.getRollData() //This is roll data of actor that *rolled* the roll
-        actionRollData.self = this.getRollData() //This is roll data of actor that *clicked* the roll
-        if (buff) {
-            actionRollData.buff = buff.getRollData() //This is roll data of optional buff item
-        }
-
-        if (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll35e(action.condition, actionRollData).roll().result))
-            return;
-
         function isActionRollable(_action) {
             if (_action.indexOf("://") !== -1) return false;
             return /^(.*?[0-9]d[0-9]+.*?)$/.test(_action)
@@ -6161,13 +6166,15 @@ export class ActorPF extends Actor {
                     // Create from default compendiums
                 } else if (action.parameters.length === 3) {
                     if (action.parameters[1] === "from") {
-                        await this.importItemFromCollectionByName(cleanParam(action.parameters[2]), cleanParam(action.parameters[0]))
+                        itemsToCreate.push(await this.importItemFromCollectionByName(cleanParam(action.parameters[2]), cleanParam(action.parameters[0])))
                     } else {
                         ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                     }
                 } else if (action.parameters.length === 4) {
                     if (action.parameters[2] === "from" && (action.parameters[0] === "unique" || action.parameters[0] === "u")) {
-                        await this.importItemFromCollectionByName(cleanParam(action.parameters[3]), cleanParam(action.parameters[1]), true)
+                        let itemToCreate = await this.importItemFromCollectionByName(cleanParam(action.parameters[3]), cleanParam(action.parameters[1]), true)
+                        if (itemToCreate)
+                            itemsToCreate.push(itemToCreate)
                     } else {
                         ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                     }
@@ -6222,8 +6229,8 @@ export class ActorPF extends Actor {
                                 updateObject[action.parameters[2]] = action.parameters[4]
                             }
                         }
-                        await this.updateOwnedItem(updateObject, { stopUpdates: true })
-                        await this.update({})
+
+                        itemUpdates.push(updateObject)
                     }
                 }
                 // Set attack * field data.melded to true on self
@@ -6239,7 +6246,6 @@ export class ActorPF extends Actor {
                     let items = this.items.filter(o => (o.name === name || name === "*") && o.type === type)
                     if (items.length > 0) {
                         if (name === '*') {
-                            let itemUpdates = []
                             for (let item of items) {
                                 if (type === "attack" && subtype !== null) {
                                     if (item.data.data.attackType !== subtype) continue;
@@ -6257,8 +6263,6 @@ export class ActorPF extends Actor {
                                 }
                                 itemUpdates.push(updateObject)
                             }
-                            await this.updateOwnedItem(itemUpdates, { stopUpdates: true })
-                            await this.update({})
                         } else {
                             const item = items[0]
                             let updateObject = {}
@@ -6272,8 +6276,7 @@ export class ActorPF extends Actor {
                                     updateObject[action.parameters[3]] = action.parameters[5]
                                 }
                             }
-                            await this.updateOwnedItem(updateObject, { stopUpdates: true })
-                            await this.update({})
+                            itemUpdates.push(updateObject)
                         }
                     }
                 } else
@@ -6284,16 +6287,12 @@ export class ActorPF extends Actor {
                 if (action.parameters.length === 4 && action.parameters[0] === "set" && action.parameters[2] === "to") {
                     let name = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
-                    let updateObject = {}
-                    updateObject[`data.attributes.conditions.${name}`] = value === 'true'
-                    await this.update(updateObject)
+                    actorUpdates[`data.attributes.conditions.${name}`] = value === 'true'
                 }
                 // Condition toggle *name*
                 else if (action.parameters.length === 2 && action.parameters[0] === "toggle") {
                     let name = cleanParam(action.parameters[1])
-                    let updateObject = {}
-                    updateObject[`data.attributes.conditions.${name}`] = !getProperty(this.data.data, `attributes.conditions.${name}`)
-                    await this.update(updateObject)
+                    actorUpdates[`data.attributes.conditions.${name}`] = !getProperty(this.data.data, `attributes.conditions.${name}`)
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6314,9 +6313,7 @@ export class ActorPF extends Actor {
                             currentTraits.splice(index, 1);
                         }
                     }
-                    let updateObject = {}
-                    updateObject[`data.traits.${traitGroup}.value`] = currentTraits
-                    await this.update(updateObject)
+                    actorUpdates[`data.traits.${traitGroup}.value`] = currentTraits
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6326,42 +6323,36 @@ export class ActorPF extends Actor {
                 if (action.parameters.length === 4 && action.parameters[0] === "set" && action.parameters[2] === "to") {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
-                    let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= new Roll35e(cleanParam(value), actionRollData).roll().total
+                        actorUpdates[`${field}`]= new Roll35e(cleanParam(value), actionRollData).roll().total
                     } else {
-                        updateObject[`${field}`]= value
+                        actorUpdates[`${field}`]= value
                     }
-                    await this.update(updateObject)
                 } else if (action.parameters.length === 4 && action.parameters[0] === "add" && action.parameters[2] === "to") {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
-                    let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + new Roll35e(cleanParam(value), actionRollData).roll().total
+                        actorUpdates[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + new Roll35e(cleanParam(value), actionRollData).roll().total
                     } else {
-                        updateObject[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + parseInt(value)
+                        actorUpdates[`${field}`]= parseInt(getProperty(actionRollData,field.replace("data","self")) || 0) + parseInt(value)
                     }
-                    await this.update(updateObject)
                 } else if (action.parameters.length === 4 && action.parameters[0] === "subtract" && action.parameters[2] === "to") {
                     let field = cleanParam(action.parameters[1])
                     let value = cleanParam(action.parameters[3])
-                    let updateObject = {}
 
                     if (isActionRollable(value)) {
-                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - new Roll35e(cleanParam(value), actionRollData).roll().total
+                        actorUpdates[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - new Roll35e(cleanParam(value), actionRollData).roll().total
                     } else {
-                        updateObject[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - value
+                        actorUpdates[`${field}`]= (getProperty(actionRollData,field.replace("data","self")) || 0) - value
                     }
-                    await this.update(updateObject)
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
             case "Damage":
                 // Rolls arbitrary attack
-                console.log(action)
+                //console.log(action)
                 if (action.parameters.length === 1) {
                     let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll()
                     let name = action.name;
@@ -6397,7 +6388,7 @@ export class ActorPF extends Actor {
                 break;
             case "AbilityDamage":
                 // Rolls arbitrary attack
-                console.log(action)
+                //console.log(action)
                 if (action.parameters.length === 2) {
                     let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
@@ -6406,7 +6397,7 @@ export class ActorPF extends Actor {
                 break;
             case "AbilityDrain":
                 // Rolls arbitrary attack
-                console.log(action)
+                //console.log(action)
                 if (action.parameters.length === 2) {
                     let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
                     ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
@@ -6415,7 +6406,7 @@ export class ActorPF extends Actor {
                 break;
             case "Regenerate":
                 // Rolls arbitrary attack
-                console.log(action)
+                //console.log(action)
                 if (action.parameters.length === 1) {
                     let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll().total
                     ActorPF.applyRegeneration(damage,actor);
@@ -6447,32 +6438,139 @@ export class ActorPF extends Actor {
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
             case "RunMacro":
-				// Executes a macro defined on MacroDirectory
-                console.log(action)
+                // Executes a macro defined on MacroDirectory
+                //console.log(action)
                 if (action.parameters.length === 1) {
-					let macroToRun = MacroDirectory.collection.find(x => x.data.name === cleanParam(action.parameters[0]));
-					if (!macroToRun)
-					{
-						ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
-						return;
-					}
-					await macroToRun.execute();
+                    let macroToRun = MacroDirectory.collection.find(x => x.data.name === cleanParam(action.parameters[0]));
+                    if (!macroToRun)
+                    {
+                        ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                        return;
+                    }
+                    await macroToRun.execute();
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
-				break;
+                break;
             case "Eval":
                 await this.executeEvalOnSelf(action);
+                break;
+            case "Message":
+                // Rolls arbitrary attack
+                //console.log(action)
+                if (action.parameters.length > 1) {
+                    let messageType = action.parameters.shift();
+                    let chatTemplateData = {
+                        name: this.name,
+                        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                        rollMode: cleanParam(messageType),
+                        text: action.parameters.join(" ")
+                    };
+                    // Create message
+                    await createCustomChatMessage("systems/D35E/templates/chat/gm-message.html", chatTemplateData, {}, {});
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
             default:
                 break;
         }
     }
 
+    async applyActionOnSelf(actions, actor, buff = null, target = "self") {
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+
+        let itemCreationActions = []
+        let itemUpdateActions = []
+        let actorUpdateActions = []
+        let otherActions = []
+
+        let _actions  = ItemPF.parseAction(actions)
+
+        console.log("D35E | ACTION | Actions", _actions)
+        for (let action of _actions) {
+
+            if (action.target !== target || (action.condition !== undefined && action.condition !== null && action.condition !== "" && !(new Roll35e(action.condition, actionRollData).roll().result)))
+                continue; // We drop out since actions do not belong to us
+
+            switch (action.action) {
+                case "TurnUndead":
+                    otherActions.push(action)
+                    break;
+                case "Create":
+                case "Give":
+                    itemCreationActions.push(action)
+                    break;
+                case "Activate":
+                    otherActions.push(action)
+                    break;
+                case "Set":
+                    itemUpdateActions.push(action)
+                    break;
+                case "Condition":
+                case "Trait":
+                case "Update":
+                    actorUpdateActions.push(action)
+                    break;
+                case "Damage":
+                case "SelfDamage":
+                case "Grapple":
+                case "AbilityDamage":
+                case "AbilityDrain":
+                case "Regenerate":
+                case "Clear":
+                case "Use":
+                case "Roll":
+                case "RunMacro":
+                case "Eval":
+                case "Message":
+                    otherActions.push(action)
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        let actionRollData = actor.getRollData() //This is roll data of actor that *rolled* the roll
+        actionRollData.self = this.getRollData() //This is roll data of actor that *clicked* the roll
+        if (buff) {
+            actionRollData.buff = buff.getRollData() //This is roll data of optional buff item
+        }
+
+        let itemUpdates = [];
+        let itemsToCreate = [];
+        let actorUpdates = {};
+
+        for (let action of itemCreationActions) {
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+        }
+        if (itemCreationActions.length) {
+            console.log("D35E | ACTION | itemCreationActions", itemCreationActions)
+            await this.createEmbeddedDocuments("Item", itemsToCreate, {})
+        }
+
+        for (let action of itemUpdateActions) {
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+        }
+        if (itemUpdateActions.length) {
+            console.log("D35E | ACTION | itemUpdateActions", itemUpdateActions)
+            await this.updateEmbeddedDocuments("Item", itemUpdates, {})
+        }
+        for (let action of actorUpdateActions) {
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+        }
+        if (actorUpdateActions.length) {
+            console.log("D35E | ACTION | actorUpdates", actorUpdateActions)
+            await this.update(actorUpdates)
+        }
+        for (let action of otherActions) {
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+        }
+    }
+
     async executeEvalOnSelf(action) {
         let actor = this;
-        console.log('D35E | Running async eval')
+        //console.log('D35E | Running async eval')
         await eval("(async () => {" + action.body + "})()");
-        console.log('D35E | Running async eval done')
+        //console.log('D35E | Running async eval done')
     }
 
     async quickChangeItemQuantity(itemId, add = 1) {
@@ -6480,7 +6578,7 @@ export class ActorPF extends Actor {
 
         const curQuantity = getProperty(item.data, "data.quantity") || 0;
         const newQuantity = Math.max(0, curQuantity + add);
-        await item.update({ "data.quantity": newQuantity });
+        await item.update({"data.quantity": newQuantity });
     }
 
     //
@@ -6760,15 +6858,15 @@ export class ActorPF extends Actor {
         if (restoreDailyUses) {
             let items = [],
                 hasItemUpdates = false;
-            for (let a = 0; a < this.data.items.length; a++) {
-                let item = this.data.items[a];
-                items[a] = item;
+            for (let item of this.data.items) {
+
                 let itemUpdate = {};
-                const itemData = item.data;
+                const itemData = item.data.data;
                 rollData.item = duplicate(itemData);
 
                 if (itemData.uses && itemData.uses.per === "day" && itemData.uses.value !== itemData.uses.max) {
                     hasItemUpdates = true;
+                    itemUpdate['_id'] = item.id
                     if (itemData.uses.rechargeFormula) {
                         itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll35e(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
                         rollData.item.uses.value = itemUpdate["data.uses.value"]
@@ -6782,18 +6880,23 @@ export class ActorPF extends Actor {
                 if (hasProperty(item, "data.combatChangesRange.maxFormula")) {
                     if (getProperty(item, "data.combatChangesRange.maxFormula") !== "") {
                         let roll = new Roll35e(getProperty(item, "data.combatChangesRange.maxFormula"), rollData).roll();
+                        hasItemUpdates = true;
                         itemUpdate["data.combatChangesRange.max"] = roll.total;
+                        itemUpdate['_id'] = item.id
                     }
                 }
                 for (let i = 1; i <= 3; i++)
                     if (hasProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`)) {
                         if (getProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`) !== "") {
+                            hasItemUpdates = true;
                             let roll = new Roll35e(getProperty(item, `data.combatChangesAdditionalRanges.slider${i}.maxFormula`), rollData).roll();
                             itemUpdate[`data.combatChangesAdditionalRanges.slider${i}.max`] = roll.total;
+                            itemUpdate['_id'] = item.id
                         }
                     }
                 if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.per === "day" && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
                     hasItemUpdates = true;
+                    itemUpdate['_id'] = item.id
                     if (itemData.enhancements.uses.rechargeFormula) {
                         itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll35e(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
                     }
@@ -6808,6 +6911,7 @@ export class ActorPF extends Actor {
                         usePowerPoints = spellbook.usePowerPoints;
                     if (!isSpontaneous && !usePowerPoints && itemData.preparation.preparedAmount !== itemData.preparation.maxAmount) {
                         hasItemUpdates = true;
+                        itemUpdate['_id'] = item.id
                         itemUpdate["data.preparation.preparedAmount"] = itemData.preparation.maxAmount;
                     }
                 }
@@ -6826,12 +6930,14 @@ export class ActorPF extends Actor {
                             hasItemUpdates = true;
                         }
                     }
+                    itemUpdate['_id'] = item.id
                     itemUpdate[`data.enhancements.items`] = enhItems;
                 }
-
-                items[a] = mergeObject(item, itemUpdate, { enforceTypes: false, inplace: false });
+                if (itemUpdate['_id'])
+                    items.push(itemUpdate)
             }
-            if (hasItemUpdates) updateData.items = items;
+            if (hasItemUpdates)
+                await this.updateEmbeddedDocuments("Item", items, {stopUpdates: true})
 
             // Restore spontaneous spellbooks
             for (let [key, spellbook] of Object.entries(actorData.attributes.spells.spellbooks)) {
@@ -6986,7 +7092,7 @@ export class ActorPF extends Actor {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus)
+                //console.log(textStatus)
                 if (manual) {
                     ui.notifications.error(game.i18n.localize("D35E.NotificationSyncError").format(that.data.name));
                 }
@@ -7180,6 +7286,44 @@ export class ActorPF extends Actor {
 
         if (itemsToUpdate.length)
             await this.updateEmbeddedEntity("Item", itemsToUpdate, {stopUpdates: true, ignoreSpellbookAndLevel: true});
+    }
+
+
+
+    async updateOwnedItem(itemData, options = {}) {
+        console.warn("You are referencing Actor#updateOwnedItem which is deprecated in favor of Item#update or Actor#updateEmbeddedDocuments. Support will be removed in 0.9.0");
+        itemData = itemData instanceof Array ? itemData : [itemData];
+        options.massUpdate = true;
+        return this.updateEmbeddedDocuments("Item", itemData, options);
+    }
+
+    async updateEmbeddedEntity(documentName, data, options) {
+        console.warn("The Document#updateEmbeddedEntity method has been renamed to Document#updateEmbeddedDocuments. Support for the old method name will be removed in 0.9.0");
+        data = data instanceof Array ? data : [data];
+        options.massUpdate = true;
+        return this.updateEmbeddedDocuments(documentName, data, options);
+    }
+
+    async createEmbeddedDocuments(type, data, options) {
+        console.log('D35E | createEmbeddedDocuments')
+        let createdItems = await super.createEmbeddedDocuments(type, data, options);
+        await this.refresh({})
+        return Promise.resolve(createdItems);
+    }
+
+    async updateEmbeddedDocuments(type, data, options) {
+        console.log('D35E | updateEmbeddedDocuments')
+        let updatedItems = await super.updateEmbeddedDocuments(type, data, options);
+        if (options.massUpdate)
+            await this.refresh({})
+        return Promise.resolve(updatedItems);
+    }
+
+    async deleteEmbeddedDocuments(type, data, options) {
+        console.log('D35E | deleteEmbeddedDocuments')
+        let deletedDocuments = await super.deleteEmbeddedDocuments(type, data, options);
+        await this.refresh({})
+        return Promise.resolve(deletedDocuments);
     }
 }
 

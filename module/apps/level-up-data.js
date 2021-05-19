@@ -1,11 +1,11 @@
 export class LevelUpDataDialog extends FormApplication {
     constructor(...args) {
         super(...args);
-        console.log('D35E | Level Up Windows data', this.object.data)
+        //console.log('D35E | Level Up Windows data', this.object.data)
         this.actor = this.object.data;
         this.levelUpId = this.options.id;
         this.levelUpData = this.actor.data.details.levelUpData.find(a => a.id === this.levelUpId);
-        console.log('ludid',this.levelUpId,this.levelUpData, this.options.skillset)
+        //console.log('ludid',this.levelUpId,this.levelUpData, this.options.skillset)
     }
 
     static get defaultOptions() {
@@ -84,7 +84,7 @@ export class LevelUpDataDialog extends FormApplication {
         const updateData = {};
         let classId = formData['class'];
         let hp = parseInt(formData['hp'] || 0);
-        console.log('formData',formData)
+        //console.log('formData',formData)
         if (classId !== "") {
 
 
@@ -118,7 +118,7 @@ export class LevelUpDataDialog extends FormApplication {
                     })
                 }
             })
-            console.log(`D35E | Updating Level Data | ${classId} | ${this.levelUpId}`)
+            //console.log(`D35E | Updating Level Data | ${classId} | ${this.levelUpId}`)
             updateData[`data.details.levelUpData`] = data;
 
             const classes = this.actor.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {

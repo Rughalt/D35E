@@ -25,10 +25,10 @@ export default class D35ELayer extends CanvasLayer {
           return Number.between(c.x, x, x+width) && Number.between(c.y, y, y+height);
         });
         // Release objects no longer controlled
-        console.log(oldSet)
-        console.log(newSet)
+        //console.log(oldSet)
+        //console.log(newSet)
         const toRelease = oldSet.filter(obj => !newSet.includes(obj));
-        console.log(toRelease)
+        //console.log(toRelease)
         toRelease.forEach(obj => obj.release(releaseOptions));
         // Control new objects
         if ( isObjectEmpty(controlOptions) ) controlOptions.releaseOthers = false;
@@ -40,7 +40,7 @@ export default class D35ELayer extends CanvasLayer {
 
     /** @override */
     selectObjects({x, y, width, height, releaseOptions={}, controlOptions={}}={}) {
-        console.log('selectObjects')
+        //console.log('selectObjects')
         releaseOptions = { updateSight: false };
         controlOptions = { releaseOthers: false, updateSight: false };
         const changed = this.selectObjectsFromTokenLayer({x, y, width, height, releaseOptions, controlOptions});

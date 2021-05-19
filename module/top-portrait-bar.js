@@ -18,11 +18,11 @@ export class TopPortraitBar {
       $('#navigation').append($portraitBarDiv)
       var $portraitBarHandle = $("<div id='portrait-bar-handle'><a><i class='fas fa-arrows-alt'></i></a></div>")
       $portraitBarDiv.append($portraitBarHandle)
-      console.log($portraitBarHandle)
+      //console.log($portraitBarHandle)
       $portraitBarHandle.on({
         mousedown:function(e)
         {
-          console.log('S')
+          //console.log('S')
           dragging = true;
           dragX = e.clientX - $(this).parent().position().left;
           dragY = e.clientY - $(this).parent().position().top;
@@ -34,7 +34,7 @@ export class TopPortraitBar {
           },
         mousemove:function(e)
         {
-          console.log('D')
+          //console.log('D')
           if(dragging)
             $(this).parent().offset({top:e.clientY-dragY,left:e.clientX-dragX});
 
@@ -43,7 +43,7 @@ export class TopPortraitBar {
     }
     let height = $('#scene-list').height()
     portraitBar = $('#portrait-bar')
-    // console.log('Bar', portraitBar, actor)
+    // //console.log('Bar', portraitBar, actor)
     if (actor == null)
       return;
     // if (actor.data.type !== "character")

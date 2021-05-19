@@ -114,7 +114,7 @@ export class TreasureGeneratorDialog extends FormApplication {
     );
     let identified = document.getElementById("identified").checked;
 
-    console.log(identified);
+    //console.log(identified);
     this.curQuality = treasureQuality;
     this.curType = treasureType;
     this.curAmount = treasureAmount;
@@ -242,7 +242,7 @@ export class TreasureGeneratorDialog extends FormApplication {
       let item = await canvas.tokens
         .get(token.data._id)
         .actor.createEmbeddedEntity("OwnedItem", it, { stopUpdates: true });
-      console.log("item: ", item);
+      //console.log("item: ", item);
       item = await actor.items.get(item._id);
       if (item.type === "weapon" || item.type === "equipment") {
         const updateData = {};

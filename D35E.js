@@ -93,6 +93,15 @@ Hooks.once("init", async function() {
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.entityClass = ChatMessagePF;
 
+  Actors.unregisterSheet("core", ActorSheet);
+  Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true });
+  Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
+  Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
+  Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
+  Items.unregisterSheet("core", ItemSheet);
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
 
 
   // Register System Settings
@@ -110,15 +119,6 @@ Hooks.once("init", async function() {
   applyConfigModifications();
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true });
-  Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
-  Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
@@ -301,6 +301,10 @@ Hooks.on("renderSettings", (app, html) => {
 
 });
 
+Hooks.on("renderActorSheet",function(sheet, window, data) {
+  //sheet.object.refresh({render: false})
+});
+
 /* -------------------------------------------- */
 /*  Canvas Initialization                       */
 /* -------------------------------------------- */
@@ -374,7 +378,7 @@ Hooks.on("updateItem", (item, changedData, options, user) => {
       console.log("Not updating actor as action was started by other user")
       return
     }
-    actor.refresh(options)
+    //actor.refresh(options)
   }
 });
 Hooks.on("updateToken", (scene, token, data, options, user) => {
@@ -527,7 +531,7 @@ Hooks.on("createItem", (data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  data.parent.refresh(options);
+  //data.parent.refresh(options);
 });
 Hooks.on("deleteItem", (data, options, user) => {
   if (!(data.parent instanceof Actor)) return;
@@ -536,7 +540,7 @@ Hooks.on("deleteItem", (data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  data.parent.refresh(options);
+  //data.parent.refresh(options);
 });
 
 Hooks.on("updateActor",  (actor, data, options, user) => {

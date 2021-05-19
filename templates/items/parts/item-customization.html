@@ -14,7 +14,7 @@
   {{#unless data.data.customAttributesLocked}}<a class="custom-field-control add"><i class="fas fa-plus"></i> {{localize "D35E.AddCustomAttribute"}}</a>{{/unless}}
   {{#each data.data.customAttributes as |part a|}}
   <li class="custom-field flexrow" data-custom-field="{{a}}">
-    {{#if ../data.customAttributesLocked}}
+    {{#if ../data.data.customAttributesLocked}}
     <label>{{part.name}}</label>
     {{else}}
     <input type="text" name="data.customAttributes.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{part.name}}"/>

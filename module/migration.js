@@ -5,7 +5,7 @@
 export const migrateWorld = async function() {
   if (!game.user.isGM) return ui.notifications.error(game.i18n.localize("D35E.ErrorUnauthorizedAction"));
   ui.notifications.info(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
-  console.log(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
+  //console.log(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
 
   // Migrate World Actors
   for ( let a of game.actors.entities ) {
@@ -13,9 +13,9 @@ export const migrateWorld = async function() {
 
       let itemsToAdd = []
       const updateData = await migrateActorData(a,itemsToAdd);
-      console.log(`Migrating Actor entity ${a.name}`);
+      //console.log(`Migrating Actor entity ${a.name}`);
       await a.update(updateData);
-      console.log(`Adding missing items to ${a.name}`);
+      //console.log(`Adding missing items to ${a.name}`);
       if (itemsToAdd.length)
         await a.createEmbeddedEntity("OwnedItem", itemsToAdd, {stopUpdates: true});
     } catch(err) {
@@ -27,7 +27,7 @@ export const migrateWorld = async function() {
   for ( let i of game.items.entities ) {
     try {
       const updateData = migrateItemData(i);
-      console.log(`Migrating Item entity ${i.name}`);
+      //console.log(`Migrating Item entity ${i.name}`);
       await i.update(updateData, {enforceTypes: false});
     } catch(err) {
       console.error(err);
@@ -38,7 +38,7 @@ export const migrateWorld = async function() {
   for ( let s of game.scenes.entities ) {
     try {
       const updateData = await migrateSceneData(s.data);
-      console.log(`Migrating Scene entity ${s.name}`);
+      //console.log(`Migrating Scene entity ${s.name}`);
       await s.update(updateData);
     } catch(err) {
       console.error(err);
@@ -88,12 +88,12 @@ export const migrateCompendium = async function(pack) {
       expandObject(updateData);
       updateData["_id"] = ent._id;
       await pack.updateEntity(updateData);
-      console.log(`Migrated ${entity} entity ${ent.name} in Compendium ${pack.collection}`);
+      //console.log(`Migrated ${entity} entity ${ent.name} in Compendium ${pack.collection}`);
     } catch(err) {
       console.error(err);
     }
   }
-  console.log(`Migrated all ${entity} entities from Compendium ${pack.collection}`);
+  //console.log(`Migrated all ${entity} entities from Compendium ${pack.collection}`);
 };
 
 /* -------------------------------------------- */
@@ -285,7 +285,7 @@ const _migrateCharacterLevel = function(ent, updateData) {
   }
   let k = "details.levelUpProgression"
   const value = getProperty(ent.data.data, k);
-  console.log(`D35E | Migrate | Level up progression ${value}`)
+  //console.log(`D35E | Migrate | Level up progression ${value}`)
   if (value === null || value === undefined) {
 
     updateData["data.details.levelUpProgression"] = false;

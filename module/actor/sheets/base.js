@@ -68,10 +68,10 @@ export class ActorSheetPF extends ActorSheet {
    */
   getData() {
     // Basic data
-    let isOwner = this.entity.owner;
+    let isOwner = this.document.isOwner;
     const data = {
       owner: isOwner,
-      limited: this.entity.limited,
+      limited: this.document.limited,
       options: this.options,
       editable: this.isEditable,
       cssClass: isOwner ? "editable" : "locked",
@@ -92,7 +92,7 @@ export class ActorSheetPF extends ActorSheet {
     let featRollData = this.actor.getRollData()
     data.items = this.actor.items.map(i => {
       i.data.labels = i.labels;
-      i.data.id = i._id;
+      i.data.id = i.id;
       i.data.hasAttack = i.hasAttack;
       i.data.hasMultiAttack = i.hasMultiAttack;
       i.data.containerId = getProperty(i.data, "data.containerId");
@@ -804,7 +804,7 @@ export class ActorSheetPF extends ActorSheet {
     }
     {
 
-      console.log("D35E | Item Browser | Loading pack inline browser on load")
+      //console.log("D35E | Item Browser | Loading pack inline browser on load")
       let entityType = localStorage.getItem(`D35E-last-ent-type-${this.id}`)
       let type = localStorage.getItem(`D35E-last-type-${this.id}`)
       let subType = localStorage.getItem(`D35E-last-subtype-${this.id}`)
@@ -1154,7 +1154,7 @@ export class ActorSheetPF extends ActorSheet {
         let props = $(`<div class="item-properties"></div>`);
         chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
         if (!item.showUnidentifiedData) {
-          console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
+          //console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
           (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
 
             let enh = new ItemPF(_enh, {owner: this.owner})
@@ -2275,7 +2275,7 @@ export class ActorSheetPF extends ActorSheet {
 
 
   enrichDropData(origData) {
-    if (getProperty(origData, "type") === "spell") setProperty(result, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
+    if (getProperty(origData, "type") === "spell") setProperty(origData, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
 
   }
 
@@ -2340,12 +2340,12 @@ export class ActorSheetPF extends ActorSheet {
   async loadData(entityType, type, subtype, filter, previousData, label) {
     if($(`.item-add-${this.randomUuid}-overlay`).css('display') !== 'none')
     {
-      console.log("D35E | Item Browser | Skipping, its already visible", this.randomUuid)
+      //console.log("D35E | Item Browser | Skipping, its already visible", this.randomUuid)
       return;
     }
 
     $(`#items-add-${this.randomUuid}-label`).text(`${game.i18n.localize("D35E.Add")} ${label}`)
-    console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
+    //console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
     function _filterItems(item, entityType, type, subtype) {
       if (entityType === "spells" && item.type !== type) return false;
       if (entityType === "items" && type.split(',').indexOf(item.type) !== -1 && (item.data.data.subType === subtype || subtype === "-")) return true;

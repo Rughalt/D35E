@@ -14,7 +14,7 @@ import {
 function log(message) {
 	if (CONFIG.debug['treasure-gen']) {
 		// eslint-disable-next-line no-console
-		console.log(message)
+		//console.log(message)
 	}
 }
 
@@ -173,9 +173,9 @@ export default class TreasureGenerator {
 	async _makeItem(item) {
 		if (item.id) {
 			try {
-				// console.log("fetchin " + item.id);
+				// //console.log("fetchin " + item.id);
 				let it = await getItem(item.id)
-				// console.log(it);
+				// //console.log(it);
 				if (item.consumableType) {
 					//TODO handle caster Level, not every item has it defined, others have it at 0 when not needed (been added automatically)
 					it.data.data.quantity = item.amount
@@ -262,7 +262,7 @@ export default class TreasureGenerator {
 	// toItemPfArr() {
 	//   let promises = [];
 
-	//   console.log(this._treasure.items)
+	//   //console.log(this._treasure.items)
 	//   for (let item of this._treasure.items) {
 	//     promises.push(this._makeItem(item));
 	//   }
@@ -1031,7 +1031,7 @@ export async function genTreasureFromToken(
 		overrideNames: true,
 	}
 ) {
-	// console.log("generating treasure for: ", token.name);
+	// //console.log("generating treasure for: ", token.name);
 	let TreasureLevels = []
 	let actor = token.actor
 	let TreasureLevel = getActorCrAndMultiplier(actor)
@@ -1057,15 +1057,15 @@ export async function genTreasureFromToken(
 					.includes(item._id)
 		)
 		.map((it) => it._id)
-	console.log('D35E |  Layer TOKEN', token)
+	//console.log('D35E |  Layer TOKEN', token)
 	await token.actor.deleteEmbeddedEntity(
 		'OwnedItem',
 		Array.from(itemsToDelete),
 		{ stopUpdates: true }
 	)
 
-	// console.log("actor:", game.actors.get(token.data.actorId));
-	// console.log("items:", game.actors.get(token.data.actorId).data.items);
+	// //console.log("actor:", game.actors.get(token.data.actorId));
+	// //console.log("items:", game.actors.get(token.data.actorId).data.items);
 
 	//TODO adding items to actor, verify 0.8 compatibility
 	for await (let it of treasureGen.toItemPfArr()) {
@@ -1075,7 +1075,7 @@ export async function genTreasureFromToken(
 		let item = await canvas.tokens
 			.get(token.data._id)
 			.actor.createEmbeddedEntity('OwnedItem', it, { stopUpdates: true })
-		// console.log("item: ", item);
+		// //console.log("item: ", item);
 		item = await canvas.tokens.get(token.data._id).actor.items.get(item._id)
 		if (item.type === 'weapon' || item.type === 'equipment') {
 			const updateData = {}
@@ -1103,8 +1103,8 @@ export async function genTreasureFromToken(
 		},
 	})
 
-	// console.log("token after treasure gen:", canvas.tokens.get(token.data._id));
-	// console.log("treasure rolls:", treasureGen._rolls);
+	// //console.log("token after treasure gen:", canvas.tokens.get(token.data._id));
+	// //console.log("treasure rolls:", treasureGen._rolls);
 	return treasure
 }
 

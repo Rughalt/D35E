@@ -48,6 +48,18 @@ export class Roll35e extends Roll {
         return terms;
     }
 
+    static replaceFormulaData(formula, data, {missing, warn=false}={}) {
+        let dataRgx = new RegExp(/@([a-z.0-9_\-]+)/gi);
+        return formula.replace(dataRgx, (match, term) => {
+            let value = foundry.utils.getProperty(data, term);
+            if ( value === null || value === undefined ) {
+                if ( warn && ui.notifications ) ui.notifications.warn(game.i18n.format("DICE.WarnMissingData", {match}));
+                return (missing !== undefined) ? String(missing) : match;
+            }
+            return String(value).trim();
+        });
+    }
+
     // _identifyTerms(formula, { step = 0 } = {}) {
     //     if (typeof formula !== "string") throw new Error("The formula provided to a Roll instance must be a string");
     //     formula = this.constructor._preProcessDiceFormula(formula, this.data);

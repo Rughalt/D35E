@@ -434,13 +434,15 @@ export class ItemPF extends Item {
 
     async update(data, options = {}) {
         if (options['recursive'] !== undefined && options['recursive'] === false) {
-            console.log('D35E | Skipping update logic since it is not recursive')
+            //console.log('D35E | Skipping update logic since it is not recursive')
             await super.update(data, options);
             return
         }
-        const srcData = mergeObject(this.data, expandObject(data), {inplace: false});
-        //const srcDataWithRolls = mergeObject(srcData, this.getRollData(), {inplace: false});
-        const srcDataWithRolls = srcData.data;
+        console.log('ACTIVATING BUFF', data, this.data.data.active)
+        const srcData = mergeObject(duplicate(this.data), expandObject(data), {inplace: false});
+        console.log('ACTIVATING BUFF', data, this.data.data.active)
+        const srcDataWithRolls = mergeObject(srcData, this.getRollData(), {inplace: false});
+        //const srcDataWithRolls = srcData.data;
         if (data['data.nameFromFormula'] || getProperty(this.data, "data.nameFromFormula"))
             data["name"] = ItemPF._fillTemplate(data['data.nameFormula'] || getProperty(this.data, "data.nameFormula"), srcDataWithRolls) || data["name"]
         // Update name
@@ -468,7 +470,7 @@ export class ItemPF extends Item {
             data["data.weight"] = this.data.data.weight * weightChange;
         }
 
-        console.log("D35E Item Update", data)
+        //console.log("D35E Item Update", data)
         if (data["data.convertedWeight"]) {
             const conversion = game.settings.get("D35E", "units") === "metric" ? 2 : 1;
             data["data.weight"] = data["data.convertedWeight"] * conversion;
@@ -487,22 +489,16 @@ export class ItemPF extends Item {
 
 
 
+        console.log('ACTIVATING BUFF', data, this.data.data.active)
         if (data["data.active"] && data["data.active"] !== this.data.data.active) {
             //Buff or item was activated
             data["data.timeline.elapsed"] = 0
-
             for (let actionValue of this.data.data.activateActions || []) {
-                let actions = ItemPF.parseAction(actionValue.action)
-                for (let actionData of actions) {
-                    //console.log('applying active action', actionData.action)
-                    if (actionData.target === "self") {
-                        if (!this.actor) continue;
-                        if (this.actor.token !== null) {
-                            await this.actor.token.actor.applyActionOnSelf(actionData, this.actor.token.actor, this)
-                        } else {
-                            await this.actor.applyActionOnSelf(actionData, this.actor, this)
-                        }
-                    }
+                if (!this.actor) continue;
+                if (this.actor.token !== null) {
+                    await this.actor.token.actor.applyActionOnSelf(actionValue.action, this.actor.token.actor, this)
+                } else {
+                    await this.actor.applyActionOnSelf(actionValue.action, this.actor, this)
                 }
             }
             if (this.data.data.buffType === "shapechange") {
@@ -539,25 +535,20 @@ export class ItemPF extends Item {
                             }
                         }
                     }
-                    if (this.actor.token !== null) {
-                        await this.actor.token.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
-                    } else {
-                        await this.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
-                    }
+                    if (itemsToDelete.length)
+                        if (this.actor.token !== null) {
+                            await this.actor.token.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
+                        } else {
+                            await this.actor.deleteOwnedItem(itemsToDelete,{stopUpdates: true})
+                        }
                 }
             }
             for (let actionValue of this.data.data.deactivateActions || []) {
-                let actions = ItemPF.parseAction(actionValue.action)
-                for (let actionData of actions) {
-                    //console.log('applying deactivate action', actionData.action)
-                    if (actionData.target === "self") {
-                        if (!this.actor) continue;
-                        if (this.actor.token !== null) {
-                            await this.actor.token.actor.applyActionOnSelf(actionData, this.actor.token.actor, this)
-                        } else {
-                            await this.actor.applyActionOnSelf(actionData, this.actor, this)
-                        }
-                    }
+                if (!this.actor) continue;
+                if (this.actor.token !== null) {
+                    await this.actor.token.actor.applyActionOnSelf(actionValue.action, this.actor.token.actor, this)
+                } else {
+                    await this.actor.applyActionOnSelf(actionValue.action, this.actor, this)
                 }
             }
 
@@ -641,11 +632,18 @@ export class ItemPF extends Item {
         // }
 
 
+        let updateData = await super.update(data, options);
+        if (this.actor !== null && !options.massUpdate) {
+            await this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
+            if (this.sheet) {
+                this.sheet.render()
+            }
+            console.log('D35E | Update actor after item update')
+        }
 
-        // if (this.actor !== null)
-        //     await this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
 
-        return super.update(data, options);
+        return Promise.resolve(updateData);
+        // return super.update(data, options);
     }
 
     _updateAlignmentEnhancement(data, enhancements, type, srcData) {
@@ -973,7 +971,7 @@ export class ItemPF extends Item {
                 }
 
                 //
-                // console.log('D35E | Calculated spell DC for props', saveDC)
+                // //console.log('D35E | Calculated spell DC for props', saveDC)
             }
         }
 
@@ -1248,7 +1246,7 @@ export class ItemPF extends Item {
                         attackExtraParts.push(useAmmoAttack);
                     }
                     rollModifiers.push(`${useAmmoName}`)
-                    // console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
+                    // //console.log('D35E | Selected ammo', useAmmoDamage, useAmmoAttack)
                 }
 
 
@@ -1502,7 +1500,7 @@ export class ItemPF extends Item {
                 })
             }
 
-            // console.log('D35E | Enabled conditionals', enabledConditionals)
+            // //console.log('D35E | Enabled conditionals', enabledConditionals)
             let attackEnhancementMap = new Map();
             let damageEnhancementMap = new Map();
             for (let enabledConditional of enabledConditionals) {
@@ -1574,7 +1572,7 @@ export class ItemPF extends Item {
             }
             if (rollData.featDamage) {
                 for (let dmg of Object.keys(rollData.featDamage)) {
-                    // console.log('Bonus damage!', dmg, rollData.featDamage[dmg])
+                    // //console.log('Bonus damage!', dmg, rollData.featDamage[dmg])
                     damageExtraParts.push(["(${this.featDamage."+dmg+"})",dmg]);
                 }
             }
@@ -1727,7 +1725,7 @@ export class ItemPF extends Item {
             // Prompt measure template
             if (useMeasureTemplate) {
 
-                // console.log(`D35E | Creating measure template.`)
+                // //console.log(`D35E | Creating measure template.`)
                 // Create template
                 const template = AbilityTemplate.fromItem(this, rollData.spellWidened ? 2 : 1);
                 if (template) {
@@ -1740,10 +1738,10 @@ export class ItemPF extends Item {
                 }
             }
 
-            // console.log(`D35E | Updating item on attack.`)
+            // //console.log(`D35E | Updating item on attack.`)
             // Deduct charge
             if (this.autoDeductCharges && !skipChargeCheck) {
-                // console.log(`D35E | Deducting ${this.chargeCost} charges.`)
+                // //console.log(`D35E | Deducting ${this.chargeCost} charges.`)
                 if (rollData.useAmount === undefined)
                     await this.addCharges(-1*this.chargeCost, itemUpdateData);
                 else
@@ -1772,7 +1770,7 @@ export class ItemPF extends Item {
             let rolled = false;
             if (this.hasAttack || this.hasDamage || this.hasEffect || getProperty(this.data, "data.actionType") === "special") {
 
-                // console.log(`D35E | Generating chat message.`)
+                // //console.log(`D35E | Generating chat message.`)
                 // Get extra text and properties
                 let hasBoxInfo = this.hasAttack || this.hasDamage || this.hasEffect;
                 let attackNotes = []
@@ -1897,7 +1895,7 @@ export class ItemPF extends Item {
             conditionals: this.data.data.conditionals,
         };
         const html = await renderTemplate(template, dialogData);
-        // console.log(dialogData)
+        // //console.log(dialogData)
         let roll;
         const buttons = {};
         let wasRolled = false;
@@ -2055,7 +2053,7 @@ export class ItemPF extends Item {
                 spellDC.description = saveDesc;
             }
         }
-        // console.log('D35E | Calculated spell DC', spellDC)
+        // //console.log('D35E | Calculated spell DC', spellDC)
         return spellDC;
     }
 
@@ -2385,7 +2383,7 @@ export class ItemPF extends Item {
             }
             rolls.push(roll);
         }
-        // console.log(rolls);
+        // //console.log(rolls);
         return rolls;
     }
 
@@ -2555,7 +2553,7 @@ export class ItemPF extends Item {
         if (_actor)
             isOwnerOfToken = _actor.testUserPermission(game.user, "OWNER");
         if (!(isTargetted || game.user.isGM || message.isAuthor || isOwnerOfToken || canBeUsedByEveryone)) {
-            console.log('No permission', isTargetted, game.user.isGM, isOwnerOfToken)
+            //console.log('No permission', isTargetted, game.user.isGM, isOwnerOfToken)
             button.disabled = false;
             return;
         }
@@ -2620,15 +2618,10 @@ export class ItemPF extends Item {
              * - Damage <roll> on self
              * -
              */
-            let actions = ItemPF.parseAction(actionValue)
 
-            for (let actionData of actions) {
-                if (actionData.target === "self") {
-                    await actor.applyActionOnSelf(actionData, actor)
-                } else {
-                    await ActorPF.applyAction(actionData, actor);
-                }
-            }
+            await actor.applyActionOnSelf(actionValue, actor)
+            await ActorPF.applyAction(actionValue, actor);
+
         }
 
         // Re-enable the button
@@ -2636,7 +2629,7 @@ export class ItemPF extends Item {
             button.disabled = false;
         else {
             await message.update({'content':message.data.content.replace(button.outerHTML,`<button disabled class="disabled-action-button">${button.innerText}</button>`)})
-            console.log(message, button)
+            //console.log(message, button)
         }
     }
 
@@ -2972,7 +2965,7 @@ export class ItemPF extends Item {
         if (this.data.data.atWill) return;
         //if (this.data.data.level === 0) return;
 
-        console.log(`D35E | Adding spell uses ${value}`)
+        //console.log(`D35E | Adding spell uses ${value}`)
         const spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.data.data.spellbook}`),
             isSpontaneous = spellbook.spontaneous, usePowerPoints = spellbook.usePowerPoints,
             spellbookKey = getProperty(this.data, "data.spellbook") || "primary",
@@ -4098,7 +4091,7 @@ export class ItemPF extends Item {
     }
 
     get attackDescription() {
-        // console.log('D35E | AB ', this.hasAttack)
+        // //console.log('D35E | AB ', this.hasAttack)
         if (this.hasAttack) {
             let bab = 0;
             let attackBonus = ((this.data.data.enh || 0) ? parseInt(this.data.data.enh) : (this.data.data.masterwork ? 1 : 0)) + parseInt(this.data.data.attackBonus || "0");
@@ -4116,7 +4109,7 @@ export class ItemPF extends Item {
     }
 
     get damageDescription() {
-        // console.log('D35E | DD ', this.hasDamage)
+        // //console.log('D35E | DD ', this.hasDamage)
         let rollData = this.actor.getRollData();
         rollData.critMult = 1;
         rollData.item = duplicate(this.getRollData())

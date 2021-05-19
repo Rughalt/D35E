@@ -288,7 +288,7 @@ export class ItemSheetPF extends ItemSheet {
             }
 
             // Enrich description
-            data.description = TextEditor.enrichHTML(data.data.description.value);
+            data.description = TextEditor.enrichHTML(this.item.data.data.description.value);
         }
         if (this.item.data.type === "race") {
             data.children = {
@@ -921,7 +921,7 @@ export class ItemSheetPF extends ItemSheet {
             formData['data.containerWeightless'] = false
         }
 
-        console.log("IM IN _UPDATE OBJECT FIXING THINGS", formData)
+        //console.log("IM IN _UPDATE OBJECT FIXING THINGS", formData)
         return super._updateObject(event, formData);
     }
 
@@ -1126,7 +1126,7 @@ export class ItemSheetPF extends ItemSheet {
             let _customAttributes = duplicate(this.item.data.data.customAttributes || {});
             let newAttribute = {id: this.generateId(),name:'',value:''};
             _customAttributes[newAttribute.id] = newAttribute;
-            console.log(`D35E | Adding custom attribute | `,_customAttributes)
+            //console.log(`D35E | Adding custom attribute | `,_customAttributes)
             return this.item.update({"data.customAttributes": _customAttributes});
         }
 
@@ -1134,7 +1134,7 @@ export class ItemSheetPF extends ItemSheet {
         if (a.classList.contains("delete")) {
             await this._onSubmit(event);  // Submit any unsaved changes
             const li = a.closest(".custom-field");
-            console.log(`D35E | Removing custom attribute | ${li.dataset.customField}`, this.item.data.data.customAttributes)
+            //console.log(`D35E | Removing custom attribute | ${li.dataset.customField}`, this.item.data.data.customAttributes)
             const updateData = {};
             updateData[`data.customAttributes.-=${li.dataset.customField}`] = null;
             return this.item.update(updateData);
@@ -1293,8 +1293,7 @@ export class ItemSheetPF extends ItemSheet {
 
         // Add new change
         if (a.classList.contains("add-change")) {
-            console.log('AAAAAITEM', this.item);
-            //await this._onSubmit(event);  // Submit any unsaved changes
+            //console.log('AAAAAITEM', this.item);
             let _changes = duplicate(this.item.data.data.changes) || [];
             return this.item.update({"data.changes": _changes.concat([["", "", "", "", 0]])});
         }
@@ -1423,14 +1422,16 @@ export class ItemSheetPF extends ItemSheet {
     }
 
     async _createAttack(event) {
+        event.preventDefault();
         if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
 
-        await this._onSubmit(event);
+        //await this._onSubmit(event);
 
         return this.item.parent.createAttackFromWeapon(this.item);
     }
 
     async _addSpellsToSpellbook(event) {
+        event.preventDefault();
         if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
         await this.item.parent.addSpellsToSpellbook(this.item);
 
@@ -1588,7 +1589,7 @@ export class ItemSheetPF extends ItemSheet {
         const li = event.currentTarget;
         const packName = li.getAttribute('data-pack');
         const pack = game.packs.get(packName);
-        // console.log(event)
+        // //console.log(event)
         if (!pack) return;
         // Set the transfer data
         event.dataTransfer.setData("text/plain", JSON.stringify({

@@ -10,7 +10,7 @@ CACHE.DamageTypes = new Map()
 
 export const buildCache = async function() {
 
-    console.log("D35E | Building Caches for compendiums...")
+    //console.log("D35E | Building Caches for compendiums...")
     ui.notifications.info(`Building Caches for compendiums...`);
     let itemPack = game.packs.get();
     let items = []
@@ -104,5 +104,5 @@ export const buildCache = async function() {
         }
 
     ui.notifications.info(`Building Caches for compendiums finished!`);
-    console.log("D35E | Building Caches for finished!")
+    //console.log("D35E | Building Caches for finished!")
 }
