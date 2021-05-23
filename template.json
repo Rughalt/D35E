@@ -1110,7 +1110,8 @@
           "value": [],
           "custom": ""
         }
-      }
+      },
+      "noVisionOverride": false
     },
     "npc": {
       "templates": [
@@ -1140,7 +1141,8 @@
         "name": null,
         "data": {},
         "distance": 0
-      }
+      },
+      "noVisionOverride": true
     },
     "trap": {
       "templates": [

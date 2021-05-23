@@ -1445,6 +1445,9 @@
 
   "D35E.DistMeterShort": "m",
 
+  "D35E.NoVisionOverride": "Do now override Token Vision",
+  "D35E.NoVisionOverrideH": "This option disables overriding Token vision settings from actor and items. ",
+
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

@@ -137,6 +137,11 @@ export async function PatchCore() {
     },
   });
 
+  // Patch StringTerm
+  const StringTerm_eval = StringTerm.prototype.evaluate;
+  StringTerm.prototype.evaluate = async function(...args) {
+    return this;
+  };
 
 
   // Patch, patch, patch

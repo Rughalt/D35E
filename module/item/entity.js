@@ -438,9 +438,9 @@ export class ItemPF extends Item {
             await super.update(data, options);
             return
         }
-        console.log('ACTIVATING BUFF', data, this.data.data.active)
-        const srcData = mergeObject(duplicate(this.data), expandObject(data), {inplace: false});
-        console.log('ACTIVATING BUFF', data, this.data.data.active)
+        console.log('Is true/false', data, this.data.data.active)
+        const srcData = mergeObject(this.data.toObject(), expandObject(data), {inplace: false});
+        console.log('Should be true/false, is true true', data, this.data.data.active)
         const srcDataWithRolls = mergeObject(srcData, this.getRollData(), {inplace: false});
         //const srcDataWithRolls = srcData.data;
         if (data['data.nameFromFormula'] || getProperty(this.data, "data.nameFromFormula"))
@@ -495,9 +495,9 @@ export class ItemPF extends Item {
             data["data.timeline.elapsed"] = 0
             let actionValue = (this.data.data.activateActions || []).map(a => a.action).join(";")
             if (this.actor && this.actor.token !== null) {
-                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this)
+                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this, "self")
             } else if (this.actor) {
-                await this.actor.applyActionOnSelf(actionValue, this.actor, this)
+                await this.actor.applyActionOnSelf(actionValue, this.actor, this, "self")
             }
             if (this.data.data.buffType === "shapechange") {
                 if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
@@ -514,9 +514,9 @@ export class ItemPF extends Item {
                     }
 
                     if (this.actor.token !== null) {
-                        await this.actor.token.actor.createOwnedItem(itemsToCreate,{stopUpdates: true})
+                        await this.actor.token.actor.createEmbeddedDocuments("Item", itemsToCreate,{stopUpdates: true})
                     } else {
-                        await this.actor.createOwnedItem(itemsToCreate,{stopUpdates: true})
+                        await this.actor.createEmbeddedDocuments("Item", itemsToCreate,{stopUpdates: true})
                     }
                 }
             }
@@ -543,9 +543,9 @@ export class ItemPF extends Item {
             }
             let actionValue = (this.data.data.deactivateActions || []).map(a => a.action).join(";")
             if (this.actor && this.actor.token !== null) {
-                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this)
+                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this, "self")
             } else if (this.actor) {
-                await this.actor.applyActionOnSelf(actionValue, this.actor, this)
+                await this.actor.applyActionOnSelf(actionValue, this.actor, this, "self")
             }
 
 
@@ -632,13 +632,13 @@ export class ItemPF extends Item {
         let updateData = await super.update(data, options);
         if (this.actor !== null && !options.massUpdate) {
             await this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
-            if (this.sheet) {
-                this.sheet.render()
-            }
-            console.log('D35E | Update actor after item update')
+            // if (this.sheet) {
+            //     await this.sheet.render()
+            // }
+
         }
 
-
+        console.log('D35E | ITEM UPDATE | Updated')
         return Promise.resolve(updateData);
         // return super.update(data, options);
     }
@@ -802,7 +802,7 @@ export class ItemPF extends Item {
         const token = actor ? actor.token : null;
         const templateData = {
             actor: actor,
-            tokenId: token ? `${token.scene._id}.${token.id}` : null,
+            tokenId: token ? `${token.parent._id}.${token.id}` : null,
             item: this.data,
             data: this.getChatData(),
             labels: this.labels,
@@ -1816,7 +1816,7 @@ export class ItemPF extends Item {
                     hasProperties: props.length > 0,
                     item: this.data,
                     actor: actor.data,
-                    tokenId: token ? `${token.scene._id}.${token.id}` : null,
+                    tokenId: token ? `${token.parent._id}.${token.id}` : null,
                     hasBoxInfo: hasBoxInfo,
                     useAmmoName: useAmmoName,
                     dc: dc,

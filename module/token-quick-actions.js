@@ -13,7 +13,7 @@ export class TokenQuickActions {
         return;
     
     let quickActions = '<div class="col actions"><div class="below">'
-    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "feat") && getProperty(o, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
+    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "feat") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
     });
     items.forEach(function(item) {
       const icon = item.img;

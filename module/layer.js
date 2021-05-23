@@ -60,7 +60,7 @@ export default class D35ELayer extends CanvasLayer {
 
       deactivate(a, b, c) {
           super.deactivate(a, b, c)
-          canvas.tokens.interactiveChildren = false;
+          //canvas.tokens.interactiveChildren = false;
       }
 
     async draw() {

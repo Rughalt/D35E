@@ -60,6 +60,8 @@ export class Roll35e extends Roll {
         });
     }
 
+
+
     // _identifyTerms(formula, { step = 0 } = {}) {
     //     if (typeof formula !== "string") throw new Error("The formula provided to a Roll instance must be a string");
     //     formula = this.constructor._preProcessDiceFormula(formula, this.data);
@@ -171,7 +173,12 @@ export class Roll35e extends Roll {
     static _preProcessDiceFormula(formula, data = {}) {
         function _fillTemplate(templateString, templateVars){
             if (templateString.indexOf('$') !== -1)
-                return new Function("return `"+templateString +"`;").call(templateVars);
+                try {
+                    return new Function("return `" + templateString + "`;").call(templateVars);
+                } catch (err) {
+                    ui.notifications.warn(game.i18n.format("DICE.WarnMissingData", {templateString}));
+                    return  "0";
+                }
             else
                 return formula;
         }
@@ -236,3 +243,5 @@ export class Roll35e extends Roll {
         return terms.join("");
     }
 }
+
+

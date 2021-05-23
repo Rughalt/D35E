@@ -101,9 +101,7 @@
             skills += parseInt(bonusSkillPoints)
             skills = Math.max(1,skills)
             let classes = JSON.parse('{{{classesJson}}}')
-            console.log(classes)
-            let classSkills = classes.find(_c => _c.id === classId).classSkills;
-            console.log(classSkills)
+            let classSkills = classes.find(_c => _c.id === classId)?.classSkills || {};
             for (let key of Object.keys(classSkills)) {
                 $(`input[data-class-skillid='${key}'`).val(classSkills[key])
                 $(`span[data-class-skillid='${key}'`).toggleClass("bold", classSkills[key])

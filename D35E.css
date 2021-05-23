@@ -2280,6 +2280,22 @@
   border-top-left-radius: 4px;
   text-align: right;
 }
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-browser-details div {
+  line-height: 16px !important;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-browser-details p {
+  display: inline !important;
+  line-height: 16px !important;
+  font-size: 13px;
+}
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-browser-details h1,
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-browser-details h2,
+.D35E.sheet.actor .item-add-overlay .item-add-list .item-browser-details h3 {
+  display: inline !important;
+  line-height: 16px !important;
+  font-size: 13px;
+  font-weight: 600;
+}
 .locked img.sheet-profile {
   max-height: 360px;
   max-width: 240px;

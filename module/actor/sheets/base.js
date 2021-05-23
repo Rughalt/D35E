@@ -88,7 +88,7 @@ export class ActorSheetPF extends ActorSheet {
 
     };
     // The Actor and its Items
-    data.actor = duplicate(this.actor.data);
+    data.actor = this.actor.data.toObject(false);
     let featRollData = this.actor.getRollData()
     data.items = this.actor.items.map(i => {
       i.data.labels = i.labels;
@@ -151,6 +151,9 @@ export class ActorSheetPF extends ActorSheet {
 
     // Update skill labels
     for ( let [s, skl] of Object.entries(data.actor.data.skills)) {
+      if (skl === null) {
+        continue;
+      }
       skl.label = CONFIG.D35E.skills[s];
       skl.arbitrary = CONFIG.D35E.arbitrarySkills.includes(s);
       skl.sourceDetails = (data.sourceDetails != null && data.sourceDetails.data.skills[s] != null) ? data.sourceDetails.data.skills[s].changeBonus : [];
@@ -417,6 +420,8 @@ export class ActorSheetPF extends ActorSheet {
 
     // sort skills by label
     let keys = Object.keys(skillset).sort(function(a,b) {
+      if (skillset[a] === null) return -1;
+      if (skillset[b] === null) return -1;
       if (skillset[a].custom && !skillset[b].custom) return 1;
       if (!skillset[a].custom && skillset[b].custom) return -1;
       return ('' + skillset[a].label).localeCompare(skillset[b].label)
@@ -424,6 +429,7 @@ export class ActorSheetPF extends ActorSheet {
 
     keys.forEach( a => {
       let skl = skillset[a]
+      if (skl === null) return ;
       result.all.skills[a] = skl;
       if ((skl.rank > 0 || (!skl.rt && this.actor.data.data.displayNonRTSkills) || (skl.visibility === "always")) && (skl.visibility !== "never")) result.known.skills[a] = skl;
       else if (skl.subSkills !== undefined && (skl.visibility !== "never")) {
@@ -1443,9 +1449,10 @@ export class ActorSheetPF extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onItemEdit(event) {
+  async _onItemEdit(event) {
     event.preventDefault();
     const li = event.currentTarget.closest(".item");
+    await this.actor.refresh({})
     const item = this.actor.getOwnedItem(li.dataset.itemId);
     item.sheet.render(true);
   }
@@ -1744,7 +1751,7 @@ export class ActorSheetPF extends ActorSheet {
       if (!res) continue;
       const id = res._id;
       if (!id) continue;
-      const item = this.actor.items.find(o => o._id === id);
+      const item = this.actor.items.get(id);
       if (!item) continue;
       item.data.tag = key;
     }
@@ -2347,6 +2354,7 @@ export class ActorSheetPF extends ActorSheet {
     $(`#items-add-${this.randomUuid}-label`).text(`${game.i18n.localize("D35E.Add")} ${label}`)
     //console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
     function _filterItems(item, entityType, type, subtype) {
+      if (item.data.data.uniqueId) return false;
       if (entityType === "spells" && item.type !== type) return false;
       if (entityType === "items" && type.split(',').indexOf(item.type) !== -1 && (item.data.data.subType === subtype || subtype === "-")) return true;
       if (entityType === "feats" && item.type === type && item.data.data.featType === subtype && !item.data.data.uniqueId) return true;
@@ -2375,9 +2383,13 @@ export class ActorSheetPF extends ActorSheet {
           let li = $(`<li class="item-list-item item" data-item-id="${i.id}">
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
-                                <span>${i.name}</span>
+                                <span onclick="$(this).parent().parent().children('.item-browser-details').slideToggle()">${i.name}</span>
                            
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
+                                <div style="display: none" class="item-browser-details flexcol">
+                                <div style="max-height:100px; overflow: hidden;  -webkit-mask-image: linear-gradient(to bottom, black 75px, transparent 100px); mask-image: linear-gradient(to bottom, black 75px, transparent 100px);">${i.data.data.description.value}</div>
+                                ` + (i.type !== 'feat' ? `<div style="flex: 0 20px; opacity: 0.8" ><i class="fas fa-coins"></i> ${i.data.data.price} gp</div>` : '') + `
+                                </div>
                         </li>`);
           li.find(".add-from-compendium").mouseup(ev => {
                 localStorage.setItem(`D35E-position-${this.id}`, $(`#${this.randomUuid}-itemList`).scrollTop())
@@ -2386,7 +2398,7 @@ export class ActorSheetPF extends ActorSheet {
           );
           if (!$(`#${this.randomUuid}-itemList li[data-item-id='${i.id}']`).length) {
             $(`#${this.randomUuid}-itemList`).append(li);
-            addedItems.push({id: i.id, name: i.name, pack: p.collection, img: i.img})
+            addedItems.push({id: i.id, name: i.name, pack: p.collection, img: i.img, description: i.data.data.description, price: i.data.data.price, type: i.type })
           }
         }
 
@@ -2397,8 +2409,13 @@ export class ActorSheetPF extends ActorSheet {
         let li = $(`<li class="item-list-item item" data-item-id="${i.id}">
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
-                                <span>${i.name}</span>
+                                <span onclick="$(this).parent().parent().children('.item-browser-details').slideToggle()">${i.name}</span>
+                           
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
+                                <div style="display: none" class="item-browser-details flexcol">
+                                <div style="max-height: 100px; overflow: hidden;  -webkit-mask-image: linear-gradient(to bottom, black 75px, transparent 100px); mask-image: linear-gradient(to bottom, black 75px, transparent 100px);">${i.description.value}</div>
+                                ` + (i.type !== 'feat' ? `<div style="flex: 0 20px; opacity: 0.8" ><i class="fas fa-coins"></i> ${i.price} gp</div>` : '') + `
+                                </div>
                         </li>`);
         li.find(".add-from-compendium").mouseup(ev => {
           localStorage.setItem(`D35E-position-${this.id}`, $(`#${this.randomUuid}-itemList`).scrollTop())

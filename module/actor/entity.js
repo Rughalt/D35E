@@ -93,8 +93,8 @@ export class ActorPF extends Actor {
     }
 
     static _getChangeItemSubtype(item) {
-        if (item.type === "buff") return item.data.data.buffType;
-        if (item.type === "feat") return item.data.data.featType;
+        if (item.type === "buff") return item.data.data.buffType || item.data?.featType;
+        if (item.type === "feat") return item.data?.data?.featType || item.data?.featType;
         return "";
     }
 
@@ -1317,7 +1317,7 @@ export class ActorPF extends Actor {
         if (data.data.jumpSkillAdjust) {
             changes.push({
                 raw: [`4*floor((@attributes.speed.land.total - 30)/10)`, "skill", "skill.jmp", "untyped", 0],
-                source: {name: "Speed bonus"}
+                source: {name: "Speed bonus", type: "speedBonus"}
             });
         }
 
@@ -1344,7 +1344,8 @@ export class ActorPF extends Actor {
 
     async _updateChanges({data = null} = {}, options = {}) {
         let updateData = {};
-        let srcData1 = mergeObject(this.data, expandObject(data || {}), { inplace: false });
+        console.log('D35E | Data', this.data.toObject(false).data.classes, this.data.data.classes)
+        let srcData1 = mergeObject(this.data.toObject(false), expandObject(data || {}), { inplace: false });
         srcData1.items = this.items;
 
         // srcData1.items = this.items.reduce((cur, i) => {
@@ -1589,7 +1590,7 @@ export class ActorPF extends Actor {
         // Parse changes
         let temp = [];
         //console.log('D35E | Master Changes');
-        const origData = mergeObject(this.data, data != null ? expandObject(data) : {}, { inplace: false });
+        const origData = mergeObject(this.data.toObject(false), data != null ? expandObject(data) : {}, { inplace: false });
         updateData = flattenObject({ data: mergeObject(origData.data, expandObject(updateData).data, { inplace: false }) });
         this._addDynamicData(updateData, {}, flags, Object.keys(this.data.data.abilities), srcData1, true);
 
@@ -1608,6 +1609,8 @@ export class ActorPF extends Actor {
         let currentChangeTarget = null;
         let changeRollData = null;
         // All changes are sorted and lumped together
+
+
         allChanges.forEach((change, a) => {
             const formula = change.raw[0] || "";
             if (formula === "") return;
@@ -1650,7 +1653,7 @@ export class ActorPF extends Actor {
                 case "noDex":
                     linkData(srcData1, updateData, "data.abilities.dex.origTotal", 0);
                     linkData(srcData1, updateData, "data.abilities.dex.origMod", 0);
-                    linkData(srcData1, updateData, "data.abilities.dex.mod", 0);
+                    linkData(srcData1, updateData, "data.abilities.dex.total", 0);
                     linkData(srcData1, updateData, "data.abilities.dex.mod", 0);
                     linkData(srcData1, updateData, `data.abilities.dex.drain`, 0);
                     break;
@@ -1783,6 +1786,7 @@ export class ActorPF extends Actor {
         } else {
             if (updateData["data.attributes.hp.max"]) {
                 const hpDiff = updateData["data.attributes.hp.max"] - prevValues.mhp;
+                console.log('D35E | HP Diff', prevValues.mhp, hpDiff, updateData["data.attributes.hp.max"])
                 if (hpDiff !== 0) {
                     linkData(srcData1, updateData, "data.attributes.hp.value", Math.min(updateData["data.attributes.hp.max"], srcData1.data.attributes.hp.value + hpDiff));
                 }
@@ -1890,7 +1894,7 @@ export class ActorPF extends Actor {
 
 
         //console.log('D35E | Source Details');
-        this._setSourceDetails(mergeObject(this.data, srcData1, { inplace: false }), sourceInfo, flags);
+        this._setSourceDetails(mergeObject(this.data.toObject(false), srcData1, { inplace: false }), sourceInfo, flags);
 
         const diffData = (srcData1);
         // Apply changes
@@ -1956,17 +1960,20 @@ export class ActorPF extends Actor {
         let changes = {};
         for (let change of changeData) {
             for (let b of Object.keys(change)) {
-                changes[b] = { positive: 0, negative: 0 };
+                changes[b] = { positive: 0, negative: 0, sources: [] };
             }
             for (let [changeType, data] of Object.entries(change)) {
                 // Add positive value
                 if (data.positive.value !== 0) {
                     changes[changeType].positive += data.positive.value;
+                    changes[changeType].sources.push(...data.positive.sources);
                 }
                 // Add negative value
                 if (data.negative.value !== 0) {
                     changes[changeType].negative += data.negative.value;
+                    changes[changeType].sources.push(...data.negative.sources);
                 }
+
             }
         }
 
@@ -1989,8 +1996,18 @@ export class ActorPF extends Actor {
                         }
                     }
                     sourceInfo[target] = sourceInfo[target] || { positive: [], negative: [] };
-                    if (consolidatedChanges[target] < 0) sourceInfo[target].positive.push({name:sourceName, type: sourceType, value: consolidatedChanges[target]});
-                    if (consolidatedChanges[target] > 0) sourceInfo[target].negative.push({name:sourceName, type: sourceType, value: consolidatedChanges[target]});
+                    for (let changeSource of value.sources) {
+                        if (changeSource.value > 0) sourceInfo[target].positive.push({
+                            name: changeSource.name,
+                            type: changeSource.type,
+                            value: changeSource.value
+                        });
+                        if (changeSource.value < 0) sourceInfo[target].negative.push({
+                            name: changeSource.name,
+                            type: changeSource.type,
+                            value: changeSource.value
+                        });
+                    }
                 }
             }
         }
@@ -2339,15 +2356,15 @@ export class ActorPF extends Actor {
             let groupFormulas = new Map()
             classes.forEach(obj => {
                 try {
-                    if (obj.data.sneakAttackGroup == null || obj.data.sneakAttackGroup === "")
+                    if (obj.data.data.sneakAttackGroup == null || obj.data.data.sneakAttackGroup === "")
                         return;
-                    if (!groupLevels.has(obj.data.sneakAttackGroup)) {
-                        groupLevels.set(obj.data.sneakAttackGroup, 0)
+                    if (!groupLevels.has(obj.data.data.sneakAttackGroup)) {
+                        groupLevels.set(obj.data.data.sneakAttackGroup, 0)
                     }
-                    if (!groupFormulas.has(obj.data.sneakAttackGroup)) {
-                        groupFormulas.set(obj.data.sneakAttackGroup, obj.data.sneakAttackFormula)
+                    if (!groupFormulas.has(obj.data.data.sneakAttackGroup)) {
+                        groupFormulas.set(obj.data.data.sneakAttackGroup, obj.data.data.sneakAttackFormula)
                     }
-                    groupLevels.set(obj.data.sneakAttackGroup, groupLevels.get(obj.data.sneakAttackGroup) + obj.data.levels)
+                    groupLevels.set(obj.data.data.sneakAttackGroup, groupLevels.get(obj.data.data.sneakAttackGroup) + obj.data.data.levels)
                 } catch (e) {
                 }
             })
@@ -2376,16 +2393,16 @@ export class ActorPF extends Actor {
             }
             classes.forEach(obj => {
                 try {
-                    if (obj.data.minionGroup == null || obj.data.minionGroup === "")
+                    if (obj.data.data.minionGroup == null || obj.data.data.minionGroup === "")
                         return;
-                    let minionGroup = obj.data.minionGroup.toLowerCase()
+                    let minionGroup = obj.data.data.minionGroup.toLowerCase()
                     if (!groupLevels.has(minionGroup)) {
                         groupLevels.set(minionGroup, 0)
                     }
                     if (!groupFormulas.has(minionGroup)) {
-                        groupFormulas.set(minionGroup, minionLevelFormula)
+                        groupFormulas.set(minionGroup, obj.data.data.minionLevelFormula)
                     }
-                    groupLevels.set(minionGroup, groupLevels.get(minionGroup) + obj.data.levels)
+                    groupLevels.set(minionGroup, groupLevels.get(minionGroup) + obj.data.data.levels)
                 } catch (e) {
                 }
             })
@@ -2457,7 +2474,9 @@ export class ActorPF extends Actor {
                 itemsWithUid.set(i.data.data.uniqueId, i._id)
             }
 
-            if (getProperty(data, "data.classLevels") !== this.data.classLevels) {
+            console.log('D35E | Adding Features', level, data, this.data.data.classLevels, updateData)
+
+            if (true) {
                 linkData(data, updateData, "data.details.level.value", level);
                 let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial" && o.data.data.automaticFeatures).sort((a, b) => {
                     return a.sort - b.sort;
@@ -2472,8 +2491,10 @@ export class ActorPF extends Actor {
                 await itemPack.getIndex().then(index => items = index);
 
                 for (const classInfo of classNames) {
+                    console.log('D35E | Adding Features', classInfo)
                     let added = false;
                     for (let feature of classInfo[2]) {
+                        console.log('D35E | Adding Features', feature)
                         let e = CACHE.AllAbilities.get(feature.uid)
                         const level = parseInt(feature.level)
                         let uniqueId = e?.data?.data?.uniqueId;
@@ -2487,6 +2508,7 @@ export class ActorPF extends Actor {
                         this.addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added);
                     }
                     for (let e of CACHE.ClassFeatures.get(classInfo[0]) || []) {
+                        console.log('D35E | Adding Features', e)
                         if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
                         let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
                         for (let _level of levels) {
@@ -2619,6 +2641,7 @@ export class ActorPF extends Actor {
     }
 
     addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added) {
+        console.log('D35E | Adding Features', addedAbilities)
         let canAdd = !addedAbilities.has(uniqueId)
         if (canAdd) {
             if (level <= classInfo[1]) {
@@ -3475,7 +3498,7 @@ export class ActorPF extends Actor {
      * @return {Promise}        A Promise which resolves to the updated Entity
      */
     async update(data, options = {}) {
-        let origData = deepClone(data)
+        let origData = duplicate(data)
         if (options['recursive'] !== undefined && options['recursive'] === false) {
             //console.log('D35E | Skipping update logic since it is not recursive')
             return super.update(data, options);
@@ -3836,7 +3859,7 @@ export class ActorPF extends Actor {
         if (data1.details.levelUpData && data1.details.levelUpProgression) {
             levelUpData.forEach(lud => {
                 if (lud.classId === null || lud.classId === "") return;
-                let _class = this.items.find(cls => cls._id === lud.classId)
+                let _class = this.items.get(lud.classId)
                 if (_class == null) {
                     lud.classId = null;
                     lud.classImage = null;
@@ -4172,7 +4195,9 @@ export class ActorPF extends Actor {
             attackData["data.ability.damage"] = "str";
             if (item.data.data.weaponSubtype === "2h" && isMelee) attackData["data.ability.damageMult"] = 1.5;
         }
-
+        if (item.data.data.properties["thr"] === true) {
+            attackData["data.ability.attack"] = "dex";
+        }
         // Add damage formula
         if (item.data.data.weaponData.damageRoll) {
             const die = item.data.data.weaponData.damageRoll || "1d4";
@@ -4268,7 +4293,7 @@ export class ActorPF extends Actor {
             let meleeAttack = duplicate(attacks[0])
             meleeAttack["data"]["actionType"] = "mwak";
             meleeAttack["data"]["thrown"] = false;
-
+            meleeAttack["data"]["ability"]['attack'] = "str";
             attacks[0]['name'] = `${attacks[0]['name']} (Thrown)`
             attacks.push(meleeAttack)
         }
@@ -6119,7 +6144,7 @@ export class ActorPF extends Actor {
     }
 
     getRollData(data = null) {
-        if (data == null) data = this.data.data;
+        if (data == null) data = this.data.toObject(false).data;
         const result = mergeObject(data, {
             size: Object.keys(CONFIG.D35E.sizeChart).indexOf(getProperty(data, "traits.actualSize")) - 4,
         }, { inplace: false });
@@ -6128,10 +6153,12 @@ export class ActorPF extends Actor {
     }
 
     async autoApplyActionsOnSelf(actions) {
+        console.log('AUTO APPLY ACTION ON SELF', this.name)
         await this.applyActionOnSelf(actions, this, null, "self")
     }
 
     static applyAction(actions, actor) {
+        console.log('APPLY ACTION ON ACTOR')
         const promises = [];
         let tokensList;
         if (game.user.targets.size > 0)
@@ -6393,7 +6420,9 @@ export class ActorPF extends Actor {
                 //console.log(action)
                 if (action.parameters.length === 2) {
                     let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
-                    ActorPF.applyAbilityDamage(damage, cleanParam(action.parameters[0]));
+                    let abilityField = `data.abilities.${action.parameters[0]}.damage`,
+                    abilityDamage = actionRollData.self.abilities[action.parameters[0]].damage || 0;
+                    actorUpdates[abilityField] = abilityDamage + damage
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6402,7 +6431,9 @@ export class ActorPF extends Actor {
                 //console.log(action)
                 if (action.parameters.length === 2) {
                     let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
-                    ActorPF.applyAbilityDrain(damage, cleanParam(action.parameters[0]));
+                    let abilityField = `data.abilities.${action.parameters[0]}.drain`,
+                        abilityDamage = actionRollData.self.abilities[action.parameters[0]].drain || 0;
+                    actorUpdates[abilityField] = abilityDamage + damage
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6510,13 +6541,13 @@ export class ActorPF extends Actor {
                 case "Condition":
                 case "Trait":
                 case "Update":
+                case "AbilityDamage":
+                case "AbilityDrain":
                     actorUpdateActions.push(action)
                     break;
                 case "Damage":
                 case "SelfDamage":
                 case "Grapple":
-                case "AbilityDamage":
-                case "AbilityDrain":
                 case "Regenerate":
                 case "Clear":
                 case "Use":
@@ -6560,8 +6591,10 @@ export class ActorPF extends Actor {
             await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
         }
         if (actorUpdateActions.length) {
-            console.log("D35E | ACTION | actorUpdates", actorUpdateActions)
+            console.log("D35E | ACTION | actorUpdates", actorUpdateActions, this.name)
             await this.update(actorUpdates)
+        } else {
+            await this.update({})
         }
         for (let action of otherActions) {
             await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
@@ -6754,12 +6787,14 @@ export class ActorPF extends Actor {
                 const classes = actor.data.items.filter(obj => {
                     return obj.type === "class";
                 });
-                const minionClass = classes.find(o => getProperty(o.data, "classType") === "minion");
+
+                const minionClass = classes.find(o => getProperty(o.data.data, "classType") === "minion");
                 if (!!minionClass) {
                     let updateObject = {}
                     updateObject["_id"] = minionClass.id || minionClass._id;
-                    updateObject["data.levels"] = this.getRollData().attributes.minionClassLevels[minionClass.data.minionGroup] || 0;
-                    await actor.updateOwnedItem(updateObject, {stopUpdates: true})
+                    updateObject["data.levels"] = this.getRollData().attributes.minionClassLevels[minionClass.data.data.minionGroup] || 0;
+                    console.log('D35E | Minion class', minionClass, updateObject, this.getRollData(), )
+                    await actor.updateOwnedItem(updateObject, {stopUpdates: true, massUpdate: true})
                 }
                 actor.update(masterData, {stopUpdates: true});
             }
