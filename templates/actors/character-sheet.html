@@ -288,6 +288,14 @@
     $( "#actor-{{actorId}}  .configure-spellbook" ).addClass( "disabled-action" ); //Disable
     $( "#actor-{{actorId}}  .point-buy" ).addClass( "disabled-action" ); //Disable
     $( "#actor-{{actorId}}  .note-editor" ).addClass( "disabled-action" ); //Disable
+
   </script>
   {{/if}}
+  <script>
+
+    function modifyInputValue(id, value) {
+      if (parseInt($(`input[name='${id}']`).val() || 1) + value < 1) return;
+      $(`input[name='${id}']`).val(parseInt($(`input[name='${id}']`).val() || 0) + value)
+    }
+  </script>
 </form>

@@ -8,7 +8,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
 
   /**
    * A factory method to create an AbilityTemplate instance using provided data from an Item5e instance
-   * @param {ItemPF1} item               The Item object for which to construct the template
+   * @param {ItemD35E} item               The Item object for which to construct the template
    * @return {AbilityTemplate|null}     The template object, or null if the item does not produce a template
    */
   static fromItem(item, multiplier = 1) {
@@ -25,6 +25,8 @@ export default class AbilityTemplate extends MeasuredTemplate {
       x: 0,
       y: 0,
       fillColor: target.customColor || game.user.color,
+      _id: randomID(16),
+
     };
 
     let path = target.customTexture;
@@ -48,8 +50,11 @@ export default class AbilityTemplate extends MeasuredTemplate {
         break;
     }
 
-    // Return the template constructed from the item data
-    let template = new this(templateData)
+
+    const cls = CONFIG.MeasuredTemplate.documentClass;
+    const template = new cls(templateData, { parent: canvas.scene });
+
+    template.item = item
 
     if (path) {
       loadTexture(path).then((tex) => {
@@ -58,14 +63,14 @@ export default class AbilityTemplate extends MeasuredTemplate {
         template.refresh();
       })
     }
-    template.item = item;
-    return template;
-  }
 
-  /* -------------------------------------------- */
+    const object = new this(template);
+    return object;
+  }
 
   /**
    * Creates a preview of the spell template
+   *
    * @param {Event} event   The initiating click event
    */
   async drawPreview(event) {
@@ -81,21 +86,22 @@ export default class AbilityTemplate extends MeasuredTemplate {
 
   /**
    * Activate listeners for the template preview
+   *
    * @param {CanvasLayer} initialLayer  The initially active CanvasLayer to re-activate after the workflow is complete
    * @returns {Promise<boolean>} Returns true if placed, or false if cancelled
    */
   activatePreviewListeners(initialLayer) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const handlers = {};
       let moveTime = 0;
 
       const pfStyle = game.settings.get("D35E", "measureStyle") === true;
 
       // Update placement (mouse-move)
-      handlers.mm = event => {
+      handlers.mm = (event) => {
         event.stopPropagation();
         let now = Date.now(); // Apply a 20ms throttle
-        if ( now - moveTime <= 20 ) return;
+        if (now - moveTime <= 20) return;
         const center = event.data.getLocalPosition(this.layer);
         let pos = canvas.grid.getSnappedPosition(center.x, center.y, 2);
         this.data.x = pos.x;
@@ -106,7 +112,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
       };
 
       // Cancel the workflow (right-click)
-      handlers.rc = (event, canResolve=true) => {
+      handlers.rc = (event, canResolve = true) => {
         this.layer.preview.removeChildren();
         canvas.stage.off("mousemove", handlers.mm);
         canvas.stage.off("mousedown", handlers.lc);
@@ -122,33 +128,44 @@ export default class AbilityTemplate extends MeasuredTemplate {
       };
 
       // Confirm the workflow (left-click)
-      handlers.lc = event => {
+      handlers.lc = async (event) => {
         handlers.rc(event, false);
 
         // Confirm final snapped position
-        const destination = canvas.grid.getSnappedPosition(this.x, this.y, 2);
-        this.data.x = destination.x;
-        this.data.y = destination.y;
+        this.data.update(this.data);
 
         // Create the template
-        canvas.scene.createEmbeddedEntity("MeasuredTemplate", this.data);
-        resolve(true);
+        const result = await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [this.data]);
+        resolve(result);
       };
 
       // Rotate the template by 3 degree increments (mouse-wheel)
-      handlers.mw = event => {
+      handlers.mw = (event) => {
         if (event.ctrlKey) event.preventDefault(); // Avoid zooming the browser window
         event.stopPropagation();
         let delta, snap;
-        if (pfStyle && this.data.t === "cone") {
-          delta = 90;
-          snap = event.shiftKey ? delta : 45;
+        if (event.ctrlKey) {
+          if (this.data.t === "rect") {
+            delta = Math.sqrt(canvas.dimensions.distance * canvas.dimensions.distance);
+          } else {
+            delta = canvas.dimensions.distance;
+          }
+          this.data.distance += delta * -Math.sign(event.deltaY);
+        } else {
+          if (pfStyle && this.data.t === "cone") {
+            delta = 90;
+            snap = event.shiftKey ? delta : 45;
+          } else {
+            delta = canvas.grid.type > CONST.GRID_TYPES.SQUARE ? 30 : 15;
+            snap = event.shiftKey ? delta : 5;
+          }
+          if (this.data.t === "rect") {
+            snap = Math.sqrt(Math.pow(5, 2) + Math.pow(5, 2));
+            this.data.distance += snap * -Math.sign(event.deltaY);
+          } else {
+            this.data.direction += snap * Math.sign(event.deltaY);
+          }
         }
-        else {
-          delta = canvas.grid.type > CONST.GRID_TYPES.SQUARE ? 30 : 15;
-          snap = event.shiftKey ? delta : 5;
-        }
-        this.data.direction += (snap * Math.sign(event.deltaY));
         this.refresh();
       };
 
@@ -158,10 +175,14 @@ export default class AbilityTemplate extends MeasuredTemplate {
       canvas.stage.on("mousedown", handlers.lc);
       canvas.app.view.oncontextmenu = handlers.rc;
       canvas.app.view.onwheel = handlers.mw;
+      this.hitArea = new PIXI.Polygon([]);
     });
   }
 
   refresh() {
+    if (!this.template) return;
+    if (!canvas.scene) return;
+
     super.refresh();
 
     if (this.active) {
@@ -171,5 +192,3 @@ export default class AbilityTemplate extends MeasuredTemplate {
     return this;
   }
 }
-
-

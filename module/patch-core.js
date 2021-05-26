@@ -2,7 +2,7 @@ import { _rollInitiative, _getInitiativeFormula } from "./combat.js";
 import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
 import { ActorPF } from "./actor/entity.js";
-
+import { patchMeasureTools } from "./measure.js";
 
 const FormApplication_close = FormApplication.prototype.close;
 
@@ -137,20 +137,14 @@ export async function PatchCore() {
     },
   });
 
-  // Patch StringTerm
-  const StringTerm_eval = StringTerm.prototype.evaluate;
-  StringTerm.prototype.evaluate = async function(...args) {
-    return this;
-  };
 
 
   // Patch, patch, patch
   Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
   Combat.prototype.rollInitiative = _rollInitiative;
   window.getTemplate = D35E_getTemplate;
-
+  patchMeasureTools();
     patchLowLightVision();
-
   import("./lib/intro.js")
 
 }

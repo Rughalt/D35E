@@ -242,6 +242,64 @@ export class Roll35e extends Roll {
 
         return terms.join("");
     }
+
+    async _evaluate({minimize=false, maximize=false}={}) {
+
+        // Step 1 - Replace intermediate terms with evaluated numbers
+        const intermediate = [];
+        for ( let term of this.terms ) {
+            if ( !(term instanceof RollTerm) ) {
+                throw new Error("Roll evaluation encountered an invalid term which was not a RollTerm instance");
+            }
+            if ( term.isIntermediate ) {
+                await term.evaluate({minimize, maximize, async: true});
+                this._dice = this._dice.concat(term.dice);
+                term = new NumericTerm({number: term.total, options: term.options});
+            }
+            intermediate.push(term);
+        }
+        this.terms = intermediate;
+
+        // Step 2 - Simplify remaining terms
+        this.terms = this.constructor.simplifyTerms(this.terms);
+
+        // Step 3 - Evaluate remaining terms
+        for ( let term of this.terms ) {
+            if ( !term._evaluated && !(term instanceof StringTerm)) await term.evaluate({minimize, maximize, async: true});
+        }
+
+        // Step 4 - Evaluate the final expression
+        this._total = this._evaluateTotal();
+        return this;
+    }
+
+    _evaluateSync({minimize=false, maximize=false}={}) {
+
+        // Step 1 - Replace intermediate terms with evaluated numbers
+        this.terms = this.terms.map(term => {
+            if ( !(term instanceof RollTerm) ) {
+                throw new Error("Roll evaluation encountered an invalid term which was not a RollTerm instance");
+            }
+            if ( term.isIntermediate ) {
+                term.evaluate({minimize, maximize, async: false});
+                this._dice = this._dice.concat(term.dice);
+                return new NumericTerm({number: term.total, options: term.options});
+            }
+            return term;
+        });
+
+        // Step 2 - Simplify remaining terms
+        this.terms = this.constructor.simplifyTerms(this.terms);
+
+        // Step 3 - Evaluate remaining terms
+        for ( let term of this.terms ) {
+            if ( !term._evaluated && !(term instanceof StringTerm)) term.evaluate({minimize, maximize, async: false});
+        }
+
+        // Step 4 - Evaluate the final expression
+        this._total = this._evaluateTotal();
+        return this;
+    }
 }
 
 

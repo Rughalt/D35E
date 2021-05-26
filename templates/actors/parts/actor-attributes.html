@@ -6,19 +6,37 @@
 {{#each data.abilities as |ability id|}}
   <li class="ability" data-ability="{{id}}">
     <div class="ability-header flexrow">
-      <input class="ability-damage" name="data.abilities.{{id}}.damage" type="text" title="{{ localize 'D35E.Damage' }}"
+
+      {{#if ability.isZero}}
+      <input class="ability-damage readonly" name="data.abilities.{{id}}.damage" type="text" title="{{ localize 'D35E.Damage' }}"
              value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number" 
+             placeholder="{{ localize 'D35E.DMG' }}" readonly/>
+      <input class="ability-penalty readonly" name="data.abilities.{{id}}.userPenalty" type="text" title="{{ localize 'D35E.Penalty' }}"
+             value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number"
+             placeholder="{{ localize 'D35E.PNL' }}" readonly/>
+      <input class="ability-drain readonly" name="data.abilities.{{id}}.drain" type="text" title="{{ localize 'D35E.Drain' }}"
+             value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" 
+             placeholder="{{ localize 'D35E.DRN' }}" readonly/>
+      {{else}}
+      <input class="ability-damage" name="data.abilities.{{id}}.damage" type="text" title="{{ localize 'D35E.Damage' }}"
+             value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number"
              placeholder="{{ localize 'D35E.DMG' }}"/>
       <input class="ability-penalty" name="data.abilities.{{id}}.userPenalty" type="text" title="{{ localize 'D35E.Penalty' }}"
              value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number"
              placeholder="{{ localize 'D35E.PNL' }}"/>
       <input class="ability-drain" name="data.abilities.{{id}}.drain" type="text" title="{{ localize 'D35E.Drain' }}"
-             value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" 
+             value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number"
              placeholder="{{ localize 'D35E.DRN' }}"/>
+      {{/if}}
     </div>
     <h4 class="ability-name box-title rollable">{{ability.label}}</h4>
     <span class="ability-score tooltip">
+
+                    {{#if ability.isZero}}
+                        -
+                    {{else}}
       {{numberFormat ability.total decimals=0 sign=false}}
+                    {{/if}}
       <span class="tooltipcontent">
         @abilities.{{id}}.total : {{ability.total}}<br/>
         @abilities.{{id}}.value : {{ability.value}}<br/>
@@ -38,10 +56,18 @@
     <div class="ability-modifiers flexrow">
       <span class="ability-mod">{{numberFormat ability.mod decimals=0 sign=true}}</span>
       <div class="ability-center"></div>
+
+      {{#if ability.isZero}}
+      <input name="data.abilities.{{id}}.value" type="hidden" value="0" data-dtype="Number" class="readonly"
+             placeholder="10" readonly/>
+      <input class="ability-base readonly" name="data.abilities.{{id}}.tempvalue" type="text" value="{{ability.value}}"
+             data-dtype="Number" placeholder="10" readonly/>
+      {{else}}
       <input name="data.abilities.{{id}}.value" type="hidden" value="{{ability.value}}" data-dtype="Number"
              placeholder="10"/>
       <input class="ability-base" name="data.abilities.{{id}}.tempvalue" type="text" value="{{ability.value}}"
              data-dtype="Number" placeholder="10"/>
+      {{/if}}
     </div>
   </li>
 {{/each}}

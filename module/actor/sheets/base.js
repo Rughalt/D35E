@@ -2282,8 +2282,7 @@ export class ActorSheetPF extends ActorSheet {
 
 
   enrichDropData(origData) {
-    if (getProperty(origData, "type") === "spell") setProperty(origData, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
-
+    if (getProperty(origData, "type") === "spell") origData.document.data.update({"data.spellbook":this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null});
   }
 
 
@@ -2384,7 +2383,13 @@ export class ActorSheetPF extends ActorSheet {
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
                                 <span onclick="$(this).parent().parent().children('.item-browser-details').slideToggle()">${i.name}</span>
-                           
+                                <a class="item-control"  style="flex: 0; margin: 0 4px;" title="Remove Quantity" onclick="modifyInputValue('amount-add-${i.id}',-1)">
+                                    <i class="fas fa-minus remove-skill"></i>
+                                </a>
+                                <input type="text"  class="skill-value" name='amount-add-${i.id}' value="1" readonly style="border: none; flex: 0 25px; text-align: center;" placeholder="0"/>
+                                <a class="item-control" title="Add Quantity" style="flex: 0 20px; margin: 0 4px;" onclick="modifyInputValue('amount-add-${i.id}',1)">
+                                    <i class="fas fa-plus add-skill"></i>
+                                </a>
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
                                 <div style="display: none" class="item-browser-details flexcol">
                                 <div style="max-height:100px; overflow: hidden;  -webkit-mask-image: linear-gradient(to bottom, black 75px, transparent 100px); mask-image: linear-gradient(to bottom, black 75px, transparent 100px);">${i.data.data.description.value}</div>
@@ -2410,7 +2415,13 @@ export class ActorSheetPF extends ActorSheet {
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
                                 <span onclick="$(this).parent().parent().children('.item-browser-details').slideToggle()">${i.name}</span>
-                           
+                                <a class="item-control"  style="flex: 0; margin: 0 4px;" title="Remove Quantity" onclick="modifyInputValue('amount-add-${i.id}',-1)">
+                                    <i class="fas fa-minus remove-skill"></i>
+                                </a>
+                                <input type="text"  class="skill-value" name='amount-add-${i.id}' value="1" readonly style="border: none; flex: 0 25px; text-align: center;" placeholder="0"/>
+                                <a class="item-control" title="Add Quantity" style="flex: 0 20px; margin: 0 4px;" onclick="modifyInputValue('amount-add-${i.id}',1)">
+                                    <i class="fas fa-plus add-skill"></i>
+                                </a>
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
                                 <div style="display: none" class="item-browser-details flexcol">
                                 <div style="max-height: 100px; overflow: hidden;  -webkit-mask-image: linear-gradient(to bottom, black 75px, transparent 100px); mask-image: linear-gradient(to bottom, black 75px, transparent 100px);">${i.description.value}</div>
@@ -2455,10 +2466,13 @@ export class ActorSheetPF extends ActorSheet {
     let dataType = "compendium";
     let itemData = {};
     // Case 1 - Import from a Compendium pack
+    let quantity = parseInt($(`input[name='amount-add-${itemId}']`).val() || 1);
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
     if (packItem != null) itemData = packItem.data;
+    itemData.document.data.update({"data.quantity":quantity});
     this.enrichDropData(itemData);
+    console.log('D35E | Adding Quantity', quantity, itemData)
     await this.importItem(itemData, dataType);
     $(ev.target).prop('disabled',false)
   }

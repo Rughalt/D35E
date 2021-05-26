@@ -1925,21 +1925,21 @@ export class ActorPF extends Actor {
 
         {
 
-            const classes = srcData1.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
+            const classes = srcData1.items.filter(o => o.type === "class" && getProperty(o.data.data, "classType") !== "racial").sort((a, b) => {
                 return a.sort - b.sort;
             });
             const k = "data.attributes.powerPointsTotal";
             linkData(srcData1, updateData, k, updateData[k] + classes.reduce((cur, obj) => {
                 try {
-                    if (obj.data.powerPointTable === undefined || obj.data.powerPointTable[obj.data.levels] === undefined)
+                    if (obj.data.data.powerPointTable === undefined || obj.data.data.powerPointTable[obj.data.data.levels] === undefined)
                         return cur
                     let ablMod = 0;
-                    if (obj.data.powerPointBonusBaseAbility !== undefined && obj.data.powerPointBonusBaseAbility !== null && obj.data.powerPointBonusBaseAbility !== "")
-                        ablMod = getProperty(srcData1, `data.abilities.${obj.data.powerPointBonusBaseAbility}.mod`) || 0;
+                    if (obj.data.data.powerPointBonusBaseAbility !== undefined && obj.data.data.powerPointBonusBaseAbility !== null && obj.data.data.powerPointBonusBaseAbility !== "")
+                        ablMod = getProperty(srcData1, `data.abilities.${obj.data.data.powerPointBonusBaseAbility}.mod`) || 0;
                     const v = new Roll35e("ceil(0.5*@level*@ablMod)", {
-                        level: obj.data.levels,
+                        level: obj.data.data.levels,
                         ablMod: ablMod
-                    }).roll().total + obj.data.powerPointTable[obj.data.levels];
+                    }).roll().total + obj.data.data.powerPointTable[obj.data.data.levels];
 
                     if (v !== 0) {
                         sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
@@ -2474,7 +2474,7 @@ export class ActorPF extends Actor {
                 itemsWithUid.set(i.data.data.uniqueId, i._id)
             }
 
-            console.log('D35E | Adding Features', level, data, this.data.data.classLevels, updateData)
+            //console.log('D35E | Adding Features', level, data, this.data.data.classLevels, updateData)
 
             if (true) {
                 linkData(data, updateData, "data.details.level.value", level);
@@ -2491,7 +2491,7 @@ export class ActorPF extends Actor {
                 await itemPack.getIndex().then(index => items = index);
 
                 for (const classInfo of classNames) {
-                    console.log('D35E | Adding Features', classInfo)
+                    //console.log('D35E | Adding Features', classInfo)
                     let added = false;
                     for (let feature of classInfo[2]) {
                         console.log('D35E | Adding Features', feature)
@@ -2508,7 +2508,7 @@ export class ActorPF extends Actor {
                         this.addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added);
                     }
                     for (let e of CACHE.ClassFeatures.get(classInfo[0]) || []) {
-                        console.log('D35E | Adding Features', e)
+                        //console.log('D35E | Adding Features', e)
                         if (e.data.data.associations === undefined || e.data.data.associations.classes === undefined) continue;
                         let levels = e.data.data.associations.classes.filter(el => el[0] === classInfo[0])
                         for (let _level of levels) {
@@ -2641,7 +2641,7 @@ export class ActorPF extends Actor {
     }
 
     addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added) {
-        console.log('D35E | Adding Features', addedAbilities)
+        //console.log('D35E | Adding Features', addedAbilities)
         let canAdd = !addedAbilities.has(uniqueId)
         if (canAdd) {
             if (level <= classInfo[1]) {
@@ -2951,6 +2951,10 @@ export class ActorPF extends Actor {
         data.combinedResistances = data.energyResistance ? duplicate(data.energyResistance) : [];
         data.combinedDR = data.damageReduction ? duplicate(data.damageReduction) : [];
         let erDrRollData = this.getRollData();
+
+        for (let [a, abl] of Object.entries(data.abilities)) {
+            data.abilities[a].isZero = abl.total === 0 && abl.mod === 0;
+        }
 
         data.shieldType = "none";
         this.items.filter(obj => {
@@ -4063,7 +4067,7 @@ export class ActorPF extends Actor {
             if (packItem != null) itemData = packItem.data;
             if (itemData) {
                 if (itemData._id) delete itemData._id;
-                itemData.data.level = spell.level
+                itemData.data.document.data.update({'level':spell.level});
                 spellsToAdd.push(itemData)
             }
         }
@@ -4087,7 +4091,7 @@ export class ActorPF extends Actor {
                 if (obj.data.data.learnedAt !== undefined) {
                     obj.data.data.learnedAt.class.forEach(learnedAtObj => {
                         if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
-                            obj.data.data.level = learnedAtObj[1]
+                            obj.data.document.data.update({'data.level':learnedAtObj[1]});
                             foundLevel = true;
                         }
                     })
@@ -4096,7 +4100,7 @@ export class ActorPF extends Actor {
                 if (!foundLevel) continue;
 
                 if (obj.data._id) delete obj.data._id;
-                obj.data.data.spellbook = _spellbookKey
+                obj.data.document.data.update({'data.spellbook':_spellbookKey});
                 spellsToAdd.push(obj.data)
             }
         }
@@ -5927,11 +5931,12 @@ export class ActorPF extends Actor {
             // Don't auto-equip transferred items
             if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
                 obj.data.equipped = false;
+                obj.document.data.update({'data.equipped':false})
 
             }
             if (["weapon", "equipment", "loot"].includes(obj.type)) {
                 if (obj.data.identifiedName !== obj.name) {
-                    obj.data.identifiedName = obj.name
+                    obj.document.data.update({'data.identifiedName':obj.name})
                 }
             }
             if (["spell"].includes(obj.type)) {
@@ -5945,11 +5950,11 @@ export class ActorPF extends Actor {
                         let _spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey]
                         if (_spellbook.hasSpecialSlot && _spellbook.spellcastingType === "divine"){
                             spellbook = _spellbook
-                            obj.data.spellbook = _spellbookKey
+                            obj.document.data.update({'data.spellbook':_spellbookKey})
                         }
                     }
                     if (spellbook === undefined) {
-                        obj.data.spellbook = "primary"
+                        obj.document.data.update({'data.spellbook':"primary"})
                         spellbook = this.data.data.attributes.spells.spellbooks["primary"]
                         ui.notifications.warn(`No Spellbook found for spell. Adding to Primary spellbook.`)
                     }
@@ -5966,13 +5971,13 @@ export class ActorPF extends Actor {
                                 for (const learnedAtObj of obj.data.learnedAt.class) {
                                     if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
                                         spellbook = _spellbook
-                                        obj.data.spellbook = _spellbookKey
+                                        obj.document.data.update({'data.spellbook':spellbookKey})
                                     }
                                 }
                             }
                         }
                         if (spellbook === undefined) {
-                            obj.data.spellbook = "primary"
+                            obj.document.data.update({'data.spellbook':"primary"})
                             spellbook = this.data.data.attributes.spells.spellbooks["primary"]
                             ui.notifications.warn(`No Spellbook found for spell. Adding to Primary spellbook.`)
                         } else {
@@ -5982,14 +5987,14 @@ export class ActorPF extends Actor {
                     if (obj.data.learnedAt !== undefined) {
                         obj.data.learnedAt.class.forEach(learnedAtObj => {
                             if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
-                                obj.data.level = learnedAtObj[1]
-                                obj.data.powerPointsCost = Math.max((parseInt(learnedAtObj[1])*2)-1,0)
+                                obj.document.data.update({'data.level':learnedAtObj[1]})
+                                obj.document.data.update({'data.powerPointsCost': Math.max((parseInt(learnedAtObj[1])*2)-1,0)})
                                 foundLevel = true;
                             }
                         })
                     }
                     if (!foundLevel) {
-                        obj.data.powerPointsCost = Math.max((parseInt(obj.data.level)*2)-1,0)
+                        obj.document.data.update({'data.powerPointsCost': Math.max((parseInt(obj.data.level)*2)-1,0)})
                         ui.notifications.warn(`Spell added despite not being in a spell list for class.`)
                     }
                 }
