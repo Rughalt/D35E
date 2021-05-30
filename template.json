@@ -328,6 +328,7 @@
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -368,6 +369,7 @@
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -408,6 +410,7 @@
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -448,6 +451,7 @@
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -1321,6 +1325,7 @@
       "physicalItem": {
         "quantity": 1,
         "weight": 0,
+        "constantWeight": true,
         "price": 0,
         "identified": true,
         "hp": {

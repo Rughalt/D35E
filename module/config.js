@@ -1076,6 +1076,9 @@ D35E.buffTargets = {
     "_label": "D35E.Psionics",
     "powerPoints": "D35E.PowerPointsBonus",
   },
+  "spells": {
+    "_label": "D35E.BuffSpellbookSpellsPrepared"
+  },
   "misc": {
     "_label": "D35E.MiscShort",
     "cmb": "Grapple",

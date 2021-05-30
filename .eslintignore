@@ -1,0 +1,5 @@
+node_modules
+module/lib/
+module/semver.js
+foundry.js
+dist/

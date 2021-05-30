@@ -223,6 +223,24 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "noAutoSpellpointsCost", {
+    name: "SETTINGS.D35ENoAutoSpellpoinCost",
+    hint: "SETTINGS.D35ENoAutoSpellpoinCostH",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
+  game.settings.register("D35E", "spellpointCostCustomFormula", {
+    name: "SETTINGS.D35ESpellpointsCostFormula",
+    hint: "SETTINGS.D35ESpellpointsCostFormulaH",
+    scope: "world",
+    config: true,
+    default: "",
+    type: String
+  });
+
   /**
    * Option to automatically collapse Item Card descriptions
    */

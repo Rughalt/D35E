@@ -145,6 +145,12 @@ export async function PatchCore() {
   window.getTemplate = D35E_getTemplate;
   patchMeasureTools();
     patchLowLightVision();
+// This system assumes that evalate should be run on StringTerm.eval
+  const StringTerm_eval = StringTerm.prototype.evaluate;
+  StringTerm.prototype.evaluate = async function(...args) {
+    return this;
+  };
+
   import("./lib/intro.js")
 
 }

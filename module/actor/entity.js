@@ -201,9 +201,10 @@ export class ActorPF extends Actor {
 
     get _sortChangePriority() {
         const skillTargets = this._skillTargets;
+        const spellTargets = this._spellTargets;
         return {
             targets: [
-                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl","resistance","dr"
+                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl","resistance","dr","spells"
             ], types: [
                 "str", "dex", "con", "int", "wis", "cha",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
@@ -213,7 +214,7 @@ export class ActorPF extends Actor {
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will", "turnUndead","turnUndeadDiceTotal", "spellResistance", "powerPoints", "sneakAttack",
-                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification", "regen", "fastHeal", "concealment"
+                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification", "regen", "fastHeal", "concealment", ...spellTargets
             ], modifiers: [
                 "untyped", "base", "enh", "dodge", "inherent", "deflection",
                 "morale", "luck", "sacred", "insight", "resist", "profane",
@@ -235,6 +236,15 @@ export class ActorPF extends Actor {
             } else skills.push(`skill.${sklKey}`);
         }
         return [...skills, ...subSkills];
+    }
+
+    get _spellTargets() {
+        let targets = [];
+        for (let spellbook of ["primary", "secondary", "tetriary", "spelllike"]) {
+            for (let level = 0; level < 10; level++)
+            targets.push(`spells.spellbooks.${spellbook}.spells.spell${level}.bonus`);
+        }
+        return targets;
     }
 
     _sortChanges(a, b) {
@@ -597,6 +607,9 @@ export class ActorPF extends Actor {
             if (curData.skills[sklKey] != null && curData.skills[sklKey].subSkills[subSklKey] != null) {
                 return `data.skills.${sklKey}.subSkills.${subSklKey}.changeBonus`;
             }
+        } else if (changeTarget.startsWith('spells')) {
+            console.log("D35E | Changing spell slot bonus")
+            return `data.attributes.${changeTarget}`;
         } else if (changeTarget.match(/^resistance\.([a-zA-Z0-9\-]+)$/)) {
             const resistanceKey = RegExp.$1;
             return `data.resistances.${resistanceKey}.changeBonus`;
@@ -1418,6 +1431,17 @@ export class ActorPF extends Actor {
                         }
                     }
                 }
+                else if (key === "spells") {
+                    //  "spells.spellbooks.primary.spells.spell1.bonus": "Level 1",
+                    for (let spellbook of ["primary", "secondary", "tetriary", "spelllike"]) {
+                        for (let level = 0; level < 10; level++) {
+                            changeData[`spells.spellbooks.${spellbook}.spells.spell${level}.bonus`] = {};
+                            Object.keys(CONFIG.D35E.bonusModifiers).forEach(b => {
+                                changeData[`spells.spellbooks.${spellbook}.spells.spell${level}.bonus`][b] = duplicate(changeDataTemplate);
+                            });
+                        }
+                    }
+                }
                 // Add static targets
                 else {
                     for (let subKey of Object.keys(buffTarget)) {
@@ -1748,6 +1772,7 @@ export class ActorPF extends Actor {
             for (let a = 0; a < 10; a++) {
                 const classBase = classProgression !== undefined ? parseInt(classProgression[a + 1]) : -1;
                 let base = parseInt(getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.base`));
+                let bonus = parseInt(getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.bonus`) || 0);
                 if (!autoSpellLevels) {
                     if (Number.isNaN(base)) {
                         linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.base`, null);
@@ -1758,8 +1783,10 @@ export class ActorPF extends Actor {
                 } else {
                     if (classBase >= 0) {
                         const value = (typeof spellslotAbilityMod === "number") ? (classBase + ActorPF.getSpellSlotIncrease(spellslotAbilityMod, a)) : classBase;
-                        linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.max`, value);
+                        linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.base`, value);
+                        linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.max`, value + bonus);
                     } else {
+                        linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.base`, 0);
                         linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.max`, 0);
                     }
                 }
@@ -2269,10 +2296,10 @@ export class ActorPF extends Actor {
             let epicLevels = 0;
             if (useFractionalBaseBonuses) {
                 linkData(data, updateData, k, Math.floor(classes.reduce((cur, obj) => {
-                    const babScale = getProperty(obj, "data.bab") || "";
-                    if (babScale === "high") return cur + obj.data.levels;
-                    if (babScale === "med") return cur + obj.data.levels * 0.75;
-                    if (babScale === "low") return cur + obj.data.levels * 0.5;
+                    const babScale = getProperty(obj.data, "data.bab") || "";
+                    if (babScale === "high") return cur + obj.data.data.levels;
+                    if (babScale === "med") return cur + obj.data.data.levels * 0.75;
+                    if (babScale === "low") return cur + obj.data.data.levels * 0.5;
                     return cur;
                 }, 0)));
 
@@ -2284,15 +2311,15 @@ export class ActorPF extends Actor {
             } else {
                 let epicBab = 0
                 let bab = classes.reduce((cur, obj) => {
-                    const formula = CONFIG.D35E.classBABFormulas[obj.data.bab] != null ? CONFIG.D35E.classBABFormulas[obj.data.bab] : "0";
-                    let classLevel = obj.data.levels;
+                    const formula = CONFIG.D35E.classBABFormulas[obj.data.data.bab] != null ? CONFIG.D35E.classBABFormulas[obj.data.data.bab] : "0";
+                    let classLevel = obj.data.data.levels;
 
                     // Epic level/total level should only be calculated when taking into account non-racial hd
-                    if (getProperty(obj.data, "classType") === "base" || (obj.data, "classType") === "prestige") {
+                    if (getProperty(obj.data.data, "classType") === "base" || (obj.data.data, "classType") === "prestige") {
                         if (totalLevel + classLevel > 20) {
                             classLevel = 20 - totalLevel;
                             totalLevel = 20;
-                            epicLevels += obj.data.levels - classLevel;
+                            epicLevels += obj.data.data.levels - classLevel;
                         } else {
                             totalLevel = totalLevel + classLevel
                         }
@@ -2321,7 +2348,7 @@ export class ActorPF extends Actor {
             const k = "data.attributes.turnUndeadHdTotal";
             linkData(data, updateData, k, classes.reduce((cur, obj) => {
                 try {
-                    const v = new Roll35e(obj.data.turnUndeadLevelFormula, { level: obj.data.levels }).roll().total;
+                    const v = new Roll35e(obj.data.data.turnUndeadLevelFormula, { level: obj.data.data.levels }).roll().total;
 
                     if (v !== 0) {
                         sourceInfo[k] = sourceInfo[k] || { positive: [], negative: [] };
@@ -2413,6 +2440,29 @@ export class ActorPF extends Actor {
             linkData(data, updateData, k, minionLevels);
 
         }
+
+
+
+        // Reset spell slots
+        for (let spellbookKey of Object.keys(getProperty(data, "data.attributes.spells.spellbooks"))) {
+            const spellbookClass = getProperty(data, `data.attributes.spells.spellbooks.${spellbookKey}.class`);
+            let classLevel = getProperty(data, `data.classes.${spellbookClass}.level`) + parseInt(getProperty(data, `data.attributes.spells.spellbooks.${spellbookKey}.bonusPrestigeCl`));
+            if (classLevel > getProperty(data, `data.classes.${spellbookClass}.maxLevel`))
+                classLevel = getProperty(data, `data.classes.${spellbookClass}.maxLevel`);
+            const classProgression = getProperty(data, `data.classes.${spellbookClass}.spellPerLevel${classLevel}`);
+            for (let a = 0; a < 10; a++) {
+                linkData(data, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.bonus`, 0);
+                const classBase = classProgression !== undefined ? parseInt(classProgression[a + 1]) : -1;
+                if (classBase >= 0) {
+                    const value = classBase;
+                    linkData(data, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.classBase`, value);
+                } else {
+                    linkData(data, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.classBase`, 0);
+                }
+
+            }
+        }
+
 
         linkData(data, updateData, "data.attributes.cmb.total", updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
         linkData(data, updateData, "data.attributes.cmd.total", 10 + updateData["data.attributes.bab.total"] - data1.attributes.energyDrain);
@@ -2785,6 +2835,7 @@ export class ActorPF extends Actor {
         let energyDrainPenalty = Math.abs(data1.attributes.energyDrain);
         for (let [sklKey, skl] of Object.entries(data1.skills)) {
             if (skl == null) continue;
+            if (skl.ability === undefined) continue; // This exists only in broken skills
 
             let acpPenalty = (skl.acp ? Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]) : 0);
             if (sklKey === "swm")
@@ -3168,11 +3219,13 @@ export class ActorPF extends Actor {
             spellbook.powersKnown = data.classes[spellbook.class]?.powersKnown ? data.classes[spellbook.class]?.powersKnown[`${data.classes[spellbook.class].level}`] || 0 : 0
             spellbook.powersMaxLevel = data.classes[spellbook.class]?.powersMaxLevel ? data.classes[spellbook.class]?.powersMaxLevel[`${data.classes[spellbook.class].level}`] || 0 : 0
             spellbook.cl.total += spellbook.bonusPrestigeCl === undefined ? 0 : spellbook.bonusPrestigeCl;
+            spellbook.powerPointsValue = {max: spellbook.powerPointsTotal || 0, value: spellbook.powerPoints || 0}
             // Add spell slots
             spellbook.spells = spellbook.spells || {};
             for (let a = 0; a < 10; a++) {
                 spellbook.spells[`spell${a}`] = spellbook.spells[`spell${a}`] || { value: 0, max: 0, base: null, known: 0 };
-                spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level - 1] ? data.classes[spellbook.class]?.spellsKnownPerLevel[data.classes[spellbook.class].level - 1][a+1] || 0 : 0) : 0
+                let spellbookClassLevel = (data.classes[spellbook.class]?.level || 0) + spellbook.bonusPrestigeCl;
+                spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[spellbookClassLevel - 1] ? data.classes[spellbook.class]?.spellsKnownPerLevel[spellbookClassLevel - 1][a+1] || 0 : 0) : 0
             }
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
@@ -5930,13 +5983,30 @@ export class ActorPF extends Actor {
             delete obj.effects;
             // Don't auto-equip transferred items
             if (obj._id != null && ["weapon", "equipment"].includes(obj.type)) {
-                obj.data.equipped = false;
-                obj.document.data.update({'data.equipped':false})
+                if (obj.document)
+                    obj.document.data.update({'data.equipped':false})
+                else
+                    obj.data.equipped = false;
 
             }
+            // Adjust weight on drop from compendium
+            if (["weapon", "equipment", "loot"].includes(obj.type) && options.dataType !== "data" && !obj.data.constantWeight) {
+                let newSize = Object.keys(CONFIG.D35E.sizeChart).indexOf(getProperty(this.data.data, "traits.actualSize"))
+                let oldSize = Object.keys(CONFIG.D35E.sizeChart).indexOf("med")
+                console.log('D35E | Resize Object',newSize,oldSize)
+                let weightChange = Math.pow(2,newSize-oldSize);
+                if (obj.document)
+                    obj.document.data.update({'data.weight':obj.data.weight * weightChange})
+                else
+                    obj.data.weight = obj.data.weight * weightChange;
+            }
             if (["weapon", "equipment", "loot"].includes(obj.type)) {
+                console.log('D35E | Create Object',obj)
                 if (obj.data.identifiedName !== obj.name) {
-                    obj.document.data.update({'data.identifiedName':obj.name})
+                    if (obj.document)
+                        obj.document.data.update({'data.identifiedName':obj.name})
+                    else
+                        obj.data.identifiedName = obj.name;
                 }
             }
             if (["spell"].includes(obj.type)) {
@@ -5950,11 +6020,18 @@ export class ActorPF extends Actor {
                         let _spellbook = this.data.data.attributes.spells.spellbooks[_spellbookKey]
                         if (_spellbook.hasSpecialSlot && _spellbook.spellcastingType === "divine"){
                             spellbook = _spellbook
-                            obj.document.data.update({'data.spellbook':_spellbookKey})
+                            if (obj.document)
+                                obj.document.data.update({'data.spellbook':_spellbookKey})
+                            else
+                                obj.data.spellbook = _spellbookKey;
                         }
                     }
                     if (spellbook === undefined) {
-                        obj.document.data.update({'data.spellbook':"primary"})
+
+                        if (obj.document)
+                            obj.document.data.update({'data.spellbook':"primary"})
+                        else
+                            obj.data.spellbook = "primary";
                         spellbook = this.data.data.attributes.spells.spellbooks["primary"]
                         ui.notifications.warn(`No Spellbook found for spell. Adding to Primary spellbook.`)
                     }
@@ -5971,30 +6048,66 @@ export class ActorPF extends Actor {
                                 for (const learnedAtObj of obj.data.learnedAt.class) {
                                     if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
                                         spellbook = _spellbook
-                                        obj.document.data.update({'data.spellbook':spellbookKey})
+                                        if (obj.document)
+                                            obj.document.data.update({'data.spellbook':spellbookKey})
+                                        else
+                                            obj.data.spellbook = spellbookKey;
                                     }
                                 }
                             }
                         }
                         if (spellbook === undefined) {
-                            obj.document.data.update({'data.spellbook':"primary"})
+                            if (obj.document)
+                                obj.document.data.update({'data.spellbook':"primary"})
+                            else
+                                obj.data.spellbook = "primary";
                             spellbook = this.data.data.attributes.spells.spellbooks["primary"]
                             ui.notifications.warn(`No Spellbook found for spell. Adding to Primary spellbook.`)
                         } else {
                         }
                     }
                     let spellbookClass = this.data.data.classes[spellbook.class]?.name || "Missing";
+                    console.log('D35E | Spellpoints', game.settings.get("D35E", "spellpointCostCustomFormula"), game.settings.get("D35E", "spellpointCostCustomFormula") && game.settings.get("D35E", "spellpointCostCustomFormula") !== "")
                     if (obj.data.learnedAt !== undefined) {
                         obj.data.learnedAt.class.forEach(learnedAtObj => {
                             if (learnedAtObj[0].toLowerCase() === spellbookClass.toLowerCase()) {
-                                obj.document.data.update({'data.level':learnedAtObj[1]})
-                                obj.document.data.update({'data.powerPointsCost': Math.max((parseInt(learnedAtObj[1])*2)-1,0)})
+                                if (obj.document) {
+                                    obj.document.data.update({'data.level': learnedAtObj[1]})
+                                    if (!game.settings.get("D35E", "noAutoSpellpointsCost")) {
+                                        if (game.settings.get("D35E", "spellpointCostCustomFormula") && game.settings.get("D35E", "spellpointCostCustomFormula") !== "")
+                                            obj.document.data.update({'data.powerPointsCost': new Roll35e(game.settings.get("D35E", "spellpointCostCustomFormula"), { "level":  parseInt(learnedAtObj[1])}).roll().total})
+                                        else
+                                            obj.document.data.update({'data.powerPointsCost': Math.max((parseInt(learnedAtObj[1]) * 2) - 1, 0)})
+                                    }
+                                }
+                                else {
+                                    obj.data.level = learnedAtObj[1];
+
+                                    if (!game.settings.get("D35E", "noAutoSpellpointsCost")){
+                                        if (game.settings.get("D35E", "spellpointCostCustomFormula") && game.settings.get("D35E", "spellpointCostCustomFormula") !== "")
+                                            obj.data.powerPointsCost = new Roll35e(game.settings.get("D35E", "spellpointCostCustomFormula"), { "level":  parseInt(learnedAtObj[1])}).roll().total
+                                        else
+                                            obj.data.powerPointsCost = Math.max((parseInt(learnedAtObj[1]) * 2) - 1, 0);
+                                    }
+                                }
                                 foundLevel = true;
                             }
                         })
                     }
                     if (!foundLevel) {
-                        obj.document.data.update({'data.powerPointsCost': Math.max((parseInt(obj.data.level)*2)-1,0)})
+
+                        if (!game.settings.get("D35E", "noAutoSpellpointsCost")) {
+                            if (obj.document)
+                                if (game.settings.get("D35E", "spellpointCostCustomFormula") && game.settings.get("D35E", "spellpointCostCustomFormula") !== "")
+                                    obj.document.data.update({'data.powerPointsCost': new Roll35e(game.settings.get("D35E", "spellpointCostCustomFormula"), { "level":  parseInt(obj.data.level)}).roll().total})
+                                else
+                                    obj.document.data.update({'data.powerPointsCost': Math.max((parseInt(obj.data.level) * 2) - 1, 0)})
+                            else
+                                if (game.settings.get("D35E", "spellpointCostCustomFormula") && game.settings.get("D35E", "spellpointCostCustomFormula") !== "")
+                                    obj.data.powerPointsCost = new Roll35e(game.settings.get("D35E", "spellpointCostCustomFormula"), { "level":  parseInt(obj.data.level)}).roll().total
+                                else
+                                    obj.data.powerPointsCost = Math.max((parseInt(obj.data.level) * 2) - 1, 0);
+                        }
                         ui.notifications.warn(`Spell added despite not being in a spell list for class.`)
                     }
                 }
@@ -7084,14 +7197,18 @@ export class ActorPF extends Actor {
         }
         for (let _fx of fx) {
             if (_fx?.data?.origin && !existingIds.has(_fx?.data?.origin)) {
-                await _fx.delete()
+                try {
+                    await _fx.delete()
+                } catch {
+
+                }
             }
         }
 
         for (let token of tokens) {
             CONFIG.statusEffects.forEach((con) => {
                 const idx = fx.findIndex((e) => e.getFlag("core", "statusId") === con.id);
-                if (CONFIG.D35E.conditions[con.id] && (idx !== -1) != this.data.data.attributes.conditions[con.id])
+                if (CONFIG.D35E.conditions[con.id] && (idx !== -1) != this.data.data.attributes.conditions[con.id] && token.object)
                     promises.push(token.object.toggleEffect(con, { midUpdate: true }));
             });
         }

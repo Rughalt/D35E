@@ -125,6 +125,7 @@ export class DamageTypes {
         if (DamageTypes.getDamageTypeForUID(dr,'any').value > 0) {
             drParts.push(`<li class="tag">${DR} ${DamageTypes.getDamageTypeForUID(dr,'any').value}/-</li>`)
         }
+        let drOrModified = false;
         dr.forEach(t => {
             if (t.uid === "any") return;
             let drType = DamageTypes.getDamageTypeForUID(dr,t.uid)
@@ -132,6 +133,7 @@ export class DamageTypes {
                 if (drType.or) {
                     drOrParts.push(`${drType.name}`)
                     orValue = immune;
+                    drOrModified = drOrModified || t.modified;
                 } else {
                     drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${DR} ${immune}/${drType.name}</li>`)
                 }
@@ -140,6 +142,7 @@ export class DamageTypes {
                 if (drType.or) {
                     drOrParts.push(`${drType.name}`)
                     orValue = drType.value
+                    drOrModified = drOrModified || t.modified;
                 } else {
                     drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${DR} ${drType.value}/${drType.name}</li>`)
                 }
@@ -149,7 +152,7 @@ export class DamageTypes {
             }
         })
         if (drOrParts.length)
-            drParts.push(`<li class="tag ${t.modified ? 'modified' : ''}">${DR} ${orValue}/${drOrParts.join(` ${or} `)}</li>`)
+            drParts.push(`<li class="tag ${drOrModified ? 'modified' : ''}">${DR} ${orValue}/${drOrParts.join(` ${or} `)}</li>`)
         drParts.push('</ul>')
         return drParts.join('')
     }

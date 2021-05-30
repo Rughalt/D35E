@@ -564,24 +564,24 @@
                         <div class="form-group stacked">
                             <label class="checkbox">
                                 <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
-                                       data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+                                       data.data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
                             </label>
                         </div>
                         <div class="form-group stacked">
                             <label class="checkbox">
                                 <input type="checkbox" name="data.hasSpecialSlot" {{checked
-                                       data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
+                                    data.data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
                             </label>
                         </div>
 
                         <div class="form-group stacked">
                             <label class="checkbox">
                                 <input type="checkbox" name="data.allSpellsKnown" {{checked
-                                       data.allSpellsKnown}}/> {{localize "D35E.KnowsAllSpells"}}
+                                    data.data.allSpellsKnown}}/> {{localize "D35E.KnowsAllSpells"}}
                             </label>
                         </div>
                         <label>{{localize "D35E.SpellcastingDescription"}}</label>
-                        {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
+                        {{editor content=data.data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
                         editable=editable}}
 
 

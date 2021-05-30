@@ -2454,20 +2454,31 @@
 .D35E.sheet.item .primary-body .tab {
   padding: 0 5px;
 }
+.D35E.sheet.item .primary-body .detailsbox {
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 -4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
 .D35E.sheet.item .primary-body .item-properties {
   flex: 0 0 120px;
-  margin: 5px 5px 5px 0;
-  padding-right: 5px;
-  border-right: 2px groove #eeede0;
 }
 .D35E.sheet.item .primary-body .item-properties .form-group {
-  margin: 0;
+  margin: 2px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px;
+  flex: 0 0 132px;
+  border-radius: 4px;
+}
+.D35E.sheet.item .primary-body .item-properties .form-group.gm label {
+  color: #3d0d0d;
 }
 .D35E.sheet.item .primary-body .item-properties .form-group label {
   line-height: 24px;
 }
 .D35E.sheet.item .primary-body .item-properties .form-group input {
   text-align: right;
+  flex: 0 40px;
 }
 .D35E.sheet.item .primary-body .item-properties .properties-list {
   list-style: none;

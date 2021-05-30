@@ -1448,6 +1448,12 @@
   "D35E.NoVisionOverride": "Do now override Token Vision",
   "D35E.NoVisionOverrideH": "This option disables overriding Token vision settings from actor and items. ",
 
+  "D35E.OnlyPrepared": "Only Prepared",
+
+  "D35E.EmptyCombatChange": "Item {0} has an empty Combat Change",
+  "D35E.BuffSpellbookSpellsPrepared": "Maximum Prepared Spells",
+  "D35E.BuffSpellbookSpellsPreparedLevel": "Spellbook {0}, Level {1}",
+
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
@@ -1502,6 +1508,10 @@
   "SETTINGS.D35ECurrencyConfigLabel": "Configure Custom Coins",
   "SETTINGS.D35ECurrencyConfigName": "Custom Coins",
   "SETTINGS.D35ECurrencyConfigUpdate": "Save Custom Coins",
-  "SETTINGS.D35ECurrencyConfigHint": "Allows you to define custom Coins and group them into Currencies"
+  "SETTINGS.D35ECurrencyConfigHint": "Allows you to define custom Coins and group them into Currencies",
+  "SETTINGS.D35ENoAutoSpellpoinCost": "No Automatic Spellpoint Cost assignment",
+  "SETTINGS.D35ENoAutoSpellpoinCostH": "Disables automatic calculation of spellpoint cost",
+  "SETTINGS.D35ESpellpointsCostFormula": "Custom spellpoint cost formula",
+  "SETTINGS.D35ESpellpointsCostFormulaH": "Custom spellpoint cost formula. Use @level to get spell level. Leave empty to disable"
 
 }

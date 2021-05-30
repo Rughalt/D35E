@@ -77,13 +77,14 @@ export class ItemSheetPF extends ItemSheet {
         data.usesImperialSystem = game.settings.get("D35E", "units") === "imperial";
 
         data.randomUuid = uuidv4();
-
+        
         // Item Type, Status, and Details
         this.item.dataType = this.item.type.titleCase();
         this.item.dataStatus = this._getItemStatus(this.item.data);
         this.item.dataProperties = this._getItemProperties(this.item.data);
         this.item.dataName = this.item.name;
-        data.isPhysical = this.item.data.hasOwnProperty("data.quantity");
+        data.isPhysical = this.item.data.data.quantity !== undefined;
+        console.log('D35E | Base Item Data', this.item.data.data.quantity !== undefined)
         data.isSpell = this.item.type === "spell";
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
@@ -365,6 +366,8 @@ export class ItemSheetPF extends ItemSheet {
             }
         }
 
+        data.itemType = this.item.type;
+
         // Prepare class specific stuff
         if (this.item.data.type === "class") {
             for (let [a, s] of Object.entries(data.data.data.savingThrows)) {
@@ -509,12 +512,12 @@ export class ItemSheetPF extends ItemSheet {
                 data.hasKnownSpells = false;
                 if (data.isSpellcaster) {
                     for (let spellLevel = 0; spellLevel <= 9; spellLevel++) {
-                        if (getProperty(data.data, "spellsPerLevel") !== undefined && getProperty(data.data, "spellsPerLevel")[level - 1]) {
-                            let spellPerLevel = getProperty(data.data, "spellsPerLevel")[level - 1][spellLevel + 1];
+                        if (getProperty(this.item.data.data, "spellsPerLevel") !== undefined && getProperty(this.item.data.data, "spellsPerLevel")[level - 1]) {
+                            let spellPerLevel = getProperty(this.item.data.data, "spellsPerLevel")[level - 1][spellLevel + 1];
                             spellProgressionData[`spells${spellLevel}`] = spellPerLevel !== undefined && parseInt(spellPerLevel) !== -1 ? spellPerLevel : "-"
                         }
-                        if (getProperty(data.data, "spellsKnownPerLevel") !== undefined && getProperty(data.data, "spellsKnownPerLevel")[level - 1]) {
-                            let spellPerLevel = getProperty(data.data, "spellsKnownPerLevel")[level - 1][spellLevel + 1];
+                        if (getProperty(this.item.data.data, "spellsKnownPerLevel") !== undefined && getProperty(this.item.data.data, "spellsKnownPerLevel")[level - 1]) {
+                            let spellPerLevel = getProperty(this.item.data.data, "spellsKnownPerLevel")[level - 1][spellLevel + 1];
                             knownSpellProgressionData[`spells${spellLevel}`] = spellPerLevel !== undefined && parseInt(spellPerLevel) !== -1 ? spellPerLevel : "-"
                             data.hasKnownSpells = true;
                         }
@@ -602,6 +605,12 @@ export class ItemSheetPF extends ItemSheet {
                                 }
                             }
                         }
+                    }
+                } else if (item[1] === "spells") {
+                    //  "spells.spellbooks.primary.spells.spell1.bonus": "Level 1",
+                    for (let spellbook of ["primary", "secondary", "tetriary", "spelllike"]) {
+                        for (let level = 0; level < 10; level++)
+                            item.subTargets[`spells.spellbooks.${spellbook}.spells.spell${level}.bonus`] = game.i18n.localize("D35E.BuffSpellbookSpellsPreparedLevel").format(spellbook, level);
                     }
                 }
                 // Add static targets
@@ -1002,8 +1011,13 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".context-note-control").click(this._onNoteControl.bind(this));
 
         // Create attack
-        if (["weapon"].includes(this.item.data.type)) {
-            html.find("button[name='create-attack']").click(this._createAttack.bind(this));
+        if (["weapon"].includes(this.item.data.type) && this.item.actor != null && !this.item.showUnidentifiedData) {
+            const toggleString = "<a style='color: white; text-decoration: none' class='header-button companion-view-button' title='" + game.i18n.localize("D35E.CreateAttack") + "'><i class='fa fa-feather-alt'></i>"+game.i18n.localize("D35E.CreateAttack")+"</a>";
+            const toggleButton = $(toggleString);
+            html.closest('.app').find('.companion-view-button').remove();
+            const titleElement = html.closest('.app').find('.window-title');
+            toggleButton.insertAfter(titleElement);
+            toggleButton.click(this._createAttack.bind(this));
         }
 
         if (["feat"].includes(this.item.data.type)) {

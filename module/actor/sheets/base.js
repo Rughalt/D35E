@@ -392,6 +392,7 @@ export class ActorSheetPF extends ActorSheet {
       }
       if (spell.data.specialPrepared)
         spellbook[lvl].specialSlotPrepared = true
+      if (!book.usePowerPoints && !book.spontaneous && spell.data.preparation.maxAmount === 0 && book.showOnlyPrepared) return;
       spellbook[lvl].spells.push(spell);
     });
 
@@ -2205,7 +2206,7 @@ export class ActorSheetPF extends ActorSheet {
       // Case 3 - Import from World entity
       else {
         dataType = "world";
-        itemData = game.items.get(data.id).data;
+        itemData = game.items.get(data.id).data.toObject(false);
       }
 
       this.enrichDropData(itemData);
@@ -2267,7 +2268,7 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     if (itemData._id) delete itemData._id;
-    return this.actor.createEmbeddedEntity("Item", itemData);
+    return this.actor.createEmbeddedEntity("Item", itemData, {dataType: dataType});
   }
   async importActor(itemData, dataType) {
     if (itemData.type === "npc") {

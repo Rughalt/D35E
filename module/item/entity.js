@@ -260,7 +260,7 @@ export class ItemPF extends Item {
         const data = itemData.data;
         const C = CONFIG.D35E;
         const labels = {};
-
+        
         // Physical items
         if (hasProperty(itemData, "data.weight")) {
             // Sync name
@@ -2088,7 +2088,12 @@ export class ItemPF extends Item {
                 c[4] = c[4].replace(/@range/g, combatChangesRollData.range)
             }
             if (c[3].indexOf('$') === -1 && c[3].indexOf('&') === -1) {
-                c[4] = new Roll35e(`${c[4]}`,combatChangesRollData).roll().total
+                if (c[4] !== "")
+                    c[4] = new Roll35e(`${c[4]}`,combatChangesRollData).roll().total
+                else {
+                    c[4] = 0;
+                    ui.notifications.warn(game.i18n.localize("D35E.EmptyCombatChange").format(this.name));
+                }
             }
             if (c.length === 6) {
                 c.push(this.id)
@@ -2589,7 +2594,7 @@ export class ItemPF extends Item {
             const attackerToken = button.dataset.attackertoken;
             const attacker = button.dataset.attacker;
             const ammoId = button.dataset.ammoid;
-            const incorporeal = button.dataset.incorporeal;
+            const incorporeal = button.dataset.incorporeal === "true";
             event.applyHalf = action === "applyDamageHalf";
             ActorPF.applyDamage(event,roll,critroll,natural20,natural20Crit,fumble,fumbleCrit,damage,normalDamage,material,alignment,enh,nonLethal,!damage,null,attacker,attackerToken,ammoId,incorporeal);
         } else if (action === "applyHealing") {
