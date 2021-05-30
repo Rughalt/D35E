@@ -204,7 +204,7 @@ export class ActorPF extends Actor {
         const spellTargets = this._spellTargets;
         return {
             targets: [
-                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl","resistance","dr","spells"
+                "ability", "misc", "ac", "attack", "damage", "savingThrows", "skills", "skill", "prestigeCl","resistance","dr","spells","spellcastingAbility"
             ], types: [
                 "str", "dex", "con", "int", "wis", "cha",
                 "allSpeeds", "landSpeed", "climbSpeed", "swimSpeed", "burrowSpeed", "flySpeed",
@@ -214,7 +214,7 @@ export class ActorPF extends Actor {
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will", "turnUndead","turnUndeadDiceTotal", "spellResistance", "powerPoints", "sneakAttack",
-                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification", "regen", "fastHeal", "concealment", ...spellTargets
+                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification", "regen", "fastHeal", "concealment", ...spellTargets,"scaPrimary","scaSecondary","scaTetriary","scaSpelllike"
             ], modifiers: [
                 "untyped", "base", "enh", "dodge", "inherent", "deflection",
                 "morale", "luck", "sacred", "insight", "resist", "profane",
@@ -594,6 +594,14 @@ export class ActorPF extends Actor {
                 return "data.attributes.concealment.total";
             case "asf":
                 return "data.attributes.arcaneSpellFailure";
+            case "scaPrimary":
+                return "data.attributes.spells.spellbooks.primary.spellcastingAbilityBonus"
+            case "scaSecondary":
+                return "data.attributes.spells.spellbooks.secondary.spellcastingAbilityBonus"
+            case "scaTetriary":
+                return "data.attributes.spells.spellbooks.tetriary.spellcastingAbilityBonus"
+            case "scaSpelllike":
+                return "data.attributes.spells.spellbooks.spellike.spellcastingAbilityBonus"
         }
 
         if (changeTarget.match(/^skill\.([a-zA-Z0-9]+)$/)) {
@@ -608,7 +616,6 @@ export class ActorPF extends Actor {
                 return `data.skills.${sklKey}.subSkills.${subSklKey}.changeBonus`;
             }
         } else if (changeTarget.startsWith('spells')) {
-            console.log("D35E | Changing spell slot bonus")
             return `data.attributes.${changeTarget}`;
         } else if (changeTarget.match(/^resistance\.([a-zA-Z0-9\-]+)$/)) {
             const resistanceKey = RegExp.$1;
@@ -1762,8 +1769,8 @@ export class ActorPF extends Actor {
                 linkData(srcData1, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.hasSpecialSlot`, getProperty(srcData1, `data.classes.${spellbookClass}.hasSpecialSlot`));
 
                 autoSpellLevels = true;
-                spellbookAbilityMod = getProperty(srcData1, `data.abilities.${autoSpellcastingAbilityKey}.mod`)
-                spellslotAbilityMod = getProperty(srcData1, `data.abilities.${autoSpellslotAbilityKey}.mod`)
+                spellbookAbilityMod = getProperty(srcData1, `data.abilities.${autoSpellcastingAbilityKey}.mod`) + getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.spellcastingAbilityBonus`)
+                spellslotAbilityMod = getProperty(srcData1, `data.abilities.${autoSpellslotAbilityKey}.mod`) + getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.spellcastingAbilityBonus`)
             }
 
             let powerPointsFormula = updateData[`data.attributes.spells.spellbooks.${spellbookKey}.dailyPowerPointsFormula`] || getProperty(srcData1, `attributes.spells.spellbooks.${spellbookKey}.dailyPowerPointsFormula`) || "0"
@@ -2450,6 +2457,7 @@ export class ActorPF extends Actor {
             if (classLevel > getProperty(data, `data.classes.${spellbookClass}.maxLevel`))
                 classLevel = getProperty(data, `data.classes.${spellbookClass}.maxLevel`);
             const classProgression = getProperty(data, `data.classes.${spellbookClass}.spellPerLevel${classLevel}`);
+            linkData(data, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spellcastingAbilityBonus`, 0);
             for (let a = 0; a < 10; a++) {
                 linkData(data, updateData, `data.attributes.spells.spellbooks.${spellbookKey}.spells.spell${a}.bonus`, 0);
                 const classBase = classProgression !== undefined ? parseInt(classProgression[a + 1]) : -1;
@@ -4868,7 +4876,7 @@ export class ActorPF extends Actor {
         this.items.filter(o => this.isCombatChangeItemType(o)).forEach(i => {
             if (i.hasCombatChange(attackType, rollData)) {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
-                rollModifiers.push(`${i.name}`)
+                rollModifiers.push(`${i.data.data.combatChangeCustomReferenceName || i.name}`)
             }
             if (i.hasCombatChange(attackType + 'Optional', rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                 allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType + 'Optional', rollData, optionalFeatRanges.get(i._id)))
@@ -4879,10 +4887,10 @@ export class ActorPF extends Actor {
                     if (optionalFeatRanges.get(i._id).slider1) ranges.push(optionalFeatRanges.get(i._id).slider1)
                     if (optionalFeatRanges.get(i._id).slider2) ranges.push(optionalFeatRanges.get(i._id).slider2)
                     if (optionalFeatRanges.get(i._id).slider3) ranges.push(optionalFeatRanges.get(i._id).slider3)
-                    rollModifiers.push(`${i.name} (${ranges.join(", ")})`)
+                    rollModifiers.push(`${i.data.data.combatChangeCustomReferenceName || i.name} (${ranges.join(", ")})`)
                 }
                 else
-                    rollModifiers.push(`${i.name}`)
+                    rollModifiers.push(`${i.data.data.combatChangeCustomReferenceName || i.name}`)
 
                 i.addCharges(-1 * (i.data.data.combatChangesUsesCost === 'chargesPerUse' ? i.data.data?.uses?.chargesPerUse || 1 : optionalFeatRanges.get(i._id).base));
             }

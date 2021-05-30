@@ -41,7 +41,7 @@ export const alterRoll = function(str, add, multiply) {
 /**
  * Creates tabs for a sheet object
  */
-export const createTabs = function(html, tabGroups) {
+export const createTabs = function(html, tabGroups, existingTabs = null) {
   // Create recursive activation/callback function
   const _recursiveActivate = function(rtabs, tabName=null) {
     if (tabName == null) this._initialTab[rtabs.group] = rtabs.active;
@@ -62,7 +62,7 @@ export const createTabs = function(html, tabGroups) {
   };
 
   // Create all tabs
-  const _func = function(group, children) {
+  const _func = function(group, children, tabs = null) {
     if (html.find(`nav[data-group="${group}"]`).length === 0) return null;
 
     if (this._initialTab == null) this._initialTab = {};
@@ -81,24 +81,26 @@ export const createTabs = function(html, tabGroups) {
     if (scrollElems.length === 0) scrollElems = html.find(`.tab[data-group="${group}"]`);
     scrollElems.scroll(ev => this._scrollTab[group] = ev.currentTarget.scrollTop);
 
-    // Create tabs object
-    const tabs = new TabsV2({
-      navSelector: `.tabs[data-group="${group}"]`,
-      contentSelector: `.${group}-body`,
-      callback: (_, tabs) => {
-        _recursiveActivate.call(this, tabs);
-      },
-    });
+    if (!tabs) {
+      // Create tabs object
+      tabs = new TabsV2({
+        navSelector: `.tabs[data-group="${group}"]`,
+        contentSelector: `.${group}-body`,
+        callback: (_, tabs) => {
+          _recursiveActivate.call(this, tabs);
+        },
+      });
 
-    // Recursively create tabs
-    tabs.group = group;
-    tabs.subTabs = [];
-    for (let [childKey, subChildren] of Object.entries(children)) {
-      const newTabs = _func.call(this, childKey, subChildren);
-      if (newTabs != null) tabs.subTabs.push(newTabs);
+      // Recursively create tabs
+      tabs.group = group;
+      tabs.subTabs = [];
+      for (let [childKey, subChildren] of Object.entries(children)) {
+        const newTabs = _func.call(this, childKey, subChildren);
+        if (newTabs != null) tabs.subTabs.push(newTabs);
+      }
+
+      tabs.bind(html[0]);
     }
-
-    tabs.bind(html[0]);
     _recursiveActivate.call(this, tabs, this._initialTab[group]);
     return tabs;
   };

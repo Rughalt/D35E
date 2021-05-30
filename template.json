@@ -1249,6 +1249,8 @@
         },
         "combatChangesUsesCost": "chargesPerUse",
         "combatChangesApplySpecialActionsOnce": true,
+        "combatChangeCustomDisplayName": "",
+        "combatChangeCustomReferenceName": "",
         "sizeOverride": "",
         "counterName": "",
         "resistances": [],

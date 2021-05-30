@@ -28,6 +28,7 @@ export class ItemSheetPF extends ItemSheet {
         this.childItemMap = new Map()
         this.ehnancementItemMap = new Map()
         this.containerMap = new Map()
+        this._altTabs = null;
     }
 
     /* -------------------------------------------- */
@@ -951,7 +952,7 @@ export class ItemSheetPF extends ItemSheet {
                     "configuration": {},
                 },
             };
-            createTabs.call(this, html, tabGroups);
+            this._altTabs = createTabs.call(this, html, tabGroups, this._altTabs);
         }
         // Run older Tabs as a fallback
         else {

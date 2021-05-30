@@ -1453,7 +1453,10 @@
   "D35E.EmptyCombatChange": "Item {0} has an empty Combat Change",
   "D35E.BuffSpellbookSpellsPrepared": "Maximum Prepared Spells",
   "D35E.BuffSpellbookSpellsPreparedLevel": "Spellbook {0}, Level {1}",
-
+  "D35E.BuffSpellbookSpellcastingAbility": "Spellbook Spellcasting/Spellslot Ability",
+  "D35E.CustomName":"Custom Name",
+  "D35E.CustomReferenceName":"Custom Chat Card Name",
+  "D35E.LeaveEmptyForItemName": "Leave empty to use Item name",
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",

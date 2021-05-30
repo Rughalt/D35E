@@ -64,6 +64,10 @@ export class ItemPF extends Item {
         return ["day", "week", "charges"].includes(getProperty(this.data, "data.uses.per"));
     }
 
+    get combatChangeName() {
+        return this.data.data.combatChangeCustomDisplayName || this.name;
+    }
+
     get autoDeductCharges() {
         return this.type === "spell"
             ? getProperty(this.data, "data.preparation.autoDeductCharges") === true
@@ -1535,7 +1539,7 @@ export class ItemPF extends Item {
             actor.items.filter(o => (o.type === "feat" || (o.type ==="buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded))).forEach(i => {
                 if (i.hasCombatChange(attackType,rollData)) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType, rollData))
-                    rollModifiers.push(`${i.name}`)
+                    rollModifiers.push(`${i.data.data.combatChangeCustomReferenceName || i.name}`)
                 }
                 if (i.hasCombatChange(attackType+'Optional',rollData) && optionalFeatIds.indexOf(i._id) !== -1) {
                     allCombatChanges = allCombatChanges.concat(i.getPossibleCombatChanges(attackType+'Optional', rollData, optionalFeatRanges.get(i._id)))
@@ -1546,10 +1550,10 @@ export class ItemPF extends Item {
                         if (optionalFeatRanges.get(i._id).slider1) ranges.push(optionalFeatRanges.get(i._id).slider1)
                         if (optionalFeatRanges.get(i._id).slider2) ranges.push(optionalFeatRanges.get(i._id).slider2)
                         if (optionalFeatRanges.get(i._id).slider3) ranges.push(optionalFeatRanges.get(i._id).slider3)
-                        rollModifiers.push(`${i.name} (${ranges.join(", ")})`)
+                        rollModifiers.push(`${i.data.data.combatChangeCustomReferenceName || i.name} (${ranges.join(", ")})`)
                     }
                     else
-                        rollModifiers.push(`${i.name}`)
+                        rollModifiers.push(`${i.data.data.combatChangeCustomReferenceName || i.name}`)
                 }
             })
             this._addCombatChangesToRollData(allCombatChanges, rollData);

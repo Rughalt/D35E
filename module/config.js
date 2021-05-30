@@ -1079,6 +1079,13 @@ D35E.buffTargets = {
   "spells": {
     "_label": "D35E.BuffSpellbookSpellsPrepared"
   },
+  "spellcastingAbility": {
+    "_label": "D35E.BuffSpellbookSpellcastingAbility",
+    "scaPrimary": "Primary",
+    "scaSecondary": "Secondary",
+    "scaTetriary": "Tetriary",
+    "scaSpelllike": "Spelllike"
+  },
   "misc": {
     "_label": "D35E.MiscShort",
     "cmb": "Grapple",

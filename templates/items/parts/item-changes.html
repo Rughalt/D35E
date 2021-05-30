@@ -120,6 +120,14 @@
     {{localize "D35E.CombatChangesSettings"}}
   </h3>
   <div class="form-group uses-per">
+    <label>{{localize "D35E.CustomName"}}</label>
+    <input type="text" name="data.combatChangeCustomDisplayName" value="{{data.data.combatChangeCustomDisplayName}}" placeholder="{{localize "D35E.LeaveEmptyForItemName"}}"/>
+  </div>
+  <div class="form-group uses-per">
+    <label>{{localize "D35E.CustomReferenceName"}}</label>
+    <input type="text" name="data.combatChangeCustomReferenceName" value="{{data.data.combatChangeCustomReferenceName}}" placeholder="{{localize "D35E.LeaveEmptyForItemName"}}"/>
+  </div>
+  <div class="form-group uses-per">
     <label>{{localize "D35E.MaximumRange"}}</label>
     <input type="text" value="{{data.data.combatChangesRange.max}}" disabled data-dtype="Number"/>
   </div>
