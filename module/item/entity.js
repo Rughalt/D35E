@@ -3863,7 +3863,7 @@ export class ItemPF extends Item {
 
     async addEnhancementFromData(itemData) {
         if (this.hasEnhancement(itemData.name)) return;
-        return this.update(this.getEnhancementFromData(itemData))
+        return this.update(await this.getEnhancementFromData(itemData))
     }
 
     async getEnhancementFromData(itemData) {

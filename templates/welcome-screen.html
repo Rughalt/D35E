@@ -41,7 +41,7 @@
         border: 1px #6a6969 solid;
     }
 
-    .welcome-screen .window-content > * {
+    .welcome-screen .window-content>* {
         flex: 0;
     }
 
@@ -102,11 +102,10 @@
         font-size: 28px;
         text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);
     }
-
 </style>
 
 <h1 style="text-align: center"><img src="systems/D35E/icons/ui/logo.png"
-                                    style="height: 64px; border: none; float: left">
+        style="height: 64px; border: none; float: left">
     <span style='font-family: "Nodesto", sans-serif;
         text-shadow: 0px 0px 10px rgba(255, 100, 0, 0.76);'>3.5e SRD</span>
     <br><span style="font-size: 14px">3.5 SRD implementation for Foundry VTT</span></h1>
@@ -139,10 +138,8 @@
     border-bottom-left-radius: 4px;
     margin-bottom: 4px;">
                 <!--                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Player's Companion</h2>-->
-                <img src="systems/D35E/ui/logo-35e-companion.png"
-                     style="padding: 0 0.7rem; flex: 0">
-                <img src="systems/D35E/ui/companion-screen.png"
-                     style="padding: 0 0.7rem; flex: 0">
+                <img src="systems/D35E/ui/logo-35e-companion.png" style="padding: 0 0.7rem; flex: 0">
+                <img src="systems/D35E/ui/companion-screen.png" style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0; color: black">
                     Player's Companion is a new way to experience character sheet both when playing the game and
                     offline!<em style="opacity: 0.8">Some parts of Player's Companion are Patreon only feature!</em>
@@ -158,9 +155,11 @@
     border-bottom-right-radius: 4px;
     margin-bottom: 4px;">
                 <p style="padding: 0 0.7rem; flex: 0; color: black">
-                    <strong>Offline Character Sheet</strong> allows you to view your character sheet anywhere you are - and does not
+                    <strong>Offline Character Sheet</strong> allows you to view your character sheet anywhere you are -
+                    and does not
                     require Foundry server to be running! When your Foundry instance is up, you can make rolls from the
-                    Player's Companion - so no need to go to Foundry to use a weapon or roll that skill check! With Offline Character Sheet you can
+                    Player's Companion - so no need to go to Foundry to use a weapon or roll that skill check! With
+                    Offline Character Sheet you can
                 </p>
                 <ul style="padding: 0 0.7rem; flex: 0; color: black !important; font-style: italic; margin-left: 1rem;">
                     <li>Roll Skill and Ability Checks</li>
@@ -169,19 +168,21 @@
                     <li>Hero Features overview</li>
                 </ul>
                 <p style="padding: 0 0.7rem; flex: 0; color: black">
-                    <strong>Compendium Browsers</strong>  allows you to view 3.5e SRD compendium data outside the game, wherever you are. With power full search engine you can easily find any item, spell or power!
+                    <strong>Compendium Browsers</strong> allows you to view 3.5e SRD compendium data outside the game,
+                    wherever you are. With power full search engine you can easily find any item, spell or power!
                 </p>
                 <a class="btn bottom" href="https://companion.legaciesofthedragon.com">Learn
                     more about Companion</a>
 
             </div>
             <div class="flexcol" style="max-height: 410px">
-                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Metamagic</h2>
-                <img src="systems/D35E/icons/ui/welcome-screen/0.87-magic.png"
-                     style="padding: 0 0.7rem; flex: 0">
+                <h2 class="news" style="padding: 0 0.7rem; flex: 0">Beware! Updated Dragons!</h2>
+                <img src="systems/D35E/icons/ui/welcome-screen/0.87-templates.png" style="padding: 0 0.7rem; flex: 0">
                 <p style="padding: 0 0.7rem; flex: 0">
-                    Spice up your spells with Metamagic Feat support, available from version 0.92! You can now easily create metamagic spells and effects using Metamagic feats! Enlarge, Widen and Maximize your Magic!<br><br><span style="opacity: 0.8">Available for Metamagic feats added after 0.92 release.</span>
+                    System has been updated to be compatible with Foundry 0.8.6! Several systems were re-written and optimized, a lot of new smaller features were added and a lot of other rough edges were smoothed out.<br><br>While most things should just work, some fire bugs may be still hiding between the lines of code, so <b>backup often</b>!
+                    
                 </p>
+                <a class="btn bottom" href="https://github.com/Rughalt/D35E/issues">Github Issues</a>
             </div>
             <!--            <div class="flexcol" style="max-height: 410px">-->
 
@@ -212,39 +213,117 @@
 
         <div class="flexrow">
             <p style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;"><input
-                    type="checkbox" class='show-again' id="welcome-screen-show-again"/> <label
+                    type="checkbox" class='show-again' id="welcome-screen-show-again" /> <label
                     for="welcome-screen-show-again">Don't show this screen again until next update.</label></p>
             <a href="https://discord.gg/wDyUaZH" class="discord social-button" style="float: right">Discord</a><a
                 class="github social-button" style="float: right"
                 href="https://www.github.com/Rughalt/D35E">GitHub</a><a class="patreon social-button"
-                                                                        style="float: right"
-                                                                        href="https://www.patreon.com/Rughalt">Become a
-            Patron</a>
+                style="float: right" href="https://www.patreon.com/Rughalt">Become a
+                Patron</a>
         </div>
     </div>
     <div class="tab" data-tab="changelog" style="overflow-y: scroll; height: 570px;">
+        <h2>v0.93.0</h2>
+        <h3 id="new-features-">New features:</h3>
+        <ul>
+            <li>Improved UX of item add drawer, with added item preview</li>
+            <li>Added ability to filter spells in spellbooks by prepared only</li>
+            <li>Multiple fixes antweaks for spellbooks<ul>
+                    <li>Ability to add custom number of prepared spell slots to any spellbooks/spell level (base class
+                        spells slots is available unde
+                        <code>@attributes.spells.spellbooks.primary.spells.spell1.classBase</code>)</li>
+                    <li>Prestige caster level correctly influences known spells</li>
+                    <li>Power points can be displayed in the token bars</li>
+                </ul>
+            </li>
+            <li>Thrown weapons create two attacks and use up ammunition correctly</li>
+        </ul>
+        <h3 id="fixes">Fixes</h3>
+        <ul>
+            <li>Fixed Ability damage and Ability Drain rolls</li>
+            <li>Multiple fixes to 0.8.x compatibility</li>
+        </ul>
+        <h3 id="all-changes-">All changes:</h3>
+        <ul>
+            <li><a href="https://github.com/Rughalt/D35E/issues/544">544</a> - Unable to add enhancements to items
+                closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/538">538</a> - Arrow recovery not working closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/535">535</a> - Can´t activate temporary buff closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/531">531</a> - Spellpoint System closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/530">530</a> - Issue/Bug: DR Immunity Magic Not Working
+                closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/529">529</a> - Bonus Casting from prestige classes not
+                applying to spells known closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/526">526</a> - FR: change weights on items depending on
+                character size closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/521">521</a> - Spells with Templates don&#39;t appear to
+                cast closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/520">520</a> - Error on boot up with Familars closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/519">519</a> - Error when opening level up window.
+                closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/518">518</a> - Error adding class levels closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/517">517</a> - Attacks have no visible description on
+                their list. closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/516">516</a> - Jump&#39;s synergy bonus is listed as
+                speed bonus. closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/515">515</a> - Character sheet takes unusually long time
+                to open. closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/514">514</a> - Error trying to move characters closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/513">513</a> - Error trying to open a character&#39;s
+                sheet. closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/511">511</a> - Sometimes Tokens are not clickable closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/506">506</a> - FR: Add in the ability to place Class
+                Abilities (and others) into a Shared Data Module closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/505">505</a> - Non-active Class Features not populating
+                closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/499">499</a> - Throwing weapon closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/495">495</a> - Display Max Power Points closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/490">490</a> - improvement for special action closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/487">487</a> - DOT Buffs closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/486">486</a> - Familiar group casing weirdness closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/485">485</a> - an idea we got for spell caster with a
+                lot of spell closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/481">481</a> - Display special names for feats in
+                &quot;optional&quot; Action Types closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/478">478</a> - Spellcasting Prodigy - feat - bonus in
+                &quot;Spellcasting Ability&quot; for a given spellbook closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/470">470</a> - Constitution Score &quot;none&quot;
+                closed</li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/466">466</a> - Add spell name to &quot;item&quot; data
+                object closed</li>
+        </ul>
+
         <h2>v0.92.4</h2>
         <h3>Changes</h3>
         <ul>
             <li><a href="https://github.com/Rughalt/D35E/issues/476">476</a> - Link to D35E docs </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/475">475</a> - Unarmed Strike (Monk) stops working after adding Weapon Focus </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/472">472</a> - Resistance and Damage Reduction in Changes Tab not refering to things outside of itself such as Class </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/475">475</a> - Unarmed Strike (Monk) stops working after
+                adding Weapon Focus </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/472">472</a> - Resistance and Damage Reduction in
+                Changes Tab not refering to things outside of itself such as Class </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/469">469</a> - racial HD bug sheet </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/467">467</a> - Paladin Lay On Hands is doing damage instead of healing </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/467">467</a> - Paladin Lay On Hands is doing damage
+                instead of healing </li>
         </ul>
         <h2>v0.92.2</h2>
         <h3>Changes</h3>
         <ul>
             <li>Custom Currency Support<ul>
-                <li>Add Custom Currency in World settings (along with its weight, value in gold, and currency group)</li>
-                <li>Currently not supported in loot sheet (needs support on Loot Sheet Mod site)</li>
-            </ul>
+                    <li>Add Custom Currency in World settings (along with its weight, value in gold, and currency group)
+                    </li>
+                    <li>Currently not supported in loot sheet (needs support on Loot Sheet Mod site)</li>
+                </ul>
             </li>
             <li>Damage Reduction - added ability to set &quot;Immunity unless Type&quot;</li>
             <li>Incorporeal damage type<ul>
-                <li>Ability to set Attack as Incorporeal</li>
-                <li>Ability to add damage reduction unless Incorporeal</li>
-            </ul>
+                    <li>Ability to set Attack as Incorporeal</li>
+                    <li>Ability to add damage reduction unless Incorporeal</li>
+                </ul>
             </li>
             <li>Natural attacks can be set as equivalent to Magic and Epic for purposes of Damage Reduction</li>
             <li>Ability to add/remove HP on actor by typing +10 or -20 in the HP attribute field.</li>
@@ -255,41 +334,54 @@
         </ul>
         <h3>All changes</h3>
         <ul>
-            <li><a href="https://github.com/Rughalt/D35E/issues/462">462</a> - Add class information to spell rolls </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/461">461</a> - Different attributes for spell DCs and spells per day </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/462">462</a> - Add class information to spell rolls
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/461">461</a> - Different attributes for spell DCs and
+                spells per day </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/458">458</a> - Incorporeal not working </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/457">457</a> - Weapons with returning are being treated as ammo and never replenish </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/457">457</a> - Weapons with returning are being treated
+                as ammo and never replenish </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/454">454</a> - Equipment Combat Changes. </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/453">453</a> - Fast healing/Regeneration is no longer working. </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/448">448</a> - See the roll of HP when a character levels up </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/453">453</a> - Fast healing/Regeneration is no longer
+                working. </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/448">448</a> - See the roll of HP when a character
+                levels up </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/442">442</a> - Request: Miss Chance </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/433">433</a> - Feature request: Show non-active class features on character sheet </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/433">433</a> - Feature request: Show non-active class
+                features on character sheet </li>
         </ul>
 
         <h2>v0.92</h2>
         <h3>Features</h3>
         <ul>
-            <li>Metamagic Feats Support - support for metamagic feat is in! You can mak spell as being maximized, enhanced or widened with ease!<ul>
-                <li>Metamagic feats allow for easy creation of spells in most instances</li>
-                <li>Epic level spell support</li>
-                <li>Most of Metamagic spell changes - Maximized, Widened, Enhanced, Enlarged etc... work out of the box with implemented spells</li>
-            </ul>
+            <li>Metamagic Feats Support - support for metamagic feat is in! You can mak spell as being maximized,
+                enhanced or widened with ease!<ul>
+                    <li>Metamagic feats allow for easy creation of spells in most instances</li>
+                    <li>Epic level spell support</li>
+                    <li>Most of Metamagic spell changes - Maximized, Widened, Enhanced, Enlarged etc... work out of the
+                        box with implemented spells</li>
+                </ul>
             </li>
             <li>Custom Item Tags: Custom tags are used when generating resource names, class names for roll data. </li>
             <li>Skill &quot;Combat Changes&quot;<ul>
-                <li>Skills are the latest art of the system to get Combat Change support</li>
-                <li>All standard Combat Chances features are available</li>
-                <li>You can limit skills using condition <code>&#39;@skillId&#39; === &#39;&lt;skillShortId&gt;&#39;</code>. <code>featSkillBonus</code> is used to set value added to skill roll.</li>
-            </ul>
+                    <li>Skills are the latest art of the system to get Combat Change support</li>
+                    <li>All standard Combat Chances features are available</li>
+                    <li>You can limit skills using condition <code>&#39;@skillId&#39; ===
+                            &#39;&lt;skillShortId&gt;&#39;</code>. <code>featSkillBonus</code> is used to set value
+                        added to skill roll.</li>
+                </ul>
             </li>
             <li>Approximate damage, range and attack display on character sheet near the weapons</li>
             <li>Improved Feat requirements system<ul>
-                <li>Feats can now require other feats (using Custom Item Tags as reference)</li>
-            </ul>
+                    <li>Feats can now require other feats (using Custom Item Tags as reference)</li>
+                </ul>
             </li>
-            <li>Ability to add rolling from Roll Table as a part of action. Drag and drop Roll Table from compendium to item and it will be rolled according to formula or randomly. Added <code>@attack&lt;n&gt;</code> field to Roll Table formula data to reference possible attack roll.</li>
+            <li>Ability to add rolling from Roll Table as a part of action. Drag and drop Roll Table from compendium to
+                item and it will be rolled according to formula or randomly. Added <code>@attack&lt;n&gt;</code> field
+                to Roll Table formula data to reference possible attack roll.</li>
             <li>Thrown weapons do not require ammunition - they require having enough quantity to be used</li>
-            <li>Special Action <code>eval</code> that evaluates <em>one line</em> javascript code. <strong>Use with care, we are not responsible for breaking things</strong></li>
+            <li>Special Action <code>eval</code> that evaluates <em>one line</em> javascript code. <strong>Use with
+                    care, we are not responsible for breaking things</strong></li>
         </ul>
         <h3>Changes</h3>
         <ul>
@@ -297,23 +389,38 @@
             <li><a href="https://github.com/Rughalt/D35E/issues/446">446</a> - natural armor bug </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/441">441</a> - Tumble and Total Defense </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/439">439</a> - Jump and High Speed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/432">432</a> - Allow taking half damage from particular energy types </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/431">431</a> - unidentified magic item reveals spell-like properties in player&#39;s sheet </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/429">429</a> - Damage Ability choice not remembered in Attack dialog </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/428">428</a> - Apply half damage with no check is applying Full Damage </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/426">426</a> - Unarmed strike not usable from Unarmed strike &#39;item&#39; </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/424">424</a> - Bard feature &#39;Bardic Knowledge&#39; </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/421">421</a> - Add &quot;Emission Angle&quot; to item light sources </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/418">418</a> - Darts are ranged weapons without ammunitions </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/417">417</a> - Fast Healing, Regeneration for Changes Mechanic </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/408">408</a> - Allow embedded expressions in object references in special actions </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/432">432</a> - Allow taking half damage from particular
+                energy types </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/431">431</a> - unidentified magic item reveals
+                spell-like properties in player&#39;s sheet </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/429">429</a> - Damage Ability choice not remembered in
+                Attack dialog </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/428">428</a> - Apply half damage with no check is
+                applying Full Damage </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/426">426</a> - Unarmed strike not usable from Unarmed
+                strike &#39;item&#39; </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/424">424</a> - Bard feature &#39;Bardic Knowledge&#39;
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/421">421</a> - Add &quot;Emission Angle&quot; to item
+                light sources </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/418">418</a> - Darts are ranged weapons without
+                ammunitions </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/417">417</a> - Fast Healing, Regeneration for Changes
+                Mechanic </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/408">408</a> - Allow embedded expressions in object
+                references in special actions </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/406">406</a> - Critical Confirmation Bonus </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/405">405</a> - Request Extend the slider mechanic to have multiple </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/404">404</a> - Add optional &quot;combat&quot; changes for skill checks </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/403">403</a> - Allow for special actions on attacks to be applied only once during a full attack </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/402">402</a> - Limited Uses always subtracts by 1 regardless of other values. </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/405">405</a> - Request Extend the slider mechanic to
+                have multiple </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/404">404</a> - Add optional &quot;combat&quot; changes
+                for skill checks </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/403">403</a> - Allow for special actions on attacks to
+                be applied only once during a full attack </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/402">402</a> - Limited Uses always subtracts by 1
+                regardless of other values. </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/399">399</a> - Familiar Hit Points </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/392">392</a> - Request Have the ability to set a cap in multi use abilities </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/392">392</a> - Request Have the ability to set a cap in
+                multi use abilities </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/389">389</a> - Clothing and Weight </li>
         </ul>
 
@@ -322,20 +429,22 @@
         <ul>
             <li>Support for Legacies of the Dragon - Player&#39;s Companion</li>
             <li>Special Action extensions<ul>
-                <li>Automatic applying of &quot;on self&quot; actions where applicable</li>
-                <li>Buff data is passed to buff special actions, and can be used as <code>@buff</code></li>
-                <li>Ability to change Traits
-                    Ability to add and subtract values using Special Actions</li>
-            </ul>
+                    <li>Automatic applying of &quot;on self&quot; actions where applicable</li>
+                    <li>Buff data is passed to buff special actions, and can be used as <code>@buff</code></li>
+                    <li>Ability to change Traits
+                        Ability to add and subtract values using Special Actions</li>
+                </ul>
             </li>
             <li>Combat Changes<ul>
-                <li>Ability to add special action as part of a Combat Change</li>
-                <li>Ability to have sliders/ranges in Combat Change, to allow use implementing effects such as Combat Expertise</li>
-            </ul>
+                    <li>Ability to add special action as part of a Combat Change</li>
+                    <li>Ability to have sliders/ranges in Combat Change, to allow use implementing effects such as
+                        Combat Expertise</li>
+                </ul>
             </li>
             <li>Ammunition changes<ul>
-                <li>Forcing all ranged weapons to use/select ammo instead of using &quot;generic umlimited&quot; ammunition</li>
-            </ul>
+                    <li>Forcing all ranged weapons to use/select ammo instead of using &quot;generic umlimited&quot;
+                        ammunition</li>
+                </ul>
             </li>
             <li>Inventory cleanup functionality</li>
             <li>Basic Feat requirements function</li>
@@ -348,44 +457,79 @@
         </ul>
         <h3>All changes</h3>
         <ul>
-            <li><a href="https://github.com/Rughalt/D35E/issues/398">398</a> - Allow ammo recovery to be turned off closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/396">396</a> - Critical Damage Doesn&#39;t have the Bracket showing the damage types closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/394">394</a> - Math for Even Number Ability Score Penalties  closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/388">388</a> - Backpack Description Copy Paste Error closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/387">387</a> - Full attack wield modes not translating into the attack dialog closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/384">384</a> - Healing items say damage in the chat card closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/382">382</a> - Monk, Wholeness of body little bug closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/380">380</a> - Request self use action which doesnt use the chat card closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/379">379</a> - Rounding error in inventory for total inventory value closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/378">378</a> - Max charges not updating for items closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/377">377</a> - Blackguard sneak attack formula error: @classes.blackguard.level not provided in roll data. closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/374">374</a> - Missing localization: D35E.LockEditingByPlayers closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/373">373</a> - Missing localization: D35E.Value closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/372">372</a> - Missing localization: D35E.RaceSubtypePlural closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/371">371</a> - Missing localization: D35E.Image closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/370">370</a> - Missing localization: D35E.ChargesToDecuct closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/369">369</a> - Missing localization: Spell/Ability Attack Count field closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/368">368</a> - Missing localization: D35E.VsTouchAc closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/366">366</a> - Encounter Generator not loading closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/365">365</a> - Request Automatic ammunition recovery closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/398">398</a> - Allow ammo recovery to be turned off
+                closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/396">396</a> - Critical Damage Doesn&#39;t have the
+                Bracket showing the damage types closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/394">394</a> - Math for Even Number Ability Score
+                Penalties closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/388">388</a> - Backpack Description Copy Paste Error
+                closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/387">387</a> - Full attack wield modes not translating
+                into the attack dialog closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/384">384</a> - Healing items say damage in the chat card
+                closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/382">382</a> - Monk, Wholeness of body little bug closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/380">380</a> - Request self use action which doesnt use
+                the chat card closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/379">379</a> - Rounding error in inventory for total
+                inventory value closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/378">378</a> - Max charges not updating for items closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/377">377</a> - Blackguard sneak attack formula error:
+                @classes.blackguard.level not provided in roll data. closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/374">374</a> - Missing localization:
+                D35E.LockEditingByPlayers closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/373">373</a> - Missing localization: D35E.Value closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/372">372</a> - Missing localization:
+                D35E.RaceSubtypePlural closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/371">371</a> - Missing localization: D35E.Image closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/370">370</a> - Missing localization:
+                D35E.ChargesToDecuct closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/369">369</a> - Missing localization: Spell/Ability
+                Attack Count field closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/368">368</a> - Missing localization: D35E.VsTouchAc
+                closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/366">366</a> - Encounter Generator not loading closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/365">365</a> - Request Automatic ammunition recovery
+                closed </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/364">364</a> - Ammunition Detail closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/362">362</a> - Request Combat Changes can add special actions closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/360">360</a> - [Request] Special actions to modify / toggle arrays closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/359">359</a> - Buff &quot;Activate Special actions&quot; doesn&#39;t have buff item&#39;s data when passing to actor entity for applyActionOnSelf closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/358">358</a> - [Request] Spells/Abilities that have an attack but no damage. closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/357">357</a> - [Request] Power Attack Scale used for other items. closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/356">356</a> - Buffs are expiring one round too short closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/355">355</a> - Power attack is not remembering its value when save attack form toggled on closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/354">354</a> - Trolls are not taking lethal damage from anything closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/352">352</a> - GM&#39;s cant access the Character HUD movement icon closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/362">362</a> - Request Combat Changes can add special
+                actions closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/360">360</a> - [Request] Special actions to modify /
+                toggle arrays closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/359">359</a> - Buff &quot;Activate Special actions&quot;
+                doesn&#39;t have buff item&#39;s data when passing to actor entity for applyActionOnSelf closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/358">358</a> - [Request] Spells/Abilities that have an
+                attack but no damage. closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/357">357</a> - [Request] Power Attack Scale used for
+                other items. closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/356">356</a> - Buffs are expiring one round too short
+                closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/355">355</a> - Power attack is not remembering its value
+                when save attack form toggled on closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/354">354</a> - Trolls are not taking lethal damage from
+                anything closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/352">352</a> - GM&#39;s cant access the Character HUD
+                movement icon closed </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/351">351</a> - Prayer spell broken closed </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/350">350</a> - Wildcard Tokens closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/349">349</a> - Request: Feats to make changes to Arcane Spell Failure closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/327">327</a> - Request: Lock Character Sheet Components closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/325">325</a> - Shapechange and Natural Armor closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/320">320</a> - Toggle use of ammunition during ranged attacks closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/318">318</a> - Price updates from enhancements overriding base price not adding to them closed </li>
-            <li><a href="https://github.com/Rughalt/D35E/issues/223">223</a> - Shapechange/Wildshape/Polymorph changes closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/349">349</a> - Request: Feats to make changes to Arcane
+                Spell Failure closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/327">327</a> - Request: Lock Character Sheet Components
+                closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/325">325</a> - Shapechange and Natural Armor closed
+            </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/320">320</a> - Toggle use of ammunition during ranged
+                attacks closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/318">318</a> - Price updates from enhancements
+                overriding base price not adding to them closed </li>
+            <li><a href="https://github.com/Rughalt/D35E/issues/223">223</a> - Shapechange/Wildshape/Polymorph changes
+                closed </li>
             <li><a href="https://github.com/Rughalt/D35E/issues/149">149</a> - Inventory Grouping closed </li>
         </ul>
 
@@ -394,7 +538,8 @@
         <ul>
             <li>Psionic powers additional points
                 <ul>
-                    <li>Psionic powers can use additional Power Points. You can reference this value using <code>@useAmount</code>
+                    <li>Psionic powers can use additional Power Points. You can reference this value using
+                        <code>@useAmount</code>
                         variable in rolls
                     </li>
                     <li>Rules regarding Power Point usage are not enforced on selection, but when using attack.</li>
@@ -1300,10 +1445,13 @@
             Authors Jonathan Tweet, Monte Cook, Skip Williams, Rich Baker, Andy Collins, David Noonan, Rich Redman,
             Bruce R. Cordell, John D. Rateliff, Thomas Reid, James Wyatt, based on original material by E. Gary Gygax
             and Dave Arneson.<br>Monster Manual II Copyright 2002, Wizards of the Coast, Inc.<br>Unearthed Arcana
-            Copyright 2004, Wizards of the Coast, Inc.; Andy Collins, Jesse Decker, David Noonan, Rich Redman.<br>Pathfinder
-            Roleplaying Game Reference Document. © 2011, Paizo Publishing, LLC; Author: Paizo Publishing, LLC.<br>Pathfinder
+            Copyright 2004, Wizards of the Coast, Inc.; Andy Collins, Jesse Decker, David Noonan, Rich
+            Redman.<br>Pathfinder
+            Roleplaying Game Reference Document. © 2011, Paizo Publishing, LLC; Author: Paizo Publishing,
+            LLC.<br>Pathfinder
             Roleplaying Game Core Rulebook. © 2009, Paizo Publishing, LLC; Author: Jason Bulmahn, based on material by
-            Jonathan Tweet, Monte Cook, and Skip Williams.<br>Foundry Virtual Tabletop © 2019, Foundry Gaming LLC<br>&nbsp;
+            Jonathan Tweet, Monte Cook, and Skip Williams.<br>Foundry Virtual Tabletop © 2019, Foundry Gaming
+            LLC<br>&nbsp;
         </p>
         <div></div>
     </div>
