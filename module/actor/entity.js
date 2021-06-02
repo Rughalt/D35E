@@ -2506,7 +2506,7 @@ export class ActorPF extends Actor {
 
             let templateClassesToUpdate = []
             for (const _templateClass of classes.filter(o => getProperty(o.data.data, "classType") === "template")) {
-                const templateClass = templateClass;
+                const templateClass = _templateClass.data;
                 if (!!templateClass) {
                     if (templateClass.data.levels === level) return
                     let updateObject = {}
