@@ -10,7 +10,7 @@
         </h3>
         {{#each data.currency as |v k|}}
         <label class="denomination {{k}}">{{ lookup ../config.currencies k }}</label>
-        <input type="text" name="data.currency.{{k}}" value="{{v}}" data-dtype="Number"/>
+        <input type="text" name="data.currency.{{k}}" value="{{v}}" data-dtype="Number" />
         {{/each}}
     </ol>
     {{#if isCharacter}}
@@ -21,7 +21,7 @@
         </h3>
         {{#each data.altCurrency as |v k|}}
         <label class="denomination {{k}}">{{ lookup ../config.currencies k }}</label>
-        <input type="text" name="data.altCurrency.{{k}}" value="{{v}}" data-dtype="Number"/>
+        <input type="text" name="data.altCurrency.{{k}}" value="{{v}}" data-dtype="Number" />
         {{/each}}
     </ol>
     {{/if}}
@@ -33,24 +33,26 @@
         </h3>
         {{#each c as |curr|}}
         <label class="denomination {{k}}">{{ lookup curr 1 }}</label>
-        <input type="text" name="data.customCurrency.{{lookup curr 0}}" value="{{lookup ../../data.customCurrency (lookup curr 0)}}" data-dtype="Number"/>
+        <input type="text" name="data.customCurrency.{{lookup curr 0}}"
+            value="{{lookup ../../data.customCurrency (lookup curr 0)}}" data-dtype="Number" />
         {{/each}}
     </ol>
     {{/each}}
 
 </div>
-<div class="flexrow" style="flex: 0"><h2 class="block-header" style="flex: 1">{{ localize
-    'D35E.Items'}}</h2><a
-        class="btn open-add-items point-buy-button blue-button open-compendium-pack"
+<div class="flexrow" style="flex: 0">
+    <h2 class="block-header" style="flex: 1">{{ localize
+    'D35E.Items'}}</h2><a class="btn open-add-items point-buy-button blue-button open-compendium-pack"
         data-pack="inline:items:weapon,equipment,consumable,loot:-:{{ localize 'D35E.Items'}}"
         onkeydown="e.preventDefault();">
-    {{ localize 'D35E.AddItem' }}
-</a><a
-        class="btn point-buy-button blue-button group-inventory tooltip" style="flex: 0 40px"
+        {{ localize 'D35E.AddItem' }}
+    </a><a class="btn point-buy-button blue-button group-inventory tooltip" style="flex: 0 40px"
         data-pack="inline:items:weapon,equipment,consumable,loot:-:{{ localize 'D35E.Items'}}"
         onkeydown="e.preventDefault();">
-    <i class="fas fa-broom" style="color: white !important;"></i><span class="tooltipcontent" style="z-index: 1000">{{localize "D35E.SortInventory"}}</span>
-</a></div>
+        <i class="fas fa-broom" style="color: white !important;"></i><span class="tooltipcontent"
+            style="z-index: 1000">{{localize "D35E.SortInventory"}}</span>
+    </a>
+</div>
 {{!-- Inventory Navigation --}}
 <!--<nav class="sheet-navigation tabs subtabs inventory" data-group="inventory">-->
 <!--  {{#each sections as |section sid|}}-->
@@ -97,8 +99,9 @@
                 <!--          </a>-->
                 <!--          {{/if}}-->
                 <a class="item-control item-create" style="flex: 0; margin-left: 4px;"
-                   title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}" {{/each}}>
-                <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
+                    title="{{ localize 'D35E.CreateItem' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}"
+                    {{/each}}>
+                    <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
                 </a>
                 {{/if}}
             </div>
@@ -146,7 +149,7 @@
 
                         {{#unless item.data.melded}}
                         <a class="item-control item-attack"><img class="icon"
-                                                                 src="systems/D35E/icons/actions/gladius.svg"></a>
+                                src="systems/D35E/icons/actions/gladius.svg"></a>
 
                         {{/unless}}
                     </div>
@@ -159,8 +162,10 @@
                 <div class="item-actions">
                     <div class="capacity">
                         <span class="capacity-bar"
-                              style="width:{{#if item.data.capacity}}{{item.itemsWeightPercentage}}%{{/if}}"></span>
-                        <span class="capacity-label">{{item.itemsWeight}}{{#if item.convertedCapacity}}/{{item.convertedCapacity}}{{/if}} {{ item.units }}</span>
+                            style="width:{{#if item.data.capacity}}{{item.itemsWeightPercentage}}%{{/if}}"></span>
+                        <span
+                            class="capacity-label">{{item.itemsWeight}}{{#if item.convertedCapacity}}/{{item.convertedCapacity}}{{/if}}
+                            {{ item.units }}</span>
                     </div>
                 </div>
                 {{/if}}
@@ -168,8 +173,8 @@
                 <div class="item-detail item-weight">
                     {{#if item.totalWeight}}
                     <span>
-              {{ item.totalWeight }} {{ item.units }}
-            </span>
+                        {{ item.totalWeight }} {{ item.units }}
+                    </span>
                     {{/if}}
                 </div>
 
@@ -190,7 +195,7 @@
                 {{/if}}
                 <div class=" item-detail item-container">
                     <select name="item.data.containerId" style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;"
-                            data-dtype="String" class="container-selector">
+                        data-dtype="String" class="container-selector">
                         {{#select item.data.containerId}}
                         <option value="">{{ localize 'D35E.None' }}</option>
                         {{#each @root.containerList as |container a|}}
@@ -203,31 +208,42 @@
                     <div class="flexrow">
                         {{#unless item.showUnidentifiedData}}
                         {{#if item.isCharged}}
+                        {{#unless item.isRecharging}}
                         {{#unless item.data.linkedChargeItem.id}}
-                        <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
+                        <input type="text" value="{{item.data.uses.value}}" data-dtype="Number" />
                         {{else}}
-                        <input type="text" value="{{item.charges}}" disabled data-dtype="Number"/>
+                        <input type="text" value="{{item.charges}}" disabled data-dtype="Number" />
                         {{/unless}}
                         <span class="sep"> of </span>
                         {{#unless item.data.linkedChargeItem.id}}
-                        <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number"/>
+                        <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number" />
                         {{else}}
-                        <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number"/>
+                        <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number" />
 
                         {{/unless}}
                         <span class="tooltipcontent">
-              @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
-              @resources.{{item.tag}}.max : {{item.data.uses.max}}
-            </span>
+                            @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
+                            @resources.{{item.tag}}.max : {{item.data.uses.max}}
+                            {{#if item.hasTimedRecharge}}
+                            <br><br>
+                            This item will recharge after use <br>after {{item.data.recharge.formula}} rounds.
+                            {{/if}}
+                        </span>
+                        <i class="fas fa-history tooltip"></i>
+                        {{else}}
+                        <span><i class="fas fa-history"></i> Ready in {{item.data.recharge.current}}</span>
+                        {{/unless}}
                         {{/if}}
                         {{/unless}}
+
+                        
                     </div>
 
                     {{#unless item.showUnidentifiedData}}
                     {{#if item.canRecharge}}
                     <div class="item-attack" style="margin-left: 4px; flex: 0 17px">
                         <a class="item-control item-recharge"><img class="icon"
-                                                                   src="systems/D35E/icons/actions/lightning-electron.svg"></a>
+                                src="systems/D35E/icons/actions/lightning-electron.svg"></a>
                     </div>
                     {{/if}}
                     {{/unless}}
@@ -238,7 +254,8 @@
                 <div class="item-controls">
                     <a class="item-control item-quantity-add"><i class="fas fa-plus"></i></a>
                     <a class="item-control item-quantity-subtract"><i class="fas fa-minus"></i></a>
-                    <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
+                    <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i
+                            class="fas fa-edit"></i></a>
                     <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i
                             class="fas fa-trash"></i></a>
                 </div>
@@ -257,8 +274,8 @@
                             </div>
                             <div class="item-detail item-container">
                                 <select name="iitem.data.containerId"
-                                        style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String"
-                                        class="container-selector">
+                                    style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String"
+                                    class="container-selector">
                                     {{#select iitem.data.containerId}}
                                     <option value="">{{ localize 'D35E.None' }}</option>
                                     {{#each @root.containerList as |container a|}}
@@ -302,13 +319,13 @@
 <div class="form-group carry-bonus">
     <label>{{ localize 'D35E.BonusCarryStrength' }}</label>
     <input type="text" name="data.abilities.str.carryBonus" value="{{data.abilities.str.carryBonus}}"
-           data-dtype="Number" placeholder="0"/>
+        data-dtype="Number" placeholder="0" />
     <label>{{ localize 'D35E.Multiplier' }}</label>
-    <input type="text" name="data.abilities.str.carryMultiplier"
-           value="{{data.abilities.str.carryMultiplier}}" data-dtype="Number" placeholder="1"/>
+    <input type="text" name="data.abilities.str.carryMultiplier" value="{{data.abilities.str.carryMultiplier}}"
+        data-dtype="Number" placeholder="1" />
     <label style="flex: 1">{{ localize 'D35E.TotalInventoryValue' }}</label>
-    <input type="text" style="flex: 0 0 80px"
-           value="{{totalInventoryValue}}" data-dtype="Number" disabled placeholder="1"/>
+    <input type="text" style="flex: 0 0 80px" value="{{totalInventoryValue}}" data-dtype="Number" disabled
+        placeholder="1" />
 </div>
 {{#with encumbrance}}
 <span class="carry-label">{{carryLabel}}</span>
