@@ -1515,6 +1515,8 @@
   "SETTINGS.D35ENoAutoSpellpoinCost": "No Automatic Spellpoint Cost assignment",
   "SETTINGS.D35ENoAutoSpellpoinCostH": "Disables automatic calculation of spellpoint cost",
   "SETTINGS.D35ESpellpointsCostFormula": "Custom spellpoint cost formula",
-  "SETTINGS.D35ESpellpointsCostFormulaH": "Custom spellpoint cost formula. Use @level to get spell level. Leave empty to disable"
-
+  "SETTINGS.D35ESpellpointsCostFormulaH": "Custom spellpoint cost formula. Use @level to get spell level. Leave empty to disable",
+  "SETTINGS.D35EDisableTokenVisionsN": "Do not override Token Vision",
+  "SETTINGS.D35EDisableTokenVisionL": "This option disables overriding Token vision settings from items globally. WARNING: This disables functionality of torches and magic items that change vision! This setting will take effect after each actor/token update!"
+ 
 }

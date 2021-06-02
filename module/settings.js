@@ -462,8 +462,8 @@ export const registerSystemSettings = function() {
   });
 
   game.settings.register("D35E", "globalDisableTokenVision", {
-    name: "SETTINGS.D35EDisableTokenLightsN",
-    hint: "SETTINGS.D35EDisableTokenLightsL",
+    name: "SETTINGS.D35EDisableTokenVisionN",
+    hint: "SETTINGS.D35EDisableTokenVisionL",
     scope: "world",
     config: true,
     default: false,
