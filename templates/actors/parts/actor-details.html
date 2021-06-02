@@ -246,8 +246,15 @@
                         <div class="item-detail item-actions">
                             <div class="item-attack">
                                 {{#if item.hasAction}}
+
+                                {{#unless item.data.melded}}
+                                {{#unless item.disabled}}
+                                {{#unless item.isRecharging}}
                                 <a class="item-control item-attack"><img class="icon"
                                                                          src="systems/D35E/icons/actions/gladius.svg"></a>
+                                {{/unless}}
+                                {{/unless}}
+                                {{/unless}}
                                 {{/if}}
                                 {{#if item.isFullAttack}}
                                 <a class="item-control item-attack"><img class="icon"
@@ -257,15 +264,37 @@
                         </div>
 
                         <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
-                            {{#if item.isCharged}}
-                            <input type="text" value="{{item.data.uses.value}}" data-dtype="Number"/>
-                            <span class="sep"> {{ localize 'D35E._Of' }} </span>
-                            <input type="text" value="{{item.data.uses.max}}" disabled data-dtype="Number"/>
-                            <span class="tooltipcontent">
-                    @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
-                    @resources.{{item.tag}}.max : {{item.data.uses.max}}
-                  </span>
+                            
+                            <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
+                                {{#if item.isCharged}}
+                        {{#unless item.isRecharging}}
+                        {{#unless item.data.linkedChargeItem.id}}
+                        <input type="text" value="{{item.data.uses.value}}" data-dtype="Number" />
+                        {{else}}
+                        <input type="text" value="{{item.charges}}" disabled data-dtype="Number" />
+                        {{/unless}}
+                        <span class="sep"> of </span>
+                        {{#unless item.data.linkedChargeItem.id}}
+                        <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number" />
+                        {{else}}
+                        <input type="text" value="{{item.maxCharges}}" disabled data-dtype="Number" />
+
+                        {{/unless}}
+                        <span class="tooltipcontent">
+                            @resources.{{item.tag}}.value : {{item.data.uses.value}}<br>
+                            @resources.{{item.tag}}.max : {{item.data.uses.max}}
+                            {{#if item.hasTimedRecharge}}
+                            <br><br>
+                            This item will recharge after use <br>after {{item.data.recharge.formula}} rounds.
                             {{/if}}
+                        </span>
+                        <i class="fas fa-history tooltip"></i>
+                        {{else}}
+                        <span><i class="fas fa-history"></i> Ready in {{item.data.recharge.current}}</span>
+                        {{/unless}}
+                        {{/if}}
+                            </div>
+          
                         </div>
                     </li>
                     {{/each}}

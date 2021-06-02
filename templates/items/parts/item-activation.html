@@ -165,5 +165,27 @@
     <input style="flex: 0 40px" type="text" value="{{data.data.uses.maxPerUse}}" disabled  data-dtype="Number"/>
   </div>
   {{/if}}
+
+
+  {{#if isCharged}}
+  <div class="form-group">
+    <label>{{localize "D35E.RechargeMechanicOnUse"}}</label>
+    <label class="checkbox" style="position: relative; flex: 0 20px">
+      <input type="checkbox" class="stylized" name="data.recharge.enabled" {{checked data.data.recharge.enabled}}/>
+      <span class="checkmark"></span>
+    </label>
+  </div>
+  {{#if data.data.recharge.enabled}}
+  <div class="form-group input">
+    <label>{{localize "D35E.RechargeTimeFormula"}} <i class="fas fa-info-circle tooltip">
+      <div class="tooltipcontent"><strong>{{localize "D35E.RechargeTimeFormula"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.RechargeTimeFormulaInfo"}}</p></div>
+    </i></label>
+    <input style="flex: 0 140px; margin-right: 1rem" type="text" value="{{data.data.recharge.formula}}" name="data.recharge.formula"  data-dtype="String"/>
+
+    <span class="sep"> Current:  </span>
+    <input style="flex: 0 40px" type="text" value="{{data.data.recharge.current}}" name="data.recharge.current"  data-dtype="Number"/>
+  </div>
+  {{/if}}
+  {{/if}}
 {{/unless}}
 {{/if}}

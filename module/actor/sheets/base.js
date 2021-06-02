@@ -100,6 +100,8 @@ export class ActorSheetPF extends ActorSheet {
       i.data.hasEffect = i.hasEffect;
       i.data.charges = i.charges;
       i.data.maxCharges = i.maxCharges;
+      i.data.isRecharging = i.isRecharging
+      i.data.hasTimedRecharge = i.hasTimedRecharge;
       i.data.container = getProperty(i.data, "data.container");
       i.data.hasAction = i.hasAction || i.isCharged;
       i.data.attackDescription = i.type === "attack" ? i.attackDescription : "";

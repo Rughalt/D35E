@@ -172,6 +172,13 @@ export class ItemPF extends Item {
         return this.constructor.getTypeColor(this.type, 1);
     }
 
+    get isRecharging() {
+        return this.data.data?.recharge?.enabled && this.data.data?.recharge?.current
+    }
+
+    get hasTimedRecharge() {
+        return this.data.data?.recharge?.enabled
+    }
 
     /**
      * Generic charge addition (or subtraction) function that either adds charges
@@ -197,12 +204,30 @@ export class ItemPF extends Item {
         if (data != null && this.isSingleUse && data["data.quantity"] != null) prevValue = data["data.quantity"];
         else if (data != null && !this.isSingleUse && data["data.uses.value"] != null) prevValue = data["data.uses.value"];
 
+        let newUses = prevValue + value;
+        let rechargeTime = 0;
+        let rechargeFormula = null;
+        if (!isChargeLinked && newUses === 0) {
+            rechargeFormula =  getProperty(this.data, "data.recharge.formula")
+        } else if (isChargeLinked && newUses === 0) {
+            rechargeFormula = getProperty(chargeItem.data, "data.recharge.formula")
+        }
+        
+        if (rechargeFormula) {
+            rechargeTime = new Roll35e(rechargeFormula, {}).roll().total
+        }
+        console.log('D35E | Recharge and uses', data, newUses, rechargeFormula, rechargeTime)
         if (data != null && !isChargeLinked) {
-            if (this.isSingleUse) data["data.quantity"] = prevValue + value;
-            else data["data.uses.value"] = prevValue + value;
+            if (this.isSingleUse) {
+                data["data.quantity"] = newUses;
+            }
+            else {
+                data["data.uses.value"] = newUses;
+                data["data.recharge.current"] = rechargeTime;
+            }
         } else {
-            if (this.isSingleUse) await chargeItem.update({"data.quantity": prevValue + value}, {stopUpdates: true});
-            else await chargeItem.update({"data.uses.value": prevValue + value}, {stopUpdates: true});
+            if (this.isSingleUse) await chargeItem.update({"data.quantity": newUses}, {stopUpdates: true});
+            else await chargeItem.update({"data.uses.value": newUses, "data.recharge.current": rechargeTime}, {stopUpdates: true});
         }
         
     }
@@ -1168,6 +1193,8 @@ export class ItemPF extends Item {
         const rollData = actor ? actor.getRollData() : {};
         rollData.item = duplicate(itemData);
         const itemUpdateData = {};
+        itemUpdateData._id = this._id;
+        console.log('D35E | Attack item update', itemUpdateData)
 
         let rolled = false;
         const _roll = async function (fullAttack, form) {
@@ -2738,33 +2765,50 @@ export class ItemPF extends Item {
 
     getElapsedTimeUpdateData(time) {
         if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
-            if (!this.data.data.timeline.enabled)
-                return {'_id': this._id}
-            if (!this.data.data.active)
-                return {'_id': this._id}
-            if (this.data.data.timeline.elapsed + time >= this.data.data.timeline.total) {
-                if (!this.data.data.timeline.deleteOnExpiry) {
-                    let updateData = {}
-                    updateData["data.active"] = false;
-                    updateData["_id"] = this._id;
-                    return updateData;
-                } else {
-                    if (!this.actor) return;
-                    if (this.actor.token) {
+            if (this.data.data.timeline.enabled) {
+                if (this.data.data.timeline.elapsed + time >= this.data.data.timeline.total) {
+                    if (!this.data.data.timeline.deleteOnExpiry) {
                         let updateData = {}
                         updateData["data.active"] = false;
                         updateData["_id"] = this._id;
                         return updateData;
-                    } else
-                        return {'_id': this._id, 'delete': true};
+                    } else {
+                        if (!this.actor) return;
+                        if (this.actor.token) {
+                            let updateData = {}
+                            updateData["data.active"] = false;
+                            updateData["_id"] = this._id;
+                            return updateData;
+                        } else
+                            return {'_id': this._id, 'delete': true};
+                    }
+                } else {
+                    let updateData = {}
+                    updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
+                    updateData["_id"] = this._id;
+                    return updateData;
                 }
-            } else {
-                let updateData = {}
-                updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
-                updateData["_id"] = this._id;
-                return updateData;
             }
         }
+        if (this.data.data.recharge !== undefined && this.data.data.recharge !== null) {
+            if (this.data.data.recharge.enabled) {
+
+                if (this.data.data.recharge.current - time < 1) {
+                    let updateData = {}
+                    updateData["data.recharge.current"] = 0;
+                    updateData["data.uses.value"] = this.data.data.uses.max;
+                    updateData["_id"] = this._id;
+                    return updateData;
+                } else {
+                    let updateData = {}
+                    updateData["data.recharge.current"] = this.data.data.recharge.current - time;
+                    updateData["_id"] = this._id;
+                    return updateData;
+                }
+
+            }
+        }
+        return {'_id': this._id};
     }
 
     getTimelineTimeLeft() {
