@@ -13,7 +13,7 @@
       </h3>
 
       <h3 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{data.data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
       </h3>
       {{else}}
       {{#if showUnidentifiedData}}
@@ -72,7 +72,7 @@
       <div class="form-group">
         <label>{{localize "D35E.Category"}}</label>
         <select name="data.equipmentType">
-          {{#select data.equipmentType}}
+          {{#select data.data.equipmentType}}
           {{#each equipmentCategories.types as |name type|}}
           <option value="{{type}}">{{name}}</option>
           {{/each}}
@@ -85,7 +85,7 @@
       {{#unless showUnidentifiedData}}<div class="form-group">
         <label>{{localize "D35E.Type"}}</label>
         <select name="data.equipmentSubtype">
-          {{#select data.equipmentSubtype}}
+          {{#select data.data.equipmentSubtype}}
           {{#each equipmentCategories.subTypes as |name type|}}
           <option value="{{type}}">{{name}}</option>
           {{/each}}
@@ -99,7 +99,7 @@
       <div class="form-group">
         <label>{{localize "D35E.Slot"}}</label>
         <select name="data.slot">
-          {{#select data.slot}}
+          {{#select data.data.slot}}
           {{#each equipmentSlots as |name type|}}
           <option value="{{type}}">{{name}}</option>
           {{/each}}
@@ -107,7 +107,7 @@
         </select>
       </div>
       {{else}}
-      <input type="hidden" name="data.slot" value="{{data.slot}}" />
+      <input type="hidden" name="data.slot" value="{{data.data.slot}}" />
       {{/if}}
       {{/unless}}
 
@@ -115,14 +115,14 @@
       <div class="form-group stacked">
         <label>{{localize "D35E.EquipmentStatus"}}</label>
         <label class="checkbox">
-          <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{localize "D35E.Equipped"}}
+          <input type="checkbox" name="data.equipped" {{checked data.data.equipped}}/> {{localize "D35E.Equipped"}}
         </label>
         <label class="checkbox">
-          <input type="checkbox" name="data.masterwork" {{checked data.masterwork}}/> {{localize "D35E.Masterwork"}}
+          <input type="checkbox" name="data.masterwork" {{checked data.data.masterwork}}/> {{localize "D35E.Masterwork"}}
         </label>
         {{#if isGM}}
         <label class="checkbox">
-          <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}
+          <input type="checkbox" name="data.identified" {{checked data.data.identified}}/> {{localize "D35E.Identified"}}
         </label>
         {{/if}}
       </div>
@@ -132,7 +132,7 @@
       <div class="form-group">
         <label>{{localize "D35E.ArmorClass"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.armor.value" value="{{data.armor.value}}" data-dtype="Number"/>
+          <input type="text" name="data.armor.value" value="{{data.data.armor.value}}" data-dtype="Number"/>
         </div>
       </div>
 
@@ -140,7 +140,7 @@
       <div class="form-group">
         <label>{{localize "D35E.EnhancementBonus"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.armor.enh" value="{{data.armor.enh}}" data-dtype="Number"/>
+          <input type="text" name="data.armor.enh" value="{{data.data.armor.enh}}" data-dtype="Number"/>
         </div>
       </div>
 
@@ -152,7 +152,7 @@
       <div class="form-group">
         <label>{{localize "D35E.MaxDexterityModifier"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.armor.dex" value="{{data.armor.dex}}" placeholder="{{localize "D35E.Unlimited"}}"/>
+          <input type="text" name="data.armor.dex" value="{{data.data.armor.dex}}" placeholder="{{localize "D35E.Unlimited"}}"/>
         </div>
       </div>
 
@@ -160,7 +160,7 @@
       <div class="form-group">
         <label>{{localize "D35E.ArmorCheckPenalty"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.armor.acp" value="{{data.armor.acp}}" data-dtype="Number" placeholder="0"/>
+          <input type="text" name="data.armor.acp" value="{{data.data.armor.acp}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
 
@@ -168,7 +168,7 @@
       <div class="form-group">
         <label>{{localize "D35E.ArcaneSpellFailure"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.spellFailure" value="{{data.spellFailure}}" data-dtype="Number" placeholder="0"/>
+          <input type="text" name="data.spellFailure" value="{{data.data.spellFailure}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
 
@@ -186,6 +186,9 @@
 
       {{!-- Item Measure Template --}}
       {{> "systems/D35E/templates/items/parts/item-template.html"}}
+
+      <h3 class="form-header">{{localize "D35E.Senses"}}</h3>
+      {{> "systems/D35E/templates/items/parts/item-senses.html"}}
 
       <h3 class="form-header">{{localize "D35E.LightItemLight"}}</h3>
       {{> "systems/D35E/templates/items/parts/item-light.html"}}

@@ -13,6 +13,8 @@ import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
 import {ItemPF} from "../../item/entity.js";
 import {CompendiumDirectoryPF} from "../../sidebar/compendium.js";
 import {DamageTypes} from "../../damage-types.js";
+import {Roll35e} from "../../roll.js"
+import ActorSensesConfig from "../../apps/senses-config.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -66,10 +68,10 @@ export class ActorSheetPF extends ActorSheet {
    */
   getData() {
     // Basic data
-    let isOwner = this.entity.owner;
+    let isOwner = this.document.isOwner;
     const data = {
       owner: isOwner,
-      limited: this.entity.limited,
+      limited: this.document.limited,
       options: this.options,
       editable: this.isEditable,
       cssClass: isOwner ? "editable" : "locked",
@@ -86,11 +88,11 @@ export class ActorSheetPF extends ActorSheet {
 
     };
     // The Actor and its Items
-    data.actor = duplicate(this.actor.data);
+    data.actor = this.actor.data.toObject(false);
     let featRollData = this.actor.getRollData()
     data.items = this.actor.items.map(i => {
       i.data.labels = i.labels;
-      i.data.id = i._id;
+      i.data.id = i.id;
       i.data.hasAttack = i.hasAttack;
       i.data.hasMultiAttack = i.hasMultiAttack;
       i.data.containerId = getProperty(i.data, "data.containerId");
@@ -149,6 +151,9 @@ export class ActorSheetPF extends ActorSheet {
 
     // Update skill labels
     for ( let [s, skl] of Object.entries(data.actor.data.skills)) {
+      if (skl === null) {
+        continue;
+      }
       skl.label = CONFIG.D35E.skills[s];
       skl.arbitrary = CONFIG.D35E.arbitrarySkills.includes(s);
       skl.sourceDetails = (data.sourceDetails != null && data.sourceDetails.data.skills[s] != null) ? data.sourceDetails.data.skills[s].changeBonus : [];
@@ -190,6 +195,8 @@ export class ActorSheetPF extends ActorSheet {
       obj.isPrepared = obj.data.preparation.mode === "prepared";
     });
 
+    data.senses = this._getSenses(this.actor.data);
+
     data.isShapechanged = false;
     data.items.filter(obj => { return obj.type === "buff" && obj.data.buffType === "shapechange"; })
         .forEach(obj => {
@@ -221,8 +228,8 @@ export class ActorSheetPF extends ActorSheet {
     // Prepare skillsets
     data.skillsets = this._prepareSkillsets(data.actor.data.skills);
 
-    data.energyResistance = DamageTypes.computeERString(DamageTypes.getERForActor(this.actor));
-    data.damageReduction = DamageTypes.computeDRString(DamageTypes.getDRForActor(this.actor));
+    data.energyResistance = DamageTypes.computeERTags(DamageTypes.getERForActor(this.actor));
+    data.damageReduction = DamageTypes.computeDRTags(DamageTypes.getDRForActor(this.actor));
 
     // Skill rank counting
     const skillRanks = { allowed: 0, used: 0, bgAllowed: 0, bgUsed: 0, sentToBG: 0 };
@@ -247,7 +254,8 @@ export class ActorSheetPF extends ActorSheet {
     }
     // Count allowed skill ranks
     let firstOnList = true;
-    this.actor.data.items.filter(obj => { return obj.type === "class"; }).forEach(cls => {
+    this.actor.data.items.filter(obj => { return obj.type === "class"; }).forEach(_cls => {
+        let cls = _cls.data;
       const clsLevel = cls.data.levels;
       const clsSkillsPerLevel = cls.data.skillsPerLevel;
       const fcSkills = cls.data.fc.skill.value;
@@ -262,7 +270,7 @@ export class ActorSheetPF extends ActorSheet {
       if (data.useBGSkills) skillRanks.bgAllowed = this.actor.data.data.details.level.value * 2;
     });
     if (this.actor.data.data.details.bonusSkillRankFormula !== "") {
-      let roll = new Roll(
+      let roll = new Roll35e(
         this.actor.data.data.details.bonusSkillRankFormula,
         duplicate(this.actor.data.data)
       ).roll();
@@ -384,6 +392,7 @@ export class ActorSheetPF extends ActorSheet {
       }
       if (spell.data.specialPrepared)
         spellbook[lvl].specialSlotPrepared = true
+      if (!book.usePowerPoints && !book.spontaneous && spell.data.preparation.maxAmount === 0 && book.showOnlyPrepared) return;
       spellbook[lvl].spells.push(spell);
     });
 
@@ -412,6 +421,8 @@ export class ActorSheetPF extends ActorSheet {
 
     // sort skills by label
     let keys = Object.keys(skillset).sort(function(a,b) {
+      if (skillset[a] === null) return -1;
+      if (skillset[b] === null) return -1;
       if (skillset[a].custom && !skillset[b].custom) return 1;
       if (!skillset[a].custom && skillset[b].custom) return -1;
       return ('' + skillset[a].label).localeCompare(skillset[b].label)
@@ -419,6 +430,7 @@ export class ActorSheetPF extends ActorSheet {
 
     keys.forEach( a => {
       let skl = skillset[a]
+      if (skl === null) return ;
       result.all.skills[a] = skl;
       if ((skl.rank > 0 || (!skl.rt && this.actor.data.data.displayNonRTSkills) || (skl.visibility === "always")) && (skl.visibility !== "never")) result.known.skills[a] = skl;
       else if (skl.subSkills !== undefined && (skl.visibility !== "never")) {
@@ -606,6 +618,9 @@ export class ActorSheetPF extends ActorSheet {
 
     // Trait Selector
     html.find('.trait-selector').click(this._onTraitSelector.bind(this));
+
+    // Sense Selector
+    html.find('.sense-selector').click(this._onSenseSelector.bind(this));
 
 
     // Trait Selector
@@ -796,7 +811,7 @@ export class ActorSheetPF extends ActorSheet {
     }
     {
 
-      console.log("D35E | Item Browser | Loading pack inline browser on load")
+      //console.log("D35E | Item Browser | Loading pack inline browser on load")
       let entityType = localStorage.getItem(`D35E-last-ent-type-${this.id}`)
       let type = localStorage.getItem(`D35E-last-type-${this.id}`)
       let subType = localStorage.getItem(`D35E-last-subtype-${this.id}`)
@@ -853,15 +868,17 @@ export class ActorSheetPF extends ActorSheet {
 
 
   _rollRandomHitDie(event) {
+    let itemUpdates = []
     this.actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
-      let hd = item['data']['hd']
+      let hd = item.data.data.hd;
       let hp = 0;
-      let levels = item['data']['levels'];
+      let levels = item.data.data.levels;
       for (let i = 0; i < levels; i++) {
         hp += this.getRandomInt(1,hd);
       }
-      this.setItemUpdate(item._id, "data.hp", hp);
+      itemUpdates.push({_id: item._id, "data.hp": hp});
     });
+    this.actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
   }
 
   getRandomInt(min, max) {
@@ -997,7 +1014,7 @@ export class ActorSheetPF extends ActorSheet {
     if (notes.length > 0) props.push({ header: game.i18n.localize("D35E.Notes"), value: notes });
     let formulaRoll = {}
     try {
-      formulaRoll = new Roll(spellbook.concentrationFormula, rollData).roll();
+      formulaRoll = new Roll35e(spellbook.concentrationFormula, rollData).roll();
     } catch (e) {
       formulaRoll = {total: 0}
     }
@@ -1081,7 +1098,7 @@ export class ActorSheetPF extends ActorSheet {
     const value = $(event.currentTarget).prop("checked");
     const updateData = {};
     updateData["data.active"] = value;
-    if (item.hasPerm(game.user, "OWNER"))
+    if (item.testUserPermission(game.user, "OWNER"))
     {
       await item.update(updateData);
     }
@@ -1144,11 +1161,12 @@ export class ActorSheetPF extends ActorSheet {
         let props = $(`<div class="item-properties"></div>`);
         chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
         if (!item.showUnidentifiedData) {
-          console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
+          //console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
           (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
+
             let enh = new ItemPF(_enh, {owner: this.owner})
             if (enh.hasAction || enh.isCharged) {
-              let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh._id}">
+              let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh.tag}">
                     <div class="item-name  flexrow">
                         <div class="item-image item-enh-image" style="background-image: url('${enh.img}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
@@ -1213,17 +1231,17 @@ export class ActorSheetPF extends ActorSheet {
 
     // Quick Attack
     if (a.classList.contains("item-enh-attack")) {
-      item.useEnhancementItem(item.getEnhancementItem(enhId));
+      await item.useEnhancementItem(await item.getEnhancementItem(enhId));
     }
   }
 
 
-  _onEnhRoll(event) {
+  async _onEnhRoll(event) {
     event.preventDefault();
     const itemId = $(event.currentTarget).parents(".enh-item").attr("data-item-id");
     const enhId = $(event.currentTarget).parents(".enh-item").attr("data-enh-id");
     const item = this.actor.getOwnedItem(itemId);
-    let enh = item.getEnhancementItem(enhId);
+    let enh = await item.getEnhancementItem(enhId);
     return enh.roll({}, this.actor);
   }
 
@@ -1261,7 +1279,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.${skillId}.subSkills.${tag}`] = skillData;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   _onSkillCreate(event) {
@@ -1289,7 +1307,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.${tag}`] = skillData;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   _onArbitrarySkillDelete(event) {
@@ -1299,7 +1317,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.${mainSkillId}.subSkills.-=${subSkillId}`] = null;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   _onSkillDelete(event) {
@@ -1308,7 +1326,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const updateData = {};
     updateData[`data.skills.-=${skillId}`] = null;
-    if (this.actor.hasPerm(game.user, "OWNER")) this.actor.update(updateData);
+    if (this.actor.testUserPermission(game.user, "OWNER")) this.actor.update(updateData);
   }
 
   async _quickItemActionControl(event) {
@@ -1432,9 +1450,10 @@ export class ActorSheetPF extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onItemEdit(event) {
+  async _onItemEdit(event) {
     event.preventDefault();
     const li = event.currentTarget.closest(".item");
+    await this.actor.refresh({})
     const item = this.actor.getOwnedItem(li.dataset.itemId);
     item.sheet.render(true);
   }
@@ -1452,6 +1471,7 @@ export class ActorSheetPF extends ActorSheet {
 
     const li = event.currentTarget.closest(".item");
     if (keyboard.isDown("Shift")) {
+
       this.actor.deleteOwnedItem(li.dataset.itemId);
     }
     else {
@@ -1491,7 +1511,7 @@ export class ActorSheetPF extends ActorSheet {
         itemUpdate['_id'] = itemId
         if (itemData.uses && itemData.uses.value !== itemData.uses.max) {
           if (itemData.uses.rechargeFormula) {
-            itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
+            itemUpdate["data.uses.value"] = Math.min(itemData.uses.value + new Roll35e(itemData.uses.rechargeFormula, itemData).roll().total, itemData.uses.max)
           }
           else
           {
@@ -1501,7 +1521,7 @@ export class ActorSheetPF extends ActorSheet {
 
         if (itemData.enhancements && itemData.enhancements.uses && itemData.enhancements.uses.value !== itemData.enhancements.uses.max) {
           if (itemData.enhancements.uses.rechargeFormula) {
-            itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
+            itemUpdate["data.enhancements.uses.value"] = Math.min(itemData.enhancements.uses.value + new Roll35e(itemData.enhancements.uses.rechargeFormula, itemData).roll().total, itemData.enhancements.uses.max)
           }
           else
           {
@@ -1521,7 +1541,7 @@ export class ActorSheetPF extends ActorSheet {
           let enhItems = duplicate(itemData.enhancements.items)
           for (let _item of enhItems) {
             if (_item.data.uses.rechargeFormula) {
-              _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
+              _item.data.uses.value  = Math.min(_item.data.uses.value + new Roll35e(_item.data.uses.rechargeFormula, _item.data).roll().total, _item.data.uses.max)
             }
             else
             {
@@ -1732,7 +1752,7 @@ export class ActorSheetPF extends ActorSheet {
       if (!res) continue;
       const id = res._id;
       if (!id) continue;
-      const item = this.actor.items.find(o => o._id === id);
+      const item = this.actor.items.get(id);
       if (!item) continue;
       item.data.tag = key;
     }
@@ -1782,7 +1802,7 @@ export class ActorSheetPF extends ActorSheet {
       else if (item.type === "full-attack") arr[4].push(item);
       else if ( Object.keys(inventory).includes(item.type) || (item.data.subType != null && Object.keys(inventory).includes(item.data.subType)) ) {
         //console.log(`D35E | Item container | ${item.name}, ${item.data.containerId} |`, item)
-        if (item.data.containerId !== "none") {
+        if (item.data.containerId && item.data.containerId !== "none") {
           if (!containerItems.has(item.data.containerId)) {
             containerItems.set(item.data.containerId,[])
             containerItemsWeight.set(item.data.containerId,0)
@@ -1912,11 +1932,11 @@ export class ActorSheetPF extends ActorSheet {
       }
       features.all.items.push(f);
     }
-    classes.sort((a, b) => b.levels - a.levels);
+    classes.sort((a, b) => b.data.levels - a.data.levels);
     features.classes.items = classes;
     classes.forEach(c => {
       c['classFeatures'] = classFeaturesMap.get(c.name) || []
-      c['passiveClassFeatures'] = c.data.nonActiveClassAbilities.filter(a => parseInt(a[0]) <= parseInt(c.levels || "0")).map(a => {return {level: a[0], name: a[1], description: a[2]};})
+      c['passiveClassFeatures'] = c.data.nonActiveClassAbilities.filter(a => parseInt(a[0]) <= parseInt(c.data.levels || "0")).map(a => {return {level: a[0], name: a[1], description: a[2]};})
     })
     // Buffs
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });
@@ -2070,6 +2090,11 @@ export class ActorSheetPF extends ActorSheet {
     new ActorTraitSelector(this.actor, options).render(true)
   }
 
+  _onSenseSelector(event){
+
+    new ActorSensesConfig(this.actor).render(true)
+    event.preventDefault();
+  }
 
 
   _onDREREditor(event) {
@@ -2133,10 +2158,10 @@ export class ActorSheetPF extends ActorSheet {
       if (item == null) continue;
 
       delete data._id;
-      if (item.hasPerm(game.user, "OWNER")) promises.push(item.update(data));
+      if (item.testUserPermission(game.user, "OWNER")) promises.push(item.update(data));
     }
-
-    await Promise.all(promises);
+    if (promises)
+      await Promise.all(promises);
   }
 
   /**
@@ -2164,7 +2189,7 @@ export class ActorSheetPF extends ActorSheet {
       if (data.pack) {
         dataType = "compendium";
         const pack = game.packs.find(p => p.collection === data.pack);
-        const packItem = await pack.getEntity(data.id);
+        const packItem = await pack.getDocument(data.id);
         if (packItem != null) itemData = packItem.data;
       }
 
@@ -2181,10 +2206,11 @@ export class ActorSheetPF extends ActorSheet {
       // Case 3 - Import from World entity
       else {
         dataType = "world";
-        itemData = game.items.get(data.id).data;
+        itemData = game.items.get(data.id).data.toObject(false);
       }
 
-      return this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+      this.enrichDropData(itemData);
+      return this.importItem(itemData, dataType);
     } else if (data.type === "Actor") {
       let actorData = {};
       // Case 1 - Import from a Compendium pack
@@ -2211,7 +2237,8 @@ export class ActorSheetPF extends ActorSheet {
         actorData = game.actors.get(data.id).data;
       }
 
-      return this.importActor(mergeObject(actorData, this.getDropData(actorData), {inplace: false}), dataType);
+      this.enrichDropData(actorData);
+      return this.importActor(actorData, dataType);
     }
   }
 
@@ -2241,7 +2268,7 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     if (itemData._id) delete itemData._id;
-    return this.actor.createEmbeddedEntity("OwnedItem", itemData);
+    return this.actor.createEmbeddedEntity("Item", itemData, {dataType: dataType});
   }
   async importActor(itemData, dataType) {
     if (itemData.type === "npc") {
@@ -2255,14 +2282,8 @@ export class ActorSheetPF extends ActorSheet {
 
 
 
-  getDropData(origData) {
-    let result = {};
-
-    // Set spellbook for spell
-    console.log(this.currentPrimaryTab)
-    if (getProperty(origData, "type") === "spell") setProperty(result, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
-
-    return result;
+  enrichDropData(origData) {
+    if (getProperty(origData, "type") === "spell") origData.document.data.update({"data.spellbook":this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null});
   }
 
 
@@ -2326,13 +2347,14 @@ export class ActorSheetPF extends ActorSheet {
   async loadData(entityType, type, subtype, filter, previousData, label) {
     if($(`.item-add-${this.randomUuid}-overlay`).css('display') !== 'none')
     {
-      console.log("D35E | Item Browser | Skipping, its already visible", this.randomUuid)
+      //console.log("D35E | Item Browser | Skipping, its already visible", this.randomUuid)
       return;
     }
 
     $(`#items-add-${this.randomUuid}-label`).text(`${game.i18n.localize("D35E.Add")} ${label}`)
-    console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
+    //console.log("D35E | Item Browser | Loading pack inline browser", this.randomUuid, `.item-add-${this.randomUuid}-overlay`, $(`.item-add-${this.randomUuid}-overlay`).css('display'))
     function _filterItems(item, entityType, type, subtype) {
+      if (item.data.data.uniqueId) return false;
       if (entityType === "spells" && item.type !== type) return false;
       if (entityType === "items" && type.split(',').indexOf(item.type) !== -1 && (item.data.data.subType === subtype || subtype === "-")) return true;
       if (entityType === "feats" && item.type === type && item.data.data.featType === subtype && !item.data.data.uniqueId) return true;
@@ -2361,9 +2383,19 @@ export class ActorSheetPF extends ActorSheet {
           let li = $(`<li class="item-list-item item" data-item-id="${i.id}">
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
-                                <span>${i.name}</span>
-                           
+                                <span onclick="$(this).parent().parent().children('.item-browser-details').slideToggle()">${i.name}</span>
+                                <a class="item-control"  style="flex: 0; margin: 0 4px;" title="Remove Quantity" onclick="modifyInputValue('amount-add-${i.id}',-1)">
+                                    <i class="fas fa-minus remove-skill"></i>
+                                </a>
+                                <input type="text"  class="skill-value" name='amount-add-${i.id}' value="1" readonly style="border: none; flex: 0 25px; text-align: center;" placeholder="0"/>
+                                <a class="item-control" title="Add Quantity" style="flex: 0 20px; margin: 0 4px;" onclick="modifyInputValue('amount-add-${i.id}',1)">
+                                    <i class="fas fa-plus add-skill"></i>
+                                </a>
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
+                                <div style="display: none" class="item-browser-details flexcol">
+                                <div style="max-height:100px; overflow: hidden;  -webkit-mask-image: linear-gradient(to bottom, black 75px, transparent 100px); mask-image: linear-gradient(to bottom, black 75px, transparent 100px);">${i.data.data.description.value}</div>
+                                ` + (i.type !== 'feat' ? `<div style="flex: 0 20px; opacity: 0.8" ><i class="fas fa-coins"></i> ${i.data.data.price} gp</div>` : '') + `
+                                </div>
                         </li>`);
           li.find(".add-from-compendium").mouseup(ev => {
                 localStorage.setItem(`D35E-position-${this.id}`, $(`#${this.randomUuid}-itemList`).scrollTop())
@@ -2372,7 +2404,7 @@ export class ActorSheetPF extends ActorSheet {
           );
           if (!$(`#${this.randomUuid}-itemList li[data-item-id='${i.id}']`).length) {
             $(`#${this.randomUuid}-itemList`).append(li);
-            addedItems.push({id: i.id, name: i.name, pack: p.collection, img: i.img})
+            addedItems.push({id: i.id, name: i.name, pack: p.collection, img: i.img, description: i.data.data.description, price: i.data.data.price, type: i.type })
           }
         }
 
@@ -2383,8 +2415,19 @@ export class ActorSheetPF extends ActorSheet {
         let li = $(`<li class="item-list-item item" data-item-id="${i.id}">
                                <div class="item-name non-rollable flexrow">
                                <div class="item-image non-rollable" style="background-image: url('${i.img}')"></div>
-                                <span>${i.name}</span>
+                                <span onclick="$(this).parent().parent().children('.item-browser-details').slideToggle()">${i.name}</span>
+                                <a class="item-control"  style="flex: 0; margin: 0 4px;" title="Remove Quantity" onclick="modifyInputValue('amount-add-${i.id}',-1)">
+                                    <i class="fas fa-minus remove-skill"></i>
+                                </a>
+                                <input type="text"  class="skill-value" name='amount-add-${i.id}' value="1" readonly style="border: none; flex: 0 25px; text-align: center;" placeholder="0"/>
+                                <a class="item-control" title="Add Quantity" style="flex: 0 20px; margin: 0 4px;" onclick="modifyInputValue('amount-add-${i.id}',1)">
+                                    <i class="fas fa-plus add-skill"></i>
+                                </a>
                                 <a class="add-from-compendium blue-button" style="flex: 0 40px; text-align: center">Add</a> </div>
+                                <div style="display: none" class="item-browser-details flexcol">
+                                <div style="max-height: 100px; overflow: hidden;  -webkit-mask-image: linear-gradient(to bottom, black 75px, transparent 100px); mask-image: linear-gradient(to bottom, black 75px, transparent 100px);">${i.description.value}</div>
+                                ` + (i.type !== 'feat' ? `<div style="flex: 0 20px; opacity: 0.8" ><i class="fas fa-coins"></i> ${i.price} gp</div>` : '') + `
+                                </div>
                         </li>`);
         li.find(".add-from-compendium").mouseup(ev => {
           localStorage.setItem(`D35E-position-${this.id}`, $(`#${this.randomUuid}-itemList`).scrollTop())
@@ -2424,10 +2467,14 @@ export class ActorSheetPF extends ActorSheet {
     let dataType = "compendium";
     let itemData = {};
     // Case 1 - Import from a Compendium pack
+    let quantity = parseInt($(`input[name='amount-add-${itemId}']`).val() || 1);
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
     if (packItem != null) itemData = packItem.data;
-    await this.importItem(mergeObject(itemData, this.getDropData(itemData), {inplace: false}), dataType);
+    itemData.document.data.update({"data.quantity":quantity});
+    this.enrichDropData(itemData);
+    console.log('D35E | Adding Quantity', quantity, itemData)
+    await this.importItem(itemData, dataType);
     $(ev.target).prop('disabled',false)
   }
 
@@ -2437,5 +2484,19 @@ export class ActorSheetPF extends ActorSheet {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   }
+
+  _getSenses(actorData) {
+    const senses = actorData.data.senses || {};
+    const tags = {};
+    for ( let [k, label] of Object.entries(CONFIG.D35E.senses) ) {
+      const v = senses[k] ?? 0
+      if ( v === 0 ) continue;
+      tags[k] = {name: `${game.i18n.localize(label)} ${v} ${game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.DistMeterShort") : game.i18n.localize("D35E.DistFtShort")}`, modified: senses.modified[k]};
+    }
+    if ( !!senses.special ) tags["special"] = {name: senses.special, modified: false};
+    if ( !!senses.lowLight ) tags["lowLight"] = {name: game.i18n.localize('D35E.VisionLowLight'), modified: senses.modified["lowLight"]};
+    return tags;
+  }
+
 
 }

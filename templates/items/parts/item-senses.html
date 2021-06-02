@@ -1,0 +1,36 @@
+<div class="form-group">
+  <label>{{localize "D35E.VisionLowLight"}}</label>
+  <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+    <input type="checkbox" class="stylized auto-save" name="data.data.senses.lowLight" {{#if data.data.senses.lowLight}}checked{{/if}}/>
+    <span class="checkmark"></span>
+  </label>
+</div>
+{{!-- Template Size --}}
+
+<div class="form-group">
+  <label>{{localize "D35E.SenseBlindsight"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.senses.blindsight" value="{{data.data.senses.blindsight}}" placeholder="0" data-dtype="Number" />
+  </div>
+</div>
+
+<div class="form-group">
+  <label>{{localize "D35E.SenseDarkvision"}}</label>
+  <div class="form-fields">
+    <input type="text" name="data.senses.darkvision" value="{{data.data.senses.darkvision}}" placeholder="0" data-dtype="Number" />
+  </div>
+</div>
+
+
+
+{{!-- Override Color --}}
+<div class="form-group">
+  <label>{{localize "D35E.SenseTremorsense"}}</label>
+  <input type="text" name="data.senses.tremorsense" value="{{data.data.senses.tremorsense}}" placeholder="0" data-dtype="Number" />
+</div>
+
+<div class="form-group">
+  <label>{{localize "D35E.SenseTruesight"}}</label>
+  <input type="text" name="data.senses.truesight" value="{{data.data.senses.truesight}}"  placeholder="0" data-dtype="Number" />
+</div>
+

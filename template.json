@@ -103,9 +103,13 @@
             },
             "carriedWeight": 0
           },
-          "vision": {
+          "senses": {
+            "darkvision": 0,
+            "blindsight": 0,
+            "tremorsense": 0,
+            "truesight": 0,
             "lowLight": false,
-            "darkvision": 0
+            "special": ""
           },
           "hd": {
             "base": {
@@ -319,10 +323,12 @@
                 "powerPointsFormula": "",
                 "dailyPowerPointsFormula": "",
                 "powerPoints": 0,
+                "powerPointsTotal": 0,
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -357,10 +363,13 @@
                 "spellcastingType": null,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
+                "powerPointsTotal": 0,
+                "dailyPowerPointsFormula": "",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -395,10 +404,13 @@
                 "spellcastingType": null,
                 "powerPointsFormula": "",
                 "powerPoints": 0,
+                "powerPointsTotal": 0,
+                "dailyPowerPointsFormula": "",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -433,10 +445,13 @@
                 "spellcastingType": "None",
                 "powerPointsFormula": "",
                 "powerPoints": 0,
+                "powerPointsTotal": 0,
+                "dailyPowerPointsFormula": "",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
                 "hasSpecialSlot": false,
+                "showOnlyPrepared": false,
                 "specialSlots": {
                   "level1": null,
                   "level2": null,
@@ -1099,7 +1114,8 @@
           "value": [],
           "custom": ""
         }
-      }
+      },
+      "noVisionOverride": false
     },
     "npc": {
       "templates": [
@@ -1129,7 +1145,8 @@
         "name": null,
         "data": {},
         "distance": 0
-      }
+      },
+      "noVisionOverride": true
     },
     "trap": {
       "templates": [
@@ -1232,6 +1249,8 @@
         },
         "combatChangesUsesCost": "chargesPerUse",
         "combatChangesApplySpecialActionsOnce": true,
+        "combatChangeCustomDisplayName": "",
+        "combatChangeCustomReferenceName": "",
         "sizeOverride": "",
         "counterName": "",
         "resistances": [],
@@ -1240,6 +1259,15 @@
       },
       "contextNotes": {
         "contextNotes": []
+      },
+      "senses": {
+        "senses": {
+          "darkvision": 0,
+          "blindsight": 0,
+          "tremorsense": 0,
+          "truesight": 0,
+          "lowLight": false
+        }
       },
       "light": {
         "light": {
@@ -1299,6 +1327,7 @@
       "physicalItem": {
         "quantity": 1,
         "weight": 0,
+        "constantWeight": true,
         "price": 0,
         "identified": true,
         "hp": {
@@ -1588,6 +1617,7 @@
       },
       "activateActions": [],
       "deactivateActions": [],
+      "perRoundActions": [],
       "hideFromToken": false
     },
     "consumable": {

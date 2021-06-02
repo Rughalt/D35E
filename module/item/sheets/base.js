@@ -4,6 +4,9 @@ import {ItemPF} from "../entity.js";
 import {CACHE} from "../../cache.js";
 import {isMinimumCoreVersion} from "../../lib.js";
 import {DamageTypes} from "../../damage-types.js";
+import {createTag} from "../../lib.js";
+
+import {Roll35e} from "../../roll.js"
 
 /**
  * Override and extend the core ItemSheet implementation to handle D&D5E specific item types
@@ -25,6 +28,7 @@ export class ItemSheetPF extends ItemSheet {
         this.childItemMap = new Map()
         this.ehnancementItemMap = new Map()
         this.containerMap = new Map()
+        this._altTabs = null;
     }
 
     /* -------------------------------------------- */
@@ -60,9 +64,9 @@ export class ItemSheetPF extends ItemSheet {
         const data = await super.getData();
         data.labels = this.item.labels;
         // Include sub-items
-        data.items = [];
+        this.item.datas = [];
         if (this.item.items != null) {
-            data.items = this.item.items.map(i => {
+            this.item.datas = this.item.items.map(i => {
                 i.data.labels = i.labels;
                 return i.data;
             });
@@ -70,24 +74,24 @@ export class ItemSheetPF extends ItemSheet {
 
         // Include CONFIG values
         data.config = CONFIG.D35E;
-
         // Include relevant settings
         data.usesImperialSystem = game.settings.get("D35E", "units") === "imperial";
 
         data.randomUuid = uuidv4();
-
+        
         // Item Type, Status, and Details
-        data.itemType = data.item.type.titleCase();
-        data.itemStatus = this._getItemStatus(data.item);
-        data.itemProperties = this._getItemProperties(data.item);
-        data.itemName = data.item.name;
-        data.isPhysical = data.item.data.hasOwnProperty("quantity");
+        this.item.dataType = this.item.type.titleCase();
+        this.item.dataStatus = this._getItemStatus(this.item.data);
+        this.item.dataProperties = this._getItemProperties(this.item.data);
+        this.item.dataName = this.item.name;
+        data.isPhysical = this.item.data.data.quantity !== undefined;
+        console.log('D35E | Base Item Data', this.item.data.data.quantity !== undefined)
         data.isSpell = this.item.type === "spell";
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
         data.isAttack = this.item.type === "attack";
-        data.isWeaponAttack = this.item?.data?.data?.actopn === "rwak" || this.item?.data?.data?.actopn === "mwak";
-        data.isShapechangeBuff = this.item.type === "buff" && this.item?.data?.data?.buffType === "shapechange";
+        data.isWeaponAttack = this.item.data?.data?.action === "rwak" || this.item.data?.data?.action === "mwak";
+        data.isShapechangeBuff = this.item.data.type === "buff" && this.item.data.data?.buffType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";
         data.isContainer = this.item.data.data.subType === "container";
@@ -102,25 +106,25 @@ export class ItemSheetPF extends ItemSheet {
 
         // Unidentified data
         if (this.item.showUnidentifiedData) {
-            data.itemName = getProperty(this.item.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
+            this.item.dataName = getProperty(this.item.data, "data.unidentified.name") || game.i18n.localize("D35E.Unidentified");
         } else {
-            data.itemName = getProperty(this.item.data, "data.identifiedName") || this.item.name;
+            this.item.dataName = getProperty(this.item.data, "data.identifiedName") || this.item.name;
         }
 
 
         // Action Details
         data.hasAttackRoll = this.item.hasAttack;
-        data.isHealing = data.item.data.actionType === "heal";
+        data.isHealing = this.item.data.data.actionType === "heal";
 
         data.isCharged = false;
-        if (data.item.data.uses != null) {
-            data.isCharged = ["day", "week", "charges", "encounter"].includes(data.item.data.uses.per);
+        if (this.item.data.data.uses != null) {
+            data.isCharged = ["day", "week", "charges", "encounter"].includes(this.item.data.data.uses.per);
         }
-        if (data.item.data.range != null) {
-            data.canInputRange = ["ft", "mi", "spec"].includes(data.item.data.range.units);
+        if (this.item.data.data.range != null) {
+            data.canInputRange = ["ft", "mi", "spec"].includes(this.item.data.data.range.units);
         }
-        if (data.item.data.duration != null) {
-            data.canInputDuration = !(["", "inst", "perm", "seeText"].includes(data.item.data.duration.units));
+        if (this.item.data.data.duration != null) {
+            data.canInputDuration = !(["", "inst", "perm", "seeText"].includes(this.item.data.data.duration.units));
         }
 
         data.charges = this.item.charges
@@ -128,9 +132,9 @@ export class ItemSheetPF extends ItemSheet {
         data.unmetRequirements = this.item.hasUnmetRequirements()
 
         // Prepare feat specific stuff
-        if (data.item.type === "feat") {
+        if (this.item.data.type === "feat") {
             data.isClassFeature = true; //Any feat can be a class feature
-            if (data.item.data.featType === 'spellSpecialization')
+            if (this.item.data.data.featType === 'spellSpecialization')
                 data.isSpellSpecialization = true;
         }
 
@@ -151,15 +155,15 @@ export class ItemSheetPF extends ItemSheet {
 
 
         // Prepare weapon specific stuff
-        if (data.item.type === "weapon") {
-            data.isRanged = (data.item.data.weaponSubtype === "ranged" || data.item.data.properties["thr"] === true);
+        if (this.item.type === "weapon") {
+            data.isRanged = (this.item.data.data.weaponSubtype === "ranged" || this.item.data.data.properties["thr"] === true);
 
             // Prepare categories for weapons
             data.weaponCategories = {types: {}, subTypes: {}};
             for (let [k, v] of Object.entries(CONFIG.D35E.weaponTypes)) {
                 if (typeof v === "object") data.weaponCategories.types[k] = v._label;
             }
-            const type = data.item.data.weaponType;
+            const type = this.item.data.data.weaponType;
             if (hasProperty(CONFIG.D35E.weaponTypes, type)) {
                 for (let [k, v] of Object.entries(CONFIG.D35E.weaponTypes[type])) {
                     // Add static targets
@@ -179,6 +183,7 @@ export class ItemSheetPF extends ItemSheet {
                 e.hasUses = e.data.uses && (e.data.uses.max > 0);
                 e.calcPrice = e.data.enhIncrease !== undefined && e.data.enhIncrease !== null && e.data.enhIncrease > 0 ? `+${e.data.enhIncrease}` : `${e.data.price}`
                 e.isCharged = ["day", "week", "charges", "encounter"].includes(getProperty(e, "data.uses.per"));
+                e.tag = item.tag;
                 data.enhancements.push(e)
                 if (e.data.isFromSpell)
                     data.enhancementsFromSpell.push(e)
@@ -188,32 +193,32 @@ export class ItemSheetPF extends ItemSheet {
                     data.enhancementsBase.push(e)
             })
             data.hasEnhancements = true;
-            data.lightMagical = (data.item.data.enh || 0) > 0 && (data.item.data.enh || 0) < 6;
-            data.veryMagical = (data.item.data.enh || 0) > 5;
+            data.lightMagical = (this.item.data.data.enh || 0) > 0 && (this.item.data.data.enh || 0) < 6;
+            data.veryMagical = (this.item.data.data.enh || 0) > 5;
         }
 
         // Prepare enhancement specific stuff
-        if (data.item.type === "enhancement") {
+        if (this.item.data.type === "enhancement") {
             data.enhancementTypes = {types: {}, subTypes: {}};
             for (let [k, v] of Object.entries(CONFIG.D35E.enhancementType)) {
                 data.enhancementTypes.types[k] = v;
             }
 
-            data.isWeaponEnhancement = data.item.data.enhancementType === 'weapon'
-            data.isArmorEnhancement = data.item.data.enhancementType === 'armor'
-            data.isMiscEnhancement = data.item.data.enhancementType === 'misc'
+            data.isWeaponEnhancement = this.item.data.data.enhancementType === 'weapon'
+            data.isArmorEnhancement = this.item.data.data.enhancementType === 'armor'
+            data.isMiscEnhancement = this.item.data.data.enhancementType === 'misc'
 
         }
 
         // Prepare equipment specific stuff
-        if (data.item.type === "equipment") {
+        if (this.item.data.type === "equipment") {
             data.hasCombatChanges = true;
             // Prepare categories for equipment
             data.equipmentCategories = {types: {}, subTypes: {}};
             for (let [k, v] of Object.entries(CONFIG.D35E.equipmentTypes)) {
                 if (typeof v === "object") data.equipmentCategories.types[k] = v._label;
             }
-            const type = data.item.data.equipmentType;
+            const type = this.item.data.data.equipmentType;
             if (hasProperty(CONFIG.D35E.equipmentTypes, type)) {
                 for (let [k, v] of Object.entries(CONFIG.D35E.equipmentTypes[type])) {
                     // Add static targets
@@ -236,12 +241,13 @@ export class ItemSheetPF extends ItemSheet {
             let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
             _enhancements.forEach(e => {
                 let item = new ItemPF(e, {owner: this.item.owner})
-                this.ehnancementItemMap.set(e._id, item);
+                this.ehnancementItemMap.set(item.tag, item);
                 e.hasAction = item.hasAction || item.isCharged;
                 e.incorrect = !((e.data.enhancementType === 'weapon' && this.item.type === 'weapon') || (e.data.enhancementType === 'armor' && this.item.type === 'equipment') || (e.data.enhancementType === 'misc'));
                 e.hasUses = e.data.uses && (e.data.uses.max > 0);
                 e.calcPrice = e.data.enhIncrease !== undefined && e.data.enhIncrease !== null && e.data.enhIncrease > 0 ? `+${e.data.enhIncrease}` : `${e.data.price}`
                 e.isCharged = ["day", "week", "charges", "encounter"].includes(getProperty(e, "data.uses.per"));
+                e.tag = item.tag;
                 data.enhancements.push(e)
                 if (e.data.isFromSpell)
                     data.enhancementsFromSpell.push(e)
@@ -254,39 +260,39 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         // Prepare attack specific stuff
-        if (data.item.type === "attack") {
-            data.isWeaponAttack = data.item.data.attackType === "weapon";
-            data.isNaturalAttack = data.item.data.attackType === "natural";
+        if (this.item.data.type === "attack") {
+            data.isWeaponAttack = this.item.data.data.attackType === "weapon";
+            data.isNaturalAttack = this.item.data.data.attackType === "natural";
         }
 
-        if (data.item.data.weight) {
+        if (this.item.data.data.weight) {
             const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
-            data.convertedWeight = data.item.data.weight * conversion;
+            data.convertedWeight = this.item.data.data.weight * conversion;
         }
 
-        if (data.item.data.capacity) {
+        if (this.item.data.data.capacity) {
             const conversion = game.settings.get("D35E", "units") === "metric" ? 0.5 : 1;
-            data.convertedCapacity = data.item.data.capacity * conversion;
+            data.convertedCapacity = this.item.data.data.capacity * conversion;
         }
 
         // Prepare spell specific stuff
-        if (data.item.type === "spell") {
+        if (this.item.data.type === "spell") {
             let spellbook = null;
             if (this.actor != null) {
                 spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${this.item.data.data.spellbook}`);
             }
 
             data.isPreparedSpell = spellbook != null ? !spellbook.spontaneous : false;
-            data.isAtWill = data.item.data.atWill;
+            data.isAtWill = this.item.data.data.atWill;
             data.spellbooks = {};
             if (this.item.actor) {
                 data.spellbooks = duplicate(this.item.actor.data.data.attributes.spells.spellbooks);
             }
 
             // Enrich description
-            data.description = TextEditor.enrichHTML(data.data.description.value);
+            data.description = TextEditor.enrichHTML(this.item.data.data.description.value);
         }
-        if (data.item.type === "race") {
+        if (this.item.data.type === "race") {
             data.children = {
                 spelllikes: [],
                 abilities: [],
@@ -345,11 +351,11 @@ export class ItemSheetPF extends ItemSheet {
         }
 
 
-        if (data.item.type === "buff") {
+        if (this.item.data.type === "buff") {
             data.hasCombatChanges = true;
         }
-        if (data.item.type === "feat") {
-            data.isFeat = data.item.data.featType === "feat"
+        if (this.item.data.type === "feat") {
+            data.isFeat = this.item.data.data.featType === "feat"
             data.hasCombatChanges = true;
             data.hasRequirements = true;
             data.featCounters = []
@@ -361,36 +367,38 @@ export class ItemSheetPF extends ItemSheet {
             }
         }
 
+        data.itemType = this.item.type;
+
         // Prepare class specific stuff
-        if (data.item.type === "class") {
-            for (let [a, s] of Object.entries(data.data.savingThrows)) {
+        if (this.item.data.type === "class") {
+            for (let [a, s] of Object.entries(data.data.data.savingThrows)) {
                 s.label = CONFIG.D35E.savingThrows[a];
             }
-            for (let [a, s] of Object.entries(data.data.fc)) {
+            for (let [a, s] of Object.entries(data.data.data.fc)) {
                 s.label = CONFIG.D35E.favouredClassBonuses[a];
             }
             data.powerPointLevels = {}
-            Object.keys(data.data.powerPointTable).forEach(key => {
+            Object.keys(data.data.data.powerPointTable).forEach(key => {
                 data.powerPointLevels[key] = {
-                    value: data.data.powerPointTable[key],
-                    known: data.data.powersKnown !== undefined ? data.data.powersKnown[key] || 0 : 0,
-                    maxLevel: data.data.powersMaxLevel !== undefined ? data.data.powersMaxLevel[key] || 0 : 0
+                    value: data.data.data.powerPointTable[key],
+                    known: data.data.data.powersKnown !== undefined ? data.data.data.powersKnown[key] || 0 : 0,
+                    maxLevel: data.data.data.powersMaxLevel !== undefined ? data.data.data.powersMaxLevel[key] || 0 : 0
                 }
             })
 
-            data.powerPointBonusBaseAbility = data.data.powerPointBonusBaseAbility
+            data.powerPointBonusBaseAbility = data.data.data.powerPointBonusBaseAbility
             data.abilities = {}
             for (let [a, s] of Object.entries(CONFIG.D35E.abilities)) {
                 data.abilities[a] = {}
                 data.abilities[a].label = s;
             }
             data.hasRequirements = true;
-            data.hasMaxLevel = data.data.maxLevel !== undefined && data.data.maxLevel !== null && data.data.maxLevel !== "" && data.data.maxLevel !== 0;
-            data.isBaseClass = data.data.classType === "base";
-            data.isRacialHD = data.data.classType === "racial";
-            data.isTemplate = data.data.classType === "template";
-            data.isPsionSpellcaster = data.data.spellcastingType === "psionic";
-            data.isSpellcaster = data.data.spellcastingType !== undefined && data.data.spellcastingType !== null && data.data.spellcastingType !== "none";
+            data.hasMaxLevel = data.data.data.maxLevel !== undefined && data.data.data.maxLevel !== null && data.data.data.maxLevel !== "" && data.data.data.maxLevel !== 0;
+            data.isBaseClass = data.data.data.classType === "base";
+            data.isRacialHD = data.data.data.classType === "racial";
+            data.isTemplate = data.data.data.classType === "template";
+            data.isPsionSpellcaster = data.data.data.spellcastingType === "psionic";
+            data.isSpellcaster = data.data.data.spellcastingType !== undefined && data.data.data.spellcastingType !== null && data.data.data.spellcastingType !== "none";
             data.isNonPsionSpellcaster = data.isSpellcaster && !data.isPsionSpellcaster
             data.progression = []
             data.spellProgression = []
@@ -475,7 +483,7 @@ export class ItemSheetPF extends ItemSheet {
             }
 
 
-            for (let level = 1; level < data.data.maxLevel + 1; level++) {
+            for (let level = 1; level < this.item.data.data.maxLevel + 1; level++) {
                 let progressionData = {}
                 let spellProgressionData = {}
                 let knownSpellProgressionData = {}
@@ -484,14 +492,14 @@ export class ItemSheetPF extends ItemSheet {
                 spellProgressionData.level = level
                 knownSpellProgressionData.level = level
                 for (let a of ['fort', 'ref', 'will']) {
-                    const classType = getProperty(data.data, "classType") || "base";
+                    const classType = getProperty(this.item.data.data, "classType") || "base";
 
-                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] != null ? CONFIG.D35E.classSavingThrowFormulas[classType][data.data.savingThrows[a].value] : "0";
-                    progressionData[a] = Math.floor(new Roll(formula, {level: level}).roll().total);
+                    let formula = CONFIG.D35E.classSavingThrowFormulas[classType][this.item.data.data.savingThrows[a].value] != null ? CONFIG.D35E.classSavingThrowFormulas[classType][this.item.data.data.savingThrows[a].value] : "0";
+                    progressionData[a] = Math.floor(new Roll35e(formula, {level: level}).roll().total);
                 }
                 {
-                    const formula = CONFIG.D35E.classBABFormulas[data.data.bab] != null ? CONFIG.D35E.classBABFormulas[data.data.bab] : "0";
-                    let bab = Math.floor(new Roll(formula, {level: level}).roll().total);
+                    const formula = CONFIG.D35E.classBABFormulas[this.item.data.data.bab] != null ? CONFIG.D35E.classBABFormulas[this.item.data.data.bab] : "0";
+                    let bab = Math.floor(new Roll35e(formula, {level: level}).roll().total);
                     let babModifiers = []
                     while (bab > 0) {
                         babModifiers.push("+" + bab);
@@ -505,12 +513,12 @@ export class ItemSheetPF extends ItemSheet {
                 data.hasKnownSpells = false;
                 if (data.isSpellcaster) {
                     for (let spellLevel = 0; spellLevel <= 9; spellLevel++) {
-                        if (getProperty(data.data, "spellsPerLevel") !== undefined && getProperty(data.data, "spellsPerLevel")[level - 1]) {
-                            let spellPerLevel = getProperty(data.data, "spellsPerLevel")[level - 1][spellLevel + 1];
+                        if (getProperty(this.item.data.data, "spellsPerLevel") !== undefined && getProperty(this.item.data.data, "spellsPerLevel")[level - 1]) {
+                            let spellPerLevel = getProperty(this.item.data.data, "spellsPerLevel")[level - 1][spellLevel + 1];
                             spellProgressionData[`spells${spellLevel}`] = spellPerLevel !== undefined && parseInt(spellPerLevel) !== -1 ? spellPerLevel : "-"
                         }
-                        if (getProperty(data.data, "spellsKnownPerLevel") !== undefined && getProperty(data.data, "spellsKnownPerLevel")[level - 1]) {
-                            let spellPerLevel = getProperty(data.data, "spellsKnownPerLevel")[level - 1][spellLevel + 1];
+                        if (getProperty(this.item.data.data, "spellsKnownPerLevel") !== undefined && getProperty(this.item.data.data, "spellsKnownPerLevel")[level - 1]) {
+                            let spellPerLevel = getProperty(this.item.data.data, "spellsKnownPerLevel")[level - 1][spellLevel + 1];
                             knownSpellProgressionData[`spells${spellLevel}`] = spellPerLevel !== undefined && parseInt(spellPerLevel) !== -1 ? spellPerLevel : "-"
                             data.hasKnownSpells = true;
                         }
@@ -566,12 +574,12 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         // Prepare stuff for items with changes
-        if (data.item.data.changes) {
+        if (this.item.data.data.changes) {
             data.changes = {targets: {}, modifiers: CONFIG.D35E.bonusModifiers};
             for (let [k, v] of Object.entries(CONFIG.D35E.buffTargets)) {
                 if (typeof v === "object") data.changes.targets[k] = v._label;
             }
-            data.item.data.changes.forEach(item => {
+            data.data.data.changes.forEach(item => {
                 item.subTargets = {};
                 // Add specific skills
                 if (item[1] === "skill") {
@@ -599,6 +607,12 @@ export class ItemSheetPF extends ItemSheet {
                             }
                         }
                     }
+                } else if (item[1] === "spells") {
+                    //  "spells.spellbooks.primary.spells.spell1.bonus": "Level 1",
+                    for (let spellbook of ["primary", "secondary", "tetriary", "spelllike"]) {
+                        for (let level = 0; level < 10; level++)
+                            item.subTargets[`spells.spellbooks.${spellbook}.spells.spell${level}.bonus`] = game.i18n.localize("D35E.BuffSpellbookSpellsPreparedLevel").format(spellbook, level);
+                    }
                 }
                 // Add static targets
                 else if (item[1] != null && CONFIG.D35E.buffTargets.hasOwnProperty(item[1])) {
@@ -610,9 +624,9 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         // Prepare stuff for attacks with conditionals
-        if (data.item.data.conditionals) {
+        if (this.item.data.data.conditionals) {
             data.conditionals = { targets: {}, conditionalModifierTypes: {} };
-            for (const conditional of data.item.data.conditionals) {
+            for (const conditional of this.item.data.data.conditionals) {
                 for (const modifier of conditional.modifiers) {
                     modifier.targets = this.item.getConditionalTargets();
                     modifier.subTargets = this.item.getConditionalSubTargets(modifier.target);
@@ -627,12 +641,12 @@ export class ItemSheetPF extends ItemSheet {
 
 
         // Prepare stuff for items with context notes
-        if (data.item.data.contextNotes) {
+        if (this.item.data.data.contextNotes) {
             data.contextNotes = {targets: {}};
             for (let [k, v] of Object.entries(CONFIG.D35E.contextNoteTargets)) {
                 if (typeof v === "object") data.contextNotes.targets[k] = v._label;
             }
-            data.item.data.contextNotes.forEach(item => {
+            this.item.data.data.contextNotes.forEach(item => {
                 item.subNotes = {};
                 // Add specific skills
                 if (item[1] === "skill") {
@@ -898,6 +912,15 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+        let perRoundActions = Object.entries(formData).filter(e => e[0].startsWith("data.perRoundActions"));
+        formData["data.perRoundActions"] = perRoundActions.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = {name: "", action: ""};
+
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         // Update the Item
 
         if (this.containerMap.has(formData['data.containerId'])) {
@@ -907,7 +930,9 @@ export class ItemSheetPF extends ItemSheet {
             formData['data.container'] = "None"
             formData['data.containerWeightless'] = false
         }
-        super._updateObject(event, formData);
+
+        //console.log("IM IN _UPDATE OBJECT FIXING THINGS", formData)
+        return super._updateObject(event, formData);
     }
 
     /* -------------------------------------------- */
@@ -927,7 +952,7 @@ export class ItemSheetPF extends ItemSheet {
                     "configuration": {},
                 },
             };
-            createTabs.call(this, html, tabGroups);
+            this._altTabs = createTabs.call(this, html, tabGroups, this._altTabs);
         }
         // Run older Tabs as a fallback
         else {
@@ -970,6 +995,7 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".special-control").click(this._onSpecialControl.bind(this));
         html.find(".a-special-control").click(this._onActivateSpecialControl.bind(this));
         html.find(".d-special-control").click(this._onDeactivateSpecialControl.bind(this));
+        html.find(".r-special-control").click(this._onPerRoundSpecialControl.bind(this));
 
         // Modify damage formula
         html.find(".damage-control").click(this._onDamageControl.bind(this));
@@ -986,8 +1012,13 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".context-note-control").click(this._onNoteControl.bind(this));
 
         // Create attack
-        if (["weapon"].includes(this.item.data.type)) {
-            html.find("button[name='create-attack']").click(this._createAttack.bind(this));
+        if (["weapon"].includes(this.item.data.type) && this.item.actor != null && !this.item.showUnidentifiedData) {
+            const toggleString = "<a style='color: white; text-decoration: none' class='header-button companion-view-button' title='" + game.i18n.localize("D35E.CreateAttack") + "'><i class='fa fa-feather-alt'></i>"+game.i18n.localize("D35E.CreateAttack")+"</a>";
+            const toggleButton = $(toggleString);
+            html.closest('.app').find('.companion-view-button').remove();
+            const titleElement = html.closest('.app').find('.window-title');
+            toggleButton.insertAfter(titleElement);
+            toggleButton.click(this._createAttack.bind(this));
         }
 
         if (["feat"].includes(this.item.data.type)) {
@@ -1110,7 +1141,7 @@ export class ItemSheetPF extends ItemSheet {
             let _customAttributes = duplicate(this.item.data.data.customAttributes || {});
             let newAttribute = {id: this.generateId(),name:'',value:''};
             _customAttributes[newAttribute.id] = newAttribute;
-            console.log(`D35E | Adding custom attribute | `,_customAttributes)
+            //console.log(`D35E | Adding custom attribute | `,_customAttributes)
             return this.item.update({"data.customAttributes": _customAttributes});
         }
 
@@ -1118,7 +1149,7 @@ export class ItemSheetPF extends ItemSheet {
         if (a.classList.contains("delete")) {
             await this._onSubmit(event);  // Submit any unsaved changes
             const li = a.closest(".custom-field");
-            console.log(`D35E | Removing custom attribute | ${li.dataset.customField}`, this.item.data.data.customAttributes)
+            //console.log(`D35E | Removing custom attribute | ${li.dataset.customField}`, this.item.data.data.customAttributes)
             const updateData = {};
             updateData[`data.customAttributes.-=${li.dataset.customField}`] = null;
             return this.item.update(updateData);
@@ -1206,6 +1237,41 @@ export class ItemSheetPF extends ItemSheet {
         }
     }
 
+    /**
+     * Adds or removes per round action from buffs.
+     * Available for item type: Buff
+     * @private
+     */
+    async _onPerRoundSpecialControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+        // Add new attack component
+        if (a.classList.contains("add-special")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            let perRoundActions = this.item.data.data.perRoundActions;
+            if (perRoundActions === undefined)
+                perRoundActions = []
+            return this.item.update({
+                "data.perRoundActions": perRoundActions.concat([[{
+                    name: "",
+                    action: "",
+                    range: "",
+                    img: "",
+                    condition: ""
+                }]])
+            });
+        }
+
+        // Remove an attack component
+        if (a.classList.contains("delete-special")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".special-part");
+            const perRoundActions = duplicate(this.item.data.data.perRoundActions);
+            perRoundActions.splice(Number(li.dataset.perRoundActions), 1);
+            return this.item.update({"data.perRoundActions": perRoundActions});
+        }
+    }
+
     async _onDeactivateSpecialControl(event) {
         event.preventDefault();
         const a = event.currentTarget;
@@ -1242,9 +1308,9 @@ export class ItemSheetPF extends ItemSheet {
 
         // Add new change
         if (a.classList.contains("add-change")) {
-            //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.changes || [];
-            return this.item.update({"data.changes": changes.concat([["", "", "", "", 0]])});
+            //console.log('AAAAAITEM', this.item);
+            let _changes = duplicate(this.item.data.data.changes) || [];
+            return this.item.update({"data.changes": _changes.concat([["", "", "", "", 0]])});
         }
 
         // Remove a change
@@ -1264,9 +1330,9 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.combatChanges || [];
+            const changes =this.item.data.data.combatChanges || [];
             // Combat Changes are
-            return this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", ""]])});
+            await this.item.update({"data.combatChanges": changes.concat([["", "", "", "", "", ""]])});
         }
 
         // Remove a change
@@ -1275,7 +1341,7 @@ export class ItemSheetPF extends ItemSheet {
             const li = a.closest(".change");
             const changes = duplicate(this.item.data.data.combatChanges);
             changes.splice(Number(li.dataset.change), 1);
-            return this.item.update({"data.combatChanges": changes});
+            await this.item.update({"data.combatChanges": changes});
         }
     }
 
@@ -1286,7 +1352,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.requirements || [];
+            const changes = duplicate(this.item.data.data.requirements) || [];
             // Combat Changes are
             return this.item.update({"data.requirements": changes.concat([["", "", ""]])});
         }
@@ -1308,7 +1374,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.resistances || [];
+            const changes = duplicate(this.item.data.data.resistances) || [];
             // Combat Changes are
             return this.item.update({"data.resistances": changes.concat([["", "", false, false, false]])});
         }
@@ -1330,7 +1396,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new change
         if (a.classList.contains("add-change")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const changes = this.item.data.data.damageReduction || [];
+            const changes = duplicate(this.item.data.data.damageReduction) || [];
             // Combat Changes are
             return this.item.update({"data.damageReduction": changes.concat([["", "", false]])});
         }
@@ -1352,7 +1418,7 @@ export class ItemSheetPF extends ItemSheet {
         // Add new note
         if (a.classList.contains("add-note")) {
             //await this._onSubmit(event);  // Submit any unsaved changes
-            const contextNotes = this.item.data.data.contextNotes || [];
+            const contextNotes = duplicate(this.item.data.data.contextNotes) || [];
             return this.item.update({"data.contextNotes": contextNotes.concat([["", "", "", 0]])});
         }
 
@@ -1371,16 +1437,18 @@ export class ItemSheetPF extends ItemSheet {
     }
 
     async _createAttack(event) {
+        event.preventDefault();
         if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
 
-        await this._onSubmit(event);
+        //await this._onSubmit(event);
 
-        await this.item.actor.createAttackFromWeapon(this.item);
+        return this.item.parent.createAttackFromWeapon(this.item);
     }
 
     async _addSpellsToSpellbook(event) {
+        event.preventDefault();
         if (this.item.actor == null) throw new Error(game.i18n.localize("D35E.ErrorItemNoOwner"));
-        await this.item.actor.addSpellsToSpellbook(this.item);
+        await this.item.parent.addSpellsToSpellbook(this.item);
 
     }
 
@@ -1536,7 +1604,7 @@ export class ItemSheetPF extends ItemSheet {
         const li = event.currentTarget;
         const packName = li.getAttribute('data-pack');
         const pack = game.packs.get(packName);
-        // console.log(event)
+        // //console.log(event)
         if (!pack) return;
         // Set the transfer data
         event.dataTransfer.setData("text/plain", JSON.stringify({
@@ -1775,7 +1843,7 @@ export class ItemSheetPF extends ItemSheet {
             const updateData = {};
             let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
             _enhancements = _enhancements.filter(function (obj) {
-                return obj._id !== li.dataset.itemId;
+                return createTag(obj.name) !== li.dataset.itemId;
             });
 
             this.item.updateMagicItemName(updateData, _enhancements);
@@ -1793,7 +1861,7 @@ export class ItemSheetPF extends ItemSheet {
                     const updateData = {};
                     let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
                     _enhancements = _enhancements.filter(function (obj) {
-                        return obj._id !== li.dataset.itemId;
+                        return createTag(obj.name) !== li.dataset.itemId;
                     });
 
                     this.item.updateMagicItemName(updateData, _enhancements);
@@ -1815,7 +1883,7 @@ export class ItemSheetPF extends ItemSheet {
         const value = Number(event.currentTarget.value);
         let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
         _enhancements.filter(function (obj) {
-            return obj._id === itemId
+            return createTag(obj.name) === itemId
         }).forEach(i => {
             i.data.uses.value = value;
         });
@@ -1831,7 +1899,7 @@ export class ItemSheetPF extends ItemSheet {
         const value = Number(event.currentTarget.value);
         let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
         _enhancements.filter(function (obj) {
-            return obj._id === itemId
+            return createTag(obj.name) === itemId
         }).forEach(i => {
             i.data.uses.max = value;
             i.data.uses.maxFormula = `${value}`;
@@ -1848,7 +1916,7 @@ export class ItemSheetPF extends ItemSheet {
         const value = Number(event.currentTarget.value);
         let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
         _enhancements.filter(function (obj) {
-            return obj._id === itemId
+            return createTag(obj.name) === itemId
         }).forEach(i => {
             i.data.uses.chargesPerUse = value;
         });
@@ -1864,7 +1932,7 @@ export class ItemSheetPF extends ItemSheet {
         const value = Number(event.currentTarget.value);
         let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
         _enhancements.filter(function (obj) {
-            return obj._id === itemId
+            return createTag(obj.name) === itemId
         }).forEach(i => {
             i.data.enh = value;
             ItemPF.setEnhItemPrice(i);
@@ -1889,11 +1957,11 @@ export class ItemSheetPF extends ItemSheet {
      * Handle rolling of an item from the Actor sheet, obtaining the Item instance and dispatching to it's roll method
      * @private
      */
-    _onEnhRoll(event) {
+    async _onEnhRoll(event) {
         event.preventDefault();
         const itemId = event.currentTarget.closest(".item").dataset.itemId;
         //const item = this.actor.getOwnedItem(itemId);
-        let item = this.ehnancementItemMap.get(itemId);
+        let item = await this.item.getEnhancementItem(itemId);
         return item.roll({}, this.item.actor);
     }
 
@@ -1910,9 +1978,9 @@ export class ItemSheetPF extends ItemSheet {
     async _quickItemActionControl(event) {
         event.preventDefault();
         const a = event.currentTarget;
-        const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
-
-        let item = this.item.getEnhancementItem(itemId);
+        const itemId = event.currentTarget.closest(".item").dataset.itemId;
+        //const item = this.actor.getOwnedItem(itemId);
+        let item = await this.item.getEnhancementItem(itemId);
         // Quick Attack
         if (a.classList.contains("item-attack")) {
             await this.item.useEnhancementItem(item)

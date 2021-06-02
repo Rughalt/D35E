@@ -14,11 +14,21 @@
                 {{#each data.abilities as |ability id|}}
                 <div class="ability-simple flexrow" data-ability="{{id}}">
                     <h4 class="ability-name rollable">{{ability.label}}</h4>
-                    <input class="ability-base-simple" name="data.abilities.{{id}}.tempvalue" type="text"
-                           value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
+                    {{#if ability.isZero}}
+                        <input class="ability-base-simple readonly" name="data.abilities.{{id}}.tempvalue" type="text"
+                               value="0" data-dtype="Number" placeholder="10" readonly/>
+                    {{else}}
+                        <input class="ability-base-simple" name="data.abilities.{{id}}.tempvalue" type="text"
+                               value="{{ability.value}}" data-dtype="Number" placeholder="10"/>
+                    {{/if}}
                     <div class="flexrow">
-              <span class="ability-score tooltip">
-                <h4 class="ability-value-text">{{numberFormat ability.total decimals=0 sign=false}}</h4>
+                <span class="ability-score tooltip">
+
+                    {{#if ability.isZero}}
+                        <h4 class="ability-value-text">-</h4>
+                    {{else}}
+                        <h4 class="ability-value-text">{{numberFormat ability.total decimals=0 sign=false}}</h4>
+                    {{/if}}
                 <span class="tooltipcontent">
               @abilities.{{id}}.total : {{ability.total}}<br/>
               @abilities.{{id}}.value : {{ability.value}}<br/>

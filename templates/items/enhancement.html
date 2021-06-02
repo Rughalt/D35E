@@ -15,9 +15,9 @@
       <h4>
         <div class="form-group">
           <div class="form-fields">
-            <input type="text" style="text-align: right; line-height: 24px" name="data.nameExtension.prefix" value="{{data.nameExtension.prefix}}" placeholder="Prefix"/>
+            <input type="text" style="text-align: right; line-height: 24px" name="data.nameExtension.prefix" value="{{data.data.nameExtension.prefix}}" placeholder="Prefix"/>
             <span>Item of</span>
-            <input type="text" style="line-height: 24px" name="data.nameExtension.suffix" value="{{data.nameExtension.suffix}}" placeholder="Suffix"/>
+            <input type="text" style="line-height: 24px" name="data.nameExtension.suffix" value="{{data.data.nameExtension.suffix}}" placeholder="Suffix"/>
           </div>
         </div>
       </h4>
@@ -63,7 +63,7 @@
       <div class="form-group">
         <label>{{localize "D35E.Category"}}</label>
         <select name="data.enhancementType">
-          {{#select data.enhancementType}}
+          {{#select data.data.enhancementType}}
           {{#each enhancementTypes.types as |name type|}}
           <option value="{{type}}">{{localize name}}</option>
           {{/each}}
@@ -77,37 +77,37 @@
       <div class="form-group">
         <label>{{localize "D35E.EnhancementBonus"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+          <input type="text" name="data.enh" value="{{data.data.enh}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.BaseWeaponDamage"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.weaponData.damageRoll" value="{{data.weaponData.damageRoll}}" placeholder="{{localize "D35E.DamageRoll"}}"/>
+          <input type="text" name="data.weaponData.damageRoll" value="{{data.data.weaponData.damageRoll}}" placeholder="{{localize "D35E.DamageRoll"}}"/>
           <select name="data.weaponData.damageTypeId">
-            {{#select data.weaponData.damageTypeId}}
+            {{#select data.data.weaponData.damageTypeId}}
             <option value="">{{localize "D35E.Custom"}}</option>
             {{#each damageTypes as |damage type|}}
             <option value="{{damage.data.data.uniqueId}}">{{damage.data.name}}</option>
             {{/each}}
             {{/select}}
           </select>
-          {{#unless data.weaponData.damageTypeId}}
-          <input type="text" name="data.weaponData.damageType" value="{{data.weaponData.damageType}}" placeholder="{{localize "D35E.DamageType"}}"/>
+          {{#unless data.data.weaponData.damageTypeId}}
+          <input type="text" name="data.weaponData.damageType" value="{{data.data.weaponData.damageType}}" placeholder="{{localize "D35E.DamageType"}}"/>
           {{/unless}}
         </div>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.BaseWeaponAttackBonus"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.weaponData.attackRoll" value="{{data.weaponData.attackRoll}}" placeholder="{{localize "D35E.AttackRoll"}}"/>
+          <input type="text" name="data.weaponData.attackRoll" value="{{data.data.weaponData.attackRoll}}" placeholder="{{localize "D35E.AttackRoll"}}"/>
         </div>
       </div>
 
       <div class="form-group">
         <label>{{localize "D35E.EnhancementOptionalDamage"}}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
-          <input type="checkbox" class="stylized" name="data.weaponData.optionalDamage" {{checked data.weaponData.optionalDamage}}/>
+          <input type="checkbox" class="stylized" name="data.weaponData.optionalDamage" {{checked data.data.weaponData.optionalDamage}}/>
           <span class="checkmark"></span>
         </label>
       </div>
@@ -119,26 +119,26 @@
       <div class="flexrow">
         <div class="form-group" style="flex: 1">
           <div class="toggle" style="width: 125px">
-            <input id="{{randomUuid}}-data.weaponData.alignment.good" type="checkbox" name="data.weaponData.alignment.good" {{checked data.weaponData.alignment.good}}/>
-            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.good">{{#if data.weaponData.alignment.good}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentGood"}}</label>
+            <input id="{{randomUuid}}-data.weaponData.alignment.good" type="checkbox" name="data.weaponData.alignment.good" {{checked data.data.weaponData.alignment.good}}/>
+            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.good">{{#if data.data.weaponData.alignment.good}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentGood"}}</label>
           </div>
         </div>
         <div class="form-group" style="flex: 1">
           <div class="toggle" style="width: 125px">
-            <input id="{{randomUuid}}-data.weaponData.alignment.evil" type="checkbox" name="data.weaponData.alignment.evil" {{checked data.weaponData.alignment.evil}}/>
-            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.evil">{{#if data.weaponData.alignment.evil}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentEvil"}}</label>
+            <input id="{{randomUuid}}-data.weaponData.alignment.evil" type="checkbox" name="data.weaponData.alignment.evil" {{checked data.data.weaponData.alignment.evil}}/>
+            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.evil">{{#if data.data.weaponData.alignment.evil}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentEvil"}}</label>
           </div>
         </div>
         <div class="form-group" style="flex: 1">
           <div class="toggle" style="width: 125px">
-            <input id="{{randomUuid}}-data.weaponData.alignment.chaotic" type="checkbox" name="data.weaponData.alignment.chaotic" {{checked data.weaponData.alignment.chaotic}}/>
-            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.chaotic">{{#if data.weaponData.alignment.chaotic}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentChaotic"}}</label>
+            <input id="{{randomUuid}}-data.weaponData.alignment.chaotic" type="checkbox" name="data.weaponData.alignment.chaotic" {{checked data.data.weaponData.alignment.chaotic}}/>
+            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.chaotic">{{#if data.data.weaponData.alignment.chaotic}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentChaotic"}}</label>
           </div>
         </div>
         <div class="form-group" style="flex: 1">
           <div class="toggle">
-            <input id="{{randomUuid}}-data.weaponData.alignment.lawful" type="checkbox" name="data.weaponData.alignment.lawful" {{checked data.weaponData.alignment.lawful}}/>
-            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.lawful">{{#if data.weaponData.alignment.lawful}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentLawful"}}</label>
+            <input id="{{randomUuid}}-data.weaponData.alignment.lawful" type="checkbox" name="data.weaponData.alignment.lawful" {{checked data.data.weaponData.alignment.lawful}}/>
+            <label style="width: 125px" for="{{randomUuid}}-data.weaponData.alignment.lawful">{{#if data.data.weaponData.alignment.lawful}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.AlignmentLawful"}}</label>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
       <div class="form-group">
         <label>{{localize "D35E.EnhancementBonus"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+          <input type="text" name="data.enh" value="{{data.data.enh}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
       <div class="form-group stacked">
@@ -181,7 +181,7 @@
       <div class="form-group">
         <label>{{localize "D35E.EnhancementBonus"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.enh" value="{{data.enh}}" data-dtype="Number" placeholder="0"/>
+          <input type="text" name="data.enh" value="{{data.data.enh}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
       {{/if}}
@@ -191,31 +191,31 @@
       <div class="form-group">
         <label>{{localize "D35E.CraftingRequirements"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.requirements" value="{{data.requirements}}" data-dtype="String" placeholder="eg. CL10; Craft Magic Weapons, Fireball"/>
+          <input type="text" name="data.requirements" value="{{data.data.requirements}}" data-dtype="String" placeholder="eg. CL10; Craft Magic Weapons, Fireball"/>
         </div>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.EnhancementIncreaseFormula"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.enhIncreaseFormula" value="{{data.enhIncreaseFormula}}" data-dtype="String" placeholder="@enhancement"/>
+          <input type="text" name="data.enhIncreaseFormula" value="{{data.data.enhIncreaseFormula}}" data-dtype="String" placeholder="@enhancement"/>
         </div>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.EnhancementIncrease"}}</label>
         <div class="form-fields">
-          <input type="text"  disabled value="{{data.enhIncrease}}" data-dtype="Number" placeholder="0"/>
+          <input type="text"  disabled value="{{data.data.enhIncrease}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.PriceFormula"}}</label>
         <div class="form-fields">
-          <input type="text" name="data.priceFormula" value="{{data.priceFormula}}" data-dtype="String" placeholder="1000*@enhIncrease"/>
+          <input type="text" name="data.priceFormula" value="{{data.data.priceFormula}}" data-dtype="String" placeholder="1000*@enhIncrease"/>
         </div>
       </div>
       <div class="form-group">
         <label>{{localize "D35E.Price"}}</label>
         <div class="form-fields">
-          <input type="text" disabled value="{{data.price}}" data-dtype="Number" placeholder="0"/>
+          <input type="text" disabled value="{{data.data.price}}" data-dtype="Number" placeholder="0"/>
         </div>
       </div>
 
@@ -244,7 +244,7 @@
           <a class="change-control add-change"><i class="fas fa-plus"></i></a>
         </h4>
         <ol class="changes form-group">
-          {{#each data.changes as |change a|}}
+          {{#each data.data.changes as |change a|}}
           <li class="change flexrow" data-change="{{a}}">
             <input type="text" name="data.changes.{{a}}.0" value="{{lookup this "0"}}"
             placeholder="{{localize "D35E.Formula"}}" />
@@ -282,7 +282,7 @@
           <a class="resistance-control add-change"><i class="fas fa-plus"></i></a>
         </h4>
         <ol class="changes form-group">
-          {{#each data.resistances as |change a|}}
+          {{#each data.data.resistances as |change a|}}
           <li class="change flexrow" data-change="{{a}}">
             <input type="text" name="data.resistances.{{a}}.0" value="{{lookup this "0"}}"
             placeholder="{{localize "D35E.Formula"}}" />
@@ -303,7 +303,7 @@
             <a class="resistance-control delete-change"><i class="fas fa-minus"></i></a>
           </li>
           {{/each}}
-          {{#unless data.resistances}}
+          {{#unless data.data.resistances}}
           <li class="change flexrow">
             <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.Resistances"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
           </li>
@@ -318,7 +318,7 @@
           <a class="dr-control add-change"><i class="fas fa-plus"></i></a>
         </h4>
         <ol class="changes form-group">
-          {{#each data.damageReduction as |change a|}}
+          {{#each data.data.damageReduction as |change a|}}
           <li class="change flexrow" data-change="{{a}}">
             <input type="text" name="data.damageReduction.{{a}}.0" value="{{lookup this "0"}}"
             placeholder="{{localize "D35E.Formula"}}" />
@@ -333,7 +333,7 @@
             <a class="dr-control delete-change"><i class="fas fa-minus"></i></a>
           </li>
           {{/each}}
-          {{#unless data.damageReduction}}
+          {{#unless data.data.damageReduction}}
           <li class="change flexrow">
             <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.DR"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
           </li>

@@ -2,7 +2,7 @@ import { _rollInitiative, _getInitiativeFormula } from "./combat.js";
 import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
 import { ActorPF } from "./actor/entity.js";
-
+import { patchMeasureTools } from "./measure.js";
 
 const FormApplication_close = FormApplication.prototype.close;
 
@@ -15,7 +15,7 @@ export async function PatchCore() {
           const compiled = Handlebars.compile(resp.html, { preventIndent: true });
           Handlebars.registerPartial(path, compiled);
           _templateCache[path] = compiled;
-          console.log(`Foundry VTT | Retrieved and compiled template ${path}`);
+          //console.log(`Foundry VTT | Retrieved and compiled template ${path}`);
           resolve(compiled);
         });
       });
@@ -102,26 +102,6 @@ export async function PatchCore() {
     };
   }
 
-  const ActorTokenHelpers_update = ActorTokenHelpers.prototype.update;
-  ActorTokenHelpers.prototype.update = async function(data, options={}) {
-    // Pre update
-    if (isMinimumCoreVersion("0.7.4")) {
-      await this.prepareUpdateData(data);
-    }
-
-
-    // Update changes
-    let diff = data;
-    if (options.updateChanges !== false) {
-      const updateObj = await this._updateChanges({data: data});
-      if (updateObj.diff.items) delete updateObj.diff.items;
-      diff = mergeObject(diff, updateObj.diff);
-    }
-    if (Object.keys(diff).length) {
-      await ActorTokenHelpers_update.call(this, diff, options);
-    }
-    //await this.toggleConditionStatusIcons();
-  };
 
 
 
@@ -135,7 +115,7 @@ export async function PatchCore() {
   const Token_animateMovement = Token.prototype.animateMovement;
   Token.prototype.animateMovement = async function(...args) {
     await Token_animateMovement.call(this, ...args);
-    console.log("D35E | Calling _calculateMinionDistance")
+    //console.log("D35E | Calling _calculateMinionDistance")
     ActorPF.prototype._calculateMinionDistance.call(this.actor, {});
     // Do something?
   };
@@ -149,14 +129,6 @@ export async function PatchCore() {
   //   return ActorPF.prototype.update.call(this, options);
   // };
   // Patch ActorTokenHelpers.deleteEmbeddedEntity
-  const ActorTokenHelpers_deleteEmbeddedEntity = ActorTokenHelpers.prototype.deleteEmbeddedEntity;
-  ActorTokenHelpers.prototype.deleteEmbeddedEntity = async function(embeddedName, id, options={}) {
-    await ActorTokenHelpers_deleteEmbeddedEntity.call(this, embeddedName, id, options);
-
-
-    if (options.stopUpdates) return;
-    return ActorPF.prototype.update.call(this, options);
-  };
 
   Object.defineProperty(ActiveEffect.prototype, "isTemporary", {
     get: function () {
@@ -171,8 +143,13 @@ export async function PatchCore() {
   Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
   Combat.prototype.rollInitiative = _rollInitiative;
   window.getTemplate = D35E_getTemplate;
-
+  patchMeasureTools();
     patchLowLightVision();
+// This system assumes that evalate should be run on StringTerm.eval
+  const StringTerm_eval = StringTerm.prototype.evaluate;
+  StringTerm.prototype.evaluate = async function(...args) {
+    return this;
+  };
 
   import("./lib/intro.js")
 

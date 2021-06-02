@@ -2,9 +2,9 @@
 <div class="form-group input-select">
   <label>{{localize "D35E.ActivationCost"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.activation.cost" value="{{data.activation.cost}}" data-dtype="Number" placeholder=""/>
+    <input type="text" name="data.activation.cost" value="{{data.data.activation.cost}}" data-dtype="Number" placeholder=""/>
     <select name="data.activation.type">
-      {{#select data.activation.type}}
+      {{#select data.data.activation.type}}
       <option value=""></option>
       {{#each config.abilityActivationTypes as |name key|}}
       <option value="{{key}}">{{name}}</option>
@@ -13,13 +13,13 @@
     </select>
   </div>
 </div>
-{{#if data.activation.type}}
+{{#if data.data.activation.type}}
 
 {{#unless isAttack}}
 <div class="form-group">
   <label>{{localize "D35E.Favorite"}}</label>
   <label class="checkbox" style="position: relative; flex: 0 20px">
-    <input type="checkbox" class="stylized" name="data.favorite" {{checked data.favorite}}/>
+    <input type="checkbox" class="stylized" name="data.favorite" {{checked data.data.favorite}}/>
     <span class="checkmark"></span>
   </label>
 </div>
@@ -29,7 +29,7 @@
 <div class="form-group input-select-select">
   <label>{{localize "D35E.Target"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.target.value" value="{{data.target.value}}"/>
+    <input type="text" name="data.target.value" value="{{data.data.target.value}}"/>
   </div>
 </div>
 
@@ -37,9 +37,9 @@
 <div class="form-group input-select">
   <label>{{localize "D35E.Range"}}</label>
   <div class="form-fields">
-    {{#if canInputRange}}<input type="text" name="data.range.value" value="{{data.range.value}}" placeholder="{{#unless isSpell}}{{localize "D35E.Formula"}}{{/unless}}"/>{{/if}}
+    {{#if canInputRange}}<input type="text" name="data.range.value" value="{{data.data.range.value}}" placeholder="{{#unless isSpell}}{{localize "D35E.Formula"}}{{/unless}}"/>{{/if}}
     <select name="data.range.units">
-      {{#select data.range.units}}
+      {{#select data.data.range.units}}
       <option value=""></option>
       {{#each config.distanceUnits as |name key|}}
       <option value="{{key}}">{{name}}</option>
@@ -54,7 +54,7 @@
 <div class="form-group input-select-select">
   <label>{{localize "D35E.Area"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.spellArea" value="{{data.spellArea}}"/>
+    <input type="text" name="data.spellArea" value="{{data.data.spellArea}}"/>
   </div>
 </div>
 {{/if}}
@@ -64,11 +64,11 @@
   <label>{{localize "D35E.Duration"}}</label>
   <div class="form-fields">
     {{#if isSpell}}
-    <input type="text" name="data.spellDuration" value="{{data.spellDuration}}" placeholder="{{localize "D35E.SpellDurationExample"}}"/>
+    <input type="text" name="data.spellDuration" value="{{data.data.spellDuration}}" placeholder="{{localize "D35E.SpellDurationExample"}}"/>
     {{else}}
-    {{#if canInputDuration}}<input type="text" name="data.duration.value" value="{{data.duration.value}}" placeholder="{{localize "D35E.Formula"}}"/>{{/if}}
+    {{#if canInputDuration}}<input type="text" name="data.duration.value" value="{{data.data.duration.value}}" placeholder="{{localize "D35E.Formula"}}"/>{{/if}}
     <select name="data.duration.units">
-      {{#select data.duration.units}}
+      {{#select data.data.duration.units}}
       <option value=""></option>
       {{#each config.timePeriods as |name key|}}
       <option value="{{key}}">{{name}}</option>
@@ -85,7 +85,7 @@
     <label>{{localize "D35E.LimitedUses"}}</label>
     <div class="form-fields">
       {{#if isCharged}}
-      {{#unless data.linkedChargeItem.id}}
+      {{#unless data.data.linkedChargeItem.id}}
       <input type="text" name="data.uses.value" value="{{charges}}" data-dtype="Number"/>
       {{else}}
       <input type="text" disabled value="{{charges}}" data-dtype="Number"/>
@@ -94,7 +94,7 @@
       <input type="text" value="{{maxCharges}}" disabled data-dtype="Number"/>
       {{/if}}
       <select name="data.uses.per">
-        {{#select data.uses.per}}
+        {{#select data.data.uses.per}}
         <option value=""></option>
         {{#each config.limitedUsePeriods as |name key|}}
         <option value="{{key}}">{{name}}</option>
@@ -103,31 +103,31 @@
       </select>
     </div>
   </div>
-  {{#unless data.linkedChargeItem.id}}
+  {{#unless data.data.linkedChargeItem.id}}
   {{#if isCharged}}
   <div class="form-group uses-per">
     <label>{{localize "D35E.MaximumUsesFormula"}}</label>
-    <input type="text" name="data.uses.maxFormula" value="{{data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
+    <input type="text" name="data.uses.maxFormula" value="{{data.data.uses.maxFormula}}" placeholder="{{localize "D35E.MaximumUsesFormula"}}"/>
   </div>
 
   <div class="form-group uses-recharge-formula">
     <label>{{localize "D35E.RechargeFormula"}} <i class="fas fa-info-circle tooltip">
       <div class="tooltipcontent"><strong>{{localize "D35E.RechargeFormula"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.RechargeFormulaInfo"}}</p></div>
     </i></label>
-    <input type="text" name="data.uses.rechargeFormula" value="{{data.uses.rechargeFormula}}" placeholder="{{localize "D35E.RechargeFormula"}}"/>
+    <input type="text" name="data.uses.rechargeFormula" value="{{data.data.uses.rechargeFormula}}" placeholder="{{localize "D35E.RechargeFormula"}}"/>
   </div>
   {{/if}}
   {{/unless}}
   <div class="charge-link flexcol">
-    {{#unless data.linkedChargeItem.id}}
+    {{#unless data.data.linkedChargeItem.id}}
       <div style="width: 100%; text-align: center; padding: 12px">
         {{localize "D35E.DropChargeLinkItem"}}
       </div>
     {{else}}
-      <h4>{{localize "D35E.LinkedCharge"}} {{data.linkedChargeItem.id}}<a style="float: right" class="colorized-link remove-charge-link">{{localize "D35E.UnlinkCharge"}}</a></h4>
+      <h4>{{localize "D35E.LinkedCharge"}} {{data.datalinkedChargeItem.id}}<a style="float: right" class="colorized-link remove-charge-link">{{localize "D35E.UnlinkCharge"}}</a></h4>
       <div class="form-group">
-      <img src="{{data.linkedChargeItem.img}}">
-      <label>{{data.linkedChargeItem.name}}</label>
+      <img src="{{data.datalinkedChargeItem.img}}">
+      <label>{{data.datalinkedChargeItem.name}}</label>
 
 
 
@@ -139,30 +139,30 @@
   <div class="form-group">
     <label>{{localize "D35E.AutoDeductCharges"}}</label>
     <label class="checkbox" style="position: relative; flex: 0 20px">
-      <input type="checkbox" class="stylized" name="data.uses.autoDeductCharges" {{checked data.uses.autoDeductCharges}}/>
+      <input type="checkbox" class="stylized" name="data.uses.autoDeductCharges" {{checked data.data.uses.autoDeductCharges}}/>
       <span class="checkmark"></span>
     </label>
   </div>
 
   <div class="form-group input">
     <label>{{localize "D35E.ChargesToDeduct"}}</label>
-    <input style="width: 40px" type="text" value="{{data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
+    <input style="width: 40px" type="text" value="{{data.data.uses.chargesPerUse}}" name="data.uses.chargesPerUse"  data-dtype="Number"/>
   </div>
 
   <div class="form-group">
     <label>{{localize "D35E.AllowMultipleUses"}}</label>
     <label class="checkbox" style="position: relative; flex: 0 20px">
-      <input type="checkbox" class="stylized" name="data.uses.allowMultipleUses" {{checked data.uses.allowMultipleUses}}/>
+      <input type="checkbox" class="stylized" name="data.uses.allowMultipleUses" {{checked data.data.uses.allowMultipleUses}}/>
       <span class="checkmark"></span>
     </label>
   </div>
-  {{#if data.uses.allowMultipleUses}}
+  {{#if data.data.uses.allowMultipleUses}}
   <div class="form-group input">
     <label>{{localize "D35E.MaxChargesPerUse"}}</label>
-    <input style="flex: 0 140px; margin-right: 1rem" type="text" value="{{data.uses.maxPerUseFormula}}" name="data.uses.maxPerUseFormula"  data-dtype="String"/>
+    <input style="flex: 0 140px; margin-right: 1rem" type="text" value="{{data.data.uses.maxPerUseFormula}}" name="data.uses.maxPerUseFormula"  data-dtype="String"/>
 
     <span class="sep"> Total:  </span>
-    <input style="flex: 0 40px" type="text" value="{{data.uses.maxPerUse}}" disabled  data-dtype="Number"/>
+    <input style="flex: 0 40px" type="text" value="{{data.data.uses.maxPerUse}}" disabled  data-dtype="Number"/>
   </div>
   {{/if}}
 {{/unless}}

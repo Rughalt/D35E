@@ -1,0 +1,21 @@
+<form autocomplete="off">
+    <p class="notes">{{localize "D35E.SensesConfigHint"}}</p>
+    {{#each senses as |sense name|}}
+    <div class="form-group">
+        <label>{{sense.label}}</label>
+        <input name="data.attributes.senses.{{name}}" type="number" step="0.1" value="{{sense.value}}"/>
+    </div>
+    {{/each}}
+    <div class="form-group">
+        <label>{{localize "D35E.VisionLowLight"}}</label>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized auto-save" name="data.attributes.senses.lowLight" {{#if lowLight}}checked{{/if}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.SenseSpecial"}}</label>
+        <input type="text" name="data.attributes.senses.special" value="{{special}}"/>
+    </div>
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{ localize "Submit"}}</button>
+</form>

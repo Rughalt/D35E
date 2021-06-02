@@ -90,10 +90,14 @@
         {{#if spellbook.orig.usePowerPoints}}
         <li class="attribute high powerPoints tooltip" data-attribute="powerPoints">
             <h4 class="attribute-name box-title">{{ localize 'D35E.PowerPoints' }}</h4>
-            <div class="attribute-value">
+            <div class="attribute-value flexrow" style="padding: 0 20px">
 
                 <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.powerPoints"
                        value="{{spellbook.orig.powerPoints}}" placeholder="{{ localize 'D35E.PowerPoints' }}"
+                       data-dtype="Number"/>
+                <span style="flex: 0 12px;  line-height: 24px;">/</span>
+                <input type="text" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.powerPointsTotal"
+                       value="{{spellbook.orig.powerPointsTotal}}" disabled placeholder="{{ localize 'D35E.PowerPoints' }}"
                        data-dtype="Number"/>
             </div>
             <footer class="attribute-footer">
@@ -174,6 +178,17 @@
     <!--    </div>-->
     <!--  </div>-->
 
+    <div class="flexrow" style="margin: 5px 0 -5px"><h2 class="block-header" style="flex: 1">Spell List</h2>
+        <div class="form-group" style="flex: 0 110px;">
+            <label>{{localize "D35E.OnlyPrepared"}}</label>
+
+            <label class="checkbox" style="position: relative; flex: 0 20px">
+                <input type="checkbox" class="stylized" name="data.attributes.spells.spellbooks.{{spellbookIndex}}.showOnlyPrepared"
+                       {{checked spellbook.orig.showOnlyPrepared}}/>
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
 
 </div>
 

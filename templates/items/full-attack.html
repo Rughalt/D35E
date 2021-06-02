@@ -45,7 +45,7 @@
                     </div>
                   </li>
                   <ol class="item-list" data-pack="D35E.class-abilities">
-                    {{#each data.attacks as |item level|}}
+                    {{#each data.data.attacks as |item level|}}
                     <li class="item item-box  flexrow" data-item-id="{{item.id}}" data-pack="{{item.pack}}"
                         data-item-level="{{item.level}}">
                       <div class="item-name child-item flexrow non-rollable">
@@ -86,13 +86,13 @@
 
               <div class="form-group stacked">
                 <label class="checkbox">
-                  <input type="checkbox" name="data.showInQuickbar" {{checked data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
+                  <input type="checkbox" name="data.showInQuickbar" {{checked data.data.showInQuickbar}}/> {{localize "D35E.ShowInQuickbar"}}
                 </label>
               </div>
 
               <h3 class="form-header">{{localize "D35E.FullAttackAttacks"}}</h3>
               <section>
-                {{#each data.attacks as |attack level|}}
+                {{#each data.data.attacks as |attack level|}}
                 <div class="full-attack flexcol" data-attack="{{level}}">
                   <h4>{{localize "D35E.Attack"}} {{attack._id}}</h4>
                   <div class="form-group">

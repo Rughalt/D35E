@@ -13,7 +13,8 @@ export class TokenQuickActions {
         return;
     
     let quickActions = '<div class="col actions"><div class="below">'
-    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "feat") && getProperty(o, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
+    let ammoCounter = '<div class="col actions"><div class="below" style="bottom: -60px">'
+    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "feat") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
     });
     items.forEach(function(item) {
       const icon = item.img;
@@ -24,8 +25,19 @@ export class TokenQuickActions {
       const type = item.type;
       quickActions += `<div id="${type}-${item._id}" class="control-icon token-quick-action"><img src="${icon}" width="36" height="36" title="${title}"></div>`;
     });
-    
+    let ammo = actor.data.items.filter(o => (o.type === "loot" || o.type === "spell" || o.type === "feat") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
+    });
+
+    ammo.forEach(function(item) {
+      const icon = item.img;
+      let title = "";
+      title = `${item.name} (${item.data.data.quantity})`;
+      const type = item.type;
+      ammoCounter += `<div id="${type}-${item._id}" class="control-icon"  title="${title}"><img style="position: absolute" src="${icon}" width="36" height="36"><span style="position: relative" >${item.data.data.quantity}</span></div>`;
+    });
+
     html.find('.col.middle').after(quickActions + '</div></div>');
+    html.find('.col.middle').after(ammoCounter + '</div></div>');
     
     items.forEach(function(item) {
       const type = item.type;

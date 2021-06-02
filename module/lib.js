@@ -2,6 +2,10 @@
  * Creates a tag from a string.
  * For example, if you input the string "Wizard of Oz 2", you will get "wizardOfOz2"
  */
+
+
+import {Roll35e} from "./roll.js"
+
 export const createTag = function(str) {
   if (str.length === 0) str = "tag";
   return str.replace(/[^a-zA-Z0-9\s]/g, "").split(/\s+/).map((s, a) => {
@@ -37,7 +41,7 @@ export const alterRoll = function(str, add, multiply) {
 /**
  * Creates tabs for a sheet object
  */
-export const createTabs = function(html, tabGroups) {
+export const createTabs = function(html, tabGroups, existingTabs = null) {
   // Create recursive activation/callback function
   const _recursiveActivate = function(rtabs, tabName=null) {
     if (tabName == null) this._initialTab[rtabs.group] = rtabs.active;
@@ -58,7 +62,7 @@ export const createTabs = function(html, tabGroups) {
   };
 
   // Create all tabs
-  const _func = function(group, children) {
+  const _func = function(group, children, tabs = null) {
     if (html.find(`nav[data-group="${group}"]`).length === 0) return null;
 
     if (this._initialTab == null) this._initialTab = {};
@@ -77,24 +81,26 @@ export const createTabs = function(html, tabGroups) {
     if (scrollElems.length === 0) scrollElems = html.find(`.tab[data-group="${group}"]`);
     scrollElems.scroll(ev => this._scrollTab[group] = ev.currentTarget.scrollTop);
 
-    // Create tabs object
-    const tabs = new TabsV2({
-      navSelector: `.tabs[data-group="${group}"]`,
-      contentSelector: `.${group}-body`,
-      callback: (_, tabs) => {
-        _recursiveActivate.call(this, tabs);
-      },
-    });
+    if (!tabs) {
+      // Create tabs object
+      tabs = new TabsV2({
+        navSelector: `.tabs[data-group="${group}"]`,
+        contentSelector: `.${group}-body`,
+        callback: (_, tabs) => {
+          _recursiveActivate.call(this, tabs);
+        },
+      });
 
-    // Recursively create tabs
-    tabs.group = group;
-    tabs.subTabs = [];
-    for (let [childKey, subChildren] of Object.entries(children)) {
-      const newTabs = _func.call(this, childKey, subChildren);
-      if (newTabs != null) tabs.subTabs.push(newTabs);
+      // Recursively create tabs
+      tabs.group = group;
+      tabs.subTabs = [];
+      for (let [childKey, subChildren] of Object.entries(children)) {
+        const newTabs = _func.call(this, childKey, subChildren);
+        if (newTabs != null) tabs.subTabs.push(newTabs);
+      }
+
+      tabs.bind(html[0]);
     }
-
-    tabs.bind(html[0]);
     _recursiveActivate.call(this, tabs, this._initialTab[group]);
     return tabs;
   };
@@ -333,19 +339,19 @@ export const normalDie = function(origCount, origSides, crit=1) {
  * @param {string|number} [targetSize="M"] - The target size to change the die to.
  *   Can be a string of values "F", "D", "T", "S", "M", "L", "H", "G" or "C" for the different sizes.
  *   Can also be a number in the range of -4 to 4, where 0 is Medium.
- * @returns {number} The result of the new roll.
+ * @returns {number} The result of the new Roll35e.
  */
 export const sizeRoll = function(origCount, origSides, targetSize="M", crit=1) {
-  return new Roll(sizeDie(origCount, origSides, targetSize, crit)).roll().total;
+  return new Roll35e(sizeDie(origCount, origSides, targetSize, crit)).roll().total;
 };
 
 export const sizeNaturalRoll = function(block, targetSize="M", crit=1) {
-  return new Roll(sizeNaturalDie(block, targetSize, crit)).roll().total;
+  return new Roll35e(sizeNaturalDie(block, targetSize, crit)).roll().total;
 };
 
 
 export const sizeMonkDamageRoll = function(level, targetSize="M", crit=1) {
-  return new Roll(sizeMonkDamageDie(level, targetSize, crit)).roll().total;
+  return new Roll35e(sizeMonkDamageDie(level, targetSize, crit)).roll().total;
 };
 
 

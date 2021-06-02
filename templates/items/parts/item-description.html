@@ -1,169 +1,197 @@
 <div class="tab active flexcol" data-group="primary" data-tab="description">
-  {{#if showIdentifyDescription}}
-  <nav class="sheet-navigation tabs subtabs description" data-group="description">
-    <a class="item active" data-tab="identified">{{localize "D35E.Identified"}}</a>
-    <a class="item" data-tab="unidentified">{{localize "D35E.Unidentified"}}</a>
-  </nav>
-  {{/if}}
-
-  <div class="flexrow description-container">
-    <div class="item-properties">
-      {{#if isPhysical}}
-      {{!-- Quantity --}}
-      <div class="form-group">
-        <label>{{localize "D35E.Quantity"}}</label>
-        <input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number"/>
-      </div>
-
-      {{!-- Weight --}}
-      <div class="form-group">
-        <label>{{localize "D35E.Weight"}}</label>
-        <input type="text" name="data.convertedWeight" value="{{convertedWeight}}" data-dtype="Number"/>
-        {{#if usesImperialSystem}}
-        <label class="unit" style="flex: 0">{{ localize 'D35E.Lbs' }}</label>
-        {{else}}
-        <label class="unit" style="flex: 0">{{ localize 'D35E.Kgs' }}</label>
-        {{/if}}
-      </div>
-
-      <div class="form-group">
-        <label>{{localize "D35E.EquippedWeightless"}}</label>
-
-        <label class="checkbox" style="position: relative; flex: 0 20px">
-          <input type="checkbox" class="stylized" name="data.equippedWeightless" {{checked data.equippedWeightless}}/>
-          <span class="checkmark"></span>
-        </label>
-      </div>
-
-      {{!-- Price --}}
-      {{#if showIdentifyDescription}}
-      <div class="form-group">
-        <label>{{localize "D35E.Price"}}</label>
-        <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"/>
-      </div>
-
-      <div class="form-group">
-        <label>{{localize "D35E.UnidentifiedPriceShort"}}</label>
-        <input type="text" name="data.unidentified.price" value="{{data.unidentified.price}}" data-dtype="Number"/>
-      </div>
-      {{else}}
-      {{#if showUnidentifiedData}}
-      <div class="form-group">
-        <label>{{localize "D35E.Price"}}</label>
-        <input type="text" name="data.unidentified.price" value="{{data.unidentified.price}}" data-dtype="Number"/>
-      </div>
-      {{else}}
-      <div class="form-group">
-        <label>{{localize "D35E.Price"}}</label>
-        <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"/>
-      </div>
-      {{/if}}
-      {{/if}}
-
-      {{!-- Hit Points --}}
-      <div class="form-group">
-        <label>{{localize "D35E.HPShort"}}</label>
-        <input type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number" style="flex: 0 0 32px"/>
-        <span>/</span>
-        <input type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number" style="flex: 0 0 32px"/>
-      </div>
-
-      {{!-- Hardness --}}
-      <div class="form-group">
-        <label>{{localize "D35E.Hardness"}}</label>
-        <input type="text" name="data.hardness" value="{{data.hardness}}" data-dtype="Number"/>
-      </div>
-
-      {{!-- Carried Flag --}}
-      <div class="form-group">
-        <label>{{localize "D35E.Carried"}}</label>
-        <label class="checkbox" style="position: relative; flex: 0 20px">
-          <input type="checkbox" class="stylized" name="data.carried" {{checked data.carried}}/>
-          <span class="checkmark"></span>
-        </label>
-      </div>
-      <div class="form-group">
-        <label>{{localize "D35E.Container"}}</label>
-
-        <select name="data.containerId">
-          {{#select data.containerId}}
-          {{#each availableContainers as |name id|}}
-          <option value="{{id}}">{{name}}</option>
-          {{/each}}
-          {{/select}}
-        </select>
-      </div>
-      {{/if}}
-
-
-      {{#if canMeld}}
-      <div class="form-group">
-        <label>{{localize "D35E.Melded"}}</label>
-
-        <label class="checkbox" style="position: relative; flex: 0 20px">
-          <input type="checkbox" class="stylized" name="data.melded" {{checked data.melded}}/>
-          <span class="checkmark"></span>
-        </label>
-      </div>
-      {{/if}}
-
-
-
-      {{!-- Properties --}}
-
-      {{#unless showUnidentifiedData}}
-      <ol class="properties-list">
-        {{#each itemProperties}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ol>
-      {{/unless}} 
-
-      {{#if isFeat}}
-      <div class="form-group">
-        <label>{{localize "D35E.FeatPool"}}</label>
-        <select name="data.classSource" data-dtype="String">
-            {{#select data.classSource}}
-            <option value="">{{localize "D35E.Base"}}</option>
-            {{#each featCounters as |ftt a|}}
-            <option value="{{ftt.val}}" style="text-transform: capitalize">{{ftt.name}}</option>
-            {{/each}}
-            {{/select}}
-        </select>
-      </div>
-      {{/if}}
-
-      {{#if isGM}}
-      <div class="form-group">
-        <label>UID</label>
-        <input type="text" name="data.uniqueId" value="{{data.uniqueId}}" data-dtype="String"/>
-      </div>
-
-      <div class="form-group">
-        <label>Non Removable</label>
-        <input type="checkbox" name="data.userNonRemovable" {{checked data.userNonRemovable}}/>
-      </div>
-      {{/if}}
-
-
-    </div>
-
+    {{#if showIdentifyDescription}}
+    <nav class="sheet-navigation tabs subtabs description" data-group="description">
+        <a class="item active" data-tab="identified">{{localize "D35E.Identified"}}</a>
+        <a class="item" data-tab="unidentified">{{localize "D35E.Unidentified"}}</a>
+    </nav>
+    {{/if}}
     {{#if showIdentifyDescription}}
     <section class="description-body">
       <div class="tab description-group flexcol" data-group="description" data-tab="identified">
-      {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
+        {{editor content=data.data.description.value target="data.description.value" button=true owner=owner
+        editable=editable}}
       </div>
 
       <div class="tab description-group flexcol" data-group="description" data-tab="unidentified">
-      {{editor content=data.description.unidentified target="data.description.unidentified" button=true owner=owner editable=editable}}
+        {{editor content=data.data.description.unidentified target="data.description.unidentified" button=true
+        owner=owner editable=editable}}
       </div>
     </section>
     {{else}}
     {{#if showUnidentifiedData}}
-    {{editor content=data.description.unidentified target="data.description.unidentified" button=true owner=owner editable=editable}}
+    {{editor content=data.data.description.unidentified target="data.description.unidentified" button=true
+    owner=owner editable=editable}}
     {{else}}
-    {{editor content=data.description.value target="data.description.value" button=true owner=owner editable=editable}}
+    {{editor content=data.data.description.value target="data.description.value" button=true owner=owner
+    editable=editable}}
     {{/if}}
     {{/if}}
-  </div>
+    <div class="detailsbox" style="flex: 0">
+        <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
+            {{#if isPhysical}}
+            {{!-- Quantity --}}
+            <div class="form-group">
+                <label>{{localize "D35E.Quantity"}}</label>
+                <input type="text" name="data.quantity" value="{{data.data.quantity}}" data-dtype="Number"/>
+            </div>
+
+            {{!-- Weight --}}
+            <div class="form-group">
+                <label>{{localize "D35E.Weight"}}</label>
+                <input type="text" name="data.convertedWeight" value="{{convertedWeight}}" data-dtype="Number"/>
+                {{#if usesImperialSystem}}
+                <label class="unit" style="flex: 0">{{ localize 'D35E.Lbs' }}</label>
+                {{else}}
+                <label class="unit" style="flex: 0">{{ localize 'D35E.Kgs' }}</label>
+                {{/if}}
+            </div>
+
+            {{!-- Price --}}
+            {{#if showIdentifyDescription}}
+            <div class="form-group">
+                <label>{{localize "D35E.Price"}}</label>
+                <input type="text" name="data.price" value="{{data.data.price}}" data-dtype="Number"/>
+            </div>
+
+            <div class="form-group">
+                <label>{{localize "D35E.UnidentifiedPriceShort"}}</label>
+                <input type="text" name="data.unidentified.price" value="{{data.data.unidentified.price}}"
+                       data-dtype="Number"/>
+            </div>
+            {{else}}
+            {{#if showUnidentifiedData}}
+            <div class="form-group">
+                <label>{{localize "D35E.Price"}}</label>
+                <input type="text" name="data.unidentified.price" value="{{data.data.unidentified.price}}"
+                       data-dtype="Number"/>
+            </div>
+            {{else}}
+            <div class="form-group">
+                <label>{{localize "D35E.Price"}}</label>
+                <input type="text" name="data.price" value="{{data.data.price}}" data-dtype="Number"/>
+            </div>
+            {{/if}}
+            {{/if}}
+
+            {{!-- Hit Points --}}
+            <div class="form-group">
+                <label>{{localize "D35E.HPShort"}}</label>
+                <input type="text" name="data.hp.value" value="{{data.data.hp.value}}" data-dtype="Number"
+                       style="flex: 0 0 32px"/>
+                <span>/</span>
+                <input type="text" name="data.hp.max" value="{{data.data.hp.max}}" data-dtype="Number"
+                       style="flex: 0 0 32px"/>
+            </div>
+
+            {{!-- Hardness --}}
+            <div class="form-group">
+                <label>{{localize "D35E.Hardness"}}</label>
+                <input type="text" name="data.hardness" value="{{data.data.hardness}}" data-dtype="Number"/>
+            </div>
+
+            <div class="form-group">
+                <label>{{localize "D35E.Container"}}</label>
+
+                <select name="data.containerId">
+                    {{#select data.data.containerId}}
+                    {{#each availableContainers as |name id|}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+            {{/if}}
+
+
+
+            {{#if isFeat}}
+            <div class="form-group">
+                <label>{{localize "D35E.FeatPool"}}</label>
+                <select name="data.classSource" data-dtype="String">
+                    {{#select data.data.classSource}}
+                    <option value="">{{localize "D35E.Base"}}</option>
+                    {{#each featCounters as |ftt a|}}
+                    <option value="{{ftt.val}}" style="text-transform: capitalize">{{ftt.name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+            {{/if}}
+
+            <div class="form-group">
+                <label>{{localize "D35E.EquippedWeightless"}}</label>
+
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized" name="data.equippedWeightless" {{checked
+                           data.data.equippedWeightless}}/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+
+            {{!-- Carried Flag --}}
+            <div class="form-group">
+                <label>{{localize "D35E.Carried"}}</label>
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized" name="data.carried" {{checked data.data.carried}}/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            {{#if canMeld}}
+            <div class="form-group">
+                <label>{{localize "D35E.Melded"}}</label>
+
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized" name="data.melded" {{checked data.data.melded}}/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            {{/if}}
+
+
+            {{!-- Properties --}}
+
+
+        </div>
+        <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
+            {{#if isGM}}
+            <div class="form-group gm">
+                <label><i class="fas fa-low-vision tooltip"></i> UID</label>
+                <input type="text" name="data.uniqueId" value="{{data.data.uniqueId}}" data-dtype="String"/>
+            </div>
+
+            <div class="form-group gm">
+                <label><i class="fas fa-low-vision tooltip"></i> Non Removable</label>
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized" name="data.userNonRemovable" {{checked
+                           data.data.userNonRemovable}}/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <div class="form-group gm">
+                <label><i class="fas fa-low-vision tooltip"></i> Const. weight</label>
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized" name="data.constantWeight" {{checked
+                           data.data.constantWeight}}/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+
+            {{/if}}
+
+        </div>
+        <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
+            {{#unless showUnidentifiedData}}
+            {{#if itemProperties}}
+            <ol class="properties-list">
+                {{#each itemProperties}}
+                <li>{{this}}</li>
+                {{/each}}
+            </ol>
+            {{/if}}
+            {{/unless}}
+
+        </div>
+
+
+    </div>
 </div>

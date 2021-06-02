@@ -13,7 +13,7 @@
                     <option data-hd="0" data-skill="0" value="">{{localize "D35E.SelectClass"}}</option>
                     {{#select levelUpData.classId}}
                     {{#each classes as |cls a|}}
-                    <option data-hd="{{cls.data.hd}}" data-skill="{{cls.data.skillsPerLevel}}" value="{{cls._id}}">{{cls.name}}</option>
+                    <option data-hd="{{cls.data.data.hd}}" data-skill="{{cls.data.data.skillsPerLevel}}" value="{{cls._id}}">{{cls.name}}</option>
                     {{/each}}
                     {{/select}}
                 </select>
@@ -101,8 +101,7 @@
             skills += parseInt(bonusSkillPoints)
             skills = Math.max(1,skills)
             let classes = JSON.parse('{{{classesJson}}}')
-            let classSkills = classes.find(_c => _c.id === classId).classSkills;
-            console.log(classSkills)
+            let classSkills = classes.find(_c => _c.id === classId)?.classSkills || {};
             for (let key of Object.keys(classSkills)) {
                 $(`input[data-class-skillid='${key}'`).val(classSkills[key])
                 $(`span[data-class-skillid='${key}'`).toggleClass("bold", classSkills[key])

@@ -1,11 +1,11 @@
 export class LevelUpDataDialog extends FormApplication {
     constructor(...args) {
         super(...args);
-
+        //console.log('D35E | Level Up Windows data', this.object.data)
         this.actor = this.object.data;
         this.levelUpId = this.options.id;
         this.levelUpData = this.actor.data.details.levelUpData.find(a => a.id === this.levelUpId);
-        console.log('ludid',this.levelUpId,this.levelUpData, this.options.skillset)
+        //console.log('ludid',this.levelUpId,this.levelUpData, this.options.skillset)
     }
 
     static get defaultOptions() {
@@ -59,7 +59,7 @@ export class LevelUpDataDialog extends FormApplication {
         let data = {
             actor: this.actor,
             classes: classes,
-            classesJson: JSON.stringify(classes.map(_c => { return {id: _c._id, classSkills: _c.data.classSkills}})),
+            classesJson: JSON.stringify(classes.map(_c => { return {id: _c._id, classSkills: _c.data.data.classSkills}})),
             level: this.actor.data.details.levelUpData.findIndex(a => a.id === this.levelUpId) + 1,
             totalLevel: this.actor.data.details.level.available,
             skillset: skillset,
@@ -84,7 +84,7 @@ export class LevelUpDataDialog extends FormApplication {
         const updateData = {};
         let classId = formData['class'];
         let hp = parseInt(formData['hp'] || 0);
-        console.log('formData',formData)
+        //console.log('formData',formData)
         if (classId !== "") {
 
 
@@ -100,9 +100,9 @@ export class LevelUpDataDialog extends FormApplication {
                         let key = s.split(".");
                         if (key[0] === "skills" && key.length === 3) {
                             if (a.skills[key[1]] === undefined) {
-                                a.skills[key[1]] = {rank: 0, cls: _class.data.classSkills[key[1]]}
+                                a.skills[key[1]] = {rank: 0, cls: _class.data.data.classSkills[key[1]]}
                             }
-                            a.skills[key[1]].cls = _class.data.classSkills[key[1]]
+                            a.skills[key[1]].cls = _class.data.data.classSkills[key[1]]
                             a.skills[key[1]].rank = parseInt(formData[s])
                         }
                         if (key[0] === "skills" && key.length === 5) {
@@ -110,15 +110,15 @@ export class LevelUpDataDialog extends FormApplication {
                                 a.skills[key[1]] = {subskills: {}}
                             }
                             if (a.skills[key[1]].subskills[key[3]] === undefined) {
-                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: _class.data.classSkills[key[1]]}
+                                a.skills[key[1]].subskills[key[3]] = {rank: 0, cls: _class.data.data.classSkills[key[1]]}
                             }
-                            a.skills[key[1]].subskills[key[3]].cls = _class.data.classSkills[key[1]]
+                            a.skills[key[1]].subskills[key[3]].cls = _class.data.data.classSkills[key[1]]
                             a.skills[key[1]].subskills[key[3]].rank = parseInt(formData[s])
                         }
                     })
                 }
             })
-            console.log(`D35E | Updating Level Data | ${classId} | ${this.levelUpId}`)
+            //console.log(`D35E | Updating Level Data | ${classId} | ${this.levelUpId}`)
             updateData[`data.details.levelUpData`] = data;
 
             const classes = this.actor.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {

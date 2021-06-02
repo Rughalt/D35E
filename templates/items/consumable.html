@@ -13,7 +13,7 @@
       </h3>
 
       <h3 class="charname">
-        <input name="data.unidentified.name" type="text" value="{{data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
+        <input name="data.unidentified.name" type="text" value="{{data.data.unidentified.name}}" placeholder="{{localize "D35E.UnidentifiedName"}}"/>
       </h3>
       {{else}}
       {{#if showUnidentifiedData}}
@@ -65,7 +65,7 @@
       <div class="form-group">
         <label>{{localize "D35E.Type"}}</label>
         <select name="data.consumableType">
-          {{#select data.consumableType}}
+          {{#select data.data.consumableType}}
           {{#each config.consumableTypes as |name type|}}
           <option value="{{type}}">{{name}}</option>
           {{/each}}
@@ -75,7 +75,7 @@
 
       {{#if isGM}}
       <label class="checkbox">
-        <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{localize "D35E.Identified"}}
+        <input type="checkbox" name="data.identified" {{checked data.data.identified}}/> {{localize "D35E.Identified"}}
       </label>
       {{/if}}
 

@@ -21,10 +21,10 @@
             {{#if isTemplate}}
             <li></li>
             <li class="attribute high tooltip" data-attribute="levels">
-                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.datalevels}}</span>
                 <h4 class="attribute-name box-title">{{localize "D35E.BaseHD"}}</h4>
                 <div class="attribute-value">
-                    <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize " D35E.Level"}}"
+                    <input type="text" name="data.levels" value="{{data.data.levels}}" placeholder="{{localize " D35E.Level"}}"
                     data-dtype="Number"/>
                 </div>
                 <footer class="attribute-footer">
@@ -33,10 +33,10 @@
             </li>
             {{else}}
             <li class="attribute high tooltip" data-attribute="levels">
-                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.levels}}</span>
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.level : {{data.datalevels}}</span>
                 <h4 class="attribute-name box-title">{{localize "D35E.Level"}}</h4>
                 <div class="attribute-value">
-                    <input type="text" name="data.levels" value="{{data.levels}}" placeholder="{{localize " D35E.Level"}}"
+                    <input type="text" name="data.levels" value="{{data.data.levels}}" placeholder="{{localize " D35E.Level"}}"
                     data-dtype="Number"/>
                 </div>
                 <footer class="attribute-footer">
@@ -45,14 +45,14 @@
             </li>
 
             <li class="attribute high tooltip" data-attribute="hp">
-                <span class="tooltipcontent">@classes.{{item.data.tag}}.hp : {{data.hp}}</span>
+                <span class="tooltipcontent">@classes.{{item.data.tag}}.hp : {{data.datahp}}</span>
                 <h4 class="attribute-name box-title">{{localize "D35E.HitPoints"}} {{#if healthConfig.auto}}(Auto){{/if}}</h4>
                 <div class="attribute-value">
                     {{!-- Hit Points --}}
                     {{#unless healthConfig.auto}}
-                        <input type="text" name="data.hp" value="{{data.hp}}" data-dtype="Number"/>
+                        <input type="text" name="data.hp" value="{{data.data.hp}}" data-dtype="Number"/>
                     {{else}}
-                        <input type="text" name="data.hp" disabled value="{{data.hp}}" data-dtype="Number"/>
+                        <input type="text" name="data.hp" disabled value="{{data.data.hp}}" data-dtype="Number"/>
                     {{/unless}}
                 </div>
                 <footer class="attribute-footer">
@@ -91,7 +91,7 @@
                     <section class="description-body" style="display: block; height: 100%">
                         <div class="tab description-group flexcol" data-group="description"
                              data-tab="sub-description">
-                            {{editor content=data.description.value target="data.description.value" button=true owner=owner
+                            {{editor content=data.data.description.value target="data.description.value" button=true owner=owner
                             editable=editable}}
                         </div>
                         <div class="tab description-group flexcol" data-group="description" data-tab="sub-progression">
@@ -176,9 +176,9 @@
                         {{#if isNonPsionSpellcaster}}
                         <div class="tab description-group flexcol" data-group="description" data-tab="sub-spellcasting">
 
-                            {{{data.spellcastingDescription}}}
+                            {{{data.dataspellcastingDescription}}}
 
-                            <h2>{{data.spellcastingSpellname}} Progression Table</h2>
+                            <h2>{{data.dataspellcastingSpellname}} Progression Table</h2>
                             <div class="inventory-group flexcol">
                                 <ol class="inventory-list sub-scroll" style="padding: 0">
                                     <li class="flexrow inventory-header spellbook-header">
@@ -221,7 +221,7 @@
                             </div>
 
                             {{#if hasKnownSpells}}
-                            <h2>{{data.spellcastingSpellnamePl}} Known</h2>
+                            <h2>{{data.dataspellcastingSpellnamePl}} Known</h2>
                             <div class="inventory-group flexcol">
                                 <ol class="inventory-list sub-scroll" style="padding: 0">
                                     <li class="flexrow inventory-header spellbook-header">
@@ -268,9 +268,9 @@
                         {{#if isPsionSpellcaster}}
                         <div class="tab description-group flexcol" data-group="description" data-tab="sub-psionics">
 
-                            {{{data.spellcastingDescription}}}
+                            {{{data.dataspellcastingDescription}}}
 
-                            <h2>{{data.spellcastingSpellname}} Progression Table</h2>
+                            <h2>{{data.dataspellcastingSpellname}} Progression Table</h2>
                             <div class="inventory-group flexcol">
                                 <ol class="inventory-list sub-scroll" style="padding: 0">
                                     <li class="flexrow inventory-header spellbook-header">
@@ -307,7 +307,7 @@
 
             <div class="tab flexcol active" data-group="primary" data-tab="description">
         <section class="description-body flexcol" style="height: 385px">
-                {{editor content=data.description.value target="data.description.value" button=true owner=owner
+                {{editor content=data.data.description.value target="data.description.value" button=true owner=owner
                 editable=editable}}
         </section>
         </div>
@@ -331,7 +331,7 @@
                         <div class="form-group">
                             <label>{{localize "D35E.ClassType"}}</label>
                             <select name="data.classType">
-                                {{#select data.classType}}
+                                {{#select data.data.classType}}
                                 {{#each config.classTypes as |name type|}}
                                 <option value="{{type}}">{{name}}</option>
                                 {{/each}}
@@ -344,7 +344,7 @@
                         <div class="form-group">
                             <label>{{localize "D35E.CreatureType"}}</label>
                             <select name="data.creatureType">
-                                {{#select data.creatureType}}
+                                {{#select data.data.creatureType}}
                                 {{#each config.creatureTypes as |name type|}}
                                 <option value="{{type}}">{{name}}</option>
                                 {{/each}}
@@ -357,13 +357,13 @@
                         {{#if isTemplate}}
                         <div class="form-group">
                             <label>{{localize "D35E.LA"}}</label>
-                            <input type="text" name="data.la" value="{{data.la}}" data-dtype="Number" />
+                            <input type="text" name="data.la" value="{{data.data.la}}" data-dtype="Number" />
                         </div>
                         {{!-- Racial Type --}}
                         <div class="form-group">
                             <label>{{localize "D35E.CreatureType"}}</label>
                             <select name="data.creatureType">
-                                {{#select data.creatureType}}
+                                {{#select data.data.creatureType}}
                                 {{#each config.creatureTypes as |name type|}}
                                 <option value="{{type}}">{{name}}</option>
                                 {{/each}}
@@ -374,7 +374,7 @@
                         {{!-- HD --}}
                         <div class="form-group">
                             <label>{{localize "D35E.HitDie"}}</label>
-                            <input type="text" name="data.hd" value="{{data.hd}}" data-dtype="Number"/>
+                            <input type="text" name="data.hd" value="{{data.data.hd}}" data-dtype="Number"/>
                         </div>
 
 
@@ -383,7 +383,7 @@
                         <div class="form-group">
                             <label>{{localize "D35E.BABAbbr"}}</label>
                             <select name="data.bab">
-                                {{#select data.bab}}
+                                {{#select data.data.bab}}
                                 <option value="">{{localize "D35E.None"}}</option>
                                 {{#each config.classBAB as |name value|}}
                                 <option value="{{value}}">{{name}}</option>
@@ -395,19 +395,19 @@
                         {{!-- Skills/Level --}}
                         <div class="form-group">
                             <label>{{localize "D35E.SkillsPerLevel"}}</label>
-                            <input type="text" name="data.skillsPerLevel" value="{{data.skillsPerLevel}}" data-dtype="Number"/>
+                            <input type="text" name="data.skillsPerLevel" value="{{data.data.skillsPerLevel}}" data-dtype="Number"/>
                         </div>
 
 
                         <div class="form-group">
                             <label>{{localize "D35E.MaxLevel"}}</label>
-                            <input type="text" name="data.maxLevel" value="{{data.maxLevel}}" data-dtype="Number"/>
+                            <input type="text" name="data.maxLevel" value="{{data.data.maxLevel}}" data-dtype="Number"/>
                         </div>
 
                         <div class="form-group">
                         <label class="checkbox skill-cs">
                             <label>{{localize "D35E.AutomaticFeatures"}}</label>
-                            <input type="checkbox" name="data.automaticFeatures" {{checked data.automaticFeatures}}/>
+                            <input type="checkbox" name="data.automaticFeatures" {{checked data.data.automaticFeatures}}/>
                         </label>
                         </div>
                         <em>{{localize "D35E.MaxLevelAutomationInfo"}}</em>
@@ -415,7 +415,7 @@
                         <h4 class="form-header">{{localize "D35E.SavingThrowPlural"}}</h4>
 
                         {{!-- Saving Throws --}}
-                        {{#each data.savingThrows as |savingThrow id|}}
+                        {{#each data.data.savingThrows as |savingThrow id|}}
                         <div class="form-group">
                             <label>{{savingThrow.label}}</label>
                             <select name="data.savingThrows.{{id}}.value">
@@ -433,35 +433,35 @@
                         <h4 class="form-header">{{localize "D35E.AdditionalClassFeatures"}}</h4>
                         <div class="form-group">
                             <label>{{localize "D35E.TurnUndeadFormula"}}</label>
-                            <input type="text" name="data.turnUndeadLevelFormula" value="{{data.turnUndeadLevelFormula}}"
+                            <input type="text" name="data.turnUndeadLevelFormula" value="{{data.data.turnUndeadLevelFormula}}"
                                    data-dtype="String"/>
                         </div>
 
                         <div class="form-group">
                             <label>{{localize "D35E.SneakAttackGroup"}}</label>
-                            <input type="text" name="data.sneakAttackGroup" value="{{data.sneakAttackGroup}}" data-dtype="String"/>
+                            <input type="text" name="data.sneakAttackGroup" value="{{data.data.sneakAttackGroup}}" data-dtype="String"/>
                         </div>
 
                         <div class="form-group">
                             <label>{{localize "D35E.SneakAttackFormula"}}</label>
-                            <input type="text" name="data.sneakAttackFormula" value="{{data.sneakAttackFormula}}"
+                            <input type="text" name="data.sneakAttackFormula" value="{{data.data.sneakAttackFormula}}"
                                    data-dtype="String"/>
                         </div>
                         <div class="form-group">
                             <label>{{localize "D35E.MinionGroup"}}</label>
-                            <input type="text" name="data.minionGroup" value="{{data.minionGroup}}" data-dtype="String"/>
+                            <input type="text" name="data.minionGroup" value="{{data.data.minionGroup}}" data-dtype="String"/>
                         </div>
 
                         <div class="form-group">
                             <label>{{localize "D35E.MinionLevelFormula"}}</label>
-                            <input type="text" name="data.minionLevelFormula" value="{{data.minionLevelFormula}}"
+                            <input type="text" name="data.minionLevelFormula" value="{{data.data.minionLevelFormula}}"
                                    data-dtype="String"/>
                         </div>
                         {{#if false}}
                         <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
 
                         {{!-- Favoured Class Bonuses --}}
-                        {{#each data.fc as |fc id|}}
+                        {{#each data.data.fc as |fc id|}}
                         <div class="form-group">
                             <label>{{fc.label}}</label>
                             <input type="text" name="data.fc.{{id}}.value" value="{{fc.value}}" data-dtype="Number"/>
@@ -498,7 +498,7 @@
                         <div class="form-group">
                             <label>{{localize "D35E.SpellcastingType"}}</label>
                             <select name="data.spellcastingType">
-                                {{#select data.spellcastingType}}
+                                {{#select data.data.spellcastingType}}
                                 {{#each config.spellcastingType as |name type|}}
                                 <option value="{{type}}">{{localize name}}</option>
                                 {{/each}}
@@ -511,7 +511,7 @@
                         <div class="form-group spellcasting-ability flexrow">
                             <label><span>{{localize "D35E.SpellcastingAbility"}}</span></label>
                             <select name="data.spellcastingAbility" data-dtype="String">
-                                {{#select data.spellcastingAbility}}
+                                {{#select data.data.spellcastingAbility}}
                                 <option value="">{{localize "D35E.None"}}</option>
                                 {{#each config.abilities as |abl a|}}
                                 <option value="{{a}}">{{abl}}</option>
@@ -522,7 +522,7 @@
                         <div class="form-group spellcasting-ability flexrow">
                             <label><span>{{localize "D35E.SpellslotAbility"}}</span></label>
                             <select name="data.spellslotAbility" data-dtype="String">
-                                {{#select data.spellslotAbility}}
+                                {{#select data.data.spellslotAbility}}
                                 <option value="">{{localize "D35E.SpellcastingAbility"}}</option>
                                 {{#each config.abilities as |abl a|}}
                                 <option value="{{a}}">{{abl}}</option>
@@ -554,34 +554,34 @@
 
                         <div class="form-group">
                             <label>{{localize "D35E.SpellcastingSpellname"}}</label>
-                            <input type="text" name="data.spellcastingSpellname" value="{{data.spellcastingSpellname}}" data-dtype="String"/>
+                            <input type="text" name="data.spellcastingSpellname" value="{{data.data.spellcastingSpellname}}" data-dtype="String"/>
                         </div>
                         <div class="form-group">
                             <label>{{localize "D35E.SpellcastingSpellnamePl"}}</label>
-                            <input type="text" name="data.spellcastingSpellnamePl" value="{{data.spellcastingSpellnamePl}}" data-dtype="String"/>
+                            <input type="text" name="data.spellcastingSpellnamePl" value="{{data.data.spellcastingSpellnamePl}}" data-dtype="String"/>
                         </div>
 
                         <div class="form-group stacked">
                             <label class="checkbox">
                                 <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
-                                       data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+                                       data.data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
                             </label>
                         </div>
                         <div class="form-group stacked">
                             <label class="checkbox">
                                 <input type="checkbox" name="data.hasSpecialSlot" {{checked
-                                       data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
+                                    data.data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
                             </label>
                         </div>
 
                         <div class="form-group stacked">
                             <label class="checkbox">
                                 <input type="checkbox" name="data.allSpellsKnown" {{checked
-                                       data.allSpellsKnown}}/> {{localize "D35E.KnowsAllSpells"}}
+                                    data.data.allSpellsKnown}}/> {{localize "D35E.KnowsAllSpells"}}
                             </label>
                         </div>
                         <label>{{localize "D35E.SpellcastingDescription"}}</label>
-                        {{editor content=data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
+                        {{editor content=data.data.spellcastingDescription target="data.spellcastingDescription" button=true owner=owner
                         editable=editable}}
 
 

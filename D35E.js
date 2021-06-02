@@ -39,9 +39,12 @@ import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
 import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
+import {TreasureGeneratorDialog} from "./module/apps/treasure-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
 import {applyConfigModifications} from "./module/config-tools.js";
 import {addLowLightVisionToLightConfig} from "./module/low-light-vision.js";
+import {Roll35e} from "./module/roll.js";
+import {genTreasureFromToken} from "./module/treasure/treasure.js"
 
 // Add String.format
 if (!String.prototype.format) {
@@ -90,22 +93,6 @@ Hooks.once("init", async function() {
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.entityClass = ChatMessagePF;
 
-
-
-  // Register System Settings
-  registerSystemSettings();
-
-  CONFIG.statusEffects = getConditions();
-
-
-  D35ELayer.registerLayer();
-  // Patch Core Functions
-  PatchCore();
-  // Preload Handlebars Templates
-  await preloadHandlebarsTemplates();
-  applyConfigModifications();
-
-  // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true });
   Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
@@ -115,6 +102,23 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
+
+
+  // Register System Settings
+  registerSystemSettings();
+
+  CONFIG.statusEffects = getConditions();
+
+
+  CONFIG.Canvas.layers["d35e"] = D35ELayer;
+
+  // Patch Core Functions
+  PatchCore();
+  // Preload Handlebars Templates
+  await preloadHandlebarsTemplates();
+  applyConfigModifications();
+
+  // Register sheet application classes
 
   // Enable skin
   $('body').toggleClass('d35ecustom', game.settings.get("D35E", "customSkin"));
@@ -209,7 +213,7 @@ Hooks.once("ready", async function() {
 
   const interval = setInterval(function() {
     if (updateRequestArray.length === 0) {
-      game.actors.entities.filter(obj => obj.hasPerm(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
+      game.actors.entities.filter(obj => obj.testUserPermission(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
         updateRequestArray.push(a);
       });
     }
@@ -297,6 +301,10 @@ Hooks.on("renderSettings", (app, html) => {
 
 });
 
+Hooks.on("renderActorSheet",function(sheet, window, data) {
+  //sheet.object.refresh({render: false})
+});
+
 /* -------------------------------------------- */
 /*  Canvas Initialization                       */
 /* -------------------------------------------- */
@@ -359,24 +367,26 @@ Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
 
-Hooks.on("updateOwnedItem", (actor, _, changedData, options, user) => {
-  TopPortraitBar.render(actor)
-  if (!(actor instanceof Actor)) return;
+Hooks.on("updateItem", (item, changedData, options, user) => {
+  console.log('D35E | Updated Item', item,changedData,options,user,game.userId)
+  let actor = item.parent;
+  if (actor) {
+    TopPortraitBar.render(actor)
+    if (!(actor instanceof Actor)) return;
 
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
-    return
+    if (user !== game.userId) {
+      console.log("Not updating actor as action was started by other user")
+      return
+    }
+    //actor.refresh(options)
   }
-  //actor.updateContainerData(updateData)
-  const item = actor.getOwnedItem(changedData._id);
-  if (item == null) return;
-  actor.updateItemResources(item);
 });
 Hooks.on("updateToken", (scene, token, data, options, user) => {
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
+  if (options.tokenOnly) return
   const actor = game.actors.tokens[data._id] ?? game.actors.get(token.actorId);
   if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
@@ -409,14 +419,34 @@ Hooks.on("renderLightConfig", (app, html) => {
 });
 
 
-Hooks.on("createToken", async (scene, token, options, userId) => {
+Hooks.on("createToken", async (token, options, userId) => {
   if (userId !== game.user._id) return;
 
-  const actor = game.actors.tokens[token._id] ?? game.actors.get(token.actorId);
+  const actor = game.actors.tokens[token._id] ?? game.actors.get(token.data.actorId);
   actor.toggleConditionStatusIcons();
 
   // Update changes and generate sourceDetails to ensure valid actor data
-  if (actor != null) actor.refresh();
+  if (actor != null) await actor.refresh();
+
+  if (game.settings.get("D35E", "randomizeHp")){
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    let itemUpdates = []
+    actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
+      let hd = item.data.data.hd
+      let hp = 0;
+      let levels = item.data.data.levels;
+      for (let i = 0; i < levels; i++) {
+        hp += getRandomInt(1,hd);
+      }
+      itemUpdates.push({_id: item._id, "data.hp": hp});
+    });
+    actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
+  }
+
 });
 
 
@@ -437,11 +467,14 @@ Hooks.on("createCombatant", (combat, combatant, info, data) => {
 Hooks.on("updateCombat", async (combat, combatant, info, data) => {
   if (!game.user.isGM)
     return;
+  if ((combat.current.turn <= combat.previous.turn && combat.current.round === combat.previous.round) || combat.current.round < combat.previous.round)
+    return; // We moved back in time
   const actor = combat.combatant.actor;
   if (actor != null) {
     actor.refresh();
     let itemUpdateData = []
     let itemsEnding = []
+    let itemsOnRound = []
     let itemResourcesData = {}
     let deletedOrChanged = false;
     if (actor.items !== undefined && actor.items.size > 0) {
@@ -451,6 +484,8 @@ Hooks.on("updateCombat", async (combat, combatant, info, data) => {
         let _data = i.getElapsedTimeUpdateData(1)
         if (_data && _data["data.active"] === false)
           itemsEnding.push(i)
+        if ((i.data.data.perRoundActions || []).length)
+          itemsOnRound.push(i)
         if (_data && !_data.delete) {
           itemUpdateData.push(_data);
           deletedOrChanged = true;
@@ -467,6 +502,8 @@ Hooks.on("updateCombat", async (combat, combatant, info, data) => {
     if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await actor.update(itemResourcesData);
     if (itemsEnding.length)
       actor.renderBuffEndChatCard(itemsEnding)
+    if (itemsOnRound.length)
+      actor.applyOnRoundBuffActions(itemsOnRound);
     actor.renderFastHealingRegenerationChatCard();
   }
 });
@@ -488,23 +525,23 @@ Hooks.on("preCreateOwnedItem", (actor, item) => {
   }
 });
 
-Hooks.on("createOwnedItem", (actor, data, options, user) => {
-  if (!(actor instanceof Actor)) return;
+Hooks.on("createItem", (data, options, user) => {
+  if (!(data.parent instanceof Actor)) return;
 
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  actor.refresh(options);
+  //data.parent.refresh(options);
 });
-Hooks.on("deleteOwnedItem", (actor, data, options, user) => {
-  if (!(actor instanceof Actor)) return;
+Hooks.on("deleteItem", (data, options, user) => {
+  if (!(data.parent instanceof Actor)) return;
 
   if (user !== game.userId) {
     console.log("Not updating actor as action was started by other user")
     return
   }
-  actor.refresh(options);
+  //data.parent.refresh(options);
 });
 
 Hooks.on("updateActor",  (actor, data, options, user) => {
@@ -579,7 +616,7 @@ async function createItemMacro(item, slot) {
  */
 function rollItemMacro(itemName, {itemId=null, itemType=null, actorId=null}={}) {
   let actor = getActorFromId(actorId);
-  if (actor && !actor.hasPerm(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+  if (actor && !actor.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
   const item = actor ? actor.items.find(i => {
     if (itemId != null && i._id !== itemId) return false;
     if (itemType != null && i.type !== itemType) return false;
@@ -630,28 +667,55 @@ function rollTurnUndead({actorName=null, actorId=null}={}) {
 
 
 Hooks.on("getSceneControlButtons", (controls) => {
-
   if (!game.user.isGM) return;
   controls.push({
     name: "d35e-gm-tools",
     title: "D35E.GMTools",
     icon: "fas fa-dungeon",
-    layer: "D35ELayer",
+    layer: "d35e",
     tools: [
+      {
+        name: "select",
+        title: "CONTROLS.BasicSelect",
+        icon: "fas fa-expand",
+      },
       {
         name: "d35e-gm-tools-encounter-generator",
         title: "D35E.EncounterGenerator",
         icon: "fas fa-dragon",
-        onClick: () => {new EncounterGeneratorDialog().render(true)
+        onClick: () => {
+          new EncounterGeneratorDialog().render(true);
           //QuestLog.render(true)
           // Place your code here - <app class name>.render()
           // Remember you must import file on the top - look at imports
         },
-        button: true
-      }
-    ]
+        button: true,
+      },
+      {
+        name: "d35e-gm-tools-treasure-generator",
+        title: "D35E.TreasureGenerator",
+        icon: "fas fa-gem",
+        onClick: async () => {
+          for (let token of canvas.tokens.controlled.filter(
+            (t) => game.actors.get(t.data.actorId).data.type === "npc"
+          ))
+            {await genTreasureFromToken(token);}
+            ui.notifications.info(`Treasure generation finished`);
+        },
+        button: true,
+      },
+      {
+        name: "d35e-gm-tools-custom-treasure-generator",
+        title: "D35E.CustomTreasureGenerator",
+        icon: "fas fa-store",
+        onClick: () => {
+          new TreasureGeneratorDialog().render(true);
+        },
+        button: true,
+      },
+    ],
+    activeTool: "select",
   });
 });
-
 
 

@@ -18,11 +18,11 @@ export class TopPortraitBar {
       $('#navigation').append($portraitBarDiv)
       var $portraitBarHandle = $("<div id='portrait-bar-handle'><a><i class='fas fa-arrows-alt'></i></a></div>")
       $portraitBarDiv.append($portraitBarHandle)
-      console.log($portraitBarHandle)
+      //console.log($portraitBarHandle)
       $portraitBarHandle.on({
         mousedown:function(e)
         {
-          console.log('S')
+          //console.log('S')
           dragging = true;
           dragX = e.clientX - $(this).parent().position().left;
           dragY = e.clientY - $(this).parent().position().top;
@@ -34,7 +34,7 @@ export class TopPortraitBar {
           },
         mousemove:function(e)
         {
-          console.log('D')
+          //console.log('D')
           if(dragging)
             $(this).parent().offset({top:e.clientY-dragY,left:e.clientX-dragX});
 
@@ -43,14 +43,14 @@ export class TopPortraitBar {
     }
     let height = $('#scene-list').height()
     portraitBar = $('#portrait-bar')
-    // console.log('Bar', portraitBar, actor)
+    // //console.log('Bar', portraitBar, actor)
     if (actor == null)
       return;
     // if (actor.data.type !== "character")
     //   return;
     if (!actor.data.data.isPartyMember)
       return;
-    if (!actor.hasPerm(game.user, "LIMITED")) // Player cannot see
+    if (!actor.testUserPermission(game.user, "LIMITED")) // Player cannot see
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
@@ -87,7 +87,7 @@ export class TopPortraitBar {
         life.text(`Dying`)
       } else {
         portraitDiv.removeClass('dead');
-        if (actor.hasPerm(game.user, "OBSERVER")) {
+        if (actor.testUserPermission(game.user, "OBSERVER")) {
           life.text(`${actor.data.data.attributes.hp.value} / ${actor.data.data.attributes.hp.max}`)
         } else {
           life.text(``)
@@ -115,7 +115,7 @@ export class TopPortraitBar {
     //html.find('.col.middle').after(quickActions + '</div></div>');
 
     portraitDiv.click(function(event) {
-      if (!actor.hasPerm(game.user, "OBSERVER")) // Player cannot see
+      if (!actor.testUserPermission(game.user, "OBSERVER")) // Player cannot see
         return;
       actor.sheet.render(true);
     });

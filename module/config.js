@@ -373,7 +373,8 @@ D35E.speedReduction = {
 
 /* -------------------------------------------- */
 
-D35E.carryingCapacityFormula = "(10*@str)*(max(@str,11)-@str)/(max(11-@str,1))+(5*pow(2,floor(@str/5)-2)*(20+floor(47*pow(2,0.1*(@str%5))-47))*(min(@str,10)-@str)/(min(10-@str,-1)";
+/*  D35E.carryingCapacityFormula = "(10*@str)*(max(@str,11)-@str)/(max(11-@str,1))+(5*pow(2,(-2)+floor(@str/5)))*(20+floor(47*pow(2,0.1*(@str%5))-47))*(min(@str,10)-@str)/(min(10-@str,-1))"; */
+D35E.carryingCapacityFormula = "(10*@str)"
 
 D35E.encumbranceMultipliers = {
   normal: {
@@ -1075,6 +1076,16 @@ D35E.buffTargets = {
     "_label": "D35E.Psionics",
     "powerPoints": "D35E.PowerPointsBonus",
   },
+  "spells": {
+    "_label": "D35E.BuffSpellbookSpellsPrepared"
+  },
+  "spellcastingAbility": {
+    "_label": "D35E.BuffSpellbookSpellcastingAbility",
+    "scaPrimary": "Primary",
+    "scaSecondary": "Secondary",
+    "scaTetriary": "Tetriary",
+    "scaSpelllike": "Spelllike"
+  },
   "misc": {
     "_label": "D35E.MiscShort",
     "cmb": "Grapple",
@@ -1326,6 +1337,14 @@ D35E.requirements = {
   "wis": "D35E.AbilityWis",
   "cha": "D35E.AbilityCha"
 }
+
+D35E.senses = {
+  "blindsight": "D35E.SenseBlindsight",
+  "darkvision": "D35E.SenseDarkvision",
+  "tremorsense": "D35E.SenseTremorsense",
+  "truesight": "D35E.SenseTruesight"
+};
+
 
 
 

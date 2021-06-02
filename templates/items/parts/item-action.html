@@ -2,7 +2,7 @@
 <div class="form-group select">
   <label>{{localize "D35E.ActionType"}}</label>
   <select name="data.actionType">
-    {{#select data.actionType}}
+    {{#select data.data.actionType}}
     <option value=""></option>
     {{#each config.itemActionTypes as |name type|}}
     <option value="{{type}}">{{name}}</option>
@@ -10,13 +10,13 @@
     {{/select}}
   </select>
 </div>
-{{#if data.actionType}}
+{{#if data.data.actionType}}
 
 {{#if isSpell}}
 <div class="form-group">
   <label>{{localize "D35E.SpellEffect"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.spellEffect" value="{{data.spellEffect}}" placeholder="{{localize "D35E.SpellEffectExample"}}"/>
+    <input type="text" name="data.spellEffect" value="{{data.data.spellEffect}}" placeholder="{{localize "D35E.SpellEffectExample"}}"/>
   </div>
 </div>
 {{/if}}
@@ -24,40 +24,40 @@
 <div class="flexrow">
   <div class="form-group" style="flex: 1">
     <div class="toggle" style="width: 168px">
-      <input id="{{randomUuid}}-data.spellData.metamagicFeats.good" type="checkbox" name="data.metamagicFeats.maximized" {{checked data.metamagicFeats.maximized}}/>
-      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.good">{{#if data.metamagicFeats.maximized}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellMaximized"}}</label>
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.good" type="checkbox" name="data.metamagicFeats.maximized" {{checked data.data.metamagicFeats.maximized}}/>
+      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.good">{{#if data.data.metamagicFeats.maximized}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellMaximized"}}</label>
     </div>
   </div>
   <div class="form-group" style="flex: 1">
     <div class="toggle" style="width: 168px">
-      <input id="{{randomUuid}}-data.spellData.metamagicFeats.evil" type="checkbox" name="data.metamagicFeats.empowered" {{checked data.metamagicFeats.empowered}}/>
-      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.evil">{{#if data.metamagicFeats.empowered}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellEmpowered"}}</label>
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.evil" type="checkbox" name="data.metamagicFeats.empowered" {{checked data.data.metamagicFeats.empowered}}/>
+      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.evil">{{#if data.data.metamagicFeats.empowered}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellEmpowered"}}</label>
     </div>
   </div>
   <div class="form-group" style="flex: 1">
     <div class="toggle" style="width: 168px">
-      <input id="{{randomUuid}}-data.spellData.metamagicFeats.chaotic" type="checkbox" name="data.metamagicFeats.enlarged" {{checked data.metamagicFeats.enlarged}}/>
-      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.chaotic">{{#if data.metamagicFeats.enlarged}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellEnlarged"}}</label>
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.chaotic" type="checkbox" name="data.metamagicFeats.enlarged" {{checked data.data.metamagicFeats.enlarged}}/>
+      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.chaotic">{{#if data.data.metamagicFeats.enlarged}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellEnlarged"}}</label>
     </div>
   </div>
 </div>
 <div class="flexrow">
   <div class="form-group" style="flex: 1">
     <div class="toggle">
-      <input id="{{randomUuid}}-data.spellData.metamagicFeats.lawful" type="checkbox" name="data.metamagicFeats.intensified" {{checked data.metamagicFeats.intensified}}/>
-      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.lawful">{{#if data.metamagicFeats.intensified}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellIntensified"}}</label>
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.lawful" type="checkbox" name="data.metamagicFeats.intensified" {{checked data.data.metamagicFeats.intensified}}/>
+      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.lawful">{{#if data.data.metamagicFeats.intensified}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellIntensified"}}</label>
     </div>
   </div>
   <div class="form-group" style="flex: 1">
     <div class="toggle">
-      <input id="{{randomUuid}}-data.spellData.metamagicFeats.widened" type="checkbox" name="data.metamagicFeats.widened" {{checked data.metamagicFeats.widened}}/>
-      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.widened">{{#if data.metamagicFeats.widened}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellWidened"}}</label>
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.widened" type="checkbox" name="data.metamagicFeats.widened" {{checked data.data.metamagicFeats.widened}}/>
+      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.widened">{{#if data.data.metamagicFeats.widened}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellWidened"}}</label>
     </div>
   </div>
   <div class="form-group" style="flex: 1">
     <div class="toggle">
-      <input id="{{randomUuid}}-data.spellData.metamagicFeats.enhanced" type="checkbox" name="data.metamagicFeats.enhanced" {{checked data.metamagicFeats.enhanced}}/>
-      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.enhanced">{{#if data.metamagicFeats.enhanced}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellEnhanced"}}</label>
+      <input id="{{randomUuid}}-data.spellData.metamagicFeats.enhanced" type="checkbox" name="data.metamagicFeats.enhanced" {{checked data.data.metamagicFeats.enhanced}}/>
+      <label style="width: 168px" for="{{randomUuid}}-data.spellData.metamagicFeats.enhanced">{{#if data.data.metamagicFeats.enhanced}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.SpellEnhanced"}}</label>
     </div>
   </div>
 </div>
@@ -65,7 +65,7 @@
 <div class="form-group">
   <label>{{localize "D35E.SpellAttackCount"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.attackCountFormula" value="{{data.attackCountFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
+    <input type="text" name="data.attackCountFormula" value="{{data.data.attackCountFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
   </div>
 </div>
 {{/unless}}
@@ -78,9 +78,9 @@
     </span>
   </label>
   <div class="form-fields">
-    <input type="text" name="data.maxDamageDiceFormula" value="{{data.maxDamageDiceFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
+    <input type="text" name="data.maxDamageDiceFormula" value="{{data.data.maxDamageDiceFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
     <span style="flex: 0; margin-left: 8px">Total:</span>
-    <input type="text" disabled value="{{data.maxDamageDice}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
+    <input type="text" disabled value="{{data.data.maxDamageDice}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
   </div>
 </div>
 {{/unless}}
@@ -90,34 +90,34 @@
 <div class="form-group">
   <label>{{localize "D35E.AttackRollBonus"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.attackBonus" value="{{data.attackBonus}}" placeholder="{{localize "D35E.Formula"}}"/>
+    <input type="text" name="data.attackBonus" value="{{data.data.attackBonus}}" placeholder="{{localize "D35E.Formula"}}"/>
   </div>
 </div>
 
 <div class="form-group">
   <label>{{localize "D35E.CriticalThreatRange"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.ability.critRange" value="{{data.ability.critRange}}" data-dtype="Number"/>
+    <input type="text" name="data.ability.critRange" value="{{data.data.ability.critRange}}" data-dtype="Number"/>
   </div>
 </div>
 
 <div class="form-group">
   <label>{{localize "D35E.CriticalMultiplier"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.ability.critMult" value="{{data.ability.critMult}}" data-dtype="Number"/>
+    <input type="text" name="data.ability.critMult" value="{{data.data.ability.critMult}}" data-dtype="Number"/>
   </div>
 </div>
 <div class="form-group">
   <label>{{localize "D35E.CriticalConfirmBonus"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.critConfirmBonus" value="{{data.critConfirmBonus}}" placeholder="{{localize "D35E.Formula"}}"/>
+    <input type="text" name="data.critConfirmBonus" value="{{data.data.critConfirmBonus}}" placeholder="{{localize "D35E.Formula"}}"/>
   </div>
 </div>
 
 <div class="form-group">
   <label>{{localize "D35E.VsTouchAc"}}</label>
   <label class="checkbox" style="position: relative; flex: 0 20px">
-    <input type="checkbox" class="stylized" name="data.ability.vsTouchAc" {{checked data.ability.vsTouchAc}}/>
+    <input type="checkbox" class="stylized" name="data.ability.vsTouchAc" {{checked data.data.ability.vsTouchAc}}/>
     <span class="checkmark"></span>
   </label>
 </div>
@@ -125,7 +125,7 @@
 <div class="form-group select">
   <label>{{localize "D35E.AttackAbility"}}</label>
   <select name="data.ability.attack">
-    {{#select data.ability.attack}}
+    {{#select data.data.ability.attack}}
     <option value=""></option>
     {{#each config.abilities as |ability a|}}
     <option value="{{a}}">{{ability}}</option>
@@ -139,7 +139,7 @@
   <a class="attack-control add-attack"><i class="fas fa-plus"></i></a>
 </h4>
 <ol class="attack-parts form-group">
-  {{#each data.attackParts as |part a|}}
+  {{#each data.data.attackParts as |part a|}}
   <li class="attack-part flexrow" data-attack-part="{{a}}">
     <input type="text" name="data.attackParts.{{a}}.0" placeholder="{{localize "D35E.AttackBonusFormula"}}" value="{{lookup this "0"}}"/>
     <input type="text" name="data.attackParts.{{a}}.1" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "1"}}"/>
@@ -153,7 +153,7 @@
 <div class="form-group select">
   <label>{{localize "D35E.DamageAbility"}}</label>
   <select name="data.ability.damage">
-    {{#select data.ability.damage}}
+    {{#select data.data.ability.damage}}
     <option value=""></option>
     {{#each config.abilities as |ability a|}}
     <option value="{{a}}">{{ability}}</option>
@@ -161,9 +161,9 @@
     {{/select}}
   </select>
   <select name="data.ability.damageMult" data-dtype="Number">
-    {{#select data.ability.damageMult}}
+    {{#select data.data.ability.damageMult}}
     <option value="0.5">x0.5</option>
-    <option value="1" {{#unless data.ability.damageMult}}selected="selected"{{/unless}}>x1</option>
+    <option value="1" {{#unless data.data.ability.damageMult}}selected="selected"{{/unless}}>x1</option>
     <option value="1.5">x1.5</option>
     <option value="2">x2</option>
     {{/select}}
@@ -184,7 +184,7 @@
     1d8 + 2 * @critMult<br>
     2d6 + (@critMult)d6
   </span>
-  {{#each data.damage.parts as |part i| }}
+  {{#each data.data.damage.parts as |part i| }}
   <li class="damage-part flexrow" data-damage-part="{{i}}">
     <input type="text" name="data.damage.parts.{{i}}.0" placeholder="{{#unless isHealing }}{{localize "D35E.DamageFormula"}}{{ else }}{{localize "D35E.HealingFormula"}}{{/unless}}" value="{{lookup this "0"}}"/>
     <select name="data.damage.parts.{{i}}.2">
@@ -207,20 +207,20 @@
 <div class="form-group input-select">
   <label>{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}</label>
   <div class="form-fields">
-    <input type="text" name="data.save.dc" value="{{data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}"/>
+    <input type="text" name="data.save.dc" value="{{data.data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}"/>
     <select name="data.save.type">
-      {{#select data.save.type}}
+      {{#select data.data.save.type}}
       <option value="">{{localize "D35E.Custom"}}</option>
       {{#each config.savingThrowTypes as |saveType type|}}
       <option value="{{type}}">{{saveType}}</option>
       {{/each}}
       {{/select}}
     </select>
-    {{#unless data.save.type}}
-    <input type="text" name="data.save.description" value="{{data.save.description}}" placeholder="{{localize "D35E.DCDescriptionExample"}}"/>
+    {{#unless data.data.save.type}}
+    <input type="text" name="data.save.description" value="{{data.data.save.description}}" placeholder="{{localize "D35E.DCDescriptionExample"}}"/>
     {{else}}
     <select name="data.save.ability">
-      {{#select data.save.ability}}
+      {{#select data.data.save.ability}}
       <option value="">{{localize "D35E.Default"}}</option>
       {{#each config.abilities as |ability type|}}
       <option value="{{type}}">{{ability}}</option>
@@ -237,13 +237,13 @@
 {{!-- Attack Notes --}}
 <div class="form-group stacked">
   <label>{{localize "D35E.AttackNotes"}}</label>
-  <textarea type="text" name="data.attackNotes">{{data.attackNotes}}</textarea>
+  <textarea type="text" name="data.attackNotes">{{data.dataattackNotes}}</textarea>
 </div>
 
 {{!-- Effect Notes --}}
 <div class="form-group stacked">
   <label>{{localize "D35E.EffectNotes"}}</label>
-  <textarea type="text" name="data.effectNotes" style="white-space: pre">{{data.effectNotes}}</textarea>
+  <textarea type="text" name="data.effectNotes" style="white-space: pre">{{data.dataeffectNotes}}</textarea>
 </div>
 
 
@@ -252,7 +252,7 @@
   <a class="special-control add-special"><i class="fas fa-plus"></i></a>
 </h4>
 <ol class="special-parts form-group">
-  {{#each data.specialActions as |part a|}}
+  {{#each data.data.specialActions as |part a|}}
   <li class="special-part flexcol" data-special-actions="{{a}}">
     <div class="flexrow"><span>Name:</span><input type="text" name="data.specialActions.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{lookup this "name"}}"/></div>
     <div class="flexrow"><span>Action:</span><input type="text" name="data.specialActions.{{a}}.action" placeholder="{{localize "D35E.Action"}}" value="{{lookup this "action"}}"/></div>
@@ -270,17 +270,17 @@
 </h4>
 <div class="form-group">
   <label>{{localize "D35E.RollTableDrawFormula"}}</label>
-  <input type="text" name="data.rollTableDraw.formula"  value="{{data.rollTableDraw.formula}}">
+  <input type="text" name="data.rollTableDraw.formula"  value="{{data.data.rollTableDraw.formula}}">
 </div>
 <div class="rolltable-link flexcol">
-  {{#unless data.rollTableDraw.id}}
+  {{#unless data.data.rollTableDraw.id}}
   <div style="width: 100%; text-align: center; padding: 12px">
     {{localize "D35E.DropRolltable"}}
   </div>
   {{else}}
-  <h4>{{localize "D35E.LinkedRolltable"}} {{data.rollTableDraw.id}}<a style="float: right" class="colorized-link remove-rolltable-link">{{localize "D35E.UnlinkRolltable"}}</a></h4>
+  <h4>{{localize "D35E.LinkedRolltable"}} {{data.datarollTableDraw.id}}<a style="float: right" class="colorized-link remove-rolltable-link">{{localize "D35E.UnlinkRolltable"}}</a></h4>
   <div class="form-group">
-    <label>{{data.rollTableDraw.name}}</label>
+    <label>{{data.datarollTableDraw.name}}</label>
   </div>
   {{/unless}}
 </div>
