@@ -6190,14 +6190,14 @@ export class ActorPF extends Actor {
     getCarriedWeight(srcData) {
         // Determine carried weight
         const physicalItems = srcData.items.filter(o => {
-            return o.data.weight != null;
+            return o.data.data.weight != null;
         });
         return physicalItems.reduce((cur, o) => {
 
-            let weightMult = o.data.containerWeightless ? 0 : 1
-            if (!o.data.carried) return cur;
-            if (o.data.equippedWeightless && o.data.equipped) return cur;
-            return cur + (o.data.weight * o.data.quantity * weightMult);
+            let weightMult = o.data.data.containerWeightless ? 0 : 1
+            if (!o.data.data.carried) return cur;
+            if (o.data.data.equippedWeightless && o.data.data.equipped) return cur;
+            return cur + (o.data.data.weight * o.data.data.quantity * weightMult);
         }, this._calculateCoinWeight(srcData));
     }
 
