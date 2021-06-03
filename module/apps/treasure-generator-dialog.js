@@ -237,14 +237,18 @@ export class TreasureGeneratorDialog extends FormApplication {
     let ItemPfArr = treasureGen.toItemPfArr();
     let actor = canvas.tokens.get(token.data._id).actor
     //TODO adding items to actor, verify 0.8 compatibility
+    let itemsToCreate = []
     for await (let it of ItemPfArr) {
       if (it === null || it === undefined) continue;
-      let item = await canvas.tokens
-        .get(token.data._id)
-        .actor.createEmbeddedEntity("OwnedItem", it, { stopUpdates: true });
       //console.log("item: ", item);
-      item = await actor.items.get(item._id);
-      if (item.type === "weapon" || item.type === "equipment") {
+      itemsToCreate.push(it);
+      
+    }
+    let createdItems = await canvas.tokens
+        .get(token.data._id)
+        .actor.createEmbeddedEntity("Item", itemsToCreate, { stopUpdates: true });
+    for (let item of createdItems) {
+      if (item.data.type === "weapon" || item.data.type === "equipment") {
         const updateData = {};
         let _enhancements = duplicate(
           getProperty(item.data, `data.enhancements.items`) || []
