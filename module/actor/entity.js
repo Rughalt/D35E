@@ -867,8 +867,8 @@ export class ActorPF extends Actor {
             let animationSpeed = 5
             let type = ""
 
-            let lowLight = getProperty(data, "data.attributes.senses.lowLight") || getProperty(this.data, "data.attributes.senses.lowLight") || false;
-            let darkvision = getProperty(data, "data.attributes.senses.darkvision") || getProperty(this.data, "data.attributes.senses.darkvision") || 0;
+            let lowLight = getProperty(data, "data.attributes.senses.lowLight") !== undefined ?  getProperty(data, "data.attributes.senses.lowLight") : getProperty(this.data, "data.attributes.senses.lowLight") || false;
+            let darkvision = getProperty(data, "data.attributes.senses.darkvision") !== undefined ?  getProperty(data, "data.attributes.senses.darkvision") :  getProperty(this.data, "data.attributes.senses.darkvision") || 0;
 
             for (let i of this.items.values()) {
                 if (!i.data.data.hasOwnProperty("light") && !i.data.data.hasOwnProperty("senses")) continue;

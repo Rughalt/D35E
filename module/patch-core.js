@@ -144,7 +144,7 @@ export async function PatchCore() {
   Combat.prototype.rollInitiative = _rollInitiative;
   window.getTemplate = D35E_getTemplate;
   patchMeasureTools();
-    patchLowLightVision();
+  patchLowLightVision();
 // This system assumes that evalate should be run on StringTerm.eval
   const StringTerm_eval = StringTerm.prototype.evaluate;
   StringTerm.prototype.evaluate = async function(...args) {
