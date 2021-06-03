@@ -5632,6 +5632,9 @@ export class ActorPF extends Actor {
 
         let tokensList = [];
         const promises = [];
+
+        let _attacker = game.actors.get(attackerId);
+
         if (actor === null) {
             if (game.user.targets.size > 0)
                 tokensList = Array.from(game.user.targets);
@@ -5743,9 +5746,9 @@ export class ActorPF extends Actor {
 
                         let recoveryRoll = new Roll35e("1d100").roll().total;
                         if (recoveryRoll < 50) {
-                            let _attacker = game.actors.get(attackerId);
                             ammoRecovered = true;
-                            await _attacker.quickChangeItemQuantity(ammoId, 1)
+                            if (_attacker)
+                                await _attacker.quickChangeItemQuantity(ammoId, 1)
                         }
                     }
                 }
@@ -5758,6 +5761,8 @@ export class ActorPF extends Actor {
                 };
                 let chatTemplateData = {
                     name: a.name,
+                    sourceName: _attacker.name,
+                    sourceImg: _attacker.img,
                     type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                     rollMode: finalAc.rollMode || "gmroll",
                 };
@@ -6299,7 +6304,7 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    async applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData) {
+    async applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, sourceActor) {
         function cleanParam(parameter) {
             return parameter.replace(/"/gi, "");
         }
@@ -6547,10 +6552,29 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 //console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
+                    let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll()
+                    let damageTotal = damage.total
                     let abilityField = `data.abilities.${action.parameters[0]}.damage`,
                     abilityDamage = actionRollData.self.abilities[action.parameters[0]].damage || 0;
-                    actorUpdates[abilityField] = abilityDamage + damage
+                    actorUpdates[abilityField] = abilityDamage + damageTotal
+                    
+                    let name = `Ability Damage ${CONFIG.D35E.abilities[action.parameters[0]]}`;
+                    let chatTemplateData = {
+                        name: sourceActor.name,
+                        img: sourceActor.img,
+                        targetName: this.name,
+                        targetImg: this.img,
+                        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                        rollMode: "public",
+                    };
+                    const templateData = mergeObject(chatTemplateData, {
+                        flavor: name,
+                        total: damage.total,
+                        tooltip: $(await damage.getTooltip()).prepend(`<div class="dice-formula">${damage.formula}</div>`)[0].outerHTML
+                    }, {inplace: false});
+
+                    await createCustomChatMessage("systems/D35E/templates/chat/special-actions-applied.html", templateData, {}, damage);
+
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6558,10 +6582,28 @@ export class ActorPF extends Actor {
                 // Rolls arbitrary attack
                 //console.log(action)
                 if (action.parameters.length === 2) {
-                    let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll().total
+                    let damage = new Roll35e(cleanParam(action.parameters[1]), actionRollData).roll()
+                    let damageTotal = damage.total
                     let abilityField = `data.abilities.${action.parameters[0]}.drain`,
                         abilityDamage = actionRollData.self.abilities[action.parameters[0]].drain || 0;
-                    actorUpdates[abilityField] = abilityDamage + damage
+                    actorUpdates[abilityField] = abilityDamage + damageTotal
+                    
+                    let name = `Ability Drain ${CONFIG.D35E.abilities[action.parameters[0]]}`;
+                    let chatTemplateData = {
+                        name: sourceActor.name,
+                        img: sourceActor.img,
+                        targetName: this.name,
+                        targetImg: this.img,
+                        type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                        rollMode: "public",
+                    };
+                    const templateData = mergeObject(chatTemplateData, {
+                        flavor: name,
+                        total: damage.total,
+                        tooltip: $(await damage.getTooltip()).prepend(`<div class="dice-formula">${damage.formula}</div>`)[0].outerHTML
+                    }, {inplace: false});
+
+                    await createCustomChatMessage("systems/D35E/templates/chat/special-actions-applied.html", templateData, {}, damage);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6585,7 +6627,9 @@ export class ActorPF extends Actor {
                 break;
             case "Use":
                 if (action.parameters.length === 1) {
-                    // Use an action or item
+                    let item = this.getItemByTag(action.parameters[0]);
+                    if (item)
+                        item.use = ({ev: {}, skipDialog: true})
                 }
                 if (action.parameters.length === 2) {
                     // Use n items/action
@@ -6701,7 +6745,7 @@ export class ActorPF extends Actor {
         let actorUpdates = {};
 
         for (let action of itemCreationActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
         }
         if (itemCreationActions.length) {
             console.log("D35E | ACTION | itemCreationActions", itemCreationActions)
@@ -6709,14 +6753,14 @@ export class ActorPF extends Actor {
         }
 
         for (let action of itemUpdateActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
         }
         if (itemUpdateActions.length) {
             console.log("D35E | ACTION | itemUpdateActions", itemUpdateActions)
             await this.updateEmbeddedDocuments("Item", itemUpdates, {})
         }
         for (let action of actorUpdateActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
         }
         if (actorUpdateActions.length) {
             console.log("D35E | ACTION | actorUpdates", actorUpdateActions, this.name)
@@ -6725,7 +6769,7 @@ export class ActorPF extends Actor {
             await this.update({})
         }
         for (let action of otherActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
         }
     }
 

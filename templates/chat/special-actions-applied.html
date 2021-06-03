@@ -1,0 +1,31 @@
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+{{#if name}}
+<header class="card-header flexrow">
+    <img src="{{img}}" title="{{sourceName}}" width="36" height="36"/>
+    <div class="flexcol"><h3 style="line-height: 20px">{{name}}</h3>
+        <h4 style='line-height: 16px; font-family: "Nodesto", "Signika", "Palatino Linotype", serif; font-size: 18px; opacity: 0.6;'>{{localize "D35E.Uses"}} {{flavor}}</h4></div>
+</header>
+{{/if}}
+<header class="card-header flexrow">
+    
+    <img src="{{targetImg}}" title="{{targetName}}" width="36" height="36"/>
+    {{#if targetName}}<h3>{{targetName}}</h3>{{/if}}
+</header>
+
+<div class="card-content">
+    <div class="chat-attack">
+        <div class="dice-roll damage-roll">
+            <div class="dice-flavor">{{flavor}}</div>
+            <div class="dice-result">
+                <h4 class="dice-total">
+                    {{total}}
+                </h4>
+                {{{tooltip}}}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>

@@ -5251,7 +5251,7 @@ tr.introjs-showElement > th {
 .d35ecustom #sidebar #compendium li.compendium-pack .status-icons {
   right: 10px;
 }
-.d35ecustom #sidebar header:not(.message-header):not(.folder-header):not(.card-header):not(.part-header) {
+.d35ecustom #sidebar header:not(.message-header):not(.folder-header):not(.card-header):not(.part-header):not(:playlist-header) {
   background: url("icons/ui/sidebar-top.png");
   background-position: bottom;
   background-size: cover;

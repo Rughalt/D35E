@@ -1,6 +1,14 @@
 <div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
      tokenId}}data-token-id="{{tokenId}}" {{/if}}>
-<header class="card-header flexrow">
+
+     {{#if sourceName}}
+     <header class="card-header flexrow">
+         <img src="{{sourceImg}}" title="{{sourceName}}" width="36" height="36"/>
+         <div class="flexcol"><h3 style="line-height: 20px">{{sourceName}}</h3>
+             <h4 style='line-height: 16px; font-family: "Nodesto", "Signika", "Palatino Linotype", serif; font-size: 18px; opacity: 0.6;'>{{localize "D35E.Attacks"}}</h4></div>
+     </header>
+     {{/if}}
+     <header class="card-header flexrow">
     <img src="{{img}}" title="{{name}}" width="36" height="36"/>
 
     {{#if ammoRecovered}}

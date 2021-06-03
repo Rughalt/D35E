@@ -1457,6 +1457,8 @@
   "D35E.CustomName":"Custom Name",
   "D35E.CustomReferenceName":"Custom Chat Card Name",
   "D35E.LeaveEmptyForItemName": "Leave empty to use Item name",
+  "D35E.Attacks": "Attacks",
+
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
