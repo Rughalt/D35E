@@ -373,8 +373,8 @@ D35E.speedReduction = {
 
 /* -------------------------------------------- */
 
-/*  D35E.carryingCapacityFormula = "(10*@str)*(max(@str,11)-@str)/(max(11-@str,1))+(5*pow(2,(-2)+floor(@str/5)))*(20+floor(47*pow(2,0.1*(@str%5))-47))*(min(@str,10)-@str)/(min(10-@str,-1))"; */
-D35E.carryingCapacityFormula = "(10*@str)"
+D35E.carryingCapacityFormula = "(10*@str)*(max(@str,11)-@str)/(max(11-@str,1))+(5*pow(2,(-2)+floor(@str/5)))*(20+floor(47*pow(2,0.1*(@str%5))-47))*(min(@str,10)-@str)/(min(10-@str,-1))"; 
+// D35E.carryingCapacityFormula = "(10*@str)"
 
 D35E.encumbranceMultipliers = {
   normal: {

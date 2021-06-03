@@ -557,6 +557,11 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
   }
 });
 
+Hooks.on("controlToken", (token, selected) => {
+  // Refresh canvas sight
+  canvas.lighting.initializeSources();
+});
+
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
