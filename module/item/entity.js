@@ -1447,7 +1447,9 @@ export class ItemPF extends Item {
 
             let allAttacks = []
             // Auto scaling attacks
-            if (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" && fullAttack) {
+
+            let autoScaleAttacks = (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.autoScaleOption") !== "never") || getProperty(this.data, "data.autoScaleOption") === "always";
+            if (autoScaleAttacks && fullAttack) {
                 allAttacks.push({bonus: 0, label: `${game.i18n.localize("D35E.Attack")}`})
                 for (let a = 5; a < actor.data.data.attributes.bab.total; a += 5) {
                     allAttacks.push({bonus:`-${a}`, label:`${game.i18n.localize("D35E.Attack")} ${Math.floor((a + 5) / 5)}`});
@@ -1899,7 +1901,8 @@ export class ItemPF extends Item {
             let availablePowerPoints = (spellbook.powerPoints || 0) - (this.data.data.powerPointsCost || 0);
             bonusMaxPowerPoints = Math.min((this?.actor?.data?.data?.attributes?.hd.total || 0) + 10 - (this.data.data.powerPointsCost || 0),availablePowerPoints);
         }
-        let extraAttacksCount = game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" ? Math.ceil((actor.data.data.attributes.bab.total)/5.0) : (getProperty(this.data, "data.attackParts") || []).length + 1;
+        let autoScaleAttacks = (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.autoScaleOption") !== "never") || getProperty(this.data, "data.autoScaleOption") === "always"
+        let extraAttacksCount = autoScaleAttacks ? Math.ceil((actor.data.data.attributes.bab.total)/5.0) : (getProperty(this.data, "data.attackParts") || []).length + 1;
         let dialogData = {
             data: rollData,
             id: this.id,

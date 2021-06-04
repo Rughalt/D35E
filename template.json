@@ -1965,6 +1965,7 @@
         "classes": []
       },
       "attackType": "weapon",
+      "autoScaleOption": "default",
       "masterwork": false,
       "threatRangeExtended": false,
       "finesseable": false,

@@ -2182,6 +2182,9 @@
   background-size: 100%;
   height: 24px;
 }
+.D35E.sheet.actor .recharge-icon {
+  display: flex !important;
+}
 .D35E.sheet.actor .editor {
   padding: 0 8px;
 }
