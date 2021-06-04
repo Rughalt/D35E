@@ -25,7 +25,7 @@ export class TokenQuickActions {
       const type = item.type;
       quickActions += `<div id="${type}-${item._id}" class="control-icon token-quick-action"><img src="${icon}" width="36" height="36" title="${title}"></div>`;
     });
-    let ammo = actor.data.items.filter(o => (o.type === "loot" || o.type === "spell" || o.type === "feat") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
+    let ammo = actor.data.items.filter(o => (o.type === "loot") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
     });
 
     ammo.forEach(function(item) {

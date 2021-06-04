@@ -3674,17 +3674,24 @@ export class ActorPF extends Actor {
         for (const k of _absoluteKeys) {
             data[k] = Math.abs(data[k]);
         }
-        if (data[`data.attributes.hp.value`]) {
-            if (typeof data[`data.attributes.hp.value`] === "string") {
-                if (data[`data.attributes.hp.value`].startsWith('+')) {
-                    data[`data.attributes.hp.value`] = this.data.data.attributes.hp.value + parseInt(data[`data.attributes.hp.value`]);
-                } else if (data[`data.attributes.hp.value`].startsWith('-')) {
-                    data[`data.attributes.hp.value`] = this.data.data.attributes.hp.value + parseInt(data[`data.attributes.hp.value`]);
+        if (data[`data.attributes.hp.value`] !== undefined && data[`data.attributes.hp.value`] !== null) {
+            if (parseInt(data[`data.attributes.hp.value`]) == 0)
+                data[`data.attributes.hp.value`] = 0;
+            else {
+                if (typeof data[`data.attributes.hp.value`] === "string") {
+                    if (data[`data.attributes.hp.value`].startsWith('+')) {
+                        data[`data.attributes.hp.value`] = this.data.data.attributes.hp.value + parseInt(data[`data.attributes.hp.value`]);
+                    } else if (data[`data.attributes.hp.value`].startsWith('-')) {
+                        if (this.data.data.attributes.hp.value > 0) // When we are below 0, we cannot do that
+                            data[`data.attributes.hp.value`] = this.data.data.attributes.hp.value + parseInt(data[`data.attributes.hp.value`]);
+                        else 
+                            data[`data.attributes.hp.value`] = parseInt(data[`data.attributes.hp.value`]);
+                    } else {
+                        data[`data.attributes.hp.value`] = parseInt(data[`data.attributes.hp.value`]) || this.data.data.attributes.hp.value
+                    }
                 } else {
                     data[`data.attributes.hp.value`] = parseInt(data[`data.attributes.hp.value`]) || this.data.data.attributes.hp.value
                 }
-            } else {
-                data[`data.attributes.hp.value`] = parseInt(data[`data.attributes.hp.value`]) || this.data.data.attributes.hp.value
             }
         }
 

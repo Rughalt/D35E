@@ -470,10 +470,11 @@ export class ItemPF extends Item {
         console.log('Is true/false', data, this.data.data.active)
         const srcData = mergeObject(this.data.toObject(), expandObject(data), {inplace: false});
         console.log('Should be true/false, is true true', data, this.data.data.active)
-        const srcDataWithRolls = mergeObject(srcData, this.getRollData(), {inplace: false});
         //const srcDataWithRolls = srcData.data;
-        if (data['data.nameFromFormula'] || getProperty(this.data, "data.nameFromFormula"))
+        if (data['data.nameFromFormula'] || getProperty(this.data, "data.nameFromFormula")) {
+            const srcDataWithRolls = this.getRollData(srcData);
             data["name"] = ItemPF._fillTemplate(data['data.nameFormula'] || getProperty(this.data, "data.nameFormula"), srcDataWithRolls) || data["name"]
+        }
         // Update name
         if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
         else if (data["name"]) data["data.identifiedName"] = data["name"];
@@ -2538,17 +2539,22 @@ export class ItemPF extends Item {
     /**
      * @returns {Object} An object with data to be used in rolls in relation to this item.
      */
-    getRollData() {
-        const result = this.data.data;
+    getRollData(customData = null) {
+        let _base = this.data.data;
+        let result = {}
+        if (customData)
+            result = mergeObject(_base, customData.data, {inplace: false})
+        else
+            result = _base
 
-        if (this.type === "buff") result.level = this.data.data.level;
-        if (this.type === "enhancement") result.enhancement = this.data.data.enh;
-        if (this.type === "enhancement") result.enhIncrease = this.data.data.enhIncrease;
+        if (this.type === "buff") result.level = result.level;
+        if (this.type === "enhancement") result.enhancement = result.enh;
+        if (this.type === "enhancement") result.enhIncrease = result.enhIncrease;
         if (this.type === "spell") result.name = this.name;
         result['custom'] = {}
-        if (this.data.data.hasOwnProperty('customAttributes')) {
-            for (let prop in this.data.data.customAttributes || {}) {
-                let propData = this.data.data.customAttributes[prop];
+        if (result.hasOwnProperty('customAttributes')) {
+            for (let prop in result.customAttributes || {}) {
+                let propData = result.customAttributes[prop];
                 result['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
             }
         }
