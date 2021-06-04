@@ -123,6 +123,36 @@
       </label>
       {{/if}}
 
+      <div>
+        {{!-- Creation Changes --}}
+        <h3 class="form-header">
+          {{localize "D35E.CreationChanges"}}
+          <a class="creation-changes-control add-change" style="font-size: 15px; line-height: 15px;"><i class="fas fa-plus"></i></a>
+        </h3>
+        <ol class="changes form-group">
+          {{#each data.data.creationChanges as |change a|}}
+          <li class="change flexrow" data-change="{{a}}">
+      
+            <select name="data.creationChanges.{{a}}.0">
+              {{#select (lookup this "0") }}
+              <option value="">{{localize "D35E.None"}}</option>
+              {{#each ../fieldList as |field|}}
+              <option value="{{field}}">{{field}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+            <input type="text" name="data.creationChanges.{{a}}.1" value="{{lookup this "1"}}"
+            placeholder="{{localize "D35E.Formula"}}" />
+            <a class="creation-changes-control delete-change"><i class="fas fa-minus"></i></a>
+          </li>
+          {{/each}}
+          {{#unless data.data.creationChanges}}
+          <li class="change flexrow">
+            <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.CreationChanges"}}. {{{localize "D35E.UsePlusToAdd"}}}</div>
+          </li>
+          {{/unless}}
+        </ol>
+      </div>
       
     </div>
   </section>

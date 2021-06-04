@@ -1255,7 +1255,8 @@
         "counterName": "",
         "resistances": [],
         "damageReduction": [],
-        "requirements": []
+        "requirements": [],
+        "creationChanges": []
       },
       "contextNotes": {
         "contextNotes": []
@@ -1795,7 +1796,8 @@
       "bonusAmmoDamageType": "",
       "bonusAmmoAttackNote": "",
       "bagOfHoldingLike": false,
-      "capacity": 0
+      "capacity": 0,
+      "creationChanges": []
     },
     "spell": {
       "templates": [

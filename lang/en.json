@@ -1458,6 +1458,7 @@
   "D35E.CustomReferenceName":"Custom Chat Card Name",
   "D35E.LeaveEmptyForItemName": "Leave empty to use Item name",
   "D35E.Attacks": "Attacks",
+  "D35E.ModifiedFieldPlaceholder": "Select from list or enter custom",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

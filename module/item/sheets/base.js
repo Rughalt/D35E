@@ -350,6 +350,7 @@ export class ItemSheetPF extends ItemSheet {
             }
         }
 
+        data.fieldList = Object.keys(flattenObject(this.item.data.data));
 
         if (this.item.data.type === "buff") {
             data.hasCombatChanges = true;
@@ -860,6 +861,15 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+
+        let creationChanges = Object.entries(formData).filter(e => e[0].startsWith("data.creationChanges"));
+        formData["data.creationChanges"] = creationChanges.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(2);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         let resistances = Object.entries(formData).filter(e => e[0].startsWith("data.resistances"));
         formData["data.resistances"] = resistances.reduce((arr, entry) => {
             let [i, j] = entry[0].split(".").slice(2);
@@ -1004,6 +1014,7 @@ export class ItemSheetPF extends ItemSheet {
         html.find(".change-control").click(this._onChangeControl.bind(this));
         html.find(".combat-change-control").click(this._onCombatChangeControl.bind(this));
         html.find(".requirement-control").click(this._onRequirementsControl.bind(this));
+        html.find(".creation-changes-control").click(this._onCreationChangesControl.bind(this));
         html.find(".resistance-control").click(this._onResistanceControl.bind(this));
         html.find(".dr-control").click(this._onDRControl.bind(this));
 
@@ -1342,6 +1353,29 @@ export class ItemSheetPF extends ItemSheet {
             const changes = duplicate(this.item.data.data.combatChanges);
             changes.splice(Number(li.dataset.change), 1);
             await this.item.update({"data.combatChanges": changes});
+        }
+    }
+
+
+    async _onCreationChangesControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new change
+        if (a.classList.contains("add-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const changes = duplicate(this.item.data.data.creationChanges) || [];
+            // Combat Changes are
+            return this.item.update({"data.creationChanges": changes.concat([["", ""]])});
+        }
+
+        // Remove a change
+        if (a.classList.contains("delete-change")) {
+            //await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".change");
+            const changes = duplicate(this.item.data.data.creationChanges);
+            changes.splice(Number(li.dataset.change), 1);
+            return this.item.update({"data.creationChanges": changes});
         }
     }
 

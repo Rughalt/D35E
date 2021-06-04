@@ -6135,6 +6135,23 @@ export class ActorPF extends Actor {
                 }
 
             }
+            if (obj.data.creationChanges && obj.data.creationChanges.length) {
+                for (let creationChange of obj.data.creationChanges) {
+                    if (creationChange) {
+                    if (obj.document)   {
+                        let updateData = {}
+                        updateData[`data.${creationChange[0]}`] = new Roll35e(creationChange[1], {}).roll().total
+                        obj.document.data.update(updateData)
+                    }
+                    else
+                        setProperty(obj.data, creationChange[0], new Roll35e(creationChange[1], {}).roll().total);
+                    }
+                }
+                if (obj.document)   
+                    updateData[`data.creationChanges`] = []
+                else
+                    setProperty(obj.data, 'creationChanges', []);
+            }
         }
         //this.createEmbeddedDocuments
         //return this.createOwnedItem((noArray ? createData[0] : createData), options);

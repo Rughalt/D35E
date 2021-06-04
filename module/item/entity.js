@@ -1496,6 +1496,7 @@ export class ItemPF extends Item {
                 }
             }
 
+
             let isHasted = (actor?.items || []).filter(o => o.type === "buff" && o.data.data.active && (o.name === "Haste" || o.data.data.changeFlags.hasted)).length > 0;
             if ((fullAttack || actor.data.data.attributes.bab.total < 6) && isHasted && (getProperty(this.data, "data.attackType") === "weapon" || getProperty(this.data, "data.attackType") === "natural")) {
                 allAttacks.unshift({
@@ -1504,18 +1505,6 @@ export class ItemPF extends Item {
                 })
             }
 
-            let manyshotAttacks = []
-            if (greaterManyshot) {
-                allAttacks.forEach(attack => {
-                    let label = attack.label;
-                    for (let i = 0; i < greaterManyshotCount; i++) {
-                        let _attack = duplicate(attack)
-                        _attack.label = label + ` (Greater Manyshot Arrow ${i+1})`
-                        manyshotAttacks.push(_attack)
-                    }
-                });
-                allAttacks = manyshotAttacks
-            }
             if (hasTwoImprovedWeaponFightingFeat && twoWeaponFightingOffhand) {
                 allAttacks.push({
                     bonus: "-5",
@@ -1607,6 +1596,17 @@ export class ItemPF extends Item {
             }
 
 
+            if (rollData.featAdditionalAttacksBAB) {
+                if (rollData.featAdditionalAttacksBAB > 0) {
+                    for (let i = 0; i < rollData.featAttackNumberBonus; i++) {
+                        allAttacks.push({
+                            bonus: "0",
+                            label: `${game.i18n.localize("D35E.Feat")} Bonus Attack`
+                        })
+                    }
+                }
+            }
+
             let dc = this._getSpellDC(rollData)
             if (this.data.data?.metamagicFeats?.maximized) {
                 damageModifiers.maximize = true;
@@ -1632,6 +1632,20 @@ export class ItemPF extends Item {
             if (this.data.data?.metamagicFeats?.enhanced) {
                 rollData.maxDamageDice += 10;
                 rollModifiers.push(`${game.i18n.localize("D35E.SpellEnhanced")}`)
+            }
+
+
+            let manyshotAttacks = []
+            if (greaterManyshot) {
+                allAttacks.forEach(attack => {
+                    let label = attack.label;
+                    for (let i = 0; i < greaterManyshotCount; i++) {
+                        let _attack = duplicate(attack)
+                        _attack.label = label + ` (Greater Manyshot Arrow ${i+1})`
+                        manyshotAttacks.push(_attack)
+                    }
+                });
+                allAttacks = manyshotAttacks
             }
 
             // Lock useAmount for powers to max value
@@ -2180,6 +2194,7 @@ export class ItemPF extends Item {
         if (rollData.featAttackBonus) {
             if (rollData.featAttackBonus !== 0) parts.push("${this.featAttackBonus}");
         }
+        
         // Add attack bonus
         if (itemData.attackBonus !== "") {
             let attackBonus = new Roll35e(itemData.attackBonus, rollData).roll().total;
