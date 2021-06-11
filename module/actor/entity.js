@@ -2485,7 +2485,7 @@ export class ActorPF extends Actor {
         for (let [k, s] of Object.entries(getProperty(data, "data.skills"))) {
             if (!s) continue;
             const isClassSkill = classes.reduce((cur, o) => {
-                if ((getProperty(o, "data.classSkills") || {})[k] === true) return true;
+                if ((getProperty(o.data, "data.classSkills") || {})[k] === true) return true;
                 return cur;
             }, false);
             linkData(data, updateData, `data.skills.${k}.cs`, isClassSkill);
@@ -7534,29 +7534,29 @@ export class ActorPF extends Actor {
         return this.updateEmbeddedDocuments("Item", itemData, options);
     }
 
-    async updateEmbeddedEntity(documentName, data, options) {
+    async updateEmbeddedEntity(documentName, data, options = {}) {
         console.warn("The Document#updateEmbeddedEntity method has been renamed to Document#updateEmbeddedDocuments. Support for the old method name will be removed in 0.9.0");
         data = data instanceof Array ? data : [data];
         options.massUpdate = true;
         return this.updateEmbeddedDocuments(documentName, data, options);
     }
 
-    async createEmbeddedDocuments(type, data, options) {
+    async createEmbeddedDocuments(type, data, options = {}) {
         console.log('D35E | createEmbeddedDocuments')
         let createdItems = await super.createEmbeddedDocuments(type, data, options);
         await this.refresh({})
         return Promise.resolve(createdItems);
     }
 
-    async updateEmbeddedDocuments(type, data, options) {
+    async updateEmbeddedDocuments(type, data, options = {}) {
         console.log('D35E | updateEmbeddedDocuments')
         let updatedItems = await super.updateEmbeddedDocuments(type, data, options);
-        if (options.massUpdate)
+        if (options.massUpdate && !options.stopUpdates)
             await this.refresh({})
         return Promise.resolve(updatedItems);
     }
 
-    async deleteEmbeddedDocuments(type, data, options) {
+    async deleteEmbeddedDocuments(type, data, options = {}) {
         console.log('D35E | deleteEmbeddedDocuments')
         let deletedDocuments = await super.deleteEmbeddedDocuments(type, data, options);
         await this.refresh({})
