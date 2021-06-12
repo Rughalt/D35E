@@ -4118,6 +4118,7 @@ export class ActorPF extends Actor {
         if (usedItem.hasAction)
         {
             let attackResult = await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
+            if(!attackResult.wasRolled) return
             let roll = await attackResult.roll;
             await item.addSpellUses(-1+(-1*roll?.rollData?.useAmount || 0));
             return ;
