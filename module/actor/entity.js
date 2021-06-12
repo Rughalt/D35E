@@ -6,7 +6,9 @@ import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
 import {DamageTypes} from "../damage-types.js";
 import {D35E} from "../config.js";
-import {Roll35e} from "../roll.js"
+import {Roll35e} from "../roll.js";
+import {  ActorRestDialog } from "../apps/actor-rest.js";
+
 
 /**
  * Extend the base Actor class to implement additional logic specialized for D&D5e.
@@ -4691,7 +4693,7 @@ export class ActorPF extends Actor {
         };
         await new Promise(resolve => {
             new Dialog({
-                title: `${game.i18n.localize("D35E.STRollSavingThrow")}`,
+                title: `${game.i18n.localize("D35E.STRollSavingThrow")} - ${this.name}` ,
                 content: html,
                 buttons: buttons,
                 classes: ['custom-dialog','wide'],
@@ -4831,8 +4833,6 @@ export class ActorPF extends Actor {
         if (notes.length > 0) props.push({header: "Notes", value: notes});
 
         const label = sklName;
-
-
         let template = "systems/D35E/templates/apps/skill-roll-dialog.html";
         let dialogData = {
             data: rollData,
@@ -4840,7 +4840,7 @@ export class ActorPF extends Actor {
             rollModes: CONFIG.Dice.rollModes,
             skFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('skill',rollData)),
             skFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`skillOptional`,rollData)),
-            label: label,
+            label: label  
         };
         const html = await renderTemplate(template, dialogData);
         let roll;
@@ -4869,7 +4869,7 @@ export class ActorPF extends Actor {
         };
         await new Promise(resolve => {
             new Dialog({
-                title: sklName,
+                title: sklName + ' - ' + this.name,
                 content: html,
                 buttons: buttons,
                 classes: ['custom-dialog','wide'],
@@ -7055,6 +7055,10 @@ export class ActorPF extends Actor {
         }
     }
 
+    promptRest(){
+        new ActorRestDialog(this).render(true);
+    }
+
     async rest(restoreHealth, restoreDailyUses, longTermCare) {
         const actorData = this.data.data;
         let rollData = this.getRollData();
@@ -7384,6 +7388,8 @@ export class ActorPF extends Actor {
             case 'useItem':
                 this.items.find(i => i._id === remoteAction.params).use({ })
                 break;
+            case 'rest':
+                this.promptRest()
         }
     }
 

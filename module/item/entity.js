@@ -1975,7 +1975,7 @@ export class ItemPF extends Item {
         }
         await new Promise(resolve => {
             new Dialog({
-                title: `${game.i18n.localize("D35E.Use")}: ${this.name}`,
+                title: `${game.i18n.localize("D35E.Use")}: ${this.name} - ${actor.name}`,
                 content: html,
                 buttons: buttons,
                 classes: ['custom-dialog'],
