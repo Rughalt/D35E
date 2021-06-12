@@ -200,7 +200,7 @@ Hooks.once("ready", async function() {
 
   await cache.buildCache();
   console.log("D35E | Cache is ", CACHE)
-  game.actors.entities.forEach(obj => { obj._updateChanges({sourceOnly: true}, {skipToken: true}); });
+  //game.actors.entities.forEach(obj => { obj._updateChanges({sourceOnly: true}, {skipToken: true}); });
 
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Attacks(app, html, data) });
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Buffs(app, html, data) });

@@ -14,7 +14,7 @@ export class TokenQuickActions {
     
     let quickActions = '<div class="col actions"><div class="below">'
     let ammoCounter = '<div class="col actions"><div class="below" style="bottom: -60px">'
-    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "feat") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
+    let items = actor.data.items.filter(o => (o.type === "attack" || o.type === "spell" || o.type === "full-attack" || o.type === "feat") && getProperty(o.data, "data.showInQuickbar") === true).sort((a, b) => {      return a.data.sort - b.data.sort;
     });
     items.forEach(function(item) {
       const icon = item.img;

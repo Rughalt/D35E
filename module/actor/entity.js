@@ -3151,10 +3151,10 @@ export class ActorPF extends Actor {
             }
         })
         actorData.items.filter(obj => {
-            return obj.type === "feat" && obj.data.featType === "feat" && (obj.data.source === undefined || obj.data.source === "");
+            return obj.type === "feat" && obj.data.data.featType === "feat" && (obj.data.data.source === undefined || obj.data.data.source === "");
         }).forEach(obj => {
             let group = "feat"
-            let name = obj.data.classSource !== undefined && obj.data.classSource !== "" ? obj.data.classSource : "base"
+            let name = obj.data.data.classSource !== undefined && obj.data.data.classSource !== "" ? obj.data.data.classSource : "base"
             if (data.counters[group][name] === undefined) {
                 data.counters[group][name] = { value: 0, counted: 0 }
             }
@@ -7301,7 +7301,7 @@ export class ActorPF extends Actor {
             const id = cur.uuid;
             if (cur.data.data.hideFromToken) return acc;
             if (cur.data.data?.buffType === "shapechange") return acc;
-
+            console.log('DATA | Curr', cur)
             if (!acc[id]) acc[id] = { id: cur.id, label: cur.name, icon: cur.data.img, item: cur };
             if (cur.data.data.active) acc[id].active = true;
             else acc[id].active = false;

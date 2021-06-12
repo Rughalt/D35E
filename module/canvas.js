@@ -138,7 +138,7 @@ TokenHUD.prototype._getStatusEffectChoices = function () {
       buffs[buff.icon] = {
         id: buff.id,
         title: buff.label,
-        src: idx,
+        src: buff.icon,
         isActive: buff.active,
         isOverlay: false,
         cssClass: buff.active ? "active" : "",

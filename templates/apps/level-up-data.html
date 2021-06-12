@@ -108,8 +108,8 @@
             }
             let level = {{level}};
             let isCharacter = '{{actor.type}}' === "character";
-            if (level === 1 && isCharacter)
-                skills = skills * 4
+            
+            skills = skills * 4
 
             $('#spl').val(skills)
             if (!force) $('#usedSkillpoints').val(0)
