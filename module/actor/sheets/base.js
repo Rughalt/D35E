@@ -1,5 +1,4 @@
 import { ActorTraitSelector } from "../../apps/trait-selector.js";
-import { ActorRestDialog } from "../../apps/actor-rest.js";
 import { LevelUpDialog } from "../../apps/level-up-box.js";
 import { DamageReductionSetting } from "../../apps/damage-reduction-setting.js";
 import { LevelUpDataDialog } from "../../apps/level-up-data.js";
@@ -921,7 +920,7 @@ export class ActorSheetPF extends ActorSheet {
 
   _onRest(event) {
     event.preventDefault();
-    new ActorRestDialog(this.actor).render(true);
+    this.actor.promptRest()   
   }
 
   _onPointBuy(event) {
