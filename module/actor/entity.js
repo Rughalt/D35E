@@ -3026,6 +3026,7 @@ export class ActorPF extends Actor {
             return true;
         }).forEach(_obj => {
             let obj = _obj.data;
+            erDrRollData.item = _obj.getRollData()
             if (obj.data.resistances) {
                 (obj.data?.resistances || []).forEach(resistance => {
                     if (!resistance[1]) return;
@@ -3064,7 +3065,7 @@ export class ActorPF extends Actor {
                         }
                         erDrRollData.level = obj.data.levels || 0
                         erDrRollData.levels= obj.data.levels || 0
-                        _dr.value = Math.max(_dr.value, new Roll35e(dr[0] || "0", erDrRollData).roll().total)
+                        _dr.value = Math.max(_dr.value, Roll35e.safeRoll(dr[0] || "0", erDrRollData).total)
                         _dr.immunity = _dr.immunity || dr[2];
                         _dr.modified = true;
                         if  (!_dr.items)
@@ -3080,6 +3081,7 @@ export class ActorPF extends Actor {
                     data.shieldType = obj.data?.equipmentSubtype
                 if (obj.data.enhancements !== undefined) {
                     obj.data.enhancements.items.forEach(enhancementItem => {
+                        erDrRollData.item = enhancementItem.data;
                         (enhancementItem.data?.resistances || []).forEach(resistance => {
                             if (!resistance[1]) return;
                             let _resistance = data.combinedResistances.find(res => res.uid === resistance[1])
@@ -4821,7 +4823,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`skill.${isSubSkill ? skillParts[2] : skillId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, {owner: this.owner}));
+            if (noteObj.item != null) rollData.item = new ItemPF(noteObj.item.data, {owner: this.owner}).getRollData();
 
             for (let note of noteObj.notes) {
                 notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o, rollData), {rollData: rollData})));

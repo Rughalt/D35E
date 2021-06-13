@@ -2145,6 +2145,12 @@ export class ItemPF extends Item {
                 }
             }
             if (c.length === 6) {
+                if (typeof c[5] === "string") {
+                    c[5] = c[5].replace(/@range1/g, combatChangesRollData.range1)
+                    c[5] = c[5].replace(/@range2/g, combatChangesRollData.range2)
+                    c[5] = c[5].replace(/@range3/g, combatChangesRollData.range3)
+                    c[5] = c[5].replace(/@range/g, combatChangesRollData.range)
+                }
                 c.push(this.id)
                 c.push(this.name)
                 c.push(this.img)

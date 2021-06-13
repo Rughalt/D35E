@@ -647,11 +647,10 @@ export class ItemSheetPF extends ItemSheet {
             for (let [k, v] of Object.entries(CONFIG.D35E.contextNoteTargets)) {
                 if (typeof v === "object") data.contextNotes.targets[k] = v._label;
             }
-            this.item.data.data.contextNotes.forEach(item => {
+            data.data.data.contextNotes.forEach(item => {
                 item.subNotes = {};
                 // Add specific skills
                 if (item[1] === "skill") {
-
                     if (this.item.actor != null) {
                         const actorSkills = this.item.actor.data.data.skills;
                         for (let [s, skl] of Object.entries(actorSkills)) {
@@ -660,7 +659,7 @@ export class ItemSheetPF extends ItemSheet {
                                 else item.subNotes[`skill.${s}`] = CONFIG.D35E.skills[s];
                             } else {
                                 for (let [s2, skl2] of Object.entries(skl.subSkills)) {
-                                    item.subNotes[`skill.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+                                    item.subNotes[`skill.${s}.subSkills.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
                                 }
                             }
                         }
@@ -671,11 +670,12 @@ export class ItemSheetPF extends ItemSheet {
                                 else item.subNotes[`skill.${s}`] = CONFIG.D35E.skills[s];
                             } else {
                                 for (let [s2, skl2] of Object.entries(skl.subSkills)) {
-                                    item.subNotes[`skill.${s}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
+                                    item.subNotes[`skill.${s}.subSkills.${s2}`] = `${CONFIG.D35E.skills[s]} (${skl2.name})`;
                                 }
                             }
                         }
                     }
+                    
                 }
                 // Add static targets
                 else if (item[1] != null && CONFIG.D35E.contextNoteTargets.hasOwnProperty(item[1])) {
