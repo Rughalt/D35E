@@ -194,7 +194,9 @@
     </ul>
     <ul class="attributes misc-base flexrow">
       <li class="attribute sr high tooltip" data-attribute="sr">
-        <h4 class="attribute-name box-title">{{ localize 'D35E.FastHealing' }}</h4>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.FastHealing' }}<i class="fas fa-info-circle tooltip" style="display: inline; font-size: 14px; opacity: 0.8;">
+          <div class="tooltipcontent"><strong>{{localize "D35E.FastHealing"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.FastHealingInfo"}}</p></div>
+        </i></h4>
         <div class="attribute-value">
           <span>{{data.traits.fastHealingTotal}}</span>
         </div>
@@ -205,7 +207,9 @@
       </li>
 
       <li class="attribute sr high tooltip" data-attribute="sr">
-        <h4 class="attribute-name box-title">{{ localize 'D35E.Regeneration' }}</h4>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.Regeneration' }}<i class="fas fa-info-circle tooltip" style="display: inline; font-size: 14px; opacity: 0.8;">
+          <div class="tooltipcontent"><strong>{{localize "D35E.Regeneration"}}</strong><br><p style="white-space: normal;"> {{localize "D35E.RegenerationInfo"}}</p></div>
+        </i></h4>
         <div class="attribute-value">
           <span>{{data.traits.regenTotal}}</span>
         </div>

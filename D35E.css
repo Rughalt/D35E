@@ -1065,7 +1065,7 @@
   width: 100%;
 }
 .D35E.sheet.actor .attributes-root {
-  flex: 0 0 30%;
+  flex: 0 0 35%;
 }
 .D35E.sheet.actor ul.attributes {
   list-style: none;
@@ -1141,7 +1141,9 @@
   font-size: 1.8rem;
 }
 .D35E.sheet.actor ul.attributes li.attribute .attribute-value .add-prestige-cl,
-.D35E.sheet.actor ul.attributes li.attribute .attribute-value .remove-prestige-cl {
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .add-prestige-cl-deck,
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .remove-prestige-cl,
+.D35E.sheet.actor ul.attributes li.attribute .attribute-value .remove-prestige-cl-deck {
   margin: 0.5rem;
   font-size: 14px;
   opacity: 0.9;

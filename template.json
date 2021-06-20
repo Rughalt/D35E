@@ -466,6 +466,74 @@
               }
             }
           },
+          "cards": {
+            "concentration": {
+              "bonus": 0,
+              "context": ""
+            },
+            "decks": {
+              "primary": {
+                "name": "Primary",
+                "class": "",
+                "cl": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "autoHandSize": false,
+                "handSize": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "drawRandom": false,
+                "deckSize": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "clNotes": "",
+                "ability": "int",
+                "spellslotAbility": "",
+                "addHalfOtherLevels": false,
+                "autoSetup": true,
+                "baseDCFormula": "10 + @sl + @ablMod"
+              },
+              "secondary": {
+                "name": "Secondary",
+                "class": "",
+                "cl": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "autoHandSize": false,
+                "handSize": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "drawRandom": false,
+                "deckSize": {
+                  "base": 0,
+                  "value": 0,
+                  "total": 0,
+                  "formula": ""
+                },
+                "clNotes": "",
+                "ability": "int",
+                "spellslotAbility": "",
+                "addHalfOtherLevels": false,
+                "autoSetup": true,
+                "baseDCFormula": "10 + @sl + @ablMod"
+              }
+            }
+          },
           "spellcasting": {
             "_deprecated": true
           },
@@ -1199,7 +1267,8 @@
       "enhancement",
       "damage-type",
       "material",
-      "full-attack"
+      "full-attack",
+      "card"
     ],
     "templates": {
       "changes": {
@@ -1468,6 +1537,9 @@
       "sneakAttackFormula": "0",
       "minionGroup": "none",
       "minionLevelFormula": "0",
+      "deckHandSizeFormula": "0",
+      "knownCardsSizeFormula": "0",
+      "deckPrestigeClass": false,
       "spellcastingType": null,
       "spellcastingSpontaneus": false,
       "spellsPerLevel": [],
@@ -1861,6 +1933,40 @@
       "showInQuickbar": false,
       "specialPrepared": false,
       "isDomainSpell": false,
+      "specialId": null
+    },
+    "card": {
+      "templates": [
+        "itemDescription",
+        "activatedEffect",
+        "action"
+      ],
+      "learnedAt": {
+        "class": [],
+        "domain": [],
+        "subDomain": []
+      },
+      "level": 1,
+      "clOffset": 0,
+      "slOffset": 0,
+      "school": "",
+      "subschool": "",
+      "types": "",
+      "castTime": "",
+      "conditionals": [],
+      "deck": "primary",
+      "display": "",
+      "shortDescription": "",
+      "snip": "",
+      "spellDuration": "",
+      "spellEffect": "",
+      "spellArea": "",
+      "state": "deck",
+      "spellType": {
+        "value": "",
+        "_deprecated": true
+      },
+      "showInQuickbar": false,
       "specialId": null
     },
     "weapon": {

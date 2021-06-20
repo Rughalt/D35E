@@ -457,6 +457,24 @@
                             <input type="text" name="data.minionLevelFormula" value="{{data.data.minionLevelFormula}}"
                                    data-dtype="String"/>
                         </div>
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.HandSizeFormula"}}</label>
+                            <input type="text" name="data.deckHandSizeFormula" value="{{data.data.deckHandSizeFormula}}" data-dtype="String"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{localize "D35E.KnownCardsFormula"}}</label>
+                            <input type="text" name="data.knownCardsSizeFormula" value="{{data.data.knownCardsSizeFormula}}" data-dtype="String"/>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="checkbox skill-cs">
+                                <label>{{localize "D35E.DeckPrestigeClass"}}</label>
+                                <input type="checkbox" name="data.deckPrestigeClass" {{checked data.data.deckPrestigeClass}}/>
+                            </label>
+                            </div>
                         {{#if false}}
                         <h4 class="form-header">{{localize "D35E.FavouredClassBonuses"}}</h4>
 

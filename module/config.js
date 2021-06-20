@@ -36,11 +36,11 @@ D35E.abilityCost = {
   "11": 1,
   "12": 2,
   "13": 3,
-  "14": 5,
-  "15": 7,
-  "16": 10,
-  "17": 13,
-  "18": 17,
+  "14": 4,
+  "15": 6,
+  "16": 8,
+  "17": 11,
+  "18": 14,
 };
 
 
@@ -1109,7 +1109,8 @@ D35E.buffTargets = {
     "_label": "D35E.PrestigeCl",
     "arcaneCl": "D35E.Arcane",
     "psionicCl": "D35E.Psionic",
-    "divineCl": "D35E.Divine"
+    "divineCl": "D35E.Divine",
+    "cardCl": "D35E.Cards"
   }
 };
 

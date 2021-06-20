@@ -60,6 +60,7 @@ export class ItemPF extends Item {
     }
 
     get isCharged() {
+        if (this.type === "card") return true;
         if (this.type === "consumable" && getProperty(this.data, "data.uses.per") === "single") return true;
         return ["day", "week", "charges"].includes(getProperty(this.data, "data.uses.per"));
     }
@@ -79,6 +80,7 @@ export class ItemPF extends Item {
     }
 
     static getCharges(item) {
+        if (item.type === "card") return item.data.data.state === "hand"
         if (item.data.data?.linkedChargeItem?.id) {
             return item.actor.getChargesFromItemById(item.data.data?.linkedChargeItem?.id)
         } else {
@@ -198,6 +200,7 @@ export class ItemPF extends Item {
         if (getProperty(chargeItem.data, "data.uses.per") === "single"
             && getProperty(chargeItem.data, "data.quantity") == null) return;
 
+        if (this.type === "card") return this.addCardCharges(value, data);
         if (this.type === "spell") return this.addSpellUses(value, data);
 
         let prevValue = this.isSingleUse ? getProperty(chargeItem.data, "data.quantity") : getProperty(chargeItem.data, "data.uses.value");
@@ -910,6 +913,22 @@ export class ItemPF extends Item {
             if (spellAbility !== "") ablMod = getProperty(this.actor.data, `data.abilities.${spellAbility}.mod`);
 
             cl += getProperty(spellbook, "cl.total") || 0;
+            cl += data.clOffset || 0;
+            cl += rollData.featClBonus || 0;
+
+            sl += data.level;
+            sl += data.slOffset || 0;
+
+            rollData.cl = cl;
+            rollData.sl = sl;
+            rollData.ablMod = ablMod;
+        } else if (this.type === "card") {
+            let deckIndex = data.deck;
+            let deck = getProperty(this.actor.data, `data.attributes.cards.decks.${deckIndex}`) || {};
+            spellAbility = deck.ability;
+            if (spellAbility !== "") ablMod = getProperty(this.actor.data, `data.abilities.${spellAbility}.mod`);
+
+            cl += getProperty(deck, "cl.total") || 0;
             cl += data.clOffset || 0;
             cl += rollData.featClBonus || 0;
 
@@ -2037,6 +2056,22 @@ export class ItemPF extends Item {
             rollData.cl = cl;
             rollData.sl = sl;
             rollData.ablMod = ablMod;
+        } else if (this.type === "card") {
+            let deckIndex = data.deck;
+            let deck = getProperty(this.actor.data, `data.attributes.cards.decks.${deckIndex}`) || {};
+            spellAbility = deck.ability;
+            if (spellAbility !== "") ablMod = getProperty(this.actor.data, `data.abilities.${spellAbility}.mod`);
+
+            cl += getProperty(deck, "cl.total") || 0;
+            cl += data.clOffset || 0;
+            cl += rollData.featClBonus || 0;
+
+            sl += data.level;
+            sl += data.slOffset || 0;
+
+            rollData.cl = cl;
+            rollData.sl = sl;
+            rollData.ablMod = ablMod;
         }
 
         spellDC.cl = cl;
@@ -3038,6 +3073,20 @@ export class ItemPF extends Item {
         if (character && (controlled.length === 0)) targets.push(character);
         if (!targets.length) throw new Error(`You must designate a specific Token as the roll target`);
         return targets;
+    }
+
+    async addCardCharges(value, data) {
+        let newState = "deck"
+        if (value < 0) newState = "discarded"
+        if (value >= 0) newCharges = "hand"
+        const key = "data.state";
+        if (data == null) {
+            data = {};
+            data[key] = newState;
+            return this.update(data);
+        } else {
+            data[key] = newState;
+        }
     }
 
     async addSpellUses(value, data = null) {

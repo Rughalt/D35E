@@ -1,0 +1,196 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+  {{#if data.data.uniqueId}}
+  <span class="uid-warning tooltip">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div class="tooltipcontent">{{{ localize 'D35E.ItemHasUID' }}}</div>
+    <!--       {{ localize 'D35E.ItemHasUID' }}-->
+    </span>
+  {{/if}}
+
+  {{!-- Item Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <div class="sheet-header-profile">
+      <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    </div>
+
+    <div class="header-details flexrow">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
+      </h1>
+
+      <div class="item-subtitle">
+        <h4 class="item-type">{{itemType}}</h4>
+        <span class="item-status">{{itemStatus}}</span>
+      </div>
+
+      <ul class="summary">
+        <li>
+          {{labels.level}}
+        </li>
+        <li>
+          {{labels.school}}
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="sheet-content flexcol">
+  {{!-- Item Sheet Navigation --}}
+  <nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+    <a class="item" data-tab="details">{{ localize "D35E.Details" }}</a>
+  </nav>
+
+  {{!-- Item Sheet Body --}}
+  <section class="primary-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab description" data-group="primary" data-tab="description">
+      {{{description}}}
+    </div>
+
+    {{!-- Details Tab --}}
+    <div class="tab details" data-group="primary" data-tab="details">
+      <h3 class="form-header">{{localize "D35E.SpellDetails"}}</h3>
+
+      {{!-- Spellbook --}}
+      {{#if owner}}
+      <div class="form-group">
+        <label>{{localize "D35E.SpellBook"}}</label>
+        <select name="data.spellbook">
+          {{#select data.data.spellbook}}
+          {{#each spellbooks as |spellbook a|}}
+          <option value="{{a}}">{{spellbook.name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+      {{else}}
+      <input type="hidden" name="data.spellbook" value="primary"/>
+      {{/if}}
+
+      {{!-- Spell Level --}}
+      <div class="form-group">
+        <label>{{localize "D35E.SpellLevel"}}</label>
+        <select name="data.level" data-dtype="Number">
+          {{#select data.data.level}}
+          {{#each config.spellLevels as |name lvl|}}
+          <option value="{{lvl}}">{{name}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </div>
+      
+      <div class="form-group stacked">
+        <label>{{localize "D35E.LearnedAt"}}</label>
+
+        <div class="data-selector">
+          <a class="entry-selector" for="data.learnedAt.class" data-fields="{{localize "D35E.CasterLevel"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.class">{{localize "D35E.CasterLevel"}}</label>
+        </div>
+
+        <div class="data-selector">
+          <a class="entry-selector" for="data.learnedAt.domain" data-fields="{{localize "D35E.Domain"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.domain">{{localize "D35E.Domain"}}</label>
+        </div>
+
+        <div class="data-selector">
+          <a class="entry-selector" for="data.learnedAt.subDomain" data-fields="{{localize "D35E.SubDomain"}};{{localize "D35E.Level"}}" data-dtypes="String;Number"><i class="fas fa-edit"></i></a>
+          <label for="data.learnedAt.subDomain">{{localize "D35E.SubDomain"}}</label>
+        </div>
+      </div>
+
+      {{!-- Spell School --}}
+      <div class="form-group">
+        <label>{{localize "D35E.School"}}</label>
+        <input type="text" name="data.school" value="{{data.data.school}}" Placeholder="{{localize "D35E.SubSchoolExample"}}"/>
+        
+      </div>
+
+      {{!-- Subschool and type --}}
+      <div class="form-group flexrow">
+        <label>{{localize "D35E.SubSchool"}}</label>
+        <input type="text" name="data.subschool" value="{{data.data.subschool}}" Placeholder="{{localize "D35E.SubSchoolExample"}}"/>
+        <label>{{localize "D35E.TypePlural"}}</label>
+        <input type="text" name="data.types" value="{{data.data.types}}" Placeholder="{{localize "D35E.SpellTypesExample"}}"/>
+      </div>
+
+
+      <div class="form-group flexrow">
+        <label>{{localize "D35E.PowerDisplay"}}</label>
+        <input type="text" name="data.display" value="{{data.data.display}}" Placeholder="{{localize "D35E.PowerDisplayExample"}}"/>
+      </div>
+
+      {{!-- Misc --}}
+      <div class="spell-misc form-group stacked">
+        <label>{{localize "D35E.Misc"}}</label>
+
+      </div>
+      <div class="flexrow">
+        <div class="toggle" style="width: 175px">
+          <input id="{{randomUuid}}-data.showInQuickbar" type="checkbox" name="data.showInQuickbar" {{checked data.data.showInQuickbar}}/>
+          <label style="width: 175px" for="{{randomUuid}}-data.showInQuickbar">{{#if data.data.showInQuickbar}}<i class="far fa-check-square"></i>{{else}}<i class="far fa-square"></i>{{/if}}{{localize "D35E.ShowInQuickbar"}}</label>
+        </div>
+
+
+      </div>
+      <div class="data-selector">
+        <a class="entry-selector" for="data.tags" data-fields="{{localize "D35E.Tags"}}" data-dtypes="String"><i class="fas fa-edit"></i></a>
+        <label for="data.tags">{{localize "D35E.Tags"}}</label>
+      </div>
+      
+      {{!-- Caster Level Offset --}}
+      <div class="form-group">
+        <div class="form-fields">
+          <label>{{localize "D35E.CasterLevelOffset"}}</label>
+          <div class="form-fields">
+            <input type="text" name="data.clOffset" value="{{data.data.clOffset}}" data-dtype="Number"/>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Spell Level Offset --}}
+      <div class="form-group">
+        <div class="form-fields">
+          <label>{{localize "D35E.SpellLevelOffset"}}</label>
+          <div class="form-fields">
+            <input type="text" name="data.slOffset" value="{{data.data.slOffset}}" data-dtype="Number"/>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="form-header">{{localize "D35E.SpellCasting"}}</h3>
+
+      {{!-- Item Activation Template --}}
+      {{> "systems/D35E/templates/items/parts/item-activation.html"}}
+
+      <h3 class="form-header">{{localize "D35E.SpellEffects"}}</h3>
+
+      {{!-- Item Action Template --}}
+      {{> "systems/D35E/templates/items/parts/item-action.html"}}
+
+      <h3 class="form-header">{{localize "D35E.MeasureTemplate"}}</h3>
+
+      {{!-- Item Measure Template --}}
+      {{> "systems/D35E/templates/items/parts/item-template.html"}}
+
+      {{!-- Spell Description --}}
+
+      <h3 class="form-header">{{localize "D35E.Description"}}</h3>
+
+      <div class="form-group">
+        <label>Snippet</label>
+        <input type="text" name="data.snip" value="{{data.data.snip}}" data-dtype="String"/>
+      </div>
+      {{editor content=data.shortDescription target="data.shortDescription" button=true owner=owner editable=editable}}
+      {{#if isGM}}
+      <h3 class="form-header">System Properties</h3>
+      <div class="form-group">
+        <label>UID</label>
+        <input type="text" name="data.uniqueId" value="{{data.data.uniqueId}}" data-dtype="String"/>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+  </section>
+</form>

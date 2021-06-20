@@ -101,7 +101,7 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack"], makeDefault: true });
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack","card"], makeDefault: true });
 
 
   // Register System Settings

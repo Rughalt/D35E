@@ -1,0 +1,32 @@
+<form autocomplete="off" onsubmit="event.preventDefault();">
+
+
+    <div class="flexcol">
+
+        <div class="flexrow formulas form-group">
+            <label><span>{{localize "D35E.DeckName"}}</span></label>
+            <input type="text" name="name"
+                   value="{{spellbook.name}}" placeholder="{{localize " D35E.DeckName"}}" />
+        </div>
+        <div class="form-group spellcasting-class tooltip flexrow">
+            <label><span>{{localize "D35E.DeckClass"}}</span></label>
+            <select name="class" data-dtype="String">
+                {{#select spellbook.class}}
+                <option value="">{{localize "D35E.None"}}</option>
+                <option value="_hd">{{localize "D35E.HitDie"}}</option>
+                {{#each actor.data.classes as |cls a|}}
+                <option value="{{a}}">{{cls.name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>        
+        <div class="flexrow form-group-stacked">
+            <label class="checkbox">
+                <input type="checkbox" name="addHalfOtherLevels"
+                       {{checked spellbook.addHalfOtherLevels}}/> {{localize "D35E.DeckAddHalfOtherLevels"}}
+            </label>
+        </div>
+    </div>
+
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.UpdateDeck"}}</button>
+</form>

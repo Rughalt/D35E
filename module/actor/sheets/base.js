@@ -7,6 +7,7 @@ import { DicePF } from "../../dice.js";
 import {createTag, createTabs, isMinimumCoreVersion, uuidv4} from "../../lib.js";
 import { NoteEditor } from "../../apps/note-editor.js";
 import {SpellbookEditor} from "../../apps/spellbook-editor.js";
+import {DeckEditor} from "../../apps/deck-editor.js";
 import {D35E} from "../../config.js";
 import {PointBuyCalculator} from "../../apps/point-buy-calculator.js";
 import {ItemPF} from "../../item/entity.js";
@@ -412,6 +413,8 @@ export class ActorSheetPF extends ActorSheet {
     return spellbook;
   }
 
+
+
   _prepareSkillsets(skillset) {
     let result = {
       all: { skills: {} },
@@ -646,6 +649,8 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find(".note-editor").click(this._onNoteEditor.bind(this));
     html.find(".configure-spellbook").click(this._onSpellbookEditor.bind(this));
+    html.find(".configure-deck").click(this._onDeckEditor.bind(this));
+    html.find(".draw-cards").click(this._onDeckDrawCards.bind(this));
     html.find(".configure-level-up-data").click(this._onLevelDataUp.bind(this));
 
     html.find(".group-inventory").click(this._onGroupInventory.bind(this));
@@ -667,6 +672,9 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.spell-remove-uses').click(this._onSpellRemoveUses.bind(this));
     html.find('.spell-prepare-special').click(this._onSpellPrepareSpecialUses.bind(this));
     html.find('.spell-add-metamagic').click(this._onSpellAddMetamagic.bind(this));
+    html.find('.card-draw').click(this._onCardDraw.bind(this));
+    html.find('.card-discard').click(this._onCardDiscard.bind(this));
+    html.find('.card-return').click(this._onCardReturn.bind(this));
 
 
     // Item Rolling
@@ -746,6 +754,8 @@ export class ActorSheetPF extends ActorSheet {
     // Quick add item quantity
     html.find("a.remove-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, -1); });
     html.find("a.add-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, 1); });
+    html.find("a.remove-prestige-cl-deck").click(ev => { this._changeDeckPrestigeCl(ev, -1); });
+    html.find("a.add-prestige-cl-deck").click(ev => { this._changeDeckPrestigeCl(ev, 1); });
 
     // Progression
     html.find("input[type='checkbox'].level-up-progression").click(ev => this._onChangeUseProgression(ev));
@@ -858,11 +868,15 @@ export class ActorSheetPF extends ActorSheet {
         "buffs": {},
         "attacks": {},
         "spellbooks": {},
+        "decks": {},
       },
     };
     // Add spellbooks to tabGroups
     for (let a of Object.keys(this.actor.data.data.attributes.spells.spellbooks)) {
       tabGroups["primary"]["spellbooks"][`spells_${a}`] = {};
+    }
+    for (let a of Object.keys(this.actor.data.data.attributes?.cards?.decks || {})) {
+      tabGroups["primary"]["decks"][`spells_${a}`] = {};
     }
     createTabs.call(this, html, tabGroups);
   }
@@ -1358,6 +1372,20 @@ export class ActorSheetPF extends ActorSheet {
     this.actor.update(updateData);
   }
 
+  async _changeDeckPrestigeCl(event, add = 1) {
+    event.preventDefault();
+    const spellbookKey = $(event.currentTarget).closest(".deck-group").data("tab");
+
+    const currentCl = getProperty(this.actor.data, `data.attributes.cards.decks.${spellbookKey}.bonusPrestigeCl`) || 0;
+    const newCl = Math.max(0, currentCl + add);
+    const k = `data.attributes.cards.decks.${spellbookKey}.bonusPrestigeCl`;
+    let updateData = {}
+    updateData[k] = newCl
+    this.actor.update(updateData);
+  }
+
+  
+
   async _onFeatChangeGroup(event) {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
@@ -1604,6 +1632,30 @@ export class ActorSheetPF extends ActorSheet {
     await this.actor.update(updateData);
   }
 
+  async _onCardDraw(event) {
+    event.preventDefault();
+    let add = -1
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = this.actor.getOwnedItem(itemId);
+    item.update({ "data.state": "hand" });
+  }
+
+  async _onCardDiscard(event) {
+    event.preventDefault();
+    let add = -1
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = this.actor.getOwnedItem(itemId);
+    item.update({ "data.state": "discarded" });
+  }
+
+  async _onCardReturn(event) {
+    event.preventDefault();
+    let add = -1
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = this.actor.getOwnedItem(itemId);
+    item.update({ "data.state": "deck" });
+  }
+
   async _addAllKnownSpells(event) {
     event.preventDefault();
     // Remove old special prepared spell
@@ -1779,7 +1831,7 @@ export class ActorSheetPF extends ActorSheet {
     data.useableAttacks = []
     data.totalInventoryValue = 0;
     // Partition items by category
-    let [items, spells, feats, classes, attacks] = data.items.reduce((arr, item) => {
+    let [items, spells, feats, classes, attacks, cards] = data.items.reduce((arr, item) => {
       item.img = item.img || DEFAULT_TOKEN;
       item.isStack = item.data.quantity ? item.data.quantity > 1 : false;
       item.hasUses = item.data.uses && (item.data.uses.max > 0);
@@ -1794,6 +1846,7 @@ export class ActorSheetPF extends ActorSheet {
       if ( item.type === "spell" ) arr[1].push(item);
       else if ( item.type === "feat" ) arr[2].push(item);
       else if ( item.type === "class" ) arr[3].push(item);
+      else if ( item.type === "card" ) arr[5].push(item);
       else if (item.type === "attack") {
         arr[4].push(item);
       }
@@ -1818,7 +1871,7 @@ export class ActorSheetPF extends ActorSheet {
       }
 
       return arr;
-    }, [[], [], [], [], []]);
+    }, [[], [], [], [], [], []]);
     data.totalInventoryValue += this.actor.mergeCurrency();
     data.totalInventoryValue = data.totalInventoryValue.toFixed(2)
 
@@ -1866,6 +1919,32 @@ export class ActorSheetPF extends ActorSheet {
         canCreate: this.actor.owner === true,
         concentration: this.actor.data.data.skills["coc"].mod,
         spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
+      };
+
+    }
+
+    // Organize Spellbook
+    let deckData = {};
+    const decks = data.actor.data.attributes?.cards?.decks || {};
+    
+    for (let [a, deck] of Object.entries(decks)) {
+      const deckCards = cards.filter(obj => { return obj.data.deck === a; });
+      let deckSpells = {
+        hand: {name: "Hand", max: deck.handSize.total, isPrepared: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "hand"; })}, 
+        discarded: {name: "Discard Pile", isDiscarded: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "discarded"; })}, 
+        deck: {name: "Deck",  isInDeck: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "deck"; })}};
+      deckData[a] = {
+        data: deckSpells,
+        hand: deckSpells.hand.cards.length,
+        discarded: deckSpells.discarded.cards.length,
+        deck: deckSpells.deck.cards.length,
+        overMaxInHand: deckSpells.hand.cards.length > deck.handSize.total,
+        overMaxInDeck: deckCards.length > deck.deckSize.total,
+        deckCapacity: deck.deckSize.total,
+        deckTotal: deckCards.length,
+        orig: deck,
+        canCreate: this.actor.owner === true,
+        spellcastingTypeName: deck.spellcastingType !== undefined && deck.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
       };
 
     }
@@ -2010,6 +2089,7 @@ export class ActorSheetPF extends ActorSheet {
     // Assign and return
     data.inventory = Object.values(inventory);
     data.spellbookData = spellbookData;
+    data.deckData = deckData;
     data.features = Object.values(features);
     data.buffs = buffSections;
     data.attacks = attackSections;
@@ -2334,6 +2414,26 @@ export class ActorSheetPF extends ActorSheet {
     };
     new SpellbookEditor(this.actor, options).render(true);
   }
+
+  _onDeckEditor(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const options = {
+      name: a.getAttribute("for"),
+      title: a.innerText,
+      fields: a.dataset.fields,
+      dtypes: a.dataset.dtypes,
+    };
+    new DeckEditor(this.actor, options).render(true);
+  }
+
+  async _onDeckDrawCards(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    await this.actor.drawCardsForDeck(a.getAttribute("for"));
+  }
+  
+  
 
   _onLevelDataUp(event) {
     event.preventDefault();

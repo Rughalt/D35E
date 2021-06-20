@@ -205,6 +205,7 @@
     <a class="item" data-tab="skills">{{ localize 'D35E.Skills' }}</a>
     <a class="item" data-tab="buffs">{{ localize 'D35E.Buffs' }}</a>
     <a class="item" data-tab="spellbook">{{ localize 'D35E.Spells' }}</a>
+    <a class="item" data-tab="deck">{{ localize 'D35E.SpellCards' }}</a>
     <a class="item" data-tab="biography">{{ localize 'D35E.Biography' }}</a>
     <a class="item" data-tab="notes">{{ localize 'D35E.Notes' }}</a>
     <a class="item header-button" data-tab="config"><i class="fas fa-cogs"></i></a>
@@ -255,6 +256,13 @@
     {{!-- Spellbook Tab --}}
     <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
       {{> "systems/D35E/templates/actors/parts/actor-spellbook-front.html"}}
+    </div>
+
+
+
+    {{!-- Spellbook Tab --}}
+    <div class="tab spellbook flexcol" data-group="primary" data-tab="deck">
+      {{> "systems/D35E/templates/actors/parts/actor-deck-front.html"}}
     </div>
 
     

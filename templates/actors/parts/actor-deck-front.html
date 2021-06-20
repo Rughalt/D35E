@@ -1,0 +1,15 @@
+{{!-- Spellbook Navigation --}}
+<nav class="sheet-navigation tabs subtabs decks" data-group="decks">
+  {{#each data.attributes.cards.decks as |deck a|}}
+  <a class="item" data-tab="{{a}}">{{deck.name}}</a>
+  {{/each}}
+</nav>
+
+<section class="decks-body">
+  {{#each deckData as |deck a|}}
+  <div class="tab deck-group flexcol" data-group="decks" data-tab="{{a}}">
+  {{> "systems/D35E/templates/actors/parts/actor-deck.html" deck=deck deckIndex=a
+    data=../data owner=../owner filters=../filters.spellbook isCharacter=../isCharacter}}
+  </div>
+  {{/each}}
+</section>

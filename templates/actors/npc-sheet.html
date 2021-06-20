@@ -326,7 +326,8 @@
   {{!-- NPC Sheet Body --}}
   <section class="primary-body">
     <div class="tab attributes flexrow" data-group="primary" data-tab="attributes">
-
+      <div class="flexrow"><h2 class="block-header" style="flex: 1">{{ localize 'D35E.AbilityScores' }}</h2>
+        <a class="btn point-buy point-buy-button blue-button">{{ localize 'D35E.UsePointBuy' }}</a></div>
       {{!-- Ability Scores --}}
       <ul class="ability-scores flexrow" style="width: 100%">
         {{#each data.abilities as |ability id|}}

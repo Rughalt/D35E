@@ -1,6 +1,6 @@
 import { DicePF } from "../dice.js";
 import { ItemPF } from "../item/entity.js";
-import { createTag, linkData, isMinimumCoreVersion } from "../lib.js";
+import { createTag, linkData, isMinimumCoreVersion, shuffle } from "../lib.js";
 import { createCustomChatMessage } from "../chat.js";
 import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
@@ -216,7 +216,7 @@ export class ActorPF extends Actor {
                 "attack", "mattack", "rattack", 'babattack',
                 "damage", "wdamage", "sdamage",
                 "allSavingThrows", "fort", "ref", "will", "turnUndead","turnUndeadDiceTotal", "spellResistance", "powerPoints", "sneakAttack",
-                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cr", "fortification", "regen", "fastHeal", "concealment", ...spellTargets,"scaPrimary","scaSecondary","scaTetriary","scaSpelllike"
+                "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cardCl", "cr", "fortification", "regen", "fastHeal", "concealment", ...spellTargets,"scaPrimary","scaSecondary","scaTetriary","scaSpelllike"
             ], modifiers: [
                 "untyped", "base", "enh", "dodge", "inherent", "deflection",
                 "morale", "luck", "sacred", "insight", "resist", "profane",
@@ -588,6 +588,8 @@ export class ActorPF extends Actor {
                 return "data.attributes.prestigeCl.psionic.max";
             case "divineCl":
                 return "data.attributes.prestigeCl.divine.max";
+            case "cardCl":
+                return "data.attributes.prestigeCl.cards.max";
             case "cr":
                 return "data.details.totalCr";
             case "fortification":
@@ -1669,7 +1671,7 @@ export class ActorPF extends Actor {
             try {
                 change.raw[4] = roll.roll().total;
             } catch (e) {
-                ui.notifications.error(game.i18n.localize("D35E.ErrorItemFormula").format(change.source?.item?.name, this.name));
+                ui.notifications.error(game.i18n.localize("D35E.ErrorItemFormula").format(change.source?.item?.name || "Unknown (most likely Actor itself)", this.name, `${formula} (${changeTarget})`));
             }
             this._parseChange(change, changeData[changeTarget], flags);
             temp.push(changeData[changeTarget]);
@@ -1804,6 +1806,58 @@ export class ActorPF extends Actor {
 
             }
         }
+
+        // Reset spell slots
+        let classes = this.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
+            return a.sort - b.sort;
+        });
+
+        for (let deckKey of Object.keys(getProperty(srcData1, "data.attributes.cards.decks"))) {
+            const spellbookAbilityKey = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.ability`);
+            const spellslotAbilityKey = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.spellslotAbility`) || spellbookAbilityKey
+            let spellbookAbilityMod = getProperty(srcData1, `data.abilities.${spellbookAbilityKey}.mod`);
+            let spellslotAbilityMod = getProperty(srcData1, `data.abilities.${spellslotAbilityKey}.mod`);
+            const spellbookClass = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.class`);
+            const autoSetup = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.autoSetup`);
+            const deckAddHalfOtherLevels = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.addHalfOtherLevels`);
+            let baseClassLevel = getProperty(srcData1, `data.classes.${spellbookClass}.level`)
+            let classLevel = getProperty(srcData1, `data.classes.${spellbookClass}.level`)  + parseInt(getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.bonusPrestigeCl`));
+            if (classLevel > getProperty(srcData1, `data.classes.${spellbookClass}.maxLevel`))
+                classLevel = getProperty(srcData1, `data.classes.${spellbookClass}.maxLevel`);
+                
+            
+            linkData(srcData1, updateData,`data.attributes.cards.decks.${deckKey}.cl.base`,classLevel);
+
+            let deckHandSizeForumla = getProperty(srcData1, `data.classes.${spellbookClass}.deckHandSizeFormula`)  || "0";
+            let baseDeckHandSize = new Roll35e(deckHandSizeForumla || "", {level: classLevel || 0}).roll().total
+            let knownCardsSizeFormula = getProperty(srcData1, `data.classes.${spellbookClass}.knownCardsSizeFormula`)  || "0";
+            let baseKnownCardsSize = new Roll35e(knownCardsSizeFormula || "", {level: classLevel || 0}).roll().total
+            
+            let otherClassesLevels = classes.reduce((cur, o) => {
+                if (o.name === spellbookClass || o.data.data.classType === "minion" || o.data.data.classType === "template" || o.data.data.deckPresigeClass) return cur;
+                return cur + o.data.data.levels;
+            }, 0);
+
+            let prestigeClasseslLevels = classes.reduce((cur, o) => {
+                if (!o.data.data.deckPresigeClass) return cur;
+                return cur + o.data.data.levels;
+            }, 0);
+
+            let otherLevels = otherClassesLevels - baseClassLevel;
+            let totalDeckCasterLevel = (baseClassLevel || 0) + (deckAddHalfOtherLevels ? Math.floor(otherLevels/2) : 0) + prestigeClasseslLevels
+
+
+            let deckSizeFormula = updateData[`data.attributes.cards.decks.${deckKey}.handSize.formula`] || getProperty(srcData1, `attributes.cards.decks.${deckKey}.handSize.formula`) || "0"
+            linkData(srcData1, updateData,`data.attributes.cards.decks.${deckKey}.handSize.total`,new Roll35e(deckSizeFormula, this.getRollData()).roll().total + baseDeckHandSize);
+
+            let casterLevelBonusFormula = updateData[`data.attributes.cards.decks.${deckKey}.cl.formula`] || getProperty(srcData1, `attributes.cards.decks.${deckKey}.cl.formula`) || "0"
+            linkData(srcData1, updateData,`data.attributes.cards.decks.${deckKey}.cl.total`,new Roll35e(casterLevelBonusFormula, this.getRollData()).roll().total + totalDeckCasterLevel);
+
+            let knownCardsBonusFormula = updateData[`data.attributes.cards.decks.${deckKey}.deckSize.formula`] || getProperty(srcData1, `attributes.cards.decks.${deckKey}.deckSize.formula`) || "0"
+            linkData(srcData1, updateData,`data.attributes.cards.decks.${deckKey}.deckSize.total`,new Roll35e(knownCardsBonusFormula, this.getRollData()).roll().total + baseKnownCardsSize);
+        }
+
+
         // Add dex mod to AC
         if (updateData["data.abilities.dex.mod"] < 0 || !flags.loseDexToAC) {
             const maxDexBonus = updateData["data.attributes.maxDexBonus"] || (this.data.data.attributes.maxDexBonus || null);
@@ -2179,10 +2233,14 @@ export class ActorPF extends Actor {
                 "divine": {
                     "max": 0,
                     "value": 0
+                },
+                "cards": {
+                    "max": 0,
+                    "value": 0
                 }
             })
         } else {
-            for (let type of ["psionic", "arcane", "divine"]) {
+            for (let type of ["psionic", "arcane", "divine", "cards"]) {
                 // parseInt(getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.bonusPrestigeCl`))
                 if (data1.attributes.prestigeCl[type] === undefined) {
                     linkData(data, updateData, `data.attributes.prestigeCl.${type}`, {
@@ -2500,6 +2558,9 @@ export class ActorPF extends Actor {
                 if (o.data.data.classType === "minion" || o.data.data.classType === "template") return cur;
                 return cur + o.data.data.levels;
             }, 0);
+
+            
+
 
             //console.log(`D35E | Setting attributes hd total | ${level}`)
             linkData(data, updateData, "data.attributes.hd.total", level);
@@ -2967,6 +3028,9 @@ export class ActorPF extends Actor {
                 spellcastingAbility: cls.data.spellcastingAbility,
                 spellslotAbility: cls.data.spellslotAbility,
                 allSpellsKnown: cls.data.allSpellsKnown,
+                deckHandSizeFormula: cls.data.deckHandSizeFormula,
+                knownCardsSizeFormula: cls.data.knownCardsSizeFormula,
+                deckPrestigeClass: cls.data.deckPrestigeClass,
 
                 savingThrows: {
                     fort: 0,
@@ -3173,12 +3237,19 @@ export class ActorPF extends Actor {
             "psionic": 0,
             "arcane": 0,
             "divine": 0,
+            "cards": 0,
         }
 
         for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
             if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
                 let spellcastingType = data.classes[spellbook.class].spellcastingType;
                 spellcastingBonusTotalUsed[spellcastingType] += spellbook.bonusPrestigeCl;
+            }
+        }
+
+        for (let deck of Object.values(data.attributes?.cards?.decks || {})) {
+            if (deck.class !== "" && data.classes[deck.class] != null) {
+                spellcastingBonusTotalUsed["cards"] += deck.bonusPrestigeCl;
             }
         }
 
@@ -3203,6 +3274,7 @@ export class ActorPF extends Actor {
         }
 
         for (let spellbook of Object.values(data.attributes.spells.spellbooks)) {
+            if (!spellbook.cl) continue;
             // Set CL
             spellbook.maxPrestigeCl = 0
             spellbook.allSpellsKnown = false
@@ -3241,6 +3313,24 @@ export class ActorPF extends Actor {
                 let spellbookClassLevel = (data.classes[spellbook.class]?.level || 0) + spellbook.bonusPrestigeCl;
                 spellbook.spells[`spell${a}`].maxKnown = data.classes[spellbook.class]?.spellsKnownPerLevel ? Math.max(0, data.classes[spellbook.class]?.spellsKnownPerLevel[spellbookClassLevel - 1] ? data.classes[spellbook.class]?.spellsKnownPerLevel[spellbookClassLevel - 1][a+1] || 0 : 0) : 0
             }
+        }
+        for (let deck of Object.values(data.attributes?.cards?.decks || {})) {
+            // Set CL
+            deck.maxPrestigeCl = 0
+            
+            if (deck.class !== "" && data.classes[deck.class] != null) {
+                let spellcastingType = "cards";
+                if (spellcastingType !== undefined && spellcastingType !== null && spellcastingType !== "none" && spellcastingType !== "other") {
+                    if (data.attributes.prestigeCl[spellcastingType]?.max !== undefined) {
+                        deck.maxPrestigeCl = data.attributes.prestigeCl[spellcastingType].max;
+                        deck.availablePrestigeCl = data.attributes.prestigeCl[spellcastingType].max - spellcastingBonusTotalUsed[spellcastingType];
+                    }
+                }
+            }
+            deck.hasPrestigeCl = deck.maxPrestigeCl > 0
+            deck.canAddPrestigeCl = deck.availablePrestigeCl > 0
+            deck.canRemovePrestigeCl = deck.bonusPrestigeCl > 0
+            
         }
         data.canLevelUp = data.details.xp.value >= data.details.xp.max
 
@@ -3829,7 +3919,11 @@ export class ActorPF extends Actor {
 
     _onUpdate(data, options, userId, context) {
         if (hasProperty(data, "data.attributes.vision.lowLight") || hasProperty(data, "data.attributes.vision.darkvision")) {
+            try {
             canvas.sight.initializeTokens();
+            } catch (e) {
+
+            }
         }
 
 
@@ -7570,6 +7664,38 @@ export class ActorPF extends Actor {
         let deletedDocuments = await super.deleteEmbeddedDocuments(type, data, options);
         await this.refresh({})
         return Promise.resolve(deletedDocuments);
+    }
+
+    async drawCardsForDeck(deckId) {
+        let cards = this.items.filter(o => {
+            return o.type === "card";
+        })
+        let allCards = cards.filter(obj => { return obj.data.data.deck === deckId; })
+        let discardedCards = shuffle(allCards.filter(obj => { return obj.data.data.state === "discarded"; }).map(obj => obj._id))
+        let deckCards = shuffle(allCards.filter(obj => { return obj.data.data.state === "deck"; }).map(obj => obj._id))
+        let deck = this.data.data.attributes?.cards?.decks[deckId] || {}
+        let currentHandSize = allCards.filter(obj => { return obj.data.data.state === "hand"; }).length
+        let cardsToDraw = Math.max(0,deck.handSize.total - currentHandSize) 
+
+        let cardUpdates = []
+
+        while (cardsToDraw > 0 && deckCards.length > 0) {
+            let d = deckCards.pop();
+            cardUpdates.push({_id:d,'data.state':'hand'})
+            cardsToDraw--;
+        }
+
+        while (cardsToDraw > 0 && discardedCards.length > 0) {
+            let d = discardedCards.pop();
+            cardUpdates.push({_id:d,'data.state':'hand'})
+            cardsToDraw--;
+        }
+
+        if (deckCards.length === 0 && discardedCards.length > 0) {
+            discardedCards.forEach(d => {cardUpdates.push({_id:d,'data.state':'deck'})})
+        }
+
+        return  this.updateEmbeddedDocuments("Item", cardUpdates, {stopUpdates: true})
     }
 }
 
