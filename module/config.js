@@ -340,6 +340,7 @@ D35E.abilityTypes = {
   "nat": "D35E.Natural",
   "su": "D35E.Extraordinary",
   "ex": "D35E.Supernatural",
+  "sp": "D35E.SpellLike",
   "other": "D35E.Other"
 };
 
