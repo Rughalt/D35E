@@ -80,6 +80,7 @@ D35E.classBAB = {
 
 D35E.classSavingThrows = {
   "low": "D35E.Poor",
+  "med": "D35.Medium",
   "high": "D35E.Good",
 };
 
@@ -92,22 +93,27 @@ D35E.classBABFormulas = {
 D35E.classSavingThrowFormulas = {
   "base": {
     "low": "floor(@level / 3)",
+    "med": "1 + floor(@level/2.5)",
     "high": "2 + floor(@level / 2)",
   },
   "prestige": {
     "low": "floor(@level / 3)",
+    "med": "1 + floor(@level/2.5)",
     "high": "2 + floor(@level / 2)",
   },
   "racial": {
     "low": "floor(@level / 3)",
+    "med": "1 + floor(@level/2.5)",
     "high": "2 + floor(@level / 2)",
   },
   "minion": {
     "low": "floor(@level / 3)",
+    "med": "1 + floor(@level/2.5)",
     "high": "2 + floor(@level / 2)",
   },
   "template": {
     "low": "0",
+    "med": "0",
     "high": "0",
   },
 };
