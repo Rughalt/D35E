@@ -1477,6 +1477,11 @@
   "D35E.RegenerationInfo":"Regeneration will display in chat and needs to be applied manually",
   "D35E.Metamagic":"Metamagic",
   "D35E.NaturalArmor":"Natural Armor",
+  "D35E.Supernatural":"Supernatural",
+  "D35E.Extraordinary":"Extraordinary",
+  "D35E.Natural":"Natural",
+  "D35E.AbilityType":"Ability Type",
+  "D35E.Actual":"Actual",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

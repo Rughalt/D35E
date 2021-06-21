@@ -1768,6 +1768,7 @@
         "contextNotes"
       ],
       "featType": "feat",
+      "abilityType": "",
       "associations": {
         "classes": []
       },

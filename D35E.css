@@ -274,6 +274,12 @@
   border: 1px solid rgba(105, 204, 229, 0.76);
   background: rgba(105, 204, 229, 0.43);
 }
+.D35E select.modified,
+.D35E input.modified {
+  border: 1px solid rgba(105, 204, 229, 0.76);
+  background: rgba(105, 204, 229, 0.42);
+  color: rgb(4 30 37);
+}
 /* ----------------------------------------- */
 /*  Entity Sheets Specifically               */
 /* ----------------------------------------- */
@@ -1065,7 +1071,7 @@
   width: 100%;
 }
 .D35E.sheet.actor .attributes-root {
-  flex: 0 0 35%;
+  flex: 0 0 30%;
 }
 .D35E.sheet.actor ul.attributes {
   list-style: none;

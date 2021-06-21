@@ -126,16 +126,20 @@ export class ActorSheetPF extends ActorSheet {
     // Ability Scores
 
     data.abilitiesChanged = false;
-
+    
     for ( let [a, abl] of Object.entries(data.actor.data.abilities)) {
       abl.label = CONFIG.D35E.abilitiesShort[a];
       abl.tempvalue = data.actor.data.abilities[a].total;
       if (data.actor.data.abilities[a].value !== 10)
         data.abilitiesChanged = true
+      if (data.actor.data.abilities[a].value !== data.actor.data.abilities[a].total) {
+        data.actor.data.abilities[a].modified = true;
+      }
       abl.sourceDetails = data.sourceDetails != null ? data.sourceDetails.data.abilities[a].total : [];
     }
 
 
+    data.sizeModified = data.actor.data.traits.size !== data.actor.data.traits.actualSize;
 
     // Armor Class
     for (let [a, ac] of Object.entries(data.actor.data.attributes.ac)) {
@@ -1844,7 +1848,9 @@ export class ActorSheetPF extends ActorSheet {
       item.empty = itemQuantity <= 0 || (item.isCharged && itemCharges <= 0);
 
       if ( item.type === "spell" ) arr[1].push(item);
-      else if ( item.type === "feat" ) arr[2].push(item);
+      else if ( item.type === "feat" ) {
+        arr[2].push(item);
+      }
       else if ( item.type === "class" ) arr[3].push(item);
       else if ( item.type === "card" ) arr[5].push(item);
       else if (item.type === "attack") {
@@ -1997,6 +2003,7 @@ export class ActorSheetPF extends ActorSheet {
 
     for (let f of feats) {
       let k = f.data.featType;
+
       if (f.data.source) {
         let className = f.data.source.split(' ')
         className.pop()

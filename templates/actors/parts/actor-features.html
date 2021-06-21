@@ -144,6 +144,9 @@
             <div class="item-image" style="background-image: url('{{item.img}}')"></div>
             <h4>
               {{item.name}}
+              {{#if item.data.abilityType}}
+              (<span style="text-transform: capitalize;">{{item.data.abilityType}}</span>)
+              {{/if}}
 
               {{#if item.unmetRequirements}}
                 <i class="fas fa-tasks tooltip non-rollable" style="color: darkred">
@@ -281,7 +284,13 @@
               <li class="item flexrow" data-item-id="{{iitem._id}}">
                 <div class="item-name flexrow rollable">
                   <div class="item-image" style="background-image: url('{{iitem.img}}')"></div>
-                  <h4>{{iitem.name}}</h4>
+                  <h4>{{iitem.name}}
+
+                    {{#if iitem.data.abilityType}}
+                    (<span style="text-transform: capitalize;">{{iitem.data.abilityType}}</span>)
+                    {{/if}}
+
+                  </h4>
                 </div>
 
                 <div class="item-detail item-actions">

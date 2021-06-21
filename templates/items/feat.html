@@ -123,6 +123,19 @@
                 </select>
               </div>
 
+
+              <div class="form-group select">
+                <label>{{localize "D35E.AbilityType"}}</label>
+                <select name="data.abilityType" value="{{data.data.abilityType}}">
+                  {{#select data.data.abilityType}}
+                  <option value="">{{localize "D35E.None"}}</option>
+                  {{#each config.abilityTypes as |type a|}}
+                  <option value="{{a}}">{{type}}</option>
+                  {{/each}}
+                  {{/select}}
+                </select>
+              </div>
+
               {{!-- Feat Tags --}}
               <div class="form-group stacked">
                 <div class="data-selector">

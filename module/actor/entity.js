@@ -688,7 +688,7 @@ export class ActorPF extends Actor {
                 let maximized = options.maximized;
                 for (const hd of health_sources) {
                     auto_health(hd.data, options, maximized);
-                    maximized = Math.max(0, maximized - hd.data.levels);
+                    maximized = Math.max(0, maximized - hd.data.data.levels);
                 }
             } else health_sources.forEach(race => manual_health(race.data));
         }
@@ -6657,7 +6657,7 @@ export class ActorPF extends Actor {
             case "SelfDamage":
                 if (action.parameters.length === 1) {
                     let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll().total
-                    ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, actor);
+                    ActorPF.applyDamage(null,null,null,null,null,null,null,damage,null,null,null,null,false,true, this);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
@@ -6733,7 +6733,7 @@ export class ActorPF extends Actor {
                 //console.log(action)
                 if (action.parameters.length === 1) {
                     let damage = new Roll35e(cleanParam(action.parameters[0]), actionRollData).roll().total
-                    ActorPF.applyRegeneration(damage,actor);
+                    ActorPF.applyRegeneration(damage,this);
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;

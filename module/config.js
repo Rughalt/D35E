@@ -336,6 +336,14 @@ D35E.sizeStealthMods = {
   "col": -16
 };
 
+D35E.abilityTypes = {
+  "nat": "D35E.Natural",
+  "su": "D35E.Extraordinary",
+  "ex": "D35E.Supernatural",
+  "other": "D35E.Other"
+};
+
+
 D35E.flyManeuverabilities = {
   "clumsy": "D35E.FlyManeuverabilityClumsy",
   "poor": "D35E.FlyManeuverabilityPoor",
