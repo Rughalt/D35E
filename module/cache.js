@@ -8,8 +8,7 @@ CACHE.AllAbilities = new Map()
 CACHE.Materials = new Map()
 CACHE.DamageTypes = new Map()
 
-export const addClassAbilitiesFromPackToCache = async function(packName) {
-    let itemPack = game.packs.get(packName);
+export const addClassAbilitiesFromPackToCache = async function(itemPack) {
     const entities = await itemPack.getContent();
     for (let e of entities) {
         //e.pack = packName;
@@ -28,8 +27,7 @@ export const addClassAbilitiesFromPackToCache = async function(packName) {
 
 }
 
-export const addRacialAbilitiedFromPackToCache = async function (packName) {
-    let itemPack = game.packs.get(packName);
+export const addRacialAbilitiedFromPackToCache = async function (itemPack) {
     const entities = await itemPack.getContent();
     for (let e of entities) {
         //e.pack = packName;
@@ -64,19 +62,21 @@ export const buildCache = async function() {
     //console.log("D35E | Building Caches for compendiums...")
     ui.notifications.info(`Building Caches for compendiums...`);
 
-    for (let packName of ["D35E.class-abilities", "world.class-abilities","LOTD.class-abilities","ETOOLS.class-abilities"])
-    if (game.packs.has(packName)) {
-        await addClassAbilitiesFromPackToCache(packName);
-    }
+    for (const entry of game.packs.entries()) {
+        const packName = entry[0];
+        const itemPack = entry[1];
 
-    for (let packName of ["world.racial-abilities","LOTD.racial-abilities","D35E.racial-abilities"])
-        if (game.packs.has(packName)) {
-            await addRacialAbilitiedFromPackToCache(packName);
+        if (packName.endsWith('.class-abilities')) {
+            addClassAbilitiesFromPackToCache(itemPack);
+            continue;
         }
 
-    for (let packName of ["world.spelllike-abilities","world.spell-like-abilities","LOTD.spelllike","D35E.spelllike"])
-        if (game.packs.has(packName)) {
-            let itemPack = game.packs.get(packName);
+        if (packName.endsWith('.racial-abilities')) {
+            addRacialAbilitiedFromPackToCache(itemPack);
+            continue;
+        }
+
+        if (packName.endsWith('.spelllike-abilities') || packName.endsWith('.spell-like-abilities') || packName.endsWith('.spelllike')) {
             const entities = await itemPack.getContent();
             for (let e of entities) {
                 //e.pack = packName;
@@ -92,12 +92,10 @@ export const buildCache = async function() {
                     CACHE.AllRacialFeatures.push(e);
                 }
             }
+            continue;
         }
 
-
-    for (let packName of ["world.materials","LOTD.materials","D35E.materials"])
-        if (game.packs.has(packName)) {
-            let itemPack = game.packs.get(packName);
+        if (packName.endsWith('.materials')) {
             const entities = await itemPack.getContent();
             for (let e of entities) {
                 //e.pack = packName;
@@ -105,10 +103,10 @@ export const buildCache = async function() {
                     CACHE.Materials.set(e.data.data.uniqueId, e)
                 }
             }
+            continue;
         }
-    for (let packName of ["world.damage-types","LOTD.damage-types","D35E.damage-types"])
-        if (game.packs.has(packName)) {
-            let itemPack = game.packs.get(packName);
+
+        if (packName.endsWith('.damage-types')) {
             const entities = await itemPack.getContent();
             for (let e of entities) {
                 //e.pack = packName;
@@ -116,7 +114,9 @@ export const buildCache = async function() {
                     CACHE.DamageTypes.set(e.data.data.uniqueId, e)
                 }
             }
+            continue;
         }
+    };
 
     ui.notifications.info(`Building Caches for compendiums finished!`);
     //console.log("D35E | Building Caches for finished!")
