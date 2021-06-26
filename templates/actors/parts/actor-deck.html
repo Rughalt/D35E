@@ -205,35 +205,49 @@
             </div>
 
             <div class="item-detail item-actions">
+
+                {{#if section.isPrepared}}
                 <div class="item-attack">
                     <a class="item-control item-attack"><img class="icon" src="systems/D35E/icons/actions/gladius.svg"></a>
                 </div>
+                {{/if}}
             </div>
 
             <div class="spell-uses flexrow">
 
                 
+                {{#unless section.isSideDeck}}
+                <a style="flex: 0 24px;" class="item-control card-side" title="{{ localize 'D35E.SideDeck' }}">
+                    <i class="fas fa-box"></i>
+                </a>
+                {{else}}
+                <div style="flex: 0 24px;"><i class="fas fa-box disabled" style="opacity: 0.8"></i></div>
+                {{/unless}}
+
                 {{#unless section.isPrepared}}
                 <a style="flex: 0 24px;" class="item-control card-draw" title="{{ localize 'D35E.Draw' }}">
                     <i class="fas fa-hand-holding"></i>
                 </a>
                 {{else}}
-                <div style="flex: 0 24px;"></div>
+                <div style="flex: 0 24px;"><i class="fas fa-hand-holding disabled" style="opacity: 0.8"></i></div>
                 {{/unless}}
+
+
+
 
                 {{#unless section.isDiscarded}}
                 <a style="flex: 0 24px;" class="item-control card-discard" title="{{ localize 'D35E.Discard' }}">
                     <i class="fas fa-hand-sparkles"></i>
                 </a>
                 {{else}}
-                <div style="flex: 0 24px;"></div>
+                <div style="flex: 0 24px;"><i class="fas fa-hand-sparkles disabled" style="opacity: 0.8"></i></div>
                 {{/unless}}
                 {{#unless section.isInDeck}}
                 <a style="flex: 0 24px;" class="item-control card-return" title="{{ localize 'D35E.ReturnToDeck' }}">
                     <i class="fas fa-inbox"></i>
                 </a>
                 {{else}}
-                <div style="flex: 0 24px;"></div>
+                <div style="flex: 0 24px;"><i class="fas fa-inbox disabled" style="opacity: 0.8"></i></div>
                 {{/unless}}
             </div>
 

@@ -1397,7 +1397,7 @@
       "physicalItem": {
         "quantity": 1,
         "weight": 0,
-        "constantWeight": true,
+        "constantWeight": false,
         "price": 0,
         "identified": true,
         "hp": {

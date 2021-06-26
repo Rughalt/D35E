@@ -678,6 +678,7 @@ export class ActorSheetPF extends ActorSheet {
     html.find('.spell-add-metamagic').click(this._onSpellAddMetamagic.bind(this));
     html.find('.card-draw').click(this._onCardDraw.bind(this));
     html.find('.card-discard').click(this._onCardDiscard.bind(this));
+    html.find('.card-side').click(this._onCardSide.bind(this));
     html.find('.card-return').click(this._onCardReturn.bind(this));
 
 
@@ -1652,6 +1653,16 @@ export class ActorSheetPF extends ActorSheet {
     item.update({ "data.state": "discarded" });
   }
 
+  async _onCardSide(event) {
+    event.preventDefault();
+    let add = -1
+    const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
+    const item = this.actor.getOwnedItem(itemId);
+    item.update({ "data.state": "side" });
+  }
+  
+
+
   async _onCardReturn(event) {
     event.preventDefault();
     let add = -1
@@ -1938,7 +1949,8 @@ export class ActorSheetPF extends ActorSheet {
       let deckSpells = {
         hand: {name: "Hand", max: deck.handSize.total, isPrepared: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "hand"; })}, 
         discarded: {name: "Discard Pile", isDiscarded: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "discarded"; })}, 
-        deck: {name: "Deck",  isInDeck: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "deck"; })}};
+        deck: {name: "Deck",  isInDeck: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "deck"; })}, 
+        sideDeck: {name: "Side Deck",  isSideDeck: true, canCreate: true, cards: deckCards.filter(obj => { return obj.data.state === "side"; })}};
       deckData[a] = {
         data: deckSpells,
         hand: deckSpells.hand.cards.length,
@@ -2278,7 +2290,7 @@ export class ActorSheetPF extends ActorSheet {
         dataType = "compendium";
         const pack = game.packs.find(p => p.collection === data.pack);
         const packItem = await pack.getDocument(data.id);
-        if (packItem != null) itemData = packItem.data;
+        if (packItem != null) itemData = packItem.data.toObject(false);
       }
 
       // Case 2 - Data explicitly provided
@@ -2578,7 +2590,7 @@ export class ActorSheetPF extends ActorSheet {
     let quantity = parseInt($(`input[name='amount-add-${itemId}']`).val() || 1);
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
-    if (packItem != null) itemData = packItem.data;
+    if (packItem != null) itemData = packItem.data.toObject(false);
     itemData.document.data.update({"data.quantity":quantity});
     this.enrichDropData(itemData);
     console.log('D35E | Adding Quantity', quantity, itemData)
