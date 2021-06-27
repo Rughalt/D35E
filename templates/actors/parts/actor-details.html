@@ -15,7 +15,7 @@
                 <div class="ability-simple flexrow" data-ability="{{id}}">
                     <h4 class="ability-name rollable">{{ability.label}}</h4>
                     {{#if ability.isZero}}
-                        <input class="ability-base-simple readonly" name="data.abilities.{{id}}.tempvalue" type="text"
+                        <input class="ability-base-simple readonly" type="text"
                                value="0" data-dtype="Number" placeholder="10" readonly/>
                     {{else}}
                         <input class="ability-base-simple" name="data.abilities.{{id}}.tempvalue" type="text"

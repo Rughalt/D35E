@@ -8,13 +8,13 @@
     <div class="ability-header flexrow">
 
       {{#if ability.isZero}}
-      <input class="ability-damage readonly" name="data.abilities.{{id}}.damage" type="text" title="{{ localize 'D35E.Damage' }}"
+      <input class="ability-damage readonly"  type="text" title="{{ localize 'D35E.Damage' }}"
              value="{{#if ability.damage}}{{ability.damage}}{{/if}}" data-dtype="Number" 
              placeholder="{{ localize 'D35E.DMG' }}" readonly/>
-      <input class="ability-penalty readonly" name="data.abilities.{{id}}.userPenalty" type="text" title="{{ localize 'D35E.Penalty' }}"
+      <input class="ability-penalty readonly" type="text" title="{{ localize 'D35E.Penalty' }}"
              value="{{#if ability.userPenalty}}{{ability.userPenalty}}{{/if}}" data-dtype="Number"
              placeholder="{{ localize 'D35E.PNL' }}" readonly/>
-      <input class="ability-drain readonly" name="data.abilities.{{id}}.drain" type="text" title="{{ localize 'D35E.Drain' }}"
+      <input class="ability-drain readonly" type="text" title="{{ localize 'D35E.Drain' }}"
              value="{{#if ability.drain}}{{ability.drain}}{{/if}}" data-dtype="Number" 
              placeholder="{{ localize 'D35E.DRN' }}" readonly/>
       {{else}}
@@ -58,9 +58,9 @@
       <div class="ability-center"></div>
 
       {{#if ability.isZero}}
-      <input name="data.abilities.{{id}}.value" type="hidden" value="0" data-dtype="Number" class="readonly"
+      <input type="hidden" value="0" data-dtype="Number" class="readonly"
              placeholder="10" readonly/>
-      <input class="ability-base readonly" name="data.abilities.{{id}}.tempvalue" type="text" value="{{ability.value}}"
+      <input class="ability-base readonly" type="text" value="{{ability.value}}"
              data-dtype="Number" placeholder="10" readonly/>
       {{else}}
       <input name="data.abilities.{{id}}.value" type="hidden" value="{{ability.value}}" data-dtype="Number"

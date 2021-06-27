@@ -118,6 +118,7 @@ export class CompendiumBrowser extends Application {
   }
 
   _filterItems(item) {
+    if (item.data.data.uniqueId) return false;
     if (this.type === "spells" && item.type !== "spell") return false;
     if (this.type === "items" && !["weapon", "equipment", "loot", "consumable"].includes(item.type)) return false;
     if (this.type === "feats" && item.type !== "feat") return false;

@@ -2617,7 +2617,7 @@ export class ActorPF extends Actor {
                 });
 
                 for (let i of classes) {
-                    classNames.add([i.name, i.data.data.levels,i.data.data.addedAbilities || [],i.data.data.disabledAbilities || []])
+                    classNames.add([i.name, i.data.data.levels,i.data.data.addedAbilities || [],i.data.data.disabledAbilities || [], i.data.data.customTag])
                 }
 
                 let itemPack = game.packs.get("D35E.class-abilities");
@@ -2655,6 +2655,7 @@ export class ActorPF extends Actor {
                             this.addClassFeatureToActorIfPossible(addedAbilities, uniqueId, level, classInfo, existingAbilities, e, fullConditions, changes, itemsToAdd, added);
                         }
                     }
+                    
                 }
 
 
@@ -3007,7 +3008,9 @@ export class ActorPF extends Actor {
         }).forEach(_cls => {
             let cls = _cls.data
             let tag = createTag(cls.data.customTag || cls.name);
+            cls.data.baseTag = tag;
             let nameTag = createTag(cls.name);
+            cls.data.nameTag = nameTag;
             let count = 1;
             while (actorData.items.filter(obj => {
                 return obj.type === "class" && obj.data.tag === tag && obj !== cls;
