@@ -104,8 +104,8 @@ export class ActorSheetPF extends ActorSheet {
       i.data.hasTimedRecharge = i.hasTimedRecharge;
       i.data.container = getProperty(i.data, "data.container");
       i.data.hasAction = i.hasAction || i.isCharged;
-      i.data.attackDescription = i.type === "attack" ? i.attackDescription : "";
-      i.data.damageDescription = i.type === "attack" ? i.damageDescription : "";
+      i.data.attackDescription = i.type === "attack" ? i.attackDescription(featRollData) : "";
+      i.data.damageDescription = i.type === "attack" ? i.damageDescription(featRollData) : "";
       i.data.range = i.type === "attack" ? i.range : "";
       i.data.timelineLeftText = i.getTimelineTimeLeftDescriptive();
       i.data.showUnidentifiedData = i.showUnidentifiedData;

@@ -18,6 +18,17 @@ export class ActorPF extends Actor {
     API_URI = 'https://companion.legaciesofthedragon.com/';
     //API_URI = 'http://localhost:5000';
 
+    constructor(...args) {
+        super(...args);
+    
+        /**
+         * @property {object.<string>} _runningFunctions
+         * Keeps track of currently running async functions that shouldn't run multiple times simultaneously.
+         */
+        if (this._runningFunctions === undefined) this._runningFunctions = {};
+        if (this._cachedRollData === undefined) this._cachedRollData = this.getRollData();
+    }    
+
     static chatListeners(html) {
         html.on('click', 'button[data-action]', this._onChatCardButtonAction.bind(this));
     }
@@ -95,7 +106,7 @@ export class ActorPF extends Actor {
     }
 
     static _getChangeItemSubtype(item) {
-        if (item.type === "buff") return item.data.data.buffType || item.data?.featType;
+        if (item.type === "buff") return item.data?.data?.buffType || item.data?.buffType;
         if (item.type === "feat") return item.data?.data?.featType || item.data?.featType;
         return "";
     }
@@ -3699,6 +3710,7 @@ export class ActorPF extends Actor {
         await this.toggleConditionStatusIcons();
 
         this._updateMinions(options);
+        this._cachedRollData = null;
         //return false;
         return Promise.resolve(returnActor ? returnActor : this);
     }
@@ -6232,7 +6244,7 @@ export class ActorPF extends Actor {
                 }
 
             }
-            if (obj.data.creationChanges && obj.data.creationChanges.length) {
+            if (obj.data?.creationChanges && obj.data.creationChanges.length) {
                 for (let creationChange of obj.data.creationChanges) {
                     if (creationChange) {
                     if (obj.document)   {
@@ -6398,12 +6410,21 @@ export class ActorPF extends Actor {
     }
 
     getRollData(data = null) {
-        if (data == null) data = this.data.toObject(false).data;
-        const result = mergeObject(data, {
-            size: Object.keys(CONFIG.D35E.sizeChart).indexOf(getProperty(data, "traits.actualSize")) - 4,
-        }, { inplace: false });
-
-        return result;
+        if (data != null) {
+            const result = mergeObject(data, {
+                size: Object.keys(CONFIG.D35E.sizeChart).indexOf(getProperty(data, "traits.actualSize")) - 4,
+            }, { inplace: false });
+            return result;
+        } else {
+            if (!this._cachedRollData) {
+                data = this.data.toObject(false).data;
+                const result = mergeObject(data, {
+                    size: Object.keys(CONFIG.D35E.sizeChart).indexOf(getProperty(data, "traits.actualSize")) - 4,
+                }, { inplace: false });
+                this._cachedRollData = result;
+            }
+            return this._cachedRollData;
+        }
     }
 
     async autoApplyActionsOnSelf(actions) {
@@ -6802,6 +6823,7 @@ export class ActorPF extends Actor {
     }
 
     async applyActionOnSelf(actions, actor, buff = null, target = "self") {
+        if (!actions) return;
         if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         let itemCreationActions = []
@@ -7360,49 +7382,71 @@ export class ActorPF extends Actor {
     }
 
     async toggleConditionStatusIcons() {
-        const isLinkedToken = getProperty(this.data, "token.actorLink");
-        const tokens = isLinkedToken ? this.getActiveTokens() : [this.token].filter((o) => o != null);
+        if (this._runningFunctions["toggleConditionStatusIcons"]) return;
+        this._runningFunctions["toggleConditionStatusIcons"] = {};
+    
+
+        const tokens = this.token ? [this.token] : this.getActiveTokens().filter((o) => o != null);
         const buffTextures = this._calcBuffTextures();
 
-        let promises = [];
-        const fx = [...this.effects];
-        let existingIds = new Set()
-        for (let [id, obj] of Object.entries(buffTextures)) {
-            if (obj.active) {
-                await obj.item.toEffect();
-                existingIds.add(id)
-            }
-            else await fx.find((f) => f.data.origin === id)?.delete();
-        }
-        for (let _fx of fx) {
-            if (_fx?.data?.origin && !existingIds.has(_fx?.data?.origin)) {
-                try {
-                    await _fx.delete()
-                } catch {
+        for (let t of tokens) {
+        // const isLinkedToken = getProperty(this.data, "token.actorLink");
+            const actor = t.actor ? t.actor : this;
+            if (!actor.testUserPermission(game.user, "OWNER")) continue;
+            const fx = [...actor.effects];
 
+            // Create and delete buff ActiveEffects
+            let toCreate = [];
+            let toDelete = [];
+            for (let [id, obj] of Object.entries(buffTextures)) {
+                const existing = fx.find((f) => f.data.origin === id);
+                if (obj.active && !existing) toCreate.push(obj.item.getRawEffectData());
+                else if (!obj.active && existing) toDelete.push(existing.id);
+            }
+
+            // Create and delete condition ActiveEffects
+            for (let k of Object.keys(CONFIG.D35E.conditions)) {
+                const idx = fx.findIndex((e) => e.getFlag("core", "statusId") === k);
+                const hasCondition = actor.data.data.attributes.conditions[k] === true;
+                const hasEffectIcon = idx >= 0;
+                const obj = t.object ?? t;
+
+                if (hasCondition && !hasEffectIcon) {
+                toCreate.push({
+                    "flags.core.statusId": k,
+                    name: CONFIG.D35E.conditions[k],
+                    icon: CONFIG.D35E.conditionTextures[k],
+                });
+                } else if (!hasCondition && hasEffectIcon) {
+                const removeEffects = fx.filter((e) => e.getFlag("core", "statusId") === k);
+                toDelete.push(...removeEffects.map((e) => e.id));
                 }
             }
-        }
 
-        for (let token of tokens) {
-            CONFIG.statusEffects.forEach((con) => {
-                const idx = fx.findIndex((e) => e.getFlag("core", "statusId") === con.id);
-                if (CONFIG.D35E.conditions[con.id] && (idx !== -1) != this.data.data.attributes.conditions[con.id] && token.object)
-                    promises.push(token.object.toggleEffect(con, { midUpdate: true }));
-            });
-        }
-        return Promise.all(promises);
+            if (toDelete.length) await actor.deleteEmbeddedDocuments("ActiveEffect", toDelete, {stopUpdates: true});
+            if (toCreate.length) await actor.createEmbeddedDocuments("ActiveEffect", toCreate, {stopUpdates: true});
+            }
+
+
+        delete this._runningFunctions["toggleConditionStatusIcons"];
+
     }
 
     // @Object { id: { title: String, type: buff/string, img: imgPath, active: true/false }, ... }
     _calcBuffTextures() {
+        
+        console.log('D35E | Calculating buff textures')
+        if (!this.testUserPermission(game.user, "OWNER")) {
+            
+            console.log('D35E | Not owner, do not show textures')
+            return [];
+        }
         if (this.data.data.noBuffDisplay) return [];
         const buffs = this.items.filter((o) => o.type === "buff");
         return buffs.reduce((acc, cur) => {
             const id = cur.uuid;
             if (cur.data.data.hideFromToken) return acc;
             if (cur.data.data?.buffType === "shapechange") return acc;
-            console.log('DATA | Curr', cur)
             if (!acc[id]) acc[id] = { id: cur.id, label: cur.name, icon: cur.data.img, item: cur };
             if (cur.data.data.active) acc[id].active = true;
             else acc[id].active = false;
@@ -7647,7 +7691,8 @@ export class ActorPF extends Actor {
     async createEmbeddedDocuments(type, data, options = {}) {
         console.log('D35E | createEmbeddedDocuments')
         let createdItems = await super.createEmbeddedDocuments(type, data, options);
-        await this.refresh({})
+        if (!options.stopUpdates)
+            await this.refresh({})
         return Promise.resolve(createdItems);
     }
 
@@ -7662,7 +7707,8 @@ export class ActorPF extends Actor {
     async deleteEmbeddedDocuments(type, data, options = {}) {
         console.log('D35E | deleteEmbeddedDocuments')
         let deletedDocuments = await super.deleteEmbeddedDocuments(type, data, options);
-        await this.refresh({})
+        if (!options.stopUpdates)
+            await this.refresh({})
         return Promise.resolve(deletedDocuments);
     }
 

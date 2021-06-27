@@ -4137,23 +4137,15 @@ export class ItemPF extends Item {
         return totalPrice;
     }
 
-    async toEffect() {
-        if (!this.actor || this.type !== "buff") return;
+ 
 
-        const existing = this.actor.effects.find((e) => e.data.origin == this.uuid);
-        if (existing) return existing;
-
-        // Add a new effect
-        //const durationData = {rounds: this.data.data.timeline.total - this.data.data.timeline.elapsed, combat: game.combats.entities[0]._id, startRound: game.combats.entities[0].current.round || 0, startTurn: game.combats.entities[0].current.turn || 0}
+    getRawEffectData() {
         const createData = { label: this.name, icon: this.img, origin: this.uuid, disabled: !this.data.data.active };
-        createData["flags.D35E.show"] = !this.data.data.hideFromToken && !game.settings.get("D35E", "hideTokenConditions");
-        const effect = await this.actor.createEmbeddedDocuments("ActiveEffect", [createData])
-
-            // await ActiveEffect.create(createData, this.actor);
-        //await effect.create();
-
-        return effect;
-    }
+        if (this.type === "buff")
+            createData["flags.D35E.show"] = !this.data.data.hideFromToken && !game.settings.get("D35E", "hideTokenConditions");
+        return createData;
+      }
+    
 
     async renderBuffEndChatCard() {
         const chatTemplate = "systems/D35E/templates/chat/roll-ext.html";
@@ -4219,29 +4211,39 @@ export class ItemPF extends Item {
         return unmetRequirements;
     }
 
-    get attackDescription() {
+    attackDescription(rollData) {
         // //console.log('D35E | AB ', this.hasAttack)
+        if (!rollData) {
+            if (!this.actor) return []; //There are no requirements when item has no actor!
+            rollData = this.actor.getRollData();
+        }
+        rollData.item = this.getRollData();
+
         if (this.hasAttack) {
             let bab = 0;
-            let attackBonus = ((this.data.data.enh || 0) ? parseInt(this.data.data.enh) : (this.data.data.masterwork ? 1 : 0)) + parseInt(this.data.data.attackBonus || "0");
-            let abilityBonus = 0;
+            let attackBonus = ((this.data.data.enh || 0) ? this.data.data.enh : (this.data.data.masterwork ? "1" : "0")) + "+" + (this.data.data.attackBonus || "0");
+            let abilityBonus = "0";
+            let sizeBonus = CONFIG.D35E.sizeMods[this.actor.data.data.traits.actualSize] || 0;
             if (this.actor) {
-                bab = parseInt(this.actor.data.data.attributes.bab.total);
+                bab = this.actor.data.data.attributes.bab.total;
                 if (this.data.data.ability.attack)
-                    abilityBonus = parseInt(this.actor.data.data.abilities[this.data.data.ability.attack].mod)
+                    abilityBonus = this.actor.data.data.abilities[this.data.data.ability.attack].mod
             }
-            let totalBonus = bab + attackBonus + abilityBonus;
+            let totalBonus = new Roll35e(`${bab} + ${attackBonus} + ${abilityBonus} + ${sizeBonus}`, rollData).roll().total;
             return `${totalBonus >= 0 ? '+'+totalBonus : totalBonus}`
 
         }
         return "";
     }
 
-    get damageDescription() {
+    damageDescription(rollData) {
         // //console.log('D35E | DD ', this.hasDamage)
-        let rollData = this.actor.getRollData();
+        if (!rollData) {
+            if (!this.actor) return []; //There are no requirements when item has no actor!
+            rollData = this.actor.getRollData();
+        }
         rollData.critMult = 1;
-        rollData.item = duplicate(this.getRollData())
+        rollData.item = this.getRollData()
         let abilityBonus = 0;
         let results = []
         if (this.hasDamage) {

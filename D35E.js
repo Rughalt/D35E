@@ -45,6 +45,7 @@ import {applyConfigModifications} from "./module/config-tools.js";
 import {addLowLightVisionToLightConfig} from "./module/low-light-vision.js";
 import {Roll35e} from "./module/roll.js";
 import {genTreasureFromToken} from "./module/treasure/treasure.js"
+import { ActiveEffectD35E } from "./module/ae/entity.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -90,6 +91,7 @@ Hooks.once("init", async function() {
   CONFIG.debug.hooks = true;
   CONFIG.Actor.entityClass = ActorPF;
   CONFIG.Item.entityClass = ItemPF;
+  CONFIG.ActiveEffect.documentClass = ActiveEffectD35E;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.entityClass = ChatMessagePF;
 
