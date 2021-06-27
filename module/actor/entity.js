@@ -4248,7 +4248,7 @@ export class ActorPF extends Actor {
             if (packItem != null) itemData = packItem.data;
             if (itemData) {
                 if (itemData._id) delete itemData._id;
-                itemData.data.document.data.update({'level':spell.level});
+                itemData.document.data.update({'level':spell.level});
                 spellsToAdd.push(itemData)
             }
         }
