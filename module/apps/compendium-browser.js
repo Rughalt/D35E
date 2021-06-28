@@ -609,6 +609,8 @@ export class CompendiumBrowser extends Application {
       this._onEntry(li.getAttribute("data-collection"), li.getAttribute("data-entry-id"));
     });
 
+    
+
     // Make compendium items draggable
     html.find('.directory-item').each((i, li) => {
       li.setAttribute("draggable", true);
@@ -616,6 +618,7 @@ export class CompendiumBrowser extends Application {
     });
 
     html.find('input[name="search"]').keyup(this._onFilterResults.bind(this));
+    html.find('input[name="search"]').focus();
 
     html.find('.filter input[type="checkbox"]').change(this._onActivateBooleanFilter.bind(this));
 

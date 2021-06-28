@@ -35,7 +35,7 @@ export class ActorSheetPF extends ActorSheet {
      */
     this._scrollTab = {};
     this._initialTab = {};
-
+    this._firstLoad = true;
     /**
      * Track the set of item filters which are applied
      * @type {Set}
@@ -52,7 +52,6 @@ export class ActorSheetPF extends ActorSheet {
      * @type {Object[]}
      */
     this._itemUpdates = [];
-
   }
 
   get currentSpellbookKey() {
@@ -187,7 +186,7 @@ export class ActorSheetPF extends ActorSheet {
 
     // Update spellbook info
     for (let spellbook of Object.values(data.actor.data.attributes.spells.spellbooks)) {
-      const cl = spellbook.cl.total;
+      const cl = spellbook?.cl?.total || 0;
       spellbook.range = {
         close: 25 + 5 * Math.floor(cl / 2),
         medium: 100 + 10 * cl,
@@ -594,6 +593,8 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find(".attribute.melee-bab .attribute-name").click(this._onRollSimpleMelee.bind(this));
     html.find(".attribute.ranged-bab .attribute-name").click(this._onRollSimpleRanged.bind(this));
+    html.find(".roll-psionic-focus").click(this._onRollPsionicFocus.bind(this));
+    
 
     // CMB Check
     html.find(".attribute.cmb .attribute-name").click(this._onRollCMB.bind(this));
@@ -761,6 +762,8 @@ export class ActorSheetPF extends ActorSheet {
     html.find("a.add-prestige-cl").click(ev => { this._changeSpellbokPrestigeCl(ev, 1); });
     html.find("a.remove-prestige-cl-deck").click(ev => { this._changeDeckPrestigeCl(ev, -1); });
     html.find("a.add-prestige-cl-deck").click(ev => { this._changeDeckPrestigeCl(ev, 1); });
+
+    html.find("a.toggle-psionic-focus").click(ev => { this._togglePsionicFocus(ev); });
 
     // Progression
     html.find("input[type='checkbox'].level-up-progression").click(ev => this._onChangeUseProgression(ev));
@@ -1389,6 +1392,17 @@ export class ActorSheetPF extends ActorSheet {
     this.actor.update(updateData);
   }
 
+  async _togglePsionicFocus(event) {
+    event.preventDefault();
+    const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
+
+    const currentPF = getProperty(this.actor.data, `data.attributes.psionicFocus`) || false;
+    const newPF = !currentPF;
+    const k = `data.attributes.psionicFocus`;
+    let updateData = {}
+    updateData[k] = newPF
+    this.actor.update(updateData);
+  }
   
 
   async _onFeatChangeGroup(event) {
@@ -1764,6 +1778,13 @@ export class ActorSheetPF extends ActorSheet {
     this.actor.rollMelee({event: event});
   }
 
+
+  _onRollPsionicFocus(event) {
+    event.preventDefault();
+    this.actor.rollPsionicFocus({event: event});
+  }
+
+
   _onRollSimpleRanged(event) {
     event.preventDefault();
     this.actor.rollRanged({event: event});
@@ -1933,6 +1954,8 @@ export class ActorSheetPF extends ActorSheet {
         prepared: spellbookSpells.filter(obj => { return obj.data.preparation.mode === "prepared" && obj.data.preparation.prepared; }).length,
         isSpellLike: a === "spelllike",
         orig: spellbook,
+
+        psionicFocus: this.actor.data.data.attributes.psionicFocus,
         canCreate: this.actor.owner === true,
         concentration: this.actor.data.data.skills["coc"].mod,
         spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
@@ -2231,6 +2254,10 @@ export class ActorSheetPF extends ActorSheet {
   }
 
   async _render(...args) {
+    if (this._firstLoad) {
+      await this.actor._updateChanges({sourceOnly: true}, {skipToken: true}); 
+      this._firstLoad = false;
+    }
     // Trick to avoid error on elements with changing name
     let focus = this.element.find(":focus");
     focus = focus.length ? focus[0] : null;

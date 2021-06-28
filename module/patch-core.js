@@ -34,6 +34,47 @@ export async function PatchCore() {
       displayBar2: bar2 != null && bar2.attribute != null && bar2.value != null
     });
   }
+  const Token_drawEffects = Token.prototype.drawEffects;
+  Token.prototype.drawEffects = async function() {
+    this.effects.removeChildren().forEach(c => c.destroy());
+    const tokenEffects = this.data.effects;
+    const actorEffects = this.actor?.temporaryEffects || [];
+    let overlay = {
+      src: this.data.overlayEffect,
+      tint: null
+    };
+
+    // Draw status effects
+    if ( tokenEffects.length || actorEffects.length ) {
+      const promises = [];
+      let w = Math.round(canvas.dimensions.size / 2 / 5) * 2;
+      let bg = this.effects.addChild(new PIXI.Graphics()).beginFill(0x000000, 0.40).lineStyle(1.0, 0x000000);
+      let i = 0;
+
+      // Draw actor effects first
+      for ( let f of actorEffects ) {
+        if ( !f.data.icon ) continue;
+        if (f?.data?.flags?.D35E?.show && this.actor?.data?.data?.noBuffDisplay && !this.actor?.testUserPermission(game.user, "OWNER")) continue;
+        const tint = f.data.tint ? colorStringToHex(f.data.tint) : null;
+        if ( f.getFlag("core", "overlay") ) {
+          overlay = {src: f.data.icon, tint};
+          continue;
+        }
+        promises.push(this._drawEffect(f.data.icon, i, bg, w, tint));
+        i++;
+      }
+
+      // Next draw token effects
+      for ( let f of tokenEffects ) {
+        promises.push(this._drawEffect(f, i, bg, w, null));
+        i++;
+      }
+      await Promise.all(promises);
+    }
+
+    // Draw overlay effect
+    return this._drawOverlay(overlay)
+  }
 
   // Patch FormApplication
   FormApplication.prototype.saveMCEContent = async function(updateData=null) {};

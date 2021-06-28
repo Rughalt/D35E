@@ -1,0 +1,50 @@
+<div class="D35E chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+<header class="card-header flexrow">
+    <img src="{{img}}" title="{{name}}" width="36" height="36"/>
+    <h3>{{name}} - {{localize "D35E.PsionicFocus"}}</h3>
+</header>
+
+<div class="card-content">
+    <div class="chat-attack">
+
+        <div class="dice-roll attack-roll flexcol">
+            {{#if success}}
+            <div class="dice-flavor success">{{localize "D35E.Success"}}</div>
+            {{else}}
+            <div class="dice-flavor">{{localize "D35E.Failure"}}</div>
+            {{/if}}
+            <div class="flexrow">
+                <div class="flexcol">
+                    <div class="dice-result ">
+                        <h4 class="rolled-roll dice-total {{#if success}} success{{/if}}">
+                            {{total}}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="dice-result">
+                <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
+                    {{total}}</h4>
+                {{{tooltip}}}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<footer class="card-footer">
+    {{#if hasProperties}}
+    {{#each properties as |prop|}}
+    <div class="flexcol property-group gm-sensitive">
+        <label>{{prop.header}}</label>
+        <div class="flexrow">
+            {{#each prop.value as |v|}}
+            <span class="tag">{{{v}}}</span>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</footer>
+
+</div>

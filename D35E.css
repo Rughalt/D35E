@@ -746,6 +746,14 @@
   float: right;
   font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
 }
+.D35E.sheet.actor a.roll-psionic-focus {
+  padding: 4px 8px;
+  font-family: "Nodesto", "Signika", "Palatino Linotype", serif;
+  font-size: 16px;
+}
+.D35E.sheet.actor .toggle-psionic-focus {
+  font-size: 32px;
+}
 .D35E.sheet.actor .working {
   display: none;
   flex: none;
@@ -4892,6 +4900,9 @@ tr.introjs-showElement > th {
 }
 .d35ecustom .dice-roll .dice-total.success {
   color: #005a00;
+}
+.d35ecustom a.blue-hover:hover {
+  text-shadow: 0 0 10px #2C606D !important;
 }
 .d35ecustom .encounter-roller .entity-link {
   border: none;

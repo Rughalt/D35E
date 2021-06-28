@@ -29,7 +29,7 @@ export class DicePF {
    * @param {Boolean} autoRender    Whether to automatically render the chat messages
    */
   static async d20Roll({event, parts, data, template, title, speaker, flavor, takeTwenty=true, situational=true,
-                  fastForward=true, critical=20, fumble=1, onClose, dialogOptions, extraRolls=[], chatTemplate, chatTemplateData,
+                  fastForward=true, critical=20, fumble=1, treshold=null, onClose, dialogOptions, extraRolls=[], chatTemplate, chatTemplateData,
                   staticRoll=null }) {
     // Handle input arguments
     flavor = flavor || title;
@@ -72,7 +72,7 @@ export class DicePF {
             formula: roll.formula,
             tooltip: await roll.getTooltip(),
             total: roll.total,
-            isCrit: d20.total >= critical,
+            isCrit: treshold ? roll.total >= treshold : d20.total >= critical,
             isFumble: d20.total <= fumble,
           }, chatTemplateData || {});
 
@@ -108,7 +108,7 @@ export class DicePF {
           //   chatData.sound = null;
           // }
 
-          await ChatMessagePF.create(chatData);
+          await ChatMessage.create(chatData);
         }
         else {
           rolled = true;

@@ -106,6 +106,20 @@
                        placeholder="{{ localize 'D35E.DailyPowerPointsFormula' }}"/>
             </footer>
         </li>
+
+        <li class="attribute high psionicFocus tooltip" data-attribute="powerPoints">
+            <h4 class="attribute-name box-title rollable roll-psionic-focus">{{ localize 'D35E.PsionicFocus' }}</h4>
+            <div class="attribute-value flexrow" style="padding: 0 20px; height: 36px;">
+                <a class="toggle-psionic-focus blue-hover">
+                    {{#if spellbook.psionicFocus}}
+                    
+                        <i class="fas fa-check has-psionic-focus" ></i>
+                    {{else}}
+                        <i class="fas fa-times" style="opacity: 0.6;"></i>
+                    {{/if}}
+                </a>
+            </div>
+        </li>
         {{/if}}
 
         {{#if spellbook.orig.hasPrestigeCl}}

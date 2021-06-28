@@ -238,6 +238,7 @@
           "spellPointsTotal": [],
           "powerPointsTotal": 0,
           "arcaneSpellFailure": 0,
+          "psionicFocus": false,
           "wounds": {
             "min": 0,
             "value": 0
@@ -1449,6 +1450,7 @@
           "maxFormula": "",
           "rechargeFormula": null
         },
+        "requiresPsionicFocus": false,
         "linkedChargeItem": {
           "id": null,
           "img": null,

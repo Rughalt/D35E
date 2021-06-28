@@ -1381,7 +1381,6 @@ export class ActorPF extends Actor {
 
     async _updateChanges({data = null} = {}, options = {}) {
         let updateData = {};
-        console.log('D35E | Data', this.data.toObject(false).data.classes, this.data.data.classes)
         let srcData1 = mergeObject(this.data.toObject(false), expandObject(data || {}), { inplace: false });
         srcData1.items = this.items;
 
@@ -4553,6 +4552,47 @@ export class ActorPF extends Actor {
         this.rollGrapple(null, options)
     }
 
+    async rollPsionicFocus(event) {
+
+    
+        if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
+        
+        let rollData = this.getRollData();
+
+        let roll = new Roll35e("1d20 + @skills.coc.mod", rollData).roll();
+        // Set chat data
+        let chatData = {
+            speaker: ChatMessage.getSpeaker({actor: this.data}),
+            rollMode: "public",
+            sound: CONFIG.sounds.dice,
+            "flags.D35E.noRollRender": true,
+        };
+        let chatTemplateData = {
+            name: this.name,
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            rollMode: "public",
+        };
+        const templateData = mergeObject(chatTemplateData, {
+            img: this.img,
+            roll: roll,
+            total: roll.total,
+            result: roll.result,
+            tooltip: $(await roll.getTooltip()).prepend(`<div class="dice-formula">${roll.formula}</div>`)[0].outerHTML,
+            success: roll.total >= 20,
+        }, {inplace: false});
+        // Create mess age
+
+        if (roll.total >= 20) {
+            const spellbookKey = $(event.currentTarget).closest(".spellbook-group").data("tab");
+            const k = `data.attributes.psionicFocus`;
+            let updateData = {}
+            updateData[k] = true;
+            this.update(updateData);
+        }
+
+            await createCustomChatMessage("systems/D35E/templates/chat/psionic-focus.html", templateData, chatData, {rolls: [roll]});
+    }
+
     getDefenseHeaders() {
         const data = this.data.data;
         const headers = [];
@@ -4993,6 +5033,8 @@ export class ActorPF extends Actor {
         });
     }
 
+
+    
     _getAllSelectedCombatChangesForRoll(attackType, rollData, allCombatChanges, rollModifiers, optionalFeatIds, optionalFeatRanges) {
         this.items.filter(o => this.isCombatChangeItemType(o)).forEach(i => {
             if (i.hasCombatChange(attackType, rollData)) {
@@ -7438,13 +7480,6 @@ export class ActorPF extends Actor {
     // @Object { id: { title: String, type: buff/string, img: imgPath, active: true/false }, ... }
     _calcBuffTextures() {
         
-        console.log('D35E | Calculating buff textures')
-        if (!this.testUserPermission(game.user, "OWNER")) {
-            
-            console.log('D35E | Not owner, do not show textures')
-            return [];
-        }
-        if (this.data.data.noBuffDisplay) return [];
         const buffs = this.items.filter((o) => o.type === "buff");
         return buffs.reduce((acc, cur) => {
             const id = cur.uuid;
