@@ -1,57 +1,31 @@
-<nav class="sheet-navigation tabs" data-group="links" data-tabs-type="list">
-    <select class="tabs">
-        {{#each links.list as |link|}}
-        <option value="{{link.id}}" data-tab="{{link.id}}">{{link.label}}</option>
-        {{/each}}
-    </select>
-</nav>
-
 <div class="links-body">
-
-    {{#each links.list as |link|}}
     {{!-- Children Tab --}}
-    <div class="tab flexcol" data-group="links" data-tab="{{link.id}}">
-        {{!-- Info --}}
-        <i class="help-icon fas fa-info-circle" title="{{link.help}}"></i>
 
-        <table>
-            <tr>
-                <th>{{localize "D35E.Item"}}</th>
+    <div class="tab flexcol" data-group="children">
+        <ol class="inventory-list sub-scroll scroll-inventory" style="padding: 0">
 
-                {{#each link.fields as |fv fk|}}
-                <th class="links-item-extra-field">{{fv.label}}</th>
-                {{/each}}
-
-                <th class="links-controls"></th>
-            </tr>
-            {{#each link.items as |item|}}
-            <tr class="links-item" data-link={{item.id}}>
-
-                {{!-- Link name and image --}}
-                <td class="links-item-name">
-                    <div>
-                        <img src="{{item.img}}" width="24" height="24">
-                        <span>{{item.name}}</span>
+            <li class="inventory-header flexrow">
+                <h3 class="item-name flexrow">Basic Enhancements</h3>
+                <div class="item-detail item-type" style="flex: 0 32px">
+                    <span></span></div>
+            </li>
+            <ol class="item-list" data-pack="D35E.enhancement">
+                {{#each linkedItems as |item iid|}}
+                <li class="item item-box flexrow" data-item-id="{{item.itemId}}" data-pack-id="{{item.packId}}">
+                    <div class="item-name enh-item flexrow">
+                        <div class="item-image" style="background-image: url('{{item.img}}')"></div>
+                        <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
+                            {{item.name~}}
+                        </h4>
                     </div>
-                </td>
-
-                {{#each link.fields as |fv fk|}}
-                <td class="links-item-extra-field">
-                    <input type="text" data-dtype="{{fv.type}}" value="{{lookup item fk}}" name="data.links.{{link.id}}.{{item._index}}.{{fk}}" />
-                </td>
-                {{/each}}
-
-                {{!-- Link Controls --}}
-                <td class="links-controls">
-                    <div>
-                        {{#if ../../owner}}
-                        <a class="link-control delete-link" title="{{localize "D35E.DeleteItem"}}"><i class="fas fa-trash"></i></a>
-                        {{/if}}
+                    <div class="item-detail item-type flexrow" style="flex: 0 32px">
+                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                     </div>
-                </td>
-            </tr>
-            {{/each}}
-        </table>
+
+                </li>
+                {{/each}}
+            </ol>
+        </ol>
+
     </div>
-    {{/each}}
 </div>

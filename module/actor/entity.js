@@ -1,6 +1,6 @@
 import { DicePF } from "../dice.js";
 import { ItemPF } from "../item/entity.js";
-import { createTag, linkData, isMinimumCoreVersion, shuffle } from "../lib.js";
+import { createTag, linkData, isMinimumCoreVersion, shuffle, uuidv4 } from "../lib.js";
 import { createCustomChatMessage } from "../chat.js";
 import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
@@ -4024,8 +4024,9 @@ export class ActorPF extends Actor {
     }
 
     async deleteOwnedItem(itemId) {
-        const item = this.items.get(itemId);
-        return item.delete();
+        // const item = this.items.get(itemId);
+        // return item.delete();
+        this.deleteEmbeddedDocuments("Item", itemId)
     }
 
     getOwnedItem(itemId) {
@@ -6155,6 +6156,44 @@ export class ActorPF extends Actor {
         }
         //console.log('D35E Create Data', createData)
 
+        let linkedItems = []
+        for (let obj of createData) {
+            if (obj.data.linkedItems && obj.data.linkedItems.length > 0) {
+                const linkUUID = uuidv4();
+
+                for (let data of obj.data.linkedItems) {
+                    let itemData = null;
+                    const pack = game.packs.find(p => p.collection === data.packId);
+                    const packItem = await pack.getDocument(data.itemId);
+                    if (packItem != null) itemData = packItem.data.toObject(false);
+                    else {
+
+                        return ui.notifications.warn(game.i18n.localize("D35E.LinkedItemMissing"));
+                    }
+                    if (itemData) {
+                        if (itemData.document) {
+                            itemData.document.data.update({'data.linkSourceId':linkUUID})
+                            itemData.document.data.update({'data.linkSourceName':obj.name})
+                            itemData.document.data.update({'data.linkImported':true})
+                        }
+                        else {
+                            itemData.data.linkSourceId = linkUUID;
+                            itemData.data.linkSourceName = obj.name;
+                            itemData.data.linkImported = true;
+                        }
+                        linkedItems.push(itemData)
+                    }
+                }
+
+                if (obj.document)
+                    obj.document.data.update({'data.linkId':linkUUID})
+                else
+                    obj.data.linkId = linkUUID;
+            }
+        }
+
+        createData.push(...linkedItems)
+
         for (let obj of createData) {
             delete obj.effects;
             // Don't auto-equip transferred items
@@ -7744,6 +7783,23 @@ export class ActorPF extends Actor {
 
     async deleteEmbeddedDocuments(type, data, options = {}) {
         console.log('D35E | deleteEmbeddedDocuments')
+
+        
+        if (type === "Item") {
+            let additionalItemsToDelete = []
+            if (!(data instanceof Array)) {
+                data = [data];
+            }
+            for (let itemId of data) {
+                let linkId = this.items.get(itemId).data.data.linkId;
+                if (linkId) {
+                    this.items.filter(o => {
+                        return o.data.data.linkSourceId === linkId;
+                    }).forEach(o => additionalItemsToDelete.push(o._id));
+                }
+            }
+            data.push(...additionalItemsToDelete)
+        }
         let deletedDocuments = await super.deleteEmbeddedDocuments(type, data, options);
         if (!options.stopUpdates)
             await this.refresh({})

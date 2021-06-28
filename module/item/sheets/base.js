@@ -136,6 +136,14 @@ export class ItemSheetPF extends ItemSheet {
             data.isClassFeature = true; //Any feat can be a class feature
             if (this.item.data.data.featType === 'spellSpecialization')
                 data.isSpellSpecialization = true;
+
+            
+            data.linkedItems = []
+            let _likedItems = getProperty(this.item.data, `data.linkedItems`) || [];
+            _likedItems.forEach(e => {
+                //e.incorrect === 
+                data.linkedItems.push(e)
+            })
         }
 
         data.is07Xup = isMinimumCoreVersion("0.7.2");
@@ -192,6 +200,7 @@ export class ItemSheetPF extends ItemSheet {
                 else
                     data.enhancementsBase.push(e)
             })
+            
             data.hasEnhancements = true;
             data.lightMagical = (this.item.data.data.enh || 0) > 0 && (this.item.data.data.enh || 0) < 6;
             data.veryMagical = (this.item.data.data.enh || 0) > 5;
@@ -1071,7 +1080,7 @@ export class ItemSheetPF extends ItemSheet {
         html.find('.remove-charge-link').click(event => this._onRemoveChargeLink(event));
         html.find('.rolltable-link').on("drop", this._onDropRolltableLink.bind(this));
         html.find('.remove-rolltable-link').click(event => this._onRemoveRolltableLink(event));
-        html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this));
+        html.find('div[data-tab="enhancements"]').on("drop", this._onDrop.bind(this,"enh"));
 
         html.find('div[data-tab="enhancements"] .item-delete').click(this._onEnhItemDelete.bind(this));
         html.find("div[data-tab='enhancements'] .item-detail.item-uses input.uses").off("change").change(this._setEnhUses.bind(this));
@@ -1081,6 +1090,11 @@ export class ItemSheetPF extends ItemSheet {
 
         html.find('div[data-tab="enhancements"] .item-edit').click(this._onItemEdit.bind(this));
         html.find('div[data-tab="enhancements"] .item .item-image').click(event => this._onEnhRoll(event));
+
+
+        html.find('div[data-tab="linked-items"]').on("drop", this._onDrop.bind(this,"link"));
+        html.find('div[data-tab="linked-items"] .item-delete').click(this._onLinkedItemDelete.bind(this));
+
         html.find("button[name='update-item-name']").click(event => this._onEnhUpdateName(event));
 
         // Quick Item Action control
@@ -1777,7 +1791,7 @@ export class ItemSheetPF extends ItemSheet {
 
     }
 
-    async _onDrop(event) {
+    async _onDrop(importType,event) {
         event.preventDefault();
         let data;
         try {
@@ -1788,7 +1802,6 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         let dataType = "";
-
         if (data.type === "Item") {
             let itemData = {};
             // Case 1 - Import from a Compendium pack
@@ -1814,27 +1827,74 @@ export class ItemSheetPF extends ItemSheet {
                 dataType = "world";
                 itemData = game.items.get(data.id).data;
             }
-            return this.importItem(itemData, dataType);
+            return this.importItem(itemData, dataType, importType);
         }
 
 
     }
 
-    async importItem(itemData, itemType) {
-        if (itemData.type === 'enhancement') {
-
-            await this.item.addEnhancementFromData(itemData)// update(updateData);
-        }
-        if (itemData.type === 'spell') {
-            this._createEnhancementSpellDialog(itemData)
-        }
-        if (itemData.type === 'buff') {
-            await this.item.createEnhBuff(itemData)
+    async importItem(itemData, itemType, importType) {
+        if (importType === "enh") {
+            if (itemData.type === 'enhancement') {
+                await this.item.addEnhancementFromData(itemData)// update(updateData);
+            }
+            if (itemData.type === 'spell') {
+                this._createEnhancementSpellDialog(itemData)
+            }
+            if (itemData.type === 'buff') {
+                await this.item.createEnhBuff(itemData)
+            }
+        } else {
+            if (itemType !== "compendium") {
+                return ui.notifications.warn(game.i18n.localize("D35E.ResourceNeedDropFromCompendium"));
+            }
+            await this.item.addLinkedItemFromData(itemData)
         }
     }
 
 
+    
+    /**
+     * Handle deleting an existing Enhancement item
+     * @param {Event} event   The originating click event
+     * @private
+     */
+     async _onLinkedItemDelete(event) {
+        event.preventDefault();
 
+        const button = event.currentTarget;
+        if (button.disabled) return;
+
+        const li = event.currentTarget.closest(".item");
+        if (keyboard.isDown("Shift")) {
+            const updateData = {};
+            let _linkedItems = duplicate(getProperty(this.item.data, `data.linkedItems`) || []);
+            _linkedItems = _linkedItems.filter(function (obj) {
+                return obj.itemId !== li.dataset.itemId || obj.packId !== li.dataset.packId;
+            });
+            updateData[`data.linkedItems`] = _linkedItems;
+            this.item.update(updateData);
+        } else {
+            button.disabled = true;
+
+            const msg = `<p>${game.i18n.localize("D35E.DeleteItemConfirmation")}</p>`;
+            Dialog.confirm({
+                title: game.i18n.localize("D35E.DeleteItem"),
+                content: msg,
+                yes: () => {
+                    const updateData = {};
+                    let _linkedItems = duplicate(getProperty(this.item.data, `data.linkedItems`) || []);
+                    _linkedItems = _linkedItems.filter(function (obj) {
+                        return obj.itemId !== li.dataset.itemId || obj.packId !== li.dataset.packId;
+                    });
+                    updateData[`data.linkedItems`] = _linkedItems;
+                    this.item.update(updateData);
+                    button.disabled = false;
+                },
+                no: () => button.disabled = false
+            });
+        }
+    }
 
     _createEnhancementSpellDialog(itemData) {
         new Dialog({

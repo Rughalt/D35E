@@ -102,6 +102,7 @@
       <nav class="sheet-navigation tabs subtabs configuration" data-group="configuration">
         <a class="item active" data-tab="details">{{ localize "D35E.Details" }}</a>
         <a class="item" data-tab="changes">{{localize "D35E.Changes"}}</a>
+        <a class="item" data-tab="linked-items">{{localize "D35E.Links"}}</a>
       </nav>
 
       <div class="flexrow configuration-container" style="overflow: hidden; height: 100%">
@@ -170,7 +171,7 @@
                 <label>{{localize "D35E.ShortDescription"}}</label>
                 <input type="text" name="data.metamagic.shortDesc" value="{{data.data.metamagic.shortDesc}}" data-dtype="String"/>
               </div>
-              <textarea class="metamagic-editor" style="font-family: monospace; min-height: 120px" name="data.metamagic.code">{{data.datametamagic.code}}</textarea>
+              <textarea class="metamagic-editor" style="font-family: monospace; min-height: 120px" name="data.metamagic.code">{{data.data.metamagic.code}}</textarea>
             {{/if}}
 
               {{#if isSpellSpecialization}}
@@ -248,6 +249,11 @@
             {{> "systems/D35E/templates/items/parts/item-changes.html"}}
 
             {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+          </div>
+
+
+          <div class="tab configuration-group flexcol" data-group="configuration" data-tab="linked-items">
+            {{> "systems/D35E/templates/items/parts/item-links.html"}}
           </div>
         </section>
       </div>

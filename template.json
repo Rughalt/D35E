@@ -1387,6 +1387,10 @@
         "nameFromFormula": false,
         "tags": [],
         "uniqueId": "",
+        "linkId": "",
+        "linkSourceId": "",
+        "linkImported": false,
+        "linkSourceName": "",
         "source": "",
         "classSource": "",
         "userNonRemovable": false,
@@ -1777,6 +1781,7 @@
       "crOffset": "",
       "spellSpecializationName": "",
       "spellSpecializationForbiddenNames": "",
+      "linkedItems": [],
       "metamagic": {
         "enabled": false,
         "shortDesc": "",

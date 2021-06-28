@@ -3984,6 +3984,23 @@ export class ItemPF extends Item {
         }
     }
 
+    async addLinkedItemFromData(itemData) {
+        return this.update(await this.getLinkDataFromData(itemData))
+    }
+
+    async getLinkDataFromData(itemData) {
+        const updateData = {};
+        let _linkedItems = duplicate(getProperty(this.data, `data.linkedItems`) || []);
+        let linkedData = {};
+        linkedData.name = itemData.name;
+        linkedData.img = itemData.img;
+        linkedData.itemId = itemData._id;
+        linkedData.packId = itemData.document.pack;
+        _linkedItems.push(linkedData);
+        updateData[`data.linkedItems`] = _linkedItems;
+        return updateData
+    }
+
     async addEnhancementFromData(itemData) {
         if (this.hasEnhancement(itemData.name)) return;
         return this.update(await this.getEnhancementFromData(itemData))

@@ -327,6 +327,13 @@
                     </i>
                     {{/if}}
 
+
+                    {{#if item.data.linkImported}}
+                    <i class="fas fa-link non-rollable tooltip" style="color: black; opacity: 0.7">
+                        <span class="tooltipcontent" style="z-index: 999">{{localize "D35E.LinkAddedBy"}} {{item.data.linkSourceName}}</span>
+                    </i>
+                    {{/if}}
+
                     {{#unless @root.hideShortDescriptions}}
                     <em style="color: black; opacity: 0.7" class="non-rollable">{{item.data.snip}}</em>
                     {{/unless}}
@@ -433,8 +440,10 @@
             {{#if ../../owner}}
             <div class="item-controls">
                 <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
+                {{#unless item.data.linkImported}}
                 <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i
                         class="fas fa-trash"></i></a>
+                {{/unless}}
             </div>
             {{/if}}
         </li>

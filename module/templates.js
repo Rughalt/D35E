@@ -27,6 +27,7 @@ export const preloadHandlebarsTemplates = async function() {
 
     // Item Sheet Partials
     "systems/D35E/templates/items/parts/item-action.html",
+    "systems/D35E/templates/items/parts/item-links.html",
     "systems/D35E/templates/items/parts/item-activation.html",
     "systems/D35E/templates/items/parts/item-description.html",
     "systems/D35E/templates/items/parts/item-changes.html",

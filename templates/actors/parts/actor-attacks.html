@@ -246,6 +246,12 @@
             <div class="item-image" style="background-image: url('{{item.img}}')"></div>
             <h4>
               {{item.name~}} {{#if item.data.melded}}<i class="fas fa-leaf"></i>{{/if}}
+
+              {{#if item.data.linkImported}}
+              <i class="fas fa-link non-rollable" style="color: black; opacity: 0.7">
+              </i>
+              <em style="color: black; opacity: 0.7" class="non-rollable">{{item.data.linkSourceName}}</em>
+              {{/if}}
             </h4>
           </div>
 
@@ -317,7 +323,10 @@
           {{#if ../../owner}}
           <div class="item-controls">
             <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i class="fas fa-edit"></i></a>
-            <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i class="fas fa-trash"></i></a>
+            {{#unless item.data.linkImported}}
+            <a class="item-control item-delete" title="{{ localize 'D35E.DeleteItem' }}"><i
+                    class="fas fa-trash"></i></a>
+            {{/unless}}
           </div>
           {{/if}}
 

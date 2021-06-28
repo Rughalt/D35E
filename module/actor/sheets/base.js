@@ -1643,7 +1643,7 @@ export class ActorSheetPF extends ActorSheet {
     const item = duplicate(this.actor.getOwnedItem(itemId).data);
     delete item._id
     item.data.specialPrepared = true;
-    let x = await this.actor.createEmbeddedEntity("OwnedItem", item, {ignoreSpellbookAndLevel: true})
+    let x = await this.actor.createEmbeddedEntity("Item", item, {ignoreSpellbookAndLevel: true})
 
     // Update saved special prepared special id
     let updateData = {}
@@ -1698,7 +1698,7 @@ export class ActorSheetPF extends ActorSheet {
   async _onSpellAddMetamagic(event) {
     event.preventDefault();
     const itemId = $(event.currentTarget).parents(".item").attr("data-item-id");
-    const newSpell = duplicate(this.actor.getOwnedItem(itemId).data);
+    const newSpell = duplicate(this.actor.getOwnedItem(itemId).data.toObject(false));
     delete newSpell._id
 
     let metamagicFeats = this.actor.items.filter(o => (o.type === "feat" && o.data.data?.metamagic.enabled));
@@ -1717,6 +1717,7 @@ export class ActorSheetPF extends ActorSheet {
 
       for (const i of metamagicFeats) {
         if (optionalFeatIds.indexOf(i._id) !== -1) {
+
           await eval("(async () => {" + i.data.data.metamagic.code + "})()");
         }
       }
@@ -1724,7 +1725,7 @@ export class ActorSheetPF extends ActorSheet {
       newSpell.data.description.value = await renderTemplate("systems/D35E/templates/internal/spell-description.html", new ItemPF(newSpell)._generateSpellDescription(newSpell))
 
 
-      let x = await this.actor.createEmbeddedEntity("OwnedItem", newSpell, {ignoreSpellbookAndLevel: true})
+      let x = await this.actor.createEmbeddedEntity("Item", newSpell, {ignoreSpellbookAndLevel: true})
     }
 
     let template = "systems/D35E/templates/apps/apply-metamagic.html";
