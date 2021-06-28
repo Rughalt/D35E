@@ -2411,7 +2411,7 @@ export class ActorSheetPF extends ActorSheet {
 
 
   enrichDropData(origData) {
-    if (getProperty(origData, "type") === "spell") origData.document.data.update({"data.spellbook":this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null});
+    if (getProperty(origData, "type") === "spell") setProperty(origData, "data.spellbook", this.currentPrimaryTab === "spellbook" ? this.currentSpellbookKey : null);
   }
 
 
