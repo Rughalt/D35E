@@ -3714,6 +3714,7 @@ export class ActorPF extends Actor {
         this._updateMinions(options);
         this._cachedRollData = null;
         //return false;
+        console.log('D35E | ACTOR UPDATE | Finished update')
         return Promise.resolve(returnActor ? returnActor : this);
     }
 
@@ -6962,9 +6963,15 @@ export class ActorPF extends Actor {
         }
 
         let actionRollData = actor.getRollData() //This is roll data of actor that *rolled* the roll
-        actionRollData.self = this.getRollData() //This is roll data of actor that *clicked* the roll
         if (buff) {
-            actionRollData.buff = buff.getRollData() //This is roll data of optional buff item
+            actionRollData.buff = buff; //This is roll data of optional buff item
+            actionRollData.self = duplicate(actionRollData)
+        } else {
+            if (actor === this) {
+                actionRollData.self = duplicate(actionRollData)
+            } else {
+                actionRollData.self = this.getRollData() //This is roll data of actor that *clicked* the roll
+            }
         }
 
         let itemUpdates = [];

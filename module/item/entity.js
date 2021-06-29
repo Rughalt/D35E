@@ -482,6 +482,8 @@ export class ItemPF extends Item {
         if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
         else if (data["name"]) data["data.identifiedName"] = data["name"];
 
+        let activateBuff = data["data.active"] && data["data.active"] !== this.data.data.active;
+        let deactivateBuff = this.data.data.active && (data["data.active"] === undefined || !data["data.active"]);
         // Update description
         if (this.type === "spell") await this._updateSpellDescription(data, srcData);
 
@@ -522,67 +524,6 @@ export class ItemPF extends Item {
 
 
 
-        console.log('ACTIVATING BUFF', data, this.data.data.active)
-        if (data["data.active"] && data["data.active"] !== this.data.data.active) {
-            //Buff or item was activated
-            data["data.timeline.elapsed"] = 0
-            let actionValue = (this.data.data.activateActions || []).map(a => a.action).join(";")
-            if (this.actor && this.actor.token !== null) {
-                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this, "self")
-            } else if (this.actor) {
-                await this.actor.applyActionOnSelf(actionValue, this.actor, this, "self")
-            }
-            if (this.data.data.buffType === "shapechange") {
-                if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
-                    let itemsToCreate = []
-                    for (const i of this.data.data.shapechange.source.items) {
-                        if (i.type === "attack" && i.data.attackType === "natural") {
-                            //console.log('add polymorph attack')
-                            if (!this.actor) continue;
-                            let data = duplicate(i);
-                            data.name = i.name + ` (Polymorhped ${this.data.data.shapechange.source.name})`
-                            delete data._id;
-                            itemsToCreate.push(data)
-                        }
-                    }
-
-                    if (this.actor.token !== null) {
-                        await this.actor.token.actor.createEmbeddedDocuments("Item", itemsToCreate,{stopUpdates: true})
-                    } else {
-                        await this.actor.createEmbeddedDocuments("Item", itemsToCreate,{stopUpdates: true})
-                    }
-                }
-            }
-        } else if (this.data.data.active && (data["data.active"] === undefined || !data["data.active"])) {
-            if (this.data.data.buffType === "shapechange") {
-                if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
-                    let itemsToDelete = []
-                    if (this.actor) {
-                        for (const i of this.actor.items) {
-
-                            if (i.data.type === "attack" && i.data.data.attackType === "natural" && !i.data.data.melded) {
-                                //console.log('remove polymorph attack',i,this.actor,this.actor.token)
-                                itemsToDelete.push(i._id)
-                            }
-                        }
-                    }
-                    if (itemsToDelete.length)
-                        if (this.actor.token !== null) {
-                            await this.actor.token.actor.deleteEmbeddedDocuments("Item",itemsToDelete,{stopUpdates: true})
-                        } else {
-                            await this.actor.deleteEmbeddedDocuments("Item",itemsToDelete,{stopUpdates: true})
-                        }
-                }
-            }
-            let actionValue = (this.data.data.deactivateActions || []).map(a => a.action).join(";")
-            if (this.actor && this.actor.token !== null) {
-                await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, this, "self")
-            } else if (this.actor) {
-                await this.actor.applyActionOnSelf(actionValue, this.actor, this, "self")
-            }
-
-
-        }
 
         {
             let rollData = {};
@@ -664,7 +605,75 @@ export class ItemPF extends Item {
 
         let updateData = await super.update(data, options);
         if (this.actor !== null && !options.massUpdate) {
-            await this.actor.refresh(options); //We do not want to update actor again if we are in first update loop
+
+            console.log('ACTIVATING BUFF', data, this.data.data.active)
+            if (activateBuff) {
+                //Buff or item was activated
+                data["data.timeline.elapsed"] = 0
+                let actionValue = (this.data.data.activateActions || []).map(a => a.action).join(";")
+                if (this.actor && this.actor.token !== null) {
+                    const srcDataWithRolls = this.getRollData(srcData);
+                    await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, srcDataWithRolls, "self")
+                } else if (this.actor) {
+                    const srcDataWithRolls = this.getRollData(srcData);
+                    await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
+                }
+                if (this.data.data.buffType === "shapechange") {
+                    if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
+                        let itemsToCreate = []
+                        for (const i of this.data.data.shapechange.source.items) {
+                            if (i.type === "attack" && i.data.attackType === "natural") {
+                                //console.log('add polymorph attack')
+                                if (!this.actor) continue;
+                                let data = duplicate(i);
+                                data.name = i.name + ` (Polymorhped ${this.data.data.shapechange.source.name})`
+                                delete data._id;
+                                itemsToCreate.push(data)
+                            }
+                        }
+    
+                        if (this.actor.token !== null) {
+                            await this.actor.token.actor.createEmbeddedDocuments("Item", itemsToCreate,{stopUpdates: true})
+                        } else {
+                            await this.actor.createEmbeddedDocuments("Item", itemsToCreate,{stopUpdates: true})
+                        }
+                    }
+                }
+            } else if (deactivateBuff) {
+                if (this.data.data.buffType === "shapechange") {
+                    if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
+                        let itemsToDelete = []
+                        if (this.actor) {
+                            for (const i of this.actor.items) {
+    
+                                if (i.data.type === "attack" && i.data.data.attackType === "natural" && !i.data.data.melded) {
+                                    //console.log('remove polymorph attack',i,this.actor,this.actor.token)
+                                    itemsToDelete.push(i._id)
+                                }
+                            }
+                        }
+                        if (itemsToDelete.length)
+                            if (this.actor.token !== null) {
+                                await this.actor.token.actor.deleteEmbeddedDocuments("Item",itemsToDelete,{stopUpdates: true})
+                            } else {
+                                await this.actor.deleteEmbeddedDocuments("Item",itemsToDelete,{stopUpdates: true})
+                            }
+                    }
+                }
+                let actionValue = (this.data.data.deactivateActions || []).map(a => a.action).join(";")
+                if (this.actor && this.actor.token !== null) {
+                    const srcDataWithRolls = this.getRollData(srcData);
+                    await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, srcDataWithRolls, "self")
+                } else if (this.actor) {
+                    const srcDataWithRolls = this.getRollData(srcData);
+                    await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
+                }
+    
+    
+            } else {
+                await this.actor.refresh(options); 
+            }
+//We do not want to update actor again if we are in first update loop
             // if (this.sheet) {
             //     await this.sheet.render()
             // }

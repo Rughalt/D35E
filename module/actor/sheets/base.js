@@ -36,6 +36,7 @@ export class ActorSheetPF extends ActorSheet {
     this._scrollTab = {};
     this._initialTab = {};
     this._firstLoad = true;
+    this._settingItemActive = false;
     /**
      * Track the set of item filters which are applied
      * @type {Set}
@@ -1112,6 +1113,8 @@ export class ActorSheetPF extends ActorSheet {
   }
 
   async _setItemActive(event) {
+    if (this._settingItemActive) return;
+    this._settingItemActive = true;
     event.preventDefault();
     event.stopPropagation()
     this.showWorkingOverlay();
@@ -1127,6 +1130,7 @@ export class ActorSheetPF extends ActorSheet {
     }
 
     this.hideWorkingOverlay();
+    this._settingItemActive = false;
   }
 
   hideWorkingOverlay() {

@@ -1486,7 +1486,7 @@
           "attack": null,
           "damage": null,
           "damageMult": 1,
-          "critRange": 20,
+          "critRange": "20",
           "critMult": 2,
           "twoHandedOnly": false,
           "vsTouchAc": false
@@ -1998,7 +1998,7 @@
         "damageRoll": "",
         "damageType": "",
         "damageTypeId": "",
-        "critRange": 20,
+        "critRange": "20",
         "critMult": 2,
         "range": null,
         "attackFormula": "",
