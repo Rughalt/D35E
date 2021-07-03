@@ -2628,7 +2628,7 @@ export class ActorSheetPF extends ActorSheet {
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
     if (packItem != null) itemData = packItem.data.toObject(false);
-    itemData.document.data.update({"data.quantity":quantity});
+    itemData.data.quantity = quantity;
     this.enrichDropData(itemData);
     console.log('D35E | Adding Quantity', quantity, itemData)
     await this.importItem(itemData, dataType);
