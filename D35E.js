@@ -705,6 +705,13 @@ Hooks.on("getSceneControlButtons", (controls) => {
         title: "D35E.TreasureGenerator",
         icon: "fas fa-gem",
         onClick: async () => {
+          let selectedNpcTokens = canvas.tokens.controlled.filter(
+            (t) => game.actors.get(t.data.actorId).data.type === "npc"
+          );
+          if (selectedNpcTokens.length === 0) {
+            ui.notifications.error(`Please select at least a token`);
+            return;
+          }
           for (let token of canvas.tokens.controlled.filter(
             (t) => game.actors.get(t.data.actorId).data.type === "npc"
           ))

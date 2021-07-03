@@ -180,16 +180,19 @@ export default class TreasureGenerator {
 				// //console.log(it);
 				if (item.consumableType) {
 					//TODO handle caster Level, not every item has it defined, others have it at 0 when not needed (been added automatically)
-					it.data.update({'data.quantity':item.amount})
+					await it.data.update({'data.quantity':item.amount})
+					if (item.itemOverride) {
+						execFunctions(item.itemOverride)	
+						await it.data.update({...item.itemOverride.data})
+					}
 					let consumableItem = await ItemPF.toConsumable(
 						it.data,
 						item.consumableType
 					)
+					consumableItem = new ItemPF(consumableItem, {temporary: true})
+					delete consumableItem._id
 					if (consumableItem.data._id) {
-						delete data._id
-					}
-					if (item.itemOverride) {
-						mergeObject(consumableItem, item.itemOverride.data)
+						delete consumableItem.data._id
 					}
 					return consumableItem.data.toObject(false)
 				} else if (item.ability.length > 0 || item.enhancement > 0) {
@@ -233,21 +236,21 @@ export default class TreasureGenerator {
 							)[0]
 						)
 					}
-					it.data.update({'data.enhancements':_enhancements})
 
-					it.data.update({'data.quantity':item.amount})
-					let _createdItem =it.data.toObject(false)
+					await it.data.update({'data.enhancements':_enhancements, 'data.quantity':item.amount})
 					if (item.itemOverride) {
-						mergeObject(_createdItem, item.itemOverride.data)
+						execFunctions(item.itemOverride)	
+						await it.data.update({...item.itemOverride.data})
 					}
+					let _createdItem =it.data.toObject(false)
+					
 
 					return _createdItem
 				} else {
-					it.data.update({'data.quantity':item.amount})
-
+					await it.data.update({'data.quantity':item.amount})
 					if (item.itemOverride) {
-						execFunctions(item.itemOverride)
-						mergeObject(it, item.itemOverride)
+						execFunctions(item.itemOverride)						
+						await it.data.update({...item.itemOverride.data, 'name':item.itemOverride.data.data.identifiedName})
 					}
 					return it.data.toObject(false)
 				}
