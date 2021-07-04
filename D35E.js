@@ -432,14 +432,14 @@ Hooks.on("createToken", async (token, options, userId) => {
   // Update changes and generate sourceDetails to ensure valid actor data
   if (actor != null) await actor.refresh();
 
-  if (game.settings.get("D35E", "randomizeHp")){
+  if (game.settings.get("D35E", "randomizeHp") && token.actor.type === 'npc' && !token.actor.hasPlayerOwner){
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     let itemUpdates = []
-    actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
+    token.actor.data.items.filter(obj => { return obj.type === "class" }).forEach(item => {
       let hd = item.data.data.hd
       let hp = 0;
       let levels = item.data.data.levels;
@@ -448,7 +448,7 @@ Hooks.on("createToken", async (token, options, userId) => {
       }
       itemUpdates.push({_id: item._id, "data.hp": hp});
     });
-    actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
+    token.actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
   }
 
 });
