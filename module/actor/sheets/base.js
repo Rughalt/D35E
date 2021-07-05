@@ -294,6 +294,24 @@ export class ActorSheetPF extends ActorSheet {
     let sizeMod = CONFIG.D35E.sizeMods[this.actor.data.data.traits.actualSize] || 0
     data.attackBonuses = { sizeMod: sizeMod, melee: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.str.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.melee, ranged: this.actor.data.data.attributes.bab.total + this.actor.data.data.abilities.dex.mod + sizeMod - (this.actor.data.data.attributes.energyDrain || 0) + this.actor.data.data.attributes.attack.general + this.actor.data.data.attributes.attack.ranged}
 
+    data.coinWeight = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.GenericCarryLabelKg").format(this.actor._calculateCoinWeight(this.actor.data)) : game.i18n.localize("D35E.GenericCarryLabel").format(this.actor._calculateCoinWeight(this.actor.data)); 
+
+    data.maxDexBonus = { sourceDetails: [] }
+    switch (this.actor.data.data.attributes.encumbrance.level) {
+      case 0:
+        data.maxDexBonus.sourceDetails.push({name: game.i18n.localize("D35E.Encumbrance"), value: game.i18n.localize("D35E.NotLimited")})
+          break;
+      case 1:
+        data.maxDexBonus.sourceDetails.push({name: game.i18n.localize("D35E.Encumbrance"), value: '3'})
+          break;
+      case 2:
+        data.maxDexBonus.sourceDetails.push({name: game.i18n.localize("D35E.Encumbrance"), value: '1'})
+          break;
+  }
+   
+  data.maxDexBonus.sourceDetails.push({name: game.i18n.localize("D35E.Gear"), value: this.actor.data.data.attributes?.maxDex?.gear || game.i18n.localize("D35E.NotLimited")})
+
+
     // Fetch the game settings relevant to sheet rendering.
     data.healthConfig =  game.settings.get("D35E", "healthConfig");
     data.currencyConfig =  game.settings.get("D35E", "currencyConfig");

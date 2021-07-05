@@ -611,12 +611,15 @@ export class ItemPF extends Item {
                 //Buff or item was activated
                 data["data.timeline.elapsed"] = 0
                 let actionValue = (this.data.data.activateActions || []).map(a => a.action).join(";")
-                if (this.actor && this.actor.token !== null) {
-                    const srcDataWithRolls = this.getRollData(srcData);
-                    await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, srcDataWithRolls, "self")
-                } else if (this.actor) {
-                    const srcDataWithRolls = this.getRollData(srcData);
-                    await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
+                if (!actionValue) await this.actor.refresh(options); 
+                else {
+                    if (this.actor && this.actor.token !== null) {
+                        const srcDataWithRolls = this.getRollData(srcData);
+                        await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, srcDataWithRolls, "self")
+                    } else if (this.actor) {
+                        const srcDataWithRolls = this.getRollData(srcData);
+                        await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
+                    }
                 }
                 if (this.data.data.buffType === "shapechange") {
                     if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
@@ -661,22 +664,20 @@ export class ItemPF extends Item {
                     }
                 }
                 let actionValue = (this.data.data.deactivateActions || []).map(a => a.action).join(";")
-                if (this.actor && this.actor.token !== null) {
-                    const srcDataWithRolls = this.getRollData(srcData);
-                    await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, srcDataWithRolls, "self")
-                } else if (this.actor) {
-                    const srcDataWithRolls = this.getRollData(srcData);
-                    await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
-                }
-    
+                if (!actionValue) await this.actor.refresh(options); 
+                else {
+                    if (this.actor && this.actor.token !== null) {
+                        const srcDataWithRolls = this.getRollData(srcData);
+                        await this.actor.token.actor.applyActionOnSelf(actionValue, this.actor.token.actor, srcDataWithRolls, "self")
+                    } else if (this.actor) {
+                        const srcDataWithRolls = this.getRollData(srcData);
+                        await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
+                    }
+                }   
     
             } else {
                 await this.actor.refresh(options); 
             }
-//We do not want to update actor again if we are in first update loop
-            // if (this.sheet) {
-            //     await this.sheet.render()
-            // }
 
         }
 
@@ -1932,11 +1933,12 @@ export class ItemPF extends Item {
         }
         let autoScaleAttacks = (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.autoScaleOption") !== "never") || getProperty(this.data, "data.autoScaleOption") === "always"
         let extraAttacksCount = autoScaleAttacks ? Math.ceil((actor.data.data.attributes.bab.total)/5.0) : (getProperty(this.data, "data.attackParts") || []).length + 1;
+        let rc = game.settings.get("D35E", `rollConfig`).rollConfig;
         let dialogData = {
             data: rollData,
             id: this.id,
             item: this.data.data,
-            rollMode: rollModeOverride ? rollModeOverride :game.settings.get("core", "rollMode"),
+            rollMode: rollModeOverride ? rollModeOverride : (game.settings.get("D35E", `rollConfig`).rollConfig[this.actor.type].attack  || game.settings.get("core", "rollMode")),
             rollModes: CONFIG.Dice.rollModes,
             twoWeaponAttackTypes: D35E.twoWeaponAttackType,
             attackType: attackType ? attackType : "primary",

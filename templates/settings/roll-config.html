@@ -1,0 +1,217 @@
+<form autocomplete="off">
+
+    <p class="notes">{{localize 'SETTINGS.D35ERollConfigConfigInstructions'}}</p>
+    <h2>Characters</h2>
+    <div class="form-group">
+      <label>{{localize "D35E.Attack"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.character.attack" >
+          {{#select settings.rollConfig.character.attack}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.ApplyDamage"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.character.applyDamage" >
+          {{#select settings.rollConfig.character.applyDamage}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.SavingThrow"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.character.skill" >
+          {{#select settings.rollConfig.character.savingThrow}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.Skill"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.character.skill" >
+          {{#select settings.rollConfig.character.applyDamage}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.Grapple"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.character.grapple" >
+          {{#select settings.rollConfig.character.grapple}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.HitPoints"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.character.hpRoll" >
+          {{#select settings.rollConfig.character.hpRoll}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <h2>NPC</h2>
+    <div class="form-group">
+      <label>{{localize "D35E.Attack"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.npc.attack" >
+          {{#select settings.rollConfig.npc.attack}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.ApplyDamage"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.npc.applyDamage" >
+          {{#select settings.rollConfig.npc.applyDamage}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.SavingThrow"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.npc.skill" >
+          {{#select settings.rollConfig.npc.savingThrow}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.Skill"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.npc.skill" >
+          {{#select settings.rollConfig.npc.applyDamage}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.Grapple"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.npc.grapple" >
+          {{#select settings.rollConfig.npc.grapple}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.HitPoints"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.npc.hpRoll" >
+          {{#select settings.rollConfig.npc.hpRoll}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+
+
+    <h2>Trap</h2>
+    <div class="form-group">
+      <label>{{localize "D35E.Attack"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.trap.attack" >
+          {{#select settings.rollConfig.trap.attack}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.ApplyDamage"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.trap.applyDamage" >
+          {{#select settings.rollConfig.trap.applyDamage}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.SavingThrow"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.trap.skill" >
+          {{#select settings.rollConfig.trap.savingThrow}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.Skill"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.trap.skill" >
+          {{#select settings.rollConfig.trap.applyDamage}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.Grapple"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.trap.grapple" >
+          {{#select settings.rollConfig.trap.grapple}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "D35E.HitPoints"}} {{localize "D35E.RollMode"}}</label>
+      <select name="rollConfig.trap.hpRoll" >
+          {{#select settings.rollConfig.trap.hpRoll}}
+          <option value="">{{localize 'D35E.Default'}}</option>
+          {{#each rollModes as |label mode|}}
+          <option value="{{mode}}">{{localize label}}</option>
+          {{/each}}
+          {{/select}}
+      </select>
+    </div>
+
+
+  <div class="form-group">
+    <button type="button" name="reset">
+      <i class="fas fa-undo"></i> {{localize 'SETTINGS.Reset'}}
+    </button>
+    <button type="submit" name="submit" >
+      <i class="far fa-save"></i> {{localize 'SETTINGS.Save'}}
+    </button>
+  </div>
+</form>

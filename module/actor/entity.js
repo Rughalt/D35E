@@ -2348,9 +2348,12 @@ export class ActorPF extends Actor {
             linkData(data, updateData, "data.attributes.acp.gear", updateData["data.attributes.acp.gear"] + itemAcp);
             let test = getProperty(obj.data,'armor.dex');
             if (getProperty(obj.data,'armor.dex') !== null && getProperty(obj.data,'armor.dex') !== "") {
-                if (updateData["data.attributes.maxDexBonus"] == null) linkData(data, updateData, "data.attributes.maxDexBonus", Math.abs(obj.data.armor.dex));
-                else {
+                if (updateData["data.attributes.maxDexBonus"] == null)  {
+                    linkData(data, updateData, "data.attributes.maxDexBonus", Math.abs(obj.data.armor.dex));
+                    linkData(data, updateData, "data.attributes.maxDex.gear", Math.abs(obj.data.armor.dex));
+                } else {
                     linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"], Math.abs(obj.data.armor.dex)));
+                    linkData(data, updateData, "data.attributes.maxDex.gear", Math.min(updateData["data.attributes.maxDexBonus"], Math.abs(obj.data.armor.dex)));
                 }
             }
         });
@@ -2861,10 +2864,12 @@ export class ActorPF extends Actor {
             case 1:
                 linkData(data, updateData, "data.attributes.acp.encumbrance", 3);
                 linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 3));
+                linkData(data, updateData, "data.attributes.maxDex.encumbrance", Math.min(updateData["data.attributes.maxDex.encumbrance"] || Number.POSITIVE_INFINITY, 3));
                 break;
             case 2:
                 linkData(data, updateData, "data.attributes.acp.encumbrance", 6);
                 linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 1));
+                linkData(data, updateData, "data.attributes.maxDex.encumbrance", Math.min(updateData["data.attributes.maxDex.encumbrance"] || Number.POSITIVE_INFINITY, 1));
                 break;
         }
         linkData(data, updateData, "data.attributes.acp.total", Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]));
@@ -4827,7 +4832,7 @@ export class ActorPF extends Actor {
             data: rollData,
             savingThrow: savingThrow,
             id: `${this.id}-${_savingThrow}`,
-            rollMode: options.rollMode ? options.rollMode : game.settings.get("core", "rollMode"),
+            rollMode: options.rollMode ? options.rollMode : (game.settings.get("D35E", `rollConfig`).rollConfig[this.type].savingThrow || game.settings.get("core", "rollMode")),
             rollModes: CONFIG.Dice.rollModes,
             stFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('savingThrow',rollData)),
             stFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`savingThrowOptional`,rollData)),
@@ -4989,7 +4994,7 @@ export class ActorPF extends Actor {
         let template = "systems/D35E/templates/apps/skill-roll-dialog.html";
         let dialogData = {
             data: rollData,
-            rollMode: options.rollMode ? options.rollMode : game.settings.get("core", "rollMode"),
+            rollMode: options.rollMode ? options.rollMode : (game.settings.get("D35E", `rollConfig`).rollConfig[this.type].skill  || game.settings.get("core", "rollMode")),
             rollModes: CONFIG.Dice.rollModes,
             skFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('skill',rollData)),
             skFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`skillOptional`,rollData)),
@@ -5204,7 +5209,7 @@ export class ActorPF extends Actor {
         let template = "systems/D35E/templates/apps/grapple-roll-dialog.html";
         let dialogData = {
             data: rollData,
-            rollMode: game.settings.get("core", "rollMode"),
+            rollMode: options.rollMode ? options.rollMode : (game.settings.get("D35E", `rollConfig`).rollConfig[this.type].grapple  || game.settings.get("core", "rollMode")),
             rollModes: CONFIG.Dice.rollModes,
             grFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('grapple',rollData)),
             grFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`grappleOptional`,rollData)),
@@ -5667,11 +5672,14 @@ export class ActorPF extends Actor {
             data: rollData,
             item: this.data.data,
             id: `${this.id}-defensedialog`,
-            rollMode: "gmroll",
+            rollMode: (game.settings.get("D35E", `rollConfig`).rollConfig[this.type].applyDamage  || game.settings.get("core", "rollMode")),
             totalBonus: totalBonus,
             defenseBonus: defenseBonus,
             rollModes: CONFIG.Dice.rollModes,
             applyHalf: ev.applyHalf,
+            baseConcealment: this.data.data.attributes.concealment.total,
+            baseConcealmentAtLeast20: this.data.data.attributes.concealment.total > 20,
+            baseConcealmentAtLeast50: this.data.data.attributes.concealment.total > 50,
             defenseFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('defense',rollData)),
             defenseFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`defenseOptional`,rollData)),
             conditionals: this.data.data.conditionals,

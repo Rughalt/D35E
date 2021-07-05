@@ -294,7 +294,14 @@
         <h4 class="attribute-name box-title">{{ localize 'D35E.MaxDexShort' }}</h4>
           <div class="attribute-value tooltip">
             <span>{{data.attributes.maxDexBonus}}</span>
-            <span class="tooltipcontent">@attributes.maxDexBonus : {{data.attributes.maxDexBonus}}</span>
+            <span class="tooltipcontent">
+              @attributes.maxDexBonus : {{data.attributes.maxDexBonus}}
+
+              {{#if maxDexBonus.sourceDetails.length}}
+                <br/><br/>{{ localize 'D35E.FromSources' }}:<br/>
+                {{#each maxDexBonus.sourceDetails as |src|}}{{src.name}}: {{src.value}}<br/>{{/each}}
+              {{/if}}
+            </span>
         </div>
       </li>
     </ul>

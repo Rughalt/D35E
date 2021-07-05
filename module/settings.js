@@ -1,4 +1,5 @@
 import { HealthConfig } from "./config/health.js";
+import { RollConfig } from "./config/roll-config.js";
 import { isMinimumCoreVersion } from "./lib.js";
 import {CurrencyConfig} from "./config/currency.js";
 
@@ -28,6 +29,18 @@ export const registerSystemSettings = function() {
 
 
   game.settings.registerMenu(isMinimumCoreVersion("0.5.6") ? "D35E" : "system",
+    "rollConfig", {
+      name: "SETTINGS.D35ERollConfigName",
+      label: "SETTINGS.D35ERollConfigLabel",
+      hint: "SETTINGS.D35ERollConfigHint",
+      icon: "fas fa-dice",
+      type: RollConfig,
+      restricted: true
+    }
+  );
+
+
+  game.settings.registerMenu(isMinimumCoreVersion("0.5.6") ? "D35E" : "system",
       "currencyConfig", {
         name: "SETTINGS.D35ECurrencyConfigName",
         label: "SETTINGS.D35ECurrencyConfigLabel",
@@ -48,6 +61,15 @@ export const registerSystemSettings = function() {
       game.actors.entities.forEach(o => { o.update({}); });
       Object.values(game.actors.tokens).forEach(o => { o.update({}); });
     }
+  });
+
+
+  game.settings.register("D35E", "rollConfig", {
+    name: "SETTINGS.D35ERollConfigName",
+    scope: "world",
+    default: RollConfig.defaultSettings,
+    type: Object,
+    config: false
   });
 
   game.settings.register("D35E", "currencyConfig", {

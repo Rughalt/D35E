@@ -328,7 +328,7 @@
         placeholder="1" />
 </div>
 {{#with encumbrance}}
-<span class="carry-label">{{carryLabel}}</span>
+<span class="carry-label">{{carryLabel}} ({{../coinWeight}} {{ localize 'D35E.Currency' }})</span>
 <div class="encumbrance {{#if encumbered.light}}encumbered{{/if}}">
     <span class="encumbrance-bar" style="width:{{pct.light}}%"></span>
     <span class="encumbrance-label">{{ localize 'D35E.CarryLightLoad' }} ({{light}})</span>

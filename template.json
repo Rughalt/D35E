@@ -182,6 +182,10 @@
             "spell": 0
           },
           "maxDexBonus": null,
+          "maxDex": {
+            "gear": 0,
+            "encumbrance": 0
+          },
           "acp": {
             "gear": 0,
             "encumbrance": 0,

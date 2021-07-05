@@ -6,17 +6,28 @@
     <div class="form-group stacked">
         <label class="block-header">{{localize "D35E.CombatStatus"}}</label>
     </div>
+    {{#if baseConcealment}}
+    <div class="flexrow">
+        <div class="form-group">
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized auto-save" checked disabled/>
+            <span class="checkmark"></span>
+        </label>
+            <label>{{localize "D35E.ConcealmentBase"}} ({{baseConcealment}}%)</label>
+        </div>
+    </div>
+    {{/if}}
     <div class="flexrow">
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="conceal"/>
+                <input type="checkbox" class="stylized auto-save" name="conceal"  {{#if baseConcealmentAtLeast20}}disabled{{/if}}>
                 <span class="checkmark"></span>
             </label>
-            <label>{{localize "D35E.Concealment"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
+            <label>{{localize "D35E.Concealment20"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
         </div>
         <div class="form-group">
             <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
-                <input type="checkbox" class="stylized auto-save" name="fullconceal"/>
+                <input type="checkbox" class="stylized auto-save" name="fullconceal"   {{#if baseConcealmentAtLeast50}}disabled{{/if}}/>
                 <span class="checkmark"></span>
             </label>
             <label>{{localize "D35E.FullConcealment"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>

@@ -1241,7 +1241,7 @@
   "D35E.Flanking": "Flanking",
   "D35E.Prone": "Prone",
   "D35E.Concealment": "Concealment",
-  "D35E.FullConcealment": "Full Concealment",
+  "D35E.FullConcealment": "Full Concealment (50%)",
   "D35E.Charge": "Charge",
   "D35E.HighGround": "High Ground",
   "D35E.BehindCover": "Covered",
@@ -1485,6 +1485,15 @@
   "D35E.PsionicFocus":"Psionic Focus",
   "D35E.LinkedItemMissing":"Linked Item is Missing",
   "D35E.LinkAddedBy":"Added by",
+  "D35E.Grapple":"Grapple",
+  "D35E.Skill":"Skill",
+  "D35E.GenericCarryLabel": "{0} lbs",
+  "D35E.GenericCarryLabelKg": "{0} kg",
+  "D35E.Concealment20": "Concealment (20%)",
+  "D35E.ConcealmentBase": "Base Concealment",
+  "D35E.Encumbrance": "Encumbrance",
+  "D35E.Gear": "Gear",
+  "D35E.NotLimited": "Not limited",
 
 
 
@@ -1547,6 +1556,9 @@
   "SETTINGS.D35ESpellpointsCostFormula": "Custom spellpoint cost formula",
   "SETTINGS.D35ESpellpointsCostFormulaH": "Custom spellpoint cost formula. Use @level to get spell level. Leave empty to disable",
   "SETTINGS.D35EDisableTokenVisionsN": "Do not override Token Vision",
-  "SETTINGS.D35EDisableTokenVisionL": "This option disables overriding Token vision settings from items globally. WARNING: This disables functionality of torches and magic items that change vision! This setting will take effect after each actor/token update!"
- 
+  "SETTINGS.D35EDisableTokenVisionL": "This option disables overriding Token vision settings from items globally. WARNING: This disables functionality of torches and magic items that change vision! This setting will take effect after each actor/token update!",
+  "SETTINGS.D35ERollConfigConfigInstructions": "This options sets up default roll mode for different roll types for different actor types.",
+  "SETTINGS.D35ERollConfigLabel": "Configure Default Roll Modes",
+  "SETTINGS.D35ERollConfigName": "Default Roll Modes",
+  "SETTINGS.D35ERollConfigHint": "Configure default roll modes so they are automatically set for rolls"
 }
