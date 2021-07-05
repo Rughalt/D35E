@@ -4219,7 +4219,7 @@ export class ActorPF extends Actor {
      * @param {ItemPF} item   The spell being cast by the actor
      * @param {MouseEvent} ev The click event
      */
-    async useSpell(item, ev, { skipDialog = false, replacement = false, replacementItem = null } = {}, actor = null) {
+    async useSpell(item, ev, { skipDialog = false, replacement = false, replacementItem = null, rollModeOverride = null } = {}, actor = null) {
         let usedItem = replacementItem ? replacementItem : item;
         if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (item.data.type !== "spell") throw new Error("Wrong Item type");
@@ -4229,7 +4229,7 @@ export class ActorPF extends Actor {
         // Invoke the Item roll
         if (usedItem.hasAction)
         {
-            let attackResult = await usedItem.useAttack({ ev: ev, skipDialog: skipDialog }, actor, true);
+            let attackResult = await usedItem.useAttack({ ev: ev, skipDialog: skipDialog, rollModeOverride:rollModeOverride }, actor, true);
             if(!attackResult.wasRolled) return
             let roll = await attackResult.roll;
             await item.addSpellUses(-1+(-1*roll?.rollData?.useAmount || 0));
@@ -4237,7 +4237,7 @@ export class ActorPF extends Actor {
         }
 
         await item.addSpellUses(-1);
-        return usedItem.roll();
+        return usedItem.roll({rollMode: rollModeOverride});
     }
 
     async addSpellsToSpellbook(item) {
@@ -4693,7 +4693,7 @@ export class ActorPF extends Actor {
      * @param options options
      * @returns {Promise<unknown>|void}
      */
-    async rollSavingThrow(_savingThrow,ability, target, options = {}) {
+    async rollSavingThrow(_savingThrow, ability, target, options = {}) {
         if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (_savingThrow === "fort") _savingThrow = "fortitudenegates"
         if (_savingThrow === "ref") _savingThrow = "reflexnegates"
@@ -4749,7 +4749,7 @@ export class ActorPF extends Actor {
             let roll = new Roll35e("1d20 + @savingThrowBonus + @savingThrowManualBonus + @featSavingThrow", rollData).roll();
             // Set chat data
             let chatData = {
-                speaker: ChatMessage.getSpeaker({actor: this.data}),
+                speaker: options.speaker ? options.speaker : ChatMessage.getSpeaker({actor: this.data}),
                 rollMode: rollMode || "gmroll",
                 sound: CONFIG.sounds.dice,
                 "flags.D35E.noRollRender": true,
@@ -4822,13 +4822,12 @@ export class ActorPF extends Actor {
         const savingThrow = this.data.data.attributes.savingThrows[savingThrowId];
         rollData.savingThrow = savingThrowId;
 
-
         let template = "systems/D35E/templates/apps/saving-throw-roll-dialog.html";
         let dialogData = {
             data: rollData,
             savingThrow: savingThrow,
             id: `${this.id}-${_savingThrow}`,
-            rollMode: game.settings.get("core", "rollMode"),
+            rollMode: options.rollMode ? options.rollMode : game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
             stFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('savingThrow',rollData)),
             stFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`savingThrowOptional`,rollData)),
@@ -4923,7 +4922,7 @@ export class ActorPF extends Actor {
 
             // Set chat data
             let chatData = {
-                speaker: ChatMessage.getSpeaker({actor: this.data}),
+                speaker: options.speaker ? options.speaker : ChatMessage.getSpeaker({actor: this.data}),
                 rollMode: rollMode || "gmroll",
                 sound: CONFIG.sounds.dice,
                 "flags.D35E.noRollRender": true
@@ -4990,7 +4989,7 @@ export class ActorPF extends Actor {
         let template = "systems/D35E/templates/apps/skill-roll-dialog.html";
         let dialogData = {
             data: rollData,
-            rollMode: game.settings.get("core", "rollMode"),
+            rollMode: options.rollMode ? options.rollMode : game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
             skFeats: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange('skill',rollData)),
             skFeatsOptional: this.items.filter(o => this.isCombatChangeItemType(o) && o.hasCombatChange(`skillOptional`,rollData)),
@@ -5999,8 +5998,8 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    async rollSave(type,ability,target) {
-        this.rollSavingThrow(type,ability,target,{})
+    async rollSave(type,ability,target,options={}) {
+        this.rollSavingThrow(type,ability,target,options)
     }
 
     static async _rollSave(type,ability,target) {

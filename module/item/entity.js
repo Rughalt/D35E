@@ -1159,16 +1159,16 @@ export class ItemPF extends Item {
 
     /* -------------------------------------------- */
 
-    async use({ev = null, skipDialog = false, replacementId = null}, tempActor= null, skipChargeCheck=false) {
+    async use({ev = null, skipDialog = false, replacementId = null, rollModeOverride = null}, tempActor= null, skipChargeCheck=false) {
         let actor = this.actor;
         if (tempActor !== null) {
             actor = tempActor;
         }
         if (this.type === "spell") {
             if (replacementId) {
-                return actor.useSpell(this, ev, {skipDialog: skipDialog, replacement: true, replacementItem: actor.items.get(replacementId)}, actor);
+                return actor.useSpell(this, ev, {skipDialog: skipDialog, replacement: true, replacementItem: actor.items.get(replacementId), rollModeOverride: rollModeOverride}, actor);
             } else {
-                return actor.useSpell(this, ev, {skipDialog: skipDialog}, actor);
+                return actor.useSpell(this, ev, {skipDialog: skipDialog, rollModeOverride: rollModeOverride}, actor);
             }
         } else if (this.type === "full-attack") {
             await this.roll();
@@ -1180,7 +1180,8 @@ export class ItemPF extends Item {
                         ev: ev,
                         skipDialog: skipDialog,
                         attackType: attack.attackMode,
-                        isFullAttack: true
+                        isFullAttack: true,
+                        rollModeOverride: rollModeOverride
                     }, actor, skipChargeCheck)
                     if (!result.wasRolled && !ev.originalEvent?.shiftKey)
                         return ;
@@ -1188,7 +1189,7 @@ export class ItemPF extends Item {
             }
             return;
         } else if (this.hasAction) {
-            return this.useAttack({ev: ev, skipDialog: skipDialog},actor,skipChargeCheck);
+            return this.useAttack({ev: ev, skipDialog: skipDialog, rollModeOverride: rollModeOverride},actor,skipChargeCheck);
         }
 
         if (this.isCharged && !skipChargeCheck) {
@@ -1198,10 +1199,10 @@ export class ItemPF extends Item {
             }
             await this.addCharges(-1*this.chargeCost);
         }
-        return this.roll();
+        return this.roll({rollMode: rollModeOverride});
     }
 
-    async useAttack({ev = null, skipDialog = false, attackType = "primary", isFullAttack = false} = {}, tempActor= null, skipChargeCheck = false) {
+    async useAttack({ev = null, skipDialog = false, attackType = "primary", isFullAttack = false, rollModeOverride = null} = {}, tempActor= null, skipChargeCheck = false) {
         if (ev && ev.originalEvent) ev = ev.originalEvent;
         let actor = this.actor;
         if (tempActor !== null) {
@@ -1935,7 +1936,7 @@ export class ItemPF extends Item {
             data: rollData,
             id: this.id,
             item: this.data.data,
-            rollMode: game.settings.get("core", "rollMode"),
+            rollMode: rollModeOverride ? rollModeOverride :game.settings.get("core", "rollMode"),
             rollModes: CONFIG.Dice.rollModes,
             twoWeaponAttackTypes: D35E.twoWeaponAttackType,
             attackType: attackType ? attackType : "primary",
