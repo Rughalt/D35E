@@ -30,8 +30,7 @@ export class ActiveEffectD35E extends ActiveEffect {
     }
   
     get isTemporary() {
-      const duration = this.data.duration.seconds ?? (this.data.duration.rounds || this.data.duration.turns) ?? 0;
+      const duration = this.data?.duration?.seconds ?? (this?.data?.duration?.rounds || this?.data?.duration?.turns) ?? 0;
       return duration > 0 || this.getFlag("core", "statusId") || this.getFlag("D35E", "show");
     }
   }
-  

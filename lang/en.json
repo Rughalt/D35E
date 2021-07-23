@@ -1494,7 +1494,22 @@
   "D35E.Encumbrance": "Encumbrance",
   "D35E.Gear": "Gear",
   "D35E.NotLimited": "Not limited",
-
+  "D35E.Auras": "Auras",
+  "D35E.Enemy": "Enemy",
+  "D35E.Ally": "Ally",
+  "D35E.Both": "Both",
+  "D35E.AuraTarget": "Aura Targets",
+  "D35E.AuraRange": "Aura Range",
+  "D35E.PerRound": "Per Round",
+  "D35E.ShowSpellcastingTab": "Show Spells Tab",
+  "D35E.ShowDeckTab": "Show Cards Tab",
+  "D35E.ChatContextDamage": "Apply Damage",
+  "D35E.ChatContextHealing": "Apply Healing",
+  "D35E.ChatContextDoubleDamage": "Apply Double Damage",
+  "D35E.ChatContextHalfDamage": "Apply Half Damage",
+  "D35E.HandSizeFormula":"Hand Size Formula",
+  "D35E.DeckSizeFormula":"Deck Size Formula",
+  "D35E.Bonus":"Bonus",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

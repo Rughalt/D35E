@@ -1,10 +1,12 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
   {{!-- Item Sheet Header --}}
-  <header class="sheet-header flexrow">
-      <div class="sheet-header-profile {{#if lightMagical}}blue{{/if}}{{#if veryMagical}}purple{{/if}}">
-        <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
-      </div>
+  <div class="flexrow" style="flex: 0">
+    <div class="sheet-header-profile">
+      <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+    </div>
+
+    <header class="sheet-header flexrow">
 
     <div class="header-details flexrow">
       <div class="flexcol">
@@ -48,16 +50,17 @@
 
     </div>
   </header>
+  </div>
 
   {{#if data.data.material.data.uniqueId}}
   <section class="original-weapon-box flexrow material-box">
 
     <div class="sheet-header-small">
-      <img class="" src="{{data.datamaterial.img}}" title="{{data.datamaterial.name}}"/>
+      <img class="" src="{{data.data.material.img}}" title="{{data.data.material.name}}"/>
     </div>
     <div class="flexrow">
       <h3 class="origin-weapon-name">
-        <strong>{{localize "D35E.Material"}}</strong> {{data.datamaterial.name}}
+        <strong>{{localize "D35E.Material"}}</strong> {{data.data.material.name}}
       </h3>
       <a class="btn blue-button view-details-material" style="height: 40px; flex: 0 100px; width: 100px; text-align: center; line-height: 40px; font-family: 'Nodesto'; font-size: 18px;">View details</a>
     </div>

@@ -2344,14 +2344,20 @@
   margin-right: 6px;
   position: relative;
 }
-.D35E.sheet.item .sheet-header img.profile {
+.D35E.sheet.item .sheet-header-profile {
+  flex: 0 128px;
+  width: 128px;
+  margin-right: 2px;
+  position: relative;
+}
+.D35E.sheet.item .sheet-header-profile img.profile {
   border: 2px solid #000;
 }
-.D35E.sheet.item .sheet-header .sheet-header-profile {
-  flex: 0 0 100px;
-  width: 100px;
-  margin-right: 6px;
-  position: relative;
+.D35E.sheet.item .sheet-header {
+  flex: 1;
+}
+.D35E.sheet.item .sheet-header img.profile {
+  border: 2px solid #000;
 }
 .D35E.sheet.item .sheet-header .item-subtitle {
   flex: 0 0 80px;
@@ -5373,8 +5379,8 @@ tr.introjs-showElement > th {
   content: '';
   background: url("icons/ui/large-item-frame-empty.png");
   background-size: contain;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   position: absolute;
   left: 0px;
   top: 0;
@@ -5384,8 +5390,8 @@ tr.introjs-showElement > th {
   content: '';
   background: url("icons/ui/large-item-frame-red.png");
   background-size: contain;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   position: absolute;
   left: 0px;
   top: 0;
@@ -5395,8 +5401,8 @@ tr.introjs-showElement > th {
   content: '';
   background: url("icons/ui/large-item-frame-blue.png");
   background-size: contain;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   position: absolute;
   left: 0px;
   top: 0;
@@ -5406,8 +5412,8 @@ tr.introjs-showElement > th {
   content: '';
   background: url("icons/ui/large-item-frame-purple.png");
   background-size: contain;
-  width: 100px;
-  height: 100px;
+  width: 128px;
+  height: 128px;
   position: absolute;
   left: 0px;
   top: 0;

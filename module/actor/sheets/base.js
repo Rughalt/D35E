@@ -2085,12 +2085,14 @@ export class ActorSheetPF extends ActorSheet {
     })
     // Buffs
     let buffs = data.items.filter(obj => { return obj.type === "buff"; });
+    let auras = data.items.filter(obj => { return obj.type === "aura"; });
     buffs = this._filterItems(buffs, this._filters.buffs);
     const buffSections = {
       temp: { label: game.i18n.localize("D35E.Temporary"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "temp" } },
       perm: { label: game.i18n.localize("D35E.Permanent"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "perm" } },
       item: { label: game.i18n.localize("D35E.Item"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "item" } },
       misc: { label: game.i18n.localize("D35E.Misc"), pack: "browser:buffs", hasPack:true, items: [], hasActions: false, dataset: { type: "buff", "buff-type": "misc" } },
+      auras: { label: game.i18n.localize("D35E.Auras"), pack: "", isAuras: true, hasPack:false, items: [], hasActions: false, dataset: { type: "aura", "buff-type": "misc" } },
       //all: { label: game.i18n.localize("D35E.All"), items: [], hasActions: false, dataset: { type: "buff" } },
     };
     data.allbuffs = []
@@ -2100,6 +2102,11 @@ export class ActorSheetPF extends ActorSheet {
       if (s === 'shapechange') data.shapechanges.push(b)
       if (!buffSections[s]) continue;
       buffSections[s].items.push(b);
+      data.allbuffs.push(b);
+    }
+
+    for (let b of auras) {
+      buffSections['auras'].items.push(b);
       data.allbuffs.push(b);
     }
 

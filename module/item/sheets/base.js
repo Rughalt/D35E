@@ -272,6 +272,18 @@ export class ItemSheetPF extends ItemSheet {
         if (this.item.data.type === "attack") {
             data.isWeaponAttack = this.item.data.data.attackType === "weapon";
             data.isNaturalAttack = this.item.data.data.attackType === "natural";
+
+
+            data.weaponCategories = {types: {}, subTypes: {}};
+            for (let [k, v] of Object.entries(CONFIG.D35E.weaponTypes)) {
+                if (typeof v === "object") data.weaponCategories.types[k] = v._label;
+            }
+            if (hasProperty(CONFIG.D35E.weaponTypes, "martial")) {
+                for (let [k, v] of Object.entries(CONFIG.D35E.weaponTypes['martial'])) {
+                    // Add static targets
+                    if (!k.startsWith("_")) data.weaponCategories.subTypes[k] = v;
+                }
+            }
         }
 
         if (this.item.data.data.weight) {
@@ -362,6 +374,9 @@ export class ItemSheetPF extends ItemSheet {
         data.fieldList = Object.keys(flattenObject(this.item.data.data));
 
         if (this.item.data.type === "buff") {
+            data.hasCombatChanges = true;
+        }
+        if (this.item.data.type === "aura") {
             data.hasCombatChanges = true;
         }
         if (this.item.data.type === "feat") {
@@ -1722,13 +1737,17 @@ export class ItemSheetPF extends ItemSheet {
         if (!data.actorId) {
             return ui.notifications.warn(game.i18n.localize("D35E.ResourceNeedDropFromActor"));
         }
-        if (data.type === "Item" && data?.data?.data?.uses?.max) {
+        if (data.type === "Item" && data?.data?.data?.uses?.canBeLinked && data?.data?.data?.uses?.max) {
             let updateData = {}
 
             updateData[`data.linkedChargeItem.id`] = data.data.data.uniqueId ? data.data.data.uniqueId : data.data._id;
             updateData[`data.linkedChargeItem.name`] = data.data.name;
             updateData[`data.linkedChargeItem.img`] = data.data.img;
             this.item.update(updateData)
+        }
+        if (data?.data?.data?.uses?.canBeLinked) {
+
+            return ui.notifications.warn(game.i18n.localize("D35E.ResourceMustBeSetAsLinkable"));
         }
     }
 

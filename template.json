@@ -261,23 +261,28 @@
           "speed": {
             "land": {
               "base": 30,
-              "total": 30
+              "total": 30,
+              "run": 120
             },
             "climb": {
               "base": 0,
-              "total": null
+              "total": null,
+              "run": 0
             },
             "swim": {
               "base": 0,
-              "total": null
+              "total": null,
+              "run": 0
             },
             "burrow": {
               "base": 0,
-              "total": null
+              "total": null,
+              "run": 0
             },
             "fly": {
               "base": 0,
               "total": null,
+              "run": 0,
               "maneuverability": "average"
             }
           },
@@ -1155,7 +1160,9 @@
         "noLightOverride": false,
         "noTokenOverride": false,
         "noBuffDisplay": false,
-        "lockEditingByPlayers": false
+        "lockEditingByPlayers": false,
+        "showCardSheet": false,
+        "showSpellcastingSheet": true
       }
     },
     "character": {
@@ -1267,6 +1274,7 @@
       "spell",
       "feat",
       "buff",
+      "aura",
       "attack",
       "race",
       "enhancement",
@@ -1456,7 +1464,9 @@
           "maxPerUse": null,
           "maxPerUseFormula": "",
           "maxFormula": "",
-          "rechargeFormula": null
+          "rechargeFormula": null,
+          "isResource": false,
+          "canBeLinked": false
         },
         "requiresPsionicFocus": false,
         "linkedChargeItem": {
@@ -1705,6 +1715,21 @@
       },
       "activateActions": [],
       "deactivateActions": [],
+      "perRoundActions": [],
+      "hideFromToken": false
+    },
+    "aura": {
+      "templates": [
+        "itemDescription",
+        "changes",
+        "contextNotes"
+      ],
+      "level": 0,
+      "range": 0,
+      "auraTarget": "",
+      "sourceTokenId": "",
+      "sourceAuraId": "",
+      "sourceActorName": "",
       "perRoundActions": [],
       "hideFromToken": false
     },
@@ -2084,6 +2109,7 @@
       },
       "attackType": "weapon",
       "autoScaleOption": "default",
+      "weaponSubtype": "light",
       "masterwork": false,
       "threatRangeExtended": false,
       "finesseable": false,

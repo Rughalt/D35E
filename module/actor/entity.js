@@ -27,6 +27,7 @@ export class ActorPF extends Actor {
          */
         if (this._runningFunctions === undefined) this._runningFunctions = {};
         if (this._cachedRollData === undefined) this._cachedRollData = this.getRollData();
+        if (this._cachedAuras === undefined) this._cachedAuras = this.items.filter((o) => o.type === "aura");
     }    
 
     static chatListeners(html) {
@@ -65,6 +66,11 @@ export class ActorPF extends Actor {
             if (typeof o.data.data.spellFailure === "number") return cur + o.data.data.spellFailure;
             return cur;
         }, this.data.data.attributes.arcaneSpellFailure || 0);
+    }
+
+    get auras() {
+        if (!this._cachedAuras) this._cachedAuras = this.items.filter((o) => o.type === "aura");
+        return this._cachedAuras;
     }
 
     get race() {
@@ -1753,14 +1759,11 @@ export class ActorPF extends Actor {
         //console.log('D35E | ACP and spell slots');
         // Reduce final speed under certain circumstances
         let armorItems = srcData1.items.filter(o => o.type === "equipment");
-        if ((updateData["data.attributes.encumbrance.level"] >= 1 && !flags.noEncumbrance) ||
-            (armorItems.filter(o => getProperty(o.data, "equipmentSubtype") === "mediumArmor" && o.data.equipped && !o.data.melded).length && !flags.mediumArmorFullSpeed) ||
-            (armorItems.filter(o => getProperty(o.data, "equipmentSubtype") === "heavyArmor" && o.data.equipped && !o.data.melded).length && !flags.heavyArmorFullSpeed)) {
-            for (let speedKey of Object.keys(srcData1.data.attributes.speed)) {
-                let value = updateData[`data.attributes.speed.${speedKey}.total`];
-                linkData(srcData1, updateData, `data.attributes.speed.${speedKey}.total`, ActorPF.getReducedMovementSpeed(value));
-            }
+        for (let speedKey of Object.keys(srcData1.data.attributes.speed)) {
+            let value = updateData[`data.attributes.speed.${speedKey}.total`];
+            ActorPF.getReducedMovementSpeed(srcData1, value, updateData, armorItems, flags, speedKey)
         }
+
         // Reset spell slots
         for (let spellbookKey of Object.keys(getProperty(srcData1, "data.attributes.spells.spellbooks"))) {
             const spellbookAbilityKey = getProperty(srcData1, `data.attributes.spells.spellbooks.${spellbookKey}.ability`);
@@ -1831,7 +1834,7 @@ export class ActorPF extends Actor {
             const autoSetup = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.autoSetup`);
             const deckAddHalfOtherLevels = getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.addHalfOtherLevels`);
             let baseClassLevel = getProperty(srcData1, `data.classes.${spellbookClass}.level`)
-            let classLevel = getProperty(srcData1, `data.classes.${spellbookClass}.level`)  + parseInt(getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.bonusPrestigeCl`));
+            let classLevel = getProperty(srcData1, `data.classes.${spellbookClass}.level`)  + parseInt(getProperty(srcData1, `data.attributes.cards.decks.${deckKey}.bonusPrestigeCl`) || 0);
             if (classLevel > getProperty(srcData1, `data.classes.${spellbookClass}.maxLevel`))
                 classLevel = getProperty(srcData1, `data.classes.${spellbookClass}.maxLevel`);
                 
@@ -2334,6 +2337,7 @@ export class ActorPF extends Actor {
         // Reset ACP and Max Dex bonus
         linkData(data, updateData, "data.attributes.acp.gear", 0);
         linkData(data, updateData, "data.attributes.maxDexBonus", null);
+        linkData(data, updateData, "data.attributes.maxDex.gear", null);
 
         linkData(data, updateData, "data.attributes.fortification.total", (data1.attributes.fortification?.value || 0));
         linkData(data, updateData, "data.attributes.concealment.total", (data1.attributes.concealment?.value || 0));
@@ -2860,19 +2864,19 @@ export class ActorPF extends Actor {
         switch (data.data.attributes.encumbrance.level) {
             case 0:
                 linkData(data, updateData, "data.attributes.acp.encumbrance", 0);
+                linkData(data, updateData, "data.attributes.maxDex.encumbrance", Number.POSITIVE_INFINITY);
                 break;
             case 1:
                 linkData(data, updateData, "data.attributes.acp.encumbrance", 3);
-                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 3));
-                linkData(data, updateData, "data.attributes.maxDex.encumbrance", Math.min(updateData["data.attributes.maxDex.encumbrance"] || Number.POSITIVE_INFINITY, 3));
+                linkData(data, updateData, "data.attributes.maxDex.encumbrance", 3);
                 break;
             case 2:
                 linkData(data, updateData, "data.attributes.acp.encumbrance", 6);
-                linkData(data, updateData, "data.attributes.maxDexBonus", Math.min(updateData["data.attributes.maxDexBonus"] || Number.POSITIVE_INFINITY, 1));
-                linkData(data, updateData, "data.attributes.maxDex.encumbrance", Math.min(updateData["data.attributes.maxDex.encumbrance"] || Number.POSITIVE_INFINITY, 1));
+                linkData(data, updateData, "data.attributes.maxDex.encumbrance", 1);
                 break;
         }
         linkData(data, updateData, "data.attributes.acp.total", Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]));
+        linkData(data, updateData, "data.attributes.maxDex.total", Math.min(updateData["data.attributes.maxDex.gear"], updateData["data.attributes.maxDex.encumbrance"]));
 
 
         // Force speed to creature speed
@@ -3568,22 +3572,57 @@ export class ActorPF extends Actor {
      * @param {Number} value - The non-reduced movement speed.
      * @returns {Number} The reduced movement speed.
      */
-    static getReducedMovementSpeed(value) {
+    static getReducedMovementSpeed(srcData1, value, updateData, armorItems, flags, speedKey) {
         const incr = game.settings.get("D35E", "units") === "metric" ? 1.5 : 5
+        let load = updateData["data.attributes.encumbrance.carriedWeight"];
+        let maxLoad = updateData["data.attributes.encumbrance.levels.heavy"];
+        let maxSpeed = value;
+        let speed = value;
+        let maxRun = value * 4;
 
-        if (value <= 0) return value;
-        if (value < 2 * incr) return incr;
-        value = Math.floor(value / incr) * incr;
-
-        let result = 0,
-            counter = 2;
-        for (let a = incr; a <= value; a += counter * incr) {
-            result += incr;
-            if (counter === 1) counter = 2;
-            else counter = 1;
+        function reduceMaxSpeedFromEncumbrance(maxSpeed) {
+            if (maxSpeed <= 30) {
+                return Math.floor(maxSpeed/2.0) + 5
+            } else if (maxSpeed <= 60) {
+                return Math.floor(maxSpeed/2.0) + 10
+            } else if (maxSpeed <= 90) {
+                return Math.floor(maxSpeed/2.0) + 15
+            } else if (maxSpeed <= 120) {
+                return Math.floor(maxSpeed/2.0) + 20
+            } else if (maxSpeed <= 150) {
+                return Math.floor(maxSpeed/2.0) + 25
+            } else if (maxSpeed <= 180) {
+                return Math.floor(maxSpeed/2.0) + 30
+            } else if (maxSpeed <= 210) {
+                return Math.floor(maxSpeed/2.0) + 35
+            } else if (maxSpeed <= 240) {
+                return Math.floor(maxSpeed/2.0) + 40
+            }  else if (maxSpeed <= 270) {
+                return Math.floor(maxSpeed/2.0) + 45
+            } return Math.floor(maxSpeed/2.0) + 50
         }
 
-        return result;
+        if (load / maxLoad > 2.0 && !flags.noEncumbrance) {
+            speed = 0;
+            maxRun = 0;
+        } else if (load / maxLoad > 1.0 && !flags.noEncumbrance) {
+            speed = 5;
+            maxRun = 0;
+        } else if ((armorItems.filter(o => getProperty(o.data.data, "equipmentSubtype") === "heavyArmor" && o.data.data.equipped && !o.data.data.melded).length && !flags.heavyArmorFullSpeed) || ((3.0 * load / maxLoad) > 2.0 && !flags.noEncumbrance)) {
+            speed = reduceMaxSpeedFromEncumbrance(maxSpeed)
+            maxRun = 3 * speed
+        } else if ((armorItems.filter(o => getProperty(o.data.data, "equipmentSubtype") === "mediumArmor" && o.data.data.equipped && !o.data.data.melded).length && !flags.mediumArmorFullSpeed) || ((3.0 * load / maxLoad) > 1.0 && !flags.noEncumbrance)) {
+            speed = reduceMaxSpeedFromEncumbrance(maxSpeed)
+            maxRun = 4 * speed
+        } else {
+            // "light" speed
+            speed = maxSpeed
+            maxRun = 4 * maxSpeed
+        }
+        if (value) {
+            linkData(srcData1, updateData, `data.attributes.speed.${speedKey}.total`, speed);
+            linkData(srcData1, updateData, `data.attributes.speed.${speedKey}.run`, maxRun);
+        }
     }
 
     /**
@@ -3718,6 +3757,7 @@ export class ActorPF extends Actor {
 
         this._updateMinions(options);
         this._cachedRollData = null;
+        this._cachedAuras = null;
         //return false;
         console.log('D35E | ACTOR UPDATE | Finished update')
         return Promise.resolve(returnActor ? returnActor : this);
@@ -4168,7 +4208,7 @@ export class ActorPF extends Actor {
         if (!(item instanceof Item)) return;
         if (!this.testUserPermission(game.user, "OWNER")) return;
 
-        if (item.data.data.uses != null && item.data.data.activation != null && item.data.data.activation.type !== "") {
+        if (item.data.data.uses != null && item.data.data.uses.isResource && item.data.data.activation != null && item.data.data.activation.type !== "") {
             const itemTag = createTag(item.data.name);
             let curUses = item.data.data.uses;
 
@@ -4228,7 +4268,7 @@ export class ActorPF extends Actor {
         let usedItem = replacementItem ? replacementItem : item;
         if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
         if (item.data.type !== "spell") throw new Error("Wrong Item type");
-
+        if (getProperty(this.data, "data.requiresPsionicFocus") && !this.actor?.data?.data?.attributes?.psionicFocus) return ui.notifications.warn(game.i18n.localize("D35E.RequiresPsionicFocus"));
         if (getProperty(item.data, "data.preparation.mode") !== "atwill" && item.getSpellUses() <= 0) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoSpellsLeft"));
 
         // Invoke the Item roll
@@ -4349,7 +4389,7 @@ export class ActorPF extends Actor {
         attackData["data.actionType"] = ((item.data.data.weaponSubtype === "ranged" || item.data.data.properties.thr) ? "rwak" : "mwak");
         attackData["data.activation.type"] = "attack";
         attackData["data.duration.units"] = "inst";
-        attackData["data.finessable"] = item.data.data.properties.fin || false;
+        attackData["data.finesseable"] = item.data.data.properties.fin || false;
         attackData["data.threatRangeExtended"] = isKeen;
         attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
         attackData["data.originalWeaponCreated"] = true;
@@ -4392,6 +4432,7 @@ export class ActorPF extends Actor {
         if (item.data.data.properties["thr"] === true) {
             attackData["data.ability.attack"] = "dex";
         }
+        attackData["data.weaponSubtype"] = item.data.data.weaponSubtype
         // Add damage formula
         if (item.data.data.weaponData.damageRoll) {
             const die = item.data.data.weaponData.damageRoll || "1d4";
@@ -4864,7 +4905,7 @@ export class ActorPF extends Actor {
     };
 
     isCombatChangeItemType(o) {
-        return o.type === "feat" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded);
+        return o.type === "feat" || o.type === "aura" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded);
     }
 
     /**
@@ -6389,7 +6430,7 @@ export class ActorPF extends Actor {
         let currencyConfig = game.settings.get("D35E", "currencyConfig");
         for (let currency of currencyConfig.currency) {
             if (customCurrency)
-                baseWeight += customCurrency[currency[0]]*currency[2]
+                baseWeight += (customCurrency[currency[0]] || 0)*(currency[2] || 0)
         }
 
         return baseWeight;
@@ -6443,7 +6484,7 @@ export class ActorPF extends Actor {
         let currencyConfig = game.settings.get("D35E", "currencyConfig");
         for (let currency of currencyConfig.currency) {
             if (customCurrency)
-                baseTotal += customCurrency[currency[0]]*currency[3]
+                baseTotal += (customCurrency[currency[0]] || 0)*(currency[3] || 0)
         }
         return baseTotal;
     }
@@ -7182,6 +7223,8 @@ export class ActorPF extends Actor {
         await this.createEmbeddedEntity("Item", data);
     }
 
+
+
     async _updateMinions(options) {
         if (options.skipMinions) return;
         for (const actor of game.actors) {
@@ -7488,6 +7531,7 @@ export class ActorPF extends Actor {
         const buffTextures = this._calcBuffTextures();
 
         for (let t of tokens) {
+            console.log("D35E | toggleConditionStatusIcons")
         // const isLinkedToken = getProperty(this.data, "token.actorLink");
             const actor = t.actor ? t.actor : this;
             if (!actor.testUserPermission(game.user, "OWNER")) continue;
@@ -7532,14 +7576,14 @@ export class ActorPF extends Actor {
 
     // @Object { id: { title: String, type: buff/string, img: imgPath, active: true/false }, ... }
     _calcBuffTextures() {
-        
-        const buffs = this.items.filter((o) => o.type === "buff");
+        console.log("D35E | _calcBuffTextures")
+        const buffs = this.items.filter((o) => o.type === "buff" || o.type === "aura");
         return buffs.reduce((acc, cur) => {
             const id = cur.uuid;
             if (cur.data.data.hideFromToken) return acc;
             if (cur.data.data?.buffType === "shapechange") return acc;
             if (!acc[id]) acc[id] = { id: cur.id, label: cur.name, icon: cur.data.img, item: cur };
-            if (cur.data.data.active) acc[id].active = true;
+            if (cur.type === "aura" || cur.data.data.active) acc[id].active = true;
             else acc[id].active = false;
             return acc;
         }, {});
@@ -7710,7 +7754,7 @@ export class ActorPF extends Actor {
             for (let _action of i.data.data.perRoundActions)
                 actions.push({
                     label: i.name,
-                    value: _action.value,
+                    value: _action.action,
                     isTargeted: false,
                     action: "customAction",
                     img: i.img,
@@ -7805,6 +7849,7 @@ export class ActorPF extends Actor {
                 data = [data];
             }
             for (let itemId of data) {
+                if (!this.items.has(itemId)) continue;
                 let linkId = this.items.get(itemId).data.data.linkId;
                 if (linkId) {
                     this.items.filter(o => {

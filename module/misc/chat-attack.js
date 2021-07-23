@@ -2,8 +2,8 @@ import {ItemPF} from "../item/entity.js";
 import {Roll35e} from "../roll.js"
 
 export class ChatAttack {
-    constructor(item, label = "", actor = null) {
-        this.setItem(item, actor);
+    constructor(item, label = "", actor = null, rollData = null) {
+        this.setItem(item, actor, rollData);
         this.label = label;
 
         this.attack = {
@@ -59,7 +59,7 @@ export class ChatAttack {
      * @param {ItemPF} item - The item to reference.
      * @param actor
      */
-    setItem(item, actor = null) {
+    setItem(item, actor = null, rollData = null) {
         if (item == null) {
             this.rollData = {};
             this.item = null;
@@ -67,8 +67,12 @@ export class ChatAttack {
         }
 
         this.item = item;
-        this.rollData = item.actor != null ? item.actor.getRollData() : actor != null ? actor.getRollData() : {};
-        this.rollData.item = duplicate(this.item.data.data);
+        if (rollData)
+            this.rollData = rollData;
+        else {
+            this.rollData = item.actor != null ? item.actor.getRollData() : actor != null ? actor.getRollData() : {};
+            this.rollData.item = duplicate(this.item.data.data);
+        }
     }
 
     async addAttack({bonus = null, extraParts = [], primaryAttack = true, critical = false, critConfirmBonus = 0} = {}) {

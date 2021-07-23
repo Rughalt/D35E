@@ -8,10 +8,12 @@
   {{/if}}
 
   {{!-- Item Sheet Header --}}
-  <header class="sheet-header flexrow">
+  <div class="flexrow" style="flex: 0">
     <div class="sheet-header-profile">
       <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
     </div>
+
+    <header class="sheet-header flexrow">
 
     <div class="header-details flexrow">
       <h1 class="charname">
@@ -33,6 +35,7 @@
       </ul>
     </div>
   </header>
+  </div>
 
   <section class="sheet-content flexcol">
   {{!-- Item Sheet Navigation --}}

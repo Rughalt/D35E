@@ -1,0 +1,126 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Item Sheet Header --}}
+    <div class="flexrow">
+        <div class="sheet-header-profile">
+            <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+        </div>
+
+        <header class="sheet-header flexrow">
+
+        <div class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize " D35E.BuffName"}}"/>
+            </h1>
+
+            <div class="item-subtitle">
+                <h4 class="item-type">{{itemType}}</h4>
+                <span class="item-status">{{itemStatus}}</span>
+            </div>
+
+            <ul class="summary">
+                <li>
+                    {{data.data.auraTarget}}
+                </li>
+                <li class="tooltip">
+                    <span class="tooltipcontent">@item.level : {{data.data.level}}</span>
+                    <input type="text" name="data.level" value="{{#if data.data.level}}{{data.data.level}}{{/if}}"
+                           placeholder="{{localize " D35E.Level"}}"/>
+                </li>
+            </ul>
+        </div>
+    </header>
+    </div>
+
+    <section class="sheet-content flexcol">
+        {{!-- Item Sheet Navigation --}}
+        <nav class="sheet-navigation tabs" data-group="primary">
+            <a class="item active" data-tab="description">{{ localize "D35E.Description" }}</a>
+            <a class="item active" data-tab="configuration" style="flex: 0 150px;">{{ localize "D35E.Configuration"
+                }}</a>
+        </nav>
+
+        {{!-- Item Sheet Body --}}
+        <section class="primary-body">
+
+            {{!-- Description Tab --}}
+            <div class="tab flexcol active" data-group="primary" data-tab="description">
+                {{editor content=data.data.description.value target="data.description.value" button=true owner=owner
+                editable=editable}}
+            </div>
+
+
+            <div class="tab flexcol active" data-group="primary" data-tab="configuration">
+                <nav class="sheet-navigation tabs subtabs configuration" data-group="configuration">
+
+
+                    <a class="item active" data-tab="settings">{{ localize "D35E.Details" }}</a>
+                    <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
+                </nav>
+
+                <div class="flexrow configuration-container" style="overflow: hidden; height: 100%">
+                    <section class="configuration-body" style="display: block; height: 100%">
+                <div class="tab flexcol" data-group="configuration" data-tab="settings">
+
+
+                    <h3 class="form-header" style="flex: 0">Aura Details</h3>
+                    <div class="form-group select">
+                        <label>{{localize "D35E.AuraTarget"}}</label>
+                        <select name="data.auraTarget" value="{{data.data.auraTarget}}">
+                            {{#select data.data.auraTarget}}
+                            {{#each config.auraTarget as |type a|}}
+                            <option value="{{a}}">{{type}}</option>
+                            {{/each}}
+                            {{/select}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>{{localize "D35E.AuraRange"}}</label>
+                        <input style="flex: 0 60px" type="text" name="data.range" value="{{data.data.range}}" data-dtype="Number"/>
+                        <span style="flex: 0; margin-left: 8px">ft. </span>
+                    </div>
+
+                    <h3 class="form-header" style="flex: 0">Special Actions</h3>
+                    <h4 class="attack-header">
+                        {{localize "D35E.PerRound"}} {{localize "D35E.SpecialActions"}}
+                        <a class="r-special-control add-special"><i class="fas fa-plus"></i></a>
+                    </h4>
+                    <ol class="special-parts form-group">
+                        {{#each data.data.perRoundActions as |part a|}}
+                        <li class="special-part flexcol" data-per-round-actions="{{a}}">
+                            <div class="flexrow"><span>Name:</span><input type="text"
+                                                                          name="data.perRoundActions.{{a}}.name"
+                                                                          placeholder="{{localize " D35E.Name"}}"
+                                value="{{lookup this "name"}}"/>
+                            </div>
+                            <div class="flexrow"><span>Action:</span><input type="text"
+                                                                            name="data.perRoundActions.{{a}}.action"
+                                                                            placeholder="{{localize " D35E.Action"}}"
+                                value="{{lookup this "action"}}"/>
+                            </div>
+                            <div class="flexrow"><span>Condition:</span><input type="text"
+                                                                               name="data.perRoundActions.{{a}}.condition"
+                                                                               placeholder="{{localize " D35E.Condition"}}"
+                                value="{{lookup this "condition"}}"/>
+                            </div>
+                            <div class="flexrow"><span>Icon path:</span><input type="text"
+                                                                               name="data.perRoundActions.{{a}}.img"
+                                                                               placeholder="{{localize " D35E.Image"}}"
+                                value="{{lookup this "img"}}"/>
+                            </div>
+                            <a class="r-special-control delete-special"><i class="fas fa-minus"></i>Remove</a>
+
+                        </li>
+                        {{/each}}
+                    </ol>
+
+                </div>
+                <div class="tab flexcol" data-group="configuration" data-tab="changes">
+                    {{> "systems/D35E/templates/items/parts/item-changes.html"}}
+
+                    {{> "systems/D35E/templates/items/parts/item-notes.html"}}
+                </div></section></div>
+            </div>
+        </section>
+    </section>
+</form>

@@ -7,11 +7,12 @@
     </span>
   {{/if}}
   {{!-- Item Sheet Header --}}
-  <header class="sheet-header flexrow">
+  <div class="flexrow" style="flex: 0">
     <div class="sheet-header-profile">
       <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
     </div>
 
+    <header class="sheet-header flexrow">
     <div class="header-details flexrow">
       <h1 class="charname">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "D35E.ItemName"}}"/>
@@ -29,15 +30,16 @@
       </ul>
     </div>
   </header>
+  </div>
   {{#if data.data.originalWeaponCreated}}
   <section class="original-weapon-box flexrow">
 
     <div class="sheet-header-small">
-    <img class="" src="{{data.dataoriginalWeaponImg}}" title="{{data.dataoriginalWeaponName}}" data-edit="img"/>
+    <img class="" src="{{data.data.originalWeaponImg}}" title="{{data.data.originalWeaponName}}" data-edit="img"/>
     </div>
     <div class="flexcol">
       <h3 class="origin-weapon-name">
-        <strong>{{localize "D35E.CreatedFrom"}}</strong> {{data.dataoriginalWeaponName}}
+        <strong>{{localize "D35E.CreatedFrom"}}</strong> {{data.data.originalWeaponName}}
       </h3>
       <ul>
         {{#each config.weaponProperties as |name prop|}}
@@ -51,11 +53,11 @@
   <section class="original-weapon-box flexrow material-box">
 
     <div class="sheet-header-small">
-      <img class="" src="{{data.datamaterial.img}}" title="{{data.datamaterial.name}}"/>
+      <img class="" src="{{data.data.material.img}}" title="{{data.data.material.name}}"/>
     </div>
     <div class="flexrow">
       <h3 class="origin-weapon-name">
-        <strong>{{localize "D35E.Material"}}</strong> {{data.datamaterial.name}}
+        <strong>{{localize "D35E.Material"}}</strong> {{data.data.material.name}}
       </h3>
       <a class="btn blue-button" style="height: 40px; flex: 0 100px; width: 100px; text-align: center; line-height: 40px; font-family: 'Nodesto'; font-size: 18px;">View details</a>
     </div>
@@ -180,6 +182,17 @@
             <input type="checkbox" class="stylized" name="data.epic" {{checked data.data.epic}}/>
             <span class="checkmark"></span>
           </label>
+        </div>
+        {{else}}
+        <div class="form-group">
+          <label>{{localize "D35E.Type"}}</label>
+          <select name="data.weaponSubtype">
+            {{#select data.data.weaponSubtype}}
+            {{#each weaponCategories.subTypes as |name type|}}
+            <option value="{{type}}">{{name}}</option>
+            {{/each}}
+            {{/select}}
+          </select>
         </div>
         {{/if}}
         <div class="form-group">

@@ -1,6 +1,6 @@
 <div class="flexcol">
 
-    <h2>General Settings</h2>
+    <h2 class="block-header">General Settings</h2>
     <div class="form-group">
         <label>{{ localize 'D35E.PartyMember' }}</label>
         <label class="checkbox" style="position: relative; flex: 0 20px">
@@ -63,7 +63,25 @@
         </label>
     </div>
 
-    <h2>Actions</h2>
+    <h2 class="block-header">Sheet</h2>
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.ShowSpellcastingTab' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.showSpellcastingSheet" {{checked data.showSpellcastingSheet}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label>{{ localize 'D35E.ShowDeckTab' }}</label>
+        <label class="checkbox" style="position: relative; flex: 0 20px">
+            <input type="checkbox" class="stylized" name="data.showCardSheet" {{checked data.showCardSheet}}/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+
+    <h2 class="block-header">Actions</h2>
 
     <div class="form-group">
         <label>{{ localize 'D35E.FixContainers' }}</label>
@@ -75,7 +93,7 @@
     </div>
     <span style="flex: 0">{{  localize 'D35E.FixContainersDesc' }}</span>
 
-    <h2>Skills</h2>
+    <h2 class="block-header">Skills</h2>
 
     <div class="form-group">
         <label>{{ localize 'D35E.DisplayNonRTSkills' }}</label>

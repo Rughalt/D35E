@@ -111,17 +111,29 @@
                 <h3 class="item-name flexrow">{{section.label}}</h3>
 
 
+                {{#unless section.isAuras}}
                 <div class="item-detail item-timeline">
                     <span>{{ localize 'D35E.TimelineTimed' }}</span>
                 </div>
+                {{/unless}}
 
+                {{#if section.isAuras}}
+                <div class="item-detail item-active">
+                    <span>{{ localize 'D35E.Range' }}</span>
+                </div>
+                <div class="item-detail item-active">
+                    <span>{{ localize 'D35E.Target' }}</span>
+                </div>
+                {{/if}}
                 <div class="item-detail item-level">
                     <span>{{ localize 'D35E.Level' }}</span>
                 </div>
 
+                {{#unless section.isAuras}}
                 <div class="item-detail item-active">
                     <span>{{ localize 'D35E.Active' }}</span>
                 </div>
+                {{/unless}}
 
                 {{#if ../owner}}
                 <div class="item-controls">
@@ -144,24 +156,46 @@
                 <li class="item flexrow" data-item-id="{{item._id}}">
                     <div class="item-name flexrow rollable">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
-                        <h4>{{item.name}}</h4>
+                        <h4>{{item.name}}
+                            {{#if item.data.sourceActorName}}<em style="color: black; opacity: 0.7" class="non-rollable">applied by {{item.data.sourceActorName}}</em>
+                        {{/if}}
+
+                            {{#if item.data.linkImported}}
+                            <i class="fas fa-link non-rollable" style="color: black; opacity: 0.7">
+                            </i>
+                            <em style="color: black; opacity: 0.7" class="non-rollable">{{item.data.linkSourceName}}</em>
+                            {{/if}}
+                        </h4>
                     </div>
+                    {{#unless section.isAuras}}
                     <div class="item-detail item-timeline">
                         {{#if item.data.timeline.enabled }}
                         <span>{{item.timelineLeftText}}</span>
                         {{/if}}
                     </div>
+                    {{/unless}}
+                    {{#if section.isAuras}}
+
+                    <div class="item-detail item-active">
+                        <span>{{item.data.range}} ft.</span>
+                    </div>
+                    <div class="item-detail item-active">
+                        <span>{{item.data.auraTarget}}</span>
+                    </div>
+                    {{/if}}
                     <div class="item-detail item-level">
                         <input type="text" value="{{#if item.data.level}}{{item.data.level}}{{/if}}"
                                data-dtype="Number"/>
                     </div>
 
+                    {{#unless section.isAuras}}
                     <div class="item-detail item-active">
                         <label>
                         <input type="checkbox" class="stylized buff-toggle" {{checked item.data.active}}/>
                         <span class="checkmark"></span>
                         </label>
                     </div>
+                    {{/unless}}
 
                     {{#if ../../owner}}
                     <div class="item-controls">

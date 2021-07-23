@@ -230,9 +230,9 @@
           <li class="attribute speed">
             <div class="attribute-speed">
               <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedLand' }}</h4>
-              <div class="attribute-value">
-                <div class="attribute">
-                  {{#if data.attributes.speed.land.total}}{{data.attributes.speed.land.total}}{{/if}}
+              <div class="attribute-value" style="line-height: 28px">
+                <div class="attribute" style="max-width: 100%">
+                  {{#if data.attributes.speed.land.total}}{{data.attributes.speed.land.total}} / {{data.attributes.speed.land.run}}{{else}}<span style="opacity: 0.8">&#8212;</span>{{/if}}
                 </div>
               </div>
                 <footer class="attribute-footer">
@@ -243,9 +243,9 @@
             </div>
             <div class="attribute-speed">
               <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedClimb' }}</h4>
-              <div class="attribute-value">
-                <div class="attribute">
-                  {{#if data.attributes.speed.climb.total}}{{data.attributes.speed.climb.total}}{{/if}}
+              <div class="attribute-value" style="line-height: 28px">
+                <div class="attribute" style="max-width: 100%">
+                  {{#if data.attributes.speed.climb.total}}{{data.attributes.speed.climb.total}} / {{data.attributes.speed.climb.run}}{{else}}<span style="opacity: 0.8">&#8212;</span>{{/if}}
                 </div>
               </div>
               <footer class="attribute-footer">
@@ -256,9 +256,9 @@
             </div>
             <div class="attribute-speed">
               <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedSwim' }}</h4>
-              <div class="attribute-value">
-                <div class="attribute">
-                  {{#if data.attributes.speed.swim.total}}{{data.attributes.speed.swim.total}}{{/if}}
+              <div class="attribute-value" style="line-height: 28px">
+                <div class="attribute" style="max-width: 100%">
+                  {{#if data.attributes.speed.swim.total}}{{data.attributes.speed.swim.total}} / {{data.attributes.speed.swim.run}}{{else}}<span style="opacity: 0.8">&#8212;</span>{{/if}}
                 </div>
               </div>
               <footer class="attribute-footer">
@@ -269,9 +269,9 @@
             </div>
             <div class="attribute-speed">
               <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedBurrow' }}</h4>
-              <div class="attribute-value">
-                <div class="attribute">
-                  {{#if data.attributes.speed.burrow.total}}{{data.attributes.speed.burrow.total}}{{/if}}
+              <div class="attribute-value" style="line-height: 28px">
+                <div class="attribute" style="max-width: 100%">
+                  {{#if data.attributes.speed.burrow.total}}{{data.attributes.speed.burrow.total}} / {{data.attributes.speed.burrow.run}}{{else}}<span style="opacity: 0.8">&#8212;</span>{{/if}}
                 </div>
               </div>
               <footer class="attribute-footer">
@@ -282,9 +282,9 @@
             </div>
             <div class="attribute-speed">
               <h4 class="attribute-name box-title">{{ localize 'D35E.SpeedFly' }}</h4>
-              <div class="attribute-value">
-                <div class="attribute">
-                  {{#if data.attributes.speed.fly.total}}{{data.attributes.speed.fly.total}}{{/if}}
+              <div class="attribute-value" style="line-height: 28px">
+                <div class="attribute" style="max-width: 100%">
+                  {{#if data.attributes.speed.fly.total}}{{data.attributes.speed.fly.total}} / {{data.attributes.speed.fly.run}}{{else}}<span style="opacity: 0.8">&#8212;</span>{{/if}}
                 </div>
               </div>
               <footer class="attribute-footer">
@@ -317,7 +317,12 @@
     <a class="item" data-tab="feats">{{ localize 'D35E.Features' }}</a>
     <a class="item" data-tab="skills">{{ localize 'D35E.Skills' }}</a>
     <a class="item" data-tab="buffs">{{ localize 'D35E.Buffs' }}</a>
+    {{#if data.showSpellcastingSheet}}
     <a class="item" data-tab="spellbook">{{ localize 'D35E.Spells' }}</a>
+    {{/if}}
+    {{#if data.showCardSheet}}
+    <a class="item" data-tab="deck">{{ localize 'D35E.SpellCards' }}</a>
+    {{/if}}
     <a class="item" data-tab="biography">{{ localize 'D35E.Biography' }}</a>
     <a class="item" data-tab="notes">{{ localize 'D35E.Notes' }}</a>
     <a class="item header-button" data-tab="config"><i class="fas fa-cogs"></i></a>
@@ -543,6 +548,11 @@
     {{!-- Spellbook Tab --}}
     <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
       {{> "systems/D35E/templates/actors/parts/actor-spellbook-front.html"}}
+    </div>
+
+    {{!-- Decks Tab --}}
+    <div class="tab spellbook flexcol" data-group="primary" data-tab="deck">
+      {{> "systems/D35E/templates/actors/parts/actor-deck-front.html"}}
     </div>
 
     {{!-- Biography Tab --}}

@@ -1011,6 +1011,12 @@ D35E.buffTypes = {
   "misc": "D35E.Misc",
 };
 
+D35E.auraTarget = {
+  "ally": "D35E.Ally",
+  "enemy": "D35E.Enemy",
+  "both": "D35E.Both",
+};
+
 D35E.buffTargets = {
   "ac": {
     "_label": "D35E.BuffTarAC",

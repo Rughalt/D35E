@@ -60,7 +60,7 @@
                 <input type="text" style="width: calc(100%);"
                        name="data.attributes.cards.decks.{{deckIndex}}.handSize.formula"
                        value="{{deck.orig.handSize.formula}}"
-                       placeholder="{{ localize 'D35E.HandSizeFormula' }}"/>
+                       placeholder="{{ localize 'D35E.Bonus' }}{{ localize 'D35E.HandSizeFormula' }}"/>
             </footer>
         </li>
 
@@ -76,7 +76,7 @@
                 <input type="text" style="width: calc(100%);"
                        name="data.attributes.cards.decks.{{deckIndex}}.deckSize.formula"
                        value="{{deck.orig.deckSize.formula}}"
-                       placeholder="{{ localize 'D35E.DeckSizeFormula' }}"/>
+                       placeholder="{{ localize 'D35E.Bonus' }} {{ localize 'D35E.DeckSizeFormula' }}"/>
             </footer>
         </li>
         {{#if deck.orig.hasPrestigeCl}}
@@ -183,7 +183,7 @@
                section.dataset as |v k|}}data-{{k}}="{{v}}" {{/each}}>
             <i class="fas fa-atlas"></i> {{ localize 'D35E.Add' }}
             </a>
-            <a class="item-control item-create" style="flex: 0; margin-left: 4px;"
+            <a class="item-control item-create" data-type="card"  style="flex: 0; margin-left: 4px;"
                title="{{ localize 'D35E.CreateSpell' }}" {{#each section.dataset as |v k|}}data-{{k}}="{{v}}" {{/each}}>
             <i class="fas fa-plus"></i> {{ localize 'D35E.New' }}
             </a>

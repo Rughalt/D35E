@@ -46,6 +46,7 @@ import {addLowLightVisionToLightConfig} from "./module/low-light-vision.js";
 import {Roll35e} from "./module/roll.js";
 import {genTreasureFromToken} from "./module/treasure/treasure.js"
 import { ActiveEffectD35E } from "./module/ae/entity.js";
+import { CollateAuras } from "./module/auras/aura-helpers.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -58,6 +59,7 @@ if (!String.prototype.format) {
     });
   };
 }
+
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -103,7 +105,7 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
   Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "attack", "race", "enhancement","damage-type","material","full-attack","card"], makeDefault: true });
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "aura", "attack", "race", "enhancement","damage-type","material","full-attack","card"], makeDefault: true });
 
 
   // Register System Settings
@@ -145,7 +147,7 @@ Hooks.once("setup", function() {
     "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "actorTokenSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
     "limitedUsePeriods", "equipmentTypes", "equipmentSlots", "consumableTypes", "attackTypes", "attackTypesShort", "buffTypes", "buffTargets", "contextNoteTargets",
     "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets","savingThrowTypes","requirements",
-    "abilityTypes"
+    "abilityTypes", "auraTarget"
   ];
 
   const doLocalize = function(obj) {
@@ -369,7 +371,7 @@ Hooks.on("renderChatMessage", (app, html, data) => {
 Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
-
+const debouncedCollate = debounce((a, b, c, d) => CollateAuras(a, b, c, d), 200)
 Hooks.on("updateItem", (item, changedData, options, user) => {
   console.log('D35E | Updated Item', item,changedData,options,user,game.userId)
   let actor = item.parent;
@@ -448,11 +450,22 @@ Hooks.on("createToken", async (token, options, userId) => {
       }
       itemUpdates.push({_id: item._id, "data.hp": hp});
     });
-    token.actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
+    await token.actor.updateEmbeddedEntity("Item", itemUpdates, {stopUpdates: false, ignoreSpellbookAndLevel: true})
   }
+
+  debouncedCollate(canvas.scene.id, true, true, "updateToken")
 
 });
 
+Hooks.on("updateToken", async (token, options, userId) => {
+  if (options?.stopAuraUpdate) return;
+  debouncedCollate(canvas.scene.id, true, true, "updateToken")
+});
+
+Hooks.on("deleteToken", async (token, options, userId) => {
+  if (options?.stopAuraUpdate) return;
+  debouncedCollate(canvas.scene.id, true, true, "updateToken")
+});
 
 
 Hooks.on("createCombatant", (combat, combatant, info, data) => {
@@ -509,6 +522,8 @@ Hooks.on("updateCombat", async (combat, combatant, info, data) => {
     if (itemsOnRound.length)
       actor.applyOnRoundBuffActions(itemsOnRound);
     actor.renderFastHealingRegenerationChatCard();
+
+    debouncedCollate(canvas.scene.id, true, true, "updateToken")
   }
 });
 
@@ -547,6 +562,8 @@ Hooks.on("deleteItem", (data, options, user) => {
   }
   //data.parent.refresh(options);
 });
+
+Hooks.on("getChatLogEntryContext", chat.addChatMessageContextOptions);
 
 Hooks.on("updateActor",  (actor, data, options, user) => {
   TopPortraitBar.render(actor)
