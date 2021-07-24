@@ -1249,7 +1249,7 @@ export class ItemPF extends Item {
         }
 
         const itemData = this.getRollData();
-        const rollData = actor ? actor.getRollData() : {};
+        const rollData = actor ? duplicate(actor.getRollData()) : {};
         rollData.item = duplicate(itemData);
         const itemUpdateData = {};
         itemUpdateData._id = this._id;
@@ -1728,7 +1728,6 @@ export class ItemPF extends Item {
                 for (let atk of allAttacks) {
                     // Create attack object
                     let attack = new ChatAttack(this, atk.label, actor, rollData);
-                    attack.rollData = rollData;
                     let localAttackExtraParts = duplicate(attackExtraParts);
                     for (let aepConditional of attackEnhancementMap.get(`attack.${attackId}`) || []) {
                         localAttackExtraParts.push(aepConditional)

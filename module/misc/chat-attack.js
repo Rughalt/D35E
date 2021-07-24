@@ -68,7 +68,7 @@ export class ChatAttack {
 
         this.item = item;
         if (rollData)
-            this.rollData = rollData;
+            this.rollData = duplicate(rollData);
         else {
             this.rollData = item.actor != null ? item.actor.getRollData() : actor != null ? actor.getRollData() : {};
             this.rollData.item = duplicate(this.item.data.data);

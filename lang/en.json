@@ -1510,6 +1510,7 @@
   "D35E.HandSizeFormula":"Hand Size Formula",
   "D35E.DeckSizeFormula":"Deck Size Formula",
   "D35E.Bonus":"Bonus",
+  "D35E.RequiresPsionicFocus": "Requires Psionic Focus!",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

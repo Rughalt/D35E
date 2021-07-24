@@ -371,7 +371,7 @@ Hooks.on("renderChatMessage", (app, html, data) => {
 Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
 
-const debouncedCollate = debounce((a, b, c, d) => CollateAuras(a, b, c, d), 200)
+const debouncedCollate = debounce((a, b, c, d) => CollateAuras(a, b, c, d), 500)
 Hooks.on("updateItem", (item, changedData, options, user) => {
   console.log('D35E | Updated Item', item,changedData,options,user,game.userId)
   let actor = item.parent;
@@ -386,25 +386,7 @@ Hooks.on("updateItem", (item, changedData, options, user) => {
     //actor.refresh(options)
   }
 });
-Hooks.on("updateToken", (scene, token, data, options, user) => {
-  if (user !== game.userId) {
-    console.log("Not updating actor as action was started by other user")
-    return
-  }
-  if (options.tokenOnly) return
-  const actor = game.actors.tokens[data._id] ?? game.actors.get(token.actorId);
-  if (actor != null && user === game.userId && hasProperty(data, "actorData.items")) {
 
-    let itemResourcesData = {}
-    for (let i of actor.items || []) {
-      actor.getItemResourcesUpdate(i, itemResourcesData);
-    }
-    actor.refreshWithData(itemResourcesData, options)
-  } else if (actor != null && user === game.userId) {
-
-    actor.toggleConditionStatusIcons();
-  }
-});
 
 Hooks.on("renderTokenConfig", async (app, html) => {
   console.log(app.object.data)
@@ -459,11 +441,13 @@ Hooks.on("createToken", async (token, options, userId) => {
 
 Hooks.on("updateToken", async (token, options, userId) => {
   if (options?.stopAuraUpdate) return;
+  if (options.tokenOnly) return;
   debouncedCollate(canvas.scene.id, true, true, "updateToken")
 });
 
 Hooks.on("deleteToken", async (token, options, userId) => {
   if (options?.stopAuraUpdate) return;
+  if (options.tokenOnly) return;
   debouncedCollate(canvas.scene.id, true, true, "updateToken")
 });
 
