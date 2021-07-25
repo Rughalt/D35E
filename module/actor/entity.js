@@ -7554,7 +7554,6 @@ export class ActorPF extends Actor {
                 }
             }
 
-            toDelete.push(...brokenEffects)
 
 
             // Create and delete condition ActiveEffects
@@ -7571,10 +7570,16 @@ export class ActorPF extends Actor {
                     icon: CONFIG.D35E.conditionTextures[k],
                 });
                 } else if (!hasCondition && hasEffectIcon) {
-                const removeEffects = fx.filter((e) => e.getFlag("core", "statusId") === k);
-                toDelete.push(...removeEffects.map((e) => e.id));
+                    const removeEffects = fx.filter((e) => e.getFlag("core", "statusId") === k);
+                    toDelete.push(...removeEffects.map((e) => e.id));
+                }
+                if (hasEffectIcon) {
+                    const removeEffects = fx.filter((e) => e.getFlag("core", "statusId") === k);
+                    brokenEffects.delete(...removeEffects.map((e) => e.id))
                 }
             }
+
+            toDelete.push(...brokenEffects)
 
             if (toDelete.length) await actor.deleteEmbeddedDocuments("ActiveEffect", toDelete, {stopUpdates: true});
             if (toCreate.length) await actor.createEmbeddedDocuments("ActiveEffect", toCreate, {stopUpdates: true});

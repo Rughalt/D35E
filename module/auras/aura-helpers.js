@@ -127,7 +127,7 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
     AURAS.runningUpdate = false;
     // We have a queued run from other source, that did go pas debounce
     if (AURAS.queued) {
-        ui.notifications.warn("Running queued update")
+        ui.notifications.warn("Running queued Aura update, last aura update pass took too long.")
         AURAS.queued = false;
         CollateAuras(sceneID, checkAuras, removeAuras, source);
     }

@@ -1,0 +1,2 @@
+- Hotfix for natural attacks
+- Small fixed to Aura propagation
