@@ -4275,7 +4275,7 @@ export class ActorPF extends Actor {
         if (usedItem.hasAction)
         {
             let attackResult = await usedItem.useAttack({ ev: ev, skipDialog: skipDialog, rollModeOverride:rollModeOverride }, actor, true);
-            if(!attackResult.wasRolled) return
+            if(!attackResult.wasRolled && !getProperty(this.data, "data.actionType") === "special") return
             let roll = await attackResult.roll;
             await item.addSpellUses(-1+(-1*roll?.rollData?.useAmount || 0));
             return ;
@@ -7537,6 +7537,11 @@ export class ActorPF extends Actor {
             if (!actor.testUserPermission(game.user, "OWNER")) continue;
             const fx = [...actor.effects];
 
+            let brokenEffects = new Set();
+            for (let effect of fx) {
+                brokenEffects.add(effect.id)
+            }
+
             // Create and delete buff ActiveEffects
             let toCreate = [];
             let toDelete = [];
@@ -7544,7 +7549,13 @@ export class ActorPF extends Actor {
                 const existing = fx.find((f) => f.data.origin === id);
                 if (obj.active && !existing) toCreate.push(obj.item.getRawEffectData());
                 else if (!obj.active && existing) toDelete.push(existing.id);
+                if (existing) {
+                    brokenEffects.delete(existing.id)
+                }
             }
+
+            toDelete.push(...brokenEffects)
+
 
             // Create and delete condition ActiveEffects
             for (let k of Object.keys(CONFIG.D35E.conditions)) {

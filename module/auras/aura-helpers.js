@@ -3,6 +3,8 @@ import { AuraMeasureDistance } from "./aura-measure-distance.js";
 
 const AuraDebug = false;
 
+export const AURAS = {};
+
 function getAuraShape(source, radius) {
     const gs = canvas.dimensions.size
     const gd = gs / canvas.dimensions.distance
@@ -29,6 +31,11 @@ function isCorrectAlliance(source, target, auraTarget) {
 }
 
 export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
+    if (AURAS.runningUpdate) {
+        AURAS.queued = true;
+        return;
+    }
+    if (!AURAS.runningUpdate) AURAS.runningUpdate = true;
     if (!game.user.isGM) return;
     if (sceneID !== canvas.id) return ui.notifications.warn("Collate Auras called on a non viewed scene, auras will be updated when you return to that scene")
 
@@ -45,10 +52,13 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
     // This gets
 
     for (const source of canvas.tokens.placeables) {
-        if (!actorsAurasAlreadyPresent.has(source.id))
+        if (!actorsAurasAlreadyPresent.has(source.id)) {
             actorsAurasAlreadyPresent.set(source.id, new Set())
+            actorsAurasAlreadyPresentIds.set(source.id, new Set())
+        }
         for (let aura of getActor(source).auras) {
             actorsAurasAlreadyPresent.get(source.id).add(aura.data.data.sourceAuraId)
+            actorsAurasAlreadyPresentIds.get(source.id).add(aura.id)
         }
         actorModifiedAuras.set(source.id, new Set())
     }
@@ -72,9 +82,10 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
                 let sourceName = source.actor.name;
                 if (aura.data.data.sourceTokenId) {
                     if (target.id === source.id) continue;
+                    if (target.actor.id === source.actor.id) continue;
                     if (target.id === aura.data.data.sourceTokenId) {
                         let inAura = await AuraMeasureDistance.inAura(source, target, true, 0,  aura.data.data.range || 5, getAuraShape(target, aura.data.data.range || 5));
-                        if (!inAura || !isCorrectAlliance(source, target, aura.data.data.auraTarget)) {
+                        if (!inAura || !isCorrectAlliance(source, target, aura.data.data.auraTarget) || !actorsAurasAlreadyPresentIds.get(target.id).has(aura.data.data.sourceAuraId)) {
                             if (!actorsAurasToRemove.has(source.id))
                                 actorsAurasToRemove.set(source.id, [])
                             actorsAurasToRemove.get(source.id).push(aura._id)
@@ -83,6 +94,7 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
                     }
                 } else {
                     if (target.id === source.id) continue;
+                    if (target.actor.id === source.actor.id) continue;
                     let inAura = await AuraMeasureDistance.inAura(target, source, true, 0, aura.data.data.range || 5, getAuraShape(source, aura.data.data.range || 5));
                     if (inAura) {
                         console.log("D35E | Auras | In Aura", source, target)
@@ -110,5 +122,13 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
     if (AuraDebug) {
         perfEnd = performance.now()
         console.log(`Active Auras Main Function took ${perfEnd - perfStart} ms, FPS:${Math.round(canvas.app.ticker.FPS)}`)
+    }
+
+    AURAS.runningUpdate = false;
+    // We have a queued run from other source, that did go pas debounce
+    if (AURAS.queued) {
+        ui.notifications.warn("Running queued update")
+        AURAS.queued = false;
+        CollateAuras(sceneID, checkAuras, removeAuras, source);
     }
 }

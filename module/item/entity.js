@@ -1639,7 +1639,7 @@ export class ItemPF extends Item {
                 let baseCrit = this.data.data.ability.critRange || 20;
                 baseCrit = 21 - 2 * (21 - baseCrit)
                 rollData.item.ability.critRange = baseCrit;
-                this.data.data.ability.critRange = baseCrit;
+                //this.data.data.ability.critRange = baseCrit;
             }
 
             if (rollData.featDamageBonus) {
@@ -2431,9 +2431,10 @@ export class ItemPF extends Item {
 
         // Determine critical multiplier
         rollData.critMult = 1;
+        rollData.ablMult = 1;
         if (critical) rollData.critMult = this.data.data.ability.critMult;
         // Determine ability multiplier
-        if (rollData.damageAbilityMultiplier != null) rollData.ablMult = rollData.damageAbilityMultiplier;
+        if (rollData.damageAbilityMultiplier !== undefined && rollData.damageAbilityMultiplier !== null) rollData.ablMult = rollData.damageAbilityMultiplier;
         if (primaryAttack === false && rollData.ablMult > 0) rollData.ablMult = 0.5;
         let naturalAttackCount = (this.actor?.items || []).filter(o => o.type === "attack" && o.data.data.attackType === "natural").length;
         if (rollData.item.attackType === "natural" && primaryAttack && naturalAttackCount === 1) rollData.ablMult = 1.5;
@@ -2457,7 +2458,7 @@ export class ItemPF extends Item {
         // Determine ability score modifier
         let abl = rollData.item.ability.damage;
         if (typeof abl === "string" && abl !== "") {
-            rollData.ablDamage = Math.floor(rollData.abilities[abl].mod * rollData.ablMult);
+            rollData.ablDamage = Math.floor(rollData.abilities[abl].mod * (rollData.ablMult || 1));
             if (rollData.abilities[abl].mod < 0) rollData.ablDamage = rollData.abilities[abl].mod;
             if (rollData.ablDamage < 0) parts.push({base: "@ablDamage", extra: [], damageType: "Ability", damageTypeUid: parts[0].damageTypeUid});
             else if (rollData.critMult !== 1) parts.push({base: "@ablDamage * @critMult", extra: [], damageType: "Ability", damageTypeUid: parts[0].damageTypeUid});

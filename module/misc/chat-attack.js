@@ -51,7 +51,7 @@ export class ChatAttack {
     }
 
     get critRange() {
-        return new Roll35e(`${getProperty(this.item, "data.data.ability.critRange")}` || "20", this.rollData).roll().total;
+        return new Roll35e(`${this.rollData.item.ability.critRange || '20'}` || "20", this.rollData).roll().total;
     }
 
     /**
