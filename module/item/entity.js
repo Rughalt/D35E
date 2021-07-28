@@ -528,7 +528,7 @@ export class ItemPF extends Item {
         }
 
         //console.log("D35E Item Update", data)
-        if (data["data.convertedWeight"]) {
+        if (data["data.convertedWeight"] !== undefined && data["data.convertedWeight"] !== null ) {
             const conversion = game.settings.get("D35E", "units") === "metric" ? 2 : 1;
             data["data.weight"] = data["data.convertedWeight"] * conversion;
         }

@@ -408,10 +408,11 @@
                         </div>
 
                         <div class="form-group">
-                        <label class="checkbox skill-cs">
                             <label>{{localize "D35E.AutomaticFeatures"}}</label>
-                            <input type="checkbox" name="data.automaticFeatures" {{checked data.data.automaticFeatures}}/>
-                        </label>
+                            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                                <input type="checkbox" class="stylized auto-save" name="data.automaticFeatures" {{#if data.data.automaticFeatures}}checked{{/if}}/>
+                                <span class="checkmark"></span>
+                            </label>
                         </div>
                         <em>{{localize "D35E.MaxLevelAutomationInfo"}}</em>
 
@@ -582,23 +583,33 @@
                             <input type="text" name="data.spellcastingSpellnamePl" value="{{data.data.spellcastingSpellnamePl}}" data-dtype="String"/>
                         </div>
 
-                        <div class="form-group stacked">
-                            <label class="checkbox">
-                                <input type="checkbox" name="data.spellcastingSpontaneus" {{checked
-                                       data.data.spellcastingSpontaneus}}/> {{localize "D35E.SpellPrepSpontaneous"}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.SpellPrepSpontaneous"}}</label>
+                            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                                <input type="checkbox" class="stylized auto-save" name="data.spellcastingSpontaneus" {{#if data.data.spellcastingSpontaneus}}checked{{/if}}/>
+                                <span class="checkmark"></span>
                             </label>
                         </div>
-                        <div class="form-group stacked">
-                            <label class="checkbox">
-                                <input type="checkbox" name="data.hasSpecialSlot" {{checked
-                                    data.data.hasSpecialSlot}}/> {{localize "D35E.HasSpecialSpellSlot"}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.HasSpecialSpellSlot"}}</label>
+                            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                                <input type="checkbox" class="stylized auto-save" name="data.hasSpecialSlot" {{#if data.data.hasSpecialSlot}}checked{{/if}}/>
+                                <span class="checkmark"></span>
                             </label>
                         </div>
 
-                        <div class="form-group stacked">
-                            <label class="checkbox">
-                                <input type="checkbox" name="data.allSpellsKnown" {{checked
-                                    data.data.allSpellsKnown}}/> {{localize "D35E.KnowsAllSpells"}}
+                        <div class="form-group">
+                            <label>{{localize "D35E.KnowsAllSpells"}}</label>
+                            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                                <input type="checkbox" class="stylized auto-save" name="data.allSpellsKnown" {{#if data.data.allSpellsKnown}}checked{{/if}}/>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>{{localize "D35E.HalfCasterLevel"}}</label>
+                            <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+                                <input type="checkbox" class="stylized auto-save" name="data.halfCasterLevel" {{#if data.data.halfCasterLevel}}checked{{/if}}/>
+                                <span class="checkmark"></span>
                             </label>
                         </div>
                         <label>{{localize "D35E.SpellcastingDescription"}}</label>

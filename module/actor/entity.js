@@ -3050,6 +3050,7 @@ export class ActorPF extends Actor {
                 spellcastingAbility: cls.data.spellcastingAbility,
                 spellslotAbility: cls.data.spellslotAbility,
                 allSpellsKnown: cls.data.allSpellsKnown,
+                halfCasterLevel: cls.data.halfCasterLevel,
                 deckHandSizeFormula: cls.data.deckHandSizeFormula,
                 knownCardsSizeFormula: cls.data.knownCardsSizeFormula,
                 deckPrestigeClass: cls.data.deckPrestigeClass,
@@ -3310,7 +3311,10 @@ export class ActorPF extends Actor {
             if (spellbook.class === "_hd") {
                 spellbook.cl.total += data.attributes.hd.total;
             } else if (spellbook.class !== "" && data.classes[spellbook.class] != null) {
-                spellbook.cl.total += data.classes[spellbook.class].level;
+                if (data.classes[spellbook.class]?.halfCasterLevel)
+                    spellbook.cl.total += Math.floor(data.classes[spellbook.class].level / 2);
+                else
+                    spellbook.cl.total += data.classes[spellbook.class].level;
                 let spellcastingType = spellbook.spellcastingType;
                 if (spellcastingType !== undefined && spellcastingType !== null && spellcastingType !== "none" && spellcastingType !== "other") {
                     if (data.attributes.prestigeCl[spellcastingType]?.max !== undefined) {
@@ -6207,7 +6211,7 @@ export class ActorPF extends Actor {
 
         let linkedItems = []
         for (let obj of createData) {
-            if (obj.data.linkedItems && obj.data.linkedItems.length > 0) {
+            if (obj?.data?.linkedItems && obj.data.linkedItems.length > 0) {
                 const linkUUID = uuidv4();
 
                 for (let data of obj.data.linkedItems) {

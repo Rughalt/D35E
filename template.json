@@ -1666,6 +1666,7 @@
       "bab": "low",
       "skillsPerLevel": 0,
       "allSpellsKnown": false,
+      "halfCasterLevel": false,
       "creatureType": "humanoid",
       "savingThrows": {
         "fort": {
