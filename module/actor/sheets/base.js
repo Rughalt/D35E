@@ -991,8 +991,8 @@ export class ActorSheetPF extends ActorSheet {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.getOwnedItem(itemId);
-
-    return item.roll();
+    if (item)
+      return item.roll();
   }
 
   _setFeatUses(event) {

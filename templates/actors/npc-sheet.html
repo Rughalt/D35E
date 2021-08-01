@@ -110,7 +110,7 @@
             </li>
             <ol class="item-list race-container" style="margin: 0">
               <li class="race-container item flexrow" {{#if race}}data-item-id="{{race._id}}"{{/if}} title="{{ localize 'D35E.Race' }}">
-              <div class="race item-image rollable" style="background-image: url({{race.img}})"
+              <div class="race item-image {{#if race}}rollable{{/if}}" style="background-image: url({{race.img}})"
                    title="{{labels.race}}">
                 {{#unless race}}{{ localize 'D35E.Race' }}{{/unless}}
               </div>

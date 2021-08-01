@@ -156,7 +156,7 @@
           </li>
           <ol class="item-list race-container" style="width: 66.66%">
           <li class="flexrow item {{#unless race}}norace{{/unless}}" {{#if race}}data-item-id="{{race._id}}"{{/if}} style="width: 100%">
-            <div class="race item-image rollable" style="background-image: url({{race.img}})" title="{{labels.race}}">
+            <div class="race item-image {{#if race}}rollable{{/if}}" style="background-image: url({{race.img}})" title="{{labels.race}}">
               {{#unless race}}{{ localize 'D35E.Race' }}
               {{/unless}}
             </div>

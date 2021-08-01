@@ -345,6 +345,13 @@ Hooks.on('createActor', (actor, data, options) => {
     updateData["token.actorLink"] = true;
     if (updateData)
       actor.update(updateData)
+  } else if ( actor.data.type === 'npc') {
+    let updateData = {}
+    updateData["token.bar1"] = {attribute: "attributes.hp"};
+    updateData["token.displayName"] = 20;
+    updateData["token.displayBars"] = 40;
+    if (updateData)
+      actor.update(updateData)
   }
 });
 /* -------------------------------------------- */
