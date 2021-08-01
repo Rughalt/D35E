@@ -1122,6 +1122,7 @@
           "tokensize": "actor",
           "senses": "",
           "dr": "",
+          "incorporeal": false,
           "eres": "",
           "cres": "",
           "languages": {

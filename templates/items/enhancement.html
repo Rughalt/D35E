@@ -150,7 +150,7 @@
         <label>{{localize "D35E.WeaponProperties"}}</label>
         {{#each config.weaponEnhancementProperties as |name prop|}}
         <label class="checkbox">
-          <input type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.properties prop)}}/> {{ name }}
+          <input type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.data.properties prop)}}/> {{ name }}
         </label>
         {{/each}}
       </div>

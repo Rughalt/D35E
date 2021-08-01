@@ -872,15 +872,17 @@ D35E.weaponProperties = {
   "snd": "D35E.WeaponPropSunder",
   "thr": "D35E.WeaponPropThrown",
   "trp": "D35E.WeaponPropTrip",
+  "inc": "D35E.Incorporeal",
 };
 
 D35E.weaponEnhancementProperties = {
-  "thr": "D35E.WeaponEnhPropThrown",
-  "kee": "D35E.WeaponEnhPropKeen",
-  "dis": "D35E.WeaponEnhPropDistance",
-  "mnk": "D35E.WeaponEnhPropKi",
-  "spd": "D35E.WeaponEnhPropSpeed",
-  "def": "D35E.WeaponEnhPropDefending",
+  "thr": "D35E.WeaponPropThrown",
+  "kee": "D35E.WeaponPropKeen",
+  "dis": "D35E.WeaponPropDistance",
+  "mnk": "D35E.WeaponPropKi",
+  "spd": "D35E.WeaponPropSpeed",
+  "def": "D35E.WeaponPropDefending",
+  "inc": "D35E.Incorporeal",
 };
 
 // Spell Components

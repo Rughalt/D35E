@@ -18,7 +18,7 @@
                     <div class="flexrow">
                         {{#if atk.hasAttack}}
                         <div class="dice-roll damage-roll" style="{{#if atk.hasDamage}}flex: 0 50px{{/if}}">
-                            <div class="dice-flavor">{{localize "D35E.Attack"}} {{#if ../item.data.ability.vsTouchAc}}<i class="fas fa-hand-paper"></i>{{/if}}</div>
+                            <div class="dice-flavor">{{localize "D35E.Attack"}} {{#if ../item.data.ability.vsTouchAc}}<i class="fas fa-hand-paper"></i>{{/if}}{{#if ../incorporeal}}<i class="fas fa-ghost"></i>{{/if}}</div>
                             <div class="dice-result">
                                 <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
                                     {{atk.attack.total}}</h4>
@@ -100,7 +100,7 @@
                 <div class="flexrow toggle-header">
                 <div class="flexrow">
                     <div class="dice-roll damage-roll" style="flex: 0 50px">
-                        <div class="dice-flavor">{{localize "D35E.CritS"}} {{#if ../item.data.ability.vsTouchAc}} <i class="fas fa-hand"></i>{{/if}}</div>
+                        <div class="dice-flavor">{{localize "D35E.CritS"}} {{#if ../item.data.ability.vsTouchAc}} <i class="fas fa-hand"></i>{{/if}} {{#if ../incorporeal}}<i class="fas fa-ghost"></i>{{/if}}</div>
                         <div class="dice-result">
                             <h4 class="dice-total{{#if atk.critConfirm.isCrit}} success{{/if}}{{#if atk.critConfirm.isFumble}} failure{{/if}}">
                                 {{atk.critConfirm.total}}</h4>

@@ -336,6 +336,7 @@ export class DamageTypes {
         let energyDamageAfterEr = 0
         let energyDamageBeforeEr = 0
         let energyDamage = []
+
         damage.forEach(d => {
             if (d.damageTypeUid) {
                 let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
@@ -371,15 +372,31 @@ export class DamageTypes {
                     } else if (damageAfterEr === d.roll.total) {
                         value = game.i18n.localize("D35E.NoER")
                     }
-
                     energyDamage.push({nonLethal: hasRegeneration && !erValue?.lethal,name:_damage.data.name,uid:_damage.data.data.uniqueId,before:d.roll.total,after:damageAfterEr,value:value || 0,lower:damageAfterEr<d.roll.total,higher:damageAfterEr>d.roll.total,equal:d.roll.total===damageAfterEr});
                     energyDamageAfterEr += damageAfterEr;
                     energyDamageBeforeEr += d.roll.total;
+
+                    if (d.damageTypeUid === "energy-positive" || d.damageTypeUid === "energy-negative" || d.damageTypeUid === "energy-force") {
+                        incorporeal = true; //These energy damages always are treated as incorporeal
+                    }
                 }
             }
         })
+
+
+
         let beforeDamage = damageBeforeDr + energyDamageBeforeEr;
         let afterDamage = energyDamageAfterEr + damageAfterDr;
+        let incorporealMiss = false;
+        if (actor.data.data.traits.incorporeal && !incorporeal) {
+            if (Math.random() >= 0.5 || enh < 1){
+                afterDamage = 0;
+                energyDamageAfterEr = 0;
+                damageAfterDr = 0;
+                nonLethalDamage = 0;
+                incorporealMiss = true;
+            }
+        }
         return {
             beforeDamage: beforeDamage,
             damage: afterDamage,
@@ -395,6 +412,7 @@ export class DamageTypes {
             higher:afterDamage>beforeDamage,
             equal:afterDamage===beforeDamage,
             appliedDR: appliedDr,
-            energyDamage: energyDamage};
+            energyDamage: energyDamage,
+            incorporealMiss: incorporealMiss};
     }
 }

@@ -4362,13 +4362,16 @@ export class ActorPF extends Actor {
         }
         mergeObject(attackData.data, duplicate(game.data.system.template.Item.attack));
         attackData = flattenObject(attackData);
-
+        let isIncorporeal = false;
 
         // Add things from Enhancements
         if (identified) {
             _enhancements.forEach(i => {
                 if (i.data.properties !== null && i.data.properties.kee) {
                     isKeen = true;
+                }
+                if (i.data.properties !== null && i.data.properties.inc) {
+                    isIncorporeal = true;
                 }
                 if (i.data.properties !== null && i.data.properties.spd) {
                     isSpeed = true;
@@ -4377,6 +4380,19 @@ export class ActorPF extends Actor {
                     isDistance = true;
                 }
             });
+
+            if (item.data.data.properties !== null && item.data.data.properties.kee) {
+                isKeen = true;
+            }
+            if (item.data.data.properties !== null && item.data.data.properties.inc) {
+                isIncorporeal = true;
+            }
+            if (item.data.data.properties !== null && item.data.data.properties.spd) {
+                isSpeed = true;
+            }
+            if (item.data.data.properties !== null && item.data.data.properties.dis) {
+                isDistance = true;
+            }
         }
         let baseCrit = item.data.data.weaponData.critRange || 20;
         if (isKeen) {
@@ -4394,6 +4410,7 @@ export class ActorPF extends Actor {
         attackData["data.activation.type"] = "attack";
         attackData["data.duration.units"] = "inst";
         attackData["data.finesseable"] = item.data.data.properties.fin || false;
+        attackData["data.incorporeal"] = isIncorporeal || false;
         attackData["data.threatRangeExtended"] = isKeen;
         attackData["data.baseWeaponType"] = item.data.data.unidentified?.name ? item.data.data.unidentified.name : item.name;
         attackData["data.originalWeaponCreated"] = true;

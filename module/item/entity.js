@@ -1932,7 +1932,8 @@ export class ItemPF extends Item {
                     useAmmoName: useAmmoName,
                     dc: dc,
                     nonLethal: nonLethal,
-                    useAmmoId: useAmmoId
+                    useAmmoId: useAmmoId,
+                    incorporeal: this.data.data.incorporeal || this.actor.data.data.traits.incorporeal
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
