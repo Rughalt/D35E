@@ -5249,7 +5249,7 @@ export class ActorPF extends Actor {
         // Add contextual notes
         let notes = [];
         const rollData = duplicate(this.getRollData());
-        const noteObjects = this.getContextNotes(`"misc.cmb"`);
+        const noteObjects = this.getContextNotes(`misc.cmb`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
             if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
