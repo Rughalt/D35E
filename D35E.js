@@ -98,12 +98,11 @@ Hooks.once("init", async function() {
   CONFIG.ChatMessage.entityClass = ChatMessagePF;
 
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true });
-  Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true });
-  Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("D35E", ActorSheetPFNPCLoot, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false });
-  Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true });
+  Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFCharacter") });
+  Actors.registerSheet("D35E", ActorSheetPFNPC, { types: ["npc"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFNPC")  });
+  Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false, label: game.i18n.localize("D35E.ActorSheetPFNPCLite")  });
+  Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false, label: game.i18n.localize("D35E.ActorSheetPFNPCMonster")  });
+  Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFNPCTrap")  });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "aura", "attack", "race", "enhancement","damage-type","material","full-attack","card"], makeDefault: true });
 

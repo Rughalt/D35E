@@ -5,9 +5,10 @@
 
   "D35E.ActorSheetPFCharacter": "Character",
   "D35E.ActorSheetPFNPC": "NPC",
-  "D35E.ActorSheetPFNPCLite": "NPC (Lite)",
-  "D35E.ActorSheetPFNPCMonster": "NPC (Statblock)",
+  "D35E.ActorSheetPFNPCLite": "Simple",
+  "D35E.ActorSheetPFNPCMonster": "Statblock",
   "D35E.ActorSheetPFNPCLoot": "Loot",
+  "D35E.ActorSheetPFNPCTrap": "Trap",
 
   "SETTINGS.D35EDiagN": "Diagonal Movement Rule",
   "SETTINGS.D35EDiagL": "Configure which diagonal movement rule should be used for games within this system.",

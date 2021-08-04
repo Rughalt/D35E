@@ -2927,7 +2927,9 @@ export class ActorPF extends Actor {
         const data1 = data.data;
         let energyDrainPenalty = Math.abs(data1.attributes.energyDrain);
         for (let [sklKey, skl] of Object.entries(data1.skills)) {
-            if (skl == null) continue;
+            if (skl == null)
+                delete data1.skills[sklKey]
+                continue;
             if (skl.ability === undefined) continue; // This exists only in broken skills
 
             let acpPenalty = (skl.acp ? Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]) : 0);
@@ -2946,7 +2948,9 @@ export class ActorPF extends Actor {
             linkData(data, updateData, `data.skills.${sklKey}.mod`, sklValue);
             // Parse sub-skills
             for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
-                if (subSkl == null) continue;
+                if (subSkl == null)
+                    delete data1.skills[sklKey].subSkills[subSklKey]
+                    continue;
                 if (getProperty(data1, `skills.${sklKey}.subSkills.${subSklKey}`) == null) continue;
 
                 let scs = subSkl.cs;
@@ -2956,7 +2960,7 @@ export class ActorPF extends Actor {
                 acpPenalty = (subSkl.acp ? data1.attributes.acp.total : 0);
                 ablMod = 0
                 if (subSkl.ability !== "")
-                    ablMod = data1.abilities[subSkl.ability].mod;
+                    ablMod = subSkl.ability ? data1.abilities[subSkl.ability].mod : 0;
                 specificSkillBonus = subSkl.changeBonus || 0;
                 sklValue = subSkl.rank + (scs && subSkl.rank > 0 ? skl.rank : (skl.rank / 2)) + ablMod + specificSkillBonus - acpPenalty - energyDrainPenalty;
                 linkData(data, updateData, `data.skills.${sklKey}.subSkills.${subSklKey}.mod`, sklValue);

@@ -241,6 +241,8 @@ export class ActorSheetPF extends ActorSheet {
     const skillRanks = { allowed: 0, used: 0, bgAllowed: 0, bgUsed: 0, sentToBG: 0 };
     // Count used skill ranks
     for (let skl of Object.values(this.actor.data.data.skills)) {
+      if (skl === null)
+        continue
       if (skl.subSkills != null) {
         for (let subSkl of Object.values(skl.subSkills)) {
           if (data.useBGSkills && skl.background) {
