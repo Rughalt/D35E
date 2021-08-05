@@ -2,7 +2,7 @@
   "name": "D35E",
   "title": "3.5e SRD",
   "description": "Implementation of 3.5 edition System Reference Document for Foundry VTT. Aiming to provide 100% SRD coverage.",
-  "version": "0.95.5",
+  "version": "0.95.6",
   "author": "Rughalt",
   "templateVersion": 2,
   "scripts": [],

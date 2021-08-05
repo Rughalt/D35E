@@ -2927,9 +2927,10 @@ export class ActorPF extends Actor {
         const data1 = data.data;
         let energyDrainPenalty = Math.abs(data1.attributes.energyDrain);
         for (let [sklKey, skl] of Object.entries(data1.skills)) {
-            if (skl == null)
+            if (skl === null) {
                 delete data1.skills[sklKey]
                 continue;
+            }
             if (skl.ability === undefined) continue; // This exists only in broken skills
 
             let acpPenalty = (skl.acp ? Math.max(updateData["data.attributes.acp.gear"], updateData["data.attributes.acp.encumbrance"]) : 0);
@@ -2948,9 +2949,10 @@ export class ActorPF extends Actor {
             linkData(data, updateData, `data.skills.${sklKey}.mod`, sklValue);
             // Parse sub-skills
             for (let [subSklKey, subSkl] of Object.entries(skl.subSkills || {})) {
-                if (subSkl == null)
+                if (subSkl == null) {
                     delete data1.skills[sklKey].subSkills[subSklKey]
                     continue;
+                }
                 if (getProperty(data1, `skills.${sklKey}.subSkills.${subSklKey}`) == null) continue;
 
                 let scs = subSkl.cs;
