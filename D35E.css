@@ -2352,6 +2352,9 @@
 }
 .D35E.sheet.item .sheet-header-profile img.profile {
   border: 2px solid #000;
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
 }
 .D35E.sheet.item .sheet-header {
   flex: 1;
