@@ -57,8 +57,10 @@
     </div>
 
     {{#each features as |section sid|}}
-    {{#if section.isAll}}
-    <div><strong>{{ localize 'D35E.FeatPlural' }}:</strong>
+    {{#unless section.isAll}}
+    {{#unless section.isClass}}
+    {{#if section.items}}
+    <div><strong>{{section.label}}:</strong>
       {{#each section.items as |item iid|}}
       <span class="item" data-item-id="{{item._id}}">{{item.name~}}<div class="item-detail item-actions" style="display: inline; margin-left: 2px"><div class="item-attack"  style="display: inherit">{{#if item.hasAction}}<a class="item-control item-attack"><img class="icon rollable" style="vertical-align: middle" src="systems/D35E/icons/actions/gladius.svg"></a>{{/if}}</div></div>{{#if item.isCharged}}(<input class="monsterblock-item-uses" type="text" value="{{item.data.uses.value}}" data-dtype="Number" style="width: 30px; height: 20px"/><span class="sep"> {{ localize 'D35E._Of' }} </span>{{item.data.uses.max}}){{/if}}</span>{{#unless @last}}, {{/unless}}
       {{else}}
@@ -66,6 +68,8 @@
       {{/each}}
     </div>
     {{/if}}
+    {{/unless}}
+    {{/unless}}
     {{/each}}
   </div>
   

@@ -1336,7 +1336,7 @@
 
   "D35E.ChargesToDeduct": "Charges per use",
   "D35E.Image": "Image",
-  "D35E.RaceSuptypePlural": "Suptypes",
+  "D35E.RaceSubtypePlural": "Suptypes",
   "D35E.Value": "Value",
   "D35E.VsTouchAc": "Against Touch AC",
   "D35E.SpellAttackCountExample": "ex. floor(@cl/2)",
