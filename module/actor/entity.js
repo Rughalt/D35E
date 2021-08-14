@@ -32,6 +32,33 @@ export class ActorPF extends Actor {
 
     static chatListeners(html) {
         html.on('click', 'button[data-action]', this._onChatCardButtonAction.bind(this));
+        html.on('mouseenter', 'img[data-target]', this._onTargetHover.bind(this));
+        html.on('mouseleave', 'img[data-target]', this._onTargetLeave.bind(this));
+        html.on('click', 'img[data-target]', this._onTargetClick.bind(this));
+    }
+
+    static async _onTargetHover(event) {
+        event.preventDefault();
+        // Extract card data
+        const image = event.currentTarget;
+        const tokenId = image.dataset.target;
+        canvas.tokens.get(tokenId)._onHoverIn()
+    }
+
+    static async _onTargetClick(event) {
+        event.preventDefault();
+        // Extract card data
+        const image = event.currentTarget;
+        const tokenId = image.dataset.target;
+        canvas.tokens.get(tokenId).setTarget()
+    }
+
+    static async _onTargetLeave(event) {
+        event.preventDefault();
+        // Extract card data
+        const image = event.currentTarget;
+        const tokenId = image.dataset.target;
+        canvas.tokens.get(tokenId)._onHoverOut()
     }
 
     static async _onChatCardButtonAction(event) {
@@ -3919,6 +3946,11 @@ export class ActorPF extends Actor {
         // Send resource updates to item
         let updatedResources = [];
         let updateClasses = false;
+
+
+        for (let i of this.items.values()) {
+            this.getItemResourcesUpdate(i, data)
+        }
 
         for (let key of Object.keys(data)) {
             if (key.match(/^data\.resources\.([a-zA-Z0-9]+)/)) {

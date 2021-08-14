@@ -1287,6 +1287,10 @@ export class ItemPF extends Item {
                 rollModifiers = [],
                 extraText = "";
 
+            let selectedTargets = [];
+            let selectedTargetIds = '';
+
+
             let damageModifiers = {
                 maximize: false,
                 multiplier: 1,
@@ -1474,6 +1478,12 @@ export class ItemPF extends Item {
                     else if (twoWeaponMode === 'two-handed') {
                         rollData.weaponHands = 2
                     }
+                }
+
+                if (form.find('[name="target-ids"]').val() !== undefined) {
+                    selectedTargetIds = form.find('[name="target-ids"]').val()
+                    let targetIdSet = new Set(selectedTargetIds.split(";"));
+                    selectedTargets = canvas.tokens.objects.children.filter(t => targetIdSet.has(t.data._id))
                 }
                 $(form).find('[data-type="optional"]').each(function() {
                     if ($(this).prop("checked")) {
@@ -1933,7 +1943,10 @@ export class ItemPF extends Item {
                     dc: dc,
                     nonLethal: nonLethal,
                     useAmmoId: useAmmoId,
-                    incorporeal: this.data.data.incorporeal || this.actor.data.data.traits.incorporeal
+                    incorporeal: this.data.data.incorporeal || this.actor.data.data.traits.incorporeal,
+                    targets: selectedTargets,
+                    targetIds: selectedTargetIds,
+                    hasTargets: selectedTargets.length
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
@@ -1972,6 +1985,8 @@ export class ItemPF extends Item {
             data: rollData,
             id: this.id,
             item: this.data.data,
+            targets: Array.from(game.user.targets) || [],
+            hasTargets: (game.user.targets || new Set()).size,
             rollMode: rollModeOverride ? rollModeOverride : (game.settings.get("D35E", `rollConfig`).rollConfig[actor.type].attack  || game.settings.get("core", "rollMode")),
             rollModes: CONFIG.Dice.rollModes,
             twoWeaponAttackTypes: D35E.twoWeaponAttackType,

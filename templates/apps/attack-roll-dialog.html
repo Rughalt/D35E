@@ -1,4 +1,16 @@
 <form class="attack-form">
+
+    {{#if hasTargets}}
+        <div class="form-group">
+            <label>{{localize "D35E.Targets"}}</label>
+            <div>
+            {{#each targets as |target|}}
+                <img src="{{target.data.img}}" width="36" height="36">
+            {{/each}}</div>
+
+            <input type="hidden" name="target-ids" value="{{#each targets as |target|}}{{target.data._id}};{{/each}}"/>
+        </div>
+    {{/if}}
     {{#if hasAttack}}
     <div class="form-group">
         <label>{{localize "D35E.AttackRollBonus"}} <i class="fas fa-history tooltip" style="color: lightgray;"><span class="tooltipcontent">{{localize "D35E.ValuePersisted"}}</span></i></label>
