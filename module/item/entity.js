@@ -508,6 +508,7 @@ export class ItemPF extends Item {
         let deactivateBuff = this.data.data.active && (data["data.active"] === undefined || !data["data.active"]);
         // Update description
         if (this.type === "spell") await this._updateSpellDescription(data, srcData);
+        if (this.type === "card") await this._updateCardDescription(data, srcData);
 
         // Set weapon subtype
         if (data["data.weaponType"] != null && data["data.weaponType"] !== getProperty(this.data, "data.weaponType")) {
@@ -2975,6 +2976,12 @@ export class ItemPF extends Item {
         linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/D35E/templates/internal/spell-description.html", data));
     }
 
+    async _updateCardDescription(updateData, srcData) {
+        const data = this._generateSpellDescription(srcData);
+
+        linkData(srcData, updateData, "data.description.value", await renderTemplate("systems/D35E/templates/internal/spell-description.html", data));
+    }
+
     _generateSpellDescription(srcData) {
         const reSplit = CONFIG.D35E.re.traitSeparator;
 
@@ -3031,7 +3038,7 @@ export class ItemPF extends Item {
 
         // Set components label
         let components = [];
-        for (let [key, value] of Object.entries(getProperty(srcData, "data.components"))) {
+        for (let [key, value] of Object.entries(getProperty(srcData, "data.components") || {})) {
             if (key === "value" && value.length > 0) components.push(...value.split(reSplit));
             else if (key === "verbal" && value) components.push("V");
             else if (key === "somatic" && value) components.push("S");

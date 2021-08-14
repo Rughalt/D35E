@@ -313,6 +313,22 @@ export class ItemSheetPF extends ItemSheet {
             // Enrich description
             data.description = TextEditor.enrichHTML(this.item.data.data.description.value);
         }
+        if (this.item.data.type === "card") {
+            let spellbook = null;
+            if (this.actor != null) {
+                spellbook = getProperty(this.actor.data, `data.attributes.cards.decks.${this.item.data.data.deck}`);
+            }
+
+            data.isPreparedSpell = spellbook != null ? !spellbook.spontaneous : false;
+            data.isAtWill = this.item.data.data.atWill;
+            data.spellbooks = {};
+            if (this.item.actor) {
+                data.spellbooks = duplicate(this.item.actor.data.data.attributes.cards.decks);
+            }
+
+            // Enrich description
+            data.description = TextEditor.enrichHTML(this.item.data.data.description.value);
+        }
         if (this.item.data.type === "race") {
             data.children = {
                 spelllikes: [],

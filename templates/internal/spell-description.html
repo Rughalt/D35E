@@ -1,11 +1,13 @@
 <div class="spell-description">
   <p>
+    {{#if label.school}}
     {{#if psionicPower}}
       <strong>{{localize "D35E.PsionicDiscipline"}}:</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
     {{else}}
       <strong>{{localize "D35E.SpellSchoolDesc"}}:</strong>&nbsp;{{label.school}}{{#if label.subschool}}&nbsp;({{label.subschool}}){{/if}}{{#if label.types}}&nbsp;[{{label.types}}]{{/if}};
     {{/if}}
     <br>
+    {{/if}}
     {{#if learnedAt.class}}<strong>{{localize "D35E.Level"}}:</strong>&nbsp;{{learnedAt.class}};{{/if}}
     {{#if learnedAt.domain}}<strong>{{localize "D35E.Domain"}}:</strong>&nbsp;{{learnedAt.domain}};{{/if}}
     {{#if learnedAt.subDomain}}<strong>{{localize "D35E.SubDomain"}}:</strong>&nbsp;{{learnedAt.subDomain}};{{/if}}
@@ -14,10 +16,12 @@
     <br>
     {{#if label.components}}<strong>{{localize "D35E.ComponentPl"}}:</strong>&nbsp;{{label.components}}<br>{{/if}}
     {{#if label.display}}<strong>{{localize "D35E.PowerDisplay"}}:</strong>&nbsp;{{label.display}}<br>{{/if}}
+    {{#if label.castingTime}}
     {{#if psionicPower}}
       {{#if label.castingTime}}<strong>{{localize "D35E.ManifestingTime"}}:</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
     {{else}}
       {{#if label.castingTime}}<strong>{{localize "D35E.CastingTime"}}:</strong>&nbsp;{{label.castingTime}}<br>{{/if}}
+    {{/if}}
     {{/if}}
     {{#if label.range}}<strong>{{localize "D35E.Range"}}:</strong>&nbsp;{{label.range}}<br>{{/if}}
     {{#if label.area}}<strong>{{localize "D35E.Area"}}:</strong>&nbsp;{{label.area}}<br>{{/if}}
