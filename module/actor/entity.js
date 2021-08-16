@@ -3018,7 +3018,7 @@ export class ActorPF extends Actor {
             skill.subSkills = skill.subSkills || {};
             skill.namedSubSkills = {}
             for (let subSkillId of Object.keys(skill.subSkills)) {
-                if (skill.subSkills[subSkillId] == null) {
+                if (skill.subSkills[subSkillId] == null || skill.subSkills[subSkillId].name === undefined) {
                     delete skill.subSkills[subSkillId];
                 }
                 else {

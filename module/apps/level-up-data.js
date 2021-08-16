@@ -140,11 +140,11 @@ export class LevelUpDataDialog extends FormApplication {
                 classHP.set(_class._id,classHP.get(_class._id) + (lud.hp || 0))
                 Object.keys(lud.skills).forEach(s => {
 
-                    if (this.object.data.data.skills[s])
+                    if (lud.skills[s])
                         updateData[`data.skills.${s}.rank`] = (lud.skills[s].rank || 0) * (lud.skills[s].cls ? 1 : 0.5) + (updateData[`data.skills.${s}.rank`] || 0);
                     if (lud.skills[s].subskills) {
                         Object.keys(lud.skills[s].subskills).forEach(sb => {
-                            if (this.object.data.data.skills[s].subskills && this.object.data.data.skills[s].subskills[sb])
+                            if (lud.skills[s].subskills && lud.skills[s].subskills[sb])
                                 updateData[`data.skills.${s}.subSkills.${sb}.rank`] = lud.skills[s].subskills[sb].rank * (lud.skills[s].subskills[sb].cls ? 1 : 0.5) + (updateData[`data.skills.${s}.subSkills.${sb}.rank`] || 0);
                         })
                     }
