@@ -1988,7 +1988,7 @@ export class ItemPF extends Item {
             item: this.data.data,
             targets: Array.from(game.user.targets) || [],
             hasTargets: (game.user.targets || new Set()).size,
-            rollMode: rollModeOverride ? rollModeOverride : (game.settings.get("D35E", `rollConfig`).rollConfig[actor.type].attack  || game.settings.get("core", "rollMode")),
+            rollMode: rollModeOverride ? rollModeOverride : (game.settings.get("D35E", `rollConfig`).rollConfig[actor.type]?.attack  || game.settings.get("core", "rollMode")),
             rollModes: CONFIG.Dice.rollModes,
             twoWeaponAttackTypes: D35E.twoWeaponAttackType,
             attackType: attackType ? attackType : "primary",
