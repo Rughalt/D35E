@@ -342,6 +342,18 @@ D35E.sizeStealthMods = {
   "col": -16
 };
 
+D35E.sizeAdvancementChanges = {
+  "fine": {str: 0, dex: 0, con: 0, nac: 0},
+  "dim": {str: 0, dex: -2, con: 0, nac: 0},
+  "tiny": {str: 2, dex: -2, con: 0, nac: 0},
+  "sm": {str: 4, dex: -2, con: 0, nac: 0},
+  "med": {str: 4, dex: -2, con: 2, nac: 0},
+  "lg": {str: 8, dex: -2, con: 4, nac: 2},
+  "huge": {str: 8, dex: -2, con: 4, nac: 3},
+  "grg": {str: 8, dex: 0, con: 4, nac: 4},
+  "col": {str: 8, dex: 0, con: 4, nac: 5},
+};
+
 D35E.abilityTypes = {
   "nat": "D35E.Natural",
   "su": "D35E.Supernatural",
@@ -1122,6 +1134,7 @@ D35E.buffTargets = {
     "regen": "D35E.Regeneration",
     "fastHeal": "D35E.FastHealing",
     "spellResistance": "D35E.SpellResistance",
+    "powerResistance": "D35E.PowerResistance",
     "cr": "D35E.CR",
     "fortification": "D35E.Fortification",
     "asf": "D35E.ArcaneSpellFailure",
@@ -1310,6 +1323,8 @@ D35E.combatChangeType = {
   'grappleOptional': 'D35E.CMBOptional',
   'skill': 'D35E.Skills',
   'skillOptional': 'D35E.SkillsOptional',
+  'resistance': 'D35E.SpellPowerResistance',
+  'resistanceOptional': 'D35E.SpellPowerResistanceOptional',
 };
 
 CONFIG.Combat.initiative.decimals = 2;

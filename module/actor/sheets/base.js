@@ -15,6 +15,7 @@ import {CompendiumDirectoryPF} from "../../sidebar/compendium.js";
 import {DamageTypes} from "../../damage-types.js";
 import {Roll35e} from "../../roll.js"
 import ActorSensesConfig from "../../apps/senses-config.js";
+import {EntrySelector} from "../../apps/entry-selector.js";
 
 /**
  * Extend the basic ActorSheet class to do all the PF things!
@@ -324,6 +325,8 @@ export class ActorSheetPF extends ActorSheet {
         }
        data.currencyGroups[c[4]].push(c);
     })
+
+    data.psionicsAreDifferent = game.settings.get("D35E", "psionicsAreDifferent")
 
     // Return data to the sheet
     return data
@@ -792,6 +795,10 @@ export class ActorSheetPF extends ActorSheet {
     html.find(".item-search-input").off("keyup").keyup(this._filterData.bind(this))
     html.find(".item-search-input").on("change", event => event.stopPropagation());
     html.find(".item-add-close-box").click(ev => { this._closeInlineData(ev); });
+
+
+    html.find(".entry-selector").click(this._onEntrySelector.bind(this));
+    html.find(".advance-monster").click(this._onMonsterAdvance.bind(this));
 
     html.on('click', '.inventory-toggleable-header', (event) => {
       event.preventDefault();
@@ -2682,5 +2689,76 @@ export class ActorSheetPF extends ActorSheet {
     return tags;
   }
 
+  _onEntrySelector(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+    const options = {
+      name: a.getAttribute("for"),
+      isObjectProperty: true,
+      title: a.innerText,
+      fields: a.dataset.fields,
+      objectFields: a.dataset.objectfields,
+      dtypes: a.dataset.dtypes,
+    };
+    new EntrySelector(this.actor, options).render(true);
+  }
 
+  async _onMonsterAdvance(event) {
+    event.preventDefault();
+
+    let advancement = this.actor.data.data.details.advancement.hd;
+    let advancementHdMinimum = 0;
+    let advancementHdMaximum = 0;
+    advancement.forEach(hd => {
+      if (hd.upper > advancementHdMaximum) advancementHdMaximum = hd.upper;
+      if (hd.lower < advancementHdMinimum || advancementHdMinimum === 0) advancementHdMinimum = hd.lower;
+    })
+
+
+    const _roll = async function (form) {
+      let actorUpdate = {}
+      if (form) {
+        let newHd = form.find('[name="advancement-hd"]').val();
+        await this.actor.advanceHd(newHd)
+      }
+    }
+    let template = "systems/D35E/templates/apps/advance-monster.html";
+    console.log(JSON.stringify(advancement))
+    let dialogData = {
+      advancement: JSON.stringify(advancement),
+      hdData: this.actor.racialHD.data.data,
+      naturalAC: this.actor.data.data.attributes.naturalAC,
+      size: this.actor.data.data.traits.size,
+      actorSizes: CONFIG.D35E.actorSizes,
+      actorSizesJSON: JSON.stringify(CONFIG.D35E.actorSizes),
+      sizeAdvancementChangesJSON: JSON.stringify(CONFIG.D35E.sizeAdvancementChanges),
+      cr: parseInt(this.actor.data.data.details.cr),
+      maximum: advancementHdMaximum,
+      minimum: Math.max(advancementHdMinimum, this.actor.racialHD.data.data.levels+1)
+    };
+    const html = await renderTemplate(template, dialogData);
+    let roll;
+    const buttons = {};
+    let wasRolled = false;
+    buttons.normal = {
+      label: game.i18n.localize("D35E.AdvanceMonster"),
+      callback: html => {
+        wasRolled = true;
+        roll = _roll.call(this,html)
+      }
+    };
+    await new Promise(resolve => {
+      new Dialog({
+        title: `${game.i18n.localize("D35E.AdvanceMonsterWindow")}`,
+        content: html,
+        buttons: buttons,
+        classes: ['custom-dialog','wide'],
+        default: "normal",
+        close: html => {
+          return resolve(roll);
+        }
+      }).render(true);
+    });
+
+  }
 }

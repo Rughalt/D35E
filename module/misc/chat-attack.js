@@ -48,6 +48,8 @@ export class ChatAttack {
         this.natural20Crit = false;
         this.fumble = false;
         this.fumbleCrit = false;
+        this.spellPenetration = null;
+        this.isSpell = false;
     }
 
     get critRange() {
@@ -300,13 +302,15 @@ export class ChatAttack {
         };
     }
 
-    async addEffect({primaryAttack = true, actor = null, useAmount = 1, cl = null} = {}) {
+    async addEffect({primaryAttack = true, actor = null, useAmount = 1, cl = null, spellPenetration = null} = {}) {
         if (!this.item) return;
         this.effectNotes = this.item.rollEffect({primaryAttack: primaryAttack}, actor, this.rollData);
-        await this.addSpecial(actor, useAmount, cl);
+        this.spellPenetration = spellPenetration;
+        this.isSpell = !!cl;
+        await this.addSpecial(actor, useAmount, cl, spellPenetration);
     }
 
-    async addSpecial(actor = null, useAmount = 1, cl = null) {
+    async addSpecial(actor = null, useAmount = 1, cl = null, spellPenetration = null) {
         let _actor = this.item.actor;
         if (actor != null)
             _actor = actor

@@ -1,0 +1,69 @@
+<div class="D35E chat-card item-card" data-actor-id="{{actorId}}" data-item-id="{{item._id}}" {{#if
+     tokenId}}data-token-id="{{tokenId}}" {{/if}}>
+<header class="card-header flexrow">
+    <img src="{{img}}" title="{{name}}" width="36" height="36"/>
+    <h3>{{name}} - {{label}}</h3>
+</header>
+
+<div class="card-content">
+    <div class="chat-attack">
+
+        <div class="dice-roll attack-roll flexcol">
+            {{#if target}}
+            {{#if success}}
+            <div class="dice-flavor">{{localize "D35E.Success"}}</div>
+            {{else}}
+            <div class="dice-flavor">{{localize "D35E.Failure"}}</div>
+            {{/if}}
+            {{/if}}
+            {{#if target}}
+            <div class="flexrow">
+                <div class="flexcol">
+                    <div class="dice-result ">
+                        <h4 class="rolled-roll dice-total {{#if target}}{{#if success}} success{{/if}}{{#unless success}} failure{{/unless}}{{/if}}">
+                            {{total}}</h4>
+                    </div>
+                </div>
+                    <div class="flexcol">
+                        <div class="dice-result">
+                            <h4 class="rolled-versus dice-total">
+                                {{target}}</h4>
+                        </div>
+                    </div>
+            </div>
+            <div class="dice-result">
+                <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
+                    {{total}}</h4>
+                {{{tooltip}}}
+            </div>
+            {{else}}
+                <h2 style="text-align: center; opacity: 0.6; padding: 0; margin: 0;">No {{label}}</h2>
+            {{/if}}
+        </div>
+    </div>
+    <div class="flexcol card-buttons">
+        {{#each actions as |card|}}
+        <button class="{{#if card.isTargeted}}special-action-button{{/if}}" data-action="{{card.action}}" data-json="{{card.data}}" data-value="{{card.value}}">{{#if
+            card.hasImg}}<img src="{{card.img}}">{{/if}}{{#if card.isTargeted}}<img class="target"
+                                                                                    src="systems/D35E/icons/actions/reticule.svg">{{/if}}{{#unless
+            card.isTargeted}}<img class="target" src="systems/D35E/icons/actions/impact-point.svg">{{/unless}}{{card.label}}
+        </button>
+        {{/each}}
+    </div>
+</div>
+<footer class="card-footer">
+    {{#if hasProperties}}
+    {{#each properties as |prop|}}
+    <div class="flexcol property-group gm-sensitive">
+        <label>{{prop.header}}</label>
+        <div class="flexrow">
+            {{#each prop.value as |v|}}
+            <span class="tag">{{{v}}}</span>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</footer>
+
+</div>

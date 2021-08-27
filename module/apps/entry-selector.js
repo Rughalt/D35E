@@ -26,6 +26,10 @@ export class EntrySelector extends FormApplication {
     return this.options.isProgression || false;
   }
 
+  get objectProperty() {
+    return this.options.isObjectProperty || false;
+  }
+
   get fields() {
     return this.options.fields.split(";");
   }
@@ -38,11 +42,21 @@ export class EntrySelector extends FormApplication {
     return this.fields.length;
   }
 
+  get objectFields() {
+    return this.options.objectFields.split(";");
+  }
+
   getData() {
     const entries = this.entries.map(o => {
-      return o.map((o2, a) => {
-        return [o2, this.dtypes[a]];
-      });
+      if (this.options.isObjectProperty) {
+         return Object.entries(o).map((o2, a) => {
+           return [o2[1], this.dtypes[a]];
+         });
+      } else {
+        return o.map((o2, a) => {
+          return [o2, this.dtypes[a]];
+        });
+      }
     });
 
     return {
@@ -85,10 +99,20 @@ export class EntrySelector extends FormApplication {
         }
         this.entries.push(obj);
       } else {
-        for (let a = 0; a < this.dataCount; a++) {
-          let dataType = this.dtypes[a];
-          if (dataType === "Number") obj.push(0);
-          else obj.push("");
+        if (this.options.isObjectProperty) {
+          obj = {}
+
+          for (let field of this.objectFields) {
+            let dataType = this.dtypes[this.objectFields.indexOf(field)];
+            if (dataType === "Number") obj[field] = 0;
+            else obj[field] = "";
+          }
+        } else {
+          for (let a = 0; a < this.dataCount; a++) {
+            let dataType = this.dtypes[a];
+            if (dataType === "Number") obj.push(0);
+            else obj.push("");
+          }
         }
         this.entries.push(obj);
       }
@@ -114,9 +138,17 @@ export class EntrySelector extends FormApplication {
     if (a.dataset.dtype === "Number") {
       let v = parseFloat(value);
       if (isNaN(v)) v = 0;
-      this.entries[index][index2] = v === 0 ? 0 : Math.floor(v * 100) / 100;
+      if (this.options.isObjectProperty) {
+        this.entries[index][this.objectFields[index2]] = v === 0 ? 0 : Math.floor(v * 100) / 100
+      } else
+        this.entries[index][index2] = v === 0 ? 0 : Math.floor(v * 100) / 100;
     }
-    else this.entries[index][index2] = value;
+    else {
+      if (this.options.isObjectProperty) {
+        this.entries[index][this.objectFields[index2]] = value
+      } else
+        this.entries[index][index2] = value;
+    }
   }
 
   async _submitAndClose(event) {

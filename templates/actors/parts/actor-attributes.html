@@ -178,6 +178,27 @@
         </footer>
       </li>
     </ul>
+    {{#if psionicsAreDifferent}}
+    <ul class="attributes misc-base flexrow">
+      <li class="attribute sr high tooltip" data-attribute="sr">
+        <div class="tooltipcontent">
+          @attributes.pr.total : {{data.attributes.pr.total}}
+        </div>
+        <h4 class="attribute-name box-title">{{ localize 'D35E.PowerResistance' }}</h4>
+        <div class="attribute-value">
+          <span>{{data.attributes.pr.total}}</span>
+        </div>
+        <footer class="attribute-footer">
+          <div class="data-selector" style="float: right; width: 60px; line-height: 24px;">
+            <a class="note-editor" for="data.attributes.prNotes"><i class="fas fa-edit"></i></a>
+            <label>{{ localize 'D35E.Notes' }}</label>
+          </div>
+          <input style="width: calc(100% - 60px);" name="data.attributes.pr.formula" type="text" placeholder="{{ localize 'D35E.Formula' }}"
+                 value="{{#if data.attributes.pr.formula}}{{data.attributes.pr.formula}}{{/if}}"/>
+        </footer>
+      </li>
+    </ul>
+    {{/if}}
 
     <ul class="attributes misc-base flexrow">
     <li class="attribute sr high tooltip" data-attribute="sr">

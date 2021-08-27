@@ -159,6 +159,22 @@
             </button>
         </div>
         {{/if}}
+        {{#if ../isSpell}}
+        {{#if ../hasSr}}
+        <div class="flexcol card-buttons">
+        <button  class="everyone" data-action="rollSR" data-spellpen="{{spellPenetration}}">
+            Spell Resistance
+        </button>
+        </div>
+        {{/if}}
+        {{#if ../hasPr}}
+        <div class="flexcol card-buttons">
+        <button  class="everyone" data-action="rollPR" data-spellpen="{{spellPenetration}}">
+            Power Resistance
+        </button>
+        </div>
+        {{/if}}
+        {{/if}}
 
         {{#if atk.special.length}}
         <strong style="padding: 0px 2px; margin-bottom: -4px; margin-top: 4px; display: block;">Special actions</strong>

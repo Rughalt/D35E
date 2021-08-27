@@ -94,6 +94,15 @@ export const registerSystemSettings = function() {
     type: Boolean,
   });
 
+  game.settings.register("D35E", "psionicsAreDifferent", {
+    name: "SETTINGS.D35EPsionicsAreDifferentN",
+    hint: "SETTINGS.D35EPsionicsAreDifferentL",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   /**
    * Register diagonal movement rule setting
    */

@@ -1250,7 +1250,7 @@ export class ItemPF extends Item {
         }
 
         const itemData = this.getRollData();
-        const rollData = actor ? duplicate(actor.getRollData()) : {};
+        const rollData = actor ? duplicate(actor.getRollData(null, true)) : {};
         rollData.item = duplicate(itemData);
         const itemUpdateData = {};
         itemUpdateData._id = this._id;
@@ -1785,7 +1785,7 @@ export class ItemPF extends Item {
 
                         }
                     }
-                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
+                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null, spellPenetration: rollData.spellPenetration || null});
                     await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, attackId);
                     // Add to list
                     attacks.push(attack);
@@ -1806,7 +1806,7 @@ export class ItemPF extends Item {
                         critical: false,
                         modifiers: damageModifiers
                     });
-                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
+                    await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null, spellPenetration: rollData.spellPenetration || null});
 
                     await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, 0);
 
@@ -1817,14 +1817,14 @@ export class ItemPF extends Item {
             else if (this.hasEffect) {
                 let attack = new ChatAttack(this,"",actor, rollData);
                 attack.rollData = rollData;
-                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null});
+                await attack.addEffect({primaryAttack: primaryAttack, actor:actor, useAmount: rollData.useAmount || 1, cl: rollData.cl || null, spellPenetration: rollData.spellPenetration || null});
                 await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, 0);
                 // Add to list
                 attacks.push(attack);
             } else if (getProperty(this.data, "data.actionType") === "special") {
                 let attack = new ChatAttack(this,"",actor, rollData);
                 attack.rollData = rollData;
-                await attack.addSpecial(actor,rollData.useAmount || 1,rollData.cl);
+                await attack.addSpecial(actor,rollData.useAmount || 1,rollData.cl, rollData.spellPenetration);
                 await this._addCombatSpecialActionsToAttack(allCombatChanges, attack, actor, rollData, optionalFeatRanges, 0);
                 // Add to list
                 attacks.push(attack);
@@ -1947,7 +1947,12 @@ export class ItemPF extends Item {
                     incorporeal: this.data.data.incorporeal || this.actor.data.data.traits.incorporeal,
                     targets: selectedTargets,
                     targetIds: selectedTargetIds,
-                    hasTargets: selectedTargets.length
+                    hasTargets: selectedTargets.length,
+                    isSpell: this.type === "spell",
+                    hasPr: this.data.data.pr,
+                    hasSr: this.data.data.sr,
+                    cl: rollData.cl,
+                    spellPenetration: rollData.cl + (rollData.featSpellPenetrationBonus || 0)
                 }, {inplace: false});
                 // Create message
                 await createCustomChatMessage("systems/D35E/templates/chat/attack-roll.html", templateData, chatData, {rolls: rolls});
@@ -2280,6 +2285,7 @@ export class ItemPF extends Item {
             const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
             const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0);
             rollData.cl = cl;
+            rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
         }
         // Determine size bonus
         rollData.sizeBonus = CONFIG.D35E.sizeMods[rollData.traits.actualSize];
@@ -2388,7 +2394,9 @@ export class ItemPF extends Item {
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
             rollData.cl = cl;
             rollData.sl = sl;
+            rollData.spellPenetration = rollData.cl + (_rollData?.featSpellPenetrationBonus || 0);
         }
+
 
         // Determine critical multiplier
         rollData.critMult = 1;
@@ -2444,6 +2452,7 @@ export class ItemPF extends Item {
             const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
             const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0);
             rollData.cl = cl;
+            rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
         }
 
         // Determine critical multiplier
@@ -2662,7 +2671,7 @@ export class ItemPF extends Item {
      * @returns {Object} An object with data to be used in rolls in relation to this item.
      */
     getRollData(customData = null) {
-        let _base = this.data.data;
+        let _base = this.data.toObject(false).data;
         let result = {}
         if (customData)
             result = mergeObject(_base, customData.data, {inplace: false})
@@ -2767,6 +2776,12 @@ export class ItemPF extends Item {
             const ability = button.dataset.ability;
             const target = button.dataset.target;
             if (type) ActorPF._rollSave(type,ability,target);
+        } else if (action === "rollPR") {
+            const spellPenetration = button.dataset.spellpen;
+            ActorPF._rollPowerResistance(spellPenetration);
+        } else if (action === "rollSR") {
+            const spellPenetration = button.dataset.spellpen;
+            ActorPF._rollSpellResistance(spellPenetration);
         } else if (action === "customAction") {
             const value = button.dataset.value;
             const actionValue = value;
@@ -3738,6 +3753,10 @@ export class ItemPF extends Item {
         data.data.attackBonus = origData.data.attackBonus;
         data.data.critConfirmBonus = origData.data.critConfirmBonus;
         data.data.specialActions = origData.data.specialActions;
+
+        data.data.specialActions.forEach(sa => {
+            sa.action = sa.action.replace(/\(@cl\)/g, slcl[1])
+        })
         data.data.attackCountFormula = origData.data.attackCountFormula.replace(/@cl/g, slcl[1]).replace(/@sl/g, slcl[0]);
 
         // Determine aura power
@@ -3796,6 +3815,8 @@ export class ItemPF extends Item {
             clLabel: clLabel,
             config: CONFIG.D35E,
         });
+
+
 
         return data;
     }

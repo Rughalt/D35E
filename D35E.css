@@ -1597,7 +1597,8 @@
   justify-content: space-between;
 }
 .D35E.sheet.actor .traits .trait-selector,
-.D35E.sheet.actor .traits .sense-selector {
+.D35E.sheet.actor .traits .sense-selector,
+.D35E.sheet.actor .traits .advancement-selector {
   flex: 0 0 16px;
   padding: 2px 0;
   color: #999;

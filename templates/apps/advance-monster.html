@@ -1,0 +1,118 @@
+<form>
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.AdvancementHD"}}</label>
+    </div>
+    <div class="flexrow">
+        <div>&nbsp;</div>
+        <a class="item-control"  style="flex: 0; margin: 0 4px; line-height: 24px" title="Remove HD" onclick="modifyInputValue(this,'advancement-hd',-1,{{minimum}},{{maximum}})">
+            <i class="fas fa-minus remove-skill"></i>
+        </a>
+        <input type="text"  class="skill-value" name='advancement-hd' value="{{minimum}}" readonly style="background: rgba(255,255,255,0.2);border: 1px solid rgba(255,255,255,0.5); font-size: 24px; flex: 0 45px; text-align: center;" placeholder="0"/>
+        <a class="item-control" title="Add HD" style="flex: 0 20px; margin: 0 4px; line-height: 24px" onclick="modifyInputValue(this,'advancement-hd',1,{{minimum}},{{maximum}})">
+            <i class="fas fa-plus add-skill"></i>
+        </a>
+        <div>&nbsp;</div>
+    </div>
+
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.AdvancementChanges"}}</label>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementSize"}}</label>
+        <input class="readonly" style="flex: 0 80px" type="text" step="0.1" value="{{lookup actorSizes size}}" readonly/>
+        <input name="advancementNewSize" class="readonly" style="flex: 0 80px; margin-left: 8px" type="text" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementHD"}}</label>
+        <input type="number" step="0.1" style="flex: 0 40px; margin-left: 8px" value="{{hdData.levels}}" readonly/>
+        <input name="advancementNewHD" class="readonly" style="flex: 0 40px; margin-left: 8px" type="number" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementCR"}}</label>
+        <input class="readonly" style="flex: 0 40px" type="number" step="0.1" value="{{cr}}" readonly/>
+        <input name="advancementNewCR" class="readonly" style="flex: 0 40px; margin-left: 8px" type="number" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementNewHP"}}</label>
+        <span></span>
+        <input name="advancementNewHP" class="readonly" style="flex: 0 40px"  type="text" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementStrengthBonus"}}</label>
+        <span></span>
+        <input name="advancementStrBonus" class="readonly" style="flex: 0 40px" type="text" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementDexterityBonus"}}</label>
+        <span></span>
+        <input name="advancementDexBonus" class="readonly" style="flex: 0 40px" type="text" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementConstitutionBonus"}}</label>
+        <span></span>
+        <input name="advancementConBonus" class="readonly" style="flex: 0 40px" type="text" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "D35E.AdvancementNaturalACBonus"}}</label>
+        <span></span>
+        <input name="advancementNACBonus" class="readonly" style="flex: 0 40px"  type="text" step="0.1" value="{{sense.value}}"/>
+    </div>
+    <script>
+
+        function modifyInputValue(self,id, value, lowerBound, upperBound) {
+            if (parseInt($(`input[name='${id}']`).val() || 1) + value < lowerBound) return;
+            if (parseInt($(`input[name='${id}']`).val() || 1) + value > upperBound) return;
+            let newHD =  parseInt($(`input[name='${id}']`).val() || 0) + value;
+            $(`input[name='${id}']`).val(newHD)
+
+            updatePreview(self,newHD)
+
+        }
+
+        function updatePreview(self,newHd) {
+            let advancement = JSON.parse('{{{advancement}}}')
+            let sizeAdvancementChanges = JSON.parse('{{{sizeAdvancementChangesJSON}}}')
+            let currentHidDice = {{hdData.hd}}
+            let currentLevel = {{hdData.levels}}
+            let crPerHD = {{hdData.crPerHD}}
+            let sizeNames = JSON.parse('{{{actorSizesJSON}}}')
+            advancement.forEach(hd => {
+                if (newHd >= hd.lower) newSize = hd.size;
+            })
+            if (newSize === "no-change" || newSize === "") newSize = size;
+
+            const sizeIndex = Object.keys(sizeNames).indexOf('{{size}}')
+            const newSizeIndex = Object.keys(sizeNames).indexOf(newSize || "")
+            let currentSize = sizeIndex;
+            let tempStr = 0;
+            let tempDex = 0;
+            let tempCon = 0;
+            let tempNac = 0;
+            let tempCR = 0;
+            while (currentSize < newSizeIndex) {
+                currentSize++;
+                let temporarySize = Object.keys(sizeNames)[currentSize]
+                let temporaryChanges = sizeAdvancementChanges[temporarySize]
+                tempStr += temporaryChanges.str;
+                tempDex += temporaryChanges.dex;
+                tempCon += temporaryChanges.con;
+                tempNac += temporaryChanges.nac;
+                tempCR += 1;
+            }
+            tempCR += Math.floor((newHd - currentLevel) / crPerHD)
+            let newHP = Math.floor((newHd) * (currentHidDice / 2 + 0.5));
+            console.log($(self).parent().parent().find("input[name='advancementNewHD']").val(newHd))
+            console.log($(self).parent().parent().find("input[name='advancementNewHP']").val(newHP))
+            console.log($(self).parent().parent().find("input[name='advancementNewSize']").val(sizeNames[newSize]))
+            console.log($(self).parent().parent().find("input[name='advancementNewCR']").val({{cr}} + tempCR))
+            console.log($(self).parent().parent().find("input[name='advancementStrBonus']").val(tempStr > 0 ? `+${tempStr}` : tempStr))
+            console.log($(self).parent().parent().find("input[name='advancementDexBonus']").val(tempDex > 0 ? `+${tempDex}` : tempDex))
+            console.log($(self).parent().parent().find("input[name='advancementConBonus']").val(tempCon > 0 ? `+${tempCon}` : tempCon))
+            console.log($(self).parent().parent().find("input[name='advancementNACBonus']").val(tempNac > 0 ? `+${tempNac}` : tempNac))
+        }
+
+        updatePreview($("input[name='advancement-hd']"),{{minimum}})
+
+    </script>
+
+</form>

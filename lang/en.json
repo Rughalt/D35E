@@ -1514,6 +1514,11 @@
   "D35E.RequiresPsionicFocus": "Requires Psionic Focus!",
   "D35E.HalfCasterLevel": "Half Caster Level",
   "D35E.IncorporealMiss": "Miss (Incorporeal)",
+  "D35E.SpellPowerResistance": "Spell/Power Resistance",
+  "D35E.SpellPowerResistanceOptional": "Spell/Power Resistance (Optional)",
+  "D35E.ResBonus": "Spell/Power Resistance Bonus",
+  "D35E.ResRollResistance": "Roll Spell/Power Resistance",
+  "D35E.ResDialogModifiers": "Spell/Power Resistance Modifiers",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
@@ -1579,5 +1584,7 @@
   "SETTINGS.D35ERollConfigConfigInstructions": "This options sets up default roll mode for different roll types for different actor types.",
   "SETTINGS.D35ERollConfigLabel": "Configure Default Roll Modes",
   "SETTINGS.D35ERollConfigName": "Default Roll Modes",
-  "SETTINGS.D35ERollConfigHint": "Configure default roll modes so they are automatically set for rolls"
+  "SETTINGS.D35ERollConfigHint": "Configure default roll modes so they are automatically set for rolls",
+  "SETTINGS.D35EPsionicsAreDifferentN": "Variant Rule - Psionics Are Different",
+  "SETTINGS.D35EPsionicsAreDifferentL": "Splits Spell Resistance into Power and Spell Resistances"
 }

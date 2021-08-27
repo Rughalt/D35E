@@ -164,6 +164,10 @@
             "formula": "",
             "total": 0
           },
+          "pr": {
+            "formula": "",
+            "total": 0
+          },
           "cmbNotes": "",
           "saveNotes": "",
           "acNotes": "",
@@ -1218,7 +1222,13 @@
         "xp": {
           "value": 10
         },
-        "levelUpProgression": false
+        "levelUpProgression": false,
+        "advancement": {
+          "hd": [],
+          "byClass": false,
+          "none": false,
+          "originalHD": 0
+        }
       },
       "master": {
         "id": null,
@@ -1548,6 +1558,7 @@
       "maxLevel": 20,
       "prestigeLevels": 0,
       "la": 0,
+      "crPerHD": 4,
       "hdReplace": "",
       "hdReplaceRacialOnly": false,
       "addedAbilities": [],

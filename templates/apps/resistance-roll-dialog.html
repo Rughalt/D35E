@@ -1,0 +1,64 @@
+<form>
+    <div class="form-group">
+        <label>{{localize "D35E.ResBonus"}}</label>
+        <input type="text" name="res-bonus" value="" placeholder="e.g. +1d4"/>
+    </div>
+    <div class="form-group stacked">
+        <label class="block-header">{{localize "D35E.ResDialogModifiers"}}</label>
+    </div>
+    <div class="form-group">
+        <div class="flexcol">
+            {{#each resFeats as |feat|}}
+            <span>{{feat.combatChangeName}}</span>
+            {{/each}}
+        </div>
+    </div>
+    {{#each resFeatsOptional as |feat|}}
+    <div class="form-group">
+        <label style="{{#unless feat.hasUseableChange}}opacity: 0.8{{/unless}}">{{feat.combatChangeName}} {{#if feat.isCharged}}({{feat.charges}} charges){{/if}}</label>
+        {{#if feat.data.data.combatChangesRange.max}}
+        <input type="range" name="optional-range-base-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesRange.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" {{#unless feat.hasUseableChange}}disabled name="optional-{{feat.id}}"{{/unless}} class="stylized" data-feat-optional="{{feat.id}}"
+            data-type="optional"/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    {{#if feat.data.data.combatChangesAdditionalRanges.hasAdditionalRanges}}
+    <div class="form-group">
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider1.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider1.name}}</span>
+        <input type="range" name="optional-range-base-1-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider1.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-1-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider2.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider2.name}}</span>
+        <input type="range" name="optional-range-base-2-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider2.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-2-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+        {{#if feat.data.data.combatChangesAdditionalRanges.slider3.max}}
+        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider3.name}}</span>
+        <input type="range" name="optional-range-base-3-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider3.max}}" value="0" class="slider" style="flex: 1"
+               onchange="this.nextElementSibling.value=this.value">
+        <input type="text" name="optional-range-3-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{/if}}
+    </div>
+    {{/if}}
+    {{/each}}
+
+    <div class="form-group">
+        <label>{{localize "D35E.RollMode"}}</label>
+        <select name="rollMode">
+            {{#select rollMode}}
+            {{#each rollModes as |label mode|}}
+            <option value="{{mode}}">{{localize label}}</option>
+            {{/each}}
+            {{/select}}
+        </select>
+    </div>
+</form>

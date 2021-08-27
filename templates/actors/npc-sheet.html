@@ -450,7 +450,28 @@
       </div>
 
       <section class="center-pane flexcol">
+        <h2 class="block-header" style="flex: 1">{{ localize 'D35E.Advancement' }}</h2>
 
+        <div class="traits">
+        <div class="form-group">
+          <label for="data.advancement">{{ localize 'D35E.Advancement' }}</label>
+          <ul class="traits-list">
+            {{#each data.details.advancement.hd as |k|}}
+            <li class="tag">{{k.lower}}{{#if k.upper}}-{{k.upper}}{{/if}} HD ({{lookup ../config.actorSizes k.size}})</li>
+            {{else}}
+            No advancement information
+            {{/each}}
+          </ul>
+          <a class="advancement-selector entry-selector" for="data.details.advancement.hd" data-fields="low;high;size" data-objectfields="lower;upper;size" data-dtypes="Number;Number;String"><i class="fas fa-edit"></i></a>
+        </div>
+        </div>
+
+        <div class="traits">
+          <div class="form-group">
+            <label></label>
+            <a class="btn advance-monster point-buy-button blue-button">{{ localize 'D35E.ImproveMonster' }}</a>
+          </div>
+        </div>
         <h2 class="block-header" style="flex: 1">{{ localize 'D35E.Traits' }}</h2>
         <div class="traits">
           <div class="form-group">
@@ -470,6 +491,19 @@
                    value="{{data.attributes.sr.total}}"/>
           </div>
         </div>
+
+        {{#if psionicsAreDifferent}}
+        <div class="traits">
+          <div class="form-group">
+            <label>{{ localize 'D35E.PowerResistance' }}</label>
+            <input style="width: calc(100% - 60px);" name="data.attributes.pr.formula" type="text" placeholder="{{ localize 'D35E.Formula' }}"
+                   value="{{#if data.attributes.pr.formula}}{{data.attributes.pr.formula}}{{/if}}"/>
+            <span style="flex: 0 80px; text-align: end">{{ localize 'D35E.Total' }}: </span>
+            <input style="flex: 0 30px" disabled type="text"
+                   value="{{data.attributes.pr.total}}"/>
+          </div>
+        </div>
+        {{/if}}
 
         <div class="traits">
           <div class="form-group">
