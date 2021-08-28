@@ -2284,12 +2284,9 @@ export class ItemPF extends Item {
         } else rollData = options.data;
 
         // Add CL
+
         if (this.type === "spell") {
-            const spellbookIndex = itemData.spellbook;
-            const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-            const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0);
-            rollData.cl = cl;
-            rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
+            this._adjustSpellCL(itemData, rollData)
         }
         // Determine size bonus
         rollData.sizeBonus = CONFIG.D35E.sizeMods[rollData.traits.actualSize];
@@ -2392,13 +2389,9 @@ export class ItemPF extends Item {
 
         // Add spell data
         if (this.type === "spell") {
-            const spellbookIndex = itemData.spellbook;
-            const spellbook = actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-            const cl = spellbook.cl.total + (itemData.clOffset || 0) + (_rollData?.featClBonus || 0);
+            this._adjustSpellCL(itemData, rollData)
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
-            rollData.cl = cl;
             rollData.sl = sl;
-            rollData.spellPenetration = rollData.cl + (_rollData?.featSpellPenetrationBonus || 0);
         }
 
 
@@ -2452,11 +2445,7 @@ export class ItemPF extends Item {
 
         // Add CL
         if (this.type === "spell") {
-            const spellbookIndex = itemData.spellbook;
-            const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-            const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0);
-            rollData.cl = cl;
-            rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
+            this._adjustSpellCL(itemData, rollData);
         }
 
         // Determine critical multiplier
@@ -2554,6 +2543,18 @@ export class ItemPF extends Item {
         }
         // //console.log(rolls);
         return rolls;
+    }
+
+    /**
+     * Adjust spell CL based on item and actor
+     * @private
+     */
+    _adjustSpellCL(itemData, rollData) {
+        const spellbookIndex = itemData.spellbook;
+        const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+        const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
+        rollData.cl = cl;
+        rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
     }
 
     /* -------------------------------------------- */
