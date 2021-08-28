@@ -1598,5 +1598,7 @@
   "SETTINGS.D35ERollConfigName": "Default Roll Modes",
   "SETTINGS.D35ERollConfigHint": "Configure default roll modes so they are automatically set for rolls",
   "SETTINGS.D35EPsionicsAreDifferentN": "Variant Rule - Psionics Are Different",
-  "SETTINGS.D35EPsionicsAreDifferentL": "Splits Spell Resistance into Power and Spell Resistances"
+  "SETTINGS.D35EPsionicsAreDifferentL": "Splits Spell Resistance into Power and Spell Resistances",
+  "SETTINGS.D35EFullAttackChatCardN": "Show Full Attack chat card",
+  "SETTINGS.D35EFullAttackChatCardL": "Show Full Attack chat card on full attack roll"
 }

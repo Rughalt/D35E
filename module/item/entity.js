@@ -1200,7 +1200,7 @@ export class ItemPF extends Item {
                 return actor.useSpell(this, ev, {skipDialog: skipDialog, rollModeOverride: rollModeOverride}, actor);
             }
         } else if (this.type === "full-attack") {
-            await this.roll();
+            if (game.settings.get("D35E", "showFullAttackChatCard")) await this.roll();
             for (let attack of Object.values(this.data.data.attacks)) {
                 if (!attack.id) continue;
                 let attackItem = actor.items.find(i => i._id === attack.id);

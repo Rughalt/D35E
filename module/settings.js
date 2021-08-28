@@ -365,6 +365,17 @@ export const registerSystemSettings = function() {
     type: Boolean
   });
 
+  game.settings.register("D35E", "showFullAttackChatCard", {
+    name: "SETTINGS.D35EFullAttackChatCardN",
+    hint: "SETTINGS.D35EFullAttackChatCardL",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
+
+
   game.settings.register("D35E", "hidePlayersList", {
     name: "SETTINGS.D35ENoPlayersListN",
     hint: "SETTINGS.D35ENoPlayersListL",
