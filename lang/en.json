@@ -1519,6 +1519,18 @@
   "D35E.ResBonus": "Spell/Power Resistance Bonus",
   "D35E.ResRollResistance": "Roll Spell/Power Resistance",
   "D35E.ResDialogModifiers": "Spell/Power Resistance Modifiers",
+  "D35E.ImproveMonster": "Improve Monster",
+  "D35E.AdvancemenMonsterWindow": "Improve Monster",
+  "D35E.Advancement": "Advancement",
+  "D35E.AdvancementChanges": "Advancement Changes",
+  "D35E.AdvancementHD": "Improved HD",
+  "D35E.AdvancementSize": "Size Change",
+  "D35E.AdvancementCR": "CR Change",
+  "D35E.AdvancementNewHP": "New HP",
+  "D35E.AdvancementStrengthBonus": "Strength Bonus",
+  "D35E.AdvancementDexterityBonus": "Dexterity Bonus",
+  "D35E.AdvancementConstitutionBonus": "Constitution Bonus",
+  "D35E.AdvancementNaturalACBonus": "Natural AC Bonus",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
