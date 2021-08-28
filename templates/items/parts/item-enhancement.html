@@ -153,7 +153,7 @@
             </li>
             <ol class="item-list" data-pack="D35E.enhancement">
                 {{#each enhancementsFromBuff as |item iid|}}
-                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                <li class="item item-box flexrow" data-item-id="{{item.tag}}">
                     <div class="item-name enh-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">
@@ -195,7 +195,7 @@
             </li>
             <ol class="item-list" data-pack="D35E.enhancement">
                 {{#each enhancementsFromSpell as |item iid|}}
-                <li class="item item-box flexrow" data-item-id="{{item._id}}">
+                <li class="item item-box flexrow" data-item-id="{{item.tag}}">
                     <div class="item-name enh-item flexrow">
                         <div class="item-image" style="background-image: url('{{item.img}}')"></div>
                         <h4 class="rollable{{#if item.incorrect}} strikethrough-text{{/if}}">

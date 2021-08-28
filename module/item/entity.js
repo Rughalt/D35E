@@ -949,6 +949,7 @@ export class ItemPF extends Item {
             cl += getProperty(spellbook, "cl.total") || 0;
             cl += data.clOffset || 0;
             cl += rollData.featClBonus || 0;
+            cl -= this.actor.data.data.attributes.energyDrain || 0
 
             sl += data.level;
             sl += data.slOffset || 0;
@@ -965,6 +966,7 @@ export class ItemPF extends Item {
             cl += getProperty(deck, "cl.total") || 0;
             cl += data.clOffset || 0;
             cl += rollData.featClBonus || 0;
+            cl -= this.actor.data.data.attributes.energyDrain || 0
 
             sl += data.level;
             sl += data.slOffset || 0;
@@ -2114,6 +2116,7 @@ export class ItemPF extends Item {
 
             cl += getProperty(spellbook, "cl.total") || 0;
             cl += data.clOffset || 0;
+            cl -= this.actor.data.data.attributes.energyDrain || 0
 
             cl += rollData.featClBonus || 0;
 
@@ -2132,6 +2135,7 @@ export class ItemPF extends Item {
             cl += getProperty(deck, "cl.total") || 0;
             cl += data.clOffset || 0;
             cl += rollData.featClBonus || 0;
+            cl -= this.actor.data.data.attributes.energyDrain || 0
 
             sl += data.level;
             sl += data.slOffset || 0;
