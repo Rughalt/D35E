@@ -2913,7 +2913,7 @@ export class ItemPF extends Item {
 
     getElapsedTimeUpdateData(time) {
         if (this.data.data.timeline !== undefined && this.data.data.timeline !== null) {
-            if (this.data.data.timeline.enabled) {
+            if (this.data.data.timeline.enabled && this.data.data.active) {
                 if (this.data.data.timeline.elapsed + time >= this.data.data.timeline.total) {
                     if (!this.data.data.timeline.deleteOnExpiry) {
                         let updateData = {}
