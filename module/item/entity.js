@@ -625,6 +625,9 @@ export class ItemPF extends Item {
         //     updatedItem = await super.update(diff, options);
         // }
 
+        if (activateBuff) {
+            data["data.timeline.elapsed"] = 0
+        }
 
         let updateData = await super.update(data, options);
         if (this.actor !== null && !options.massUpdate) {
@@ -2918,6 +2921,7 @@ export class ItemPF extends Item {
                     if (!this.data.data.timeline.deleteOnExpiry) {
                         let updateData = {}
                         updateData["data.active"] = false;
+                        updateData["data.timeline.elapsed"] = 0;
                         updateData["_id"] = this._id;
                         return updateData;
                     } else {
@@ -2925,6 +2929,7 @@ export class ItemPF extends Item {
                         if (this.actor.token) {
                             let updateData = {}
                             updateData["data.active"] = false;
+                            updateData["data.timeline.elapsed"] = 0;
                             updateData["_id"] = this._id;
                             return updateData;
                         } else
