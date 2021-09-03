@@ -3,7 +3,7 @@
     {{localize "D35E.Conditionals"}}
 </h4>
 <ol class="conditionals form-group">
-    {{#each data.data.conditionals as |conditional a|}}
+    {{#each conditionals as |conditional a|}}
     <li class="conditional flexcolumn" data-conditional="{{a}}"><div class="conditional flexrow" data-conditional="{{a}}">
         <input class="conditional-default" type="checkbox" title="{{localize "D35E.Default"}}" name="data.conditionals.{{a}}.default" {{checked this.default}}/>
         <input class="conditional-name" type="text" name="data.conditionals.{{a}}.name" value="{{lookup this "name"}}"
