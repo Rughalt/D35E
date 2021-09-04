@@ -2151,13 +2151,13 @@ export class ItemPF extends Item {
         spellDC.cl = cl;
 
         if (data.hasOwnProperty("actionType") && (getProperty(data, "save.description") || getProperty(data, "save.type")) && getProperty(data, "save.description") !== "None") {
-            let saveDC = new Roll35e(data.save.dc.length > 0 ? data.save.dc : "0", rollData).roll().total;
+            let saveDC = new Roll35e(data.save.dc.length > 0 ? data.save.dc : (data.save.dc.toString() || "0"), rollData).roll().total;
             let saveDesc = data.save.description;
             if (this.type === "spell") {
                 saveDC += new Roll35e(spellbook.baseDCFormula || "", rollData).roll().total;
             }
 
-            if (saveDC > 0 && data.save.type) {
+            if (saveDC > 0 && data?.save?.type) {
                 spellDC.dc = saveDC + (rollData.featSpellDCBonus || 0);
                 spellDC.type = data.save.type;
                 spellDC.ability = data.save.ability;
@@ -2288,7 +2288,7 @@ export class ItemPF extends Item {
 
         // Add CL
 
-        if (this.type === "spell") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
             this._adjustSpellCL(itemData, rollData)
         }
         // Determine size bonus
@@ -2391,7 +2391,7 @@ export class ItemPF extends Item {
         }
 
         // Add spell data
-        if (this.type === "spell") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
             this._adjustSpellCL(itemData, rollData)
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
             rollData.sl = sl;
@@ -2447,7 +2447,7 @@ export class ItemPF extends Item {
         }
 
         // Add CL
-        if (this.type === "spell") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
             this._adjustSpellCL(itemData, rollData);
         }
 
@@ -2553,10 +2553,13 @@ export class ItemPF extends Item {
      * @private
      */
     _adjustSpellCL(itemData, rollData) {
-        const spellbookIndex = itemData.spellbook;
-        const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
-        const cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
-        rollData.cl = cl;
+        let cl = 0
+        if (itemData.spellbook) {
+            const spellbookIndex = itemData.spellbook;
+            const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
+            cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
+        }
+        rollData.cl = Math.max((new Roll35e(itemData.baseCl, rollData).roll()).total, cl);
         rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
     }
 
@@ -3747,7 +3750,6 @@ export class ItemPF extends Item {
         data.data.actionType = origData.data.actionType;
         for (let d of getProperty(origData, "data.damage.parts")) {
             d[0] = d[0].replace(/@sl/g, slcl[0]);
-            d[0] = d[0].replace(/@cl/g, slcl[1]);
             data.data.damage.parts.push(d);
         }
 
@@ -3756,7 +3758,9 @@ export class ItemPF extends Item {
         data.data.save.type = origData.data.save.type;
         data.data.save.ability = origData.data.save.ability;
         data.data.save.dc = 10 + slcl[0] + Math.floor(slcl[0] / 2);
-
+        data.data.baseCl = `${slcl[1]}`
+        data.data.sr = origData.data.sr
+        data.data.pr = origData.data.pr
         // Copy variables
         data.data.attackNotes = origData.data.attackNotes;
         data.data.effectNotes = origData.data.effectNotes;
@@ -3764,10 +3768,8 @@ export class ItemPF extends Item {
         data.data.critConfirmBonus = origData.data.critConfirmBonus;
         data.data.specialActions = origData.data.specialActions;
 
-        data.data.specialActions.forEach(sa => {
-            sa.action = sa.action.replace(/\(@cl\)/g, slcl[1])
-        })
-        data.data.attackCountFormula = origData.data.attackCountFormula.replace(/@cl/g, slcl[1]).replace(/@sl/g, slcl[0]);
+
+        data.data.attackCountFormula = origData.data.attackCountFormula.replace(/@sl/g, slcl[0]);
 
         // Determine aura power
         let auraPower = "faint";

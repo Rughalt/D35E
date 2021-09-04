@@ -1531,6 +1531,8 @@
   "D35E.AdvancementDexterityBonus": "Dexterity Bonus",
   "D35E.AdvancementConstitutionBonus": "Constitution Bonus",
   "D35E.AdvancementNaturalACBonus": "Natural AC Bonus",
+  "D35E.BaseSpellCL": "Consumable Spell Caster Level",
+  "D35E.MaxDamageDice": "Max Damage Dice formula",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

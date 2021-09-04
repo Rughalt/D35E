@@ -90,7 +90,8 @@ export class ItemSheetPF extends ItemSheet {
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
         data.isAttack = this.item.type === "attack";
-        data.isWeaponAttack = this.item.data?.data?.action === "rwak" || this.item.data?.data?.action === "mwak";
+        data.isWeaponAttack = this.item.data?.data?.actionType === "rwak" || this.item.data?.data?.actionType === "mwak";
+        data.isSpellLike = this.item.type === "spell" || this.item.data?.data?.actionType === "rsak" || this.item.data?.data?.actionType === "msak" || this.item.data?.data?.actionType === "spellsave";
         data.isShapechangeBuff = this.item.data.type === "buff" && this.item.data.data?.buffType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";

@@ -1522,6 +1522,9 @@
           "ability": "",
           "type": ""
         },
+        "baseCl": "0",
+        "sr": false,
+        "pr": false,
         "metamagicFeats": {
           "maximized": false,
           "empowered": false,
