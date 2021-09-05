@@ -89,7 +89,7 @@ export class CompendiumBrowser extends Application {
       if (p.private && !game.user.isGM) continue;
       if (p.entity !== this.entityType) continue;
 
-      const items = await p.getContent();
+      const items = await p.getDocuments();
       for (let i of items) {
         if (!this._filterItems(i)) continue;
         this.items.push(this._mapItem(p, i));

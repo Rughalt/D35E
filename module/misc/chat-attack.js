@@ -298,7 +298,7 @@ export class ChatAttack {
             fumble: this.fumble,
             natural20Crit: this.natural20Crit,
             fumbleCrit: this.fumbleCrit,
-            incorporeal: this.item.data.data.incorporeal || this.item.actor.data.data.traits.incorporeal
+            incorporeal: this.item.data.data.incorporeal || this.item?.actor?.data?.data?.traits?.incorporeal
         };
     }
 

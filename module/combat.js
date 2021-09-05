@@ -132,13 +132,13 @@ export const _rollInitiative = async function (ids, { formula = null, updateTurn
         // Handle different roll modes
         switch (chatData.rollMode) {
           case "gmroll":
-            chatData["whisper"] = game.users.entities.filter((u) => u.isGM).map((u) => u._id);
+            chatData["whisper"] = game.users.contents.filter((u) => u.isGM).map((u) => u._id);
             break;
           case "selfroll":
             chatData["whisper"] = [game.user._id];
             break;
           case "blindroll":
-            chatData["whisper"] = game.users.entities.filter((u) => u.isGM).map((u) => u._id);
+            chatData["whisper"] = game.users.contents.filter((u) => u.isGM).map((u) => u._id);
             chatData["blind"] = true;
         }
 

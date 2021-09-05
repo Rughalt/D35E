@@ -9,7 +9,7 @@ CACHE.Materials = new Map()
 CACHE.DamageTypes = new Map()
 
 export const addClassAbilitiesFromPackToCache = async function(itemPack) {
-    const entities = await itemPack.getContent();
+    const entities = await itemPack.getDocuments();
     for (let e of entities) {
         //e.pack = packName;
         if (e.data.data.associations !== undefined && e.data.data.associations.classes !== undefined) {
@@ -28,7 +28,7 @@ export const addClassAbilitiesFromPackToCache = async function(itemPack) {
 }
 
 export const addRacialAbilitiedFromPackToCache = async function (itemPack) {
-    const entities = await itemPack.getContent();
+    const entities = await itemPack.getDocuments();
     for (let e of entities) {
         //e.pack = packName;
         if (e.data.data.tags !== undefined) {
@@ -77,7 +77,7 @@ export const buildCache = async function() {
         }
 
         if (packName.endsWith('.spelllike-abilities') || packName.endsWith('.spell-like-abilities') || packName.endsWith('.spelllike')) {
-            const entities = await itemPack.getContent();
+            const entities = await itemPack.getDocuments();
             for (let e of entities) {
                 //e.pack = packName;
                 if (e.data.data.tags !== undefined) {
@@ -96,7 +96,7 @@ export const buildCache = async function() {
         }
 
         if (packName.endsWith('.materials')) {
-            const entities = await itemPack.getContent();
+            const entities = await itemPack.getDocuments();
             for (let e of entities) {
                 //e.pack = packName;
                 if (e.data.data.uniqueId) {
@@ -107,7 +107,7 @@ export const buildCache = async function() {
         }
 
         if (packName.endsWith('.damage-types')) {
-            const entities = await itemPack.getContent();
+            const entities = await itemPack.getDocuments();
             for (let e of entities) {
                 //e.pack = packName;
                 if (e.data.data.uniqueId) {

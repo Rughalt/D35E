@@ -185,7 +185,7 @@ export class ItemSheetPF extends ItemSheet {
             data.enhancementsFromBuff = []
             let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
             _enhancements.forEach(e => {
-                let item = new ItemPF(e, {owner: this.item.owner})
+                let item = new ItemPF(e, {owner: this.item.isOwner})
                 this.ehnancementItemMap.set(e._id, item);
                 e.hasAction = item.hasAction || item.isCharged;
                 e.incorrect = !((e.data.enhancementType === 'weapon' && this.item.type === 'weapon') || (e.data.enhancementType === 'armor' && this.item.type === 'equipment') || (e.data.enhancementType === 'misc'));
@@ -250,7 +250,7 @@ export class ItemSheetPF extends ItemSheet {
             data.enhancementsFromBuff = []
             let _enhancements = getProperty(this.item.data, `data.enhancements.items`) || [];
             _enhancements.forEach(e => {
-                let item = new ItemPF(e, {owner: this.item.owner})
+                let item = new ItemPF(e, {owner: this.item.isOwner})
                 this.ehnancementItemMap.set(item.tag, item);
                 e.hasAction = item.hasAction || item.isCharged;
                 e.incorrect = !((e.data.enhancementType === 'weapon' && this.item.type === 'weapon') || (e.data.enhancementType === 'armor' && this.item.type === 'equipment') || (e.data.enhancementType === 'misc'));
@@ -1119,6 +1119,7 @@ export class ItemSheetPF extends ItemSheet {
         html.find("div[data-tab='enhancements'] .item-detail.item-uses input.maxuses").off("change").change(this._setEnhMaxUses.bind(this));
         html.find("div[data-tab='enhancements'] .item-detail.item-per-use input[type='text']:not(:disabled)").off("change").change(this._setEnhPerUse.bind(this));
         html.find("div[data-tab='enhancements'] .item-detail.item-enh input[type='text']:not(:disabled)").off("change").change(this._setEnhValue.bind(this));
+        html.find("div[data-tab='enhancements'] .item-detail.item-cl input[type='text']:not(:disabled)").off("change").change(this._setEnhCLValue.bind(this));
 
         html.find('div[data-tab="enhancements"] .item-edit').click(this._onItemEdit.bind(this));
         html.find('div[data-tab="enhancements"] .item .item-image').click(event => this._onEnhRoll(event));
@@ -1662,7 +1663,7 @@ export class ItemSheetPF extends ItemSheet {
         event.preventDefault();
         let li = $(event.currentTarget).parents(".item-box"),
             item = this.ehnancementItemMap.get(li.attr("data-item-id")),
-            chatData = item.getChatData({secrets: this.actor ? this.actor.owner : false});
+            chatData = item.getChatData({secrets: this.actor ? this.actor.isOwner : false});
 
         // Toggle summary
         if (li.hasClass("expanded")) {
@@ -2053,6 +2054,23 @@ export class ItemSheetPF extends ItemSheet {
         updateData[`data.enhancements.items`] = _enhancements;
         this.item.update(updateData);
     }
+
+    async _setEnhCLValue(event) {
+        event.preventDefault();
+        const itemId = event.currentTarget.closest(".item").dataset.itemId;
+        const updateData = {};
+
+        const value = Number(event.currentTarget.value);
+        let _enhancements = duplicate(getProperty(this.item.data, `data.enhancements.items`) || []);
+        _enhancements.filter(function (obj) {
+            return createTag(obj.name) === itemId
+        }).forEach(i => {
+            i.data.baseCl = value;
+        });
+        updateData[`data.enhancements.items`] = _enhancements;
+        await this.item.update(updateData);
+    }
+
 
     async _setEnhValue(event) {
         event.preventDefault();

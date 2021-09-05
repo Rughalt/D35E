@@ -801,6 +801,7 @@ D35E.skills = {
   "src": "D35E.SkillSrc",
   "sen": "D35E.SkillSen",
   "slt": "D35E.SkillSlt",
+  "spk": "D35E.SkillSpk",
   "spl": "D35E.SkillSpl",
   "spt": "D35E.SkillSpt",
   "sur": "D35E.SkillSur",

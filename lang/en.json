@@ -268,6 +268,7 @@
   "D35E.SkillTmb": "Tumble",
   "D35E.SkillUMD": "Use Magic Device",
   "D35E.SkillUro": "Use Rope",
+  "D35E.SkillSpk": "Speak Languages",
 
   "D35E.TargetAlly": "Ally",
   "D35E.TargetCreature": "Creature",
@@ -1446,7 +1447,7 @@
 
   "D35E.DistMeterShort": "m",
 
-  "D35E.NoVisionOverride": "Do now override Token Vision",
+  "D35E.NoVisionOverride": "Do not override Token Vision",
   "D35E.NoVisionOverrideH": "This option disables overriding Token vision settings from actor and items. ",
 
   "D35E.OnlyPrepared": "Only Prepared",

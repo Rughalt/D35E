@@ -58,7 +58,7 @@ export const registerSystemSettings = function() {
     type: Object,
     config: false,
     onChange: () => {
-      game.actors.entities.forEach(o => { o.update({}); });
+      game.actors.contents.forEach(o => { o.update({}); });
       Object.values(game.actors.tokens).forEach(o => { o.update({}); });
     }
   });
@@ -79,7 +79,7 @@ export const registerSystemSettings = function() {
     type: Object,
     config: false,
     onChange: () => {
-      game.actors.entities.forEach(o => { o.update({}); });
+      game.actors.contents.forEach(o => { o.update({}); });
       Object.values(game.actors.tokens).forEach(o => { o.update({}); });
     }
   });
@@ -136,7 +136,7 @@ export const registerSystemSettings = function() {
       "fast": "Fast",
     },
     onChange: () => {
-      [...game.actors.entities, ...Object.values(game.actors.tokens)].filter(o => {
+      [...game.actors.contents, ...Object.values(game.actors.tokens)].filter(o => {
         return o.data.type === "character";
       }).forEach(o => {
         o.update({});
@@ -160,7 +160,7 @@ export const registerSystemSettings = function() {
       "metric": "Metric (meters, kg)"
     },
     onChange: () => {
-      [...game.actors.entities, ...Object.values(game.actors.tokens)].filter(o => {
+      [...game.actors.contents, ...Object.values(game.actors.tokens)].filter(o => {
         return o.data.type === "character";
       }).forEach(o => {
         if (o.sheet != null && o.sheet._state > 0) o.sheet.render();
@@ -203,7 +203,7 @@ export const registerSystemSettings = function() {
     default: false,
     type: Boolean,
     onChange: () => {
-      game.actors.entities.forEach(o => { if (o.sheet && o.sheet.rendered) o.sheet.render(true); });
+      game.actors.contents.forEach(o => { if (o.sheet && o.sheet.rendered) o.sheet.render(true); });
       Object.values(game.actors.tokens).forEach(o => { if (o.sheet && o.sheet.rendered) o.sheet.render(true); });
     },
   });
@@ -219,7 +219,7 @@ export const registerSystemSettings = function() {
     default: false,
     type: Boolean,
     onChange: () => {
-      game.actors.entities.forEach(o => { o.update({}); });
+      game.actors.contents.forEach(o => { o.update({}); });
       Object.values(game.actors.tokens).forEach(o => { o.update({}); });
     },
   });
@@ -526,7 +526,7 @@ export const registerSystemSettings = function() {
     onChange: () => {
       let promises = [];
       const actors = [
-        ...Array.from(game.actors.entities.filter((o) => getProperty(o.data, "token.actorLink"))),
+        ...Array.from(game.actors.contents.filter((o) => getProperty(o.data, "token.actorLink"))),
         ...Object.values(game.actors.tokens),
       ];
       for (let actor of actors) {

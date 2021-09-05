@@ -91,11 +91,11 @@ Hooks.once("init", async function() {
   // Record Configuration Values
   CONFIG.D35E = D35E;
   CONFIG.debug.hooks = true;
-  CONFIG.Actor.entityClass = ActorPF;
-  CONFIG.Item.entityClass = ItemPF;
+  CONFIG.Actor.documentClass = ActorPF;
+  CONFIG.Item.documentClass = ItemPF;
   CONFIG.ActiveEffect.documentClass = ActiveEffectD35E;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
-  CONFIG.ChatMessage.entityClass = ChatMessagePF;
+  CONFIG.ChatMessage.documentClass = ChatMessagePF;
 
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFCharacter") });
@@ -204,7 +204,7 @@ Hooks.once("ready", async function() {
 
   await cache.buildCache();
   console.log("D35E | Cache is ", CACHE)
-  //game.actors.entities.forEach(obj => { obj._updateChanges({sourceOnly: true}, {skipToken: true}); });
+  //game.actors.contents.forEach(obj => { obj._updateChanges({sourceOnly: true}, {skipToken: true}); });
 
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Attacks(app, html, data) });
   Hooks.on('renderTokenHUD', (app, html, data) => { TokenQuickActions.addTop3Buffs(app, html, data) });
@@ -217,7 +217,7 @@ Hooks.once("ready", async function() {
 
   const interval = setInterval(function() {
     if (updateRequestArray.length === 0) {
-      game.actors.entities.filter(obj => obj.testUserPermission(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
+      game.actors.contents.filter(obj => obj.testUserPermission(game.user, "OWNER") && obj.data.data.companionUuid && obj.canAskForRequest).forEach(a => {
         updateRequestArray.push(a);
       });
     }
@@ -610,7 +610,7 @@ async function createItemMacro(item, slot) {
   `  itemType: "${item.type}",\n` +
   (actor != null ? `  actorId: "${actor._id}",\n` : "") +
   `});`;
-  let macro = game.macros.entities.find(m => (m.name === item.name) && (m.command === command));
+  let macro = game.macros.contents.find(m => (m.name === item.name) && (m.command === command));
   if ( !macro ) {
     macro = await Macro.create({
       name: item.name,
@@ -653,7 +653,7 @@ function rollItemMacro(itemName, {itemId=null, itemType=null, actorId=null}={}) 
  */
 function rollDefenses({actorName=null, actorId=null}={}) {
   const speaker = ChatMessage.getSpeaker();
-  let actor = game.actors.entities.filter(o => {
+  let actor = game.actors.contents.filter(o => {
     if (!actorName && !actorId) return false;
     if (actorName && o.name !== actorName) return false;
     if (actorId && o._id !== actorId) return false;
@@ -668,7 +668,7 @@ function rollDefenses({actorName=null, actorId=null}={}) {
 
 function rollTurnUndead({actorName=null, actorId=null}={}) {
   const speaker = ChatMessage.getSpeaker();
-  let actor = game.actors.entities.filter(o => {
+  let actor = game.actors.contents.filter(o => {
     if (!actorName && !actorId) return false;
     if (actorName && o.name !== actorName) return false;
     if (actorId && o._id !== actorId) return false;

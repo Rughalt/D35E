@@ -6,9 +6,9 @@ export class Roll35e extends Roll {
     static safeRoll(formula, data = {}, context, options = { suppressError: false }) {
         let roll;
         try {
-            roll = this.create(formula, data).evaluate();
+            roll = this.create(formula, data).evaluate({async: false});
         } catch (err) {
-            roll = this.create("0", data).evaluate();
+            roll = this.create("0", data).evaluate({async: false});
             roll.err = err;
         }
         if (roll.warning) roll.err = Error("This formula had a value replaced with null.");
@@ -299,6 +299,10 @@ export class Roll35e extends Roll {
         // Step 4 - Evaluate the final expression
         this._total = this._evaluateTotal();
         return this;
+    }
+
+    roll() {
+        return super.roll({async: false});
     }
 }
 

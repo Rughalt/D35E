@@ -1949,7 +1949,7 @@ export class ItemPF extends Item {
                     dc: dc,
                     nonLethal: nonLethal,
                     useAmmoId: useAmmoId,
-                    incorporeal: this.data.data.incorporeal || this.actor.data.data.traits.incorporeal,
+                    incorporeal: this.data.data.incorporeal || this.actor?.data?.data?.traits?.incorporeal,
                     targets: selectedTargets,
                     targetIds: selectedTargetIds,
                     hasTargets: selectedTargets.length,
@@ -2559,7 +2559,7 @@ export class ItemPF extends Item {
             const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
             cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
         }
-        rollData.cl = Math.max((new Roll35e(itemData.baseCl, rollData).roll()).total, cl);
+        rollData.cl = Math.max((new Roll35e(`${itemData.baseCl}`, rollData).roll()).total, cl);
         rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
     }
 
@@ -2661,13 +2661,13 @@ export class ItemPF extends Item {
             // Handle different roll modes
             switch (chatData.rollMode) {
                 case "gmroll":
-                    chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                     break;
                 case "selfroll":
                     chatData["whisper"] = [game.user._id];
                     break;
                 case "blindroll":
-                    chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                     chatData["blind"] = true;
             }
 
@@ -3144,7 +3144,7 @@ export class ItemPF extends Item {
             const sr = getProperty(srcData, "data.sr");
             label.sr = (sr === true ? "yes" : "no");
             const pr = getProperty(srcData, "data.pr");
-            label.pr = (sr === true ? "yes" : "no");
+            label.pr = (pr === true ? "yes" : "no");
 
             if (getProperty(srcData, "data.range.units") !== "personal") data.useDCandSR = true;
         }
@@ -3451,7 +3451,7 @@ export class ItemPF extends Item {
         data.data.uses.chargesPerUse = 1
 
 
-        data.data.enh = slcl[1]
+        data.data.baseCl = slcl[1]
         data.data.enhIncreaseFormula = ""
         data.data.priceFormula = ""
         data.data.price = 0
@@ -3468,7 +3468,6 @@ export class ItemPF extends Item {
         data.data.actionType = origData.data.actionType;
         for (let d of getProperty(origData, "data.damage.parts")) {
             d[0] = d[0].replace(/@sl/g, slcl[0]);
-            d[0] = d[0].replace(/@cl/g, '@enhancement');
             data.data.damage.parts.push(d);
         }
 
@@ -3889,7 +3888,7 @@ export class ItemPF extends Item {
         const enhancements = getProperty(this.data, `data.enhancements.items`) || [];
         let itemData = (enhancements).find(i => createTag(i.name) === tag)
         if (itemData != null) {
-            return new ItemPF(itemData, {owner: this.owner});
+            return new ItemPF(itemData, {owner: this.isOwner});
         }
         else
             return itemData;
@@ -4286,13 +4285,13 @@ export class ItemPF extends Item {
         // Handle different roll modes
         switch (chatData.rollMode) {
             case "gmroll":
-                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 break;
             case "selfroll":
                 chatData["whisper"] = [game.user._id];
                 break;
             case "blindroll":
-                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 chatData["blind"] = true;
         }
 

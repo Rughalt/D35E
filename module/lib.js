@@ -168,7 +168,7 @@ export const linkData = function(expanded, flattened, key, value) {
 export const getItemOwner = function(item) {
   if (item.actor) return item.actor;
   if (item._id) {
-    return game.actors.entities.filter(o => {
+    return game.actors.contents.filter(o => {
       return o.items.filter(i => i._id === item._id).length > 0;
     })[0];
   }

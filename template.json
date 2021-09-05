@@ -998,6 +998,17 @@
             "background": false,
             "visibility": "default"
           },
+          "spk": {
+            "value": 0,
+            "ability": "",
+            "rt": true,
+            "acp": false,
+            "rank": 0,
+            "notes": "",
+            "mod": 0,
+            "background": false,
+            "visibility": "default"
+          },
           "spl": {
             "value": 0,
             "ability": "int",
@@ -1742,6 +1753,7 @@
       ],
       "level": 0,
       "range": 0,
+      "active": true,
       "auraTarget": "",
       "sourceTokenId": "",
       "sourceAuraId": "",

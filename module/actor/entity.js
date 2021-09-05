@@ -680,7 +680,7 @@ export class ActorPF extends Actor {
 
     _dataIsPC(data) {
         if (data.permission != null) {
-            const nonGM = game.users.entities.filter(u => !u.isGM);
+            const nonGM = game.users.contents.filter(u => !u.isGM);
             return nonGM.some(u => {
                 if (data.permission["default"] >= CONST.ENTITY_PERMISSIONS["OWNER"]) return true;
                 return data.permission[u._id] >= CONST.ENTITY_PERMISSIONS["OWNER"];
@@ -2753,7 +2753,7 @@ export class ActorPF extends Actor {
                                             subtype: this.constructor._getChangeItemSubtype(eItem),
                                             name: eItem.name,
                                             item: eItem,
-                                            itemRollData: new ItemPF(eItem, { owner: this.owner }).getRollData()
+                                            itemRollData: new ItemPF(eItem, { owner: this.isOwner }).getRollData()
                                         }
                                     });
                                 });
@@ -2796,7 +2796,7 @@ export class ActorPF extends Actor {
                                             subtype: this.constructor._getChangeItemSubtype(eItem),
                                             name: eItem.name,
                                             item: eItem,
-                                            itemRollData: new ItemPF(eItem, { owner: this.owner }).getRollData()
+                                            itemRollData: new ItemPF(eItem, { owner: this.isOwner }).getRollData()
                                         }
                                     });
                                 });
@@ -4375,7 +4375,7 @@ export class ActorPF extends Actor {
             if (p.private && !game.user.isGM) continue;
             if (p.entity !== "Item") continue;
 
-            const items = await p.getContent();
+            const items = await p.getDocuments();
             for (let obj of items) {
                 if (obj.type !== 'spell') continue;
                 let foundLevel = false;
@@ -4915,7 +4915,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`misc.${type}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -5090,7 +5090,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`savingThrow.${savingThrowId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -5267,7 +5267,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`skill.${isSubSkill ? skillParts[2] : skillId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = new ItemPF(noteObj.item.data, {owner: this.owner}).getRollData();
+            if (noteObj.item != null) rollData.item = new ItemPF(noteObj.item.data, {owner: this.isOwner}).getRollData();
 
             for (let note of noteObj.notes) {
                 notes.push(...note.split(/[\n\r]+/).map(o => TextEditor.enrichHTML(ItemPF._fillTemplate(o, rollData), {rollData: rollData})));
@@ -5475,7 +5475,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`misc.cmb`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -5560,7 +5560,7 @@ export class ActorPF extends Actor {
         const noteObjects = this.getContextNotes(`abilityChecks.${abilityId}`);
         for (let noteObj of noteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -5695,7 +5695,7 @@ export class ActorPF extends Actor {
         const acNoteObjects = this.getContextNotes("misc.ac");
         for (let noteObj of acNoteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -5717,7 +5717,7 @@ export class ActorPF extends Actor {
         const cmdNoteObjects = this.getContextNotes("misc.cmd");
         for (let noteObj of cmdNoteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -5739,7 +5739,7 @@ export class ActorPF extends Actor {
         const srNoteObjects = this.getContextNotes("misc.sr");
         for (let noteObj of srNoteObjects) {
             rollData.item = {};
-            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.owner }));
+            if (noteObj.item != null) rollData.item = duplicate(new ItemPF(noteObj.item.data, { owner: this.isOwner }));
 
             for (let note of noteObj.notes) {
                 if (!isMinimumCoreVersion("0.5.2")) {
@@ -8030,13 +8030,13 @@ export class ActorPF extends Actor {
         // Handle different roll modes
         switch (chatData.rollMode) {
             case "gmroll":
-                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 break;
             case "selfroll":
                 chatData["whisper"] = [game.user._id];
                 break;
             case "blindroll":
-                chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 chatData["blind"] = true;
         }
 

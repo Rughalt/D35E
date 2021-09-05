@@ -374,7 +374,7 @@ export class ActorSheetPF extends ActorSheet {
    * @private
    */
   _prepareSpellbook(data, spells, bookKey, availableSpellSpecialization, bannedSpellSpecialization, domainSpellNames) {
-    const owner = this.actor.owner;
+    const owner = this.actor.isOwner;
     const book = this.actor.data.data.attributes.spells.spellbooks[bookKey];
 
     // Reduce spells to the nested spellbook structure
@@ -1209,7 +1209,7 @@ export class ActorSheetPF extends ActorSheet {
     } else {
       let summary = li.children(".item-summary");
       if (!summary.length && item) {
-        let chatData = item.getChatData({secrets: this.actor.owner});
+        let chatData = item.getChatData({secrets: this.actor.isOwner});
         let div = $(`<div class="item-summary">${chatData.description.value}</div>`);
         let subElements = $(`<ul class="item-enh-list"></ul>`);
         let props = $(`<div class="item-properties"></div>`);
@@ -1218,7 +1218,7 @@ export class ActorSheetPF extends ActorSheet {
           //console.log('D35E | Enchancement item data', getProperty(item.data, `data.enhancements.items`) || []);
           (getProperty(item.data, `data.enhancements.items`) || []).forEach(_enh => {
 
-            let enh = new ItemPF(_enh, {owner: this.owner})
+            let enh = new ItemPF(_enh, {owner: this.isOwner})
             if (enh.hasAction || enh.isCharged) {
               let enhString = `<li class="item enh-item item-box flexrow" data-item-id="${item._id}" data-enh-id="${enh.tag}">
                     <div class="item-name  flexrow">
@@ -1988,7 +1988,7 @@ export class ActorSheetPF extends ActorSheet {
         orig: spellbook,
 
         psionicFocus: this.actor.data.data.attributes.psionicFocus,
-        canCreate: this.actor.owner === true,
+        canCreate: this.actor.isOwner === true,
         concentration: this.actor.data.data.skills["coc"].mod,
         spellcastingTypeName: spellbook.spellcastingType !== undefined && spellbook.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
       };
@@ -2016,7 +2016,7 @@ export class ActorSheetPF extends ActorSheet {
         deckCapacity: deck.deckSize.total,
         deckTotal: deckCards.length,
         orig: deck,
-        canCreate: this.actor.owner === true,
+        canCreate: this.actor.isOwner === true,
         spellcastingTypeName: deck.spellcastingType !== undefined && deck.spellcastingType !== null ? game.i18n.localize(CONFIG.D35E.spellcastingType[spellbook.spellcastingType]) : "None"
       };
 
@@ -2568,7 +2568,7 @@ export class ActorSheetPF extends ActorSheet {
         if (p.private && !game.user.isGM) continue;
         if (p.entity !== "Item") continue
 
-        const items = await p.getContent();
+        const items = await p.getDocuments();
         for (let i of items) {
           if (!_filterItems(i, entityType, type, subtype)) continue;
           let li = $(`<li class="item-list-item item" data-item-id="${i.id}">

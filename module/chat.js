@@ -15,7 +15,7 @@ export const displayChatActionButtons = function(message, html, data) {
         $(btn).addClass('everyone')
     });
     const actor = game.actors.get(data.message.speaker.actor);
-    if (actor && actor.owner) return;
+    if (actor && actor.isOwner) return;
     else if (game.user.isGM || (data.author.id === game.user.id)) return;
 
     // Otherwise make buttons disabled, but show the actions action buttons
@@ -32,20 +32,20 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
   let rollMode = game.settings.get("core", "rollMode");
   chatData = mergeObject({
     rollMode: rollMode,
-    user: game.user._id,
+    user: game.user.id,
     type: CONST.CHAT_MESSAGE_TYPES.CHAT,
   }, chatData);
   chatData.content = await renderTemplate(chatTemplate, chatTemplateData);
   // Handle different roll modes
   switch (chatData.rollMode) {
     case "gmroll":
-      chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+      chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
       break;
     case "selfroll":
-      chatData["whisper"] = [game.user._id];
+      chatData["whisper"] = [game.user.id];
       break;
     case "blindroll":
-      chatData["whisper"] = game.users.entities.filter(u => u.isGM).map(u => u._id);
+      chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
       chatData["blind"] = true;
       break;
   }
@@ -68,7 +68,7 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
 export const hideRollInfo = function(app, html, data) {
   const whisper = app.data.whisper || [];
   const isBlind = whisper.length && app.data.blind;
-  const isVisible = whisper.length ? (whisper.includes(game.user._id) || (app.isAuthor && !isBlind)) : true;
+  const isVisible = whisper.length ? (whisper.includes(game.user.id) || (app.isAuthor && !isBlind)) : true;
   if (!isVisible) {
     html.find(".dice-formula").text("???");
     html.find(".dice-total").text("?");

@@ -114,7 +114,11 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
             await getActor(source).createEmbeddedDocuments("Item", actorsAurasToAdd.get(source.id), {stopAuraUpdate: false})
         }
         if (actorsAurasToRemove.get(source.id)?.length > 0) {
-            await getActor(source).deleteEmbeddedDocuments("Item", actorsAurasToRemove.get(source.id), {stopAuraUpdate: false})
+            try {
+                await getActor(source).deleteEmbeddedDocuments("Item", actorsAurasToRemove.get(source.id), {stopAuraUpdate: false})
+            } catch (e) {
+
+            }
         }
     }
 

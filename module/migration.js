@@ -8,7 +8,7 @@ export const migrateWorld = async function() {
   //console.log(`Applying D35E System Migration for version ${game.system.data.version}. Please stand by.`);
 
   // Migrate World Actors
-  for ( let a of game.actors.entities ) {
+  for ( let a of game.actors.contents ) {
     try {
 
       let itemsToAdd = []
@@ -24,7 +24,7 @@ export const migrateWorld = async function() {
   }
 
   // Migrate World Items
-  for ( let i of game.items.entities ) {
+  for ( let i of game.items.contents ) {
     try {
       const updateData = migrateItemData(i);
       //console.log(`Migrating Item entity ${i.name}`);
@@ -35,7 +35,7 @@ export const migrateWorld = async function() {
   }
 
   // Migrate Actor Override Tokens
-  for ( let s of game.scenes.entities ) {
+  for ( let s of game.scenes.contents ) {
     try {
       const updateData = await migrateSceneData(s.data);
       //console.log(`Migrating Scene entity ${s.name}`);
@@ -72,7 +72,7 @@ export const migrateCompendium = async function(pack) {
   try {
     // Begin by requesting server-side data model migration and get the migrated content
     await pack.migrate();
-    content = await pack.getContent();
+    content = await pack.getDocuments();
   } catch(err) {
     ui.notifications.error(game.i18n.localize("D35E.ErrorProblemWithMigratingPack") + pack.collection);
     console.error(err);
