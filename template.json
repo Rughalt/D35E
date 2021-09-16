@@ -1403,6 +1403,8 @@
             "updateName": false,
             "updatePrice": false
           },
+          "clFormula": "",
+          "spellcastingAbility": "",
           "items": []
         }
       },

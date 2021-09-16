@@ -562,6 +562,8 @@ Hooks.on("updateActor",  (actor, data, options, user) => {
     console.log("Not updating actor as action was started by other user")
     return
   } else {
+
+    debouncedCollate(canvas.scene.id, true, true, "updateToken")
     if (actor.data.data.companionAutosync) {
       actor.syncToCompendium()
     }

@@ -99,7 +99,7 @@ export class ActorPF extends Actor {
     }
 
     get auras() {
-        if (!this._cachedAuras) this._cachedAuras = this.items.filter((o) => o.type === "aura");
+        if (!this._cachedAuras) this._cachedAuras = this.items.filter((o) => o.type === "aura" && o.data.data.active);
         return this._cachedAuras;
     }
 
@@ -265,7 +265,7 @@ export class ActorPF extends Actor {
                 "allSavingThrows", "fort", "ref", "will", "turnUndead","turnUndeadDiceTotal", "spellResistance", "powerPoints", "sneakAttack",
                 "cmb", "cmd", "init", "mhp", "wounds", "vigor", "arcaneCl", "divineCl", "psionicCl", "cardCl", "cr", "fortification", "regen", "fastHeal", "concealment", ...spellTargets,"scaPrimary","scaSecondary","scaTetriary","scaSpelllike"
             ], modifiers: [
-                "untyped", "base", "enh", "dodge", "inherent", "deflection",
+                "replace", "untyped", "base", "enh", "dodge", "inherent", "deflection",
                 "morale", "luck", "sacred", "insight", "resist", "profane",
                 "trait", "racial", "size", "competence", "circumstance",
                 "alchemical", "penalty"
@@ -427,6 +427,7 @@ export class ActorPF extends Actor {
             case "rattack":
                 return "data.attributes.attack.ranged";
             case "babattack":
+                if (changeType === "replace") return "data.attributes.bab.replace";
                 return ["data.attributes.bab.total", "data.attributes.cmb.total"];
             case "damage":
                 return "data.attributes.damage.general";
@@ -996,6 +997,7 @@ export class ActorPF extends Actor {
                     data[`token.lightColor`] = color || '#000';
                     data[`token.lightAnimation.type`] = type;
                     data[`token.lightAlpha`] = alpha;
+                    data[`token.lightAngle`] = lightAngle;
                 }
             }
             if (!this.data.data.noVisionOverride && !game.settings.get("D35E", "globalDisableTokenVision"))
@@ -2932,6 +2934,10 @@ export class ActorPF extends Actor {
             if (changes[`data.attributes.speed.${speedKey}.replace`])
                 linkData(data, updateData, `data.attributes.speed.${speedKey}.total`, changes[`data.attributes.speed.${speedKey}.replace`]);
         }
+        if (changes[`data.attributes.bab.replace`]) {
+            linkData(data, updateData, `data.attributes.bab.total`, changes[`data.attributes.bab.replace`]);
+            linkData(data, updateData, `data.attributes.cmb.total`, changes[`data.attributes.bab.replace`]);
+        }
 
         // Add ability mods to CMB and CMD
         const cmbMod = Object.keys(CONFIG.D35E.actorSizes).indexOf(getProperty(data, "data.traits.size") || "") <= Object.keys(CONFIG.D35E.actorSizes).indexOf("tiny") ? modDiffs["dex"] : modDiffs["str"];
@@ -3588,6 +3594,9 @@ export class ActorPF extends Actor {
 
     async refresh(options = {}) {
         if (this.testUserPermission(game.user, "OWNER") && options.stopUpdates !== true) {
+            if (options.reloadAuras) {
+                this._cachedAuras = null;
+            }
             return this.update({});
         }
     }
@@ -7894,7 +7903,7 @@ export class ActorPF extends Actor {
             if (cur.data.data.hideFromToken) return acc;
             if (cur.data.data?.buffType === "shapechange") return acc;
             if (!acc[id]) acc[id] = { id: cur.id, label: cur.name, icon: cur.data.img, item: cur };
-            if (cur.type === "aura" || cur.data.data.active) acc[id].active = true;
+            if (cur.data.data.active) acc[id].active = true;
             else acc[id].active = false;
             return acc;
         }, {});

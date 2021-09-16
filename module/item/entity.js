@@ -626,9 +626,8 @@ export class ItemPF extends Item {
         // }
 
         if (activateBuff) {
-            data["data.timeline.elapsed"] = 0
+            data["data.timeline.elapsed"] = 0;
         }
-
         let updateData = await super.update(data, options);
         if (this.actor !== null && !options.massUpdate) {
 
@@ -668,6 +667,10 @@ export class ItemPF extends Item {
                         }
                     }
                 }
+                if (this.type === "aura") {
+                    await this.actor.refresh({reloadAuras: true})
+                }
+
             } else if (deactivateBuff) {
                 if (this.data.data.buffType === "shapechange") {
                     if (this.data.data.shapechange.type === "wildshape" || this.data.data.shapechange.type === "polymorph") {
@@ -699,7 +702,10 @@ export class ItemPF extends Item {
                         const srcDataWithRolls = this.getRollData(srcData);
                         await this.actor.applyActionOnSelf(actionValue, this.actor, srcDataWithRolls, "self")
                     }
-                }   
+                }
+                if (this.type === "aura") {
+                    await this.actor.refresh({reloadAuras: true})
+                }
     
             } else {
                 if (needsUpdate)
@@ -2559,6 +2565,11 @@ export class ItemPF extends Item {
             const spellbook = this.actor.data.data.attributes.spells.spellbooks[spellbookIndex];
             cl = spellbook.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
         }
+        if (itemData.deck) {
+            const deckIndex = itemData.deck;
+            const deck = this.actor.data.data.attributes.cards.deck[deckIndex];
+            cl = deck.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
+        }
         rollData.cl = Math.max((new Roll35e(`${itemData.baseCl}`, rollData).roll()).total, cl);
         rollData.spellPenetration = rollData.cl + (rollData?.featSpellPenetrationBonus || 0);
     }
@@ -3900,6 +3911,15 @@ export class ItemPF extends Item {
                 return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
             }
         }
+        if (this.data.data.enhancements.clFormula) {
+            item.data.data.baseCl = new Roll35e(this.data.data.enhancements.clFormula, this.actor.getRollData()).roll().total;
+        }
+        if (item.data.data.save) {
+            let ablMod = 0
+            if (this.data.data.enhancements.spellcastingAbility !== "") ablMod = getProperty(this.actor.data, `data.abilities.${this.data.data.enhancements.spellcastingAbility}.mod`);
+            item.data.data.save.dc += ablMod;
+        }
+
         let roll = await item.use({ev: event, skipDialog: event.shiftKey},this.actor,this.data.data.enhancements.uses.commonPool === true);
         if (roll.wasRolled) {
             if (this.data.data.enhancements.uses.commonPool) {

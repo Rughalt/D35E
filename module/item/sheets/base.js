@@ -571,8 +571,8 @@ export class ItemSheetPF extends ItemSheet {
             }
 
 
-            if (data.data.nonActiveClassAbilities !== undefined && data.data.nonActiveClassAbilities !== null) {
-                data.data.nonActiveClassAbilities.forEach(a => {
+            if (this.item.data.data.nonActiveClassAbilities !== undefined && this.item.data.data.nonActiveClassAbilities !== null) {
+                this.item.data.data.nonActiveClassAbilities.forEach(a => {
                     if (a[0] !== 0) {
                         if (data.progression[a[0] - 1]['nonActive'] === undefined) {
                             data.progression[a[0] - 1]['nonActive'] = [];

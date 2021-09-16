@@ -15,7 +15,7 @@ function getActor(source) {
     if (source.document.data.actorLink) {
         return game.actors.get(source.document.data.actorId)
     } else {
-        return source.actor
+        return source.actor || {auras: [] }
     }
 }
 
@@ -57,6 +57,7 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
             actorsAurasAlreadyPresentIds.set(source.id, new Set())
         }
         for (let aura of getActor(source).auras) {
+            console.log(getActor(source).auras)
             actorsAurasAlreadyPresent.get(source.id).add(aura.data.data.sourceAuraId)
             actorsAurasAlreadyPresentIds.get(source.id).add(aura.id)
         }
@@ -64,7 +65,9 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
     }
 
     for (const source of canvas.tokens.placeables) {
+        if (!source.actor) continue;
         for (let aura of getActor(source).auras) {
+            console.log(getActor(source).auras)
             let auraToAdd = aura.data.toObject(false);
             auraToAdd.data.sourceTokenId = source.id;
             auraToAdd.data.sourceAuraId = aura._id;
@@ -77,7 +80,7 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
                 actorModifiedAuras.get(source.id).add(aura._id);
             }
             for (const target of canvas.tokens.placeables) {
-
+                if (!target.actor || !source.actor) continue;
                 let targetName = target.actor.name;
                 let sourceName = source.actor.name;
                 if (aura.data.data.sourceTokenId) {

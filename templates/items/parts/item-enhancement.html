@@ -248,8 +248,30 @@
 
                 </li>
                 {{/each}}
+                <li style="padding: 4px">
+                    <div class="form-group uses-per">
+                        <label>{{localize "D35E.CasterLevel"}}</label>
+                        <div class="form-fields">
+                            <input type="text" name="data.enhancements.clFormula" value="{{data.data.enhancements.clFormula}}"  />
+                        </div>
+                    </div>
+                    <div class="form-group uses-per">
+                        <label>{{localize "D35E.SpellcastingAbility"}}</label>
+                        <div class="form-fields">
+                            <select name="data.enhancements.spellcastingAbility" data-dtype="String">
+                                {{#select data.data.enhancements.spellcastingAbility}}
+                                <option value="">{{localize "D35E.None"}}</option>
+                                {{#each config.abilities as |abl a|}}
+                                <option value="{{a}}">{{abl}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+                    </div>
+                </li>
             </ol>
         </ol>
+
 
     </div>
 </div>
