@@ -57,7 +57,6 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
             actorsAurasAlreadyPresentIds.set(source.id, new Set())
         }
         for (let aura of getActor(source).auras) {
-            console.log(getActor(source).auras)
             actorsAurasAlreadyPresent.get(source.id).add(aura.data.data.sourceAuraId)
             actorsAurasAlreadyPresentIds.get(source.id).add(aura.id)
         }
@@ -112,18 +111,21 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
             }
         }
     }
+    let updatePromises = [];
     for (const source of canvas.tokens.placeables) {
         if (actorsAurasToAdd.get(source.id)?.length > 0) {
-            await getActor(source).createEmbeddedDocuments("Item", actorsAurasToAdd.get(source.id), {stopAuraUpdate: false})
+            updatePromises.push(getActor(source).createEmbeddedDocuments("Item", actorsAurasToAdd.get(source.id), {stopAuraUpdate: false}))
+
         }
         if (actorsAurasToRemove.get(source.id)?.length > 0) {
             try {
-                await getActor(source).deleteEmbeddedDocuments("Item", actorsAurasToRemove.get(source.id), {stopAuraUpdate: false})
+                updatePromises.push(getActor(source).deleteEmbeddedDocuments("Item", actorsAurasToRemove.get(source.id), {stopAuraUpdate: false}))
             } catch (e) {
 
             }
         }
     }
+    await Promise.all(updatePromises)
 
 
     if (AuraDebug) {

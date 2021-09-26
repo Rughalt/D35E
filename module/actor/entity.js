@@ -3024,6 +3024,10 @@ export class ActorPF extends Actor {
         }
     }
 
+    get originalName() {
+        this.getFlag("babele", "translated") ? this.getFlag("babele", "originalName") : this.name
+    }
+
     /**
      * Augment the basic actor data with additional dynamic data.
      */
@@ -3076,9 +3080,12 @@ export class ActorPF extends Actor {
         }).forEach(_cls => {
             let cls = _cls.data
             let tag = createTag(cls.data.customTag || cls.name);
-            cls.data.baseTag = tag;
             let nameTag = createTag(cls.name);
+            let originalNameTag = createTag(cls.originalName);
+
+            cls.data.baseTag = tag;
             cls.data.nameTag = nameTag;
+
             let count = 1;
             while (actorData.items.filter(obj => {
                 return obj.type === "class" && obj.data.tag === tag && obj !== cls;
@@ -3126,7 +3133,6 @@ export class ActorPF extends Actor {
                     alt: classType === "base" ? cls.data.fc.alt.value : 0,
                 },
             };
-            data.classes[nameTag] = data.classes[tag];
             data.classes[tag].spellsKnownPerLevel = []
             data.classes[tag].powersKnown = []
             data.classes[tag].powersMaxLevel = []
@@ -3143,6 +3149,12 @@ export class ActorPF extends Actor {
             }
             if (cls.data.classType !== "racial")
                 totalNonRacialLevels = Math.min(totalNonRacialLevels + cls.data.levels, 20)
+
+            if (nameTag !== tag)
+                data.classes[nameTag] = data.classes[tag];
+            if (originalNameTag !== tag)
+                data.classes[originalNameTag] = data.classes[tag];
+
         });
         data.classLevels = totalNonRacialLevels;
         {

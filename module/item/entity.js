@@ -80,6 +80,10 @@ export class ItemPF extends Item {
         return ItemPF.getCharges(this)
     }
 
+    get originalName() {
+        this.getFlag("babele", "translated") ? this.getFlag("babele", "originalName") : this.name
+    }
+
     static getCharges(item) {
         if (item.type === "card") return item.data.data.state === "hand"
         if (item.data.data?.linkedChargeItem?.id) {
@@ -2025,13 +2029,13 @@ export class ItemPF extends Item {
             ammunition: this.data.data.thrown ? actor.items.filter(o => o._id === this.data.data.originalWeaponId) : actor.items.filter(o => o.type === "loot" && o.data.data.subType === "ammo" && o.data.data.quantity > 0),
             extraAttacksCount: extraAttacksCount,
             hasTemplate: this.hasTemplate,
-            canPowerAttack: actor.items.filter(o => o.type === "feat" && o.name === "Power Attack").length > 0,
+            canPowerAttack: actor.items.filter(o => o.type === "feat" && o.originalName === "Power Attack").length > 0,
             maxPowerAttackValue: getProperty(actor.data, "data.attributes.bab.total"),
-            canManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Manyshot").length > 0,
+            canManyshot: actor.items.filter(o => o.type === "feat" && o.originalName === "Manyshot").length > 0,
             maxManyshotValue: 2 + Math.floor((getProperty(actor.data, "data.attributes.bab.total") - 6) / 5),
-            canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.name === "Greater Manyshot").length > 0,
-            canRapidShot: actor.items.filter(o => o.type === "feat" && o.name === "Rapid Shot").length > 0,
-            canFlurryOfBlows: actor.items.filter(o => o.type === "feat" && (o.name === "Flurry of Blows" || o.data.data.customTag === "flurryOfBlows")).length > 0,
+            canGreaterManyshot: actor.items.filter(o => o.type === "feat" && o.originalName === "Greater Manyshot").length > 0,
+            canRapidShot: actor.items.filter(o => o.type === "feat" && o.originalName === "Rapid Shot").length > 0,
+            canFlurryOfBlows: actor.items.filter(o => o.type === "feat" && (o.originalName === "Flurry of Blows" || o.data.data.customTag === "flurryOfBlows")).length > 0,
             maxGreaterManyshotValue: getProperty(actor.data, "data.abilities.wis.mod"),
             weaponFeats: actor.items.filter(o => (o.type === "aura" || o.type === "feat" || (o.type ==="buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.hasCombatChange(this.type,rollData)),
             weaponFeatsOptional: actor.items.filter(o => (o.type === "aura" || o.type === "feat" || (o.type ==="buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded)) && o.hasCombatChange(`${this.type}Optional`,rollData)),
