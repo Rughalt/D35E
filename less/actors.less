@@ -1362,9 +1362,17 @@
       border-bottom: 1px solid @colorFaint;
       &:last-child { border-bottom: none; }
 
+
       background-color: rgba(155, 155, 155, 0.3);
       &:nth-child(2n+1) {
         background-color: rgba(210, 210, 210, 0.3);
+      }
+      &:nth-child(2n+1):hover {
+        background-color: rgba(255, 255, 255, 0.4) !important;
+      }
+
+      &:nth-child(2n):hover {
+        background-color: rgba(255, 255, 255, 0.4) !important;
       }
 
       h3.sublist-empty {
@@ -1418,6 +1426,7 @@
         .item-image:hover:not(.non-rollable) {
           background-image: url("../../icons/svg/d20-black.svg") !important;
         }
+
       }
 
       .class-level-box {
@@ -1456,6 +1465,8 @@
           }
         }
       }
+
+
     }
 
     // Inventory Header
@@ -1551,6 +1562,7 @@
 
       &:nth-child(2) { border-left: 1px solid @colorFaint; }
       &:last-child { border-right: none; }
+
     }
 
     a.item-control {
