@@ -3081,7 +3081,7 @@ export class ActorPF extends Actor {
             let cls = _cls.data
             let tag = createTag(cls.data.customTag || cls.name);
             let nameTag = createTag(cls.name);
-            let originalNameTag = createTag(cls.originalName);
+            let originalNameTag = createTag(_cls.originalName);
 
             cls.data.baseTag = tag;
             cls.data.nameTag = nameTag;
