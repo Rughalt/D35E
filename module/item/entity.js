@@ -44,7 +44,7 @@ export class ItemPF extends Item {
     get hasTemplate() {
         const v = getProperty(this.data, "data.measureTemplate.type");
         const s = getProperty(this.data, "data.measureTemplate.size");
-        return (typeof v === "string" && v !== "") && (typeof s === "number" && s > 0);
+        return (typeof v === "string" && v !== "") && (typeof s === "string" && s.length > 0);
     }
 
     get hasAction() {
@@ -1855,7 +1855,7 @@ export class ItemPF extends Item {
 
                 // //console.log(`D35E | Creating measure template.`)
                 // Create template
-                const template = AbilityTemplate.fromItem(this, rollData.spellWidened ? 2 : 1);
+                const template = AbilityTemplate.fromItem(this, rollData.spellWidened ? 2 : 1, rollData);
                 if (template) {
                     if (getProperty(this, "actor.sheet.rendered")) actor.sheet.minimize();
                     const success = await template.drawPreview(ev);

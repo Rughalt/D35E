@@ -1502,7 +1502,7 @@
       "action": {
         "measureTemplate": {
           "type": "",
-          "size": 0,
+          "size": "",
           "overrideColor": false,
           "customColor": "",
           "overrideTexture": false,

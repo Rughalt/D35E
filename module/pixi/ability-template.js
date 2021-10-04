@@ -1,4 +1,5 @@
 import { D35E } from "../config.js";
+import {Roll35e} from "../roll.js";
 
 /**
  * A helper class for building MeasuredTemplates for 5e spells and abilities
@@ -11,16 +12,17 @@ export default class AbilityTemplate extends MeasuredTemplate {
    * @param {ItemD35E} item               The Item object for which to construct the template
    * @return {AbilityTemplate|null}     The template object, or null if the item does not produce a template
    */
-  static fromItem(item, multiplier = 1) {
+  static fromItem(item, multiplier = 1, rollData = {}) {
     const target = getProperty(item.data, "data.measureTemplate") || {};
     const templateShape = D35E.areaTargetTypes[target.type];
     if ( !templateShape ) return null;
-
+    let baseSize = new Roll35e(`${target.size}`, rollData).roll().total;
+    let size = baseSize*multiplier || 5;
     // Prepare template data
     const templateData = {
       t: templateShape,
       user: game.user._id,
-      distance: target.size*multiplier || 5,
+      distance: size,
       direction: 0,
       x: 0,
       y: 0,
