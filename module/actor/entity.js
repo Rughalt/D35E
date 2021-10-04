@@ -2161,8 +2161,8 @@ export class ActorPF extends Actor {
             return obj.data.type === "class";
         });
 
-        const racialHD = classes.filter(o => getProperty(o.data, "classType") === "racial");
-        const templateHD = classes.filter(o => getProperty(o.data, "classType") === "template");
+        const racialHD = classes.filter(o => getProperty(o.data.data, "classType") === "racial");
+        const templateHD = classes.filter(o => getProperty(o.data.data, "classType") === "template");
         const useFractionalBaseBonuses = game.settings.get("D35E", "useFractionalBaseBonuses") === true;
 
 
@@ -2186,11 +2186,11 @@ export class ActorPF extends Actor {
 
         // Set creature type
         if (racialHD.length > 0) {
-            linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data, "creatureType") || "humanoid");
+            linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data.data, "creatureType") || "humanoid");
         }
         // Set creature type
         if (templateHD.length > 0) {
-            linkData(data, updateData, "data.attributes.creatureType", getProperty(templateHD[0].data, "creatureType") || "humanoid");
+            linkData(data, updateData, "data.attributes.creatureType", getProperty(templateHD[0].data.data, "creatureType") || "humanoid");
         }
 
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);
@@ -6209,6 +6209,8 @@ export class ActorPF extends Actor {
                 value = damageData.damage;
                 if (finalAc.applyHalf && value > 0)
                     value = Math.max(Math.floor(value/2),1);
+                else if (finalAc.applyHalf && value < 0)
+                    value = Math.min(Math.floor(value/2),-1);
                 nonLethal += damageData.nonLethalDamage;
                 if (finalAc.applyHalf && nonLethal)
                     nonLethal =  Math.max(Math.floor(nonLethal/2),1);

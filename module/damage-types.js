@@ -346,9 +346,9 @@ export class DamageTypes {
 
                     if (d.damageTypeUid === 'damage-healing')
                         damageAfterEr =- damageAfterEr;
-                    else if (actor.data.data.details?.type === "undead" && d.damageTypeUid === "energy-negative")
+                    else if (actor.data.data.attributes?.creatureType === "undead" && d.damageTypeUid === "energy-negative")
                         damageAfterEr =- damageAfterEr;
-                    else if (actor.data.data.details?.type !== "undead" && d.damageTypeUid === "energy-positive")
+                    else if (actor.data.data.attributes?.creatureType !== "undead" && d.damageTypeUid === "energy-positive")
                         damageAfterEr =- damageAfterEr;
 
                     let value = erValue?.value
