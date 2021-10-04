@@ -6900,7 +6900,7 @@ export class ActorPF extends Actor {
         return Promise.all(promises);
     }
 
-    async applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, sourceActor) {
+    async applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, sourceActor, itemsToDelete) {
         function cleanParam(parameter) {
             return parameter.replace(/"/gi, "");
         }
@@ -7232,6 +7232,14 @@ export class ActorPF extends Actor {
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
                 break;
+
+            case "Remove":
+                if (action.parameters.length === 2) {
+                    let item = this.getItemByTagAndType(action.parameters[1], action.parameters[0]);
+                    itemsToDelete.push(item.id);
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
             case "Roll":
                 if (action.parameters.length === 1) {
                     // Do a roll
@@ -7281,6 +7289,7 @@ export class ActorPF extends Actor {
         if (!this.testUserPermission(game.user, "OWNER")) return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoActorPermission"));
 
         let itemCreationActions = []
+        let itemRemoveActions = []
         let itemUpdateActions = []
         let actorUpdateActions = []
         let otherActions = []
@@ -7300,6 +7309,9 @@ export class ActorPF extends Actor {
                 case "Create":
                 case "Give":
                     itemCreationActions.push(action)
+                    break;
+                case "Remove":
+                    itemRemoveActions.push(action)
                     break;
                 case "Activate":
                     otherActions.push(action)
@@ -7344,26 +7356,34 @@ export class ActorPF extends Actor {
         }
 
         let itemUpdates = [];
+        let itemsToDelete = [];
         let itemsToCreate = [];
         let actorUpdates = {};
 
         for (let action of itemCreationActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor, itemsToDelete)
         }
         if (itemCreationActions.length) {
             console.log("D35E | ACTION | itemCreationActions", itemCreationActions)
             await this.createEmbeddedDocuments("Item", itemsToCreate, {})
         }
+        for (let action of itemRemoveActions) {
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor, itemsToDelete)
+        }
+        if (itemRemoveActions.length) {
+            console.log("D35E | ACTION | itemCreationActions", itemRemoveActions)
+            await this.deleteEmbeddedDocuments("Item", itemsToDelete, {})
+        }
 
         for (let action of itemUpdateActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor, itemsToDelete)
         }
         if (itemUpdateActions.length) {
             console.log("D35E | ACTION | itemUpdateActions", itemUpdateActions)
             await this.updateEmbeddedDocuments("Item", itemUpdates, {})
         }
         for (let action of actorUpdateActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor, itemsToDelete)
         }
         if (actorUpdateActions.length) {
             console.log("D35E | ACTION | actorUpdates", actorUpdateActions, this.name)
@@ -7372,7 +7392,7 @@ export class ActorPF extends Actor {
             await this.update({})
         }
         for (let action of otherActions) {
-            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor)
+            await this.applySingleAction(action, itemUpdates, itemsToCreate, actorUpdates, actionRollData, actor, itemsToDelete)
         }
     }
 
@@ -8036,6 +8056,15 @@ export class ActorPF extends Actor {
 
     getItemByTag(tag) {
         let _item = this.items.find(item => createTag(item.name) === tag || item.data.data.customTag === tag)
+        if (_item != null) {
+            return _item
+        } else {
+            return null;
+        }
+    }
+
+    getItemByTagAndType(tag, type) {
+        let _item = this.items.find(item => item.type === type && (createTag(item.name) === tag || item.data.data.customTag === tag))
         if (_item != null) {
             return _item
         } else {
