@@ -190,6 +190,13 @@
       "entity": "RollTable"
     },
     {
+      "name": "item-roll-tables",
+      "label": "Item Roll Tables",
+      "system": "D35E",
+      "path": "./packs/item-roll-tables.db",
+      "entity": "RollTable"
+    },
+    {
       "name": "bestiary",
       "label": "Bestiary",
       "system": "D35E",

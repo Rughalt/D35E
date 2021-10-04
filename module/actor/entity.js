@@ -6207,7 +6207,7 @@ export class ActorPF extends Actor {
                         damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal)
                 }
                 value = damageData.damage;
-                if (finalAc.applyHalf)
+                if (finalAc.applyHalf && value > 0)
                     value = Math.max(Math.floor(value/2),1);
                 nonLethal += damageData.nonLethalDamage;
                 if (finalAc.applyHalf && nonLethal)
@@ -6275,8 +6275,11 @@ export class ActorPF extends Actor {
             //console.log('D35E | Damage Value ', value, damage)
             if (hit) {
                 let dt = value > 0 ? Math.min(tmp, value) : 0;
+                let nonLethalHeal = 0
+                if (value < 0)
+                    nonLethalHeal = value;
                 promises.push(t.actor.update({
-                    "data.attributes.hp.nonlethal": _nonLethal + nonLethal,
+                    "data.attributes.hp.nonlethal": Math.max(_nonLethal + nonLethal + nonLethalHeal, 0),
                     "data.attributes.hp.temp": tmp - dt,
                     "data.attributes.hp.value": Math.clamped(hp.value - (value - dt), -100, hp.max)
                 }));
@@ -7661,6 +7664,7 @@ export class ActorPF extends Actor {
             }
 
             updateData["data.attributes.hp.value"] = Math.min(actorData.attributes.hp.value + heal.hp, actorData.attributes.hp.max);
+            updateData["data.attributes.hp.nonlethal"] = Math.max(actorData.attributes.hp.nonlethal - heal.hp, 0);
             for (let [key, abl] of Object.entries(actorData.abilities)) {
                 let dmg = Math.abs(abl.damage);
                 updateData[`data.abilities.${key}.damage`] = Math.max(0, dmg - heal.abl);

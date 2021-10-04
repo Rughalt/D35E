@@ -2473,18 +2473,8 @@ export class ItemPF extends Item {
 
 
         // Define Roll parts
-        let parts = itemData.damage.parts.map(p => {
-            if (p[2])
-                p[1] = CACHE.DamageTypes.get(p[2]).data.name
-            else if (p[1]) {
-                for(let damageType of CACHE.DamageTypes.values()) {
-                    if (damageType.data.data.identifiers.some(i => i[0].toLowerCase() === p[1].toLowerCase()))
-                        p[2] = damageType.data.data.uniqueId;
-                }
-            }
+        let parts = this._mapDamageTypes(itemData.damage.parts);
 
-            return {base: p[0], extra: [], damageType: p[1], damageTypeUid: p[2]};
-        });
         parts[0].base = alterRoll(parts[0].base, 0, rollData.critMult);
 
         // Determine ability score modifier
@@ -2556,6 +2546,58 @@ export class ItemPF extends Item {
         }
         // //console.log(rolls);
         return rolls;
+    }
+
+    rollAlternativeDamage({data = null} = {}) {
+        const itemData = this.data.data;
+        let rollData = null;
+        let baseModifiers = [];
+        if (!data) {
+            rollData = this.actor.getRollData();
+            rollData.item = duplicate(itemData);
+        } else rollData = data;
+
+        // Add CL
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
+            this._adjustSpellCL(itemData, rollData);
+        }
+
+        // Define Roll parts
+        let parts = this._mapDamageTypes(itemData.damage.alternativeParts);
+
+        let rolls = [];
+        for (let a = 0; a < parts.length; a++) {
+            const part = parts[a];
+            let roll = {}
+            let rollString = `((${[part.base, ...part.extra].join("+")}))`;
+            roll = {
+                roll: new Roll35e(rollString, rollData).roll(),
+                damageType: part.damageType,
+                damageTypeUid: part.damageTypeUid
+            };
+            rolls.push(roll);
+        }
+        return rolls;
+    }
+
+    /**
+     * Map damage types in damage parts
+     * @private
+     */
+    _mapDamageTypes(damageParts) {
+        let parts = damageParts.map(p => {
+            if (p[2])
+                p[1] = CACHE.DamageTypes.get(p[2]).data.name
+            else if (p[1]) {
+                for (let damageType of CACHE.DamageTypes.values()) {
+                    if (damageType.data.data.identifiers.some(i => i[0].toLowerCase() === p[1].toLowerCase()))
+                        p[2] = damageType.data.data.uniqueId;
+                }
+            }
+
+            return {base: p[0], extra: [], damageType: p[1], damageTypeUid: p[2]};
+        });
+        return parts;
     }
 
     /**

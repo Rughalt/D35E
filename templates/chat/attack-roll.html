@@ -87,6 +87,36 @@
                 {{/if}}
             </div>
 
+
+            {{#if atk.hasAltDamage}}
+            <div class="flexrow">
+                <div class="flexcol toggle-header">
+                    <div class="dice-roll damage-roll">
+                        {{#if altDmg.flavor}}
+                        <div class="dice-flavor">{{altDamage.flavor}}</div>
+                        {{/if}}
+                        <div class="dice-result">
+                            <h4 class="dice-total">{{altDamage.total}}</h4>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                {{#if atk.altCards.length}}
+                <div class="flexcol card-buttons special-action-button" style="margin: 0;  min-width: 40px; max-width: 90px; flex-basis: auto; flex-grow: 0; flex: 0 0 90px">
+                    {{#each atk.altCards as |card|}}
+                    <div style="flex: 0;" class="flexrow">
+                        <button style="height: 26px; line-height: 26px; font-size: 16px; margin:0; overflow: hidden;" data-action="{{card.action}}" data-natural="{{card.natural20}}" data-naturalcrit="{{card.natural20Crit}}" data-fumble="{{card.fumble}}" data-fumblecrit="{{card.fumbleCrit}}" data-nonLethal="{{../../nonLethal}}" data-normaljson="{{card.normalDamage}}" data-json="{{card.data}}" data-critroll="{{../critConfirm.total}}" data-roll="{{../attack.total}}" data-enh="{{card.enh}}"
+                                data-material="{{card.material}}" data-incorporeal="{{card.incorporeal}}"  data-alignment="{{card.alignment}}" data-value="{{card.value}}" data-attacker="{{../../actor._id}}" {{#if ../../useAmmoId}}data-ammoid="{{../../useAmmoId}}"{{/if}}  {{#if ../../tokenId}}data-attackertoken="{{../../tokenId}}" {{/if}}>
+                        {{card.label}}
+                        </button>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+            </div>
+
             <div class="toggle-content dice-tooltips" style="display: none">
                 {{#if atk.hasAttack}}
                 <div class="dice-flavor" style="text-align: center"><h2>Attack details</h2></div>
@@ -105,6 +135,7 @@
                 {{/if}}
             </div>
         </div>
+        {{/if}}
 
         {{#if atk.hasCritConfirm}}
             <div class="toggle-box">

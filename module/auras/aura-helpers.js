@@ -66,17 +66,16 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
     for (const source of canvas.tokens.placeables) {
         if (!source.actor) continue;
         for (let aura of getActor(source).auras) {
-            console.log(getActor(source).auras)
             let auraToAdd = aura.data.toObject(false);
             auraToAdd.data.sourceTokenId = source.id;
-            auraToAdd.data.sourceAuraId = aura._id;
+            auraToAdd.data.sourceAuraId = aura.id;
             auraToAdd.data.sourceActorName = source.actor.name;
-            delete auraToAdd._id;
+            delete auraToAdd.id;
             if (aura.data.data.sourceTokenId && !canvas.tokens.get(aura.data.data.sourceTokenId)) {
                 if (!actorsAurasToRemove.has(source.id))
                     actorsAurasToRemove.set(source.id, [])
-                actorsAurasToRemove.get(source.id).push(aura._id)
-                actorModifiedAuras.get(source.id).add(aura._id);
+                actorsAurasToRemove.get(source.id).push(aura.id)
+                actorModifiedAuras.get(source.id).add(aura.id);
             }
             for (const target of canvas.tokens.placeables) {
                 if (!target.actor || !source.actor) continue;
@@ -90,8 +89,8 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
                         if (!inAura || !isCorrectAlliance(source, target, aura.data.data.auraTarget) || !actorsAurasAlreadyPresentIds.get(target.id).has(aura.data.data.sourceAuraId)) {
                             if (!actorsAurasToRemove.has(source.id))
                                 actorsAurasToRemove.set(source.id, [])
-                            actorsAurasToRemove.get(source.id).push(aura._id)
-                            actorModifiedAuras.get(source.id).add(aura._id);
+                            actorsAurasToRemove.get(source.id).push(aura.id)
+                            actorModifiedAuras.get(source.id).add(aura.id);
                         }
                     }
                 } else {
@@ -99,13 +98,12 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
                     if (target.actor.id === source.actor.id) continue;
                     let inAura = await AuraMeasureDistance.inAura(target, source, true, 0, aura.data.data.range || 5, getAuraShape(source, aura.data.data.range || 5));
                     if (inAura) {
-                        console.log("D35E | Auras | In Aura", source, target)
-                        if (!actorsAurasAlreadyPresent.get(target.id).has(aura._id) && !actorModifiedAuras.get(target.id).has(aura._id) && isCorrectAlliance(source, target, aura.data.data.auraTarget)) {
+                        if (!actorsAurasAlreadyPresent.get(target.id).has(aura.id) && !actorModifiedAuras.get(target.id).has(aura.id) && isCorrectAlliance(source, target, aura.data.data.auraTarget)) {
                             if (!actorsAurasToAdd.has(target.id))
                                 actorsAurasToAdd.set(target.id, [])
                             actorsAurasToAdd.get(target.id).push(auraToAdd)
                         }
-                        actorModifiedAuras.get(target.id).add(aura._id);
+                        actorModifiedAuras.get(target.id).add(aura.id);
                     }
                 }
             }

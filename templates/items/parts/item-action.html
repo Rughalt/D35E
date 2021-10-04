@@ -230,6 +230,34 @@
   {{/each}}
 </ol>
 
+{{!-- Damage Formula --}}
+<h4 class="damage-header">
+  {{localize "D35E.AlternativeDamageFormula"}}
+  <a class="damage-alt-control add-alt-damage"><i class="fas fa-plus"></i></a>
+</h4>
+<ol class="damage-parts form-group tooltip">
+  <span class="tooltipcontent">
+    This damage is not affected by crtical hits or other modifiers automatically.
+  </span>
+  {{#each data.data.damage.alternativeParts as |part i| }}
+  <li class="damage-part flexrow" data-damage-part="{{i}}">
+    <input type="text" name="data.damage.alternativeParts.{{i}}.0" placeholder="{{#unless isHealing }}{{localize "D35E.DamageFormula"}}{{ else }}{{localize "D35E.HealingFormula"}}{{/unless}}" value="{{lookup this "0"}}"/>
+    <select name="data.damage.alternativeParts.{{i}}.2">
+      {{#select (lookup this "2")}}
+      <option value="">{{localize "D35E.Custom"}}</option>
+      {{#each ../damageTypes as |damage type|}}
+      <option value="{{damage.data.data.uniqueId}}">{{damage.data.name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{#unless (lookup this "2")}}
+    <input type="text" name="data.damage.alternativeParts.{{i}}.1" value="{{lookup this "1"}}" placeholder="{{localize "D35E.DamageTypes"}}"/>
+    {{/unless}}
+    <a class="damage-alt-control delete-alt-damage"><i class="fas fa-minus"></i></a>
+  </li>
+  {{/each}}
+</ol>
+
 {{!-- Saving Throw --}}
 <div class="form-group input-select">
   <label>{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}</label>
@@ -273,7 +301,7 @@
   <textarea type="text" name="data.effectNotes" style="white-space: pre">{{data.data.effectNotes}}</textarea>
 </div>
 
-
+<div class="flexcol special-actions">
 <h4 class="in-header">
   {{localize "D35E.SpecialActions"}}
   <a class="special-control add-special"><i class="fas fa-plus"></i></a>
@@ -290,7 +318,12 @@
   </li>
   {{/each}}
 </ol>
-
+  <div class="spellbuff-link flexcol">
+  <div style="width: 100%; text-align: center; padding: 12px">
+    You can drop a buff from compendium here to create a special action.
+  </div>
+  </div>
+</div>
 
 <h4 class="in-header">
   {{localize "D35E.RollTableDraw"}}
@@ -305,9 +338,9 @@
     {{localize "D35E.DropRolltable"}}
   </div>
   {{else}}
-  <h4>{{localize "D35E.LinkedRolltable"}} {{data.datarollTableDraw.id}}<a style="float: right" class="colorized-link remove-rolltable-link">{{localize "D35E.UnlinkRolltable"}}</a></h4>
+  <h4>{{localize "D35E.LinkedRolltable"}} {{data.data.rollTableDraw.id}}<a style="float: right" class="colorized-link remove-rolltable-link">{{localize "D35E.UnlinkRolltable"}}</a></h4>
   <div class="form-group">
-    <label>{{data.datarollTableDraw.name}}</label>
+    <label>{{data.data.rollTableDraw.name}}</label>
   </div>
   {{/unless}}
 </div>

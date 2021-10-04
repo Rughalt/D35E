@@ -23,6 +23,7 @@ export class ItemSheetPF extends ItemSheet {
          * @type {Set}
          */
         this._filters = {};
+        this._filters = {};
 
         this.items = [];
         this.childItemMap = new Map()
@@ -830,6 +831,15 @@ export class ItemSheetPF extends ItemSheet {
             return arr;
         }, []);
 
+
+        let altDamage = Object.entries(formData).filter(e => e[0].startsWith("data.damage.alternativeParts"));
+        formData["data.damage.alternativeParts"] = altDamage.reduce((arr, entry) => {
+            let [i, j] = entry[0].split(".").slice(3);
+            if (!arr[i]) arr[i] = [];
+            arr[i][j] = entry[1];
+            return arr;
+        }, []);
+
         // Handle Attack Array
         let attacks = Object.entries(formData).filter(e => e[0].startsWith("data.attackParts"));
         formData["data.attackParts"] = attacks.reduce((arr, entry) => {
@@ -1050,6 +1060,7 @@ export class ItemSheetPF extends ItemSheet {
 
         // Modify damage formula
         html.find(".damage-control").click(this._onDamageControl.bind(this));
+        html.find(".damage-alt-control").click(this._onAltDamageControl.bind(this));
 
         // Modify buff changes
         html.find(".change-control").click(this._onChangeControl.bind(this));
@@ -1107,6 +1118,7 @@ export class ItemSheetPF extends ItemSheet {
 
 
         html.find('.spell').on("drop", this._onDropSpell.bind(this));
+        html.find('.special-actions').on("drop", this._onDropBuff.bind(this));
         html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
         html.find('.charge-link').on("drop", this._onDropChargeLink.bind(this));
         html.find('.remove-charge-link').click(event => this._onRemoveChargeLink(event));
@@ -1182,6 +1194,33 @@ export class ItemSheetPF extends ItemSheet {
             const damage = duplicate(this.item.data.data.damage);
             damage.parts.splice(Number(li.dataset.damagePart), 1);
             return this.item.update({"data.damage.parts": damage.parts});
+        }
+    }
+
+    /**
+     * Add or remove a alternativedamage part from the damage formula
+     * @param {Event} event     The original click event
+     * @return {Promise}
+     * @private
+     */
+    async _onAltDamageControl(event) {
+        event.preventDefault();
+        const a = event.currentTarget;
+
+        // Add new damage component
+        if (a.classList.contains("add-alt-damage")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            const damage = this.item.data.data.damage;
+            return this.item.update({"data.damage.alternativeParts": (damage.alternativeParts || []).concat([["", ""]])});
+        }
+
+        // Remove a damage component
+        if (a.classList.contains("delete-alt-damage")) {
+            await this._onSubmit(event);  // Submit any unsaved changes
+            const li = a.closest(".damage-part");
+            const damage = duplicate(this.item.data.data.damage);
+            damage.alternativeParts.splice(Number(li.dataset.damagePart), 1);
+            return this.item.update({"data.damage.alternativeParts": damage.alternativeParts});
         }
     }
 
@@ -1763,7 +1802,7 @@ export class ItemSheetPF extends ItemSheet {
             updateData[`data.linkedChargeItem.img`] = data.data.img;
             this.item.update(updateData)
         }
-        if (data?.data?.data?.uses?.canBeLinked) {
+        if (!data?.data?.data?.uses?.canBeLinked) {
 
             return ui.notifications.warn(game.i18n.localize("D35E.ResourceMustBeSetAsLinkable"));
         }
@@ -1822,6 +1861,54 @@ export class ItemSheetPF extends ItemSheet {
                     updateData[`data.spellSpecialization.spells.${spellLevel}.img`] = packItem.img;
                     this.item.update(updateData)
                 }
+            }
+        }
+
+
+    }
+
+    async _onDropBuff(event) {
+        event.preventDefault();
+        let data;
+        try {
+            data = JSON.parse(event.originalEvent.dataTransfer.getData('text/plain'));
+            if (data.type !== "Item") return;
+        } catch (err) {
+            return false;
+        }
+
+        let dataType = "";
+        let target = "target"
+        if (this.item.data.data.target.value === "self")
+            target = "self"
+        if (data.type === "Item") {
+            let itemData = {};
+            if (data.pack) {
+                let updateData = {}
+                dataType = "compendium";
+                const pack = game.packs.find(p => p.collection === data.pack);
+                const packItem = await pack.getEntity(data.id);
+                if (packItem != null && packItem.data.type === "buff")
+                {
+                    itemData = packItem.data;
+                    let buffString = `Create unique "${packItem.name}" from "${data.pack}" on ${target};Set buff "${packItem.name}" field data.level to max(1,(@cl)) on ${target};Activate buff "${packItem.name}" on ${target}`;
+
+                    let specialActions = duplicate(this.item.data.data.specialActions);
+                    if (specialActions === undefined)
+                        specialActions = []
+                    specialActions = specialActions.concat([{
+                        name: packItem.name,
+                        action: buffString,
+                        range: "",
+                        img: packItem.img,
+                        condition: ""
+                    }]);
+                    await this.item.update({
+                        "data.specialActions": specialActions
+                    });
+                }
+            } else {
+                return ui.notifications.warn(game.i18n.localize("D35E.ResourceNeedDropFromCompendium"));
             }
         }
 

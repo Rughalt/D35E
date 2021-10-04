@@ -34,12 +34,19 @@ export class ChatAttack {
             tooltip: "",
             total: 0,
         };
+        this.altDamage = {
+            flavor: "",
+            tooltip: "",
+            total: 0,
+        };
 
         this.subDamage = [];
         this.hasSubdamage = false;
         this.hasDamage = false;
+        this.hasAltDamage = false;
 
         this.cards = [];
+        this.altCards = [];
         this.special = [];
         this.effectNotes = "";
         this.rolls = []
@@ -199,29 +206,11 @@ export class ChatAttack {
         let shortTooltips = []
         let critShortTooltips = []
         let damageTypeTotal = new Map();
-        for (let roll of rolls) {
-            let tooltip = $(await roll.roll.getTooltip());
 
-            let totalText = roll.roll.total.toString();
-            if (roll.damageType.length) totalText += ` (${roll.damageType})`;
-            tooltip = tooltip.prepend(`
-                <header class="part-header flexrow" style="border-bottom: none; margin-top: 4px">
-                    <span class="part-formula"></span>
-                    <span class="part-total">${totalText}</span>
-                </header>
-                <div class="dice-formula">${roll.roll.formula}</div>
-                `)[0].outerHTML;
-            // Alter tooltip
-            let tooltipHtml = $(tooltip);
-            totalDamage += roll.roll.total;
-            tooltip = tooltipHtml[0].outerHTML;
-            if (!damageTypeTotal.has(roll.damageTypeUid))
-                damageTypeTotal.set(roll.damageTypeUid,{name: roll.damageType, value: 0})
-            let _dtt = damageTypeTotal.get(roll.damageTypeUid);
-            _dtt.value += roll.roll.total
+        const tooltipsAndDamage = await this.createTooltipsForRolls(rolls, totalDamage, damageTypeTotal, tooltips);
+        totalDamage = tooltipsAndDamage.totalDamage;
+        tooltips = tooltipsAndDamage.tooltips;
 
-            tooltips += tooltip;
-        }
         damageTypeTotal.forEach((value, key) => {
             if (!critical)
                 shortTooltips.push(this.getShortToolTip(value.value,value.name))
@@ -265,6 +254,82 @@ export class ChatAttack {
             this.subDamage.push(data);
             this.hasSubdamage = true;
         }
+        this.addAltDamage();
+    }
+
+
+    async addAltDamage() {
+        if (!this.item) return;
+
+        let data = this.altDamage;
+
+        const rolls = this.item.rollAlternativeDamage({
+            data: this.rollData
+        });
+        if (!rolls || rolls.length === 0) {
+            return;
+        }
+        this.hasAltDamage = true;
+
+        rolls.forEach(r => {
+            this.rolls.push(r.roll || r)
+        })
+        // Add tooltip
+        let tooltips = "";
+        let totalDamage = 0;
+        let shortTooltips = []
+        let damageTypeTotal = new Map();
+        const tooltipsAndDamage = await this.createTooltipsForRolls(rolls, totalDamage, damageTypeTotal, tooltips);
+        totalDamage = tooltipsAndDamage.totalDamage;
+        tooltips = tooltipsAndDamage.tooltips;
+        damageTypeTotal.forEach((value, key) => {
+            shortTooltips.push(this.getShortToolTip(value.value,value.name))
+        })
+        // Add normal data
+        let flavor = game.i18n.localize("D35E.AlternativeDamage");
+        const damageTypes = rolls.reduce((cur, o) => {
+            if (o.damageType !== "" && cur.indexOf(o.damageType) === -1) cur.push(o.damageType);
+            return cur;
+        }, []);
+
+        this.altCards.push(this.createChatCardData(game.i18n.localize("D35E.ApplyAlt"), totalDamage, rolls));
+
+
+
+
+        data.flavor = flavor;
+        data.tooltip = tooltips;
+        data.shortTooltip = "(" + shortTooltips.join("") + ")";
+        data.total = rolls.reduce((cur, roll) => {
+            return cur + roll.roll.total;
+        }, 0);
+    }
+
+    async createTooltipsForRolls(rolls, totalDamage, damageTypeTotal, tooltips) {
+        for (let roll of rolls) {
+            let tooltip = $(await roll.roll.getTooltip());
+
+            let totalText = roll.roll.total.toString();
+            if (roll.damageType.length) totalText += ` (${roll.damageType})`;
+            tooltip = tooltip.prepend(`
+                <header class="part-header flexrow" style="border-bottom: none; margin-top: 4px">
+                    <span class="part-formula"></span>
+                    <span class="part-total">${totalText}</span>
+                </header>
+                <div class="dice-formula">${roll.roll.formula}</div>
+                `)[0].outerHTML;
+            // Alter tooltip
+            let tooltipHtml = $(tooltip);
+            totalDamage += roll.roll.total;
+            tooltip = tooltipHtml[0].outerHTML;
+            if (!damageTypeTotal.has(roll.damageTypeUid))
+                damageTypeTotal.set(roll.damageTypeUid, {name: roll.damageType, value: 0})
+            let _dtt = damageTypeTotal.get(roll.damageTypeUid);
+            _dtt.value += roll.roll.total
+
+            tooltips += tooltip;
+        }
+        return {totalDamage, tooltips};
     }
 
     createCriticalChatCardData(label, totalDamage, rolls) {

@@ -3269,7 +3269,8 @@
 .D35E.sheet.item .spell,
 .D35E.sheet.item .full-attack,
 .D35E.sheet.item .charge-link,
-.D35E.sheet.item .rolltable-link {
+.D35E.sheet.item .rolltable-link,
+.D35E.sheet.item .spellbuff-link {
   padding: 4px;
   border: 2px groove #eeede0;
   border-radius: 2px;
@@ -3277,20 +3278,23 @@
 .D35E.sheet.item .spell img,
 .D35E.sheet.item .full-attack img,
 .D35E.sheet.item .charge-link img,
-.D35E.sheet.item .rolltable-link img {
+.D35E.sheet.item .rolltable-link img,
+.D35E.sheet.item .spellbuff-link img {
   flex: 0 24px;
   height: 24px;
 }
 .D35E.sheet.item .spell label,
 .D35E.sheet.item .full-attack label,
 .D35E.sheet.item .charge-link label,
-.D35E.sheet.item .rolltable-link label {
+.D35E.sheet.item .rolltable-link label,
+.D35E.sheet.item .spellbuff-link label {
   margin-left: 4px;
 }
 .D35E.sheet.item .spell input,
 .D35E.sheet.item .full-attack input,
 .D35E.sheet.item .charge-link input,
-.D35E.sheet.item .rolltable-link input {
+.D35E.sheet.item .rolltable-link input,
+.D35E.sheet.item .spellbuff-link input {
   flex: 0 80px;
 }
 .D35E.sheet.item .inventory-list {
@@ -4962,7 +4966,8 @@ tr.introjs-showElement > th {
 .d35ecustom .D35E.sheet.item .spell,
 .d35ecustom .D35E.sheet.item .full-attack,
 .d35ecustom .D35E.sheet.item .charge-link,
-.d35ecustom .D35E.sheet.item .rolltable-link {
+.d35ecustom .D35E.sheet.item .rolltable-link,
+.d35ecustom .D35E.sheet.item .spellbuff-link {
   border-radius: 2px;
   border: none !important;
   background: rgba(255, 255, 255, 0.2);

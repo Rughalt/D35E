@@ -1534,6 +1534,9 @@
   "D35E.AdvancementNaturalACBonus": "Natural AC Bonus",
   "D35E.BaseSpellCL": "Consumable Spell Caster Level",
   "D35E.MaxDamageDice": "Max Damage Dice formula",
+  "D35E.AlternativeDamage": "Alternative Damage",
+  "D35E.AlternativeDamageFormula": "Alternative Damage Formula",
+  "D35E.ApplyAlt": "Apply Alt",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

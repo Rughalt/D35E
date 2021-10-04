@@ -1512,7 +1512,8 @@
         "attackBonus": "",
         "critConfirmBonus": "",
         "damage": {
-          "parts": []
+          "parts": [],
+          "alternativeParts": []
         },
         "attackParts": [],
         "autoscaleAttackParts": "",
