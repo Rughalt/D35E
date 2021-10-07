@@ -740,20 +740,21 @@ Hooks.on("getSceneControlButtons", (controls) => {
         onClick: () => {
           if (SimpleCalendar) {
             SimpleCalendar.api.changeDate({hour: 8});
-            let restingPromises = []
-            for (let actor of game.actors.filter(a => a.data.data.isPartyMember)) {
-              restingPromises.push(actor.rest(true,true,false))
-            }
-            Promise.all(restingPromises).then(() => {
-              let chatTemplateData = {
-                  name: game.i18n.localize("D35E.PartyRestedHeader"),
-                  type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-                  rollMode: "public",
-                  text: game.i18n.localize("D35E.PartyRested")
-              };
-              createCustomChatMessage("systems/D35E/templates/chat/gm-message.html", chatTemplateData, {}, {});
-            })
           }
+          let restingPromises = []
+          for (let actor of game.actors.filter(a => a.data.data.isPartyMember)) {
+            restingPromises.push(actor.rest(true,true,false))
+          }
+          Promise.all(restingPromises).then(() => {
+            let chatTemplateData = {
+                name: game.i18n.localize("D35E.PartyRestedHeader"),
+                type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                rollMode: "public",
+                text: game.i18n.localize("D35E.PartyRested")
+            };
+            createCustomChatMessage("systems/D35E/templates/chat/gm-message.html", chatTemplateData, {}, {});
+          })
+        
         },
         button: true,
       },
