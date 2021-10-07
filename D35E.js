@@ -738,7 +738,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         title: "D35E.RestParty",
         icon: "fas fa-bed",
         onClick: () => {
-          if (SimpleCalendar) {
+          if (typeof SimpleCalendar !== "undefined") {
             SimpleCalendar.api.changeDate({hour: 8});
           }
           let restingPromises = []

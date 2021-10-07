@@ -81,7 +81,7 @@ export class ItemPF extends Item {
     }
 
     get originalName() {
-        if (Babele)
+        if (typeof Babele !== "undefined")
             return this.getFlag("babele", "translated") ? this.getFlag("babele", "originalName") : this.name;
         else
             return this.name
