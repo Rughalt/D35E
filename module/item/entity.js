@@ -81,7 +81,10 @@ export class ItemPF extends Item {
     }
 
     get originalName() {
-        return this.getFlag("babele", "translated") ? this.getFlag("babele", "originalName") : this.name
+        if (Babele)
+            return this.getFlag("babele", "translated") ? this.getFlag("babele", "originalName") : this.name;
+        else
+            return this.name
     }
 
     static getCharges(item) {
