@@ -20,6 +20,7 @@ import { ItemSheetPF } from "./module/item/sheets/base.js";
 import { CompendiumDirectoryPF } from "./module/sidebar/compendium.js";
 import { PatchCore } from "./module/patch-core.js";
 import { DicePF } from "./module/dice.js";
+import { createCustomChatMessage } from "./module/chat.js";
 import {
   getItemOwner,
   sizeDie,
@@ -478,41 +479,7 @@ Hooks.on("updateCombat", async (combat, combatant, info, data) => {
     return; // We moved back in time
   const actor = combat.combatant.actor;
   if (actor != null) {
-    actor.refresh();
-    let itemUpdateData = []
-    let itemsEnding = []
-    let itemsOnRound = []
-    let itemResourcesData = {}
-    let deletedOrChanged = false;
-    if (actor.items !== undefined && actor.items.size > 0) {
-      // Update items
-      for (let i of actor.items) {
-        actor.getItemResourcesUpdate(i, itemResourcesData);
-        let _data = i.getElapsedTimeUpdateData(1)
-        if (_data && _data["data.active"] === false)
-          itemsEnding.push(i)
-        if ((i.data.data.perRoundActions || []).length)
-          itemsOnRound.push(i)
-        if (_data && !_data.delete) {
-          itemUpdateData.push(_data);
-          deletedOrChanged = true;
-        }
-        else if (_data && _data.delete === true) {
-          await actor.deleteOwnedItem(_data._id, { stopUpdates: true })
-          deletedOrChanged = true;
-        }
-      }
-
-    }
-
-    if (itemUpdateData.length > 0) await actor.updateOwnedItem(itemUpdateData, { stopUpdates: true })
-    if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await actor.update(itemResourcesData);
-    if (itemsEnding.length)
-      actor.renderBuffEndChatCard(itemsEnding)
-    if (itemsOnRound.length)
-      actor.applyOnRoundBuffActions(itemsOnRound);
-    actor.renderFastHealingRegenerationChatCard();
-
+    await actor.progressTime(1);
     debouncedCollate(canvas.scene.id, true, true, "updateToken")
   }
 });
@@ -584,6 +551,34 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
   createItemMacro(data.data, slot);
   return false;
 });
+
+Hooks.on("updateWorldTime", async (date, delta, other) => {
+  let roundsDelta = Math.floor(delta / 6);
+  if (roundsDelta === 0) return;
+  if (!game.user.isGM)
+    return;
+  let alreadyChecked = new Set();
+  let updatePromises = []
+  for (const source of canvas.tokens.placeables) {
+    if (!source.actor) continue;
+    let actor = ActorPF.getActorFromTokenPlaceable(source)
+
+    let trueId = actor.id;
+    if (actor.isToken) trueId = source.id;
+    if (alreadyChecked.has(trueId)) continue;
+    alreadyChecked.add(trueId)
+    
+    if (actor) {
+      updatePromises.push(actor.progressTime(roundsDelta));
+    }
+  }
+  Promise.all(updatePromises).then(() => {
+    debouncedCollate(canvas.scene.id, true, true, "updateToken")
+  })
+    
+});
+
+
 
 Hooks.on('diceSoNiceReady', (dice3d) => {
   dice3d.addColorset({
@@ -735,6 +730,30 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-store",
         onClick: () => {
           new TreasureGeneratorDialog().render(true);
+        },
+        button: true,
+      },
+      {
+        name: "d35e-gm-tools-rest-party",
+        title: "D35E.RestParty",
+        icon: "fas fa-bed",
+        onClick: () => {
+          if (SimpleCalendar) {
+            SimpleCalendar.api.changeDate({hour: 8});
+            let restingPromises = []
+            for (let actor of game.actors.filter(a => a.data.data.isPartyMember)) {
+              restingPromises.push(actor.rest(true,true,false))
+            }
+            Promise.all(restingPromises).then(() => {
+              let chatTemplateData = {
+                  name: game.i18n.localize("D35E.PartyRestedHeader"),
+                  type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+                  rollMode: "public",
+                  text: game.i18n.localize("D35E.PartyRested")
+              };
+              createCustomChatMessage("systems/D35E/templates/chat/gm-message.html", chatTemplateData, {}, {});
+            })
+          }
         },
         button: true,
       },

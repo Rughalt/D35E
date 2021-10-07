@@ -27,7 +27,7 @@ export class ActorPF extends Actor {
          */
         if (this._runningFunctions === undefined) this._runningFunctions = {};
         if (this._cachedRollData === undefined) this._cachedRollData = this.getRollData();
-        if (this._cachedAuras === undefined) this._cachedAuras = this.items.filter((o) => o.type === "aura");
+        if (this._cachedAuras === undefined) this._cachedAuras = this.items.filter((o) => o.type === "aura" && o.data.data.active);
     }    
 
     static chatListeners(html) {
@@ -6535,7 +6535,11 @@ export class ActorPF extends Actor {
                     let itemData = null;
                     const pack = game.packs.find(p => p.collection === data.packId);
                     const packItem = await pack.getDocument(data.itemId);
-                    if (packItem != null) itemData = packItem.data.toObject(false);
+                    if (packItem != null) {
+                        itemData = packItem.data.toObject(false);
+                        itemData.data.originPack = data.pack;
+                        itemData.data.originId = packItem.id;
+                      }
                     else {
 
                         return ui.notifications.warn(game.i18n.localize("D35E.LinkedItemMissing"));
@@ -8308,6 +8312,51 @@ export class ActorPF extends Actor {
         let newHP = Math.floor((newHd - currentLevel) * (currentHidDice / 2 + 0.5)) + currentHP;
         await this.racialHD.update({'data.levels':newHd,'data.hp':newHP})
         return this.update(updateData)
+    }
+
+    async progressTime(roundDelta = 1) {
+        //await this.refresh();
+        let itemUpdateData = []
+        let itemsEnding = []
+        let itemsOnRound = []
+        let itemResourcesData = {}
+        let deletedOrChanged = false;
+        if (this.items !== undefined && this.items.size > 0) {
+        // Update items
+            for (let i of this.items) {
+                this.getItemResourcesUpdate(i, itemResourcesData);
+                let _data = i.getElapsedTimeUpdateData(roundDelta)
+                if (_data && _data["data.active"] === false)
+                    itemsEnding.push(i)
+                if ((i.data.data.perRoundActions || []).length)
+                    itemsOnRound.push(i)
+                if (_data && !_data.delete && !_data.ignore) {
+                    itemUpdateData.push(_data);
+                    deletedOrChanged = true;
+                } else if (_data && _data.delete === true) {
+                    await this.deleteOwnedItem(_data._id, { stopUpdates: true })
+                    deletedOrChanged = true;
+                }
+            }
+
+        }
+
+        if (itemUpdateData.length > 0) await this.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+        if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await this.update(itemResourcesData);
+        if (itemsEnding.length)
+            this.renderBuffEndChatCard(itemsEnding)
+        if (itemsOnRound.length)
+            this.applyOnRoundBuffActions(itemsOnRound);
+        this.renderFastHealingRegenerationChatCard();
+
+    }
+
+    static getActorFromTokenPlaceable(source) {
+        if (source.document.data.actorLink) {
+            return game.actors.get(source.document.data.actorId)
+        } else {
+            return source.actor;
+        }
     }
 
 }

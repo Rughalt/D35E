@@ -6006,6 +6006,42 @@ tr.introjs-showElement > th {
   border-bottom: 1px solid #9c3c00;
   box-shadow: 0 0 10px #9c3c00;
 }
+.d35ecustom #weather-control-container {
+  filter: none;
+  border-radius: 0;
+  background: url(icons/ui/dialog-frame.png);
+  background-size: 100% 100%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  padding: 6px;
+}
+.d35ecustom #weather-control-container #calendar,
+.d35ecustom #weather-control-container #weather {
+  filter: none;
+  border-radius: 0;
+  background: url();
+  background-size: 100% 100%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  background: url(icons/ui/background-window.png) repeat;
+}
+.d35ecustom #weather-control-container .calendar-header {
+  background: rgba(0, 0, 0, 0.3);
+}
+.d35ecustom #weather-control-container .advance-btn {
+  filter: none;
+  border-radius: 0;
+  background: url(icons/ui/name-frame.png);
+  background-size: 100% 100%;
+  border: 1px solid rgba(0, 0, 0, 0);
+  color: white;
+}
+.d35ecustom #weather-control-container .advance-btn:hover {
+  background: url(icons/ui/name-frame.png) !important;
+  background-size: 100% 100% !important;
+  text-shadow: 0 0 8px red;
+}
+.d35ecustom #weather-control-container #weather-container header {
+  background: rgba(0, 0, 0, 0.3);
+}
 .secret {
   display: none;
 }

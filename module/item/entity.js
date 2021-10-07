@@ -525,6 +525,10 @@ export class ItemPF extends Item {
             }
         }
 
+        if (this.pack && this.pack.startsWith("D35E")) {
+            data["data.originVersion"] = this.data.data.originVersion + 1;
+        }
+
         if (data["data.weaponData.size"] && data["data.weaponData.size"] !== this.data.data.weaponData.size) {
             let newSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(data["data.weaponData.size"] || "");
             let oldSize = Object.keys(CONFIG.D35E.actorSizes).indexOf(this.data.data.weaponData.size || "");
@@ -3021,7 +3025,7 @@ export class ItemPF extends Item {
 
             }
         }
-        return {'_id': this._id};
+        return {'_id': this._id, 'ignore': true};
     }
 
     getTimelineTimeLeft() {

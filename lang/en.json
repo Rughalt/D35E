@@ -1537,6 +1537,9 @@
   "D35E.AlternativeDamage": "Alternative Damage",
   "D35E.AlternativeDamageFormula": "Alternative Damage Formula",
   "D35E.ApplyAlt": "Apply Alt",
+  "D35E.RestParty": "Rest Party",
+  "D35E.PartyRestedHeader": "Long Rest Completed",
+  "D35E.PartyRested": "Everyone have rested. Daily uses have been reset, and characters were healed.",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

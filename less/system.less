@@ -1673,6 +1673,51 @@
     }
   }
 
+  #weather-control-container {
+    filter: none;
+    border-radius: 0;
+    background: url(icons/ui/dialog-frame.png);
+    background-size: 100% 100%;
+    border: 1px solid rgba(0, 0, 0, 0);
+    padding: 6px;
+
+    #calendar, #weather {
+      filter: none;
+      border-radius: 0;
+      background: url();
+      background-size: 100% 100%;
+      border: 1px solid rgba(0, 0, 0, 0);
+      background: url(icons/ui/background-window.png) repeat;
+      
+    }
+
+    .calendar-header {
+      background: rgba(0,0,0,0.3)
+    }
+
+    .advance-btn {
+      filter: none;
+      border-radius: 0;
+      background: url(icons/ui/name-frame.png);
+      background-size: 100% 100%;
+      border: 1px solid rgba(0, 0, 0, 0);
+      color: white;
+
+      &:hover {
+        background: url(icons/ui/name-frame.png) !important;
+        background-size: 100% 100% !important;
+        text-shadow: 0 0 8px red;
+      }
+    }
+
+    #weather-container {
+      header {
+
+        background: rgba(0,0,0,0.3)
+      }
+    }
+  }
+
 }
 
 .secret {

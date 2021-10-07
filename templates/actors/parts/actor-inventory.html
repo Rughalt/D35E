@@ -127,6 +127,12 @@
                     <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
                         {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
                         {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
+                        {{#if item.possibleUpdate}}
+                            <i class="fas fa-arrow-up tooltip non-rollable" style="color: darkred">
+                            <div class="tooltipcontent">{{{ localize 'D35E.PossibleUpdate' }}}
+                            </div>
+                            </i>
+                        {{/if}}
                     </h4>
                 </div>
                 {{/if}}

@@ -95,6 +95,7 @@ export class ActorSheetPF extends ActorSheet {
       i.data.labels = i.labels;
       i.data.id = i.id;
       i.data.hasAttack = i.hasAttack;
+      i.data.possibleUpdate = i.data.data.possibleUpdate;
       i.data.hasMultiAttack = i.hasMultiAttack;
       i.data.containerId = getProperty(i.data, "data.containerId");
       i.data.hasDamage = i.hasDamage;
@@ -695,6 +696,7 @@ export class ActorSheetPF extends ActorSheet {
 
     html.find(".item .container-selector").change(ev => { this._onItemChangeContainer(ev) });
     html.find(".fix-containers").click(ev => this._onCharacterClearContainers(ev));
+    html.find(".check-updates").click(ev => this._onCharacterCheckUpdates(ev));
 
 
     html.find('.spell-add-uses').click(ev => this._onSpellAddUses(ev));
@@ -1460,6 +1462,22 @@ export class ActorSheetPF extends ActorSheet {
     })
     await this.actor.updateOwnedItem(itemUpdates, {stopUpdates: true})
   }
+
+  async _onCharacterCheckUpdates(event) {
+    event.preventDefault();
+    let itemUpdates = []
+    for (let item of this.actor.items) {
+      if (item.data.data.originVersion && item.data.data.originPack && item.data.data.originId) {
+        let compendiumItem = await game.packs.get(item.data.data.originPack).getDocument(item.data.data.originId);
+        if (compendiumItem.data.data.originVersion > item.data.data.originVersion)
+          itemUpdates.push({_id: item.id, "data.possibleUpdate": true})
+        else
+          itemUpdates.push({_id: item.id, "data.possibleUpdate": false})
+      }
+    }
+    await this.actor.updateOwnedItem(itemUpdates, {stopUpdates: true})
+  }
+
 
   async _quickChangeItemQuantity(event, add=1) {
     event.preventDefault();
@@ -2356,7 +2374,11 @@ export class ActorSheetPF extends ActorSheet {
         dataType = "compendium";
         const pack = game.packs.find(p => p.collection === data.pack);
         const packItem = await pack.getDocument(data.id);
-        if (packItem != null) itemData = packItem.data.toObject(false);
+        if (packItem != null) {
+          itemData = packItem.data.toObject(false);
+          itemData.data.originPack = data.pack;
+          itemData.data.originId = packItem.id;
+        }
       }
 
       // Case 2 - Data explicitly provided
@@ -2661,7 +2683,11 @@ export class ActorSheetPF extends ActorSheet {
     let quantity = parseInt($(`input[name='amount-add-${itemId}']`).val() || 1);
     const pack = game.packs.find(p => p.collection === packId);
     const packItem = await pack.getEntity(itemId);
-    if (packItem != null) itemData = packItem.data.toObject(false);
+    if (packItem != null) {
+      itemData = packItem.data.toObject(false);
+      itemData.data.originPack = data.pack;
+      itemData.data.originId = packItem.id;
+    }
     itemData.data.quantity = quantity;
     this.enrichDropData(itemData);
     console.log('D35E | Adding Quantity', quantity, itemData)

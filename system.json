@@ -282,8 +282,8 @@
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.9.0",
   "url": "https://github.com/Rughalt/d35e",
-  "manifest": "http://dragonshorn.info/dnd35e/system.json",
-  "download": "http://dragonshorn.info/dnd35e/dnd35e.zip",
+  "manifest": "https://www.legaciesofthedragon.com/D35E/system.json",
+  "download": "https://www.legaciesofthedragon.com/D35E/dnd35e.zip",
   "media": [
     {
       "type": "cover",

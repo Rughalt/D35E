@@ -1414,6 +1414,10 @@
         }
       },
       "itemDescription": {
+        "originVersion": 0,
+        "originPack": "",
+        "originId": "",
+        "possibleUpdate": false,
         "description": {
           "value": "",
           "chat": "",

@@ -48,6 +48,7 @@ export async function CollateAuras(sceneID, checkAuras, removeAuras, source) {
     let actorsAurasAlreadyPresent = new Map();
     let actorsAurasAlreadyPresentIds = new Map();
     let actorModifiedAuras = new Map();
+    let actorAlreadyChecked = new Set();
 
     // This gets
 
