@@ -1396,36 +1396,50 @@ export class ItemPF extends Item {
 
                 if (form.find('[name="prone"]').prop("checked")) {
                     rollData.pronePenalty = -4;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.prone = true;
                     attackExtraParts.push("@pronePenalty");
                     rollModifiers.push(`${game.i18n.localize("D35E.Prone")}`)
                 }
                 if (form.find('[name="squeezing"]').prop("checked")) {
                     rollData.squeezingPenalty = -4;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.squeezing = true;
                     attackExtraParts.push("@squeezingPenalty");
                     rollModifiers.push(`${game.i18n.localize("D35E.Squeezing")}`)
                 }
                 if (form.find('[name="highground"]').prop("checked")) {
                     rollData.highground = 1;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.highGround = true;
                     attackExtraParts.push("@highground");
                     rollModifiers.push(`${game.i18n.localize("D35E.HighGround")}`)
                 }
                 if (form.find('[name="defensive"]').prop("checked")) {
                     rollData.defensive = -4;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.defensive = true;
                     attackExtraParts.push("@defensive");
                     rollModifiers.push(`${game.i18n.localize("D35E.DefensiveFighting")}`)
                 }
                 if (form.find('[name="charge"]').prop("checked")) {
                     rollData.charge = 2;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.charge = true;
                     attackExtraParts.push("@charge");
                     rollModifiers.push(`${game.i18n.localize("D35E.Charge")}`)
                 }
                 if (form.find('[name="ccshot"]').prop("checked")) {
                     rollData.ccshot = -4;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.closeQuartersShot = true;
                     attackExtraParts.push("@ccshot");
                     rollModifiers.push(`${game.i18n.localize("D35E.CloseQuartersShot")}`)
                 }
                 if (form.find('[name="flanking"]').prop("checked")) {
                     rollData.flanking = 2;
+                    if (!rollData.attackToggles) rollData.attackToggles = {};
+                    rollData.attackToggles.flanking = true;
                     attackExtraParts.push("@flanking");
                     rollModifiers.push(`${game.i18n.localize("D35E.Flanking")}`)
                 }
@@ -1447,6 +1461,7 @@ export class ItemPF extends Item {
                 let html = form.find('[name="primary-attack"]');
                 if (typeof html.prop("checked") === "boolean") {
                     primaryAttack = html.prop("checked");
+                    rollData.primaryAttack = true;
                 }
                 // Use measure template
                 html = form.find('[name="measure-template"]');
