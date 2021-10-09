@@ -111,8 +111,14 @@
 
 
     function showHotbarTutorial() {
-        $('#onboarding-character-attacks').hide();
-        $('#onboarding-character-hotbar').show();
+        let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if((userCharacter === null || $(`#actor-${userCharacter}`).length)
+            && game.user.character.data.items.some(i => i.type === "attack" && i.name === "Dagger")){
+            $('#onboarding-character-attacks').hide();
+            $('#onboarding-character-hotbar').show();
+        }else{
+            ui.notifications.warn(`Create an attack from a Dagger from compendium to continue!`)
+        }
     }
 
     function showDocumentationHub() {
@@ -143,6 +149,10 @@
 
     function showSkillTutorial() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
+        if ($(`.entry.level-up-data`).length) {
+            ui.notifications.warn(`Close Level Details window to proceed!`)
+            return;
+        }
         if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
             $('#onboarding-character-card').hide();
             $('#onboarding-character-class-details').hide();
@@ -166,8 +176,11 @@
 
     function showAddRaceTutorial() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
-        if((userCharacter === null ||
-            $(`#actor-${userCharacter}`).length)){
+
+        if (userCharacter === null) {
+            ui.notifications.warn(`You need to assign character to yourself! Right click on your name in players window, click User Configuraion and select one!`)
+        }
+        if(($(`#actor-${userCharacter}`).length)){
             $('#onboarding-character-card').hide();
             $('#onboarding-character-race').show();
         }else{
@@ -197,7 +210,10 @@
 
     function displaySheetIntro() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
-        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+        if (userCharacter === null) {
+            ui.notifications.warn(`You need to assign character to yourself! Right click on your name in players window, click User Configuraion and select one!`)
+        }
+        if(($(`#actor-${userCharacter}`).length)){
             let intro = introJs()
             intro.addSteps([
                 {
@@ -234,7 +250,10 @@
     }
     function displayLevelUpIntro() {
         let userCharacter = game.user.character == null ? null : game.user.character.id;
-        if((userCharacter === null || $(`#actor-${userCharacter}`).length)){
+        if (userCharacter === null) {
+            ui.notifications.warn(`You need to assign character to yourself! Right click on your name in players window, click User Configuraion and select one!`)
+        }
+        if(($(`#actor-${userCharacter}`).length)){
             let intro = introJs()
             intro.addSteps([
                 {

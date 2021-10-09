@@ -261,13 +261,13 @@ Hooks.once("ready", async function() {
   });
   const oldVersion = game.settings.get(title, "version");
 
+  (await import(
+    /* webpackChunkName: "welcome-screen" */
+    './module/onboarding.js'
+    )
+).default();
   if (!isNewerVersion(moduleVersion, oldVersion))
     return;
-  (await import(
-          /* webpackChunkName: "welcome-screen" */
-          './module/onboarding.js'
-          )
-  ).default();
   (await import(
           /* webpackChunkName: "welcome-screen" */
           './module/welcome-screen.js'

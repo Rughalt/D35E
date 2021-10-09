@@ -116,7 +116,8 @@
                 </div>
                 {{/if}}
             </div>
-
+            
+            {{/if}}
             <div class="toggle-content dice-tooltips" style="display: none">
                 {{#if atk.hasAttack}}
                 <div class="dice-flavor" style="text-align: center"><h2>Attack details</h2></div>
@@ -127,6 +128,11 @@
                 {{{atk.damage.tooltip}}}
                 {{/if}}
 
+                {{#if atk.hasAltDamage}}
+                <div class="dice-flavor" style="text-align: center"><h2>Alternative Damage details</h2></div>
+                {{{atk.altDamage.tooltip}}}
+                {{/if}}
+
                 {{#if atk.hasSubdamage}}
                 {{#each atk.subDamage as |dmg|}}
                 <div class="dice-flavor" style="text-align: center"><h2>Sub-Attack Damage details</h2></div>
@@ -135,7 +141,6 @@
                 {{/if}}
             </div>
         </div>
-        {{/if}}
 
         {{#if atk.hasCritConfirm}}
             <div class="toggle-box">

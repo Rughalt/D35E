@@ -282,7 +282,7 @@ D35E.sizeChart = {
 };
 
 D35E.tokenSizes = {
-  "fine": { w: 1, h: 1, scale: 0.2 },
+  "fine": { w: 1, h: 1, scale: 0.25 },
   "dim": { w: 1, h: 1, scale: 0.4 },
   "tiny": { w: 1, h: 1, scale: 0.6 },
   "sm": { w: 1, h: 1, scale: 0.8 },
