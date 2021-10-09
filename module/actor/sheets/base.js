@@ -2685,7 +2685,7 @@ export class ActorSheetPF extends ActorSheet {
     const packItem = await pack.getEntity(itemId);
     if (packItem != null) {
       itemData = packItem.data.toObject(false);
-      itemData.data.originPack = data.pack;
+      itemData.data.originPack = packId;
       itemData.data.originId = packItem.id;
     }
     itemData.data.quantity = quantity;
