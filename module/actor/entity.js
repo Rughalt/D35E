@@ -734,8 +734,12 @@ export class ActorPF extends Actor {
         }
         const compute_health = (health_sources, options) => {
             // Compute and push health, tracking the remaining maximized levels.
+            let typeHD = 0;
+            for (const hd of health_sources) {
+                typeHD += hd.data.data.levels;
+            }
             if (options.auto) {
-                let maximized = options.maximized;
+                let maximized = new Roll35e(`${options.maximized || "0"}`, { totalHD: data.data.attributes.hd.total, sourceHD: typeHD }).rollSync().total
                 for (const hd of health_sources) {
                     auto_health(hd.data, options, maximized);
                     maximized = Math.max(0, maximized - hd.data.data.levels);

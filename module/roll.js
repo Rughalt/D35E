@@ -304,6 +304,10 @@ export class Roll35e extends Roll {
     roll() {
         return super.roll({async: false});
     }
+
+    rollSync() {
+        return super.roll({async: false});
+    }
 }
 
 

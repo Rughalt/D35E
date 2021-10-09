@@ -29,9 +29,9 @@ export class HealthConfig extends FormApplication {
   static get defaultSettings() {
     return {
       hitdice: {
-        PC:     {auto: false, rate: 0.5, maximized: 1},
-        NPC:    {auto: false, rate: 0.5, maximized: 0},
-        Racial: {auto: false, rate: 0.5, maximized: 0}
+        PC:     {auto: false, rate: 0.5, maximized: "1"},
+        NPC:    {auto: false, rate: 0.5, maximized: "0"},
+        Racial: {auto: false, rate: 0.5, maximized: "0"}
       },
       hitdieOptions: ["Compute", "Rate", "Maximized"],
       rounding: "up",
@@ -78,7 +78,6 @@ export class HealthConfig extends FormApplication {
     // Some mild sanitation for the numeric values.
     for (const hd of Object.values(settings.hitdice)) {
       hd.rate = Math.max(0, Math.min(hd.rate, 100))
-      hd.maximized = Math.max(0, Math.min(Math.floor(hd.maximized), 100))
     }
     await game.settings.set("D35E", "healthConfig", settings)
     ui.notifications.info(`Updated D35E health configuration.`)
