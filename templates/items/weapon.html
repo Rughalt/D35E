@@ -75,6 +75,7 @@
     {{#unless showUnidentifiedData}}
     <a class="item" data-tab="changes">{{ localize "D35E.Changes" }}</a>
     <a class="item" data-tab="enhancements">{{ localize "D35E.Enhancements" }}</a>
+    <a class="item" data-tab="linked-items">{{localize "D35E.Links"}}</a>
     {{/unless}}
   </nav>
 
@@ -279,6 +280,9 @@
     </div>
     <div class="tab flexcol" data-group="primary" data-tab="enhancements">
       {{> "systems/D35E/templates/items/parts/item-enhancement.html"}}
+    </div>
+    <div class="tab flexcol" data-tab="linked-items">
+      {{> "systems/D35E/templates/items/parts/item-links.html"}}
     </div>
     {{/unless}}
   </section>

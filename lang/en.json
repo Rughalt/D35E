@@ -1540,6 +1540,9 @@
   "D35E.RestParty": "Rest Party",
   "D35E.PartyRestedHeader": "Long Rest Completed",
   "D35E.PartyRested": "Everyone have rested. Daily uses have been reset, and characters were healed.",
+  "D35E.ImprovedCover":"Improved Cover",
+  "D35E.ConcealmentBaseInPercent":"Concealment (0-100%)",
+  "D35E.BehindImprovedCover":"Behind Improved Cover",
 
 
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",

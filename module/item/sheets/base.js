@@ -140,6 +140,9 @@ export class ItemSheetPF extends ItemSheet {
                 data.isSpellSpecialization = true;
 
             
+        }
+        
+        if ((getProperty(this.item.data, `data.linkedItems`) || []) !== []) {
             data.linkedItems = []
             let _likedItems = getProperty(this.item.data, `data.linkedItems`) || [];
             _likedItems.forEach(e => {

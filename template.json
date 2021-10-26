@@ -1822,6 +1822,7 @@
       },
       "masterwork": false,
       "melded": false,
+      "linkedItems": [],
       "armorType": {
         "value": "",
         "_deprecated": true
@@ -2056,6 +2057,7 @@
       "weaponType": "simple",
       "weaponSubtype": "light",
       "properties": {},
+      "linkedItems": [],
       "enh": null,
       "melded": false,
       "weaponData": {

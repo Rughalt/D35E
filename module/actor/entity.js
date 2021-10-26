@@ -739,7 +739,12 @@ export class ActorPF extends Actor {
                 typeHD += hd.data.data.levels;
             }
             if (options.auto) {
-                let maximized = new Roll35e(`${options.maximized || "0"}`, { totalHD: data.data.attributes.hd.total, sourceHD: typeHD }).rollSync().total
+                let maximized = 0;
+                try {
+                    maximized = new Roll35e(`${options.maximized || "0"}`, { totalHD: data.data.attributes.hd.total, sourceHD: typeHD }).rollSync().total
+                } catch {
+                    maximized = 1;
+                }
                 for (const hd of health_sources) {
                     auto_health(hd.data, options, maximized);
                     maximized = Math.max(0, maximized - hd.data.data.levels);
@@ -5942,6 +5947,10 @@ export class ActorPF extends Actor {
                     ac += new Roll35e("+4").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Covered")}`)
                 }
+                if (form.find('[name="improvcovered"]').prop("checked")) {
+                    ac += new Roll35e("+8").roll().total;
+                    rollModifiers.push(`${game.i18n.localize("D35E.ImprovedCover")}`)
+                }
                 if (form.find('[name="charged"]').prop("checked")) {
                     ac += new Roll35e("-2").roll().total;
                     rollModifiers.push(`${game.i18n.localize("D35E.Charged")}`)
@@ -5954,6 +5963,8 @@ export class ActorPF extends Actor {
                 if (form.find('[name="fullconceal"]').prop("checked")) {
                     fullConceal = true;
                 }
+
+                rollData.concealOverride = parseInt(form.find('[name="conceal-bonus"]').val());
             }
 
             let allCombatChanges = []
@@ -5968,7 +5979,7 @@ export class ActorPF extends Actor {
             ac += rollData.featAC || 0;
 
             //console.log('D35E | Final roll AC', ac)
-            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision, rollModifiers: rollModifiers, conceal: conceal, fullConceal: fullConceal};
+            return {ac: ac, applyHalf: applyHalf, noCritical: noCritical, noCheck: acType === 'noCheck', rollMode: rollMode, applyPrecision: applyPrecision, rollModifiers: rollModifiers, conceal: conceal, fullConceal: fullConceal, concealOverride: rollData.concealOverride};
         }
         let rollData = this.getRollData();
         // Render modal dialog
@@ -6170,11 +6181,12 @@ export class ActorPF extends Actor {
                 let concealRoll = 0;
                 let concealTarget = 0;
                 let concealRolled = false;
-                if (finalAc.conceal || finalAc.fullConceal || a.data.data.attributes?.concealment?.total) {
+                if (finalAc.conceal || finalAc.fullConceal || a.data.data.attributes?.concealment?.total || finalAc.concealOverride) {
                     concealRolled = true;
                     concealRoll = new Roll35e("1d100").roll().total;
                     if (finalAc.fullConceal) concealTarget = 50
                     if (finalAc.conceal) concealTarget = 20
+                    if (finalAc.concealOverride) concealTarget = finalAc.concealOverride;
                     concealTarget = Math.max(a.data.data.attributes?.concealment?.total || 0, concealTarget)
                     if (concealRoll <= concealTarget) {
                         concealMiss = true;
