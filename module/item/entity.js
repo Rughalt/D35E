@@ -44,7 +44,7 @@ export class ItemPF extends Item {
     get hasTemplate() {
         const v = getProperty(this.data, "data.measureTemplate.type");
         const s = getProperty(this.data, "data.measureTemplate.size");
-        return (typeof v === "string" && v !== "") && (typeof s === "string" && s.length > 0);
+        return (typeof v === "string" && v !== "") && ((typeof s === "string" && s.length > 0) || (typeof s === "number" && s > 0));
     }
 
     get hasAction() {
