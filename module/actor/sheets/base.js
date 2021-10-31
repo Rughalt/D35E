@@ -1207,7 +1207,11 @@ export class ActorSheetPF extends ActorSheet {
     // Toggle summary
     if ( li.hasClass("expanded") ) {
       let summary = li.children(".item-summary");
-      summary.slideUp(200, () => summary.remove());
+      if (li.attr("data-item-id") === "passive-feature") {
+        summary.slideUp(200);
+      } else {
+        summary.slideUp(200, () => summary.remove());
+      }
     } else {
       let summary = li.children(".item-summary");
       if (!summary.length && item) {
