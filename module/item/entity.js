@@ -1237,7 +1237,7 @@ export class ItemPF extends Item {
                 }
             }
             return;
-        } else if (this.hasAction) {
+        } else if (this.type === "enhancement" || this.hasAction) {
             return this.useAttack({ev: ev, skipDialog: skipDialog, rollModeOverride: rollModeOverride, attackType: this.data.data.weaponSubtype === "2h" ? 'two-handed' : 'primary'},actor,skipChargeCheck);
         }
 
@@ -3974,8 +3974,15 @@ export class ItemPF extends Item {
     }
 
     async useEnhancementItem(item) {
+        let chargeCost = item.data.data?.uses?.chargesPerUse !== undefined ? item.data.data.uses.chargesPerUse : item.chargeCost;
+        let chargesLeft = item.data.data?.uses?.value || 0;
         if (this.data.data.enhancements.uses.commonPool) {
-            if (this.data.data.enhancements.uses.value < item.chargeCost) {
+            if (this.data.data.enhancements.uses.value < chargeCost) {
+                    return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
+                }
+        } else {
+
+            if (chargesLeft < chargeCost) {
                 return ui.notifications.warn(game.i18n.localize("D35E.ErrorNoCharges").format(this.name));
             }
         }
@@ -3988,16 +3995,16 @@ export class ItemPF extends Item {
             item.data.data.save.dc += ablMod;
         }
 
-        let roll = await item.use({ev: event, skipDialog: event.shiftKey},this.actor,this.data.data.enhancements.uses.commonPool === true);
+        let roll = await item.use({ev: event, skipDialog: event.shiftKey},this.actor,true);
         if (roll.wasRolled) {
             if (this.data.data.enhancements.uses.commonPool) {
                 let updateData = {}
-                updateData[`data.enhancements.uses.value`] = this.data.data.enhancements.uses.value - item.chargeCost;
-                updateData[`data.uses.value`] = this.data.data.enhancements.uses.value - item.chargeCost;
+                updateData[`data.enhancements.uses.value`] = this.data.data.enhancements.uses.value - chargeCost;
+                updateData[`data.uses.value`] = this.data.data.enhancements.uses.value - chargeCost;
                 updateData[`data.uses.max`] = this.data.data.enhancements.uses.max;
                 await this.update(updateData);
             } else {
-                await this.addEnhancementCharges(item, -1*item.chargeCost)
+                await this.addEnhancementCharges(item, -1*chargeCost)
             }
         }
     }
