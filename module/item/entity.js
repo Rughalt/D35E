@@ -3384,7 +3384,7 @@ export class ItemPF extends Item {
             data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.attributes.speed.swim.total")}`, "speed", "swimSpeed", "replace", getProperty(origData, "data.attributes.speed.swim.total")]])
             data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.attributes.speed.burrow.total")}`, "speed", "burrowSpeed", "replace", getProperty(origData, "data.attributes.speed.burrow.total")]])
             data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.attributes.speed.fly.total")}`, "speed", "flySpeed", "replace", getProperty(origData, "data.attributes.speed.fly.total")]])
-            data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.attributes.naturalAC")}`, "ac", "nac", "base", getProperty(origData, "data.attributes.naturalAC")]])
+            data.data.changes = data.data.changes.concat([[`${getProperty(origData, "data.attributes.naturalACTotal")}`, "ac", "nac", "base", getProperty(origData, "data.attributes.naturalACTotal")]])
         }
 
         data.data.activateActions = []

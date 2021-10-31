@@ -478,6 +478,9 @@
             <label>{{ localize 'D35E.BuffTarACNatural' }}</label>
             <input name="data.attributes.naturalAC" type="text" placeholder="0"
                    value="{{#if data.attributes.naturalAC}}{{data.attributes.naturalAC}}{{/if}}"/>
+            <span style="flex: 0 80px; text-align: end">{{ localize 'D35E.Total' }}: </span>
+            <input style="flex: 0 30px" disabled type="text"
+                  value="{{data.attributes.naturalACTotal}}"/>
           </div>
         </div>
 
