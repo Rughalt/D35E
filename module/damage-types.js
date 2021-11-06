@@ -256,7 +256,7 @@ export class DamageTypes {
     /**
      * Damage Calculation
      */
-    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal,noPrecision,incorporeal) {
+    static calculateDamageToActor(actor,damage,material,alignment,enh,nonLethal,noPrecision,incorporeal,applyHalf) {
         let er = DamageTypes.getERForActor(actor).filter(d => d.value > 0 || d.vulnerable || d.immunity || d.lethal);
         let dr = DamageTypes.getDRForActor(actor).filter(d => d.value > 0 || d.lethal || d.immunity);
         let hasRegeneration = !!actor.data.data.traits.regen;
@@ -342,7 +342,8 @@ export class DamageTypes {
                 let _damage = CACHE.DamageTypes.get(d.damageTypeUid)
                 if (_damage.data.data.damageType === "energy") {
                     let erValue = DamageTypes.getDamageTypeForUID(er,d.damageTypeUid)
-                    let damageAfterEr = Math.max(d.roll.total - (erValue?.value || 0),0)
+                    let realDamage = (applyHalf ? Math.floor(d.roll.total/2.0) : d.roll.total);
+                    let damageAfterEr = Math.max(realDamage - (erValue?.value || 0),0)
 
                     if (d.damageTypeUid === 'damage-healing')
                         damageAfterEr =- damageAfterEr;
@@ -364,12 +365,12 @@ export class DamageTypes {
                         }
                     }
                     else if (erValue?.vulnerable) {
-                        damageAfterEr = Math.ceil(d.roll.total * 1.5)
+                        damageAfterEr = Math.ceil(realDamage * 1.5)
                         value = game.i18n.localize("D35E.Vulnerability")
                     } else if (erValue?.half) {
                         damageAfterEr = Math.ceil(damageAfterEr * 0.5)
                         value = game.i18n.localize("D35E.Half")
-                    } else if (damageAfterEr === d.roll.total) {
+                    } else if (damageAfterEr === realDamage) {
                         value = game.i18n.localize("D35E.NoER")
                     }
                     energyDamage.push({nonLethal: hasRegeneration && !erValue?.lethal,name:_damage.data.name,uid:_damage.data.data.uniqueId,before:d.roll.total,after:damageAfterEr,value:value || 0,lower:damageAfterEr<d.roll.total,higher:damageAfterEr>d.roll.total,equal:d.roll.total===damageAfterEr});

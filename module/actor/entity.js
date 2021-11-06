@@ -3104,7 +3104,7 @@ export class ActorPF extends Actor {
                 nameTag = createTag(cls.name);
             }
             cls.data.tag = tag;
-            data.totalNonEclLevels += cls.data.levels
+            data.totalNonEclLevels += cls.data.classType !== "template" ? cls.data.levels : 0;
             let healthConfig = game.settings.get("D35E", "healthConfig");
             healthConfig = cls.data.classType === "racial" ? healthConfig.hitdice.Racial : this.hasPlayerOwner ? healthConfig.hitdice.PC : healthConfig.hitdice.NPC;
             const classType = cls.data.classType || "base";
@@ -4607,6 +4607,10 @@ export class ActorPF extends Actor {
                     attackData["data.attackNotes"] += '\n' + i.data.attackNotes
                     attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
                 }
+                if (i.data.effectNotes !== '') {
+                    attackData["data.effectNotes"] += '\n' + i.data.effectNotes
+                    attackData["data.effectNotes"] = attackData["data.effectNotes"].trim();
+                }
             });
             if (conditionals.length) {
                 attackData["data.conditionals"] = conditionals;
@@ -4617,6 +4621,10 @@ export class ActorPF extends Actor {
             if (item.data.data.attackNotes !== '') {
                 attackData["data.attackNotes"] += '\n' + item.data.data.attackNotes
                 attackData["data.attackNotes"] = attackData["data.attackNotes"].trim();
+            }
+            if (item.data.data.effectNotes !== '') {
+                attackData["data.effectNotes"] += '\n' + item.data.data.effectNotes
+                attackData["data.effectNotes"] = attackData["data.effectNotes"].trim();
             }
         }
 
@@ -6215,21 +6223,15 @@ export class ActorPF extends Actor {
                     }
                 }
                 if (crit) {
-                    damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal)
+                    damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal,finalAc.applyHalf)
                 } else {
                     if (natural20 || (critroll && hit)) //Natural 20 or we had a crit roll, no crit but base attack hit
-                        damageData = DamageTypes.calculateDamageToActor(a, normalDamage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal)
+                        damageData = DamageTypes.calculateDamageToActor(a, normalDamage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal,finalAc.applyHalf)
                     else
-                        damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal)
+                        damageData = DamageTypes.calculateDamageToActor(a, damage, material, alignment, enh, nonLethalDamage,noPrecision,incorporeal,finalAc.applyHalf)
                 }
                 value = damageData.damage;
-                if (finalAc.applyHalf && value > 0)
-                    value = Math.max(Math.floor(value/2),1);
-                else if (finalAc.applyHalf && value < 0)
-                    value = Math.min(Math.floor(value/2),-1);
                 nonLethal += damageData.nonLethalDamage;
-                if (finalAc.applyHalf && nonLethal)
-                    nonLethal =  Math.max(Math.floor(nonLethal/2),1);
 
                 damageData.nonLethalDamage = nonLethal
                 damageData.displayDamage = value
@@ -6965,7 +6967,7 @@ export class ActorPF extends Actor {
                     let items = this.items.filter(o => o.name === name)
                     if (items.length > 0) {
                         const item = items[0]
-                        if (item.type === "buff") {
+                        if (item.type === "buff" || item.type === "aura") {
                             await item.update({ 'data.active': true })
                         } else {
                             await item.use({ skipDialog: true })
@@ -6978,11 +6980,35 @@ export class ActorPF extends Actor {
                     let items = this.items.filter(o => o.name === name && o.type === type)
                     if (items.length > 0) {
                         const item = items[0]
-                        if (item.type === "buff") {
+                        if (item.type === "buff" || item.type === "aura") {
                             await item.update({ 'data.active': true })
                         } else {
                             await item.use({ skipDialog: true })
                         }
+                    }
+                } else
+                    ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
+                break;
+            case "Deactivate":
+                if (action.parameters.length === 1) {
+                    let name = cleanParam(action.parameters[0])
+                    let items = this.items.filter(o => o.name === name)
+                    if (items.length > 0) {
+                        const item = items[0]
+                        if (item.type === "buff" || item.type === "aura") {
+                            await item.update({ 'data.active': false })
+                        }
+                    }
+                } else if (action.parameters.length === 2) {
+
+                    let name = cleanParam(action.parameters[1])
+                    let type = cleanParam(action.parameters[0])
+                    let items = this.items.filter(o => o.name === name && o.type === type)
+                    if (items.length > 0) {
+                        const item = items[0]
+                        if (item.type === "buff" || item.type === "aura") {
+                            await item.update({ 'data.active': false })
+                        } 
                     }
                 } else
                     ui.notifications.error(game.i18n.localize("D35E.ErrorActionFormula"));
@@ -7334,6 +7360,7 @@ export class ActorPF extends Actor {
                     itemRemoveActions.push(action)
                     break;
                 case "Activate":
+                case "Deactivate":
                     otherActions.push(action)
                     break;
                 case "Set":
@@ -7435,50 +7462,54 @@ export class ActorPF extends Actor {
 
 
 
-    _createConsumableSpellDialog(itemData) {
+    async _createConsumableSpellDialog(itemData) {
+        let template = "systems/D35E/templates/apps/spell-based-item-dialog.html";
+        const html = await renderTemplate(template, {label: game.i18n.localize("D35E.CreateItemForSpellD").format(itemData.name)});
         new Dialog({
             title: game.i18n.localize("D35E.CreateItemForSpell").format(itemData.name),
-            content: game.i18n.localize("D35E.CreateItemForSpellD").format(itemData.name),
+            content:  html,
             buttons: {
                 potion: {
                     icon: '<i class="fas fa-prescription-bottle"></i>',
                     label: "Potion",
-                    callback: () => this.createConsumableSpell(itemData, "potion"),
+                    callback: html => this.createConsumableSpell(itemData, "potion", html),
                 },
                 scroll: {
                     icon: '<i class="fas fa-scroll"></i>',
                     label: "Scroll",
-                    callback: () => this.createConsumableSpell(itemData, "scroll"),
+                    callback: html => this.createConsumableSpell(itemData, "scroll", html),
                 },
                 wand: {
                     icon: '<i class="fas fa-magic"></i>',
                     label: "Wand",
-                    callback: () => this.createConsumableSpell(itemData, "wand"),
+                    callback: html => this.createConsumableSpell(itemData, "wand", html),
                 },
             },
             default: "potion",
         }).render(true);
     }
 
-    _createConsumablePowerDialog(itemData) {
+    async _createConsumablePowerDialog(itemData) {
+        let template = "systems/D35E/templates/apps/spell-based-item-dialog.html";
+        const html = await renderTemplate(template, {label: game.i18n.localize("D35E.CreateItemForPowerD").format(itemData.name)});
         new Dialog({
             title: game.i18n.localize("D35E.CreateItemForPower").format(itemData.name),
-            content: game.i18n.localize("D35E.CreateItemForPowerD").format(itemData.name),
+            content: html,
             buttons: {
                 potion: {
                     icon: '<i class="fas fa-prescription-bottle"></i>',
                     label: "Tattoo",
-                    callback: () => this.createConsumableSpell(itemData, "tattoo"),
+                    callback: html => this.createConsumableSpell(itemData, "tattoo", html),
                 },
                 scroll: {
                     icon: '<i class="fas fa-scroll"></i>',
                     label: "Power Stone",
-                    callback: () => this.createConsumableSpell(itemData, "powerstone"),
+                    callback: html => this.createConsumableSpell(itemData, "powerstone", html),
                 },
                 wand: {
                     icon: '<i class="fas fa-magic"></i>',
                     label: "Dorje",
-                    callback: () => this.createConsumableSpell(itemData, "dorje"),
+                    callback: html => this.createConsumableSpell(itemData, "dorje", html),
                 },
             },
             default: "tattoo",
@@ -7542,8 +7573,9 @@ export class ActorPF extends Actor {
         await this.createEmbeddedEntity("Item", data);
     }
 
-    async createConsumableSpell(itemData, type) {
-        let data = await ItemPF.toConsumable(itemData, type);
+    async createConsumableSpell(itemData, type, html) {
+        let cl = parseInt(html.find('[name="caster-level"]').val());
+        let data = await ItemPF.toConsumable(itemData, type, cl);
 
         if (data._id) delete data._id;
         await this.createEmbeddedEntity("Item", data);

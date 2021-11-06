@@ -1365,6 +1365,14 @@ D35E.savingThrowTypes = {
   'fortitudepartial': 'D35E.STFortitudePartial',
 };
 
+D35E.savingThrowCalculationTypes = {
+  'halfHD': 'D35E.STAutoHalfHD',
+  'HD': 'D35E.STAutoHD',
+  'halfRacialHD': 'D35E.STAutoHalfHDRacial',
+  'racialHD': 'D35E.STAutoHDRacial',
+};
+
+
 D35E.requirements = {
   'generic': 'D35E.RequirementGeneric',
   'bab': 'D35E.BAB',

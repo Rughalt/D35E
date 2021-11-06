@@ -97,7 +97,8 @@
               <section>
                 {{#each data.data.attacks as |attack level|}}
                 <div class="full-attack flexcol" data-attack="{{level}}">
-                  <h4>{{localize "D35E.Attack"}} {{attack._id}}</h4>
+                  <h4>{{localize "D35E.Attack"}} {{attack._id}}  <a style="float: right;" class="full-attack-control full-attack-delete" title="{{ localize 'D35E.DeleteItem' }}"><i
+                    class="fas fa-trash"></i></a></h4>
                   <div class="form-group">
                     <img src="{{attack.img}}">
                     <label>{{attack.name}}</label>

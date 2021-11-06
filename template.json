@@ -1538,7 +1538,9 @@
           "dc": 0,
           "description": "",
           "ability": "",
-          "type": ""
+          "type": "",
+          "dcAutoType": "",
+          "dcAutoAbility": ""
         },
         "baseCl": "0",
         "sr": false,
@@ -2078,6 +2080,7 @@
         }
       },
       "attackNotes": "",
+      "effectNotes": "",
       "bonus": {
         "value": 0,
         "_deprecated": true

@@ -259,10 +259,38 @@
 </ol>
 
 {{!-- Saving Throw --}}
+{{#unless isSpell}}
 <div class="form-group input-select">
-  <label>{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}</label>
+  <label>{{localize "D35E.UseAutoDC"}}</label>
   <div class="form-fields">
-    <input type="text" name="data.save.dc" value="{{data.data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "D35E.DCOffset"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}"/>
+    <select name="data.save.dcAutoType">
+      {{#select data.data.save.dcAutoType}}
+      <option value="">{{localize "D35E.Disable"}}</option>
+      {{#each config.savingThrowCalculationTypes as |saveType type|}}
+      <option value="{{type}}">{{saveType}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{#unless data.data.save.dcAutoType}}
+    
+    {{else}}
+    <span style="flex: 0;">+</span>
+    <select name="data.save.dcAutoAbility">
+      {{#select data.data.save.dcAutoAbility}}
+      <option value="">{{localize "D35E.NoAbility"}}</option>
+      {{#each config.abilities as |ability type|}}
+      <option value="{{type}}">{{ability}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{/unless}}
+  </div>
+</div>
+{{/unless}}
+<div class="form-group input-select">
+  <label>{{#unless isSpell}}{{localize "D35E.DC"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}</label>
+  <div class="form-fields">
+    <input type="text" {{#if data.data.save.dcAutoType}}disabled class="readonly"{{/if}} name="data.save.dc" value="{{data.data.save.dc}}" placeholder="{{#unless isSpell}}{{localize "D35E.DC"}}{{else}}{{localize "D35E.DCOffset"}}{{/unless}}"/>
     <select name="data.save.type">
       {{#select data.data.save.type}}
       <option value="">{{localize "D35E.Custom"}}</option>

@@ -146,7 +146,8 @@ Hooks.once("setup", function() {
     "spellPreparationModes", "weaponTypes", "weaponProperties", "spellComponents", "spellSchools", "spellLevels", "conditionTypes",
     "favouredClassBonuses", "armorProficiencies", "weaponProficiencies", "actorSizes", "actorTokenSizes", "abilityActivationTypes", "abilityActivationTypesPlurals",
     "limitedUsePeriods", "equipmentTypes", "equipmentSlots", "consumableTypes", "attackTypes", "attackTypesShort", "buffTypes", "buffTargets", "contextNoteTargets",
-    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets","savingThrowTypes","requirements",
+    "healingTypes", "divineFocus", "classSavingThrows", "classBAB", "classTypes", "measureTemplateTypes", "creatureTypes", "race", "damageTypes", "conditionalTargets",
+    "savingThrowTypes","requirements","savingThrowCalculationTypes",
     "abilityTypes", "auraTarget"
   ];
 

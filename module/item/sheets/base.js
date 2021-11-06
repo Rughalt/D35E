@@ -92,7 +92,7 @@ export class ItemSheetPF extends ItemSheet {
         data.isRace = this.item.type === "race";
         data.isAttack = this.item.type === "attack";
         data.isWeaponAttack = this.item.data?.data?.actionType === "rwak" || this.item.data?.data?.actionType === "mwak";
-        data.isSpellLike = this.item.type === "spell" || this.item.data?.data?.actionType === "rsak" || this.item.data?.data?.actionType === "msak" || this.item.data?.data?.actionType === "spellsave";
+        data.isSpellLike = this.item.type === "spell" || this.item.data?.data?.actionType === "rsak" || this.item.data?.data?.actionType === "msak" || this.item.data?.data?.actionType === "heal" || this.item.data?.data?.actionType === "spellsave";
         data.isShapechangeBuff = this.item.data.type === "buff" && this.item.data.data?.buffType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";
@@ -1119,10 +1119,11 @@ export class ItemSheetPF extends ItemSheet {
             li.addEventListener("dragstart", handler, false);
         });
 
+        html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
+        html.find('.full-attack-control.full-attack-delete').click(event => this._onDeleteFullAttack(event));
 
         html.find('.spell').on("drop", this._onDropSpell.bind(this));
         html.find('.special-actions').on("drop", this._onDropBuff.bind(this));
-        html.find('.full-attack').on("drop", this._onDropFullAttack.bind(this));
         html.find('.charge-link').on("drop", this._onDropChargeLink.bind(this));
         html.find('.remove-charge-link').click(event => this._onRemoveChargeLink(event));
         html.find('.rolltable-link').on("drop", this._onDropRolltableLink.bind(this));
@@ -1762,6 +1763,21 @@ export class ItemSheetPF extends ItemSheet {
             updateData[`data.attacks.${attackId}.isWeapon`] = data.data.data.attackType === "weapon";
             this.item.update(updateData)
         }
+    }
+
+    async _onDeleteFullAttack(event) {
+        event.preventDefault();
+
+        let elem = $(event.currentTarget).parents(".full-attack");
+        let attackId = elem.attr('data-attack')
+        let updateData = {}
+        updateData[`data.attacks.${attackId}.id`] = null;
+        updateData[`data.attacks.${attackId}.name`] = null;
+        updateData[`data.attacks.${attackId}.img`] = null;
+        updateData[`data.attacks.${attackId}.count`] = 1;
+        updateData[`data.attacks.${attackId}.primary`] = false;
+        updateData[`data.attacks.${attackId}.isWeapon`] = false;
+        this.item.update(updateData)
     }
 
     async _onRemoveChargeLink(event) {

@@ -545,6 +545,35 @@ export class ItemPF extends Item {
             data["data.weight"] = data["data.convertedWeight"] * conversion;
         }
 
+        if (data["data.save.dcAutoType"] !== undefined && data["data.save.dcAutoType"] !== null && data["data.save.dcAutoType"] !== "" ) {
+            if (this.actor) {
+                let autoType = data["data.save.dcAutoType"];
+                let autoDCBonus = 0;
+                switch (autoType) {
+                    case "racialHD":                    
+                        autoDCBonus += this.actor.racialHD.data.data.levels;
+                        break;
+                    case "halfRacialHD":                    
+                        autoDCBonus += this.actor.racialHD.data.data.levels;
+                        autoDCBonus = Math.floor(autoDCBonus/2.0);
+                        break;
+                    case "HD":                    
+                        autoDCBonus += this.actor.data.data.attributes.hd.total;
+                        break;
+                    case "halfHD":                    
+                        autoDCBonus += this.actor.data.data.attributes.hd.total;
+                        autoDCBonus = Math.floor(autoDCBonus/2.0);
+                        break;
+                    default:
+                        break;
+                }
+                let ability = data["data.save.dcAutoAbility"];
+                data["data.save.dc"] = 10 + (this.actor.data.data.abilities[ability]?.mod || 0) + autoDCBonus;
+            } else {
+                data["data.save.dc"] = 0;
+            }
+        }
+
         if (data["data.convertedCapacity"] !== undefined && data["data.convertedCapacity"] !== null) {
             const conversion = game.settings.get("D35E", "units") === "metric" ? 2 : 1;
             data["data.capacity"] = data["data.convertedCapacity"] * conversion;
@@ -2320,7 +2349,7 @@ export class ItemPF extends Item {
 
         // Add CL
 
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
             this._adjustSpellCL(itemData, rollData)
         }
         // Determine size bonus
@@ -2423,7 +2452,7 @@ export class ItemPF extends Item {
         }
 
         // Add spell data
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
             this._adjustSpellCL(itemData, rollData)
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
             rollData.sl = sl;
@@ -2479,7 +2508,7 @@ export class ItemPF extends Item {
         }
 
         // Add CL
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
             this._adjustSpellCL(itemData, rollData);
         }
 
@@ -2580,7 +2609,7 @@ export class ItemPF extends Item {
         } else rollData = data;
 
         // Add CL
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave") {
+        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
             this._adjustSpellCL(itemData, rollData);
         }
 
@@ -3495,7 +3524,7 @@ export class ItemPF extends Item {
         return data;
     }
 
-    static async toEnhancement(origData, type) {
+    static async toEnhancement(origData, type, cl) {
         let data = duplicate(game.system.template.Item.enhancement);
         for (let t of data.templates) {
             mergeObject(data, duplicate(game.system.template.Item.templates[t]));
@@ -3508,7 +3537,6 @@ export class ItemPF extends Item {
         };
 
         const slcl = this.getMinimumCasterLevelBySpellData(origData.data);
-
         data.data.enhancementType = "misc";
 
         // Set name
@@ -3743,7 +3771,7 @@ export class ItemPF extends Item {
 
         return data;
     }
-    static async toConsumable(origData, type) {
+    static async toConsumable(origData, type, cl) {
         let data = duplicate(game.system.template.Item.consumable);
         for (let t of data.templates) {
             mergeObject(data, duplicate(game.system.template.Item.templates[t]));
@@ -3756,7 +3784,7 @@ export class ItemPF extends Item {
         };
 
         const slcl = this.getMinimumCasterLevelBySpellData(origData.data);
-
+        if (cl) slcl[1] = cl;
         // Set consumable type
         data.data.consumableType = type;
 
