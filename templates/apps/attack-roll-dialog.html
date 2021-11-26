@@ -219,28 +219,28 @@
             <span class="checkmark"></span>
         </label>
     </div>
-    {{#if feat.data.data.combatChangesAdditionalRanges.hasAdditionalRanges}}
-    <div class="form-group">
-        {{#if feat.data.data.combatChangesAdditionalRanges.slider1.max}}
-        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider1.name}}</span>
-        <input type="range" name="optional-range-base-1-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider1.max}}" value="0" class="slider" style="flex: 1"
-               onchange="this.nextElementSibling.value=this.value">
-        <input type="text" name="optional-range-1-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+        {{#if feat.data.data.combatChangesAdditionalRanges.hasAdditionalRanges}}
+        <div class="form-group">
+            {{#if feat.data.data.combatChangesAdditionalRanges.slider1.max}}
+            <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider1.name}}</span>
+            <input type="range" name="optional-range-base-1-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider1.max}}" value="0" class="slider" style="flex: 1"
+                   onchange="this.nextElementSibling.value=this.value">
+            <input type="text" name="optional-range-1-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+            {{/if}}
+            {{#if feat.data.data.combatChangesAdditionalRanges.slider2.max}}
+            <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider2.name}}</span>
+            <input type="range" name="optional-range-base-2-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider2.max}}" value="0" class="slider" style="flex: 1"
+                   onchange="this.nextElementSibling.value=this.value">
+            <input type="text" name="optional-range-2-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+            {{/if}}
+            {{#if feat.data.data.combatChangesAdditionalRanges.slider3.max}}
+            <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider3.name}}</span>
+            <input type="range" name="optional-range-base-3-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider3.max}}" value="0" class="slider" style="flex: 1"
+                   onchange="this.nextElementSibling.value=this.value">
+            <input type="text" name="optional-range-3-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
+            {{/if}}
+        </div>
         {{/if}}
-        {{#if feat.data.data.combatChangesAdditionalRanges.slider2.max}}
-        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider2.name}}</span>
-        <input type="range" name="optional-range-base-2-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider2.max}}" value="0" class="slider" style="flex: 1"
-               onchange="this.nextElementSibling.value=this.value">
-        <input type="text" name="optional-range-2-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
-        {{/if}}
-        {{#if feat.data.data.combatChangesAdditionalRanges.slider3.max}}
-        <span style="flex: 0; margin-right: 3px; opacity: 0.8">{{feat.data.data.combatChangesAdditionalRanges.slider3.name}}</span>
-        <input type="range" name="optional-range-base-3-{{feat.id}}" min="0" max="{{feat.data.data.combatChangesAdditionalRanges.slider3.max}}" value="0" class="slider" style="flex: 1"
-               onchange="this.nextElementSibling.value=this.value">
-        <input type="text" name="optional-range-3-{{feat.id}}" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
-        {{/if}}
-    </div>
-    {{/if}}
     {{/each}}
 
     <div class="form-group stacked">
@@ -405,15 +405,6 @@
     </div>
     {{/if}}
 
-
-    <div class="form-group stacked">
-        {{#if hasTemplate}}
-        <label class="checkbox">
-            <input type="checkbox" name="measure-template" checked/> {{localize "D35E.MeasureTemplate"}}
-        </label>
-        {{/if}}
-    </div>
-
     <div class="form-group">
         {{#if allowMultipleUses}}
         <label class="slider">Multiple Uses
@@ -436,6 +427,17 @@
         <input type="text" name="useAmount" value="0" disabled style="flex: 0 30; margin-left: 8px"/>
         {{/if}}
     </div>
+
+
+    {{#if hasTemplate}}
+    <div class="form-group">
+        <label>{{localize "D35E.MeasureTemplate"}}</label>
+        <label class="checkbox" style="flex: 0 16px; margin-right: 8px; position: relative">
+            <input type="checkbox" class="stylized"  name="measure-template" checked/>
+            <span class="checkmark"></span>
+        </label>
+    </div>
+    {{/if}}
 
 
 

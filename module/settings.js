@@ -317,6 +317,18 @@ export const registerSystemSettings = function() {
     }
   });
 
+  game.settings.register("D35E", "showPartyHudTokenImage", {
+    name: "SETTINGS.D35EShowPartyHudTokenN",
+    hint: "SETTINGS.D35EShowPartyHudTokenL",
+    scope: "client",
+    config: true,
+    default: true,
+    type: Boolean,
+    onChange: () => {
+      ui.nav.render()
+    }
+  });
+
 
   game.settings.register("D35E", "customSkin", {
     name: "SETTINGS.D35ECustomSkinN",

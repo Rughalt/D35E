@@ -772,6 +772,7 @@ export class ActorSheetPF extends ActorSheet {
 
     // Race controls
     html.find(".race-container .item-control").click(this._onRaceControl.bind(this));
+    html.find(".material-container .item-control").click(this._onRaceControl.bind(this));
 
 
     // Open Compendium packs
@@ -1869,6 +1870,29 @@ export class ActorSheetPF extends ActorSheet {
       const itemData = {
         name: "New Race",
         type: "race",
+      };
+      this.actor.createOwnedItem(itemData);
+    }
+    // Edit race
+    else if (a.classList.contains("edit")) {
+      this._onItemEdit(event);
+    }
+    // Delete race
+    else if (a.classList.contains("delete")) {
+      this._onItemDelete(event);
+    }
+  }
+
+
+  async _onMaterialControl(event) {
+    event.preventDefault();
+    const a = event.currentTarget;
+
+    // Add race
+    if (a.classList.contains("add")) {
+      const itemData = {
+        name: "New Material",
+        type: "material",
       };
       this.actor.createOwnedItem(itemData);
     }

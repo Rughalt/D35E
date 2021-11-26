@@ -1787,7 +1787,7 @@ export class ItemPF extends Item {
 
             // Lock useAmount for powers to max value
             if (this.type === "spell" && getProperty(this.data, "data.isPower")) {
-                rollData.useAmount = Math.min(rollData.useAmount, rollData.cl - (getProperty(this.data, "data.powerPointsCost") || 0))
+                rollData.useAmount = Math.max(0,Math.min(rollData.useAmount, rollData.cl - (getProperty(this.data, "data.powerPointsCost") || 0)))
             }
             let attacks = [];
             if (this.hasAttack) {
@@ -2048,7 +2048,7 @@ export class ItemPF extends Item {
             let spellbookIndex = this.data.data.spellbook;
             let spellbook = getProperty(this.actor.data, `data.attributes.spells.spellbooks.${spellbookIndex}`) || {};
             let availablePowerPoints = (spellbook.powerPoints || 0) - (this.data.data.powerPointsCost || 0);
-            bonusMaxPowerPoints = Math.min((this?.actor?.data?.data?.attributes?.hd.total || 0) + 10 - (this.data.data.powerPointsCost || 0),availablePowerPoints);
+            bonusMaxPowerPoints = Math.max(spellbook.maximumPowerPointLimit ? Math.min((spellbook?.cl?.total || 0) - (this.data.data.powerPointsCost || 0),availablePowerPoints) : availablePowerPoints, 0);
         }
         let autoScaleAttacks = (game.settings.get("D35E", "autoScaleAttacksBab") && actor.data.type !== "npc" && getProperty(this.data, "data.attackType") === "weapon" && getProperty(this.data, "data.autoScaleOption") !== "never") || getProperty(this.data, "data.autoScaleOption") === "always"
         let extraAttacksCount = autoScaleAttacks ? Math.ceil((actor.data.data.attributes.bab.total)/5.0) : (getProperty(this.data, "data.attackParts") || []).length + 1;
@@ -2664,7 +2664,7 @@ export class ItemPF extends Item {
         }
         if (itemData.deck) {
             const deckIndex = itemData.deck;
-            const deck = this.actor.data.data.attributes.cards.deck[deckIndex];
+            const deck = this.actor.data.data.attributes.cards.decks[deckIndex];
             cl = deck.cl.total + (itemData.clOffset || 0) + (rollData.featClBonus || 0) - (this.actor.data.data.attributes.energyDrain || 0);
         }
         rollData.cl = Math.max((new Roll35e(`${itemData.baseCl}`, rollData).roll()).total, cl);

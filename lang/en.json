@@ -1550,8 +1550,17 @@
   "D35E.UseAutoDC": "Automatic DC Calculation",
   "D35E.Disable": "Disable",
   "D35E.NoAbility": "No Ability",
+  "D35E.BreakDC": "Break DC",
+  "D35E.BaseHardness": "Base Hardness",
+  "D35E.ObjectDescription": "Object Description",
+  "D35E.BaseHP": "Base HP",
+  "D35E.BaseACBonus": "Base AC Bonus",
+  "D35E.HP": "HP",
+  "D35E.AC": "AC",
 
 
+  "SETTINGS.D35EShowPartyHudTokenN": "Party HUD should display token images? ",
+  "SETTINGS.D35EShowPartyHudTokenL": "Toggles if images displayed in party hud should be token images or portrait images.",
   "SETTINGS.D35EShowPartyHudN": "Party HUD type",
   "SETTINGS.D35EShowPartyHudL": "How to display party HUD",
   "SETTINGS.D35ECustomSkinN": "Use Custom Skin",

@@ -26,7 +26,7 @@
     </div>
     <div class="form-group">
       <label>{{localize "D35E.SavingThrow"}} {{localize "D35E.RollMode"}}</label>
-      <select name="rollConfig.character.skill" >
+      <select name="rollConfig.character.savingThrow" >
           {{#select settings.rollConfig.character.savingThrow}}
           <option value="">{{localize 'D35E.Default'}}</option>
           {{#each rollModes as |label mode|}}
@@ -38,7 +38,7 @@
     <div class="form-group">
       <label>{{localize "D35E.Skill"}} {{localize "D35E.RollMode"}}</label>
       <select name="rollConfig.character.skill" >
-          {{#select settings.rollConfig.character.applyDamage}}
+          {{#select settings.rollConfig.character.skill}}
           <option value="">{{localize 'D35E.Default'}}</option>
           {{#each rollModes as |label mode|}}
           <option value="{{mode}}">{{localize label}}</option>
@@ -93,7 +93,7 @@
     </div>
     <div class="form-group">
       <label>{{localize "D35E.SavingThrow"}} {{localize "D35E.RollMode"}}</label>
-      <select name="rollConfig.npc.skill" >
+      <select name="rollConfig.npc.savingThrow" >
           {{#select settings.rollConfig.npc.savingThrow}}
           <option value="">{{localize 'D35E.Default'}}</option>
           {{#each rollModes as |label mode|}}
@@ -105,7 +105,7 @@
     <div class="form-group">
       <label>{{localize "D35E.Skill"}} {{localize "D35E.RollMode"}}</label>
       <select name="rollConfig.npc.skill" >
-          {{#select settings.rollConfig.npc.applyDamage}}
+          {{#select settings.rollConfig.npc.skill}}
           <option value="">{{localize 'D35E.Default'}}</option>
           {{#each rollModes as |label mode|}}
           <option value="{{mode}}">{{localize label}}</option>
@@ -162,7 +162,7 @@
     </div>
     <div class="form-group">
       <label>{{localize "D35E.SavingThrow"}} {{localize "D35E.RollMode"}}</label>
-      <select name="rollConfig.trap.skill" >
+      <select name="rollConfig.trap.savingThrow" >
           {{#select settings.rollConfig.trap.savingThrow}}
           <option value="">{{localize 'D35E.Default'}}</option>
           {{#each rollModes as |label mode|}}
@@ -174,7 +174,7 @@
     <div class="form-group">
       <label>{{localize "D35E.Skill"}} {{localize "D35E.RollMode"}}</label>
       <select name="rollConfig.trap.skill" >
-          {{#select settings.rollConfig.trap.applyDamage}}
+          {{#select settings.rollConfig.trap.skill}}
           <option value="">{{localize 'D35E.Default'}}</option>
           {{#each rollModes as |label mode|}}
           <option value="{{mode}}">{{localize label}}</option>

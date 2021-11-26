@@ -48,6 +48,7 @@ import {Roll35e} from "./module/roll.js";
 import {genTreasureFromToken} from "./module/treasure/treasure.js"
 import { ActiveEffectD35E } from "./module/ae/entity.js";
 import { CollateAuras } from "./module/auras/aura-helpers.js";
+import {ActorSheetObject} from "./module/actor/sheets/object.js";
 
 // Add String.format
 if (!String.prototype.format) {
@@ -104,6 +105,8 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetPFNPCLite, { types: ["npc"], makeDefault: false, label: game.i18n.localize("D35E.ActorSheetPFNPCLite")  });
   Actors.registerSheet("D35E", ActorSheetPFNPCMonster, { types: ["npc"], makeDefault: false, label: game.i18n.localize("D35E.ActorSheetPFNPCMonster")  });
   Actors.registerSheet("D35E", ActorSheetTrap, { types: ["trap"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFNPCTrap")  });
+  Actors.registerSheet("D35E", ActorSheetObject, { types: ["object"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFNPCObject")  });
+  Items.unregisterSheet("core", ItemSheet);
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "aura", "attack", "race", "enhancement","damage-type","material","full-attack","card"], makeDefault: true });
 
@@ -378,6 +381,9 @@ Hooks.on("renderChatMessage", (app, html, data) => {
 // Hooks.on("getChatLogEntryContext", addChatMessageContextOptions);
 Hooks.on("renderChatLog", (_, html) => ItemPF.chatListeners(html));
 Hooks.on("renderChatLog", (_, html) => ActorPF.chatListeners(html));
+Hooks.on("renderChatPopout", (_, html) => ItemPF.chatListeners(html));
+Hooks.on("renderChatPopout", (_, html) => ActorPF.chatListeners(html));
+
 
 const debouncedCollate = debounce((a, b, c, d) => CollateAuras(a, b, c, d), 500)
 Hooks.on("updateItem", (item, changedData, options, user) => {
@@ -400,12 +406,12 @@ Hooks.on("renderTokenConfig", async (app, html) => {
   console.log(app.object.data)
   let token = app.object.data.token || app.object.data;
   let newHTML = await renderTemplate("systems/D35E/templates/internal/token-light-info.html", {
-    object: duplicate(token.actorLink ? token.document.data.toObject(false) : app.object.data.toObject(false)),
+    object: duplicate(token.actorLink ? token.document.data.toObject(false) : token.flags ? token.toObject(false) : app.object.data.toObject(false)),
     globalDisable: game.settings.get("D35E", "globalDisableTokenLight")
   });
   html.find('.tab[data-tab="vision"] > *:nth-child(5)').after(newHTML);
   let newHTML2 = await renderTemplate("systems/D35E/templates/internal/token-config.html", {
-    object: duplicate(token.actorLink ? token.toObject(false) : app.object.data)
+    object: duplicate(token.actorLink ? token.toObject(false) : token.flags ? token.toObject(false) : app.object.data.toObject(false))
   });
   html.find('.tab[data-tab="vision"] > *:nth-child(2)').after(newHTML2);
 });

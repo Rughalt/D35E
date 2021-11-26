@@ -3,7 +3,8 @@
     "types": [
       "character",
       "npc",
-      "trap"
+      "trap",
+      "object"
     ],
     "templates": {
       "common": {
@@ -165,6 +166,10 @@
             "total": 0
           },
           "pr": {
+            "formula": "",
+            "total": 0
+          },
+          "hardness": {
             "formula": "",
             "total": 0
           },
@@ -338,6 +343,7 @@
                 "dailyPowerPointsFormula": "",
                 "powerPoints": 0,
                 "powerPointsTotal": 0,
+                "maximumPowerPointLimit": "@cl",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
                 "spontaneous": false,
@@ -378,6 +384,7 @@
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "powerPointsTotal": 0,
+                "maximumPowerPointLimit": "@cl",
                 "dailyPowerPointsFormula": "",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
@@ -419,6 +426,7 @@
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "powerPointsTotal": 0,
+                "maximumPowerPointLimit": "@cl",
                 "dailyPowerPointsFormula": "",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
@@ -460,6 +468,7 @@
                 "powerPointsFormula": "",
                 "powerPoints": 0,
                 "powerPointsTotal": 0,
+                "maximumPowerPointLimit": "@cl",
                 "dailyPowerPointsFormula": "",
                 "arcaneSpellFailure": true,
                 "baseDCFormula": "10 + @sl + @ablMod",
@@ -566,6 +575,10 @@
             "min": 0,
             "max": 40,
             "available": 1
+          },
+          "breakDC": {
+            "base": 0,
+            "total": 0
           },
           "levelUpData": [
             {
@@ -1178,7 +1191,11 @@
         "noBuffDisplay": false,
         "lockEditingByPlayers": false,
         "showCardSheet": false,
-        "showSpellcastingSheet": true
+        "showSpellcastingSheet": true,
+        "staticBonus": {
+          "hp": 0,
+          "ac": 0
+        }
       }
     },
     "character": {
@@ -1272,6 +1289,36 @@
         "levelUpProgression": false,
         "findDC": 1,
         "disarmDC": 1
+      },
+      "traits": {
+        "tokensize": "none"
+      },
+      "master": {
+        "id": null,
+        "img": null,
+        "name": null,
+        "data": {},
+        "distance": 0
+      }
+    },
+    "object": {
+      "templates": [
+        "common"
+      ],
+      "attributes": {
+        "spellLevel": 0,
+        "hp": {
+          "value": 0,
+          "max": 0
+        }
+      },
+      "details": {
+        "type": "",
+        "environment": "",
+        "xp": {
+          "value": 10
+        },
+        "levelUpProgression": false
       },
       "traits": {
         "tokensize": "none"
@@ -2275,6 +2322,8 @@
       "slug": "damage",
       "priceDifference": 0,
       "magicEquivalent": 0,
+      "hardness": 0,
+      "hpPerInch": 0,
       "isAlchemicalSilverEquivalent": false,
       "isAdamantineEquivalent": false,
       "isColdIronEquivalent": false,

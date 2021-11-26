@@ -6,6 +6,7 @@ export class TopPortraitBar {
 
   static async render(actor) {
     let partyHudType = game.settings.get("D35E", "showPartyHud")
+    let useTokenImages = game.settings.get("D35E", "showPartyHudTokenImage")
     let portraitBar = $('#portrait-bar')
     let dragging = false;
     let dragX = 0;
@@ -54,7 +55,7 @@ export class TopPortraitBar {
       return;
 
     if (portraitBar.find('#actor-portrait-'+actor.id).length === 0) {
-      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait "+partyHudType+"''><div class='barbox "+partyHudType+"'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='background'></div> <div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow "+partyHudType+"'></div><img src='"+actor.img+"'><div class='overlay'></div></div>" )
+      var $portraitDiv = $( "<div id='actor-portrait-"+actor.id+"' class='portrait "+partyHudType+"''><div class='barbox "+partyHudType+"'><span class='name'>"+actor.name+"</span> <div class='damagebar'><div class='background'></div> <div class='damage'></div><span class='life'>10/10</span></div></div><div class='buffbox flexrow "+partyHudType+"'></div><img src='"+(useTokenImages ? (actor.data?.token?.img || actor.img) : actor.img)+"'><div class='overlay'></div></div>" )
       portraitBar.append($portraitDiv)
     }
 

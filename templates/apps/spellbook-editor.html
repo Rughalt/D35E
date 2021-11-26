@@ -158,6 +158,17 @@
 
         </div>
         {{/unless}}
+        {{#if spellbook.usePowerPoints}}
+        <div class="flexrow formulas form-group">
+            <label><span>{{localize "D35E.SpellbookPowerPointsLimit"}}</span></label>
+            <select name="maximumPowerPointLimit" data-dtype="String">
+                {{#select spellbook.maximumPowerPointLimit}}
+                <option value="@cl">{{localize "D35E.Cl"}}</option>
+                <option value="">{{localize "D35E.NoLimit"}}</option>
+                {{/select}}
+            </select>
+        </div>
+        {{/if}}
     </div>
 
     <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{localize "D35E.UpdateSpellbook"}}</button>

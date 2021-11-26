@@ -34,6 +34,7 @@ export const createCustomChatMessage = async function(chatTemplate, chatTemplate
     rollMode: rollMode,
     user: game.user.id,
     type: CONST.CHAT_MESSAGE_TYPES.CHAT,
+    flags: {"core.canPopout": true}
   }, chatData);
   chatData.content = await renderTemplate(chatTemplate, chatTemplateData);
   // Handle different roll modes

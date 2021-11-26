@@ -1139,7 +1139,9 @@ D35E.buffTargets = {
     "cr": "D35E.CR",
     "fortification": "D35E.Fortification",
     "asf": "D35E.ArcaneSpellFailure",
-    "concealment": "D35E.Concealment"
+    "concealment": "D35E.Concealment",
+    "hardness": "D35E.Hardness",
+    "breakDC": "D35E.BreakDC"
   },
   "prestigeCl": {
     "_label": "D35E.PrestigeCl",

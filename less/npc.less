@@ -52,5 +52,49 @@
       top: 5px;
     }
   }
+
+  .material-section {
+    list-style: none;
+    margin: 0;
+    flex: 0 32px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  .material-container {
+    span {
+      font-size: 13px;
+      margin-left: 2px;
+    }
+    padding: 4px;
+    margin: 0;
+    .item-controls {
+      align-items: flex-start;
+      a {
+        flex: 0 0 16px;
+        font-size: 10px;
+        text-align: center;
+        color: #666;
+      }
+    }
+    &.nomaterial {
+      padding: 0 0 0 6px;
+    }
+    .material {
+      flex: 0 0 22px;
+      background-size: contain;
+      line-height: 24px;
+      text-align: center;
+      vertical-align: baseline;
+      margin-right: 4px;
+      height: 22px;
+      &.rollable:hover {
+        background-image: url("../../icons/svg/d20-black.svg") !important;
+      }
+    }
+  }
 }
+
 

@@ -49,6 +49,15 @@
             {{!-- Details Tab --}}
             <div class="tab details" data-group="primary" data-tab="details">
 
+                <div class="form-group">
+                    <label>{{localize "D35E.Hardness"}}</label>
+                    <input type="text" name="data.hardness" value="{{data.data.hardness}}" data-dtype="String"/>
+                </div>
+                <div class="form-group">
+                    <label>{{localize "D35E.HpPerInch"}}</label>
+                    <input type="text" name="data.hpPerInch" value="{{data.data.hpPerInch}}" data-dtype="String"/>
+                </div>
+
                 <h3 class="form-header">{{localize "D35E.MagicEquivalent"}}</h3>
                 <div class="form-group">
                     <label>{{localize "D35E.MagicEquivalent"}}</label>

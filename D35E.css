@@ -3569,7 +3569,7 @@
 /*  Basic Structure                          */
 /* ----------------------------------------- */
 .D35E.sheet.actor.character {
-  min-width: 672px;
+  min-width: 736px;
   min-height: 736px;
   /* ----------------------------------------- */
   /*  Sheet Header                             */
@@ -3729,6 +3729,47 @@
   right: 5px;
   font-size: 12px;
   top: 5px;
+}
+.D35E.sheet.actor.npc .material-section {
+  list-style: none;
+  margin: 0;
+  flex: 0 32px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+.D35E.sheet.actor.npc .material-container {
+  padding: 4px;
+  margin: 0;
+}
+.D35E.sheet.actor.npc .material-container span {
+  font-size: 13px;
+  margin-left: 2px;
+}
+.D35E.sheet.actor.npc .material-container .item-controls {
+  align-items: flex-start;
+}
+.D35E.sheet.actor.npc .material-container .item-controls a {
+  flex: 0 0 16px;
+  font-size: 10px;
+  text-align: center;
+  color: #666;
+}
+.D35E.sheet.actor.npc .material-container.nomaterial {
+  padding: 0 0 0 6px;
+}
+.D35E.sheet.actor.npc .material-container .material {
+  flex: 0 0 22px;
+  background-size: contain;
+  line-height: 24px;
+  text-align: center;
+  vertical-align: baseline;
+  margin-right: 4px;
+  height: 22px;
+}
+.D35E.sheet.actor.npc .material-container .material.rollable:hover {
+  background-image: url("../../icons/svg/d20-black.svg") !important;
 }
 .D35E.sheet.actor.npc.lite {
   min-width: 440px;
@@ -4944,6 +4985,9 @@ tr.introjs-showElement > th {
   background: none;
   color: #2C606D;
   font-size: 19px;
+}
+.d35ecustom .item-list .item-image {
+  border-radius: 2px !important;
 }
 .d35ecustom .D35E.sheet.item .form-group :not(button) i.fas:not(.tooltip),
 .d35ecustom .D35E.sheet.actor .form-group :not(button) i.fas:not(.tooltip) {

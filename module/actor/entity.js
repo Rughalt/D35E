@@ -88,6 +88,10 @@ export class ActorPF extends Actor {
 
     /* -------------------------------------------- */
 
+    get isCharacterType () {
+        return this.data.type !== "trap" && this.data.type !== "object";
+    }
+
     get spellFailure() {
         if (this.items == null) return this.data.data.attributes.arcaneSpellFailure || 0;
         return this.items.filter(o => {
@@ -106,6 +110,11 @@ export class ActorPF extends Actor {
     get race() {
         if (this.items == null) return null;
         return this.items.filter(o => o.data.type === "race")[0];
+    }
+
+    get material() {
+        if (this.items == null) return null;
+        return this.items.filter(o => o.data.type === "material")[0];
     }
 
     get racialHD() {
@@ -628,6 +637,10 @@ export class ActorPF extends Actor {
                 return "data.attributes.init.total";
             case "spellResistance":
                 return "data.attributes.sr.total";
+            case "hardness":
+                return "data.attributes.hardness.total";
+            case "breakDC":
+                return "data.details.breakDC.total";
             case "powerResistance":
                 return "data.attributes.pr.total";
             case "size":
@@ -894,7 +907,7 @@ export class ActorPF extends Actor {
 
 
         // Apply changes in Actor size to Token width/height
-        if (!options.skipToken && tokenSizeKey !== 'none' && this.data.type !== "trap" && !this.data.data.noTokenOverride)
+        if (!options.skipToken && tokenSizeKey !== 'none' && this.isCharacterType && !this.data.data.noTokenOverride)
         {
 
             let size = CONFIG.D35E.tokenSizes[tokenSizeKey];
@@ -919,7 +932,7 @@ export class ActorPF extends Actor {
                 data["token.scale"] = size.scale;
             }
         }
-        if (!options.skipToken && this.data.type !== "trap")
+        if (!options.skipToken && this.isCharacterType)
         {
             let dimLight = 0;
             let brightLight = 0;
@@ -1031,6 +1044,13 @@ export class ActorPF extends Actor {
                                 brightSight: darkvision,
                                 flags: {D35E: {lowLightVision : lowLight}}
                             }, { stopUpdates: true, tokenOnly: true });
+                    }
+                    let token = this.data.token;
+                    if (darkvision !== token.brightSight || lowLight !== getProperty(token, "flags.D35E.lowLightVision")) {
+                        await token.update({
+                            brightSight: darkvision,
+                            flags: {D35E: {lowLightVision: lowLight}}
+                        })
                     }
                     data[`token.brightSight`] = darkvision;
                     data[`token.flags.D35E.lowLightVision`] = lowLight;
@@ -1416,6 +1436,25 @@ export class ActorPF extends Actor {
             changes.push({
                 raw: ["-(@attributes.energyDrain * 5)", "misc", "vigor", "untyped", 0],
                 source: { name: "Negative Levels" }
+            });
+        }
+
+        if (this.material) {
+            changes.push({
+                raw: [`${this.material.data.data.hardness || 0}`, "misc", "hardness", "untyped", 0],
+                source: { name: `Material Hardness (${this.material.name})` }
+            });
+        }
+        if (!Number.isNaN(data.data.staticBonus.hp) && data.data.staticBonus.hp > 0) {
+            changes.push({
+                raw: [`${data.data.staticBonus.hp || 0}`, "misc", "mhp", "untyped", 0],
+                source: { name: `Manual HP Bonus` }
+            });
+        }
+        if (!Number.isNaN(data.data.staticBonus.ac) && data.data.staticBonus.ac > 0) {
+            changes.push({
+                raw: [`${data.data.staticBonus.ac || 0}`, "ac", "ac", "untyped", 0],
+                source: { name: `Manual AC Bonus` }
             });
         }
     }
@@ -2502,6 +2541,21 @@ export class ActorPF extends Actor {
                 linkData(data, updateData, k, 0);
             }
         }
+        {
+            const k = "data.attributes.hardness.total";
+            // Set spell resistance
+            if (getProperty(data, `data.attributes.hardness.formula`).length > 0) {
+                let roll = new Roll35e(getProperty(data, `data.attributes.hardness.formula`), data.data).roll();
+                linkData(data, updateData, k, roll.total);
+            } else {
+
+                linkData(data, updateData, k, 0);
+            }
+        }
+        {
+            const k = "data.details.breakDC.total";
+            linkData(data, updateData, k, parseInt(getProperty(data, `data.details.breakDC.base`) || "0"));
+        }
 
         {
             const k = "data.attributes.pr.total";
@@ -2629,7 +2683,7 @@ export class ActorPF extends Actor {
                 linkData(data, updateData, `data.skills.${k}.subSkills.${k2}.cs`, isClassSkill);
             }
         }
-        {
+        if (this.isCharacterType) {
             let level = classes.reduce((cur, o) => {
                 if (o.data.data.classType === "minion" || o.data.data.classType === "template") return cur;
                 return cur + o.data.data.levels;
@@ -2818,7 +2872,7 @@ export class ActorPF extends Actor {
                     }
                 }
             }
-            //console.log('D35E Items To Add', JSON.stringify(itemsToAdd))
+            
             for (let abilityUid of existingAbilities) {
                 if (!addedAbilities.has(abilityUid)) {
                     //console.log(`D35E | Removing existing ability ${abilityUid}`, changes)
