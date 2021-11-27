@@ -52,7 +52,7 @@
                 <div class="dice-roll attack-roll flexcol">
                     <div class="flexrow">
                         <div class="flexcol">
-                            <div class="dice-flavor">Rolled</div>
+                            <div class="dice-flavor">{{localize "D35E.Rolled"}}</div>
                             <div class="dice-result">
                                 <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
                                     {{damageData.beforeDamage}}</h4>
@@ -74,7 +74,7 @@
                         </div>
                         {{/if}}
                         <div class="flexcol">
-                            <div class="dice-flavor">Applied {{#if applyHalf}} ({{localize "D35E.Half"}}){{/if}}</div>
+                            <div class="dice-flavor">{{localize "D35E.Applied"}} {{#if applyHalf}} ({{localize "D35E.Half"}}){{/if}}</div>
                             <div class="dice-result">
                                 <h4 class="dice-total{{#if atk.attack.isCrit}} success{{/if}}{{#if atk.attack.isFumble}} failure{{/if}}">
                                     {{#if damageData.isHealing}}

@@ -1557,6 +1557,9 @@
   "D35E.BaseACBonus": "Base AC Bonus",
   "D35E.HP": "HP",
   "D35E.AC": "AC",
+  "D35E.Rolled": "Rolled",
+  "D35E.Applied": "Applied",
+  "D35E.AutoApplied": "Auto-applied",
 
 
   "SETTINGS.D35EShowPartyHudTokenN": "Party HUD should display token images? ",
