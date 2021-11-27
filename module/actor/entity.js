@@ -2360,13 +2360,13 @@ export class ActorPF extends Actor {
                     let highStart = false;
                     linkData(data, updateData, k,
                         Math.floor(classes.reduce((cur, obj) => {
-                            const saveScale = getProperty(obj, `data.savingThrows.${a}.value`) || "";
+                            const saveScale = getProperty(obj, `data.data.savingThrows.${a}.value`) || "";
                             if (saveScale === "high") {
                                 const acc = highStart ? 0 : 2;
                                 highStart = true;
-                                return cur + obj.data.levels / 2 + acc;
+                                return cur + obj.data.data.levels / 2 + acc;
                             }
-                            if (saveScale === "low") return cur + obj.data.levels / 3;
+                            if (saveScale === "low") return cur + obj.data.data.levels / 3;
                             return cur;
                         }, 0)) - data1.attributes.energyDrain
                     );
