@@ -545,6 +545,10 @@ export class ItemPF extends Item {
             data["data.weight"] = data["data.convertedWeight"] * conversion;
         }
 
+        if (data["data.classType"] !== undefined && data["data.classType"] === 'template') {
+            data["data.hp"] = 0;
+        }
+
         if (data["data.save.dcAutoType"] !== undefined && data["data.save.dcAutoType"] !== null && data["data.save.dcAutoType"] !== "" ) {
             if (this.actor) {
                 let autoType = data["data.save.dcAutoType"];
