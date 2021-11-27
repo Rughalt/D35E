@@ -21,6 +21,15 @@
 </div>
 {{/if}}
 {{#unless isWeaponAttack}}
+{{#if isConsumable}}
+<div class="form-group">
+  <label>{{localize "D35E.SpellLike"}}</label>
+  <label class="checkbox" style="position: relative; flex: 0 20px">
+    <input type="checkbox" class="stylized" name="data.isFromSpell" {{checked data.data.isFromSpell}}/>
+    <span class="checkmark"></span>
+  </label>
+</div>
+{{/if}}
 {{#if isSpellLike}}
 <div class="flexrow">
   <div class="form-group" style="flex: 1">
@@ -69,7 +78,6 @@
     <input type="text" name="data.attackCountFormula" value="{{data.data.attackCountFormula}}" placeholder="{{localize "D35E.SpellAttackCountExample"}}"/>
   </div>
 </div>
-
 {{#unless isSpell}}
 <div class="form-group">
   <label>{{localize "D35E.BaseSpellCL"}}</label>

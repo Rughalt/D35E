@@ -88,11 +88,12 @@ export class ItemSheetPF extends ItemSheet {
         data.isPhysical = this.item.data.data.quantity !== undefined;
         console.log('D35E | Base Item Data', this.item.data.data.quantity !== undefined)
         data.isSpell = this.item.type === "spell";
+        data.isConsumable = this.item.type === "consumable";
         data.isClass = this.item.type === "class";
         data.isRace = this.item.type === "race";
         data.isAttack = this.item.type === "attack";
         data.isWeaponAttack = this.item.data?.data?.actionType === "rwak" || this.item.data?.data?.actionType === "mwak";
-        data.isSpellLike = this.item.type === "spell" || this.item.data?.data?.actionType === "rsak" || this.item.data?.data?.actionType === "msak" || this.item.data?.data?.actionType === "heal" || this.item.data?.data?.actionType === "spellsave";
+        data.isSpellLike = this.item.type === "spell" || this.item.data?.data?.actionType === "rsak" || this.item.data?.data?.actionType === "msak" || this.item.data?.data?.actionType === "heal" || this.item.data?.data?.actionType === "spellsave" || this.item.data?.data?.isFromSpell;
         data.isShapechangeBuff = this.item.data.type === "buff" && this.item.data.data?.buffType === "shapechange";
         data.canMeld = this.item.type === "weapon" || this.item.type === "attack" || this.item.type === "equipment";
         data.isAmmo = this.item.data.data.subType === "ammo";

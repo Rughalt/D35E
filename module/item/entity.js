@@ -98,6 +98,10 @@ export class ItemPF extends Item {
         }
     }
 
+    isSpellLike() {
+        return this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal" || this.data.data.isFromSpell;
+    }
+
     get maxCharges() {
         return ItemPF.getMaxCharges(this)
     }
@@ -1798,6 +1802,10 @@ export class ItemPF extends Item {
                 let attackId = 0;
                 // Scaling number of attacks for spells (based on formula provided)
                 if (itemData.attackCountFormula && itemData.attackParts.length === 0) {
+
+                    if (this.isSpellLike()) {
+                        this._adjustSpellCL(itemData, rollData)
+                    }
                     let attackCount = (new Roll35e(itemData.attackCountFormula, rollData).roll().total || 1) - 1;
                     for (let i = 0; i < attackCount; i++) {
                         allAttacks.push({
@@ -1865,8 +1873,12 @@ export class ItemPF extends Item {
             // Add damage only
             else if (this.hasDamage) {
                 let attackCount = 1;
-                if (itemData.attackCountFormula)
+                if (itemData.attackCountFormula) {
+                    if (this.isSpellLike()) {
+                        this._adjustSpellCL(itemData, rollData)
+                    }
                     attackCount = new Roll35e(itemData.attackCountFormula,rollData).roll().total || 1;
+                }
                 for (let i = 0; i < attackCount; i++) {
                     let attack = new ChatAttack(this,"",actor, rollData);
                     attack.rollData = rollData;
@@ -2353,7 +2365,7 @@ export class ItemPF extends Item {
 
         // Add CL
 
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
+        if (this.isSpellLike()) {
             this._adjustSpellCL(itemData, rollData)
         }
         // Determine size bonus
@@ -2456,7 +2468,7 @@ export class ItemPF extends Item {
         }
 
         // Add spell data
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
+        if (this.isSpellLike()) {
             this._adjustSpellCL(itemData, rollData)
             const sl = this.data.data.level + (this.data.data.slOffset || 0);
             rollData.sl = sl;
@@ -2512,7 +2524,7 @@ export class ItemPF extends Item {
         }
 
         // Add CL
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
+        if (this.isSpellLike()) {
             this._adjustSpellCL(itemData, rollData);
         }
 
@@ -2613,7 +2625,7 @@ export class ItemPF extends Item {
         } else rollData = data;
 
         // Add CL
-        if (this.type === "spell" || this.data.data.actionType === "rsak" || this.data.data.actionType === "msak" || this.data.data.actionType === "spellsave" || this.data.data.actionType === "heal") {
+        if (this.isSpellLike()) {
             this._adjustSpellCL(itemData, rollData);
         }
 
@@ -3873,10 +3885,12 @@ export class ItemPF extends Item {
         data.data.pr = origData.data.pr
         // Copy variables
         data.data.attackNotes = origData.data.attackNotes;
+        data.data.actionType = origData.data.actionType;
         data.data.effectNotes = origData.data.effectNotes;
         data.data.attackBonus = origData.data.attackBonus;
         data.data.critConfirmBonus = origData.data.critConfirmBonus;
         data.data.specialActions = origData.data.specialActions;
+        data.data.isFromSpell = true;
 
 
         data.data.attackCountFormula = origData.data.attackCountFormula.replace(/@sl/g, slcl[0]);

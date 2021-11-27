@@ -1825,6 +1825,7 @@
         "action"
       ],
       "consumableType": "potion",
+      "isFromSpell": false,
       "uses": {
         "value": 0,
         "max": 0,
