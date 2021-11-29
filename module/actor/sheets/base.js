@@ -2379,7 +2379,7 @@ export class ActorSheetPF extends ActorSheet {
   /**
    * @override
    */
-  async _onDrop(event) {
+  async _onDropActor(event) {
     event.preventDefault();
     if (this.actor.data.data.lockEditingByPlayers && !game.user.isGM) {
         ui.notifications.error(game.i18n.localize("D35E.GMLockedCharacterSheet"));
@@ -2395,67 +2395,86 @@ export class ActorSheetPF extends ActorSheet {
     }
     let dataType = "";
     const actor = this.actor;
-    if (data.type === "Item") {
-      let itemData = {};
-      // Case 1 - Import from a Compendium pack
-      if (data.pack) {
-        dataType = "compendium";
-        const pack = game.packs.find(p => p.collection === data.pack);
-        const packItem = await pack.getDocument(data.id);
-        if (packItem != null) {
-          itemData = packItem.data.toObject(false);
-          itemData.data.originPack = data.pack;
-          itemData.data.originId = packItem.id;
-        }
-      }
-
-      // Case 2 - Data explicitly provided
-      else if (data.data) {
-        let sameActor = data.actorId === actor._id;
-        if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
-        if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
-
-        dataType = "data";
-        itemData = data.data;
-      }
-
-      // Case 3 - Import from World entity
-      else {
-        dataType = "world";
-        itemData = game.items.get(data.id).data.toObject(false);
-      }
-
-      this.enrichDropData(itemData);
-      return this.importItem(itemData, dataType);
-    } else if (data.type === "Actor") {
-      let actorData = {};
-      // Case 1 - Import from a Compendium pack
-      if (data.pack) {
-        dataType = "compendium";
-        const pack = game.packs.find(p => p.collection === data.pack);
-        const packItem = await pack.getEntity(data.id);
-        if (packItem != null) actorData = packItem.data;
-      }
-
-      // Case 2 - Data explicitly provided
-      else if (data.data) {
-        let sameActor = data.actorId === actor._id;
-        if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
-        if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
-
-        dataType = "data";
-        actorData = data.data;
-      }
-
-      // Case 3 - Import from World entity
-      else {
-        dataType = "world";
-        actorData = game.actors.get(data.id).data;
-      }
-
-      this.enrichDropData(actorData);
-      return this.importActor(actorData, dataType);
+    let actorData = {};
+    // Case 1 - Import from a Compendium pack
+    if (data.pack) {
+      dataType = "compendium";
+      const pack = game.packs.find(p => p.collection === data.pack);
+      const packItem = await pack.getEntity(data.id);
+      if (packItem != null) actorData = packItem.data;
     }
+
+    // Case 2 - Data explicitly provided
+    else if (data.data) {
+      let sameActor = data.actorId === actor._id;
+      if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
+      if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
+
+      dataType = "data";
+      actorData = data.data;
+    }
+
+    // Case 3 - Import from World entity
+    else {
+      dataType = "world";
+      actorData = game.actors.get(data.id).data;
+    }
+
+    this.enrichDropData(actorData);
+    return this.importActor(actorData, dataType);
+  }
+
+  /**
+   * @override
+   */
+  async _onDropItem(event) {
+    event.preventDefault();
+    if (this.actor.data.data.lockEditingByPlayers && !game.user.isGM) {
+        ui.notifications.error(game.i18n.localize("D35E.GMLockedCharacterSheet"));
+        return;
+    }
+    // Try to extract the data
+    let data;
+    try {
+      data = JSON.parse(event.dataTransfer.getData('text/plain'));
+      if (data.type !== "Item" && data.type !== "Actor") return;
+    } catch (err) {
+      return false;
+    }
+    let dataType = "";
+    const actor = this.actor;
+    let itemData = {};
+    // Case 1 - Import from a Compendium pack
+    if (data.pack) {
+      dataType = "compendium";
+      const pack = game.packs.find(p => p.collection === data.pack);
+      const packItem = await pack.getDocument(data.id);
+      if (packItem != null) {
+        itemData = packItem.data.toObject(false);
+        itemData.data.originPack = data.pack;
+        itemData.data.originId = packItem.id;
+      }
+    }
+
+    // Case 2 - Data explicitly provided
+    else if (data.data) {
+      let sameActor = data.actorId === actor._id;
+      if (sameActor && actor.isToken) sameActor = data.tokenId === actor.token.id;
+      if (sameActor) return this._onSortItem(event, data.data); // Sort existing items
+
+      dataType = "data";
+      itemData = data.data;
+    }
+
+    // Case 3 - Import from World entity
+    else {
+      dataType = "world";
+      itemData = game.items.get(data.id).data.toObject(false);
+    }
+
+    this.enrichDropData(itemData);
+    return this.importItem(itemData, dataType);
+  
   }
 
   get currentPrimaryTab() {
