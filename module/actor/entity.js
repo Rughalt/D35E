@@ -6243,7 +6243,7 @@ export class ActorPF extends Actor {
                 let concealRoll = 0;
                 let concealTarget = 0;
                 let concealRolled = false;
-                if (finalAc.conceal || finalAc.fullConceal || a.data.data.attributes?.concealment?.total || finalAc.concealOverride) {
+                if ((finalAc.conceal || finalAc.fullConceal || a.data.data.attributes?.concealment?.total || finalAc.concealOverride) && roll !== -1337) {
                     concealRolled = true;
                     concealRoll = new Roll35e("1d100").roll().total;
                     if (finalAc.fullConceal) concealTarget = 50

@@ -2,7 +2,7 @@
  * A simple form to set actor movement speeds
  * @implements {BaseEntitySheet}
  */
-export default class ActorSensesConfig extends BaseEntitySheet {
+export default class ActorSensesConfig extends DocumentSheet {
 
     /** @override */
     static get defaultOptions() {

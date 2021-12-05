@@ -36,7 +36,8 @@ export async function PatchCore() {
   }
   const Token_drawEffects = Token.prototype.drawEffects;
   Token.prototype.drawEffects = async function() {
-    this.effects.removeChildren().forEach(c => c.destroy());
+    let effects = this.effects || this.hud.effects;
+    effects.removeChildren().forEach(c => c.destroy());
     const tokenEffects = this.data.effects;
     const actorEffects = this.actor?.temporaryEffects || [];
     let overlay = {
@@ -48,7 +49,7 @@ export async function PatchCore() {
     if ( tokenEffects.length || actorEffects.length ) {
       const promises = [];
       let w = Math.round(canvas.dimensions.size / 2 / 5) * 2;
-      let bg = this.effects.addChild(new PIXI.Graphics()).beginFill(0x000000, 0.40).lineStyle(1.0, 0x000000);
+      let bg = effects.addChild(new PIXI.Graphics()).beginFill(0x000000, 0.40).lineStyle(1.0, 0x000000);
       let i = 0;
 
       // Draw actor effects first

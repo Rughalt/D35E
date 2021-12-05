@@ -54,8 +54,13 @@ export class ActorSheetPF extends ActorSheet {
      * @type {Object[]}
      */
     this._itemUpdates = [];
+
+
   }
 
+  get entity() {
+    return this.document;
+  }
   get currentSpellbookKey() {
     const elems = this.element.find("nav.spellbooks .item.active");
     if (elems.length !== 1) return Object.keys(getProperty(this.data, "data.attributes.spells.spellbook") || { "primary": null })[0];

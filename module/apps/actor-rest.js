@@ -1,4 +1,4 @@
-export class ActorRestDialog extends BaseEntitySheet {
+export class ActorRestDialog extends DocumentSheet {
   static get defaultOptions() {
     const options = super.defaultOptions;
     return mergeObject(options, {

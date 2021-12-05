@@ -38,7 +38,7 @@ import {SemanticVersion} from "./semver.js";
 import {sizeInt} from "./module/lib.js";
 import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
-import D35ELayer from "./module/layer.js";
+//import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 import {TreasureGeneratorDialog} from "./module/apps/treasure-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
@@ -117,7 +117,7 @@ Hooks.once("init", async function() {
   CONFIG.statusEffects = getConditions();
 
 
-  CONFIG.Canvas.layers["d35e"] = D35ELayer;
+  //CONFIG.Canvas.layers["d35e"] = D35ELayer;
 
   // Patch Core Functions
   PatchCore();

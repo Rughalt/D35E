@@ -1,4 +1,4 @@
-export class ActorSheetFlags extends BaseEntitySheet {
+export class ActorSheetFlags extends DocumentSheet {
   static get defaultOptions() {
     const options = super.defaultOptions;
     return mergeObject(options, {
