@@ -906,7 +906,7 @@ D35E.spellComponents = {
   "F": "D35E.SpellComponentFocus",
   "DF": "D35E.SpellComponentDivineFocus",
 };
-
+//No Spell School Selected:no|Abjuration:abj|Conjuration:con|Divination:div|Enchantment:enc|Evocation:evo|Illusion:ill|Necromancy:nec|Transmutation:trs
 // Spell Schools
 D35E.spellSchools = {
   "abj": "D35E.SpellSchoolAbjuration",

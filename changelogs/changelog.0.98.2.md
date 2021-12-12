@@ -3,9 +3,8 @@
     - Better handling of bonus skill points for items
     - Additional information for multiclass creatures
     - Ability to diable skill synergies
+- Better selections of skills in Skill Focus and spell schoold in Spell Specialization
 
 ### Fixes
-
-
-### Github changelist
+- More small fixes
  
