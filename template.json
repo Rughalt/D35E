@@ -1188,6 +1188,7 @@
         "customCurrency": {},
         "noLightOverride": false,
         "noTokenOverride": false,
+        "noSkillSynergy": false,
         "noBuffDisplay": false,
         "lockEditingByPlayers": false,
         "showCardSheet": false,

@@ -269,17 +269,21 @@ export class ActorSheetPF extends ActorSheet {
     }
     // Count allowed skill ranks
     let firstOnList = true;
+    let itemBonusSkillPointRanks = this.actor.data?.data?.counters?.bonusSkillPoints?.value || 0;
+    let classCount = 0;
     this.actor.data.items.filter(obj => { return obj.type === "class"; }).forEach(_cls => {
         let cls = _cls.data;
       const clsLevel = cls.data.levels;
       const clsSkillsPerLevel = cls.data.skillsPerLevel;
+      if (clsSkillsPerLevel > 0)
+        classCount++;
       const fcSkills = cls.data.fc.skill.value;
       if (clsLevel > 0) {
         if (firstOnList) {
-          skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * 3) + ((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel)) + fcSkills));
+          skillRanks.allowed += (Math.max(((clsLevel - 1) + 4 ) , (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel + itemBonusSkillPointRanks) * 3) + ((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel + itemBonusSkillPointRanks) * clsLevel)) + fcSkills));
           firstOnList = false;
         } else {
-          skillRanks.allowed += (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel) * clsLevel));
+          skillRanks.allowed += (((this.actor.data.data.abilities.int.mod + clsSkillsPerLevel + itemBonusSkillPointRanks) * clsLevel));
         }
       }
       if (data.useBGSkills) skillRanks.bgAllowed = this.actor.data.data.details.level.value * 2;
@@ -291,6 +295,8 @@ export class ActorSheetPF extends ActorSheet {
       ).roll();
       skillRanks.allowed += roll.total;
     }
+    if (classCount > 1) 
+      data.multipleSkillClasses = true;
     // Calculate used background skills
     if (data.useBGSkills) {
       if (skillRanks.bgUsed > skillRanks.bgAllowed) {

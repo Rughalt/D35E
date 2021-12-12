@@ -2214,6 +2214,18 @@
 .D35E.sheet.actor hr {
   margin: 4px 0 4px 0;
 }
+.D35E.sheet.actor .uid-warning {
+  flex: 0;
+  position: absolute;
+  right: 4px;
+  padding: 9px;
+  font-size: 16px;
+  color: #6d2c2c !important;
+}
+.D35E.sheet.actor .uid-warning i:hover {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
 .D35E.sheet.actor .level-up-boxes {
   flex: 110px 0;
   padding: 5px;

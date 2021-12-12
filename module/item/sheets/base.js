@@ -621,6 +621,7 @@ export class ItemSheetPF extends ItemSheet {
         }
 
         // Prepare stuff for items with changes
+        let firstChange = true;
         if (this.item.data.data.changes) {
             data.changes = {targets: {}, modifiers: CONFIG.D35E.bonusModifiers};
             for (let [k, v] of Object.entries(CONFIG.D35E.buffTargets)) {
@@ -666,6 +667,12 @@ export class ItemSheetPF extends ItemSheet {
                     for (let [k, v] of Object.entries(CONFIG.D35E.buffTargets[item[1]])) {
                         if (!k.startsWith("_")) item.subTargets[k] = v;
                     }
+                }
+                if (firstChange) {
+                    firstChange = false;
+                    data.firstChangeName =  data.changes.targets[item[1]];
+                    data.firstItemSubtargets = item.subTargets;
+                    data.selectedFirstChange = item[2] + ":" + data.firstItemSubtargets[item[2]]
                 }
             });
         }

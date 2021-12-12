@@ -26,6 +26,63 @@
     editable=editable}}
     {{/if}}
     {{/if}}
+    {{#if 
+        data.data.changeFlags.firstChangeTargetSelectableOnDescription}}
+    <div class="detailsbox" style="flex: 0">
+        {{#if data.data.changes}}
+        <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1">
+                <label>{{firstChangeName}}</label>
+                <select name="firstChangeTarget">
+                    {{#select selectedFirstChange }}
+                        <option value=":Not Set">Not Set</option>
+                        {{#each firstItemSubtargets as |target type|}}
+                        <option value="{{type}}:{{target}}">{{target}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+        </div>
+        {{/if}}
+        {{#unless data.data.changes}}
+        <li class="change flexrow">
+        <div style="width: 100%; opacity: 0.7; text-align: center">{{localize "D35E.ThereAreNo"}} {{localize "D35E.Changes"}}.</div>
+        </li>
+        {{/unless}}
+    </div>
+    {{/if}}
+
+    {{#if 
+        data.data.customAttributes}}
+    <div class="detailsbox" style="flex: 0">
+        {{#if data.data.customAttributes}}
+        {{#each data.data.customAttributes as |part a|}}
+            {{#if part.showOnDetails}}
+                <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
+                    <div class="form-group" style="flex: 1">
+                        <label>{{part.name}}</label>
+                        
+                        {{#if part.selectList}}
+                            <select name="data.customAttributes.{{a}}.value">
+                            {{#select part.value }}
+                                {{#each part.selectListArray as |target type|}}
+                                <option value="{{type}}">{{target}}</option>
+                                {{/each}}
+                            {{/select}}
+                            </select>
+                        {{else}}
+                            <input style="flex: 0 160px" type="text" name="data.customAttributes.{{a}}.value" placeholder="{{localize "D35E.Value"}}" value="{{part.value}}"/>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+        {{/if}}
+    </div>
+
+    
+
+    {{/if}}
     <div class="detailsbox" style="flex: 0">
         <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
             {{#if isPhysical}}

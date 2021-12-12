@@ -13,14 +13,46 @@
 <ol class="custom-fields form-group form-group-stacked" style="padding: 0">
   {{#unless data.data.customAttributesLocked}}<a class="custom-field-control add"><i class="fas fa-plus"></i> {{localize "D35E.AddCustomAttribute"}}</a>{{/unless}}
   {{#each data.data.customAttributes as |part a|}}
-  <li class="custom-field flexrow" data-custom-field="{{a}}">
+  <li class="custom-field flexcol" data-custom-field="{{a}}">
+    <div class="flexrow" style="width: 100%;">
     {{#if ../data.data.customAttributesLocked}}
     <label>{{part.name}}</label>
     {{else}}
     <input type="text" name="data.customAttributes.{{a}}.name" placeholder="{{localize "D35E.Name"}}" value="{{part.name}}"/>
     {{/if}}
-    <input style="flex: 0 160px" type="text" name="data.customAttributes.{{a}}.value" placeholder="{{localize "D35E.Value"}}" value="{{part.value}}"/>
-    {{#unless ../data.customAttributesLocked}}<a class="custom-field-control delete" style="flex: 0 20px; text-align: center"><i class="fas fa-minus"></i></a>{{/unless}}
+    {{#unless part.showOnDetails}}
+      {{#if part.selectList}}
+        <select name="data.customAttributes.{{a}}.value">
+          {{#select part.value }}
+              {{#each part.selectListArray as |target type|}}
+              <option value="{{type}}">{{target}}</option>
+              {{/each}}
+          {{/select}}
+        </select>
+      {{else}}
+        <input style="flex: 0 160px" type="text" name="data.customAttributes.{{a}}.value" placeholder="{{localize "D35E.Value"}}" value="{{part.value}}"/>
+      {{/if}}
+    {{else}}
+      <input style="flex: 0 160px" type="text" disabled value="{{part.value}}"/>
+    {{/unless}}
+  </div>
+    {{#unless ../data.data.customAttributesLocked}}
+    <div class="flexrow" style="width: 100%;">
+      <label>{{localize "D35E.CustomAttributeList"}} </label>
+      <input style="flex: 0 160px" type="text" name="data.customAttributes.{{a}}.selectList" placeholder="ex. Sword:sword|Dagger:dagger" value="{{part.selectList}}"/>
+
+    </div>
+      <div class="flexrow" style="width: 100%;">
+      <label>{{localize "D35E.ShowOnDescriptionPage"}} </label>
+      <label class="checkbox" style="position: relative;">
+        <input type="checkbox" class="stylized" name="data.customAttributes.{{a}}.showOnDetails"  data-dtype="Boolean" {{checked part.showOnDetails}} />
+        <span class="checkmark"></span>
+      </label>
+    </div>
+      <div class="flexrow" style="width: 100%;">
+      <a class="custom-field-control delete" style="flex: 1; text-align: right"><i class="fas fa-minus"></i> Remove custom attribute</a>
+    </div>
+    {{/unless}}
   </li>
   {{/each}}
 </ol>

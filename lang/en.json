@@ -1449,6 +1449,8 @@
 
   "D35E.NoVisionOverride": "Do not override Token Vision",
   "D35E.NoVisionOverrideH": "This option disables overriding Token vision settings from actor and items. ",
+  "D35E.NoSkillSynergy": "Do not use Skill Synergy",
+  "D35E.NoSkillSynergyH": "Disables calculation of skill synergies for the actor.",
 
   "D35E.OnlyPrepared": "Only Prepared",
 
@@ -1561,7 +1563,8 @@
   "D35E.Applied": "Applied",
   "D35E.AutoApplied": "Auto-applied",
   "D35E.SpellLike": "Spell-like",
-
+  "D35E.MultipleSkillClasses": "This creature has multiple classes but uses simple skill assignment system. Take care when entering skills as class skills are only considered class skills when you level up a class. This may make this number seem incorrect even though you entered correct number of ranks.",
+  
 
   "SETTINGS.D35EShowPartyHudTokenN": "Party HUD should display token images? ",
   "SETTINGS.D35EShowPartyHudTokenL": "Toggles if images displayed in party hud should be token images or portrait images.",

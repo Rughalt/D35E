@@ -1,6 +1,6 @@
 import { DicePF } from "../dice.js";
 import { ItemPF } from "../item/entity.js";
-import { createTag, linkData, isMinimumCoreVersion, shuffle, uuidv4 } from "../lib.js";
+import { createTag, linkData, isMinimumCoreVersion, shuffle, uuidv4, getOriginalNameIfExists } from "../lib.js";
 import { createCustomChatMessage } from "../chat.js";
 import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
@@ -1320,8 +1320,50 @@ export class ActorPF extends Actor {
                 source: { name: "Shaken" }
             });
         }
+        if (!data.data.noSkillSynergy) {
+            //Bluff
+            this.applySkillSynergies(data, changes);
+        }
+        if (data.data.jumpSkillAdjust) {
+            changes.push({
+                raw: [`4*floor((@attributes.speed.land.total - 30)/10)`, "skill", "skill.jmp", "untyped", 0],
+                source: {name: "Speed bonus", type: "speedBonus"}
+            });
+        }
 
-        //Bluff
+        // Apply level drain to hit points
+        if (!Number.isNaN(data.data.attributes.energyDrain) && data.data.attributes.energyDrain > 0) {
+            changes.push({
+                raw: ["-(@attributes.energyDrain * 5)", "misc", "mhp", "untyped", 0],
+                source: { name: "Negative Levels" }
+            });
+            changes.push({
+                raw: ["-(@attributes.energyDrain * 5)", "misc", "vigor", "untyped", 0],
+                source: { name: "Negative Levels" }
+            });
+        }
+
+        if (this.material) {
+            changes.push({
+                raw: [`${this.material.data.data.hardness || 0}`, "misc", "hardness", "untyped", 0],
+                source: { name: `Material Hardness (${this.material.name})` }
+            });
+        }
+        if (!Number.isNaN(data.data.staticBonus.hp) && data.data.staticBonus.hp > 0) {
+            changes.push({
+                raw: [`${data.data.staticBonus.hp || 0}`, "misc", "mhp", "untyped", 0],
+                source: { name: `Manual HP Bonus` }
+            });
+        }
+        if (!Number.isNaN(data.data.staticBonus.ac) && data.data.staticBonus.ac > 0) {
+            changes.push({
+                raw: [`${data.data.staticBonus.ac || 0}`, "ac", "ac", "untyped", 0],
+                source: { name: `Manual AC Bonus` }
+            });
+        }
+    }
+
+    applySkillSynergies(data, changes) {
         if (data.data.skills.blf.rank >= 5) {
             changes.push({
                 raw: ["2", "skill", "skill.dip", "untyped", 0],
@@ -1418,43 +1460,6 @@ export class ActorPF extends Actor {
             changes.push({
                 raw: ["2", "skill", "skill.kps", "untyped", 0],
                 source: { name: "Skill synergy" }
-            });
-        }
-        if (data.data.jumpSkillAdjust) {
-            changes.push({
-                raw: [`4*floor((@attributes.speed.land.total - 30)/10)`, "skill", "skill.jmp", "untyped", 0],
-                source: {name: "Speed bonus", type: "speedBonus"}
-            });
-        }
-
-        // Apply level drain to hit points
-        if (!Number.isNaN(data.data.attributes.energyDrain) && data.data.attributes.energyDrain > 0) {
-            changes.push({
-                raw: ["-(@attributes.energyDrain * 5)", "misc", "mhp", "untyped", 0],
-                source: { name: "Negative Levels" }
-            });
-            changes.push({
-                raw: ["-(@attributes.energyDrain * 5)", "misc", "vigor", "untyped", 0],
-                source: { name: "Negative Levels" }
-            });
-        }
-
-        if (this.material) {
-            changes.push({
-                raw: [`${this.material.data.data.hardness || 0}`, "misc", "hardness", "untyped", 0],
-                source: { name: `Material Hardness (${this.material.name})` }
-            });
-        }
-        if (!Number.isNaN(data.data.staticBonus.hp) && data.data.staticBonus.hp > 0) {
-            changes.push({
-                raw: [`${data.data.staticBonus.hp || 0}`, "misc", "mhp", "untyped", 0],
-                source: { name: `Manual HP Bonus` }
-            });
-        }
-        if (!Number.isNaN(data.data.staticBonus.ac) && data.data.staticBonus.ac > 0) {
-            changes.push({
-                raw: [`${data.data.staticBonus.ac || 0}`, "ac", "ac", "untyped", 0],
-                source: { name: `Manual AC Bonus` }
             });
         }
     }
@@ -2724,7 +2729,7 @@ export class ActorPF extends Actor {
                 if (i.data.data.uniqueId === null) continue;
                 if (i.data.data.uniqueId === "") continue;
                 existingAbilities.add(i.data.data.uniqueId)
-                itemsWithUid.set(i.data.data.uniqueId, i._id)
+                itemsWithUid.set(i.data.data.uniqueId, i.id)
             }
 
             //console.log('D35E | Adding Features', level, data, this.data.data.classLevels, updateData)
@@ -4440,7 +4445,7 @@ export class ActorPF extends Actor {
         for (let spell of Object.values(item.data.data.spellSpecialization.spells)) {
             let itemData = null;
             const pack = game.packs.find(p => p.collection === spell.pack);
-            const packItem = await pack.getEntity(spell.id);
+            const packItem = await pack.getDocument(spell.id);
             if (packItem != null) itemData = packItem.data;
             if (itemData) {
                 if (itemData._id) delete itemData._id;
@@ -6925,10 +6930,10 @@ export class ActorPF extends Actor {
         }
         if (pack.metadata.entity !== "Item") return;
         await pack.getIndex();
-        const entry = pack.index.find(e => e.name === name)
+        const entry = pack.index.find(e => getOriginalNameIfExists(e) === name)
         return pack.getDocument(entry._id).then(ent => {
             if (unique) {
-                if (this.items.filter(o => o.name === name && o.type === ent.type).length > 0)
+                if (this.items.filter(o => getOriginalNameIfExists(o) === name && o.type === ent.type).length > 0)
                     return undefined;
             }
             //console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
@@ -7018,7 +7023,7 @@ export class ActorPF extends Actor {
             case "Activate":
                 if (action.parameters.length === 1) {
                     let name = cleanParam(action.parameters[0])
-                    let items = this.items.filter(o => o.name === name)
+                    let items = this.items.filter(o => getOriginalNameIfExists(o) === name)
                     if (items.length > 0) {
                         const item = items[0]
                         if (item.type === "buff" || item.type === "aura") {
@@ -7046,7 +7051,7 @@ export class ActorPF extends Actor {
             case "Deactivate":
                 if (action.parameters.length === 1) {
                     let name = cleanParam(action.parameters[0])
-                    let items = this.items.filter(o => o.name === name)
+                    let items = this.items.filter(o => getOriginalNameIfExists(o) === name)
                     if (items.length > 0) {
                         const item = items[0]
                         if (item.type === "buff" || item.type === "aura") {
@@ -7057,7 +7062,7 @@ export class ActorPF extends Actor {
 
                     let name = cleanParam(action.parameters[1])
                     let type = cleanParam(action.parameters[0])
-                    let items = this.items.filter(o => o.name === name && o.type === type)
+                    let items = this.items.filter(o => getOriginalNameIfExists(o) === name && o.type === type)
                     if (items.length > 0) {
                         const item = items[0]
                         if (item.type === "buff" || item.type === "aura") {
@@ -7072,7 +7077,7 @@ export class ActorPF extends Actor {
                 if (action.parameters.length === 5 && action.parameters[1] === "field" && action.parameters[3] === "to") {
                     let name = cleanParam(action.parameters[0])
 
-                    let items = this.items.filter(o => o.name === name)
+                    let items = this.items.filter(o => getOriginalNameIfExists(o) === name)
                     if (items.length > 0) {
                         const item = items[0]
                         let updateObject = {}
@@ -7101,7 +7106,7 @@ export class ActorPF extends Actor {
                     }
                     let name = cleanParam(action.parameters[1])
 
-                    let items = this.items.filter(o => (o.name === name || name === "*") && o.type === type)
+                    let items = this.items.filter(o => (o => getOriginalNameIfExists(o) === name || name === "*") && o.type === type)
                     if (items.length > 0) {
                         if (name === '*') {
                             for (let item of items) {

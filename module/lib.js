@@ -350,6 +350,13 @@ export const shuffle = function (array) {
   return array;
 }
 
+export const getOriginalNameIfExists = function (object) {
+  if (typeof Babele !== "undefined")
+    return object.getFlag("babele", "translated") ? object.getFlag("babele", "originalName") : object.name;
+  else
+    return object.name
+}
+
 
 /**
  * Returns the result of a roll of die, which changes based on different sizes.

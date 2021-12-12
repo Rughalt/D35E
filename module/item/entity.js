@@ -470,7 +470,7 @@ export class ItemPF extends Item {
             //console.log(data.customAttributes)
             for (let prop in data.customAttributes || {}) {
                 let propData = data.customAttributes[prop];
-                itemData['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
+                itemData['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = (propData?.selectListArray || false) ? propData.selectListArray[propData.value] : propData.value;
             }
         }
         //console.log('D35E | Custom properties', itemData['custom'])
@@ -490,7 +490,8 @@ export class ItemPF extends Item {
             return
         }
         console.log('Is true/false', data, this.data.data.active)
-        const srcData = mergeObject(this.data.toObject(), expandObject(data), {inplace: false});
+        let expandedData = expandObject(data);
+        const srcData = mergeObject(this.data.toObject(), expandedData, {inplace: false});
 
         let needsUpdate = false; // if we do not have changes we often do not need to update actor
         if (this.type === 'class' ||
@@ -506,14 +507,53 @@ export class ItemPF extends Item {
             needsUpdate = true
 
         console.log('Should be true/false, is true true', data, this.data.data.active)
+
+        for (var key in expandedData.data.customAttributes) {
+            if (data[`data.customAttributes.-=${key}`] == null) continue;
+            if (expandedData.data.customAttributes.hasOwnProperty(key)) {
+                let customAttribute = expandedData.data.customAttributes[key];
+                let addedAttributes = new Set()
+                if (customAttribute.selectList !== undefined) {
+                    if (customAttribute.selectList) {
+                        data[`data.customAttributes.${key}.selectListArray`] = {}
+                        for (let selectAttribute of customAttribute.selectList.split("|")) {
+                            if (selectAttribute.indexOf(":") !== -1) {
+                                if (!selectAttribute.split(":")[1]) continue;
+                                addedAttributes.add(selectAttribute.split(":")[1])
+                                data[`data.customAttributes.${key}.selectListArray`][selectAttribute.split(":")[1]] = selectAttribute.split(":")[0];
+                            } else {
+                                if (!selectAttribute) continue;
+                                addedAttributes.add(selectAttribute)
+                                data[`data.customAttributes.${key}.selectListArray`][selectAttribute] = selectAttribute;
+                            }
+                            
+                        }
+                    }
+                    let existingCustomAttribute = this.data.data.customAttributes[key];
+                    for (var _key in existingCustomAttribute.selectListArray) {
+                        if (!addedAttributes.has(_key))
+                            data[`data.customAttributes.${key}.selectListArray.-=${_key}`] = null;
+                    }
+                }
+            }
+        }
+
         //const srcDataWithRolls = srcData.data;
+        if (data["firstChangeTarget"]) {
+            data["data.changes.0.2"] = data["firstChangeTarget"].split(":")[0];
+            data["data.changes"][0][2] = data["firstChangeTarget"].split(":")[0];
+            srcData.firstChangeTargetName = data["firstChangeTarget"].split(":")[1];
+            delete data["firstChangeTarget"];
+        }
         if (data['data.nameFromFormula'] || getProperty(this.data, "data.nameFromFormula")) {
             const srcDataWithRolls = this.getRollData(srcData);
+            srcDataWithRolls.firstChangeTargetName = srcData.firstChangeTargetName;
             data["name"] = ItemPF._fillTemplate(data['data.nameFormula'] || getProperty(this.data, "data.nameFormula"), srcDataWithRolls) || data["name"]
         }
         // Update name
         if (data["data.identifiedName"]) data["name"] = data["data.identifiedName"];
         else if (data["name"]) data["data.identifiedName"] = data["name"];
+
 
         let activateBuff = data["data.active"] && data["data.active"] !== this.data.data.active;
         let deactivateBuff = this.data.data.active && (data["data.active"] === undefined || !data["data.active"]);
@@ -2289,6 +2329,10 @@ export class ItemPF extends Item {
         return spellDC;
     }
 
+    isCombatChangeItemType() {
+        return this.type === "feat" || this.type === "aura" || (this.type === "buff" && this.data.data.active) || (this.type === "equipment" && this.data.data.equipped === true && !this.data.data.melded);
+    }
+
     hasCombatChange(itemType, rollData) {
         let combatChanges = getProperty(this.data,"data.combatChanges") || [];
         let attackType = getProperty(rollData,"item.actionType") || ""
@@ -2821,7 +2865,7 @@ export class ItemPF extends Item {
         if (result.hasOwnProperty('customAttributes')) {
             for (let prop in result.customAttributes || {}) {
                 let propData = result.customAttributes[prop];
-                result['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
+                result['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = (propData?.selectListArray || false) ? propData.selectListArray[propData.value] : propData.value;
             }
         }
         //console.log('D35E | Roll data', result)

@@ -14,6 +14,15 @@
         <input type="text" disabled value="{{skillRanks.allowed}}"/>
         <label>{{ localize 'D35E.Used' }}</label>
         <input type="text" disabled value="{{skillRanks.used}}"/>
+
+        {{#if multipleSkillClasses}}
+        <span class="uid-warning tooltip" style="color: darkred">
+            <i class="fas fa-exclamation-triangle" style="color: darkred !important; 
+            text-shadow: none !important;"></i>
+            <div class="tooltipcontent">{{{ localize 'D35E.MultipleSkillClasses' }}}</div>
+          <!--       {{ localize 'D35E.ItemHasUID' }}-->
+          </span>
+        {{/if}}
       </li>
     </ol>
   </div>
