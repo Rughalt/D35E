@@ -508,7 +508,7 @@ export class ItemPF extends Item {
 
         console.log('Should be true/false, is true true', data, this.data.data.active)
 
-        for (var key in expandedData.data.customAttributes) {
+        for (var key in expandedData?.data?.customAttributes) {
             if (data[`data.customAttributes.-=${key}`] == null) continue;
             if (expandedData.data.customAttributes.hasOwnProperty(key)) {
                 let customAttribute = expandedData.data.customAttributes[key];
