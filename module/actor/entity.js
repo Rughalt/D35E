@@ -706,10 +706,10 @@ export class ActorPF extends Actor {
 
     async _addDefaultChanges(data, changes, flags, sourceInfo, fullConditions, sizeOverride, options = {}, updateData) {
         // Class hit points
-        const classes = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") !== "racial").sort((a, b) => {
+        const classes = data.items.filter(o => o.type === "class" && getProperty(o.data.data, "classType") !== "racial").sort((a, b) => {
             return a.sort - b.sort;
         });
-        const racialHD = data.items.filter(o => o.type === "class" && getProperty(o.data, "classType") === "racial").sort((a, b) => {
+        const racialHD = data.items.filter(o => o.type === "class" && getProperty(o.data.data, "classType") === "racial").sort((a, b) => {
             return a.sort - b.sort;
         });
 
