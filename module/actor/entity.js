@@ -95,7 +95,7 @@ export class ActorPF extends Actor {
     get spellFailure() {
         if (this.items == null) return this.data.data.attributes.arcaneSpellFailure || 0;
         return this.items.filter(o => {
-            return o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded;
+            return o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded && !o.broken;
         }).reduce((cur, o) => {
             if (typeof o.data.data.spellFailure === "number") return cur + o.data.data.spellFailure;
             return cur;
@@ -796,7 +796,7 @@ export class ActorPF extends Actor {
         // Add armor bonuses from equipment
         data.items.filter(_obj => {
             let obj = _obj.data;
-            return obj.type === "equipment" && obj.data.equipped && !obj.data.melded;
+            return obj.type === "equipment" && obj.data.equipped && !obj.data.melded && !_obj.broken;
         }).forEach(_obj => {
             let item = _obj.data;
             let armorTarget = "aac";
@@ -944,11 +944,12 @@ export class ActorPF extends Actor {
             let type = ""
 
             let lowLight = getProperty(data, "data.attributes.senses.lowLight") !== undefined ?  getProperty(data, "data.attributes.senses.lowLight") : getProperty(this.data, "data.attributes.senses.lowLight") || false;
+            let lowLightMultiplier = getProperty(data, "data.attributes.senses.lowLightMultiplier") !== undefined ?  getProperty(data, "data.attributes.senses.lowLightMultiplier") : getProperty(this.data, "data.attributes.senses.lowLightMultiplier") || 2;
             let darkvision = getProperty(data, "data.attributes.senses.darkvision") !== undefined ?  getProperty(data, "data.attributes.senses.darkvision") :  getProperty(this.data, "data.attributes.senses.darkvision") || 0;
 
             for (let i of this.items.values()) {
                 if (!i.data.data.hasOwnProperty("light") && !i.data.data.hasOwnProperty("senses")) continue;
-                if (i.data.data.equipped && !i.data.data.melded) {
+                if (i.data.data.equipped && !i.data.data.melded && !i.broken) {
                     if (i.data.data.light?.emitLight) {
                         dimLight = i.data.data.light.dimRadius ? i.data.data.light.dimRadius : Math.floor(2 * i.data.data.light.radius);
                         brightLight = Math.floor(i.data.data.light.radius);
@@ -962,10 +963,12 @@ export class ActorPF extends Actor {
 
                     darkvision = Math.max(darkvision, i.data.data.senses?.darkvision || 0);
                     lowLight = lowLight || (i.data.data.senses?.lowLight || false);
+                    lowLightMultiplier = lowLightMultiplier < (i.data.data.senses?.lowLightMultiplier || 2) ? (i.data.data.senses?.lowLightMultiplier || 2) : lowLightMultiplier;
                 } else if (i.type === "race" || i.type === "class" || (i.type === "buff" && i.data.data.active)) {
 
                     darkvision = Math.max(darkvision, i.data.data.senses?.darkvision || 0);
                     lowLight = lowLight || (i.data.data.senses?.lowLight || false);
+                    lowLightMultiplier = lowLightMultiplier < (i.data.data.senses?.lowLightMultiplier || 2) ? (i.data.data.senses?.lowLightMultiplier || 2) : lowLightMultiplier;
                 }
 
             }
@@ -1001,7 +1004,7 @@ export class ActorPF extends Actor {
                             color !== o.data.lightColor ||
                             lightAngle !== o.data.lightAnimation.lightAngle ||
                             animationSpeed !== o.data.lightAnimation.speed)
-                            await o.update({
+                            await o.document.update({
                                 dimLight: dimLight,
                                 brightLight: brightLight,
                                 lightColor: color || '#000',
@@ -1029,31 +1032,32 @@ export class ActorPF extends Actor {
                     let tokens = []
                     tokens.push(this.token);
                     for (const o of tokens) {
-                        if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision"))
-                            await o.update({
+                        if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision") || lowLightMultiplier !== getProperty(o.data, "flags.D35E.lowLightVisionMultiplier"))
+                            await o.document.update({
                                 brightSight: darkvision,
-                                flags: {D35E: {lowLightVision : lowLight}}
+                                flags: {D35E: {lowLightVision : lowLight, lowLightVisionMultiplier: lowLightMultiplier}}
                             }, { stopUpdates: true, tokenOnly: true });
                     }
                 }
                 if (!this.isToken) {
                     let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
                     for (const o of tokens) {
-                        if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision"))
-                            await o.update({
+                        if (darkvision !== o.data.brightSight || lowLight !== getProperty(o.data, "flags.D35E.lowLightVision") || lowLightMultiplier !== getProperty(o.data, "flags.D35E.lowLightVisionMultiplier"))
+                            await o.document.update({
                                 brightSight: darkvision,
-                                flags: {D35E: {lowLightVision : lowLight}}
+                                flags: {D35E: {lowLightVision : lowLight, lowLightVisionMultiplier: lowLightMultiplier}}
                             }, { stopUpdates: true, tokenOnly: true });
                     }
                     let token = this.data.token;
-                    if (darkvision !== token.brightSight || lowLight !== getProperty(token, "flags.D35E.lowLightVision")) {
+                    if (darkvision !== token.brightSight || lowLight !== getProperty(token, "flags.D35E.lowLightVision") || lowLightMultiplier !== getProperty(token, "flags.D35E.lowLightVisionMultiplier")) {
                         await token.update({
                             brightSight: darkvision,
-                            flags: {D35E: {lowLightVision: lowLight}}
+                            flags: {D35E: {lowLightVision: lowLight, lowLightVisionMultiplier: lowLightMultiplier}}
                         })
                     }
                     data[`token.brightSight`] = darkvision;
                     data[`token.flags.D35E.lowLightVision`] = lowLight;
+                    data[`token.flags.D35E.lowLightVisionMultiplier`] = lowLightMultiplier;
                 }
             }
         }
@@ -1503,7 +1507,7 @@ export class ActorPF extends Actor {
         }).filter(obj => {
             let z = obj.type;
             if (obj.type === "buff") return obj.data.data.active;
-            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.data.equipped && !obj.data.data.melded);
+            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.data.equipped && !obj.data.data.melded && !obj.broken);
             return true;
         });
 
@@ -2430,7 +2434,7 @@ export class ActorPF extends Actor {
         linkData(data, updateData, "data.attributes.concealment.total", (data1.attributes.concealment?.value || 0));
         items.filter(_obj => {
             let obj = _obj.data
-            return obj.type === "equipment" && obj.data.equipped && !obj.data.melded;
+            return obj.type === "equipment" && obj.data.equipped && !obj.data.melded && !_obj.broken;
         }).forEach(_obj => {
             let obj = _obj.data
             let itemAcp = Math.abs(obj.data.armor.acp);
@@ -3249,7 +3253,7 @@ export class ActorPF extends Actor {
         data.shieldType = "none";
         this.items.filter(obj => {
             if (obj.type === "buff") return obj.data.data.active;
-            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.data.equipped && !obj.data.data.melded);
+            if (obj.type === "equipment" || obj.type === "weapon") return (obj.data.data.equipped && !obj.data.data.melded && !obj.broken);
             return true;
         }).forEach(_obj => {
             let obj = _obj.data;
@@ -3421,7 +3425,7 @@ export class ActorPF extends Actor {
             data.senses.modified = {}
         for (let i of this.items.values()) {
             if (!i.data.data.hasOwnProperty("senses")) continue;
-            if ((i.data.data.equipped && !i.data.data.melded) || i.type === "race" || i.type === "class" || (i.type === "buff" && i.data.data.active)) {
+            if ((i.data.data.equipped && !i.data.data.melded && !i.broken) || i.type === "race" || i.type === "class" || (i.type === "buff" && i.data.data.active)) {
                 for ( let [k, label] of Object.entries(CONFIG.D35E.senses) ) {
                     if (data.senses[k] !== Math.max(data.senses[k], i.data.data.senses[k] || 0)) {
                         data.senses[k] = Math.max(data.senses[k], i.data.data.senses[k] || 0);
@@ -3431,6 +3435,10 @@ export class ActorPF extends Actor {
                 data.senses.darkvision = Math.max(data.senses.darkvision, i.data.data.senses?.darkvision || 0);
                 if (data.senses.lowLight !== i.data.data.senses?.lowLight) {
                     data.senses.lowLight = data.senses.lowLight || (i.data.data.senses?.lowLight || false);
+                    data.senses.modified["lowLight"] = true
+                }
+                if (data.senses.lowLightMultiplier !== i.data.data.senses?.lowLightMultiplier) {
+                    data.senses.lowLightMultiplier = data.senses.lowLightMultiplier < (i.data.data.senses?.lowLightMultiplier || 2) ? (i.data.data.senses?.lowLightMultiplier || 2) : data.senses.lowLightMultiplier;
                     data.senses.modified["lowLight"] = true
                 }
             }
@@ -3755,10 +3763,10 @@ export class ActorPF extends Actor {
         } else if (load / maxLoad > 1.0 && !flags.noEncumbrance) {
             speed = 5;
             maxRun = 0;
-        } else if ((armorItems.filter(o => getProperty(o.data.data, "equipmentSubtype") === "heavyArmor" && o.data.data.equipped && !o.data.data.melded).length && !flags.heavyArmorFullSpeed) || ((3.0 * load / maxLoad) > 2.0 && !flags.noEncumbrance)) {
+        } else if ((armorItems.filter(o => getProperty(o.data.data, "equipmentSubtype") === "heavyArmor" && o.data.data.equipped && !o.data.data.melded && !o.broken).length && !flags.heavyArmorFullSpeed) || ((3.0 * load / maxLoad) > 2.0 && !flags.noEncumbrance)) {
             speed = reduceMaxSpeedFromEncumbrance(maxSpeed)
             maxRun = 3 * speed
-        } else if ((armorItems.filter(o => getProperty(o.data.data, "equipmentSubtype") === "mediumArmor" && o.data.data.equipped && !o.data.data.melded).length && !flags.mediumArmorFullSpeed) || ((3.0 * load / maxLoad) > 1.0 && !flags.noEncumbrance)) {
+        } else if ((armorItems.filter(o => getProperty(o.data.data, "equipmentSubtype") === "mediumArmor" && o.data.data.equipped && !o.data.data.melded && !o.broken).length && !flags.mediumArmorFullSpeed) || ((3.0 * load / maxLoad) > 1.0 && !flags.noEncumbrance)) {
             speed = reduceMaxSpeedFromEncumbrance(maxSpeed)
             maxRun = 4 * speed
         } else {
@@ -5245,7 +5253,7 @@ export class ActorPF extends Actor {
     };
 
     isCombatChangeItemType(o) {
-        return o.type === "feat" || o.type === "aura" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded);
+        return o.type === "feat" || o.type === "aura" || (o.type === "buff" && o.data.data.active) || (o.type === "equipment" && o.data.data.equipped === true && !o.data.data.melded && !o.broken);
     }
 
     /**
@@ -6902,7 +6910,7 @@ export class ActorPF extends Actor {
         const pack = game.packs.find(p => p.collection === collection);
         if (pack.metadata.entity !== "Item") return;
 
-        return pack.getEntity(entryId).then(ent => {
+        return pack.getDocument(entryId).then(ent => {
             //console.log(`${vtt} | Importing Item ${ent.name} from ${collection}`);
 
             let data = duplicate(ent.data);

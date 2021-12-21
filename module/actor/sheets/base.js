@@ -1943,6 +1943,7 @@ export class ActorSheetPF extends ActorSheet {
       gear: { label: CONFIG.D35E.lootTypes["gear"], hasPack: true, pack: `inline:items:loot:gear:${CONFIG.D35E.lootTypes["gear"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "gear" } },
       ammo: { label: CONFIG.D35E.lootTypes["ammo"], hasPack: true, pack: `inline:items:loot:ammo:${CONFIG.D35E.lootTypes["ammo"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "ammo" } },
       misc: { label: CONFIG.D35E.lootTypes["misc"], hasPack: true, pack: `inline:items:loot:misc:${CONFIG.D35E.lootTypes["misc"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "misc" } },
+      valuable: { label: game.i18n.localize("D35E.InventoryValuables"), hasPack: true, pack: `inline:items:valuable:-:${game.i18n.localize("D35E.InventoryValuables")}`, canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "valuable" } },
       container: { label: CONFIG.D35E.lootTypes["container"], canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "container" }, isContainer: true },
       tradeGoods: { label: CONFIG.D35E.lootTypes["tradeGoods"], hasPack: true, pack: `inline:items:loot:tradeGoods:-:${CONFIG.D35E.lootTypes["tradeGoods"]}`, emptyLabel: "D35E.ListDragAndDropFeat", canCreate: true, hasActions: false, items: [], canEquip: false, dataset: { type: "loot", "sub-type": "tradeGoods" } },
       junk: { label: game.i18n.localize("D35E.Junk"), hasPack: false, canCreate: false, hasActions: false, items: [], canEquip: false }
@@ -1967,7 +1968,8 @@ export class ActorSheetPF extends ActorSheet {
       const itemQuantity = getProperty(item, "data.quantity") != null ? getProperty(item, "data.quantity") : 1;
       const itemCharges = getProperty(item, "data.uses.value") != null ? getProperty(item, "data.uses.value") : 1;
       item.empty = itemQuantity <= 0 || (item.isCharged && itemCharges <= 0);
-
+      item.broken = (item.data?.hp?.value === 0 && item.data?.hp?.max > 0)
+      item.emptyOrBroken = item.empty || item.broken;
       if ( item.type === "spell" ) arr[1].push(item);
       else if ( item.type === "feat" ) {
         arr[2].push(item);
@@ -2091,7 +2093,7 @@ export class ActorSheetPF extends ActorSheet {
       i.units = game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.Kgs") : game.i18n.localize("D35E.Lbs")
       if (i.type === "weapon" && i.data.carried === true && i.data.equipped === true && !i.data.melded) equippedWeapons.add(i.id)
       if (inventory[i.type] != null) inventory[i.type].items.push(i);
-      if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
+      else if (subType != null && inventory[subType] != null) inventory[subType].items.push(i);
       if (i?.data?.subType === 'container') {
         i.convertedCapacity = Math.round(i.data.capacity * weightConversion * 10) / 10
         containerList.push({id: i.id, name: i.name})
@@ -2246,6 +2248,7 @@ export class ActorSheetPF extends ActorSheet {
     if (a.data.melded) return false;
     if (a.data.originalWeaponId && !equippedWeapons.has(a.data.originalWeaponId)) return false;
     if (a.data.originalWeaponId && this.actor.items.get(a.data.originalWeaponId).data.data.quantity < 1) return false;
+    if (a.data.originalWeaponId && this.actor.items.get(a.data.originalWeaponId).broken) return false;
     return true;
   }
 
@@ -2411,7 +2414,7 @@ export class ActorSheetPF extends ActorSheet {
     if (data.pack) {
       dataType = "compendium";
       const pack = game.packs.find(p => p.collection === data.pack);
-      const packItem = await pack.getEntity(data.id);
+      const packItem = await pack.getDocument(data.id);
       if (packItem != null) actorData = packItem.data;
     }
 
@@ -2740,7 +2743,7 @@ export class ActorSheetPF extends ActorSheet {
     // Case 1 - Import from a Compendium pack
     let quantity = parseInt($(`input[name='amount-add-${itemId}']`).val() || 1);
     const pack = game.packs.find(p => p.collection === packId);
-    const packItem = await pack.getEntity(itemId);
+    const packItem = await pack.getDocument(itemId);
     if (packItem != null) {
       itemData = packItem.data.toObject(false);
       itemData.data.originPack = packId;
@@ -2769,7 +2772,11 @@ export class ActorSheetPF extends ActorSheet {
       tags[k] = {name: `${game.i18n.localize(label)} ${v} ${game.settings.get("D35E", "units") === "metric" ? game.i18n.localize("D35E.DistMeterShort") : game.i18n.localize("D35E.DistFtShort")}`, modified: senses.modified[k]};
     }
     if ( !!senses.special ) tags["special"] = {name: senses.special, modified: false};
-    if ( !!senses.lowLight ) tags["lowLight"] = {name: game.i18n.localize('D35E.VisionLowLight'), modified: senses.modified["lowLight"]};
+    if (senses?.lowLightMultiplier > 2) {
+      if ( !!senses.lowLight ) tags["lowLight"] = {name: game.i18n.localize('D35E.VisionLowLight') + ' (' + senses.lowLightMultiplier + ' times multiplier)', modified: senses.modified["lowLight"]};
+    } else {
+      if ( !!senses.lowLight ) tags["lowLight"] = {name: game.i18n.localize('D35E.VisionLowLight'), modified: senses.modified["lowLight"]};
+    }
     return tags;
   }
 

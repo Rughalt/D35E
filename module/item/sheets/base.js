@@ -350,7 +350,7 @@ export class ItemSheetPF extends ItemSheet {
                 let spellikeItems = []
                 await spellLikes.getIndex().then(index => spellikeItems = index);
                 for (let entry of spellikeItems) {
-                    await spellLikes.getEntity(entry._id).then(e => {
+                    await spellLikes.getDocument(entry._id).then(e => {
                             if (e.data.data.tags.some(el => el[0] === this.item.data.name)) {
                                 data.children.spelllikes.push(e);
                                 this.childItemMap.set(entry._id, e);
@@ -1851,7 +1851,7 @@ export class ItemSheetPF extends ItemSheet {
         }
         if (data.type === "RollTable") {
             let updateData = {}
-            let rt = await game.packs.get(data.pack).getEntity(data.id)
+            let rt = await game.packs.get(data.pack).pack.getDocument(data.id)
             updateData[`data.rollTableDraw.id`] = data.id;
             updateData[`data.rollTableDraw.pack`] = data.pack;
             updateData[`data.rollTableDraw.name`] = rt.data.name;
@@ -1878,7 +1878,7 @@ export class ItemSheetPF extends ItemSheet {
                 let updateData = {}
                 dataType = "compendium";
                 const pack = game.packs.find(p => p.collection === data.pack);
-                const packItem = await pack.getEntity(data.id);
+                const packItem = await pack.getDocument(data.id);
                 if (packItem != null) 
                 {
                     itemData = packItem.data;
@@ -1914,7 +1914,7 @@ export class ItemSheetPF extends ItemSheet {
                 let updateData = {}
                 dataType = "compendium";
                 const pack = game.packs.find(p => p.collection === data.pack);
-                const packItem = await pack.getEntity(data.id);
+                const packItem = await pack.getDocument(data.id);
                 if (packItem != null && packItem.data.type === "buff")
                 {
                     itemData = packItem.data;
@@ -1959,7 +1959,7 @@ export class ItemSheetPF extends ItemSheet {
             if (data.pack) {
                 dataType = "compendium";
                 const pack = game.packs.find(p => p.collection === data.pack);
-                const packItem = await pack.getEntity(data.id);
+                const packItem = await pack.getDocument(data.id);
                 if (packItem != null) itemData = packItem.data;
             }
 

@@ -1,44 +1,47 @@
-<div class="flexrow" style="flex: 0">
-    <h2 class="block-header" style="flex: 1">{{ localize 'D35E.Wealth'}}</h2>
-</div>
-<div class="inventory-filters">
+<div class="inventory-sublist" data-sublist-id="inventory-wealth" style="flex: 0;">
+    <div class="flexrow" style="flex: 0">
+        <h2 class="block-header inventory-toggleable-header" style="flex: 1">{{ localize 'D35E.Wealth'}}<i class="fas fa-angle-double-down toggle-open" style="margin-left: 4px; font-size: 16px;"></i><i
+            class="fas fa-angle-double-right toggle-close" style="display: none; margin-left: 4px; font-size: 16px;"></i></h2>
+    </div>
+    <div class="inventory-filters item-list">
 
-    <ol class="currency flexrow">
-        <h3>
-            {{ localize 'D35E.Currency' }}
-            <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
-        </h3>
-        {{#each data.currency as |v k|}}
-        <label class="denomination {{k}}">{{ lookup ../config.currencies k }}</label>
-        <input type="text" name="data.currency.{{k}}" value="{{v}}" data-dtype="Number" />
+        <ol class="currency flexrow">
+            <h3>
+                {{ localize 'D35E.Currency' }}
+                <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
+            </h3>
+            {{#each data.currency as |v k|}}
+            <label class="denomination {{k}}">{{ lookup ../config.currencies k }}</label>
+            <input type="text" name="data.currency.{{k}}" value="{{v}}" data-dtype="Number" />
+            {{/each}}
+        </ol>
+        {{#if isCharacter}}
+        <ol class="currency flexrow">
+            <h3>
+                {{ localize 'D35E.WeightlessCurrency' }}
+                <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
+            </h3>
+            {{#each data.altCurrency as |v k|}}
+            <label class="denomination {{k}}">{{ lookup ../config.currencies k }}</label>
+            <input type="text" name="data.altCurrency.{{k}}" value="{{v}}" data-dtype="Number" />
+            {{/each}}
+        </ol>
+        {{/if}}
+        {{#each currencyGroups as |c k|}}
+        <ol class="currency flexrow">
+            <h3>
+                {{ k }}
+                <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
+            </h3>
+            {{#each c as |curr|}}
+            <label class="denomination {{k}}">{{ lookup curr 1 }}</label>
+            <input type="text" name="data.customCurrency.{{lookup curr 0}}"
+                value="{{lookup ../../data.customCurrency (lookup curr 0)}}" data-dtype="Number" />
+            {{/each}}
+        </ol>
         {{/each}}
-    </ol>
-    {{#if isCharacter}}
-    <ol class="currency flexrow">
-        <h3>
-            {{ localize 'D35E.WeightlessCurrency' }}
-            <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
-        </h3>
-        {{#each data.altCurrency as |v k|}}
-        <label class="denomination {{k}}">{{ lookup ../config.currencies k }}</label>
-        <input type="text" name="data.altCurrency.{{k}}" value="{{v}}" data-dtype="Number" />
-        {{/each}}
-    </ol>
-    {{/if}}
-    {{#each currencyGroups as |c k|}}
-    <ol class="currency flexrow">
-        <h3>
-            {{ k }}
-            <!-- <a class="currency-convert" title="Convert Currency"><i class="fas fa-coins"></i></a> -->
-        </h3>
-        {{#each c as |curr|}}
-        <label class="denomination {{k}}">{{ lookup curr 1 }}</label>
-        <input type="text" name="data.customCurrency.{{lookup curr 0}}"
-            value="{{lookup ../../data.customCurrency (lookup curr 0)}}" data-dtype="Number" />
-        {{/each}}
-    </ol>
-    {{/each}}
 
+    </div>
 </div>
 <div class="flexrow" style="flex: 0">
     <h2 class="block-header" style="flex: 1">{{ localize
@@ -113,20 +116,27 @@
             <li class="item flexrow inventory-sublist" data-item-id="{{item._id}}" data-sublist-id="{{item._id}}">
 
                 {{#if section.isContainer}}
-                <div class="item-name-ne flexrow  {{#if item.data.melded}}melded{{/if}}">
-                    <div class="item-image rollable" style="background-image: url('{{item.img}}')"></div>
-                    <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}} inventory-toggleable-header">
+                <div class="item-name-ne flexrow  {{#if item.data.melded}}melded{{/if}} {{#if item.emptyOrBroken}}melded{{/if}}">
+                    <div class="item-image rollable" style="background-image: url('{{item.img}}')">
+                        {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}} 
+                        {{#if item.broken}} <i class="fas fa-heart-broken"></i> {{/if}}
+                    </div>
+                    <h4 class="rollable{{#if item.emptyOrBroken}} strikethrough-text{{/if}} inventory-toggleable-header">
                         {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                        {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
+                        {{item.name~}} 
+                        
                     </h4>
 
                 </div>
                 {{else}}
-                <div class="item-name flexrow  {{#if item.data.melded}}melded{{/if}}">
-                    <div class="item-image rollable" style="background-image: url('{{item.img}}')"></div>
-                    <h4 class="rollable{{#if item.empty}} strikethrough-text{{/if}}">
+                <div class="item-name flexrow  {{#if item.data.melded}}melded{{/if}} {{#if item.emptyOrBroken}}melded{{/if}}">
+                    <div class="item-image rollable" style="background-image: url('{{item.img}}')">
+                        {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}} 
+                        {{#if item.broken}} <i class="fas fa-heart-broken"></i> {{/if}}
+                    </div>
+                    <h4 class="rollable{{#if item.emptyOrBroken}} strikethrough-text{{/if}}">
                         {{~#if item.isStack}}({{item.data.quantity}}) {{/if}}
-                        {{item.name~}} {{#if item.data.melded}}<i class="fas fa-paw"></i>{{/if}}
+                        {{item.name~}}
                         {{#if item.possibleUpdate}}
                             <i class="fas fa-arrow-up tooltip non-rollable" style="color: darkred">
                             <div class="tooltipcontent">{{{ localize 'D35E.PossibleUpdate' }}}

@@ -315,13 +315,13 @@ const _migrateWeaponProficiencies = async function(actor, updateData, itemsToAdd
   let data = actor.data.data;
   if (data.traits && data.traits.weaponProf && data.traits.weaponProf.value) {
     if (data.traits.weaponProf.value.indexOf("sim") !== -1) {
-      let item = await pack.getEntity(simpleWeaponProfItemId)
+      let item = await pack.getDocument(simpleWeaponProfItemId)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);
     }
     if (data.traits.weaponProf.value.indexOf("mar") !== -1) {
-      let item = await pack.getEntity(martialWeaponProfItemId)
+      let item = await pack.getDocument(martialWeaponProfItemId)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);
@@ -331,7 +331,7 @@ const _migrateWeaponProficiencies = async function(actor, updateData, itemsToAdd
   if (data.traits && data.traits.weaponProf && data.traits.weaponProf.custom) {
     let weaponProfsCustom =  data.traits.weaponProf.custom.split(";");
     for (const weaponName of weaponProfsCustom) {
-      let item = await pack.getEntity(weaponProfItemId)
+      let item = await pack.getDocument(weaponProfItemId)
       let data = duplicate(item.data);
       delete data._id;
       data.data.customAttributes["_87nolel8u"].value = weaponName
@@ -354,31 +354,31 @@ const _migrateArmorProficiencies = async function(actor, updateData, itemsToAdd)
   let data = actor.data.data;
   if (data.traits && data.traits.weaponProf && data.traits.armorProf.value) {
     if (data.traits.armorProf.value.indexOf("twr") !== -1) {
-      let item = await pack.getEntity(sprTower)
+      let item = await pack.getDocument(sprTower)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);
     }
     if (data.traits.armorProf.value.indexOf("shl") !== -1) {
-      let item = await pack.getEntity(spr)
+      let item = await pack.getDocument(spr)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);
     }
     if (data.traits.armorProf.value.indexOf("lgt") !== -1) {
-      let item = await pack.getEntity(armProfLight)
+      let item = await pack.getDocument(armProfLight)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);
     }
     if (data.traits.armorProf.value.indexOf("med") !== -1) {
-      let item = await pack.getEntity(armProfMed)
+      let item = await pack.getDocument(armProfMed)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);
     }
     if (data.traits.armorProf.value.indexOf("hvy") !== -1) {
-      let item = await pack.getEntity(armProfHeavy)
+      let item = await pack.getDocument(armProfHeavy)
       let data = duplicate(item.data);
       delete data._id;
       itemsToAdd.push(data);

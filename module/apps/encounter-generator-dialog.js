@@ -28,12 +28,12 @@ export class EncounterGeneratorDialog extends FormApplication {
         let compendium;
         let grabbedTable  = new Array;
         let grabbedTables = new Array;
-        const compendiums = [...game.packs.entries]
+        const compendiums = [...game.packs.values()]
         async function compendiumTables(name){
             const pack = game.packs.get("D35E.roll-tables");
             const index = await pack.getIndex();
             const idTable = index.find(i => i.name === `${name}`);
-            const table = await pack.getEntity(idTable._id);
+            const table = await pack.getDocument(idTable._id);
             return table;
         }
         compendium = await compendiums.find(c => c.metadata.name === 'roll-tables').getIndex()
@@ -46,7 +46,7 @@ export class EncounterGeneratorDialog extends FormApplication {
 
     async getTables() {//What Roll tables are our options?
         const grabbedTables = await this.getCompendiumTables();
-        let tables = game.tables.entries.concat(grabbedTables)
+        let tables = grabbedTables
         let tableArray = new Array
         for (let table of tables) {
             //this is the data I want from the roll tables
@@ -93,7 +93,7 @@ export class EncounterGeneratorDialog extends FormApplication {
     async getMonsters() {
         $("#putMonstersHere").empty()
         //declare stuff
-        const grabbedTables = game.tables.entries.concat(await this.getCompendiumTables());
+        const grabbedTables = await this.getCompendiumTables();
         let EL = 0
         let monsterArray = new Array
         let targetEL = parseInt(document.getElementById('ELTarget').value)
@@ -101,7 +101,8 @@ export class EncounterGeneratorDialog extends FormApplication {
         let limit = 1000
         let j = 0
         let breakOut = false
-        if (grabbedTables.find(t => t.data._id === val).results.filter(result => result.type != 2) != 0) {
+        if (grabbedTables.find(t => t.data._id === val).results.filter(result => result.data.type != 2) != 0) {
+            console.log(grabbedTables.find(t => t.data._id === val).results);
             return ui.notifications.error("This Rolltable has Non-Creatures on it, Cannot roll!")
         }
         // Loop limit - total number of loops we want to do.
@@ -118,7 +119,7 @@ export class EncounterGeneratorDialog extends FormApplication {
                 let testEL = new Array
                 //Try to add a monster with valid CR 'testLimit' times
                 while (testCount <= testLimit) {
-                    let monsters = grabbedTables.find(t => t.data._id === val).roll().results
+                    let monsters = (await grabbedTables.find(t => t.data._id === val).roll()).results
                     testELArray = duplicate(monsterArray)
                     monsters.forEach(monster => {
                         let monsterCR = game.D35E.CompendiumDirectoryPF.browser.compendiums.bestiary.items.find(x => x.item._id === monster.resultId)

@@ -38,7 +38,7 @@ import {SemanticVersion} from "./semver.js";
 import {sizeInt} from "./module/lib.js";
 import * as cache from "./module/cache.js";
 import {CACHE} from "./module/cache.js";
-//import D35ELayer from "./module/layer.js";
+import D35ELayer from "./module/layer.js";
 import {EncounterGeneratorDialog} from "./module/apps/encounter-generator-dialog.js";
 import {TreasureGeneratorDialog} from "./module/apps/treasure-generator-dialog.js";
 import {ActorSheetTrap} from "./module/actor/sheets/trap.js";
@@ -108,7 +108,7 @@ Hooks.once("init", async function() {
   Actors.registerSheet("D35E", ActorSheetObject, { types: ["object"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFNPCObject")  });
   Items.unregisterSheet("core", ItemSheet);
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "aura", "attack", "race", "enhancement","damage-type","material","full-attack","card"], makeDefault: true });
+  Items.registerSheet("D35E", ItemSheetPF, { types: ["class", "feat", "spell", "consumable","equipment", "loot", "weapon", "buff", "aura", "attack", "race", "enhancement","damage-type","material","full-attack","card", "valuable"], makeDefault: true });
 
 
   // Register System Settings
@@ -116,6 +116,19 @@ Hooks.once("init", async function() {
 
   CONFIG.statusEffects = getConditions();
 
+	const layers = game.data.version >= 9
+    ? {
+        d35e: {
+            layerClass: D35ELayer,
+            group: "primary"
+        }
+    }
+    : {
+        d35e: D35ELayer,
+        sequencerEffectsAboveTokens: BaseEffectsLayer
+    }
+
+	CONFIG.Canvas.layers = foundry.utils.mergeObject(Canvas.layers, layers);
 
   //CONFIG.Canvas.layers["d35e"] = D35ELayer;
 

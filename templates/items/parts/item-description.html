@@ -211,6 +211,33 @@
         </div>
         <div class="item-properties flexrow" style="display: flex; flex-wrap: wrap;">
             {{#if isGM}}
+
+            <div class="form-group gm">
+                <label><i class="fas fa-low-vision tooltip"></i> {{localize "D35E.ResalePrice"}}</label>
+                <input type="text" name="data.resalePrice" value="{{data.data.resalePrice}}" data-dtype="Number"/>
+            </div>
+            <div class="form-group gm">
+                <label><i class="fas fa-low-vision tooltip"></i> {{localize "D35E.Broken"}} {{localize "D35E.ResalePrice"}}</label>
+                <input type="text" name="data.brokenResalePrice" value="{{data.data.brokenResalePrice}}" data-dtype="Number"/>
+            </div>
+
+            <div class="form-group gm">
+                <label><i class="fas fa-low-vision tooltip"></i> {{localize "D35E.FullResalePrice"}}</label>
+                {{#unless data.data.resalePrice}}
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized" name="data.fullResalePrice" {{checked
+                           data.data.fullResalePrice}}/>
+                    <span class="checkmark"></span>
+                </label>
+                {{else}}
+                <label class="checkbox" style="position: relative; flex: 0 20px">
+                    <input type="checkbox" class="stylized disabled" disabled/>
+                    <span class="checkmark"></span>
+                </label>
+
+                {{/unless}}
+            </div>
+
             <div class="form-group gm">
                 <label><i class="fas fa-low-vision tooltip"></i> UID</label>
                 <input type="text" name="data.uniqueId" value="{{data.data.uniqueId}}" data-dtype="String"/>

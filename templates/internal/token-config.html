@@ -1,4 +1,8 @@
 <div class="form-group">
-    <label>{{localize "TOKEN.VisionLowLight"}}:</label>
+    <label>{{localize "TOKEN.VisionLowLight"}}</label>
     <input type="checkbox" name="flags.D35E.lowLightVision" data-dtype="Boolean" {{checked object.flags.D35E.lowLightVision}}/>
+</div>
+<div class="form-group">
+    <label>{{localize "TOKEN.VisionLowLightMultiplier"}}</label>
+    <input type="text" style="flex: 0 30px;" name="flags.D35E.lowLightVisionMultiplier" data-dtype="Number" value="{{object.flags.D35E.lowLightVisionMultiplier}}"/>
 </div>

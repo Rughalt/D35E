@@ -1901,7 +1901,26 @@
 .D35E.sheet.actor .inventory-list .item .item-name-ne .item-image {
   flex: 0 0 24px;
   background-size: 24px;
+  position: relative;
   margin-right: 5px;
+}
+.D35E.sheet.actor .inventory-list .item .item-name .item-image .fas.fa-heart-broken,
+.D35E.sheet.actor .inventory-list .item .item-name-ne .item-image .fas.fa-heart-broken {
+  font-size: 18px;
+  color: #ff4519;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  text-shadow: 0px 0px 3px #ff0000;
+}
+.D35E.sheet.actor .inventory-list .item .item-name .item-image .fas.fa-paw,
+.D35E.sheet.actor .inventory-list .item .item-name-ne .item-image .fas.fa-paw {
+  font-size: 18px;
+  color: #86eb03;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  text-shadow: 0px 0px 3px #126b77;
 }
 .D35E.sheet.actor .inventory-list .item .item-name .item-image.class-icon,
 .D35E.sheet.actor .inventory-list .item .item-name-ne .item-image.class-icon {
@@ -2514,8 +2533,11 @@
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 2px;
-  flex: 0 0 132px;
+  flex: 0 0 128px;
   border-radius: 4px;
+}
+.D35E.sheet.item .primary-body .item-properties .form-group.gm {
+  flex: 0 0 260px;
 }
 .D35E.sheet.item .primary-body .item-properties .form-group.gm label {
   color: #3d0d0d;

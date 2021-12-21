@@ -18,18 +18,19 @@ export default class ActorSensesConfig extends DocumentSheet {
 
     /** @override */
     get title() {
-        return `${game.i18n.localize("D35E.SensesConfig")}: ${this.entity.name}`;
+        return `${game.i18n.localize("D35E.SensesConfig")}: ${this.object.name}`;
     }
 
     /* -------------------------------------------- */
 
     /** @override */
     getData(options) {
-        const senses = this.entity._data.data.attributes?.senses ?? {};
+        const senses = this.object.data.data.attributes?.senses ?? {};
         const data = {
             senses: {},
             special: senses.special ?? "",
             lowLight: senses.lowLight ?? "",
+            lowLightMultiplier: senses.lowLightMultiplier ?? 2,
             units: senses.units
         };
         for ( let [name, label] of Object.entries(CONFIG.D35E.senses) ) {

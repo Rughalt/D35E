@@ -87,6 +87,10 @@ export class ItemPF extends Item {
             return this.name
     }
 
+    get broken() {
+        return (this.data.data?.hp?.value === 0 && this.data.data?.hp?.max > 0) || false;
+    }
+
     static getCharges(item) {
         if (item.type === "card") return item.data.data.state === "hand"
         if (item.data.data?.linkedChargeItem?.id) {
@@ -1088,6 +1092,11 @@ export class ItemPF extends Item {
                 data.equipped ? game.i18n.localize("D35E.Equipped") : game.i18n.localize("D35E.NotEquipped"),
             );
         }
+        if (this.broken) {
+            props.push(
+                game.i18n.localize("D35E.Broken")
+            );
+        }
 
         if (!this.showUnidentifiedData) {
             // Gather dynamic labels
@@ -2081,7 +2090,7 @@ export class ItemPF extends Item {
                 rolled = true;
             }
             if (this.hasRolltableDraw) {
-                let rollTable = await game.packs.get(this.data.data.rollTableDraw.pack).getEntity(this.data.data.rollTableDraw.id)
+                let rollTable = await game.packs.get(this.data.data.rollTableDraw.pack).getDocument(this.data.data.rollTableDraw.id)
                 if (this.data.data.rollTableDraw.formula) {
                     var roll = new Roll35e(this.data.data.rollTableDraw.formula, rollData);
                     await rollTable.draw({roll:roll, rollMode:rollMode});
@@ -4243,7 +4252,7 @@ export class ItemPF extends Item {
      */
     async addEnhancementFromCompendium(packName, packId, enhValue) {
         let itemData = {}
-        const packItem = await game.packs.find(p => p.collection === packName).getEntity(packId);
+        const packItem = await game.packs.find(p => p.collection === packName).getDocument(packId);
         if (packItem != null) {
             itemData = packItem.data
             itemData.data.enh = enhValue;

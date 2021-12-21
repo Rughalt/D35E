@@ -110,6 +110,7 @@
             "tremorsense": 0,
             "truesight": 0,
             "lowLight": false,
+            "lowLightMultiplier": 2,
             "special": ""
           },
           "hd": {
@@ -1351,7 +1352,8 @@
       "damage-type",
       "material",
       "full-attack",
-      "card"
+      "card",
+      "valuable"
     ],
     "templates": {
       "changes": {
@@ -1492,6 +1494,9 @@
         "weight": 0,
         "constantWeight": false,
         "price": 0,
+        "resalePrice": "",
+        "brokenResalePrice": "",
+        "fullResalePrice": false,
         "identified": true,
         "hp": {
           "max": 10,
@@ -1993,6 +1998,22 @@
       "bonusAmmoAttackNote": "",
       "bagOfHoldingLike": false,
       "capacity": 0,
+      "creationChanges": []
+    },
+    "valuable": {
+      "templates": [
+        "itemDescription",
+        "physicalItem"
+      ],
+      "constantWeight": true,
+      "subType": "misc",
+      "bonusAmmoAttack": "",
+      "bonusAmmoDamage": "",
+      "bonusAmmoDamageType": "",
+      "bonusAmmoAttackNote": "",
+      "bagOfHoldingLike": false,
+      "capacity": 0,
+      "fullResalePrice": true,
       "creationChanges": []
     },
     "spell": {
