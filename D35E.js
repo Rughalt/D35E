@@ -124,8 +124,7 @@ Hooks.once("init", async function() {
         }
     }
     : {
-        d35e: D35ELayer,
-        sequencerEffectsAboveTokens: BaseEffectsLayer
+        d35e: D35ELayer
     }
 
 	CONFIG.Canvas.layers = foundry.utils.mergeObject(Canvas.layers, layers);
