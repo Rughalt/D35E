@@ -2,7 +2,6 @@ import { DicePF } from "../dice.js";
 import { ItemPF } from "../item/entity.js";
 import { createTag, linkData, isMinimumCoreVersion, shuffle, uuidv4, getOriginalNameIfExists } from "../lib.js";
 import { createCustomChatMessage } from "../chat.js";
-import { _getInitiativeFormula } from "../combat.js";
 import { CACHE } from "../cache.js";
 import {DamageTypes} from "../damage-types.js";
 import {D35E} from "../config.js";
@@ -4881,6 +4880,29 @@ export class ActorPF extends Actor {
 
         return headers;
     }
+
+    getInitiativeContextNotes() {
+        const notes = this.getContextNotes("misc.init").reduce((arr, o) => {
+          for (const n of o.notes) arr.push(...n.split(/[\n\r]+/));
+          return arr;
+        }, []);
+    
+        let notesHTML;
+        if (notes.length > 0) {
+          // Format notes if they're present
+          const notesHTMLParts = [];
+          notes.forEach((note) => notesHTMLParts.push(`<span class="tag">${note}</span>`));
+          notesHTML =
+            '<div class="flexcol property-group gm-sensitive"><label>' +
+            game.i18n.localize("PF1.Notes") +
+            '</label> <div class="flexrow">' +
+            notesHTMLParts.join("") +
+            "</div></div>";
+        }
+    
+        return [notes, notesHTML];
+      }
+    
 
     async rollInitiative({ createCombatants = false, rerollInitiative = false, initiativeOptions = {} } = {}) {
         // Obtain (or create) a combat encounter

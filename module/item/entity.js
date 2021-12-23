@@ -55,6 +55,11 @@ export class ItemPF extends Item {
             || this.hasTemplate || (getProperty(this.data, "data.actionType") === "special");
     }
 
+    get _id() {
+        console.warn("Using old mapper for _id.")
+        return this.id;
+    }
+
     get isSingleUse() {
         return getProperty(this.data, "data.uses.per") === "single";
     }
@@ -2710,7 +2715,8 @@ export class ItemPF extends Item {
                 p[1] = CACHE.DamageTypes.get(p[2]).data.name
             else if (p[1]) {
                 for (let damageType of CACHE.DamageTypes.values()) {
-                    if (damageType.data.data.identifiers.some(i => i[0].toLowerCase() === p[1].toLowerCase()))
+                    let identifiers = damageType.data.data.identifiers;
+                    if (identifiers.some(i => i.toLowerCase() === p[1].toLowerCase()))
                         p[2] = damageType.data.data.uniqueId;
                 }
             }

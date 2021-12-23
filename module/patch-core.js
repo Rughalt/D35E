@@ -1,4 +1,4 @@
-import { _rollInitiative, _getInitiativeFormula } from "./combat.js";
+
 import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
 import { ActorPF } from "./actor/entity.js";
@@ -181,9 +181,7 @@ export async function PatchCore() {
 
 
 
-  // Patch, patch, patch
-  Combat.prototype._getInitiativeFormula = _getInitiativeFormula;
-  Combat.prototype.rollInitiative = _rollInitiative;
+  // Patch, patch, patch\
   window.getTemplate = D35E_getTemplate;
   patchMeasureTools();
   patchLowLightVision();

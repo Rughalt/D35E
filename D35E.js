@@ -20,6 +20,7 @@ import { ItemSheetPF } from "./module/item/sheets/base.js";
 import { CompendiumDirectoryPF } from "./module/sidebar/compendium.js";
 import { PatchCore } from "./module/patch-core.js";
 import { DicePF } from "./module/dice.js";
+import { CombatPF } from "./module/combat.js";
 import { createCustomChatMessage } from "./module/chat.js";
 import {
   getItemOwner,
@@ -98,6 +99,8 @@ Hooks.once("init", async function() {
   CONFIG.ActiveEffect.documentClass = ActiveEffectD35E;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.documentClass = ChatMessagePF;
+  CONFIG.Combat.documentClass = CombatPF;
+
 
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("D35E", ActorSheetPFCharacter, { types: ["character"], makeDefault: true, label: game.i18n.localize("D35E.ActorSheetPFCharacter") });
