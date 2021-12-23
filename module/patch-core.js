@@ -2,7 +2,6 @@
 import "./misc/vision-permission.js";
 import { _preProcessDiceFormula } from "./dice.js";
 import { ActorPF } from "./actor/entity.js";
-import { patchMeasureTools } from "./measure.js";
 
 const FormApplication_close = FormApplication.prototype.close;
 
@@ -183,8 +182,6 @@ export async function PatchCore() {
 
   // Patch, patch, patch\
   window.getTemplate = D35E_getTemplate;
-  patchMeasureTools();
-  patchLowLightVision();
 // This system assumes that evalate should be run on StringTerm.eval
   const StringTerm_eval = StringTerm.prototype.evaluate;
   StringTerm.prototype.evaluate = async function(...args) {
@@ -200,5 +197,3 @@ export async function PatchCore() {
 
 import { isMinimumCoreVersion } from "./lib.js";
 
-import "./measure.js";
-import {patchLowLightVision} from "./low-light-vision.js";

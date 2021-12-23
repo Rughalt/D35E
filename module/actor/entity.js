@@ -976,52 +976,14 @@ export class ActorPF extends Actor {
                     let tokens = []
                     tokens.push(this.token);
                     for (const o of tokens) {
-                        if (dimLight !== o.data.dimLight ||
-                            brightLight !== o.data.brightLight ||
-                            color !== o.data.lightColor ||
-                            animationIntensity !== o.data.lightAnimation.intensity ||
-                            type !== o.data.lightAnimation.type ||
-                            animationSpeed !== o.data.lightAnimation.speed ||
-                            lightAngle !== o.data.lightAnimation.lightAngle
-                        )
-                            await o.update({
-                                dimLight: dimLight,
-                                brightLight: brightLight,
-                                lightColor: color || '#000',
-                                lightAlpha: alpha,
-                                lightAngle: lightAngle,
-                                lightAnimation: {type: type, intensity: animationIntensity, speed: animationSpeed}
-                            }, {stopUpdates: true, tokenOnly: true});
+                        await this.updateTokenLight(dimLight, o, brightLight, color, animationIntensity, type, animationSpeed, lightAngle, alpha);
                     }
                 }
                 if (!this.isToken) {
                     let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
                     for (const o of tokens) {
-                        if (dimLight !== o.data.dimLight || brightLight !== o.data.brightLight || color !== o.data.lightColor ||
-                            animationIntensity !== o.data.lightAnimation.intensity ||
-                            type !== o.data.lightAnimation.type ||
-                            color !== o.data.lightColor ||
-                            lightAngle !== o.data.lightAnimation.lightAngle ||
-                            animationSpeed !== o.data.lightAnimation.speed)
-                            await o.document.update({
-                                dimLight: dimLight,
-                                brightLight: brightLight,
-                                lightColor: color || '#000',
-                                lightAlpha: alpha,
-                                lightAngle: lightAngle,
-                                lightAnimation: {
-                                    type: type,
-                                    intensity: animationIntensity,
-                                    animationSpeed: animationSpeed
-                                }
-                            }, {stopUpdates: true, tokenOnly: true});
+                        this.updateTokenLight(dimLight, o, brightLight, color, animationIntensity, type, animationSpeed, lightAngle, alpha);
                     }
-                    data[`token.dimLight`] = dimLight;
-                    data[`token.brightLight`] = brightLight;
-                    data[`token.lightColor`] = color || '#000';
-                    data[`token.lightAnimation.type`] = type;
-                    data[`token.lightAlpha`] = alpha;
-                    data[`token.lightAngle`] = lightAngle;
                 }
             }
             if (!this.data.data.noVisionOverride && !game.settings.get("D35E", "globalDisableTokenVision"))
@@ -1363,6 +1325,66 @@ export class ActorPF extends Actor {
                 raw: [`${data.data.staticBonus.ac || 0}`, "ac", "ac", "untyped", 0],
                 source: { name: `Manual AC Bonus` }
             });
+        }
+    }
+
+    async updateTokenLight(dimLight, o, brightLight, color, animationIntensity, type, animationSpeed, lightAngle, alpha) {
+        if (!isMinimumCoreVersion("9")) {
+            if (dimLight !== o.data.dimLight ||
+                brightLight !== o.data.brightLight ||
+                color !== o.data.lightColor ||
+                animationIntensity !== o.data.lightAnimation.intensity ||
+                type !== o.data.lightAnimation.type ||
+                animationSpeed !== o.data.lightAnimation.speed ||
+                lightAngle !== o.data.lightAnimation.lightAngle)
+                if (o.document) {
+                    await o.document.update({
+                        dimLight: dimLight,
+                        brightLight: brightLight,
+                        lightColor: color || '#000',
+                        lightAlpha: alpha,
+                        lightAngle: lightAngle,
+                        lightAnimation: { type: type, intensity: animationIntensity, speed: animationSpeed }
+                    }, { stopUpdates: true, tokenOnly: true });
+                } else {
+
+                    await o.update({
+                        dimLight: dimLight,
+                        brightLight: brightLight,
+                        lightColor: color || '#000',
+                        lightAlpha: alpha,
+                        lightAngle: lightAngle,
+                        lightAnimation: { type: type, intensity: animationIntensity, speed: animationSpeed }
+                    }, { stopUpdates: true, tokenOnly: true });
+                }
+        } else {
+            if (dimLight !== o.data.light.dim ||
+                brightLight !== o.data.light.bright ||
+                color !== o.data.light.color ||
+                animationIntensity !== o.data.light.animation.intensity ||
+                type !== o.data.light.animation.type ||
+                animationSpeed !== o.data.light.animation.speed ||
+                lightAngle !== o.data.light.angle)
+                if (o.document) {
+                    await o.document.update({light:{
+                        dim: dimLight,
+                        bright: brightLight,
+                        color: color || '#000',
+                        alpha: alpha,
+                        angle: lightAngle,
+                        animation: { type: type, intensity: animationIntensity, speed: animationSpeed }}
+                    }, { stopUpdates: true, tokenOnly: true });
+                } else {
+                    await o.update({light:{
+                        dim: dimLight,
+                        bright: brightLight,
+                        color: color || '#000',
+                        alpha: alpha,
+                        angle: lightAngle,
+                        animation: { type: type, intensity: animationIntensity, speed: animationSpeed }}
+                    }, { stopUpdates: true, tokenOnly: true });
+                }
+                
         }
     }
 
@@ -2242,11 +2264,11 @@ export class ActorPF extends Actor {
 
         // Set creature type
         if (racialHD.length > 0) {
-            linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data.data, "creatureType") || "humanoid");
+            linkData(data, updateData, "data.attributes.creatureType", getProperty(racialHD[0].data.data, "creatureType") || data.data.attributes.creatureType);
         }
         // Set creature type
         if (templateHD.length > 0) {
-            linkData(data, updateData, "data.attributes.creatureType", getProperty(templateHD[0].data.data, "creatureType") || "humanoid");
+            linkData(data, updateData, "data.attributes.creatureType", getProperty(templateHD[0].data.data, "creatureType") || data.data.attributes.creatureType);
         }
 
         linkData(data, updateData, "data.attributes.hd.total", data1.details.level.value - raceLA);

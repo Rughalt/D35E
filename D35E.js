@@ -18,10 +18,15 @@ import { ActorSheetPFNPCMonster } from "./module/actor/sheets/npc-monster.js";
 import { ItemPF } from "./module/item/entity.js";
 import { ItemSheetPF } from "./module/item/sheets/base.js";
 import { CompendiumDirectoryPF } from "./module/sidebar/compendium.js";
+import { TokenPF } from "./module/token/token.js";
+
 import { PatchCore } from "./module/patch-core.js";
 import { DicePF } from "./module/dice.js";
 import { CombatPF } from "./module/combat.js";
 import { createCustomChatMessage } from "./module/chat.js";
+import { SightLayerPF } from "./module/low-light-vision.js";
+import { TemplateLayerPF } from "./module/measure.js";
+
 import {
   getItemOwner,
   sizeDie,
@@ -100,6 +105,8 @@ Hooks.once("init", async function() {
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.documentClass = ChatMessagePF;
   CONFIG.Combat.documentClass = CombatPF;
+  CONFIG.Token.objectClass = TokenPF;
+
 
 
   Actors.unregisterSheet("core", ActorSheet);
@@ -131,6 +138,14 @@ Hooks.once("init", async function() {
     }
 
 	CONFIG.Canvas.layers = foundry.utils.mergeObject(Canvas.layers, layers);
+  if (isMinimumCoreVersion("9.0")) {
+    CONFIG.Canvas.layers.templates.layerClass = TemplateLayerPF;
+    CONFIG.Canvas.layers.sight.layerClass = SightLayerPF;
+  } else {
+    CONFIG.Canvas.layers.templates = TemplateLayerPF;
+    CONFIG.Canvas.layers.sight = SightLayerPF;
+  }
+
 
   //CONFIG.Canvas.layers["d35e"] = D35ELayer;
 
