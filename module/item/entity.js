@@ -2716,7 +2716,7 @@ export class ItemPF extends Item {
             else if (p[1]) {
                 for (let damageType of CACHE.DamageTypes.values()) {
                     let identifiers = damageType.data.data.identifiers;
-                    if (identifiers.some(i => i.toLowerCase() === p[1].toLowerCase()))
+                    if (identifiers.some(i => i[0].toLowerCase() === p[1].toLowerCase()))
                         p[2] = damageType.data.data.uniqueId;
                 }
             }

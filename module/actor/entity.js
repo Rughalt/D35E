@@ -4931,7 +4931,7 @@ export class ActorPF extends Actor {
         let combat = game.combat;
         if (!combat) {
             if (game.user.isGM && canvas.scene) {
-                combat = await game.combats.object.create({ scene: canvas.scene._id, active: true });
+                combat = await game.combats.documentClass.create({ scene: canvas.scene._id, active: true });
             } else {
                 ui.notifications.warn(game.i18n.localize("COMBAT.NoneActive"));
                 return null;
@@ -4946,16 +4946,17 @@ export class ActorPF extends Actor {
                 arr.push({ tokenId: t.id, hidden: t.data.hidden });
                 return arr;
             }, []);
-            await combat.createEmbeddedEntity("Combatant", createData);
+            await combat.createEmbeddedDocuments("Combatant", createData);
         }
 
         // Iterate over combatants to roll for
         const combatantIds = combat.combatants.reduce((arr, c) => {
-            if (c.actor.id !== this.id || (this.isToken && c.tokenId !== this.token.id)) return arr;
+            if (c.actor.id !== this.id || (this.isToken && c.data.tokenId !== this.token.id)) return arr;
             if (c.initiative && !rerollInitiative) return arr;
-            arr.push(c._id);
+            arr.push(c.id);
             return arr;
-        }, []);
+          }, []);
+      
         return combatantIds.length ? combat.rollInitiative(combatantIds, initiativeOptions) : combat;
     }
 
@@ -6645,6 +6646,14 @@ export class ActorPF extends Actor {
         }
 
         return [];
+    }
+
+
+    async deleteEmbeddedEntity(documentName, data, options = {}) {
+        console.warn("The Document#updateEmbeddedEntity method has been renamed to Document#updateEmbeddedDocuments. Support for the old method name was removed in 0.9.0");
+        data = data instanceof Array ? data : [data];
+        options.massUpdate = true;
+        return this.deleteEmbeddedEntity(documentName, data, options);
     }
 
     async createEmbeddedEntity(embeddedName, createData, options = {}) {
