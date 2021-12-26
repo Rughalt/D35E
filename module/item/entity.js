@@ -1005,7 +1005,7 @@ export class ItemPF extends Item {
 
         // Basic chat message data
         const chatData = mergeObject({
-            user: game.user._id,
+            user: game.user.id,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             speaker: ChatMessage.getSpeaker({actor: actor}),
         }, altChatData);
@@ -2824,7 +2824,7 @@ export class ItemPF extends Item {
 
             // Create roll template data
             const rollData = mergeObject({
-                user: game.user._id,
+                user: game.user.id,
                 formula: roll.formula,
                 tooltip: await roll.getTooltip(),
                 total: roll.total,
@@ -2832,7 +2832,7 @@ export class ItemPF extends Item {
 
             // Create chat data
             let chatData = {
-                user: game.user._id,
+                user: game.user.id,
                 type: CONST.CHAT_MESSAGE_TYPES.CHAT,
                 sound: CONFIG.sounds.dice,
                 speaker: ChatMessage.getSpeaker({actor: this.actor}),
@@ -2844,13 +2844,13 @@ export class ItemPF extends Item {
             // Handle different roll modes
             switch (chatData.rollMode) {
                 case "gmroll":
-                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
                     break;
                 case "selfroll":
-                    chatData["whisper"] = [game.user._id];
+                    chatData["whisper"] = [game.user.id];
                     break;
                 case "blindroll":
-                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
                     chatData["blind"] = true;
             }
 
@@ -4475,7 +4475,7 @@ export class ItemPF extends Item {
 
         // Create chat data
         let chatData = {
-            user: game.user._id,
+            user: game.user.id,
             type: CONST.CHAT_MESSAGE_TYPES.CHAT,
             sound: CONFIG.sounds.dice,
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
@@ -4485,13 +4485,13 @@ export class ItemPF extends Item {
         // Handle different roll modes
         switch (chatData.rollMode) {
             case "gmroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
                 break;
             case "selfroll":
-                chatData["whisper"] = [game.user._id];
+                chatData["whisper"] = [game.user.id];
                 break;
             case "blindroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
                 chatData["blind"] = true;
         }
 

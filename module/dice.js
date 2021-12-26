@@ -68,7 +68,7 @@ export class DicePF {
           // Create roll template data
           const d20 = roll.terms[0];
           const rollData = mergeObject({
-            user: game.user._id,
+            user: game.user.id,
             formula: roll.formula,
             tooltip: await roll.getTooltip(),
             total: roll.total,
@@ -78,7 +78,7 @@ export class DicePF {
 
           // Create chat data
           let chatData = {
-            user: game.user._id,
+            user: game.user.id,
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             sound: a === 0 ? CONFIG.sounds.dice : null,
             speaker: speaker,
@@ -88,13 +88,13 @@ export class DicePF {
           // Handle different roll modes
           switch (rollMode) {
             case "gmroll":
-              chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+              chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
               break;
             case "selfroll":
-              chatData["whisper"] = [game.user._id];
+              chatData["whisper"] = [game.user.id];
               break;
             case "blindroll":
-              chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+              chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
               chatData["blind"] = true;
               break;
           }
@@ -220,7 +220,7 @@ export class DicePF {
       if (chatTemplate) {
         // Create roll template data
         const rollData = mergeObject({
-          user: game.user._id,
+          user: game.user.id,
           formula: roll.formula,
           tooltip: await roll.getTooltip(),
           total: roll.total,
@@ -228,7 +228,7 @@ export class DicePF {
 
         // Create chat data
         let chatData = {
-          user: game.user._id,
+          user: game.user.id,
           type: CONST.CHAT_MESSAGE_TYPES.ROLL,
           rollMode: game.settings.get("core", "rollMode"),
           sound: CONFIG.sounds.dice,
@@ -242,13 +242,13 @@ export class DicePF {
         // Handle different roll modes
         switch (chatData.rollMode) {
           case "gmroll":
-            chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+            chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
             break;
           case "selfroll":
-            chatData["whisper"] = [game.user._id];
+            chatData["whisper"] = [game.user.id];
             break;
           case "blindroll":
-            chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+            chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
             chatData["blind"] = true;
         }
 

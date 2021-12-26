@@ -23,7 +23,7 @@ export class ChatMessagePF extends ChatMessage {
         isWhisper ? "whisper" : null,
         this.data.blind ? "blind": null
       ].filter(c => c !== null).join(" "),
-      isWhisper: this.data.whisper.some(id => id !== game.user._id),
+      isWhisper: this.data.whisper.some(id => id !== game.user.id),
       whisperTo: this.data.whisper.map(u => {
         let user = game.users.get(u);
         return user ? user.name : null;
@@ -35,7 +35,7 @@ export class ChatMessagePF extends ChatMessage {
       const isVisible = this.isRollVisible;
       messageData.message.content = await this.roll.render({isPrivate: !isVisible});
       if ( isWhisper ) {
-        const subject = this.data.user === game.user._id ? "You" : this.user.name;
+        const subject = this.data.user === game.user.id ? "You" : this.user.name;
         messageData.message.flavor = messageData.message.flavor || `${subject} privately rolled some dice`;
       }
       if ( !isVisible ) {
@@ -77,7 +77,7 @@ export class ChatMessagePF extends ChatMessage {
         isWhisper ? "whisper" : null,
         this.data.blind ? "blind": null
       ].filter(c => c !== null).join(" "),
-      isWhisper: this.data.whisper.some(id => id !== game.user._id),
+      isWhisper: this.data.whisper.some(id => id !== game.user.id),
       whisperTo: this.data.whisper.map(u => {
         let user = game.users.get(u);
         return user ? user.name : null;

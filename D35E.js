@@ -452,9 +452,9 @@ Hooks.on("renderLightConfig", (app, html) => {
 
 
 Hooks.on("createToken", async (token, options, userId) => {
-  if (userId !== game.user._id) return;
+  if (userId !== game.user.id) return;
 
-  const actor = game.actors.tokens[token._id] ?? game.actors.get(token.data.actorId);
+  const actor = game.actors.tokens[token.id] ?? game.actors.get(token.data.actorId);
   actor.toggleConditionStatusIcons();
 
   // Update changes and generate sourceDetails to ensure valid actor data

@@ -691,12 +691,17 @@ export class ActorPF extends Actor {
         return null;
     }
 
+    get _id() {
+        console.warn("Using old mapper for _id.")
+        return this.id;
+    }
+
     _dataIsPC(data) {
         if (data.permission != null) {
             const nonGM = game.users.contents.filter(u => !u.isGM);
             return nonGM.some(u => {
                 if (data.permission["default"] >= CONST.ENTITY_PERMISSIONS["OWNER"]) return true;
-                return data.permission[u._id] >= CONST.ENTITY_PERMISSIONS["OWNER"];
+                return data.permission[u.id] >= CONST.ENTITY_PERMISSIONS["OWNER"];
             });
         }
         return this.hasPlayerOwner;
@@ -4330,7 +4335,7 @@ export class ActorPF extends Actor {
     }
 
     async _onCreate(data, options, userId, context) {
-        if (userId === game.user._id) {
+        if (userId === game.user.id) {
             await this._updateChanges();
         }
 
@@ -8249,7 +8254,7 @@ export class ActorPF extends Actor {
 
         // Create chat data
         let chatData = {
-            user: game.user._id,
+            user: game.user.id,
             type: CONST.CHAT_MESSAGE_TYPES.CHAT,
             sound: CONFIG.sounds.dice,
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
@@ -8258,13 +8263,13 @@ export class ActorPF extends Actor {
         // Handle different roll modes
         switch (chatData.rollMode) {
             case "gmroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
                 break;
             case "selfroll":
-                chatData["whisper"] = [game.user._id];
+                chatData["whisper"] = [game.user.id];
                 break;
             case "blindroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
                 chatData["blind"] = true;
         }
 
