@@ -6653,7 +6653,7 @@ export class ActorPF extends Actor {
         console.warn("The Document#updateEmbeddedEntity method has been renamed to Document#updateEmbeddedDocuments. Support for the old method name was removed in 0.9.0");
         data = data instanceof Array ? data : [data];
         options.massUpdate = true;
-        return this.deleteEmbeddedEntity(documentName, data, options);
+        return this.deleteEmbeddedDocuments(documentName, data, options);
     }
 
     async createEmbeddedEntity(embeddedName, createData, options = {}) {
