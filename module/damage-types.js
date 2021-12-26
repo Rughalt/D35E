@@ -328,7 +328,8 @@ export class DamageTypes {
             highestDr = d.immunity ? 65536 : d.value ;
             appliedDr = d;
         }});
-        let damageAfterDr = Math.max(damageBeforeDr - highestDr,0);
+        let realDamage = (applyHalf ? Math.floor(damageBeforeDr/2.0) : damageBeforeDr);
+        let damageAfterDr = Math.max(realDamage - highestDr,0);
         if (baseIsNonLethal) {
             nonLethalDamage += damageAfterDr;
             damageAfterDr = 0;

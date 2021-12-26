@@ -975,7 +975,7 @@ export class ItemPF extends Item {
         const token = actor ? actor.token : null;
         const templateData = {
             actor: actor,
-            tokenId: token ? `${token.parent._id}.${token.id}` : null,
+            tokenId: token ? `${token.parent.id}.${token.id}` : null,
             item: this.data,
             data: this.getChatData(),
             labels: this.labels,
@@ -2074,7 +2074,7 @@ export class ItemPF extends Item {
                     hasProperties: props.length > 0,
                     item: this.data,
                     actor: actor.data,
-                    tokenId: token ? `${token.parent._id}.${token.id}` : null,
+                    tokenId: token ? `${token.parent.id}.${token.id}` : null,
                     hasBoxInfo: hasBoxInfo,
                     useAmmoName: useAmmoName,
                     dc: dc,
@@ -3054,7 +3054,7 @@ export class ItemPF extends Item {
             const [sceneId, tokenId] = tokenKey.split(".");
             const scene = game.scenes.get(sceneId);
             if (!scene) return null;
-            const tokenData = scene.getEmbeddedEntity("Token", tokenId);
+            const tokenData = scene.getEmbeddedDocument("Token", tokenId);
             if (!tokenData) return null;
             const token = new Token(tokenData);
             return token.actor;

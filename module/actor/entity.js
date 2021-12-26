@@ -4139,7 +4139,7 @@ export class ActorPF extends Actor {
                         if (barAttr.attribute === `resources.${tag}`) {
                             const tokenUpdateData = {};
                             tokenUpdateData[`${b}.attribute`] = null;
-                            token.update(token.parent._id, tokenUpdateData, { stopUpdates: true });
+                            token.update(token.parent.id, tokenUpdateData, { stopUpdates: true });
                         }
                     });
                 });
@@ -5037,7 +5037,7 @@ export class ActorPF extends Actor {
                 name: this.name,
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                 rollMode: rollMode || "gmroll",
-                tokenId: token ? `${token.parent._id}.${token.id}` : null,
+                tokenId: token ? `${token.parent.id}.${token.id}` : null,
                 actorId: this.id
             };
             const templateData = mergeObject(chatTemplateData, {
@@ -5370,7 +5370,7 @@ export class ActorPF extends Actor {
                 name: this.name,
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                 rollMode: rollMode || "gmroll",
-                tokenId: token ? `${token.parent._id}.${token.id}` : null,
+                tokenId: token ? `${token.parent.id}.${token.id}` : null,
                 actor: this
             };
             const templateData = mergeObject(chatTemplateData, {
@@ -5598,7 +5598,7 @@ export class ActorPF extends Actor {
                 name: this.name,
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER,
                 rollMode: rollMode || "gmroll",
-                tokenId: token ? `${token.parent._id}.${token.id}` : null,
+                tokenId: token ? `${token.parent.id}.${token.id}` : null,
                 actorId: this.id
             };
             const templateData = mergeObject(chatTemplateData, {
@@ -7997,7 +7997,7 @@ export class ActorPF extends Actor {
             img: this.img,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             rollMode: "selfroll",
-            tokenId: token ? `${token.parent._id}.${token.id}` : null,
+            tokenId: token ? `${token.parent.id}.${token.id}` : null,
             actor: this
         };
         let chatData = {
@@ -8279,7 +8279,7 @@ export class ActorPF extends Actor {
             img: this.img,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             rollMode: "selfroll",
-            tokenId: token ? `${token.parent._id}.${token.id}` : null,
+            tokenId: token ? `${token.parent.id}.${token.id}` : null,
             actor: this
         };
         let chatData = {
