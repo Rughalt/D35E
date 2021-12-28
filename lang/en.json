@@ -1568,6 +1568,7 @@
   "D35E.ResalePrice": "Resale Price",
   "D35E.FullResalePrice": "Full Resale Price",
   "D35E.MultipleSkillClasses": "This creature has multiple classes but uses simple skill assignment system. Take care when entering skills as class skills are only considered class skills when you level up a class. This may make this number seem incorrect even though you entered correct number of ranks.",
+  "D35E.AdditionalSliders": "Additional Sliders",
   
 
   "SETTINGS.D35EShowPartyHudTokenN": "Party HUD should display token images? ",
