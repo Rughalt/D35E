@@ -112,7 +112,8 @@ export class CurrencyConfig extends FormApplication {
     if (a.dataset.dtype === "Number") {
       let v = parseFloat(value);
       if (isNaN(v)) v = 0;
-      this.entries[index][index2] = v === 0 ? 0 : Math.floor(v * 100) / 100;
+	  /** round off to the nearest .0001 of a standard gp */
+      this.entries[index][index2] = v === 0 ? 0 : Math.floor(v * 1000000) / 1000000;
     }
     else this.entries[index][index2] = value;
   }
