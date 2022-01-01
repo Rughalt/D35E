@@ -1,0 +1,22 @@
+### Fixes
+- [885](https://github.com/Rughalt/D35E/issues/885) - Token Resize not working in Buff  
+- [879](https://github.com/Rughalt/D35E/issues/879) - Issue: Compendium Browsers are not working in core v9 and SRD v0.98.9  
+- [878](https://github.com/Rughalt/D35E/issues/878) - Inspire Greatness has null Change listed  
+- [870](https://github.com/Rughalt/D35E/issues/870) - Issue: Special Action: Deactivate functions are not working correctly.  
+- [867](https://github.com/Rughalt/D35E/issues/867) - Grapple attack bonus calculation is wrong for Tiny or lower creatures  
+- [862](https://github.com/Rughalt/D35E/issues/862) - Animal Companion Level Issue  
+- [860](https://github.com/Rughalt/D35E/issues/860) - [Bug] Ranged attack penalty affecting 'Melee Attack Bonuses'  
+- [857](https://github.com/Rughalt/D35E/issues/857) - stock Unarmed Strike item has quantity 0  
+- [856](https://github.com/Rughalt/D35E/issues/856) - standard Weapon Focus feat does not have attributes locked  
+- [853](https://github.com/Rughalt/D35E/issues/853) - Speak Language should be a class skill for bards.  
+- [852](https://github.com/Rughalt/D35E/issues/852) - Spells (all of them I believe) are subjected to Concealment  
+- [849](https://github.com/Rughalt/D35E/issues/849) - Feature Request: Toggle Skill Synergies  
+- [848](https://github.com/Rughalt/D35E/issues/848) - Add action button to items in containers  
+- [819](https://github.com/Rughalt/D35E/issues/819) - Bug: Missing Bonus Skill Points  
+- [810](https://github.com/Rughalt/D35E/issues/810) - Mage's Disjunction not marked as domain spell when added as such  
+- [805](https://github.com/Rughalt/D35E/issues/805) - Feature request: Add @item.level variable to combat changes modification formula  
+- [792](https://github.com/Rughalt/D35E/issues/792) - Level tiles overlap section below when width decreased  
+- [785](https://github.com/Rughalt/D35E/issues/785) - Spell Focus (or anything using featSpellDCBonus) causes DC in spell description to keep incrementing  
+- [681](https://github.com/Rughalt/D35E/issues/681) - Monks Flurry of Blows roll wrong amount of attacks.  
+- [414](https://github.com/Rughalt/D35E/issues/414) - Gnomes are missing the racial +2 Craft (alchemy) bonus  
+- [204](https://github.com/Rughalt/D35E/issues/204) - Monsters Missing/Wrong  

@@ -1,6 +1,6 @@
 import {DicePF} from "../dice.js";
 import {createCustomChatMessage} from "../chat.js";
-import {alterRoll, createTag, linkData} from "../lib.js";
+import {alterRoll, createTag, getOriginalNameIfExists, linkData} from "../lib.js";
 import {ActorPF} from "../actor/entity.js";
 import AbilityTemplate from "../pixi/ability-template.js";
 import {ChatAttack} from "../misc/chat-attack.js";
@@ -1028,7 +1028,7 @@ export class ItemPF extends Item {
         const data = duplicate(this.data.data);
         const labels = this.labels;
         if (!rollData) {
-            rollData = this.actor ? this.actor.getRollData() : {};
+            rollData = this.actor ? this.actor.getRollData(null, true) : {};
             rollData.item = data;
             if (this.actor) {
                 let allCombatChanges = []
@@ -1389,10 +1389,10 @@ export class ItemPF extends Item {
                 greaterManyshot = false,
                 greaterManyshotCount = 0,
                 twoWeaponFightingOffhand = false,
-                hasTwoWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Two-Weapon Fighting").length > 0,
-                multiweaponFighting = actor.items.filter(o => o.type === "feat" && (o.name === "Multiweapon Fighting" || o.data.data.changeFlags.multiweaponAttack)).length > 0,
-                hasTwoImprovedWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Improved Two-Weapon Fighting").length > 0,
-                hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && o.name === "Greater Two-Weapon Fighting").length > 0,
+                hasTwoWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && getOriginalNameIfExists(o) === "Two-Weapon Fighting").length > 0,
+                multiweaponFighting = actor.items.filter(o => o.type === "feat" && (getOriginalNameIfExists(o) === "Multiweapon Fighting" || o.data.data.changeFlags.multiweaponAttack)).length > 0,
+                hasTwoImprovedWeaponFightingFeat = actor.items.filter(o => o.type === "feat" && getOriginalNameIfExists(o) === "Improved Two-Weapon Fighting").length > 0,
+                hasTwoGreaterFightingFeat = actor.items.filter(o => o.type === "feat" && getOriginalNameIfExists(o) === "Greater Two-Weapon Fighting").length > 0,
                 rollMode = null,
                 optionalFeatIds = [],
                 optionalFeatRanges = new Map(),
@@ -2107,7 +2107,7 @@ export class ItemPF extends Item {
         };
 
         // Handle fast-forwarding
-        if (skipDialog || (ev instanceof MouseEvent && (ev.shiftKey || ev.button === 2)) || getProperty(this.data, "data.actionType") === "special") return _roll.call(this, true);
+        if (skipDialog || (ev instanceof MouseEvent && (ev.shiftKey || ev.button === 2)) || getProperty(this.data, "data.actionType") === "special") return {wasRolled: true, roll: _roll.call(this, true)} ;
 
         // Render modal dialog
         let template = "systems/D35E/templates/apps/attack-roll-dialog.html";
@@ -2379,6 +2379,7 @@ export class ItemPF extends Item {
                 c[4] = c[4].replace(/@range2/g, combatChangesRollData.range2)
                 c[4] = c[4].replace(/@range3/g, combatChangesRollData.range3)
                 c[4] = c[4].replace(/@range/g, combatChangesRollData.range)
+                c[4] = c[4].replace(/@source.level/g, this?.data?.data?.level || 0)
             }
             if (c[3].indexOf('$') === -1 && c[3].indexOf('&') === -1) {
                 if (c[4] !== "")
@@ -2394,6 +2395,7 @@ export class ItemPF extends Item {
                     c[5] = c[5].replace(/@range2/g, combatChangesRollData.range2)
                     c[5] = c[5].replace(/@range3/g, combatChangesRollData.range3)
                     c[5] = c[5].replace(/@range/g, combatChangesRollData.range)
+                    c[5] = c[5].replace(/@source.level/g, this?.data?.data?.level || 0)
                 }
                 c.push(this.id)
                 c.push(this.name)
@@ -2844,13 +2846,13 @@ export class ItemPF extends Item {
             // Handle different roll modes
             switch (chatData.rollMode) {
                 case "gmroll":
-                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
+                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                     break;
                 case "selfroll":
                     chatData["whisper"] = [game.user.id];
                     break;
                 case "blindroll":
-                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
+                    chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                     chatData["blind"] = true;
             }
 
@@ -2877,10 +2879,12 @@ export class ItemPF extends Item {
         if (this.type === "enhancement") result.enhIncrease = result.enhIncrease;
         if (this.type === "spell") result.name = this.name;
         result['custom'] = {}
+        result['customNames'] = {}
         if (result.hasOwnProperty('customAttributes')) {
             for (let prop in result.customAttributes || {}) {
                 let propData = result.customAttributes[prop];
-                result['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = (propData?.selectListArray || false) ? propData.selectListArray[propData.value] : propData.value;
+                result['custom'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = propData.value;
+                result['customNames'][(propData.name || propData.id).replace(/ /g, '').toLowerCase()] = (propData?.selectListArray || false) ? propData.selectListArray[propData.value] : propData.value;
             }
         }
         //console.log('D35E | Roll data', result)
@@ -3119,10 +3123,11 @@ export class ItemPF extends Item {
                             updateData["_id"] = this._id;
                             return updateData;
                         } else
-                            return {'_id': this._id, 'delete': true};
+                            return {'_id': this._id, 'delete': true, 'data.active': false};
                     }
                 } else {
                     let updateData = {}
+                    updateData["data.active"] = true;
                     updateData["data.timeline.elapsed"] = this.data.data.timeline.elapsed + time;
                     updateData["_id"] = this._id;
                     return updateData;
@@ -4485,13 +4490,13 @@ export class ItemPF extends Item {
         // Handle different roll modes
         switch (chatData.rollMode) {
             case "gmroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 break;
             case "selfroll":
                 chatData["whisper"] = [game.user.id];
                 break;
             case "blindroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 chatData["blind"] = true;
         }
 

@@ -921,14 +921,14 @@ export class ActorPF extends Actor {
                 tokens.push(this.token);
                 for (const o of tokens) {
                     if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale)
-                        await o.update({ width: size.w, height: size.h, scale: size.scale }, { stopUpdates: true , tokenOnly: true});
+                        await ActorPF._updateToken(o,{width: size.w, height: size.h, scale: size.scale}, {stopUpdates: true, tokenOnly: true});
                 }
             }
             if (!this.isToken) {
                 let tokens = this.getActiveTokens().filter(o => o.data.actorLink);
                 for (const o of tokens) {
                     if (size.w !== o.data.width || size.h !== o.data.height || size.scale !== o.data.scale) {
-                        await o.update({width: size.w, height: size.h, scale: size.scale}, {stopUpdates: true, tokenOnly: true});
+                        await ActorPF._updateToken(o,{width: size.w, height: size.h, scale: size.scale}, {stopUpdates: true, tokenOnly: true});
                     }
                 }
                 data["token.width"] = size.w;
@@ -3038,7 +3038,7 @@ export class ActorPF extends Actor {
         }
 
         // Add ability mods to CMB and CMD
-        const cmbMod = Object.keys(CONFIG.D35E.actorSizes).indexOf(getProperty(data, "data.traits.size") || "") <= Object.keys(CONFIG.D35E.actorSizes).indexOf("tiny") ? modDiffs["dex"] : modDiffs["str"];
+        const cmbMod = Object.keys(CONFIG.D35E.actorSizes).indexOf(getProperty(data, "data.traits.size") || "") <= Object.keys(CONFIG.D35E.actorSizes).indexOf("tiny") ? modDiffs["str"] : modDiffs["str"];
         linkData(data, updateData, "data.attributes.cmb.total", updateData["data.attributes.cmb.total"] + cmbMod);
         linkData(data, updateData, "data.attributes.cmd.total", updateData["data.attributes.cmd.total"] + modDiffs["str"]);
         if (!flags.loseDexToAC || modDiffs["dex"] < 0) {
@@ -4496,7 +4496,7 @@ export class ActorPF extends Actor {
         let spellsToAdd = []
         for (let p of game.packs.values()) {
             if (p.private && !game.user.isGM) continue;
-            if (p.entity !== "Item") continue;
+            if ((p.entity || p.documentName) !== "Item") continue;
 
             const items = await p.getDocuments();
             for (let obj of items) {
@@ -4787,7 +4787,7 @@ export class ActorPF extends Actor {
         return DicePF.d20Roll({
             event: options.event,
             parts: ["@mod - @drain + @ablMod + @sizeMod + @changeGeneral + @changeAttack"],
-            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.ranged, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.actualSize] || 0 },
+            data: { changeGeneral: this.data.data.attributes.attack.general, changeAttack: this.data.data.attributes.attack.melee, mod: this.data.data.attributes.bab.total, ablMod: this.data.data.abilities.str.mod, drain: this.data.data.attributes.energyDrain || 0, sizeMod: CONFIG.D35E.sizeMods[this.data.data.traits.actualSize] || 0 },
             title: game.i18n.localize("D35E.Melee"),
             speaker: ChatMessage.getSpeaker({ actor: this }),
             takeTwenty: false
@@ -8263,13 +8263,13 @@ export class ActorPF extends Actor {
         // Handle different roll modes
         switch (chatData.rollMode) {
             case "gmroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 break;
             case "selfroll":
                 chatData["whisper"] = [game.user.id];
                 break;
             case "blindroll":
-                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u.id);
+                chatData["whisper"] = game.users.contents.filter(u => u.isGM).map(u => u._id);
                 chatData["blind"] = true;
         }
 
@@ -8492,6 +8492,7 @@ export class ActorPF extends Actor {
         let itemUpdateData = []
         let itemsEnding = []
         let itemsOnRound = []
+        let itemsToDelete = []
         let itemResourcesData = {}
         let deletedOrChanged = false;
         if (this.items !== undefined && this.items.size > 0) {
@@ -8501,25 +8502,35 @@ export class ActorPF extends Actor {
                 let _data = i.getElapsedTimeUpdateData(roundDelta)
                 if (_data && _data["data.active"] === false)
                     itemsEnding.push(i)
-                if ((i.data.data.perRoundActions || []).length)
+                if ((i.data.data.perRoundActions || []).length && !_data.delete)
                     itemsOnRound.push(i)
                 if (_data && !_data.delete && !_data.ignore) {
-                    itemUpdateData.push(_data);
+                    itemUpdateData.push({item: i, data: _data});
                     deletedOrChanged = true;
                 } else if (_data && _data.delete === true) {
-                    await this.deleteOwnedItem(_data._id, { stopUpdates: true })
+                    itemUpdateData.push({item: i, data: {'_id': _data._id, 'data.active': false}});
+                    itemsToDelete.push(_data._id)
                     deletedOrChanged = true;
                 }
             }
 
         }
 
-        if (itemUpdateData.length > 0) await this.updateOwnedItem(itemUpdateData, { stopUpdates: true })
+        if (itemUpdateData.length > 0) {
+            let updatePromises = []
+            for (let updateData of itemUpdateData) {
+                updatePromises.push(updateData.item.update(updateData.data, { stopUpdates: true }));
+            }
+            await Promise.all(updatePromises)
+        }
         if (Object.keys(itemResourcesData).length > 0 || deletedOrChanged) await this.update(itemResourcesData);
         if (itemsEnding.length)
             this.renderBuffEndChatCard(itemsEnding)
         if (itemsOnRound.length)
             this.applyOnRoundBuffActions(itemsOnRound);
+        if (itemsToDelete.length > 0) {
+            await this.deleteEmbeddedDocuments("Item", itemsToDelete, {})
+        }
         this.renderFastHealingRegenerationChatCard();
 
     }
@@ -8529,6 +8540,14 @@ export class ActorPF extends Actor {
             return game.actors.get(source.document.data.actorId)
         } else {
             return source.actor;
+        }
+    }
+
+    static async _updateToken(token, data) {
+        if (token.document) {
+            return token.document.update(data)
+        } else {
+            return token.update(data);
         }
     }
 

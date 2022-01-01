@@ -613,4 +613,12 @@
       {{> "systems/D35E/templates/actors/parts/actor-config.html"}}
     </div>
   </section>
+
+  <script>
+
+    function modifyInputValue(id, value) {
+      if (parseInt($(`input[name='${id}']`).val() || 1) + value < 1) return;
+      $(`input[name='${id}']`).val(parseInt($(`input[name='${id}']`).val() || 0) + value)
+    }
+  </script>
 </form>

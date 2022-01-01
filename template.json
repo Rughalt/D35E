@@ -1997,6 +1997,7 @@
       "bonusAmmoDamageType": "",
       "bonusAmmoAttackNote": "",
       "bagOfHoldingLike": false,
+      "containerCanUseItems": false,
       "capacity": 0,
       "creationChanges": []
     },

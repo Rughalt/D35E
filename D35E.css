@@ -833,6 +833,7 @@
 }
 .D35E.sheet.actor .level-class-image.active {
   background-image: url("icons/actions/upgrade.svg");
+  margin-bottom: 8px;
 }
 .D35E.sheet.actor .level-class-image span.level {
   width: 20px;

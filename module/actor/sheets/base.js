@@ -421,7 +421,7 @@ export class ActorSheetPF extends ActorSheet {
       spell.epic = spell.epicLevel > 9;
       if (bannedSpellSpecialization.has(spell.data.school))
         spell.isBanned = true;
-      if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(spell.name)) {
+      if (availableSpellSpecialization.has(spell.data.school) || domainSpellNames.has(createTag(spell.name))) {
         spell.isSpecialized = true;
       } else {
         spellbook[lvl].hasNonDomainSpells = true;
@@ -1485,10 +1485,14 @@ export class ActorSheetPF extends ActorSheet {
     for (let item of this.actor.items) {
       if (item.data.data.originVersion && item.data.data.originPack && item.data.data.originId) {
         let compendiumItem = await game.packs.get(item.data.data.originPack).getDocument(item.data.data.originId);
-        if (compendiumItem.data.data.originVersion > item.data.data.originVersion)
-          itemUpdates.push({_id: item.id, "data.possibleUpdate": true})
-        else
-          itemUpdates.push({_id: item.id, "data.possibleUpdate": false})
+        if (!compendiumItem) {
+          console.log('Item missing from compendium...')
+        } else {
+          if (compendiumItem.data.data.originVersion > item.data.data.originVersion)
+            itemUpdates.push({_id: item.id, "data.possibleUpdate": true})
+          else
+            itemUpdates.push({_id: item.id, "data.possibleUpdate": false})
+        }
       }
     }
     await this.actor.updateOwnedItem(itemUpdates, {stopUpdates: true})
@@ -2029,7 +2033,7 @@ export class ActorSheetPF extends ActorSheet {
       if (feat.data?.spellSpecialization?.isDomain) {
 
         Object.values(feat.data?.spellSpecialization?.spells).forEach(s => {
-          domainSpellNames.add(s.name);
+          domainSpellNames.add(createTag(s.name));
         })
       }
     })
@@ -2649,7 +2653,7 @@ export class ActorSheetPF extends ActorSheet {
     if (!previousData) {
       for (let p of game.packs.values()) {
         if (p.private && !game.user.isGM) continue;
-        if (p.entity !== "Item") continue
+        if ((p.entity || p.documentName) !== "Item") continue
 
         const items = await p.getDocuments();
         for (let i of items) {

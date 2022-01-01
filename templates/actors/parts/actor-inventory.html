@@ -288,6 +288,76 @@
                                     {{~#if iitem.isStack}}({{iitem.data.quantity}}) {{/if}}{{iitem.name}}</h4>
 
                             </div>
+
+                            
+                            {{#if item.data.containerCanUseItems}}
+                            <div class="item-detail flexrow" style="flex: unset;">
+                                <div class="item-detail item-actions" style="flex: 0 20px;">
+                                    {{#unless iitem.showUnidentifiedData}}
+                                    {{#if iitem.hasAction}}
+                                    <div class="item-attack">
+
+                                        {{#unless item.data.melded}}
+                                        <a class="item-control item-attack"><img class="icon"
+                                                src="systems/D35E/icons/actions/gladius.svg"></a>
+
+                                        {{/unless}}
+                                    </div>
+                                    {{/if}}
+                                    {{/unless}}
+                                </div>
+
+                                <div class="item-detail item-uses flexrow {{#if iitem.isCharged}}tooltip{{/if}}" style="flex: 0 75px;">
+
+                                    <div class="flexrow">
+                                        {{#unless iitem.showUnidentifiedData}}
+                                        {{#if iitem.isCharged}}
+                                        {{#unless iitem.isRecharging}}
+                                        {{#unless iitem.data.linkedChargeItem.id}}
+                                        <input type="text" value="{{iitem.data.uses.value}}" data-dtype="Number" />
+                                        {{else}}
+                                        <input type="text" value="{{iitem.charges}}" disabled data-dtype="Number" />
+                                        {{/unless}}
+                                        <span class="sep"> of </span>
+                                        {{#unless iitem.data.linkedChargeItem.id}}
+                                        <input type="text" value="{{iitem.maxCharges}}" disabled data-dtype="Number" />
+                                        {{else}}
+                                        <input type="text" value="{{iitem.maxCharges}}" disabled data-dtype="Number" />
+
+                                        {{/unless}}
+                                        <span class="tooltipcontent">
+                                            @resources.{{iitem.tag}}.value : {{iitem.data.uses.value}}<br>
+                                            @resources.{{iitem.tag}}.max : {{iitem.data.uses.max}}
+                                            {{#if iitem.hasTimedRecharge}}
+                                            <br><br>
+                                            This item will recharge after use <br>after {{iitem.data.recharge.formula}} rounds.
+                                            {{/if}}
+                                        </span>
+                                        {{#if iitem.hasTimedRecharge}}
+                                        <i class="fas fa-history recharge-icon"></i>
+                                        {{/if}}
+                                        {{else}}
+                                        {{#if iitem.hasTimedRecharge}}
+                                        <span><i class="fas fa-history"></i> Ready in {{iitem.data.recharge.current}}</span>
+                                        {{/if}}
+                                        {{/unless}}
+                                        {{/if}}
+                                        {{/unless}}
+
+                                        
+                                    </div>
+
+                                    {{#unless iitem.showUnidentifiedData}}
+                                    {{#if iitem.canRecharge}}
+                                    <div class="item-attack" style="margin-left: 4px; flex: 0 17px">
+                                        <a class="item-control item-recharge"><img class="icon"
+                                                src="systems/D35E/icons/actions/lightning-electron.svg"></a>
+                                    </div>
+                                    {{/if}}
+                                    {{/unless}}
+                                </div>
+                            </div>
+                            {{/if}}
                             <div class="item-detail item-container">
                                 <select name="iitem.data.containerId"
                                     style="width: 100%; border: 1px rgba(0,0,0,0.3) dashed;" data-dtype="String"
@@ -302,8 +372,9 @@
                                     {{/select}}
                                 </select>
                             </div>
-                            <div class="item-detail item-uses flexrow {{#if item.isCharged}}tooltip{{/if}}">
-                            </div>
+
+                            <div class="item-detail item-uses flexrow {{#if iitem.isCharged}}tooltip{{/if}}">
+                                </div>
                             {{#if ../../../owner}}
                             <div class="item-controls">
                                 <a class="item-control item-edit" title="{{ localize 'D35E.EditItem' }}"><i
