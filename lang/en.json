@@ -1581,6 +1581,17 @@
   "D35E.CheckUpdatesToItems": "Check for Updates to Items",
   "D35E.CheckUpdatesToItemsDest": "Check for updates to items originally spawned from D35E system",
   "D35E.D35ECurrencyConfigUpdate": "Update Custom Coins List",
+  "D35E.D35EPrestigeCl": "Prestige Caster Level",
+  "D35E.Edit": "Edit",
+  "D35E.WeaponPropThrown": "Thrown",
+  "D35E.WeaponPropKeen": "Keen",
+  "D35E.WeaponPropDistance": "Distance",
+  "D35E.WeaponPropKi": "Ki",
+  "D35E.WeaponPropSpeed": "Speed",
+  "D35E.WeaponPropDefending": "Defending",
+  "D35E.Incorporeal": "Incorporeal",
+  "D35E.EnhancementIncreaseFormula": "Enhancement Increase Formula",
+  "D35E.PriceFormula": "Price Formula",
   
 
   "SETTINGS.D35EShowPartyHudTokenN": "Party HUD should display token images? ",
