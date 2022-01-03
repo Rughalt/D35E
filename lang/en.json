@@ -1592,7 +1592,9 @@
   "D35E.Incorporeal": "Incorporeal",
   "D35E.EnhancementIncreaseFormula": "Enhancement Increase Formula",
   "D35E.PriceFormula": "Price Formula",
-  
+  "D35E.AdvanceMonsterWindow": "Increase Monster Hit Dice",
+  "D35E.AdvanceMonster": "Advance Monster",
+    
 
   "SETTINGS.D35EShowPartyHudTokenN": "Party HUD should display token images? ",
   "SETTINGS.D35EShowPartyHudTokenL": "Toggles if images displayed in party hud should be token images or portrait images.",
