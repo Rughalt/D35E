@@ -10,13 +10,16 @@
 
 {{#if hasTargets}}
 <header class="card-header flexrow">
-    <img src="{{actor.img}}" title="{{item.name}}" width="36" height="36"/>
+    <img src="{{actor.img}}" title="{{item.name}}" width="36" height="36" style="border: none;"/>
     <div class="flexcol"><h3 style="line-height: 20px">{{actor.name}}</h3>
         <h4 style='line-height: 16px; font-family: "Nodesto", "Signika", "Palatino Linotype", serif; font-size: 18px; opacity: 0.6;'>{{localize "D35E.Attacks"}}
         </h4></div>
 
     {{#each targets as |target|}}
-    <img src="{{target.data.img}}" data-target="{{target.id}}" width="36" height="36">
+    <img src="{{target.data.img}}" data-target="{{target.id}}" width="36" height="36" style="border: none;">
+    {{/each}}
+    {{#each hiddenTargets as |target|}}
+    <img src="{{target.data.img}}" class="gm-sensitive" data-target="{{target.id}}" width="36" height="36" style="border: none; opacity: 0.5;">
     {{/each}}
 </header>
 {{/if}}

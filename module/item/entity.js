@@ -1613,7 +1613,7 @@ export class ItemPF extends Item {
                     selectedTargetIds = form.find('[name="target-ids"]').val()
                     let targetIdSet = new Set(selectedTargetIds.split(";"));
                     selectedTargets = canvas.tokens.objects.children.filter(t => targetIdSet.has(t.data._id))
-                }
+                } 
                 $(form).find('[data-type="optional"]').each(function() {
                     if ($(this).prop("checked")) {
                         let featId = $(this).attr('data-feat-optional');
@@ -1970,20 +1970,27 @@ export class ItemPF extends Item {
                 rolls.push(...a.rolls)
             })
             chatTemplateData.attacks = attacks;
-
+            let hiddenTargets = [];
             // Prompt measure template
             if (useMeasureTemplate) {
 
                 // //console.log(`D35E | Creating measure template.`)
                 // Create template
                 const template = AbilityTemplate.fromItem(this, rollData.spellWidened ? 2 : 1, rollData);
+                let result;
                 if (template) {
-                    if (getProperty(this, "actor.sheet.rendered")) actor.sheet.minimize();
-                    const success = await template.drawPreview(ev);
-                    if (getProperty(this, "actor.sheet.rendered")) actor.sheet.maximize();
-                    if (!success) {
-                        return;
+                    const sheetRendered = this.parent?.sheet?._element != null;
+                    if (sheetRendered) this.parent.sheet.minimize();
+                    result = await template.drawPreview(event);
+                    if (!result.result) {
+                        if (sheetRendered) this.parent.sheet.maximize();
                     }
+                }
+                let _template = await result.place();
+                if (selectedTargets.length == 0) {
+                    // We can override selevted dargets
+                    selectedTargets = template.getTokensWithin().filter(t => t.visible || game.user.isGM);
+                    hiddenTargets = template.getTokensWithin().filter(t => !t.visible && !game.user.isGM);
                 }
             }
 
@@ -2082,8 +2089,9 @@ export class ItemPF extends Item {
                     useAmmoId: useAmmoId,
                     incorporeal: this.data.data.incorporeal || this.actor?.data?.data?.traits?.incorporeal,
                     targets: selectedTargets,
+                    hiddenTargets: hiddenTargets,
                     targetIds: selectedTargetIds,
-                    hasTargets: selectedTargets.length,
+                    hasTargets: selectedTargets.length || hiddenTargets.length,
                     isSpell: this.type === "spell",
                     hasPr: this.data.data.pr,
                     hasSr: this.data.data.sr,

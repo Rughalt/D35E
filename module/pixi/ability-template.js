@@ -1,11 +1,8 @@
 import { D35E } from "../config.js";
 import {Roll35e} from "../roll.js";
+import { MeasuredTemplatePF } from "../measure.js";
 
-/**
- * A helper class for building MeasuredTemplates for 5e spells and abilities
- * @extends {MeasuredTemplate}
- */
-export default class AbilityTemplate extends MeasuredTemplate {
+export default class AbilityTemplate extends MeasuredTemplatePF {
 
   /**
    * A factory method to create an AbilityTemplate instance using provided data from an Item5e instance
@@ -22,16 +19,15 @@ export default class AbilityTemplate extends MeasuredTemplate {
     const templateData = {
       t: templateShape,
       user: game.user.id,
-      distance: size,
+      distance: size || 5,
       direction: 0,
       x: 0,
       y: 0,
       fillColor: target.customColor || game.user.color,
+      texture: target.customTexture ? target.customTexture : null,
       _id: randomID(16),
-
     };
 
-    let path = target.customTexture;
 
 
     // Additional type-specific data
@@ -58,14 +54,6 @@ export default class AbilityTemplate extends MeasuredTemplate {
 
     template.item = item
 
-    if (path) {
-      loadTexture(path).then((tex) => {
-        template.texture = tex;
-        template.data.texture = path;
-        template.refresh();
-      })
-    }
-
     const object = new this(template);
     return object;
   }
@@ -86,12 +74,6 @@ export default class AbilityTemplate extends MeasuredTemplate {
 
   /* -------------------------------------------- */
 
-  /**
-   * Activate listeners for the template preview
-   *
-   * @param {CanvasLayer} initialLayer  The initially active CanvasLayer to re-activate after the workflow is complete
-   * @returns {Promise<boolean>} Returns true if placed, or false if cancelled
-   */
   activatePreviewListeners(initialLayer) {
     return new Promise((resolve) => {
       const handlers = {};
@@ -99,13 +81,18 @@ export default class AbilityTemplate extends MeasuredTemplate {
 
       const pfStyle = game.settings.get("D35E", "measureStyle") === true;
 
+      const _clear = () => {
+        if (this.destroyed) return;
+        this.destroy();
+      };
+
       // Update placement (mouse-move)
       handlers.mm = (event) => {
         event.stopPropagation();
-        let now = Date.now(); // Apply a 20ms throttle
+        const now = Date.now(); // Apply a 20ms throttle
         if (now - moveTime <= 20) return;
         const center = event.data.getLocalPosition(this.layer);
-        let pos = canvas.grid.getSnappedPosition(center.x, center.y, 2);
+        const pos = canvas.grid.getSnappedPosition(center.x, center.y, 2);
         this.data.x = pos.x;
         this.data.y = pos.y;
         this.refresh();
@@ -124,9 +111,13 @@ export default class AbilityTemplate extends MeasuredTemplate {
         this.active = false;
         const hl = canvas.grid.getHighlightLayer(`Template.${this.id}`);
         hl.clear();
+        _clear();
 
         initialLayer.activate();
-        if (canResolve) resolve(false);
+        if (canResolve)
+          resolve({
+            result: false,
+          });
       };
 
       // Confirm the workflow (left-click)
@@ -137,7 +128,16 @@ export default class AbilityTemplate extends MeasuredTemplate {
         this.data.update(this.data);
 
         // Create the template
-        const result = await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [this.data]);
+        const result = {
+          result: true,
+          place: async () => {
+            return (await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [this.data.toObject()]))[0];
+          },
+          delete: () => {
+            return this.template?.delete();
+          },
+        };
+        _clear();
         resolve(result);
       };
 
@@ -193,4 +193,5 @@ export default class AbilityTemplate extends MeasuredTemplate {
 
     return this;
   }
+
 }

@@ -25,7 +25,7 @@ import { DicePF } from "./module/dice.js";
 import { CombatPF } from "./module/combat.js";
 import { createCustomChatMessage } from "./module/chat.js";
 import { SightLayerPF } from "./module/low-light-vision.js";
-import { TemplateLayerPF } from "./module/measure.js";
+import { TemplateLayerPF, MeasuredTemplatePF } from "./module/measure.js";
 
 import {
   getItemOwner,
@@ -102,6 +102,7 @@ Hooks.once("init", async function() {
   CONFIG.Actor.documentClass = ActorPF;
   CONFIG.Item.documentClass = ItemPF;
   CONFIG.ActiveEffect.documentClass = ActiveEffectD35E;
+  CONFIG.MeasuredTemplate.objectClass = MeasuredTemplatePF;
   CONFIG.ui.compendium = CompendiumDirectoryPF;
   CONFIG.ChatMessage.documentClass = ChatMessagePF;
   CONFIG.Combat.documentClass = CombatPF;

@@ -4,7 +4,7 @@ import { degtorad } from "./lib.js";
  * Applies patches to core functions to integrate Pathfinder specific measurements.
  */
 export class TemplateLayerPF extends TemplateLayer {
-  // Use 90 degrees cone in D35E style
+  // Use 90 degrees cone in PF1 style
   async _onDragLeftStart(event) {
     if (!game.settings.get("D35E", "measureStyle")) return super._onDragLeftStart(event);
 
@@ -78,22 +78,13 @@ export class TemplateLayerPF extends TemplateLayer {
 }
 
 export class MeasuredTemplatePF extends MeasuredTemplate {
-  // Highlight grid in D35E style
-  highlightGrid() {
-    if (!game.settings.get("D35E", "measureStyle") || !["circle", "cone"].includes(this.data.t))
-      return super.highlightGrid();
+  getHighlightedSquares() {
+    if (!game.settings.get("D35E", "measureStyle") || !["circle", "cone"].includes(this.data.t)) return [];
 
     const grid = canvas.grid,
-      d = canvas.dimensions,
-      bc = this.borderColor,
-      fc = this.fillColor;
+      d = canvas.dimensions;
 
-    // Only highlight for objects which have a defined shape
-    if (!this.id || !this.shape) return;
-
-    // Clear existing highlight
-    const hl = grid.getHighlightLayer(`Template.${this.id}`);
-    hl.clear();
+    if (!this.id || !this.shape) return [];
 
     // Get number of rows and columns
     const nr = Math.ceil((this.data.distance * 1.5) / d.distance / (d.size / grid.h)),
@@ -152,6 +143,7 @@ export class MeasuredTemplatePF extends MeasuredTemplate {
       originOffset.y = yOffset;
     }
 
+    const result = [];
     for (let a = -nc; a < nc; a++) {
       for (let b = -nr; b < nr; b++) {
         // Position of cell's top-left corner, in pixels
@@ -176,9 +168,65 @@ export class MeasuredTemplatePF extends MeasuredTemplate {
 
         const distance = measureDistance(destination, origin);
         if (distance <= this.data.distance) {
-          grid.grid.highlightGridPosition(hl, { x: gx, y: gy, color: fc, border: bc });
+          result.push({ x: gx, y: gy });
         }
       }
+    }
+
+    return result;
+  }
+
+  getTokensWithin() {
+    const highlightSquares = this.getHighlightedSquares(),
+      d = canvas.dimensions;
+
+    const inRect = function (point, rect) {
+      return point.x >= rect.x && point.x < rect.x + rect.width && point.y >= rect.y && point.y < rect.y + rect.height;
+    };
+
+    const result = [];
+    for (const s of highlightSquares) {
+      for (const t of canvas.tokens.placeables) {
+        if (result.includes(t)) continue;
+
+        const tokenData = {
+          x: Math.round(t.x / d.size),
+          y: Math.round(t.y / d.size),
+          width: Math.round(t.width / d.size),
+          height: Math.round(t.height / d.size),
+        };
+        const squareData = {
+          x: Math.round(s.x / d.size),
+          y: Math.round(s.y / d.size),
+        };
+
+        if (inRect(squareData, tokenData)) result.push(t);
+      }
+    }
+
+    return result;
+  }
+
+  // Highlight grid in PF1 style
+  highlightGrid() {
+    if (!game.settings.get("D35E", "measureStyle") || !["circle", "cone"].includes(this.data.t))
+      return super.highlightGrid();
+
+    const grid = canvas.grid,
+      bc = this.borderColor,
+      fc = this.fillColor;
+
+    // Only highlight for objects which have a defined shape
+    if (!this.id || !this.shape) return;
+
+    // Clear existing highlight
+    const hl = grid.getHighlightLayer(`Template.${this.id}`);
+    hl.clear();
+
+    // Get grid squares to highlight
+    const highlightSquares = this.getHighlightedSquares();
+    for (const s of highlightSquares) {
+      grid.grid.highlightGridPosition(hl, { x: s.x, y: s.y, color: fc, border: bc });
     }
   }
 }
