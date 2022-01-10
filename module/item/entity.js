@@ -1989,8 +1989,8 @@ export class ItemPF extends Item {
                 let _template = await result.place();
                 if (selectedTargets.length == 0) {
                     // We can override selevted dargets
-                    selectedTargets = template.getTokensWithin().filter(t => t.visible || game.user.isGM);
-                    hiddenTargets = template.getTokensWithin().filter(t => !t.visible && !game.user.isGM);
+                    selectedTargets = template.getTokensWithin().filter(t => !t.data.hidden);
+                    hiddenTargets = template.getTokensWithin().filter(t => t.data.hidden);
                 }
             }
 
