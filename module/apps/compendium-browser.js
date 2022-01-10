@@ -654,7 +654,7 @@ export class CompendiumBrowser extends Application {
 
     // Set the transfer data
     event.dataTransfer.setData("text/plain", JSON.stringify({
-      type: pack.entity,
+      type: pack.entity || pack.documentName,
       pack: pack.collection,
       id: li.getAttribute("data-entry-id")
     }));
