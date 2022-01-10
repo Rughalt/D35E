@@ -2047,7 +2047,7 @@ export class ActorPF extends Actor {
                     tokens.push(this.token);
                     for (const o of tokens) {
                         if (shapechangeImg !== o.data.img)
-                            o.update({'img': shapechangeImg}, {stopUpdates: true});
+                            ActorPF._updateToken(o,{'img': shapechangeImg}, {stopUpdates: true});
                     }
                 }
                 if (!this.isToken) {
@@ -2055,7 +2055,7 @@ export class ActorPF extends Actor {
 
                     for (const o of tokens) {
                         if (shapechangeImg !== o.data.img)
-                            o.update({'img': shapechangeImg}, {stopUpdates: true});
+                            ActorPF._updateToken(o,{'img': shapechangeImg}, {stopUpdates: true});
                     }
                     if (srcData1 !== null)
                         srcData1["token.img"] = shapechangeImg;
@@ -2066,7 +2066,7 @@ export class ActorPF extends Actor {
                     tokens.push(this.token);
                     for (const o of tokens) {
                         if (tokenImg && tokenImg !== o.data.img)
-                            o.update({'img': tokenImg}, {stopUpdates: true});
+                            ActorPF._updateToken(o,{'img': tokenImg}, {stopUpdates: true});
                     }
                 }
                 if (!this.isToken) {
@@ -2074,7 +2074,7 @@ export class ActorPF extends Actor {
 
                     for (const o of tokens) {
                         if (tokenImg && tokenImg !== o.data.img)
-                            o.update({'img': tokenImg}, {stopUpdates: true});
+                            ActorPF._updateToken(o,{'img': tokenImg}, {stopUpdates: true});
                     }
 
                     if (srcData1 !== null) {
