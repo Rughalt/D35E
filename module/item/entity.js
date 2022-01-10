@@ -4474,7 +4474,7 @@ export class ItemPF extends Item {
  
 
     getRawEffectData() {
-        const createData = { label: this.name, icon: this.img, origin: this.uuid, disabled: this.type === "aura" ? false : !this.data.data.active };
+        const createData = { label: this.name, name: this.name, icon: this.img, origin: this.uuid, disabled: this.type === "aura" ? false : !this.data.data.active };
         if (this.type === "buff")
             createData["flags.D35E.show"] = !this.data.data.hideFromToken && !game.settings.get("D35E", "hideTokenConditions");
         if (this.type === "aura")

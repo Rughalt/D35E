@@ -23,16 +23,16 @@ export async function PatchCore() {
   }
 
   // Patch TokenHUD.getData to show resource bars even if their value is 0
-  const TokenHUD_getData = TokenHUD.prototype.getData;
-  TokenHUD.prototype.getData = function() {
-    const data = TokenHUD_getData.call(this);
-    const bar1 = this.object.getBarAttribute("bar1");
-    const bar2 = this.object.getBarAttribute("bar2");
-    return mergeObject(data, {
-      displayBar1: bar1 != null && bar1.attribute != null && bar1.value != null,
-      displayBar2: bar2 != null && bar2.attribute != null && bar2.value != null
-    });
-  }
+  // const TokenHUD_getData = TokenHUD.prototype.getData;
+  // TokenHUD.prototype.getData = function() {
+  //   const data = TokenHUD_getData.call(this);
+  //   const bar1 = this.object.getBarAttribute("bar1");
+  //   const bar2 = this.object.getBarAttribute("bar2");
+  //   return mergeObject(data, {
+  //     displayBar1: bar1 != null && bar1.attribute != null && bar1.value != null,
+  //     displayBar2: bar2 != null && bar2.attribute != null && bar2.value != null
+  //   });
+  // }
   const Token_drawEffects = Token.prototype.drawEffects;
   Token.prototype.drawEffects = async function() {
     let effects = this.effects || this.hud.effects;

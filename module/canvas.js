@@ -159,25 +159,6 @@ TokenHUD.prototype._onToggleEffect = function (event, { overlay = false } = {}) 
   return this.object.toggleEffect(effect, { overlay });
 };
 
-const Token_toggleEffect = Token.prototype.toggleEffect;
-Token.prototype.toggleEffect = async function (effect, { active, overlay = false, midUpdate } = {}) {
-  let call;
-  if (typeof effect == "string") {
-    let buffItem = this.actor.items.get(effect);
-    if (buffItem) {
-      call = await buffItem.update({ "data.active": !buffItem.data.data.active });
-    } else call = Token_toggleEffect.call(this, effect, { active, overlay });
-  } else if (!midUpdate && Object.keys(CONFIG.D35E.conditions).includes(effect.id)) {
-    const updates = {};
-    updates["data.attributes.conditions." + effect.id] = !this.actor.data.data.attributes.conditions[effect.id];
-    call = this.actor.update(updates);
-  } else {
-    call = Token_toggleEffect.call(this, effect, { active, overlay });
-  }
-  if (this.hasActiveHUD) canvas.tokens.hud.refreshStatusIcons();
-  return call;
-};
-
 TokenHUD.prototype._onAttributeUpdate = function (event) {
   event.preventDefault();
 

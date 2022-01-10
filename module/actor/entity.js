@@ -8086,6 +8086,7 @@ export class ActorPF extends Actor {
                 toCreate.push({
                     "flags.core.statusId": k,
                     name: CONFIG.D35E.conditions[k],
+                    label: CONFIG.D35E.conditions[k],
                     icon: CONFIG.D35E.conditionTextures[k],
                 });
                 } else if (!hasCondition && hasEffectIcon) {

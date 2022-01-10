@@ -30,11 +30,13 @@ export class TokenPF extends Token {
       const buffItem = this.actor.items.get(effect);
       if (buffItem) {
         call = await buffItem.update({ "data.active": !buffItem.data.data.active });
-      } else call = await super.toggleEffect(effect, { active, overlay });
+      } else 
+        call = await super.toggleEffect(effect, { active, overlay });
     } else if (effect && !midUpdate && Object.keys(CONFIG.D35E.conditions).includes(effect.id)) {
       const updates = {};
       updates["data.attributes.conditions." + effect.id] = !this.actor.data.data.attributes.conditions[effect.id];
       call = await this.actor.update(updates);
+      effect.label = CONFIG.D35E.conditions[effect.id]
     } else if (effect) {
       call = await super.toggleEffect(effect, { active, overlay });
     }
