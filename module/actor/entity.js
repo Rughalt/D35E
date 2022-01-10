@@ -7172,7 +7172,7 @@ export class ActorPF extends Actor {
                     }
                     let name = cleanParam(action.parameters[1])
 
-                    let items = this.items.filter(o => (o => getOriginalNameIfExists(o) === name || name === "*") && o.type === type)
+                    let items = this.items.filter(o => (getOriginalNameIfExists(o) === name || name === "*") && o.type === type)
                     if (items.length > 0) {
                         if (name === '*') {
                             for (let item of items) {
